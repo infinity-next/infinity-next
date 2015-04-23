@@ -21,5 +21,5 @@ Route::controllers([
 ]);
 
 Route::get('{board}/thread/{thread}', 'BoardController@thread');
-Route::post('{board}/post/{thread?}', 'BoardController@post');
+Route::post('{board}/post/{thread}', 'BoardController@post');
 Route::get('{board}', 'BoardController@index');

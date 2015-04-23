@@ -1,4 +1,8 @@
+@if ($reply_to)
 <form class="form-post" method="post" action="/{!! $board->uri !!}/post/{!! $reply_to !!}">
+@else
+<form class="form-post" method="post" action="/{!! $board->uri !!}/post">
+@endif
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
 	<fieldset class="post-fields">

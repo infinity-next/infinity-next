@@ -97,11 +97,22 @@ class BoardController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function thread($uri, $thread)
+	public function thread($uri, $post)
 	{
 		$board = Board::findOrFail($uri);
 		
-		$thread = Post::findOnBoard($uri, $thread, true);
+		$post = $thread = Post::findOnBoard($uri, $post, true);
+		
+		while ($thread->reply_to)
+		{
+			$thread = Post::find($thread->reply_to);
+		}
+		
+		if ($post->board_id != $thread->board_id)
+		{
+			return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
+		}
+		
 		
 		$posts = array();
 		$posts[$thread->id] = $thread->getReplies();
