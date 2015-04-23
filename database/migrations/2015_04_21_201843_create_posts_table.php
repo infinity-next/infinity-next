@@ -19,16 +19,19 @@ class CreatePostsTable extends Migration {
 			$table->string('uri', 32);
 			$table->bigInteger('board_id')->unsigned();
 			$table->bigInteger('reply_to')->unsigned()->nullable();
+			$table->integer('reply_count')->nullable()->default(0);
+			$table->timestamp('reply_last')->nullable();
 			
 			// Embedded information
 			$table->timestamps();
 			$table->softDeletes();
+			$table->string('author_ip', 16);
 			
 			
 			// Content information
-			$table->text('body')->nullable();
 			$table->text('author')->nullable();
 			$table->string('email', 254)->nullable();
+			$table->text('body')->nullable();
 			
 			
 			// Foreigns and Indexes

@@ -26,4 +26,41 @@ class Post extends Model {
 	 */
 	protected $hidden = ['author_ip'];
 	
+	public function board( )
+	{
+		return $this->belongsTo('\App\Board', 'uri');
+	}
+	
+	public function op( )
+	{
+		return $this->belongsTo('\App\Post', 'id', 'reply_to');
+	}
+	
+	public function replies( )
+	{
+		return $this->hasMany('\App\Post', 'reply_to', 'id');
+	}
+	
+	
+	public function getBoard( )
+	{
+		return $this->board()->get();
+	}
+	
+	public function getOp( )
+	{
+		return $this->op()->get();
+	}
+	
+	public function getReplies( )
+	{
+		return $this->replies()->get();
+	}
+	
+	public function getRepliesForIndex( )
+	{
+		return $this->replies()
+				->take(-5)
+				->get();
+	}
 }

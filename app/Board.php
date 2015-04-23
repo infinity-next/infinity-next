@@ -34,10 +34,28 @@ class Board extends Model {
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
 	
-	public function getPosts( )
+	public function posts( )
 	{
-		return Posts::with([
-			
-		]);
+		return $this->hasMany('\App\Post', 'uri');
+	}
+	
+	public function threads( )
+	{
+		return $this->hasMany('\App\Post', 'uri');
+	}
+	
+	public function getThreads( )
+	{
+		return $this->threads()->get();
+	}
+	
+	public function getThreadsForIndex($page = 0)
+	{
+		return $this->threads()
+			->where('reply_to', null)
+			->orderBy('reply_last', 'desc')
+			->skip(10 * $page)
+			->take(10)
+			->get();
 	}
 }
