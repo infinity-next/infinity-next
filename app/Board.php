@@ -1,0 +1,43 @@
+<?php namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
+class Board extends Model {
+	
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'boards';
+	
+	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'uri';
+	
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['uri', 'title', 'description'];
+	
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['created_at', 'created_by', 'operated_by'];
+	
+	
+	public function getPosts( )
+	{
+		return Posts::with([
+			
+		]);
+	}
+}
