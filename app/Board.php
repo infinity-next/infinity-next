@@ -34,6 +34,14 @@ class Board extends Model {
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
 	
+	public static function getBoardList()
+	{
+		return [ static::where( 'posts_total', '>', '-1' )
+			->take(20)
+			->get()] ;
+	}
+	
+	
 	public function posts( )
 	{
 		return $this->hasMany('\App\Post', 'uri');

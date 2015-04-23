@@ -14,9 +14,9 @@ class CreateBoardsTable extends Migration {
 	{
 		Schema::create('boards', function(Blueprint $table)
 		{
-			$table->string('uri', 256)->unique();
-			$table->string('title', 256);
-			$table->string('description', 256)->default(NULL)->nullable();
+			$table->string('uri', 255)->unique();
+			$table->string('title', 255);
+			$table->string('description', 255)->default(NULL)->nullable();
 			$table->timestamps();
 			$table->integer('created_by')->unsigned();
 			$table->integer('operated_by')->unsigned();

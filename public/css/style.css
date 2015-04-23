@@ -23,7 +23,7 @@ nav.boardlist {
 	padding: 0 1em;
 	font-size: 0.8em;
 }
-	nav.boardlist.top {
+	header nav.boardlist {
 		background: #f4645f;
 		color: #ffffff;
 		
@@ -35,7 +35,7 @@ nav.boardlist {
 		right: 0;
 		position: fixed;
 	}
-	nav.boardlist.bottom {
+	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
 		
@@ -75,10 +75,10 @@ nav.boardlist {
 	nav.boardlist .boardlist-link {
 		text-decoration: none;
 	}
-	nav.boardlist.top .boardlist-link {
+	header nav.boardlist .boardlist-link {
 		color: #ffffff;
 	}
-	nav.boardlist.bottom .boardlist-link {
+	footer nav.boardlist .boardlist-link {
 		color: #ffffff;
 	}
 
