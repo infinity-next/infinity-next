@@ -20,6 +20,8 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
+Route::get('contribute', 'ContributeController@index');
+
 Route::get('{board}/thread/{thread}', 'BoardController@thread');
 Route::post('{board}/post/{thread}', 'BoardController@post');
 Route::get('{board}', 'BoardController@index');

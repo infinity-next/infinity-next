@@ -9,7 +9,7 @@
 		
 		<figcaption class="board-details">
 			<h1 class="board-title">{{{ $board->title }}}</h1>
-			<h2 class="board-description">{{{ $board->description }}}</h2>
+			<h2 class="board-desc">{{{ $board->description }}}</h2>
 		</figcaption>
 	</figure>
 	

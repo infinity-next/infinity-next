@@ -36,7 +36,8 @@ class Board extends Model {
 	
 	public static function getBoardList()
 	{
-		return [ static::where( 'posts_total', '>', '-1' )
+		return [ static::where('posts_total', '>', '-1')
+			->orderBy('uri', 'asc')
 			->take(20)
 			->get()] ;
 	}
