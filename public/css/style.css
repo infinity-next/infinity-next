@@ -94,6 +94,38 @@ section.index-threads {
 	border-top: 1px solid #dee0df;
 }
 
+.form-post {
+	display: block;
+	margin: 0 auto;
+	width: 600px;
+}
+	.post-fields {
+		border: none;
+	}
+	.post-action {
+		margin: 0;
+		padding: 0;
+	}
+	.post-action.action-newthread {
+	}
+	
+	.post-field {
+		
+	}
+	.post-label {
+		display: block;	
+	}
+	.post-label.field-post {
+		display: none;
+		padding: 0;
+		margin: 0.2em;
+	}
+	.post-input {
+		display: block;
+		margin: 0.2em;
+		width: 100%;
+	}
+
 
 /* Threads */
 .thread {

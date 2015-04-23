@@ -38,9 +38,7 @@
 		<section class="index-form">
 			<aside class="advertisement left"></aside>
 			
-			<form class="form-post">
-				
-			</form>
+			@include('content.forms.post', [ 'board' => $board ])
 			
 			<aside class="advertisement right"></aside>
 		</section>
@@ -51,7 +49,7 @@
 				@foreach ($threads as $thread)
 				<li class="thread-item">
 					<article class="thread">
-						@include('content.post', [ 'thread' => $thread, 'posts' => $posts ])
+						@include('content.post', [ 'board' => $board, 'thread' => $thread, 'posts' => $posts ])
 					</article>
 				</li>
 				@endforeach

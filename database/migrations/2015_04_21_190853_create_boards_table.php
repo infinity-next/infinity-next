@@ -17,9 +17,10 @@ class CreateBoardsTable extends Migration {
 			$table->string('uri', 256)->unique();
 			$table->string('title', 256);
 			$table->string('description', 256)->default(NULL)->nullable();
-			$table->timestamp('created_at');
+			$table->timestamps();
 			$table->integer('created_by')->unsigned();
 			$table->integer('operated_by')->unsigned();
+			$table->integer('posts_total')->unsigned()->default(0);
 			
 			$table->primary('uri');
 			$table->foreign('created_by')->references('id')->on('users');

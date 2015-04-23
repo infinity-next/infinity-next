@@ -53,6 +53,7 @@ class Board extends Model {
 	{
 		return $this->threads()
 			->where('reply_to', null)
+			->where('deleted_at', null)
 			->orderBy('reply_last', 'desc')
 			->skip(10 * $page)
 			->take(10)

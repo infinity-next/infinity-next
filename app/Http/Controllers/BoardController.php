@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers;
 
+use Input;
+use Request;
 use View;
 use \App\Board;
+use \App\Post;
 
 class BoardController extends Controller {
 	
@@ -33,22 +36,82 @@ class BoardController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index( $uri )
+	public function index($uri)
 	{
-		if ($board = Board::findOrFail($uri))
+		$board = Board::findOrFail($uri);
+		
+		$threads = $board->getThreadsForIndex();
+		
+		$posts = array();
+		foreach ($threads as $thread)
 		{
-			$threads = $board->getThreadsForIndex();
+			$posts[$thread->id] = $thread->getRepliesForIndex();
+		}
+		
+		return View::make('board', [
+				'reply_to' => "",
+				'board'    => $board,
+				'threads'  => $threads,
+				'posts'    => $posts,
+			] );
+	}
+	
+	
+	/**
+	 * Handles the creation of a new thread.
+	 *
+	 * @return Response (redirects to the thread view)
+	 */
+	public function post($uri, $thread_id = false)
+	{
+		$board = Board::findOrFail($uri);
+		
+		if ($input = Input::all())
+		{
+			$post = new Post( $input );
 			
-			$posts = array();
-			foreach ($threads as $thread) {
-				$posts[$thread->id] = $thread->getRepliesForIndex();
+			if ($thread_id !== false)
+			{
+				$thread = Post::findOnBoard($uri, $thread_id, true);
+				$post->reply_to = $thread->id;
 			}
 			
-			return View::make('board', [
-					'board'   => $board,
-					'threads' => $threads,
-					'posts'   => $posts,
-				] );
+			$board->threads()->save( $post );
+			
+			if ($thread_id === false)
+			{
+				return redirect("{$uri}/thread/{$post->board_id}");
+			}
+			else
+			{
+				return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
+			}
 		}
+		
+		return redirect($uri);
+	}
+	
+	/**
+	 * Show the board index for the user.
+	 * This is usually the last few threads.
+	 *
+	 * @return Response
+	 */
+	public function thread($uri, $thread)
+	{
+		$board = Board::findOrFail($uri);
+		
+		$thread = Post::findOnBoard($uri, $thread, true);
+		
+		$posts = array();
+		$posts[$thread->id] = $thread->getReplies();
+		
+		return View::make('board', [
+				'reply_to' => $thread->board_id,
+				
+				'board'    => $board,
+				'threads'  => [$thread],
+				'posts'    => $posts,
+			] );
 	}
 }

@@ -26,6 +26,60 @@ class Post extends Model {
 	 */
 	protected $hidden = ['author_ip'];
 	
+	public static function boot()
+	{
+		parent::boot();
+		
+		// Setup event bindings...
+		static::creating(function($post)
+		{
+			$board = $post->board;
+			$board->posts_total += 1;
+			$post->board_id = $board->posts_total;
+			
+			$post->reply_last = $post->freshTimestamp();
+			$post->setCreatedAt($post->reply_last);
+			$post->setUpdatedAt($post->reply_last);
+			
+			if ($post->reply_to)
+			{
+				$op = $post->op;
+				
+				if ($op && $op->canReply())
+				{
+					$op->reply_last = $post->created_at;
+					$op->save();
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			$board->save();
+			return true;
+		});
+	}
+	
+	public static function findOnBoard($uri, $board_id, $require = false)
+	{
+		$query = static::where([ 'uri' => $uri, 'board_id' => $board_id ]);
+		
+		if ($require)
+		{
+			return $query->firstOrFail();
+		}
+		
+		return $query->first();
+	}
+	
+	
+	public function canReply()
+	{
+		return true;
+	}
+	
+	
 	public function board( )
 	{
 		return $this->belongsTo('\App\Board', 'uri');
@@ -60,7 +114,9 @@ class Post extends Model {
 	public function getRepliesForIndex( )
 	{
 		return $this->replies()
-				->take(-5)
-				->get();
+			->where('deleted_at', null)
+			->skip(-5)
+			->take(5)
+			->get();
 	}
 }
