@@ -13,10 +13,97 @@ ul {
 	padding: 0;
 }
 
-header {
+
+/* Contributory Block */
+header.contrib-header {
+	display: block;
+}
+
+/* Board & Thread Index */
+header.board-header {
 	border-top: 1em solid #f4645f;
+	color: #333;
 	padding: 1em 0;
 }
+	ul.contrib-options {
+		text-align: center;
+	}
+		li.contrib-option {
+			padding-right: 9px;
+			border-right: 1px solid #f4645f;
+			min-height: 360px;
+		}
+		li.contrib-option:last-child {
+			padding-right: 10px;
+			border-right: none;
+		}
+			a.option-link {
+				display: block;
+				color: #f4645f;
+				font-size: 300%;
+				font-weight: bold;
+				text-decoration: none;
+			}
+			a.option-link h3 {
+				margin: 0;
+			}
+			blockquote.option-desc {
+				margin: 0;
+			}
+	
+	section.contrib-shekel {
+		display: block;
+	}
+		h3.shekel-title {
+			display: block;
+			margin-bottom: 0;
+		}
+		blockquote.shekel-timer {
+			display: block;
+			font-size: 400%;
+			text-align: center;
+			margin: 0;
+		}
+		p.shekel-oyvey {
+			display: block;
+			text-align: right;
+			margin-top: 0;
+		}
+
+/* Contribution Sections */
+.section-me {
+	background: #333;
+	color: white;
+}
+	.me-skills {
+		clear: both;
+	}
+	.me-skill {
+		position: relative;
+		padding: 0
+	}
+	.me-skill:first-child {
+		padding-right: 3em;
+	}
+	.me-skill:last-child {
+		padding-left: 3em;
+	}
+		.me-skill .fa {
+			font-size: 300%;
+			vertical-align: top;
+			
+			position: absolute;
+			top: 5px;
+			bottom: 0;
+			left: -1.5em;
+		}
+		.me-skill:last-child .fa {
+			left: -0.5em;
+		}
+		.skill-name {
+		}
+		.skill-desc {
+		}
 
 /* Navigation */
 nav.boardlist {
@@ -34,6 +121,7 @@ nav.boardlist {
 		left: 0;
 		right: 0;
 		position: fixed;
+		z-index: 1000000;
 	}
 	footer nav.boardlist {
 		background: #666666;

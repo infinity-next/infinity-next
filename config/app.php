@@ -12,9 +12,9 @@ return [
 	| application. If disabled, a simple generic error page is shown.
 	|
 	*/
-
+	
 	'debug' => env('APP_DEBUG'),
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Application URL
@@ -109,7 +109,12 @@ return [
 	*/
 
 	'providers' => [
-
+		
+		/*
+		 * Debugging tools
+		 */
+		'Barryvdh\Debugbar\ServiceProvider',
+		
 		/*
 		 * Laravel Framework Service Providers...
 		 */
@@ -135,7 +140,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-
+		
 		/*
 		 * Application Service Providers...
 		 */
@@ -144,7 +149,11 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-
+		
+		/*
+		 * Stripe
+		 */
+		'Laravel\Cashier\CashierServiceProvider',
 	],
 
 	/*
