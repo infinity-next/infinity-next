@@ -1,31 +1,40 @@
 @if ($reply_to)
-<form class="form-post" method="post" action="/{!! $board->uri !!}/post/{!! $reply_to !!}">
+<form class="form-post" method="POST" action="{{{ url($board->uri . '/post/' . $reply_to) }}}">
 @else
-<form class="form-post" method="post" action="/{!! $board->uri !!}/post">
+<form class="form-post" method="POST" action="{{{ url($board->uri . '/post') }}}">
 @endif
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
-	<fieldset class="post-fields">
-		<legend class="post-action action-newthread">{{{ $reply_to ? "Reply" : "Create a Thread" }}} <button>ya ok submit the post</button></legend>
+	<fieldset class="form-fields">
+		<legend class="form-legend">{{{ $reply_to ? "Reply" : "Create a Thread" }}}</legend>
 		
-		<div class="post-field">
-			<label class="post-label field-subject">Subject</label>
-			<input class="post-input field-subject" name="subject" type="text" maxlength="255" />
+		<div class="field row-subject">
+			<label class="field-label" for="subject">Subject</label>
+			<input class="field-control" id="subject" name="subject" type="text" maxlength="255" />
 		</div>
 		
-		<div class="post-field">
-			<label class="post-label field-author">Name</label>
-			<input class="post-input field-author" name="author" type="text" maxlength="255" />
+		<div class="field row-author">
+			<label class="field-label" for="author">Name</label>
+			<input class="field-control" id="author" name="author" type="text" maxlength="255" />
 		</div>
 		
-		<div class="post-field">
-			<label class="post-label field-email">Email</label>
-			<input class="post-input field-email" name="email" type="text" maxlength="255" />
+		<div class="field row-email">
+			<label class="field-label" for="email">Email</label>
+			<input class="field-control" id="email" name="email" type="text" maxlength="255" />
 		</div>
 		
-		<div class="post-field">
-			<label class="post-label field-post">Post</label>
-			<textarea class="post-input field-post" name="body" type="text"></textarea>
+		<div class="field row-post">
+			<label class="field-label" for="body">Post</label>
+			<textarea class="field-control" id="body" name="body" type="text"></textarea>
+		</div>
+		
+		<div class="field row-captcha">
+			<label class="field-label" for="captcha">{!! Captcha::img() !!}</label>
+			<input class="field-control" id="captcha" name="captcha" type="text" />
+		</div>
+		
+		<div class="field row-submit">
+			<button type="submit" class="field-submit">Login</button>
 		</div>
 	</fieldset>
 </form>

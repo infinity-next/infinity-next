@@ -4,9 +4,16 @@
  * 1000 - Boardlist, top. Shold be highest element on boards and threads.
 */
 
+/*
+ * Generic tag definitions
+ */
+
 html,
 body {
-	background: #ffffff;
+	background-color: #eee;
+	background-image: url('/img/noise.png');
+	background-repeat: repeat;
+	
 	display: flex;
 	min-height: 100vh;
 	flex-direction: column;
@@ -19,53 +26,127 @@ ul {
 	padding: 0;
 }
 
+/*
+ * Generic class definitions
+ */
+
+/* Design */
+form,
+.post-container,
+.smooth-box {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	padding: 1.5em;
+}
+
+/* Forms */
+form {
+	margin: 50px auto;
+}
+	.form-fields {
+		border: none;
+		padding: 0;
+		margin: 0;
+	}
+	.form-legend {
+		font-weight: bold;
+		margin: 0;
+		padding: 0;
+	}
+	
+	.field {
+		margin: 1em 0;
+	}
+	.field-label {
+		display: block;
+	}
+	.field-control {
+		display: block;
+		
+		border: 1px solid #dee0df;
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0.2em 0.4em;
+		width: 100%;
+		
+		font-size: 120%;
+		line-height: 1.4em;
+	}
+	
+	.row-captcha {
+		border: 1px solid #dee0df;
+		width: 300px;
+		margin-left: 0;
+		margin-right: auto;
+	}
+		.row-captcha .field-control {
+			border: none;
+			border-top: 1px solid #dee0df;
+		}
+
+
+/*
+ * Specific page content
+ */
+
 /* Contributory Block */
 header.contrib-header {
 	display: block;
 }
-	ul.contrib-options {
-		margin-top: 2em;
-		text-align: center;
-	}
-		li.contrib-option {
-			padding-right: 10px;
-			margin-bottom: 1em;
-		}
-			a.option-link {
-				display: block;
-				color: #f4645f;
-				font-size: 300%;
-				font-weight: bold;
-				text-decoration: none;
-			}
-			a.option-link h3 {
-				margin: 0;
-			}
-			blockquote.option-desc {
-				margin: 0;
-			}
-	
-	section.contrib-shekel {
+
+ul.contrib-options {
+	text-align: center;
+}
+	ul.contrib-options::after {
+		content: ' ';
+		clear: both;
 		display: block;
 	}
-		h3.shekel-title {
+	li.contrib-option {
+		border-bottom: 1px solid #f4645f;
+		padding-bottom: 1em;
+		padding-right: 10px;
+		margin-bottom: 1em;
+	}
+	li.contrib-option:last-child {
+		border-bottom: none;
+	}
+		a.option-link {
 			display: block;
-			margin-bottom: 0;
+			color: #f4645f;
+			font-size: 300%;
+			font-weight: bold;
+			text-decoration: none;
 		}
-		blockquote.shekel-timer {
-			display: block;
-			font-size: 400%;
-			text-align: center;
+		a.option-link h3 {
 			margin: 0;
 		}
-		p.shekel-oyvey {
-			display: block;
-			text-align: right;
-			margin-top: 0;
-		}
-		blockquote.shekel-explainer {
+		blockquote.option-desc {
 			margin: 0;
 		}
+
+section.contrib-shekel {
+	display: block;
+}
+	h3.shekel-title {
+		display: block;
+		margin-bottom: 0;
+	}
+	blockquote.shekel-timer {
+		display: block;
+		font-size: 400%;
+		text-align: center;
+		margin: 0;
+	}
+	p.shekel-oyvey {
+		display: block;
+		text-align: right;
+		margin-top: 0;
+	}
+	blockquote.shekel-explainer {
+		margin: 0;
+	}
 
 /* Contribution Sections */
 .section-me {
@@ -86,8 +167,10 @@ header.contrib-header {
 
 @media (min-width: 768px) {
 	li.contrib-option {
-		padding-right: 9px;
+		border-bottom: none;
 		border-right: 1px solid #f4645f;
+		padding-bottom: 0;
+		padding-right: 9px;
 		min-height: 360px;
 	}
 	li.contrib-option:last-child {
@@ -187,115 +270,96 @@ main {
 	flex: 1;
 }
 
-/* Post Form */
-section.index-threads {
-	background-color: #eee;
-	background-image: url('/img/noise.png');
-	background-repeat: repeat;
+/* Board Index */
+section.index-form {
+	margin-bottom: 1em;
 }
+	.form-post {
+		display: block;
+		margin: 0 auto;
+		width: 600px;
+	}
 
-.form-post {
-	display: block;
-	margin: 0 auto;
-	width: 600px;
-}
-	.post-fields {
-		border: none;
-	}
-	.post-action {
-		margin: 0;
-		padding: 0;
-	}
-	.post-action.action-newthread {
-	}
+section.index-threads {
 	
-	.post-field {
-		
-	}
-	.post-label {
-		display: block;	
-	}
-	.post-label.field-post {
+}
+	.field-label.field-post {
 		display: none;
 		padding: 0;
 		margin: 0.2em;
 	}
-	.post-input {
-		display: block;
-		margin: 0.2em;
-		width: 100%;
+	
+	/* Threads */
+	.thread {
+		margin: 0 0 0 1em;
+		padding: 1em 0 1em 0;
 	}
-
-
-/* Threads */
-.thread {
-	margin: 0 0 0 1em;
-	padding: 1em 0 1em 0;
-}
-.thread-item:nth-child(even) {
-	background: rgba(255,255,255,0.5);
-}
-
-.reply {
-	margin: 0.5em 0 0.5em 2em;
-	padding: 0;
-}
-
-.post {
-	font-size: 105%;
-	margin: 0 auto 0 0;
-	padding: 0;
-	max-width: 75vw;
-}
-	.post p {
-		display: block;
-		margin: 0;
+	.thread-item:nth-child(odd) {
+		background: rgba(255,255,255,0.5);
+	}
+	
+	.reply {
+		margin: 0.5em 0 0.5em 2em;
 		padding: 0;
-		min-height: 1.1em;
-		line-height: 1.1em;
+	}	
+	
+	.post {
+		font-size: 105%;
+		margin: 0 auto 0 0;
+		padding: 0;
+		max-width: 75vw;
 	}
-	.post .quote {
-		color: #789922;
-	}
-
-.post-container {
-	display: inline-block;
-	background: #fff;
-	box-shadow: 0 0 5px rgba(0,0,0,0.1);
-	padding: 1em;
-}
-
-.post-details {
-	margin-bottom: 0.60em;
-}
-	.post-detail {
+		.post p {
+			display: block;
+			margin: 0;
+			padding: 0;
+			min-height: 1.1em;
+			line-height: 1.1em;
+		}
+		.post .quote {
+			color: #789922;
+		}
+	
+	.post-container {
 		display: inline-block;
 	}
-		.subject {
-			display: inline-block;
-			margin: 0;
-			font-size: 1em;
+		.post-details {
+			margin-bottom: 0.60em;
 		}
-		.author {
-			display: inline-block;
-			color: #117743;
-		}
-		.createdon {
-			display: inline-block;
-		}
-		.authorid {
-			display: inline-block;
-		}
-		.postid {
-			display: inline-block;
-		}
+			.post-detail {
+				display: inline-block;
+			}
+				.subject {
+					display: inline-block;
+					margin: 0;
+					font-size: 1em;
+				}
+				.author {
+					display: inline-block;
+					color: #117743;
+				}
+				.createdon {
+					display: inline-block;
+				}
+				.authorid {
+					display: inline-block;
+				}
+				.postid {
+					display: inline-block;
+				}
+
+section.auth-form {
+	max-width: 640px;
+}
 
 
 /* Page Header */
 header {
+	background: #fff;
 	border-top: 1em solid #f4645f;
 	color: #333;
-	padding: 1em 0;
+	padding: 1em 0 0 0;
+	margin: 0 0 1em 0;
 }
 
 figure.page-head {

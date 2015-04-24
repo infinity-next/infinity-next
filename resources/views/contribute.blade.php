@@ -6,7 +6,7 @@
 @section('content')
 <main class="contrib">
 	<section class="contrib-howto grid-container">
-		<ul class="contrib-options">
+		<ul class="contrib-options smooth-box">
 			<li class="contrib-option option-code grid-25">
 				<a class="option-link" href="https://github.com/8n-tech/larachan/">
 					<span class="option-stack fa-stack">

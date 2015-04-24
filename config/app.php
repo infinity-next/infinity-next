@@ -154,6 +154,11 @@ return [
 		 * Stripe
 		 */
 		'Laravel\Cashier\CashierServiceProvider',
+		
+		/*
+		 * Captcha
+		 */
+		'Mews\Captcha\CaptchaServiceProvider',
 	],
 
 	/*
@@ -168,7 +173,9 @@ return [
 	*/
 
 	'aliases' => [
-
+		/*
+		 * Core
+		 */
 		'App'       => 'Illuminate\Support\Facades\App',
 		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
 		'Auth'      => 'Illuminate\Support\Facades\Auth',
@@ -201,7 +208,11 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-
+		
+		/*
+		 * Captcha
+		 */
+		'Captcha' => 'Mews\Captcha\Facades\Captcha',
 	],
 
 ];

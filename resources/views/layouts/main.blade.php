@@ -26,7 +26,7 @@
 
 	@yield('content')
 	
-	<footer class="contrib-footer">
+	<footer>
 		@include('widgets.boardlist')
 		
 		<section id="footnotes">

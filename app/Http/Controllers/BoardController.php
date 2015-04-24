@@ -68,6 +68,11 @@ class BoardController extends Controller {
 		
 		if ($input = Input::all())
 		{
+			$this->validate($request, [
+					'body' => 'required'
+					'captcha' => 'required|captcha',
+				]);
+			
 			$post = new Post( $input );
 			
 			if ($thread_id !== false)

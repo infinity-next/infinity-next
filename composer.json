@@ -6,9 +6,12 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "5.0.*",
+		"mews/captcha": " dev-master",
+		
 		"stripe/stripe-php": "2.*",
 		"laravel/cashier": "~5.0"
 	},
+	"minimum-stability": "dev",
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
 		"phpspec/phpspec": "~2.1",

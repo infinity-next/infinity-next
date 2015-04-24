@@ -13,7 +13,7 @@
 		<aside class="advertisement right"></aside>
 	</section>
 	
-	<section class="index-threads">
+	<section class="index-threads static">
 		
 		<ul class="thread-list">
 			@foreach ($threads as $thread)

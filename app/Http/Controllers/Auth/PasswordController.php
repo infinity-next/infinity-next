@@ -4,9 +4,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
 
 class PasswordController extends Controller {
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Password Reset Controller
@@ -17,9 +18,9 @@ class PasswordController extends Controller {
 	| explore this trait and override any methods you wish to tweak.
 	|
 	*/
-
+	
 	use ResetsPasswords;
-
+	
 	/**
 	 * Create a new password controller instance.
 	 *
@@ -34,5 +35,16 @@ class PasswordController extends Controller {
 
 		$this->middleware('guest');
 	}
-
+	
+	/**
+	 * Send a reset link to the given user.
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function postEmail(Request $request)
+	{
+		$this->validate($request, ['captcha' => 'required|captcha']);
+		return parent::postEmail($request);
+	}
 }
