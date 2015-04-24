@@ -34,4 +34,12 @@ class ContributeController extends Controller {
 	{
 		return View::make('contribute');
 	}
+	
+	/**
+	 * Opens the donation page.
+	 */
+	public function donate()
+	{
+		return View::make('content.donate');
+	}
 }

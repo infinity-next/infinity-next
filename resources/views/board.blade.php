@@ -1,21 +1,9 @@
 @extends('layouts.main')
 
-@section('content')
-<header class="board-header">
-	@include('widgets.boardlist')
-	
-	<figure class="board-head">
-		<img class="board-banner" src="/img/logo.png" />
-		
-		<figcaption class="board-details">
-			<h1 class="board-title">{{{ $board->title }}}</h1>
-			<h2 class="board-desc">{{{ $board->description }}}</h2>
-		</figcaption>
-	</figure>
-	
-	<aside class="announcement"></aside>
-</header>
+@section('title', "/{$board->uri}/")
+@section('description', $board->description)
 
+@section('content')
 <main class="board-index page-1">
 	<section class="index-form">
 		<aside class="advertisement left"></aside>
@@ -38,22 +26,4 @@
 		</ul>
 	</section>
 </main>
-
-<footer class="board-footer">
-	<!--<nav class="board-pages">
-		<a class="board-page-prev" href="#">Previous</a>
-		
-		<ul class="board-page-list">
-			<li class="board-page">
-				<a class="page-link">1</a>
-			</li>
-		</ul>
-	</nav>-->
-	
-	@include('widgets.boardlist')
-	
-	<section id="footnotes">
-		<div>Larachan &copy; Larachan Development Group 2015</div>
-	</section>
-</footer>
 @stop

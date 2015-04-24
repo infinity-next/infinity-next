@@ -1,0 +1,1 @@
+<aside class="announcement">@yield('announcement')</aside>

@@ -49,10 +49,10 @@ class BoardController extends Controller {
 		}
 		
 		return View::make('board', [
-				'reply_to' => "",
 				'board'    => $board,
 				'threads'  => $threads,
 				'posts'    => $posts,
+				'reply_to' => false,
 			] );
 	}
 	
@@ -118,11 +118,10 @@ class BoardController extends Controller {
 		$posts[$thread->id] = $thread->getReplies();
 		
 		return View::make('board', [
-				'reply_to' => $thread->board_id,
-				
 				'board'    => $board,
 				'threads'  => [$thread],
 				'posts'    => $posts,
+				'reply_to' => $thread->board_id,
 			] );
 	}
 }

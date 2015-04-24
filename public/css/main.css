@@ -1,3 +1,9 @@
+/*
+ * z-index list of importance
+ * 9999 - Stripe overlay. NEVER SURPASS.
+ * 1000 - Boardlist, top. Shold be highest element on boards and threads.
+*/
+
 html,
 body {
 	background: #ffffff;
@@ -13,29 +19,17 @@ ul {
 	padding: 0;
 }
 
-
 /* Contributory Block */
 header.contrib-header {
 	display: block;
 }
-
-/* Board & Thread Index */
-header.board-header {
-	border-top: 1em solid #f4645f;
-	color: #333;
-	padding: 1em 0;
-}
 	ul.contrib-options {
+		margin-top: 2em;
 		text-align: center;
 	}
 		li.contrib-option {
-			padding-right: 9px;
-			border-right: 1px solid #f4645f;
-			min-height: 360px;
-		}
-		li.contrib-option:last-child {
 			padding-right: 10px;
-			border-right: none;
+			margin-bottom: 1em;
 		}
 			a.option-link {
 				display: block;
@@ -69,6 +63,9 @@ header.board-header {
 			text-align: right;
 			margin-top: 0;
 		}
+		blockquote.shekel-explainer {
+			margin: 0;
+		}
 
 /* Contribution Sections */
 .section-me {
@@ -82,6 +79,22 @@ header.board-header {
 		position: relative;
 		padding: 0
 	}
+		.skill-name {
+		}
+		.skill-desc {
+		}
+
+@media (min-width: 768px) {
+	li.contrib-option {
+		padding-right: 9px;
+		border-right: 1px solid #f4645f;
+		min-height: 360px;
+	}
+	li.contrib-option:last-child {
+		padding-right: 10px;
+		border-right: none;
+	}
+	
 	.me-skill:first-child {
 		padding-right: 3em;
 	}
@@ -89,6 +102,7 @@ header.board-header {
 		padding-left: 3em;
 	}
 		.me-skill .fa {
+			display: block;
 			font-size: 300%;
 			vertical-align: top;
 			
@@ -100,10 +114,8 @@ header.board-header {
 		.me-skill:last-child .fa {
 			left: -0.5em;
 		}
-		.skill-name {
-		}
-		.skill-desc {
-		}
+}
+
 
 /* Navigation */
 nav.boardlist {
@@ -121,7 +133,7 @@ nav.boardlist {
 		left: 0;
 		right: 0;
 		position: fixed;
-		z-index: 1000000;
+		z-index: 1000;
 	}
 	footer nav.boardlist {
 		background: #666666;
@@ -170,16 +182,16 @@ nav.boardlist {
 		color: #ffffff;
 	}
 
-
 /* Main Content */
 main {
 	flex: 1;
 }
 
-
 /* Post Form */
 section.index-threads {
-	border-top: 1px solid #dee0df;
+	background-color: #eee;
+	background-image: url('/img/noise.png');
+	background-repeat: repeat;
 }
 
 .form-post {
@@ -217,18 +229,16 @@ section.index-threads {
 
 /* Threads */
 .thread {
-	background: #dee0df;
-	margin: 0;
-	padding: 1em 0 1em 1em;
+	margin: 0 0 0 1em;
+	padding: 1em 0 1em 0;
 }
-.thread-item:nth-child(even) .thread {
-	background: #ffffff;
+.thread-item:nth-child(even) {
+	background: rgba(255,255,255,0.5);
 }
 
 .reply {
-	background: #ECECEC;
-	margin: 1em 0 0 0;
-	padding: 0.75em 1em;
+	margin: 0.5em 0 0.5em 2em;
+	padding: 0;
 }
 
 .post {
@@ -247,6 +257,13 @@ section.index-threads {
 	.post .quote {
 		color: #789922;
 	}
+
+.post-container {
+	display: inline-block;
+	background: #fff;
+	box-shadow: 0 0 5px rgba(0,0,0,0.1);
+	padding: 1em;
+}
 
 .post-details {
 	margin-bottom: 0.60em;
@@ -273,37 +290,42 @@ section.index-threads {
 			display: inline-block;
 		}
 
-.thread-replies {
-	margin-top: 1.25em;
+
+/* Page Header */
+header {
+	border-top: 1em solid #f4645f;
+	color: #333;
+	padding: 1em 0;
 }
 
-/* Board Details */
-figure.board-head {
+figure.page-head {
 	display: block;
-	margin: 0 auto;
+	margin: 0 auto 1em auto;
 	max-width: 960px;
 	text-align: center;
 }
 
-img.board-banner {
+#logo {
+	display: block;
+	margin: 0 auto;
 	max-width: 300px;
-	max-height: 150px;
+	max-height: 100px;
 }
 
-figcaption.board-details {
-	
+figcaption.page-details {
 }
-	h1.board-title {
-		color: #525252;
+	h1.page-title {
+		color: #333;
 		margin: 0.2em 0 0 0;
 	}
-	h2.board-desc {
-		color: #525252;
+	h2.page-desc {
+		color: #333;
 		margin: 0;
 		font-size: 1em;
 		font-weight: normal;
 	}
 
+/* Page Footer */
 footer {
 	padding: 0;
 }
