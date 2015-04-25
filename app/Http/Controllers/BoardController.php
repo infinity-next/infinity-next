@@ -36,7 +36,7 @@ class BoardController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index($uri)
+	public function getIndex(Request $request, $uri)
 	{
 		$board = Board::findOrFail($uri);
 		
@@ -56,53 +56,13 @@ class BoardController extends Controller {
 			] );
 	}
 	
-	
-	/**
-	 * Handles the creation of a new thread.
-	 *
-	 * @return Response (redirects to the thread view)
-	 */
-	public function post($uri, $thread_id = false)
-	{
-		$board = Board::findOrFail($uri);
-		
-		if ($input = Input::all())
-		{
-			$this->validate( new Request(), [
-					'body' => 'required',
-					'captcha' => 'required|captcha',
-				]);
-			
-			$post = new Post( $input );
-			
-			if ($thread_id !== false)
-			{
-				$thread = Post::findOnBoard($uri, $thread_id, true);
-				$post->reply_to = $thread->id;
-			}
-			
-			$board->threads()->save( $post );
-			
-			if ($thread_id === false)
-			{
-				return redirect("{$uri}/thread/{$post->board_id}");
-			}
-			else
-			{
-				return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
-			}
-		}
-		
-		return redirect($uri);
-	}
-	
 	/**
 	 * Show the board index for the user.
 	 * This is usually the last few threads.
 	 *
 	 * @return Response
 	 */
-	public function thread($uri, $post)
+	public function getThread(Request $request, $uri, $post)
 	{
 		$board = Board::findOrFail($uri);
 		
@@ -128,5 +88,46 @@ class BoardController extends Controller {
 				'posts'    => $posts,
 				'reply_to' => $thread->board_id,
 			] );
+	}
+	
+	/**
+	 * Handles the creation of a new thread or reply.
+	 *
+	 * @param  string  $uri (board uri)
+	 * @param  int     $thread_id (optional, new thread is unspecified)
+	 * @return Response (redirects to the thread view)
+	 */
+	public function postThread(Request $request, $uri, $thread_id = false)
+	{
+		$board = Board::findOrFail($uri);
+		
+		if ($input = Input::all())
+		{
+			$this->validate($request, [
+					'body' => 'required',
+					'captcha' => 'required|captcha',
+				]);
+			
+			$post = new Post( $input );
+			
+			if ($thread_id !== false)
+			{
+				$thread = Post::findOnBoard($uri, $thread_id, true);
+				$post->reply_to = $thread->id;
+			}
+			
+			$board->threads()->save( $post );
+			
+			if ($thread_id === false)
+			{
+				return redirect("{$uri}/thread/{$post->board_id}");
+			}
+			else
+			{
+				return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
+			}
+		}
+		
+		return redirect($uri);
 	}
 }

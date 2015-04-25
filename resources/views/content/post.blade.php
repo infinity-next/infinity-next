@@ -1,4 +1,5 @@
 <div class="post-container">
+	<a name="{{{ $thread->board_id }}}"></a>
 	<ul class="post-details">
 		<li class="post-detail post-subject"><h3 class="subject">{{{ $thread->subject }}}</h3></li>
 		<li class="post-detail post-author"><strong class="author">{{{ $thread->author }}}</strong></li>

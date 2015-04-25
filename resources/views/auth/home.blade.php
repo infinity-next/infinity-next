@@ -1,7 +1,5 @@
-@extends('layouts.main')
+@extends('layouts.cp')
 
-@section('content')
-<main>
-	
-</main>
+@section('body')
+
 @endsection

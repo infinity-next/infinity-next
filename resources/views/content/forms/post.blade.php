@@ -1,8 +1,5 @@
-@if ($reply_to)
-<form class="form-post" method="POST" action="{{{ url($board->uri . '/post/' . $reply_to) }}}">
-@else
-<form class="form-post" method="POST" action="{{{ url($board->uri . '/post') }}}">
-@endif
+
+<form class="form-post" method="POST" action="{{{ url($board->uri . '/post/' . ($reply_to ?: "")) }}}">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
 	<fieldset class="form-fields">
@@ -34,7 +31,7 @@
 		</div>
 		
 		<div class="field row-submit">
-			<button type="submit" class="field-submit">Login</button>
+			<button type="submit" class="field-submit">Submit</button>
 		</div>
 	</fieldset>
 </form>

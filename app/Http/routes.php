@@ -24,6 +24,8 @@ Route::get('/', 'WelcomeController@getIndex');
 */
 Route::group(['prefix' => 'cp'], function()
 {
+	Route::any('/', 'Auth\HomeController@getIndex');
+	
 	Route::controllers([
 		'home'     => 'Auth\HomeController',
 		'auth'     => 'Auth\AuthController',
@@ -34,7 +36,9 @@ Route::group(['prefix' => 'cp'], function()
 Route::get('contribute', 'ContributeController@index');
 Route::get('contribute/donate', 'ContributeController@donate');
 
-Route::get('{board}/thread/{thread}', 'BoardController@thread');
-Route::post('{board}/post/{thread}', 'BoardController@post');
-Route::post('{board}/post', 'BoardController@post');
+Route::post('{board}/thread/{thread}', 'BoardController@getThread');
+Route::post('{board}/post/{thread}', 'BoardController@postThread');
+Route::post('{board}/post', 'BoardController@postThread');
+Route::post('{board}', 'BoardController@postThread');
+Route::get('{board}/thread/{thread}', 'BoardController@getThread');
 Route::get('{board}', 'BoardController@index');

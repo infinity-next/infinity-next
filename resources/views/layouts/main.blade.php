@@ -10,7 +10,7 @@
 </head>
 <body class="larachan">
 	<header class="board-header">
-		@include('widgets.boardlist')
+		@include('nav.boardlist')
 		
 		<figure class="page-head">
 				<img id="logo" src="/img/logo.png" alt="Larachan" />
@@ -23,11 +23,11 @@
 		
 		@include('widgets.announcement')
 	</header>
-
+	
 	@yield('content')
 	
 	<footer>
-		@include('widgets.boardlist')
+		@include('nav.boardlist')
 		
 		<section id="footnotes">
 			<div>Larachan &copy; Larachan Development Group 2015</div>

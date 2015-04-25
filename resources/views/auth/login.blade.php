@@ -4,7 +4,7 @@
 
 @section('content')
 <main>
-	<section class="auth-form grid-container">
+	<section class="auth-form grid-container smooth-box">
 		@if (count($errors) > 0)
 			<ul class="alerts grid-100">
 			@foreach ($errors->all() as $error)
