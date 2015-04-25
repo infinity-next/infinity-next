@@ -40,6 +40,16 @@ class PasswordController extends Controller {
 	}
 	
 	/**
+	 * Display the form to request a password reset link.
+	 *
+	 * @return Response
+	 */
+	public function getEmail()
+	{
+		return view('auth.password.forgot');
+	}
+
+	/**
 	 * Opens the password reset form.
 	 *
 	 * @param  Request  $request
@@ -47,7 +57,7 @@ class PasswordController extends Controller {
 	 */
 	public function getIndex(Request $request)
 	{
-		return view('auth.change');
+		return view('auth.password.change');
 	}
 	
 	/**
@@ -59,7 +69,7 @@ class PasswordController extends Controller {
 	public function postIndex(Request $request)
 	{
 		$validator = $this->validate($request, [
-			'password' => "required",
+			'password'     => "required",
 			'password_new' => "required|confirmed|min:4",
 		]);
 		
@@ -73,11 +83,11 @@ class PasswordController extends Controller {
 			
 			$this->auth->login($user);
 			
-			return view('auth.change')
+			return view('auth.password.change')
 				->withStatus(trans('custom.success.password_new'));
 		}
 		
-		return view('auth.change')
+		return view('auth.password.change')
 			->withErrors(['username' => trans('custom.validate.password_old')]);
 	}
 	
@@ -90,7 +100,7 @@ class PasswordController extends Controller {
 	public function postEmail(Request $request)
 	{
 		$this->validate($request, [
-				'email' => 'required|email',
+				'email'   => 'required|email',
 				'captcha' => 'required|captcha',
 			]);
 		return parent::postEmail($request);
