@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Validation Language Lines
@@ -12,7 +12,7 @@ return [
 	| as the size rules. Feel free to tweak each of these messages here.
 	|
 	*/
-
+	
 	"accepted"             => "The :attribute must be accepted.",
 	"active_url"           => "The :attribute is not a valid URL.",
 	"after"                => "The :attribute must be a date after :date.",
@@ -73,7 +73,7 @@ return [
 	"unique"               => "The :attribute has already been taken.",
 	"url"                  => "The :attribute format is invalid.",
 	"timezone"             => "The :attribute must be a valid zone.",
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines
@@ -86,8 +86,8 @@ return [
 	*/
 
 	'custom' => [
-		'attribute-name' => [
-			'rule-name' => 'custom-message',
+		'validate' => [
+			'captcha' => 'The security image was not answered correctly',
 		],
 	],
 

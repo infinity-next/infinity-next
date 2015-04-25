@@ -25,4 +25,5 @@ Route::get('contribute/donate', 'ContributeController@donate');
 
 Route::get('{board}/thread/{thread}', 'BoardController@thread');
 Route::post('{board}/post/{thread}', 'BoardController@post');
+Route::post('{board}/post', 'BoardController@post');
 Route::get('{board}', 'BoardController@index');

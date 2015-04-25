@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers;
 
 use Input;
-use Request;
 use View;
-use \App\Board;
-use \App\Post;
+use App\Board;
+use App\Post;
+use Illuminate\Http\Request;
 
 class BoardController extends Controller {
 	
@@ -68,8 +68,8 @@ class BoardController extends Controller {
 		
 		if ($input = Input::all())
 		{
-			$this->validate($request, [
-					'body' => 'required'
+			$this->validate( new Request(), [
+					'body' => 'required',
 					'captcha' => 'required|captcha',
 				]);
 			

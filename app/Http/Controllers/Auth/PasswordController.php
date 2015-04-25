@@ -44,7 +44,10 @@ class PasswordController extends Controller {
 	 */
 	public function postEmail(Request $request)
 	{
-		$this->validate($request, ['captcha' => 'required|captcha']);
+		$this->validate($request, [
+				'email' => 'required|email',
+				'captcha' => 'required|captcha',
+			]);
 		return parent::postEmail($request);
 	}
 }

@@ -3,7 +3,7 @@
 @section('title', "Reset Password")
 
 @section('content')
-<main class="static">
+<main>
 	<section class="auth-form grid-container">
 		@if (count($errors) > 0)
 			<ul class="alerts grid-100">
