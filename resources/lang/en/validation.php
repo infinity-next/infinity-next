@@ -87,7 +87,8 @@ return [
 
 	'custom' => [
 		'validate' => [
-			'captcha' => 'The security image was not answered correctly',
+			'captcha'      => 'The security image was not answered correctly',
+			'password_old' => 'Your current password is incorrect.',
 		],
 	],
 

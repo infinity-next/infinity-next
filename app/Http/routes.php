@@ -11,14 +11,25 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', 'WelcomeController@getIndex');
 
-Route::get('home', 'HomeController@index');
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
+/*
+| Control Panel (cp)
+| Anything having to deal with secure information goes here.
+| This includes:
+| - Registration, Login, and Account Recovery.
+| - Contributor status.
+| - Board creation, Board management, Volunteer management.
+| - Top level site management.
+*/
+Route::group(['prefix' => 'cp'], function()
+{
+	Route::controllers([
+		'home'     => 'Auth\HomeController',
+		'auth'     => 'Auth\AuthController',
+		'password' => 'Auth\PasswordController',
+	]);
+});
 
 Route::get('contribute', 'ContributeController@index');
 Route::get('contribute/donate', 'ContributeController@donate');

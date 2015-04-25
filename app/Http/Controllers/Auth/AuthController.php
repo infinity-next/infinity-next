@@ -15,7 +15,7 @@ class AuthController extends Controller {
 	|
 	| This controller handles the registration of new users, as well as the
 	| authentication of existing users. By default, this controller uses
-	| a simple trait to add these behaviors. Why don't you explore it?
+	| a simple trait to add these behaviors.
 	|
 	*/
 	
@@ -33,7 +33,9 @@ class AuthController extends Controller {
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 		
-		$this->middleware('guest', ['except' => 'getLogout']);
+		$this->middleware('guest', [
+				'except' => 'getLogout'
+			]);
 	}
 	
 		/**
@@ -48,18 +50,18 @@ class AuthController extends Controller {
 			'username' => 'required',
 			'password' => 'required',
 		]);
-
+		
 		$credentials = $request->only('username', 'password');
-
+		
 		if ($this->auth->attempt($credentials, $request->has('remember')))
 		{
 			return redirect()->intended($this->redirectPath());
 		}
-
+		
 		return redirect($this->loginPath())
 					->withInput($request->only('username', 'remember'))
 					->withErrors([
-						'username' => $this->getFailedLoginMessage(),
+							 $this->getFailedLoginMessage(),
 					]);
 	}
 }

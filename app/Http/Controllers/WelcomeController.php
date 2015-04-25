@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-class WelcomeController extends Controller {
+use App\Http\Controllers\Controller;
 
+class WelcomeController extends Controller {
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Welcome Controller
@@ -12,7 +14,7 @@ class WelcomeController extends Controller {
 	| controllers, you are free to modify or remove it as you desire.
 	|
 	*/
-
+	
 	/**
 	 * Create a new controller instance.
 	 *
@@ -20,17 +22,16 @@ class WelcomeController extends Controller {
 	 */
 	public function __construct()
 	{
-		$this->middleware('guest');
 	}
-
+	
 	/**
 	 * Show the application welcome screen to the user.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function getIndex()
 	{
 		return view('welcome');
 	}
-
+	
 }

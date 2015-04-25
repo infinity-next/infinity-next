@@ -14,7 +14,7 @@
 		@endif
 		
 		<div class="grid-100">
-			<form class="form-auth" role="form" method="POST" action="{{ url('/auth/login') }}">
+			<form class="form-auth" role="form" method="POST" action="{{ url('/cp/auth/login') }}">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 				
 				<fieldset class="form-fields">
@@ -36,7 +36,7 @@
 					
 					<div class="field row-submit">
 						<button type="submit" class="field-submit">Login</button>
-						<a class="button" href="{{ url('/password/email') }}">Forgot Your Password?</a>
+						<a class="button" href="{{ url('/cp/password/email') }}">Forgot Your Password?</a>
 					</div>
 				</fieldset>
 			</form>

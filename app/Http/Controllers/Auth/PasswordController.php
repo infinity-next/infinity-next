@@ -5,6 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 
 class PasswordController extends Controller {
 	
@@ -32,8 +33,52 @@ class PasswordController extends Controller {
 	{
 		$this->auth = $auth;
 		$this->passwords = $passwords;
-
-		$this->middleware('guest');
+		
+		$this->middleware('guest', [
+				'except' => ['postIndex', 'getIndex'],
+			]);
+	}
+	
+	/**
+	 * Opens the password reset form.
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function getIndex(Request $request)
+	{
+		return view('auth.change');
+	}
+	
+	/**
+	 * Opens the password reset form.
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function postIndex(Request $request)
+	{
+		$validator = $this->validate($request, [
+			'password' => "required",
+			'password_new' => "required|confirmed|min:4",
+		]);
+		
+		$credentials = $request->only('password', 'password_new');
+		$user = $this->auth->user();
+		
+		if ($this->auth->validate(['username' => $user->username, 'password' => $credentials['password']]))
+		{
+			$user->password = bcrypt($credentials['password_new']);
+			$user->save();
+			
+			$this->auth->login($user);
+			
+			return view('auth.change')
+				->withStatus(trans('custom.success.password_new'));
+		}
+		
+		return view('auth.change')
+			->withErrors(['username' => trans('custom.validate.password_old')]);
 	}
 	
 	/**

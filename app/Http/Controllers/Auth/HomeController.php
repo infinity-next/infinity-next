@@ -1,7 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller {
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Home Controller
@@ -12,7 +14,7 @@ class HomeController extends Controller {
 	| controller as you wish. It is just here to get your app started!
 	|
 	*/
-
+	
 	/**
 	 * Create a new controller instance.
 	 *
@@ -22,15 +24,15 @@ class HomeController extends Controller {
 	{
 		$this->middleware('auth');
 	}
-
+	
 	/**
 	 * Show the application dashboard to the user.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function getIndex()
 	{
 		return view('home');
 	}
-
+	
 }
