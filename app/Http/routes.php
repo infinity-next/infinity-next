@@ -27,8 +27,9 @@ Route::group(['prefix' => 'cp'], function()
 	Route::any('/', 'Auth\HomeController@getIndex');
 	
 	Route::controllers([
-		'home'     => 'Auth\HomeController',
 		'auth'     => 'Auth\AuthController',
+		'donate'   => 'Auth\DonateController',
+		'home'     => 'Auth\HomeController',
 		'password' => 'Auth\PasswordController',
 	]);
 });
@@ -42,12 +43,4 @@ Route::group([
 ], function()
 {
 	Route::controller('', 'BoardController');
-	//Route::controllers([
-		//'thread/{thread}' => 'BoardController',
-		//'post/{thread}'   => 'BoardController',
-		//'thread'          => 'BoardController',
-		//'post'            => 'BoardController',
-	//]);
-	
-	//Route::get('', 'BoardController@index');
 });

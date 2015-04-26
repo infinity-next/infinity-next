@@ -1,10 +1,10 @@
 <div class="post-container">
-	<a name="{{{ $thread->board_id }}}"></a>
+	<a name="{!! $thread->board_id !!}"></a>
 	<ul class="post-details">
 		<li class="post-detail post-subject"><h3 class="subject">{{{ $thread->subject }}}</h3></li>
 		<li class="post-detail post-author"><strong class="author">{{{ $thread->author }}}</strong></li>
 		<li class="post-detail post-postedon"><time class="postedon">{{{ $thread->created_at }}}</time></li>
-		<li class="post-detail post-authorid"><span class="authorid">NEED_TO_ADD</span></li>
+		<li class="post-detail post-authorid"><span class="authorid"></span></li>
 		<li class="post-detail post-id">
 			<a href="/{!! $board->uri !!}/thread/{!! $thread->board_id !!}#{!! $thread->board_id !!}" class="postid">No.</a>
 			<a href="/{!! $board->uri !!}/thread/{!! $thread->board_id !!}#reply-{!! $thread->board_id !!}" class="postid">{!! $thread->board_id !!}</a>

@@ -9,7 +9,7 @@
 						<a class="linkitem-name" href="{!! url('cp/password') !!}">Change Password</a>
 					</li>
 					<li class="cp-linkitem">
-						<a class="linkitem-name" href="{!! url('cp/contribute') !!}">Donor Status</a>
+						<a class="linkitem-name" href="{!! url('cp/donate') !!}">Donor Status</a>
 					</li>
 				</ul>
 			</li>

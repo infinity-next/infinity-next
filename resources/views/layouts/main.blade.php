@@ -3,10 +3,18 @@
 <head>
 	<title>@yield('title') - Larachan</title>
 	
-	<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
-	<link rel="stylesheet" type="text/css" href="/css/boilerplate.css" />
-	<link rel="stylesheet" type="text/css" href="/css/grid-responsive.css" />
-	<link rel="stylesheet" type="text/css" href="/css/main.css" />
+	@section('css')
+		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="/css/boilerplate.css" />
+		<link rel="stylesheet" type="text/css" href="/css/grid-responsive.css" />
+		<link rel="stylesheet" type="text/css" href="/css/main.css" />
+	@show
+	
+	@section('js')
+		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
+	@show
+	
+	@yield('head')
 </head>
 <body class="larachan">
 	<header class="board-header">

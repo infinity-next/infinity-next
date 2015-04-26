@@ -1,4 +1,3 @@
-
 <form class="form-post" method="POST" action="{{{ url($board->uri . '/thread/' . ($reply_to ?: "")) }}}">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	

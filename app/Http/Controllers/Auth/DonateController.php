@@ -1,0 +1,62 @@
+<?php namespace App\Http\Controllers\Auth;
+
+use Input;
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Registrar;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+
+class DonateController extends Controller {
+	
+	/**
+	 * Create a new authentication controller instance.
+	 *
+	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
+	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
+	 * @return void
+	 */
+	public function __construct(Guard $auth, Registrar $registrar)
+	{
+		$this->auth = $auth;
+	}
+	
+	/*
+	|--------------------------------------------------------------------------
+	| Donate Controller
+	|--------------------------------------------------------------------------
+	|
+	| When a user wants to donate money, they can do so through this form.
+	| Donations can either be handled one-time (and anonymously)
+	| or through a cyclic billing system that they set up.
+	|
+	*/
+	
+	/**
+	 * Opens the password reset form.
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function getIndex(Request $request)
+	{
+		return view('content.donate');
+	}
+	
+	public function postIndex(Request $request)
+	{
+		$user  = $this->auth->user();
+		$input = Input::all();
+		
+		if ($user)
+		{
+			$user->charge($input['amount'] * 100, [
+				'source'        => $input['stripeToken'],
+				'receipt_email' => $user->email,
+			]);
+		}
+		
+		return view('content.donate');
+	}
+	
+}

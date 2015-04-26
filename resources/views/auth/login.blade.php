@@ -31,12 +31,13 @@
 					</div>
 					
 					<div class="field row-remember">
-						<label class="field-label-inline"><input type="checkbox" name="remember"/> Remember Me</label>
+						<a href="{{ url('/cp/password/email') }}">Forgot Your Password?</a>
+						<a href="{{ url('/cp/auth/register') }}">Register</a>
 					</div>
 					
 					<div class="field row-submit">
 						<button type="submit" class="field-submit">Login</button>
-						<a class="button" href="{{ url('/cp/password/email') }}">Forgot Your Password?</a>
+						<label class="field-label-inline"><input type="checkbox" name="remember"/> Remember Me</label>
 					</div>
 				</fieldset>
 			</form>
