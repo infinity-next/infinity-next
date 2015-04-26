@@ -3,10 +3,22 @@
 @section('js')
 @parent
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript" src="/js/vendor/jquery.creditCardValidator.js"></script>
 <script type="text/javascript">
 	Stripe.setPublishableKey('pk_test_2GFaAAaqm95AaMlwveuQlRvN');
 	
 	$(document)
+		.on('change', "#ccn", function(event) {
+			$("#ccn").validateCreditCard({ accept: [
+				'visa',
+				'mastercard',
+				'amex',
+				'jcb',
+				'discover',
+				'diners_club_international',
+				'diners_club_carte_blanche'
+			]});
+		})
 		.on('change', ".row-payment .field-control-inline", function(event) {
 			var paymentVal = $(".row-payment .field-control-inline:checked").val();
 			
@@ -41,7 +53,7 @@
 			}
 			
 			
-			$("#payment-time").text( timestamp + " of development time" + (paymentVal == "monthly" ? " per month" : ""));
+			$("#payment-time").html( "<strong>$" + amount + " USD</strong> will afford <strong>" + timestamp + "</strong> of development time" + (paymentVal == "monthly" ? " per month" : ""));
 		})
 		.on('submit', "#payment-form", function(event) {
 			var $form = $(this);

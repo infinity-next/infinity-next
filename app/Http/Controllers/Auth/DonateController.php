@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class DonateController extends Controller {
 	
@@ -46,14 +46,39 @@ class DonateController extends Controller {
 	public function postIndex(Request $request)
 	{
 		$user  = $this->auth->user();
-		$input = Input::all();
 		
 		if ($user)
 		{
-			$user->charge($input['amount'] * 100, [
-				'source'        => $input['stripeToken'],
-				'receipt_email' => $user->email,
+			$this->validate($request, [
+				'stripeToken'  => 'required',
+				'payment'      => 'required|in:once,monthly',
+				
+				'amount'       => 'required_if:payment,once',
+				
+				'subscription' => 'required_if:payment,monthly|in:monthly-three,monthly-six,monthly-twelve,monthly-eighteen',
 			]);
+			
+			
+			$input = Input::all();
+			
+			switch ($input['payment'])
+			{
+				case "once":
+					$user->charge($input['amount'] * 100, [
+						'description'   => "larachan dev donation",
+						'source'        => $input['stripeToken'],
+						'receipt_email' => $user->email,
+					]);
+				break;
+				
+				case "monthly":
+					$user->subscription($input['subscription'])->create($input['stripeToken'], [
+						'description'   => "larachan dev donation",
+						'email'         => $user->email,
+						'source'        => $input['stripeToken'],
+					]);
+				break;
+			}
 		}
 		
 		return view('content.donate');

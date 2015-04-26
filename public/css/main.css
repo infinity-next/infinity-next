@@ -34,6 +34,35 @@ ul {
 	padding: 0;
 }
 
+button,
+a.button {
+	display: inline-block;
+	padding: 0.2em 1em 0.25em;
+	margin-bottom: 0;
+	
+	background: #f4645f;
+	border: none;
+	border-radius: 5px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	outline: 0;
+	
+	cursor: pointer;
+	
+	color: #fff;
+	font-size: 1em;
+	font-size: 1.07142857142857rem;
+	font-weight: bold;
+	line-height: 1.4545em;
+	-webkit-font-smoothing: antialiased;
+	text-align: center;
+	vertical-align: middle;
+}
+button:hover,
+a.button:hover {
+	background: #b74b47;
+}
+
 /*
  * Generic definitions
  */
@@ -512,6 +541,112 @@ nav.cp-side {
 					nav.cp-side a.linkitem-name {
 						font-size: 90%;
 					}
+
+#payment-form {
+	margin: 0 0 1em 0;
+}
+#payment-form::after {
+	clear: both;
+	content: ' ';
+	display: block;
+}
+	#payment-form fieldset.form-fields {
+		box-sizing: border-box;
+		padding: 0 1em 0 0;
+		margin: 0 0 1em 0;
+	}
+	#payment-form #card-details {
+		float: left;
+	}
+		#payment-form legend.form-legend {
+			margin-bottom: 0.4em;
+		}
+		#payment-form #card-form {
+			border-radius: 5px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+			background-color: #f9f9f7;
+			border: 1px solid #fff;
+			margin: 0;
+			padding: 13px 20px;
+			width: 320px;
+		}
+	#payment-form #donate-details {
+		border-bottom: 1px solid #dee0df;
+		border-top: 1px solid #dee0df;
+		margin: 0.75em 0;
+		padding: 0.75em 0;
+	}
+		#payment-form .field-row::after{
+			content: ' ';
+			display: block;
+			clear: both;
+		}
+		#payment-form .field {
+			float: left;
+			margin: 0.5em 0.5em 0.5em 0;
+		}
+		#payment-form .row-ccn {
+			width: 320px;
+		}
+		#payment-form .row-cvc {
+			width: 90px;
+		}
+		#payment-form .row-month {
+			width: 122px;
+		}
+		#payment-form .row-year {
+			width: 90px;
+			margin-right: 0;
+		}
+		#payment-form .row-amount {
+			width: 100%;
+			margin-right: 0;
+		}
+		#payment-form .row-subscription {
+			width: 100%;
+			margin-right: 0;
+		}
+
+#payment-time {
+	margin: 0.6em 0;
+	padding: 0.4em 0;
+	font-size: 130%;
+	text-align: center;
+}
+#payment-submit .field-submit {
+	width: 100%;
+}
+
+#payment-security {
+	border-radius: 4px;
+	margin: auto 0;
+	padding: 0.25em 0.5em;
+}
+	#payment-security li.security-step {
+		display: block;
+		margin: 0.75em 0;
+		line-height: 1em;
+		position: relative
+	}
+		#payment-security div.security-icons {
+			position: absolute;
+		}
+		#payment-security li.security-step i.fa {
+			font-size: 140%;
+			margin: 0;
+			text-align: center;
+			width: 1.2em;
+		}
+		#payment-security span.security-item {
+			display: inline-block;
+			margin: 0 0 0 0;
+			padding: 0 0 0 5.8em;
+		}
+		#payment-security span.security-footer {
+			display: block;
+			margin: 0 0 0.25em 0;
+		}
+
 
 /* Page Header */
 header {
