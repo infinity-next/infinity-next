@@ -61,16 +61,9 @@ class Post extends Model {
 		});
 	}
 	
-	public static function findOnBoard($uri, $board_id, $require = false)
+	public static function getPostForBoard($uri, $board_id)
 	{
-		$query = static::where([ 'uri' => $uri, 'board_id' => $board_id ]);
-		
-		if ($require)
-		{
-			return $query->firstOrFail();
-		}
-		
-		return $query->first();
+		return static::where([ 'uri' => $uri, 'board_id' => $board_id ])->first();
 	}
 	
 	
@@ -80,43 +73,44 @@ class Post extends Model {
 	}
 	
 	
-	public function board( )
+	public function board()
 	{
 		return $this->belongsTo('\App\Board', 'uri');
 	}
 	
-	public function op( )
+	public function op()
 	{
 		return $this->belongsTo('\App\Post', 'id', 'reply_to');
 	}
 	
-	public function replies( )
+	public function replies()
 	{
 		return $this->hasMany('\App\Post', 'reply_to', 'id');
 	}
 	
 	
-	public function getBoard( )
+	public function getBoard()
 	{
 		return $this->board()->get();
 	}
 	
-	public function getOp( )
+	public function getOp()
 	{
 		return $this->op()->get();
 	}
 	
-	public function getReplies( )
+	public function getReplies()
 	{
 		return $this->replies()->get();
 	}
 	
-	public function getRepliesForIndex( )
+	public function getRepliesForIndex()
 	{
 		return $this->replies()
 			->where('deleted_at', null)
-			->skip(-5)
+			->orderBy('id', 'desc')
 			->take(5)
-			->get();
+			->get()
+			->reverse();
 	}
 }

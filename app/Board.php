@@ -33,7 +33,6 @@ class Board extends Model {
 	 */
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
-	
 	public static function getBoardList()
 	{
 		return [ static::where('posts_total', '>', '-1')
@@ -43,17 +42,25 @@ class Board extends Model {
 	}
 	
 	
-	public function posts( )
+	public function posts()
 	{
 		return $this->hasMany('\App\Post', 'uri');
 	}
 	
-	public function threads( )
+	public function threads()
 	{
 		return $this->hasMany('\App\Post', 'uri');
 	}
 	
-	public function getThreads( )
+	
+	public function getLocalThread($post)
+	{
+		return $this->threads()
+			->where('board_id', $post)
+			->first();
+	}
+	
+	public function getThreads()
 	{
 		return $this->threads()->get();
 	}

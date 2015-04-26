@@ -2,7 +2,7 @@
 
 return [
 	'default' => [
-		'length'     => 6,
+		'length'     => 4,
 		'width'	     => 300,
 		'height'     => 60,
 		'quality'    => 100,

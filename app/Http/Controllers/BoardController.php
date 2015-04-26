@@ -36,10 +36,8 @@ class BoardController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Request $request, $uri)
+	public function getIndex(Request $request, Board $board)
 	{
-		$board = Board::findOrFail($uri);
-		
 		$threads = $board->getThreadsForIndex();
 		
 		$posts = array();
@@ -62,20 +60,18 @@ class BoardController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getThread(Request $request, $uri, $post)
+	public function getThread(Request $request, Board $board, $thread)
 	{
-		$board = Board::findOrFail($uri);
+		$post = $thread = $board->getLocalThread($thread);
 		
-		$post = $thread = Post::findOnBoard($uri, $post, true);
-		
-		while ($thread->reply_to)
+		while (!is_null($thread->reply_to))
 		{
 			$thread = Post::find($thread->reply_to);
 		}
 		
 		if ($post->board_id != $thread->board_id)
 		{
-			return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
+			return redirect("{$board->uri}/thread/{$thread->board_id}#{$post->board_id}");
 		}
 		
 		
@@ -97,10 +93,8 @@ class BoardController extends Controller {
 	 * @param  int     $thread_id (optional, new thread is unspecified)
 	 * @return Response (redirects to the thread view)
 	 */
-	public function postThread(Request $request, $uri, $thread_id = false)
+	public function postThread(Request $request, Board $board, $thread_id = false)
 	{
-		$board = Board::findOrFail($uri);
-		
 		if ($input = Input::all())
 		{
 			$this->validate($request, [
@@ -108,26 +102,26 @@ class BoardController extends Controller {
 					'captcha' => 'required|captcha',
 				]);
 			
-			$post = new Post( $input );
+			$post = new Post($input);
 			
 			if ($thread_id !== false)
 			{
-				$thread = Post::findOnBoard($uri, $thread_id, true);
+				$thread = $board->getLocalThread($thread_id);
 				$post->reply_to = $thread->id;
 			}
 			
-			$board->threads()->save( $post );
+			$board->threads()->save($post);
 			
 			if ($thread_id === false)
 			{
-				return redirect("{$uri}/thread/{$post->board_id}");
+				return redirect("{$board->uri}/thread/{$post->board_id}");
 			}
 			else
 			{
-				return redirect("{$uri}/thread/{$thread->board_id}#{$post->board_id}");
+				return redirect("{$board->uri}/thread/{$thread->board_id}#{$post->board_id}");
 			}
 		}
 		
-		return redirect($uri);
+		return redirect($board->uri);
 	}
 }

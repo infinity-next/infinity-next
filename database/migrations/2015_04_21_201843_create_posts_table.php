@@ -30,6 +30,7 @@ class CreatePostsTable extends Migration {
 			
 			// Content information
 			$table->text('author')->nullable();
+			$table->string('subject')->nullable();
 			$table->string('email', 254)->nullable();
 			$table->text('body')->nullable();
 			

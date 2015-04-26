@@ -36,9 +36,18 @@ Route::group(['prefix' => 'cp'], function()
 Route::get('contribute', 'ContributeController@index');
 Route::get('contribute/donate', 'ContributeController@donate');
 
-Route::post('{board}/thread/{thread}', 'BoardController@getThread');
-Route::post('{board}/post/{thread}', 'BoardController@postThread');
-Route::post('{board}/post', 'BoardController@postThread');
-Route::post('{board}', 'BoardController@postThread');
-Route::get('{board}/thread/{thread}', 'BoardController@getThread');
-Route::get('{board}', 'BoardController@index');
+Route::group([
+	'prefix' => '{board}',
+	'where'  => ['board' => '[a-z]{1,31}'],
+], function()
+{
+	Route::controller('', 'BoardController');
+	//Route::controllers([
+		//'thread/{thread}' => 'BoardController',
+		//'post/{thread}'   => 'BoardController',
+		//'thread'          => 'BoardController',
+		//'post'            => 'BoardController',
+	//]);
+	
+	//Route::get('', 'BoardController@index');
+});
