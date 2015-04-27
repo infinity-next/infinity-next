@@ -130,6 +130,12 @@
 		</blockquote>
 	</section>
 	
+	<section class="contrib-donate">
+		<div class="grid-container">
+			@include('content.forms.donate')
+		</div>
+	</section>
+	
 	<section class="contrib-section section-code">
 		<blockquote>
 		</blockquote>

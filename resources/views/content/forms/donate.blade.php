@@ -5,7 +5,7 @@
 	<span class="payment-errors"></span>
 	
 	<fieldset class="form-fields" id="card-details">
-		<legend class="form-legend">Donate to Larachan</legend>
+		<legend class="form-legend">Donate to Larachan Development</legend>
 		
 		<div id="card-form">
 			<div class="field-row">
@@ -87,6 +87,7 @@
 			</div>
 			
 			<div class="field-row" id="payment-time"></div>
+			<div class="field-row" id="payment-tax"></div>
 			
 			<div id="payment-submit">
 				<button type="submit" class="field-submit">Submit Payment</button>
@@ -118,6 +119,14 @@
 		</ul>
 	</div>
 	
+	<div id="payment-btc" class="grid-50">
+		<h5 class="btc-title"><i class="fa fa-btc"></i>itcoin Contributions</h5>
+		<blockquote class="btc-desc">
+			<img class="btc-qr" src="/img/assets/btc.png" />
+			The best and most direct way to contribute to the development process is with Bitcoins. I live in a city with a Bitcoin ATM and am freely able to access anything sent to me. A whole bitcoin is worth up to <strong>28 hours</strong> of development time.
+			<code class="btc-code">1Ah4wk9WRfhK5gtbgUyGrJriqiXHgyyoJZ</code>
+		</blockquote>
+	</div>
 </form>
 @else
 	@include('errors.parts.ssl')

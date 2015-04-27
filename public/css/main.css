@@ -219,7 +219,7 @@ section.contrib-shekel {
 		margin: 0;
 	}
 
-.section-me {
+section.section-me {
 	background: #333;
 	color: white;
 }
@@ -234,6 +234,17 @@ section.contrib-shekel {
 		}
 		.skill-desc {
 		}
+
+section.contrib-donate {
+	margin: 1em 0;
+	background: #EEFFF2;
+}
+	section.contrib-donate #payment-form {
+		padding: 1em;
+		margin: 1em 0;
+		background: #fff;
+		border-radius: 4px;
+	}
 
 @media (min-width: 768px) {
 	li.contrib-option {
@@ -613,6 +624,9 @@ nav.cp-side {
 	font-size: 130%;
 	text-align: center;
 }
+#payment-tax {
+	text-align: center;
+}
 #payment-submit .field-submit {
 	width: 100%;
 }
@@ -645,6 +659,29 @@ nav.cp-side {
 		#payment-security span.security-footer {
 			display: block;
 			margin: 0 0 0.25em 0;
+		}
+
+#payment-btc {
+}
+	#payment-btc h5.btc-title {
+		margin: 0.5em 0 0 5px;
+		font-size: 1.1em;
+	}
+	#payment-btc blockquote.btc-desc {
+		margin: 0;
+	}
+	#payment-btc img.btc-qr {
+		float: left;
+		width: 200px;
+		height: 200px;
+		margin: 0 1em 1em 0;
+	}
+		#payment-btc code.btc-code {
+			display: inline-block;
+			background: #dddddd;
+			color: #333333;
+			padding: 0.2em 1em;
+			margin: 0.4em 0 0 0;
 		}
 
 
