@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DonationRequest;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -43,7 +44,7 @@ class DonateController extends Controller {
 		return view('content.donate');
 	}
 	
-	public function postIndex(Request $request)
+	public function postIndex(DonationRequest $request)
 	{
 		$user  = $this->auth->user();
 		

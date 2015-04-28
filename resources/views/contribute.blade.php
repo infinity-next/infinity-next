@@ -71,6 +71,8 @@
 	</section>
 
 	<section class="contrib-section section-me">
+		<blockquote id="back-to-pol">“The question isn't who is going to let me;<br />it's who is going to stop me.”</blockquote>
+		
 		<blockquote class="me-autobio grid-container">
 			<h3 class="me-title">My life in a few sentences</h3>
 			<p>I'm Josh. I am neither a profiteer, nor a businessman.</p>

@@ -80,6 +80,44 @@ a.button:hover {
 form {
 	margin: 0 auto;
 }
+	.form-messages {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+		.form-message {
+			display: block;
+			border-radius: 1.5em;
+			padding: 0.25em 1em;
+			margin: 0.2em 0;
+			
+			border: 1px solid #7f7f7f;
+			background: #d5d5d5;
+			color: #7f7f7f;
+		}
+			.form-message .fa {
+				margin: 0 0.5em 0 -0.5em;
+			}
+			.form-message:last-child {
+				margin-bottom: 1em;
+			}
+		.form-message.message-info {
+			border: 1px solid #60859f;
+			background: #cbd7df;
+			color: #60859f;
+		}
+		.form-message.message-success {
+			border: 1px solid #4cb266;
+			background: #c5e6cd;
+			color: #4cb266;
+		}
+		.form-message.message-error {
+			border: 1px solid #B74B47;
+			background: #F9B5B2;
+			color: #B74B47;
+		}
+		
+	
 	.form-fields {
 		border: none;
 		padding: 0;
@@ -109,6 +147,16 @@ form {
 		font-size: 120%;
 		line-height: 1.4em;
 	}
+		.field-control.control-valid {
+			background: #c5e6cd;
+			border: 1px solid #4cb266;
+			color: #4cb266;
+		}
+		.field-control.control-invalid {
+			background: #F9B5B2;
+			border: 1px solid #B74B47;
+			color: #B74B47;
+		}
 	
 	.row-captcha {
 		border: 1px solid #dee0df;
@@ -168,6 +216,7 @@ header.contrib-header {
 
 ul.contrib-options {
 	text-align: center;
+	margin: 0 0 1em 0;
 }
 	ul.contrib-options::after {
 		content: ' ';
@@ -223,6 +272,21 @@ section.section-me {
 	background: #333;
 	color: white;
 }
+	
+	#back-to-pol {
+		margin: 0 0 0.20em 0;
+		font-family: Optima,Segoe,"Segoe UI",Candara,Calibri,Arial,sans-serif;
+		font-size: 3em;
+		text-align: center;
+		
+		background-color: #fff;
+		color: transparent;
+		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
+		-webkit-background-clip: text;
+		-moz-background-clip: text;
+		background-clip: text;
+	}
+	
 	.me-skills {
 		clear: both;
 	}
@@ -683,6 +747,29 @@ nav.cp-side {
 			padding: 0.2em 1em;
 			margin: 0.4em 0 0 0;
 		}
+		
+		#ccn {
+				background-image: url('/img/assets/providers.png'), url('/img/assets/providers.png');
+				background-position: 2px -121px;
+				background-size: 120px 361px;
+				background-repeat: no-repeat;
+				padding-left: 54px;
+			}
+			#ccn.visa {
+				background-position: 2px -163px;
+			}
+			#ccn.visa_electron {
+				background-position: 2px -205px;
+			}
+			#ccn.mastercard {
+				background-position: 2px -247px;
+			}
+			#ccn.maestro {
+				background-position: 2px -289px;
+			}
+			#ccn.discover {
+				background-position: 2px -331px;
+			}
 
 
 /* Page Header */
@@ -724,6 +811,7 @@ figcaption.page-details {
 /* Page Footer */
 footer {
 	padding: 0;
+	margin: 1em 0 0 0;
 }
 	#footnotes {
 		background: #fafafa;

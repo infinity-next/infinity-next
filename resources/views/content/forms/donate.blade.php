@@ -1,8 +1,8 @@
 @if (!Request::secure())
-<form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate">
+<form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
-	<span class="payment-errors"></span>
+	<ul class="form-messages"></ul>
 	
 	<fieldset class="form-fields" id="card-details">
 		<legend class="form-legend">Donate to Larachan Development</legend>
@@ -10,14 +10,14 @@
 		<div id="card-form">
 			<div class="field-row">
 				<div class="field row-ccn">
-					<input class="field-control" id="ccn" type="text" maxlength="20" size="20" pattern="[0-9]{13,12}" data-stripe="number" placeholder="4242 4242 4242 4242"/>
+					<input class="field-control numeric" id="ccn" type="text" maxlength="20" size="20" autofocus required data-stripe="number" />
 				</div>
 			</div>
 			
 			<div class="field-row">
 				<div class="field row-cvc">
 					<label class="field-label" for="cvc">CVC</label>
-					<input class="field-control" id="cvc" type="text" maxlength="4" size="4" data-stripe="cvc" />
+					<input class="field-control numeric" id="cvc" type="text" maxlength="3" size="3" pattern="[0-9]{3}" required data-stripe="cvc" />
 				</div>
 				
 				<div class="field row-month">
@@ -69,7 +69,7 @@
 					<div class="field row-amount">
 						<label class="field-label" for="amount">Contribution Amount (USD$)</label>
 						<span class="field-value"></span>
-						<input class="field-control" id="amount" name="amount" type="number" min="2.5" value="12.00" />
+						<input class="field-control" id="amount" name="amount" type="number" min="2.5" step="0.5" value="12.00" />
 					</div>
 				</div>
 				

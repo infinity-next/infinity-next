@@ -11,12 +11,10 @@
 	@show
 	
 	@section('js')
-		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="https://js.stripe.com/v2/" async></script>
 		
-		<script type="text/javascript" src="/js/vendor/jquery.creditCardValidator.js"></script>
-		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-		
+		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="/js/plugins/jquery.creditCardValidator.js"></script>
 		<script type="text/javascript" src="/js/main.js"></script>
 	@show
 	
