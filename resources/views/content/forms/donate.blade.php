@@ -2,7 +2,7 @@
 <form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
-	<ul class="form-messages"></ul>
+	@include('widgets.messages')
 	
 	<fieldset class="form-fields" id="card-details">
 		<legend class="form-legend">Donate to Larachan Development</legend>
@@ -10,19 +10,19 @@
 		<div id="card-form">
 			<div class="field-row">
 				<div class="field row-ccn">
-					<input class="field-control numeric" id="ccn" type="text" maxlength="20" size="20" autofocus required data-stripe="number" />
+					<input class="field-control numeric" id="ccn" name="ccn" type="text" maxlength="20" size="20" autofocus required data-stripe="number" />
 				</div>
 			</div>
 			
 			<div class="field-row">
 				<div class="field row-cvc">
 					<label class="field-label" for="cvc">CVC</label>
-					<input class="field-control numeric" id="cvc" type="text" maxlength="3" size="3" pattern="[0-9]{3}" required data-stripe="cvc" />
+					<input class="field-control numeric" id="cvc" name="cvc" type="text" maxlength="3" size="3" pattern="[0-9]{3}" required data-stripe="cvc" />
 				</div>
 				
 				<div class="field row-month">
 					<label class="field-label" for="month">Expiration</label>
-					<select class="field-control" id="month" data-stripe="exp-month">
+					<select class="field-control" id="month" name="exp-month" data-stripe="exp-month">
 						<option value="1">1 - Jan</option>
 						<option value="2">2 - Feb</option>
 						<option value="3">3 - Mar</option>
@@ -40,7 +40,7 @@
 				
 				<div class="field row-year">
 					<label class="field-label" for="year">&nbsp;</label>
-					<select class="field-control" id="year" data-stripe="exp-year">
+					<select class="field-control" id="year" name="exp-year" data-stripe="exp-year">
 						<option value="2015">2015</option>
 						<option value="2016">2016</option>
 						<option value="2017">2017</option>

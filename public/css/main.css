@@ -625,6 +625,33 @@ nav.cp-side {
 	content: ' ';
 	display: block;
 }
+	#payment-form .blockOverlay {
+		background: rgba(255, 255, 255, 0.75);
+		top: -0.25em;
+		left: -0.25em;
+		right: -0.25em;
+		bottom: -0.25em;
+	}
+	#payment-form #payment-process,
+	#payment-form #payment-received {
+		background-image: url('/img/assets/infinity.gif');
+		background-position: top center;
+		background-repeat: no-repeat;
+		background-color: #ffffff;
+		color: #333;
+		display: block;
+		border-radius: 4px;
+		line-height: 2em;
+		font-size: 2em;
+		padding: 80px 6px 6px 6px;
+		text-align: center;
+	}
+		#payment-form #payment-received {
+			background-image: url('/img/assets/heart.png');
+			background-size: 128px 152px;
+			padding-top: 160px;
+		}
+	
 	#payment-form fieldset.form-fields {
 		box-sizing: border-box;
 		padding: 0 1em 0 0;

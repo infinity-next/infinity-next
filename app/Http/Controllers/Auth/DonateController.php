@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 
 class DonateController extends Controller {
@@ -46,22 +47,15 @@ class DonateController extends Controller {
 	
 	public function postIndex(DonationRequest $request)
 	{
+		$errors = [];
+		
 		$user  = $this->auth->user();
+		$input = Input::all();
+		
+		$amount = false;
 		
 		if ($user)
 		{
-			$this->validate($request, [
-				'stripeToken'  => 'required',
-				'payment'      => 'required|in:once,monthly',
-				
-				'amount'       => 'required_if:payment,once',
-				
-				'subscription' => 'required_if:payment,monthly|in:monthly-three,monthly-six,monthly-twelve,monthly-eighteen',
-			]);
-			
-			
-			$input = Input::all();
-			
 			switch ($input['payment'])
 			{
 				case "once":
@@ -70,6 +64,7 @@ class DonateController extends Controller {
 						'source'        => $input['stripeToken'],
 						'receipt_email' => $user->email,
 					]);
+					$amount = "\${$input['amount']}";
 				break;
 				
 				case "monthly":
@@ -78,11 +73,25 @@ class DonateController extends Controller {
 						'email'         => $user->email,
 						'source'        => $input['stripeToken'],
 					]);
+					$amount = $request->getSubscriptionsByID()[$input['subscription']];
 				break;
 			}
 		}
+		else {
+			
+		}
 		
-		return view('content.donate');
+		if ($request->ajax())
+		{
+			return response()->json([
+				'amount'  => $amount,
+				'errors'  => $errors,
+			]);
+		}
+		else
+		{
+			return view('content.donate');
+		}
 	}
 	
 }

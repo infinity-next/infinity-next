@@ -21,21 +21,19 @@
 		var target  = args[0];
 		var options = args[1];
 		
-		console.log(widget);
-		
 		if (typeof options !== "object") {
 			options = {};
 		}
 		
 		widget.options = $.extend(options, widget.defaults);
 		
-		console.log(widget.options, options, widget.defaults);
+		console.log(widget.options);
 		
 		if (typeof target !== "string") {
 			target = widget.options.selector.widget;
 		}
 		
-		var $widget = widget.$widget = $(target);
+		var $widget = widget.$widget = $(target).first();
 		
 		if ($widget.length) {
 			widget.bind.widget();
@@ -83,11 +81,10 @@
 		},
 		
 		// Compiled settings.
-		options  : {},
+		options  : false,
 		
 		bind     : {
 			widget : function() {
-				alert(1);
 			}
 		},
 		
@@ -95,12 +92,25 @@
 			
 		},
 		
-		events   : {
-			
+		clear    : function() {
+			widget.$widget.children().remove();
 		},
 		
-		submit   : function(parameters) {
+		push     : function(message, messageType) {
+			if (widget.options === false) {
+				widget.init();
+			}
 			
+			var $message;
+			var className = "message";
+			
+			if (widget.options.template['message-'+messageType] !== undefined) {
+				className = 'message-'+messageType;
+			}
+			
+			$message = $(widget.options.template[className]);
+			$message.append(message).appendTo(widget.$widget);
+			return $message;
 		},
 		
 		init     : function(target, options) {
@@ -108,7 +118,7 @@
 		}
 	};
 	
-	window.lc.widget("notify", widget);
+	window.lc.widget("notice", widget);
 })(window, jQuery);
 
 
@@ -126,27 +136,48 @@
 			
 			// Selectors for finding and binding elements.
 			selector : {
-				'widget'        : "#payment-form",
+				'widget'            : "#payment-form",
 				
-				'input-ccn'     : "#ccn",
+				'time'              : "#payment-time",
 				
-				'inputs-cycle'  : ".row-payment .field-control-inline",
-				'inputs-amount' : "#donate-details input"
+				'input-amount'      : "#amount",
+				'input-ccn'         : "#ccn",
+				'input-cvc'         : "#cvc",
+				'input-pay-monthly' : "#payment-monthly",
+				'input-pay-once'    : "#payment-once",
+				'input-sub'         : "#subscription",
+				'input-amount'      : "#amount",
+				
+				'inputs-cycle'      : ".row-payment .field-control-inline",
+				'inputs-amount'     : "#donate-details input",
+				
+				'message'           : "#payment-process"
 			},
 			
 			// HTML Templates for dynamic construction
 			template : {
-				
+				'message-stripe'    : "<div id=\"payment-process\">Contacting Stripe</div>",
+				'message-server'    : "<div id=\"payment-process\">Processing</div>",
+				'thank-you'         : "<div id=\"payment-received\">Thank you!</div>"
 			}
 		},
 		
 		// Compiled settings.
-		options  : {},
+		options  : false,
 		
 		// Event binding.
 		bind     : {
 			widget : function() {
-				alert(1);
+				Stripe.setPublishableKey(widget.options.config['stripe-key']);
+				
+				widget.$widget
+					.on('submit', widget.events.formSubmit)
+					.on('change', widget.options.selector['input-ccn'], widget.events.ccnChange)
+					.on('change', widget.options.selector['inputs-cycle'], widget.events.cycleChange)
+					.on('change', widget.options.selector['inputs-amount'], widget.events.paymentChange);
+				
+				widget.events.cycleChange();
+				widget.events.paymentChange();
 			}
 		},
 		
@@ -157,12 +188,168 @@
 		
 		// Event trigger handlers.
 		events   : {
+			ajaxAlways     : function(data, textStatus, errorThrown) {
+				widget.$widget.find('button').prop('disabled', false);
+			},
 			
+			ajaxDone     : function(data, textStatus, errorThrown) {
+				var $ty = $(widget.options.template['thank-you']);
+				
+				$(widget.options.selector['message']).replaceWith($ty);
+				$ty.hide().fadeIn(500);
+				setTimeout(function() { widget.$widget.unblock(); }, 1500);
+				
+				if (data.amount !== false) {
+					window.lc.notice.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
+				}
+				
+				$.each(data.errors, function(index, error) {
+					window.lc.notice.push(error, "error");
+				});
+			},
+			
+			ajaxFail     : function(data, textStatus, errorThrown) {
+				console.log(data);
+				
+				widget.$widget.unblock();
+				window.lc.notice.push("The server responded with an unknown error. You were not charged. Please report this issue.", "error");
+			},
+			
+			ccnChange      : function(event) {
+				$(this).validateCreditCard(
+					widget.events.ccnValidate,
+					{
+						accept: [
+							'visa',
+							'mastercard',
+							'amex',
+							'jcb',
+							'discover',
+							'diners_club_international',
+							'diners_club_carte_blanche'
+						]
+					}
+				);
+			},
+			
+			ccnValidate    : function(result) {
+				$(this)[0].className = "field-control";
+				
+				if (result.card_type)
+				{
+					$(this).addClass(result.card_type.name);
+					
+					if (result.valid) {
+						return $(this).addClass('control-valid');
+					}
+					else {
+						return $(this).removeClass('control-invalid');
+					}
+				}
+			},
+			
+			cycleChange    : function(event) {
+				var paymentVal = $(widget.options.selector['inputs-cycle']).filter(":checked").val();
+				
+				$(widget.options.selector['input-pay-once']).toggle(paymentVal == "once");
+				$(widget.options.selector['input-pay-monthly']).toggle(paymentVal == "monthly");
+			},
+			
+			formSubmit     : function(event) {
+				window.lc.notice.clear();
+				
+				var $form = $(this);
+				
+				$form.block({
+					message : widget.options.template['message-stripe'],
+					theme   : true
+				});
+				
+				// Disable the submit button to prevent repeated clicks
+				$form.find('button').prop('disabled', true);
+				
+				// Send the information to Stripe.
+				Stripe.card.createToken($form, widget.events.stripeResponse);
+				
+				// Clear personal information.
+				$(widget.options.selector['input-ccn'])
+					.add(widget.options.selector['input-cvc'])
+						.val("")
+						.trigger('change');
+				
+				// Prevent the form from submitting with the default action
+				return false;
+			},
+			
+			paymentChange  : function(event) {
+				var workFactor = 0.1875;
+				var timestamp = "";
+				
+				var paymentVal = $(widget.options.selector['inputs-cycle']).filter(":checked").val();
+				var amount = 0;
+				
+				if (paymentVal == "once")
+				{
+					amount = parseInt($(widget.options.selector['input-amount']).val(), 10);
+				}
+				else
+				{
+					amount = parseInt($(widget.options.selector['input-sub']).children("option:selected").attr('data-amount'), 10);
+				}
+				
+				var hours = parseFloat(amount * workFactor);
+				
+				if (hours < 1)
+				{
+					timestamp = (hours*60).toFixed(0) + " minutes";
+				}
+				else
+				{
+					timestamp = hours.toFixed(2) + " hours";
+				}
+				
+				var text = "<strong>$" + amount + " USD</strong> will afford up to <wbr> <strong>" + timestamp + "</strong> of development time" + (paymentVal == "monthly" ? " per month" : "");
+				
+				$(widget.options.selector['time']).html(text);
+			},
+			
+			stripeResponse : function(status, response) {
+				var $form = widget.$widget;
+				
+				if (response.error) {
+					// Show the errors on the form
+					window.lc.notice.push(response.error.message, "error");
+					
+					$form.unblock();
+					$form.find('button').prop('disabled', false);
+				}
+				else {
+					// Response contains id and card, which contains additional card details
+					var token = response.id;
+					
+					// Insert the token into the form so it gets submitted to the server
+					$form.append($('<input type="hidden" name="stripeToken" />').val(token));
+					
+					// Submit to server
+					widget.submit($form.add("<input type=\"hidden\" name=\"ajax\" value=\"1\" />").serialize());
+				}
+			}
 		},
 		
 		// Form submission.
 		submit   : function(parameters) {
+			var $form = widget.$widget;
 			
+			// Change our server message.
+			$(widget.options.selector['message']).replaceWith(widget.options.template['message-server']);
+			
+			$.post(
+				$form.attr('action'),
+				parameters
+			)
+				.done(widget.events.ajaxDone)
+				.fail(widget.events.ajaxFail)
+				.always(widget.events.ajaxAlways);
 		},
 		
 		// Widget building.
@@ -176,102 +363,18 @@
 
 
 
-
-Stripe.setPublishableKey('pk_test_2GFaAAaqm95AaMlwveuQlRvN');
+/*
 
 $(document)
 	.on('change', "#ccn", function(event) {
-		$(this)
-			.validateCreditCard(function(result) {
-				$(this)[0].className = "field-control";
-				
-				$(this).addClass(result.card_type.name);
-				
-				if (result.valid) {
-					return $(this).addClass('control-valid');
-				}
-				else {
-					return $(this).removeClass('control-invalid');
-				}
-			},
-			{
-				accept: [
-					'visa',
-					'mastercard',
-					'amex',
-					'jcb',
-					'discover',
-					'diners_club_international',
-					'diners_club_carte_blanche'
-				]
-			}
-		);
-	})
-	.on('change', ".row-payment .field-control-inline", function(event) {
-		var paymentVal = $(".row-payment .field-control-inline:checked").val();
-		
-		$("#payment-once").toggle(paymentVal == "once");
-		$("#payment-monthly").toggle(paymentVal == "monthly");
-	})
+	.on('change', ".row-payment .field-control-inline")
 	.on('change', "#donate-details input", function(event) {
-		var workFactor = 0.1875;
-		var timestamp = "";
-		
-		var paymentVal = $(".row-payment .field-control-inline:checked").val();
-		var amount = 0;
-		
-		if (paymentVal == "once")
-		{
-			amount = parseInt($("#amount").val(), 10);
-		}
-		else
-		{
-			amount = parseInt($("#subscription option:selected").attr('data-amount'), 10);
-		}
-		
-		var hours = parseFloat(amount * workFactor);
-		
-		if (hours < 1)
-		{
-			timestamp = (hours*60).toFixed(0) + " minutes";
-		}
-		else
-		{
-			timestamp = hours.toFixed(2) + " hours";
-		}
-		
-		
-		$("#payment-time").html( "<strong>$" + amount + " USD</strong> will afford up to <wbr> <strong>" + timestamp + "</strong> of development time" + (paymentVal == "monthly" ? " per month" : ""));
 	})
 	.on('submit', "#payment-form", function(event) {
-		var $form = $(this);
-		
-		// Disable the submit button to prevent repeated clicks
-		$form.find('button').prop('disabled', true);
-		
-		Stripe.card.createToken($form, stripeResponseHandler);
-		
-		// Prevent the form from submitting with the default action
-		return false;
 	})
 	.on('ready', function(event) {
 		$(".row-payment .field-control-inline").first().trigger('change');
 	});
 	
-function stripeResponseHandler(status, response) {
-	var $form = $('#payment-form');
-	
-	if (response.error) {
-		// Show the errors on the form
-		$form.find('.payment-errors').text(response.error.message);
-		$form.find('button').prop('disabled', false);
-	}
-	else {
-		// response contains id and card, which contains additional card details
-		var token = response.id;
-		// Insert the token into the form so it gets submitted to the server
-		$form.append($('<input type="hidden" name="stripeToken" />').val(token));
-		// and submit
-		$form.get(0).submit();
-	}
-};
+
+*/
