@@ -2,16 +2,17 @@
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\View\View;
 
 class Authenticate {
-
+	
 	/**
 	 * The Guard implementation.
 	 *
 	 * @var Guard
 	 */
 	protected $auth;
-
+	
 	/**
 	 * Create a new filter instance.
 	 *
@@ -22,7 +23,7 @@ class Authenticate {
 	{
 		$this->auth = $auth;
 	}
-
+	
 	/**
 	 * Handle an incoming request.
 	 *
@@ -43,7 +44,7 @@ class Authenticate {
 				return redirect()->guest('cp/auth/login');
 			}
 		}
-
+			
 		return $next($request);
 	}
 

@@ -23,7 +23,7 @@
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="#contribute-shekel">
+				<a class="option-link" href="{!! url('cp/donate') !!}">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-ils fa-stack-1x fa-inverse"></i>
@@ -38,7 +38,7 @@
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="#">
+				<a class="option-link" href="{!! url('/larachan/') !!}">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-lightbulb-o fa-stack-1x fa-inverse"></i>
@@ -53,7 +53,7 @@
 				</blockquote>
 			</li>
 			<li class="option-code grid-25">
-				<a class="option-link" href="#">
+				<a class="option-link">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-heart fa-stack-1x fa-inverse"></i>
@@ -69,10 +69,10 @@
 			</li>
 		</ul>
 	</section>
-
+	
+	@include('widgets.devtimer')
+	
 	<section class="contrib-section section-me">
-		<blockquote id="back-to-pol">“The question isn't who is going to let me;<br />it's who is going to stop me.”</blockquote>
-		
 		<blockquote class="me-autobio grid-container">
 			<h3 class="me-title">My life in a few sentences</h3>
 			<p>I'm Josh. I am neither a profiteer, nor a businessman.</p>
@@ -109,38 +109,10 @@
 				<li class="me-skill skill-mysql grid-50">
 					<i class="fa fa-database"></i>
 					<strong class="skill-name">MySQL</strong>
-					<p class="skill-desc">While not my greatest strength, I'm very familiar with databases. Everything I've ever done has used MySQL as its storage engine and I know enough about it to get by on any project. Perhaps even more importantly, I know when <em>not</em> to use the database, something I wish my coworkers had known before building entire features out of a complicated set of triggers, views, and stored procedures.</p>
+					<p class="skill-desc">While not my greatest strength, I'm very familiar with databases. Everything I've ever done has used MySQL as its storage engine and I know enough about it to get by on any project. Perhaps just as important, I know when <em>not</em> to use the database, something I wish others had appreciated before building entire features out of a complicated set of triggers, views, and stored procedures.</p>
 				</li>
 			</ul>
 		</div>
-	</section>
-	
-	<section class="contrib-shekel grid-container">
-		<a id="contribute-shekel"></a>
-		<h3 class="shekel-title">I can afford to work ...</h3>
-		<blockquote class="shekel-timer">17 days<wbr/> and<wbr/> 12 hours<wbr/></blockquote>
-		<p class="shekel-oyvey">... thanks to the generous contributors.</p>
-		
-		<blockquote class="shekel-explainer">
-			<p>This is based on the assumption that my quality of life will cost $400 AUD a week to sustain.</p>
-			<p>My expenses are not that grand. Here is what factors into my estimate.</p>
-			<ul>
-				<li><strong>$200 for rent and utilities.</strong> My roommate and landlord is my friend so I'm not at risk of becoming homeless if things go sour, but it would strain our relationship not to meet my financial obligations to him.</li>
-				<li><strong>$20 a day for consumables.</strong> Food, drink, etc. I'm a big guy. <img src="//i.imgur.com/AT2M04g.png" /></li>
-				<li><strong>$60 a week for bills and "in case shit".</strong> This amount is saved to roll over <em>in case shit</em>. It also acts as a buffer in case I need to pay bills while looking for new work.</li>
-			</ul>
-		</blockquote>
-	</section>
-	
-	<section class="contrib-donate">
-		<div class="grid-container">
-			@include('content.forms.donate')
-		</div>
-	</section>
-	
-	<section class="contrib-section section-code">
-		<blockquote>
-		</blockquote>
 	</section>
 </main>
 @stop

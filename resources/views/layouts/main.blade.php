@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-	<title>@yield('title') - Larachan</title>
+	<title>@yield('title', 'Larachan')</title>
 	
 	@section('css')
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 		
 		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="/js/vendor/modernizr.custom.81355.js"></script>
 		<script type="text/javascript" src="/js/plugins/jquery.creditCardValidator.js"></script>
 		<script type="text/javascript" src="/js/plugins/jquery.blockUI.js"></script>
 		<script type="text/javascript" src="/js/main.js"></script>

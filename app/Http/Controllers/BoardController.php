@@ -1,12 +1,13 @@
 <?php namespace App\Http\Controllers;
 
-use Input;
-use View;
 use App\Board;
 use App\Post;
+use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\View;
 
-class BoardController extends Controller {
+class BoardController extends MainController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -19,16 +20,6 @@ class BoardController extends Controller {
 	| and what information is available to the accessing user.
 	|
 	*/
-	
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		
-	}
 	
 	/**
 	 * Show the board index for the user.

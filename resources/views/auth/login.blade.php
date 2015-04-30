@@ -32,7 +32,6 @@
 					
 					<div class="field row-remember">
 						<a href="{{ url('/cp/password/email') }}">Forgot Your Password?</a>
-						<a href="{{ url('/cp/auth/register') }}">Register</a>
 					</div>
 					
 					<div class="field row-submit">

@@ -42,7 +42,7 @@ class AddCashierColumns extends Migration {
 				'last_four',
 				'trial_ends_at',
 				'subscription_ends_at',
-				'subscription_kill_token',
+				'subscription_kill_token'
 			);
 		});
 	}

@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\CpController;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
+use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
-class PasswordController extends Controller {
+class PasswordController extends CpController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -29,14 +30,14 @@ class PasswordController extends Controller {
 	 * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
 	 * @return void
 	 */
-	public function __construct(Guard $auth, PasswordBroker $passwords)
+	public function __construct(Guard $auth, Registrar $registrar, PasswordBroker $passwords)
 	{
-		$this->auth = $auth;
 		$this->passwords = $passwords;
-		
 		$this->middleware('guest', [
 				'except' => ['postIndex', 'getIndex'],
 			]);
+		
+		return parent::__construct($auth, $registrar);
 	}
 	
 	/**

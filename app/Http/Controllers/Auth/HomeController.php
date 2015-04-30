@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\CpController;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Registrar;
 
-class HomeController extends Controller {
+class HomeController extends CpController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -16,13 +18,17 @@ class HomeController extends Controller {
 	*/
 	
 	/**
-	 * Create a new controller instance.
+	 * Create a new authentication controller instance.
 	 *
+	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
+	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(Guard $auth, Registrar $registrar)
 	{
 		$this->middleware('auth');
+		
+		return parent::__construct($auth, $registrar);
 	}
 	
 	/**

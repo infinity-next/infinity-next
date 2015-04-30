@@ -33,12 +33,13 @@ class Board extends Model {
 	 */
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
-	public static function getBoardList()
+	public static function getBoardListBar()
 	{
 		return [ static::where('posts_total', '>', '-1')
 			->orderBy('uri', 'asc')
 			->take(20)
-			->get()] ;
+			->get()
+		];
 	}
 	
 	

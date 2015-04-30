@@ -13,15 +13,13 @@ class DonationRequest extends Request {
 	public function rules()
 	{
 		$cycles = implode(',', array_values($this->getCycles()));
-		$subscriptions = implode(',', array_values($this->getSubscriptions()));
+		$subscriptions = "monthly-" . implode(',monthly-', array_values($this->getOptions()));
 		
 		$rules = [
 			'stripeToken'  => 'required',
+			'email'        => 'required|email',
 			'payment'      => 'required|in:' . $cycles,
-			
-			'amount'       => 'required_if:payment,once|numeric|min:2.00',
-			
-			'subscription' => 'required_if:payment,monthly|in:' . $subscriptions,
+			'amount'       => 'required|numeric|min:3',
 		];
 		
 		if (Auth::check())
@@ -32,32 +30,30 @@ class DonationRequest extends Request {
 		return $rules;
 	}
 	
-	public function getCycles()
+	public static function getCycles()
 	{
 		return [
 			"One-time payment" =>'once',
-			"Monthly subscription" => 'monthly',
+			"Monthly support" => 'monthly',
 		];
 	}
 	
-	public function getCyclesByID()
+	public static function getCyclesByID()
 	{
-		return array_flip($this->getCycles());
+		return array_flip(static::getCycles());
 	}
 	
-	public function getSubscriptions()
+	public static function getOptions()
 	{
 		return [
-			"\$3 / month"  => 'monthly-three',
-			"\$6 / month"  => 'monthly-six',
-			"\$12 / month" => 'monthly-twelve',
-			"\$18 / month" => 'monthly-eighteen',
+			3,
+			6,
+			12,
+			20,
+			30,
+			50,
+			100,
 		];
-	}
-	
-	public function getSubscriptionsByID()
-	{
-		return array_flip($this->getSubscriptions());
 	}
 	
 	
@@ -86,8 +82,6 @@ class DonationRequest extends Request {
 		return Response::make('Permission denied foo!', 403);
 	}
 	
-	*/
-	
 	// OPTIONAL OVERRIDE
 	public function response(array $errors)
 	{
@@ -96,6 +90,11 @@ class DonationRequest extends Request {
 		// See what it does natively here: 
 		// https://github.com/laravel/framework/blob/master/src/Illuminate/Foundation/Http/FormRequest.php
 		
-		return view('content.donate');
+		return View::make('content.donate', [
+			'cycles'  => static::getCycles(),
+			'amounts' => static::getOptions(),
+		]);
 	}
+	
+	*/
 }

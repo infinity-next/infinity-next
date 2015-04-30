@@ -76,6 +76,15 @@ a.button:hover {
 	overflow: hidden;
 }
 
+html.no-js .no-js,
+html.js    .require-js {
+	display: block;
+}
+html.no-js .require-js,
+html.js    .no-js {
+	display: none;
+}
+
 /* Forms */
 form {
 	margin: 0 auto;
@@ -185,13 +194,7 @@ figure.error {
 }
 	figure.error i.error-icon {
 		font-size: 10em;
-		
-		background-color: #565656;
-		color: transparent;
-		text-shadow: 0px 2px 3px rgba(255,255,255,0.5);
-		-webkit-background-clip: text;
-		-moz-background-clip: text;
-		background-clip: text;
+		color: #565656;
 	}
 	figcaption.error-caption {
 	}
@@ -214,9 +217,18 @@ header.contrib-header {
 	display: block;
 }
 
-ul.contrib-options {
+main.contrib section {
+	margin: 1em auto;
+}
+	main.contrib section:first-child {
+		margin-top: 0;
+	}
+	main.contrib section:last-child {
+		margin-bottom: -1em;
+	}
+
+section.contrib-howto ul.contrib-options {
 	text-align: center;
-	margin: 0 0 1em 0;
 }
 	ul.contrib-options::after {
 		content: ' ';
@@ -272,21 +284,6 @@ section.section-me {
 	background: #333;
 	color: white;
 }
-	
-	#back-to-pol {
-		margin: 0 0 0.20em 0;
-		font-family: Optima,Segoe,"Segoe UI",Candara,Calibri,Arial,sans-serif;
-		font-size: 3em;
-		text-align: center;
-		
-		background-color: #fff;
-		color: transparent;
-		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
-		-webkit-background-clip: text;
-		-moz-background-clip: text;
-		background-clip: text;
-	}
-	
 	.me-skills {
 		clear: both;
 	}
@@ -300,7 +297,6 @@ section.section-me {
 		}
 
 section.contrib-donate {
-	margin: 1em 0;
 	background: #EEFFF2;
 }
 	section.contrib-donate #payment-form {
@@ -353,6 +349,7 @@ nav.boardlist {
 	header nav.boardlist {
 		background: #f4645f;
 		color: #ffffff;
+		vertical-align: baseline;
 		
 		box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
 		-webkit-box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
@@ -377,7 +374,6 @@ nav.boardlist {
 	nav.boardlist .boardlist-items,
 	nav.boardlist .boardlist-item {
 		display: inline-block;
-		vertical-align: middle;
 		height: 1em;
 		line-height: 1em;
 	}
@@ -620,6 +616,9 @@ nav.cp-side {
 #payment-form {
 	margin: 0 0 1em 0;
 }
+#card-details {
+	width: 354px;
+}
 #payment-form::after {
 	clear: both;
 	content: ' ';
@@ -700,14 +699,91 @@ nav.cp-side {
 			width: 90px;
 			margin-right: 0;
 		}
-		#payment-form .row-amount {
-			width: 100%;
-			margin-right: 0;
-		}
+		#payment-form .row-attribution,
+		#payment-form .row-amount,
+		#payment-form .row-email,
 		#payment-form .row-subscription {
 			width: 100%;
 			margin-right: 0;
 		}
+		
+		#donate-details .donate-options {
+			display: block;
+			margin: 0 -2px;
+		}
+			#donate-details .donate-option {
+				display: inline-block;
+				float: left;
+				margin: 4px 2px;
+				text-align: center;
+				height: 76px;
+				width: 76px;
+			}
+				#donate-details .donate-cycle-label {
+					display: block;
+					box-sizing: border-box;
+					padding: 6px;
+					margin: 0 0 4px;
+					border: 1px solid #dddddd;
+					background: #fff;
+					color: #333;
+					line-height: 1em;
+					vertical-align: top;
+					font-weight: bold;
+				}
+				#donate-details .donate-cycle-input {
+					transform: scale(1.2);
+					vertical-align: middle;
+				}
+				
+				#donate-details .donate-option-input {
+					position: absolute;
+					width: 1px;
+					height: 1px;
+					margin: -1px;
+					padding: 0px;
+					overflow: hidden;
+					border: 0px none;
+					clip: rect(0px, 0px, 0px, 0px);
+				}
+				#donate-details .donate-option-label {
+					display: block;
+					background: none repeat scroll 0% 0% #F4645F;
+					font-size: 1em;
+					height: 5em;
+					line-height: 5;
+					border-radius: 0.3em;
+					color: #fff;
+					cursor: pointer;
+					box-sizing: border-box;
+					transition: all 0.2s ease 0s;
+				}
+				
+				#donate-details .donate-option-label:active,
+				#donate-details .donate-option-input:checked + .donate-option-label,
+				#donate-details .donate-option-label.checked {
+					background: none repeat scroll 0% 0% #B74B47 !important;
+					box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25) inset;
+				}
+				#donate-details #input_amount_other_label {
+					line-height: 2.5;
+				}
+				#donate-details #input_amount_other_box {
+					position: absolute;
+					display: block;
+					width: 64px;
+					margin: 0px 2px;
+					background: none repeat scroll 0% 0% #F9B5B2;
+					line-height: 1;
+					padding: 0.25em;
+					border: 0px none;
+					outline: 0px none;
+					border-radius: 0.3em;
+					color: #333;
+				}
+					#donate-details #input_amount_other_box:focus {
+						background: none repeat scroll 0% 0% #FFF;
+					}
 
 #payment-time {
 	margin: 0.6em 0;
@@ -720,6 +796,10 @@ nav.cp-side {
 }
 #payment-submit .field-submit {
 	width: 100%;
+}
+#payment-email {
+	font-size: 70%;
+	margin: 0.6em 0 0 0;
 }
 
 #payment-security {
@@ -754,6 +834,12 @@ nav.cp-side {
 
 #payment-btc {
 }
+html.no-js #payment-btc {
+	float: none;
+	margin: 1em auto 1em 0;
+	padding: 0 10%;
+	width: 82.5%;
+}
 	#payment-btc h5.btc-title {
 		margin: 0.5em 0 0 5px;
 		font-size: 1.1em;
@@ -768,11 +854,13 @@ nav.cp-side {
 		margin: 0 1em 1em 0;
 	}
 		#payment-btc code.btc-code {
-			display: inline-block;
+			display: block;
 			background: #dddddd;
+			clear: both;
 			color: #333333;
 			padding: 0.2em 1em;
 			margin: 0.4em 0 0 0;
+			text-align: center;
 		}
 		
 		#ccn {

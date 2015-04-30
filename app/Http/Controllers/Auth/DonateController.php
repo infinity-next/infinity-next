@@ -1,27 +1,16 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Payment;
+use App\User;
+use App\Http\Controllers\MainController;
 use App\Http\Requests\DonationRequest;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\View;
 
-class DonateController extends Controller {
-	
-	/**
-	 * Create a new authentication controller instance.
-	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
-	 * @return void
-	 */
-	public function __construct(Guard $auth, Registrar $registrar)
-	{
-		$this->auth = $auth;
-	}
+class DonateController extends MainController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -42,49 +31,91 @@ class DonateController extends Controller {
 	 */
 	public function getIndex(Request $request)
 	{
-		return view('content.donate');
-	}
-	
-	public function postIndex(DonationRequest $request)
-	{
-		$errors = [];
-		
-		$user  = $this->auth->user();
-		$input = Input::all();
-		
-		$amount = false;
+		$donated = 0;
+		$user    = $this->auth->user();
 		
 		if ($user)
 		{
-			switch ($input['payment'])
-			{
-				case "once":
-					$user->charge($input['amount'] * 100, [
-						'description'   => "larachan dev donation",
-						'source'        => $input['stripeToken'],
-						'receipt_email' => $user->email,
-					]);
-					$amount = "\${$input['amount']}";
-				break;
-				
-				case "monthly":
-					$user->subscription($input['subscription'])->create($input['stripeToken'], [
-						'description'   => "larachan dev donation",
-						'email'         => $user->email,
-						'source'        => $input['stripeToken'],
-					]);
-					$amount = $request->getSubscriptionsByID()[$input['subscription']];
-				break;
-			}
+			$donated = $user->payments()->sum('amount');
 		}
-		else {
+		
+		return View::make('content.donate', [
+			'donated' => $donated,
+			'cycles'  => DonationRequest::getCycles(),
+			'amounts' => DonationRequest::getOptions(),
+		]);
+	}
+	
+	/**
+	 * Handles a payment.
+	 *
+	 * @param  App/Http/Requests/DonationRequest  $request
+	 * @return Response
+	 */
+	public function postIndex(DonationRequest $request)
+	{
+		$errors   = [];
+		$fakeUser = false;
+		
+		$user     = $this->auth->user();
+		$input    = Input::all();
+		
+		// Create a dummy account if we're not authenticated.
+		if (!$user)
+		{
+			$fakeUser = true;
+			$user = new User();
+		}
+		
+		// Build our \App\Payment model.
+		$payment = [
+			'customer'     => ($fakeUser ? NULL : $user->id ),
+			'ip'           => $request->getClientIp(),
+			'amount'       => $input['amount'] * 100,
+			'subscription' => NULL,
+		];
+		
+		
+		// Handle input depending on the type of payment.
+		// Stripe does subscriptions and charges differently.
+		switch ($input['payment'])
+		{
+			case "once":
+				$tx = [
+					'description'   => "larachan dev donation",
+					'source'        => $input['stripeToken'],
+					'receipt_email' => $input['email'],
+				];
+				
+				$receipt = $user->charge($payment['amount'], $tx);
+			break;
 			
+			case "monthly":
+				$tx = [
+					'description'   => "larachan dev donation",
+					'source'        => $input['stripeToken'],
+					'email'         => $input['email'],
+				];
+				
+				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['stripeToken'], $tx);
+				$payment['subscription'] = "monthly-{$input['amount']}";
+			break;
+		}
+		
+		// Record our payment.
+		// This stores no identifying information,
+		// besides an optional user ID.
+		Payment::create($payment)->save();
+		
+		if ($fakeUser === true)
+		{
+			$user->delete();
 		}
 		
 		if ($request->ajax())
 		{
 			return response()->json([
-				'amount'  => $amount,
+				'amount'  => "\${$payment['amount']}",
 				'errors'  => $errors,
 			]);
 		}

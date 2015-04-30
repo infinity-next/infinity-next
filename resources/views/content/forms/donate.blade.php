@@ -1,10 +1,13 @@
 @if (!Request::secure())
+
+@include('errors.parts.js')
+
 <form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
 	@include('widgets.messages')
 	
-	<fieldset class="form-fields" id="card-details">
+	<fieldset id="card-details" class="form-fields require-js">
 		<legend class="form-legend">Donate to Larachan Development</legend>
 		
 		<div id="card-form">
@@ -17,7 +20,7 @@
 			<div class="field-row">
 				<div class="field row-cvc">
 					<label class="field-label" for="cvc">CVC</label>
-					<input class="field-control numeric" id="cvc" name="cvc" type="text" maxlength="3" size="3" pattern="[0-9]{3}" required data-stripe="cvc" />
+					<input class="field-control" id="cvc" name="cvc" type="text" maxlength="3" size="3" pattern="[0-9]{3}" required data-stripe="cvc" />
 				</div>
 				
 				<div class="field row-month">
@@ -57,46 +60,63 @@
 				</div>
 			</div>
 			
+			<div class="field-row">
+				<div class="field row-email">
+					<label class="field-label" for="email">Email Address (<em>For invoices</em>)</label>
+					<input class="field-control" type="email" id="email" name="email" value="{{{ $user ? $user->email : "" }}}" maxlength="254" required data-stripe="email"  />
+				</div>
+			</div>
+			
+			<div class="field-row">
+				<div class="field row-attribution">
+					<label class="field-label" for="attribution">Attribution (<em>Optional, Displayed publicly</em>)</label>
+					<input class="field-control" type="text" id="attribution" name="attribution" value="{{{ $user ? $user->username : "" }}}" maxlength="32" placeholder="Anonymous" />
+				</div>
+			</div>
+			
+			
 			<div id="donate-details">
 				<div class="field-row">
-					<div class="field row-payment">
-						<label class="field-label"><input class="field-control-inline" type="radio" name="payment" value="once" checked /> One-time donation</label>
-						<label class="field-label"><input class="field-control-inline" type="radio" name="payment" value="monthly" /> Monthly support</label>
-					</div>
+					@foreach ($cycles as $cycleName => $cycle)
+					<label class="donate-cycle-label">
+						<input type="radio" name="payment" id="payment-{{!! $cycle !!}" value="{!! $cycle !!}" class="donate-cycle-input" {{ $cycle == "once" ? "checked" : "" }} /> {{{ $cycleName }}}
+					</label>
+					@endforeach
 				</div>
 				
-				<div class="field-row" id="payment-once" style="display: none;">
-					<div class="field row-amount">
-						<label class="field-label" for="amount">Contribution Amount (USD$)</label>
-						<span class="field-value"></span>
-						<input class="field-control" id="amount" name="amount" type="number" min="2.5" step="0.5" value="12.00" />
-					</div>
-				</div>
-				
-				<div class="field-row donate-details" id="payment-monthly" style="display: none;">
-					<div class="field row-subscription">
-						<label class="field-label" for="subscription">Contribution per Month (USD$)</label>
-						<select class="field-control" id="subscription" name="subscription">
-							<option value="monthly-three" data-amount="3">$3 / month</option>
-							<option value="monthly-six" data-amount="6">$6 / month</option>
-							<option value="monthly-twelve" data-amount="12" selected>$12 / month</option>
-							<option value="monthly-eighteen" data-amount="18">$18 / month</option>
-						</select>
-					</div>
+				<div class="field-row">
+					<ul class="donate-options">
+						@foreach ($amounts as $amount)
+						<li class="donate-option">
+							<input type="radio" name="amount" id="input_amount_{!! $amount !!}" value="{!! $amount !!}" class="donate-option-input" {{ $amount == 12 ? "checked" : "" }}  />
+							<label for="input_amount_{!! $amount !!}" class="donate-option-label">${!! $amount !!}</label>
+						</li>
+						@endforeach
+						
+						<li class="donate-option">
+							<input type="radio" name="amount" id="input_amount_other" value="Other" class="donate-option-input" >
+							<label for="input_amount_other" id="input_amount_other_label" class="donate-option-label">
+								<span>Other</span>
+								<input type="text" id="input_amount_other_box" size="3" autocomplete="off" name="other" value="" />
+							</label>
+						</li>
+					</ul>
 				</div>
 			</div>
 			
-			<div class="field-row" id="payment-time"></div>
-			<div class="field-row" id="payment-tax"></div>
+			<div class="field-row" id="payment-time"><strong>$12 USD</strong> will afford up to <strong>2.25 hours</strong> of development time</div>
 			
 			<div id="payment-submit">
-				<button type="submit" class="field-submit">Submit Payment</button>
+				<button type="submit" class="field-submit">Submit Donation</button>
 			</div>
-			
+		</div>
+		
+		<div id="payment-email">
+			* Monthly support will be debited on the anniversary of the first donation, until such time as you notify us to discontinue them. Donations initiated on the 29, 30, or 31 of the month will recur on the last day of the month for shorter months, as close to the original date as possible. Please ensure you enter a valid email so that invoices are delivered correctly.
 		</div>
 	</fieldset>
 	
-	<div id="payment-security" class="grid-50">
+	<div id="payment-security" class="grid-50 require-js">
 		<span class="security-footer"><strong>At no point</strong> is your personal information stored on this webserver, even temporarily. We interact strictly through Stripe.</span>
 		
 		<ul class="security-steps">
@@ -123,7 +143,8 @@
 		<h5 class="btc-title"><i class="fa fa-btc"></i>itcoin Contributions</h5>
 		<blockquote class="btc-desc">
 			<img class="btc-qr" src="/img/assets/btc.png" />
-			The best and most direct way to contribute to the development process is with Bitcoins. I live in a city with a Bitcoin ATM and am freely able to access anything sent to me. A whole bitcoin is worth up to <strong>28 hours</strong> of development time.
+			The most direct way to contribute to the development process is with Bitcoins. I am freely able to access anything sent to me. A whole bitcoin is worth up to <strong>28 hours</strong> of development time.
+			<p class="btc-nojs no-js">For users most concerned about privacy (you!), this is the best method available.</p>
 			<code class="btc-code">1Ah4wk9WRfhK5gtbgUyGrJriqiXHgyyoJZ</code>
 		</blockquote>
 	</div>

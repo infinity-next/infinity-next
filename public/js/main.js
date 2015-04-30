@@ -136,22 +136,25 @@
 			
 			// Selectors for finding and binding elements.
 			selector : {
-				'widget'            : "#payment-form",
+				'widget'             : "#payment-form",
 				
-				'time'              : "#payment-time",
+				'time'               : "#payment-time",
 				
-				'input-amount'      : "#amount",
-				'input-ccn'         : "#ccn",
-				'input-cvc'         : "#cvc",
-				'input-pay-monthly' : "#payment-monthly",
-				'input-pay-once'    : "#payment-once",
-				'input-sub'         : "#subscription",
-				'input-amount'      : "#amount",
+				'input-ccn'          : "#ccn",
+				'input-cvc'          : "#cvc",
+				'input-exp-month'    : "#month",
+				'input-exp-year'     : "#year",
+				'input-pay-monthly'  : "#payment-monthly",
+				'input-pay-once'     : "#payment-once",
+				'input-sub'          : "#subscription",
+				'input-amount'       : ".donate-option-input:checked",
+				'input-select-other' : "#input_amount_other",
+				'input-amount-other' : "#input_amount_other_box",
 				
-				'inputs-cycle'      : ".row-payment .field-control-inline",
-				'inputs-amount'     : "#donate-details input",
+				'inputs-cycle'       : ".donate-cycle-input:checked",
+				'inputs-amount'      : ".donate-option-input, #input_amount_other_box",
 				
-				'message'           : "#payment-process"
+				'message'            : "#payment-process"
 			},
 			
 			// HTML Templates for dynamic construction
@@ -170,11 +173,15 @@
 			widget : function() {
 				Stripe.setPublishableKey(widget.options.config['stripe-key']);
 				
+				// $(widget.options.selector['input-pay-once']).insertBefore(widget.options.selector['input-pay-monthly']);
+				
 				widget.$widget
 					.on('submit', widget.events.formSubmit)
 					.on('change', widget.options.selector['input-ccn'], widget.events.ccnChange)
 					.on('change', widget.options.selector['inputs-cycle'], widget.events.cycleChange)
-					.on('change', widget.options.selector['inputs-amount'], widget.events.paymentChange);
+					.on('change', widget.options.selector['inputs-amount'], widget.events.paymentChange)
+					.on('change', widget.options.selector['input-amount-other'], widget.events.otherChange)
+					.on('focus', widget.options.selector['input-amount-other'], widget.events.otherFocus);
 				
 				widget.events.cycleChange();
 				widget.events.paymentChange();
@@ -251,31 +258,120 @@
 			cycleChange    : function(event) {
 				var paymentVal = $(widget.options.selector['inputs-cycle']).filter(":checked").val();
 				
-				$(widget.options.selector['input-pay-once']).toggle(paymentVal == "once");
-				$(widget.options.selector['input-pay-monthly']).toggle(paymentVal == "monthly");
+				if (paymentVal != "once")
+				{
+					$(widget.options.selector['input-amount-other'])
+						.prop('checked', false)
+						.parent()
+							.toggle(false);
+					
+					$(widget.options.selector['inputs-amount'])
+						.filter("[value=12]")
+							.prop('checked', true);
+				}
+				else
+				{
+					$(widget.options.selector['input-amount-other'])
+						.parent()
+							.toggle(true);
+				}
+				
+				widget.events.paymentChange();
+			},
+			
+			otherFocus     : function(event) {
+				$(this).val("");
+				$(widget.options.selector['input-select-other']).prop('checked', true);
+				widget.events.paymentChange();
+			},
+			
+			otherChange    : function(event) {
+				widget.events.paymentChange();
 			},
 			
 			formSubmit     : function(event) {
 				window.lc.notice.clear();
 				
-				var $form = $(this);
+				var valid = true;
+				var sel   = widget.options.selector;
 				
-				$form.block({
-					message : widget.options.template['message-stripe'],
-					theme   : true
-				});
+				// Make sure the CCN has been validated by the jQuery tool.
+				var $ccn  = $(sel['input-ccn']);
+				if (!$ccn.is(".control-valid"))
+				{
+					window.lc.notice.push("Please enter a valid credit card number.", 'error');
+					$ccn.focus().trigger('focus');
+					valid = false;
+				}
 				
-				// Disable the submit button to prevent repeated clicks
-				$form.find('button').prop('disabled', true);
+				// Check to see if CVC is valid.
+				var $cvc = $(sel['input-cvc']);
+				if (parseInt($cvc.val(), 10).toString().length !== 3)
+				{
+					window.lc.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
+					$ccn.focus().trigger('focus');
+					valid = false;
+				}
 				
-				// Send the information to Stripe.
-				Stripe.card.createToken($form, widget.events.stripeResponse);
+				// Check if expiration date is older than this month.
+				var $month     = $(sel['input-exp-month']);
+				var $year      = $(sel['input-exp-year']);
+				var expiration = parseInt($month.val(), 10) + (parseInt($year.val(), 10) * 12);
+				var expiredBy  = new Date().getMonth() + (new Date().getFullYear() * 12);
+				if (expiration < expiredBy)
+				{
+					window.lc.notice.push("Double-check your expiration date. This card is invalid.", 'error');
+					valid = false;
+				}
 				
-				// Clear personal information.
-				$(widget.options.selector['input-ccn'])
-					.add(widget.options.selector['input-cvc'])
-						.val("")
-						.trigger('change');
+				// See what amount we've entered.
+				var $amountSel = $(sel['input-amount']).filter(":checked");
+				var $amountInp = $(sel['input-amount-other']);
+				var amount     = 0;
+				if (!$amountSel.length)
+				{
+					window.lc.notice.push("Please enter an amount.", 'error');
+					valid = false;
+				}
+				else if ($amountSel.val() == "Other")
+				{
+					amount = parseInt($amountInp.val(), 10);
+					
+					if (isNaN(amount) || amount <= 3)
+					{
+						window.lc.notice.push("Please enter a real amount that is greater than $3.", 'error');
+						$amountInp.focus();
+						valid = false;
+					}
+					else if (amount.toString() !== $amountInp.val())
+					{
+						window.lc.notice.push("Please enter a real, whole number as a donation amount.", 'error');
+						$amountInp.focus();
+						valid = false;
+					}
+				}
+				
+				if (valid)
+				{
+					var $form = $(this);
+					
+					$form.block({
+						message : widget.options.template['message-stripe'],
+						theme   : true
+					});
+					
+					// Disable the submit button to prevent repeated clicks
+					$form.find('button').prop('disabled', true);
+					
+					// Send the information to Stripe.
+					Stripe.card.createToken($form, widget.events.stripeResponse);
+					
+					// Clear personal information.
+					$(widget.options.selector['input-ccn'])
+						.add(widget.options.selector['input-cvc'])
+							.val("")
+							.trigger('change');
+				}
 				
 				// Prevent the form from submitting with the default action
 				return false;
@@ -286,15 +382,20 @@
 				var timestamp = "";
 				
 				var paymentVal = $(widget.options.selector['inputs-cycle']).filter(":checked").val();
-				var amount = 0;
+				var amount = $(widget.options.selector['input-amount']).filter(":checked").val();
 				
-				if (paymentVal == "once")
+				if( amount == "Other")
 				{
-					amount = parseInt($(widget.options.selector['input-amount']).val(), 10);
+					amount = parseInt($(widget.options.selector['input-amount-other']).val(), 10);
 				}
 				else
 				{
-					amount = parseInt($(widget.options.selector['input-sub']).children("option:selected").attr('data-amount'), 10);
+					amount = parseInt(amount, 10);
+				}
+				
+				if (isNaN(amount))
+				{
+					amount = 0;
 				}
 				
 				var hours = parseFloat(amount * workFactor);
@@ -331,7 +432,16 @@
 					$form.append($('<input type="hidden" name="stripeToken" />').val(token));
 					
 					// Submit to server
-					widget.submit($form.add("<input type=\"hidden\" name=\"ajax\" value=\"1\" />").serialize());
+					var parameters = $form
+						.add("<input type=\"hidden\" name=\"ajax\" value=\"1\" />")
+						.serialize();
+					
+					if ($(widget.options.selector['input-amount']).val() == "Other")
+					{
+						parameters += "&amount=" + $(widget.options.selector['input-amount-other']).val();
+					}
+					
+					widget.submit(parameters);
 				}
 			}
 		},

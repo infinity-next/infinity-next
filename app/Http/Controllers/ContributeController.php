@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use View;
+use App\Http\Controllers\MainController;
+use Illuminate\Support\Facades\View;
 
-class ContributeController extends Controller {
+class ContributeController extends MainController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -13,16 +14,6 @@ class ContributeController extends Controller {
 	| Stripe and other merchant services are included in this.
 	|
 	*/
-	
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		
-	}
 	
 	/**
 	 * Show the board index for the user.

@@ -1,12 +1,12 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\CpController;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller {
+class AuthController extends CpController {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -30,12 +30,11 @@ class AuthController extends Controller {
 	 */
 	public function __construct(Guard $auth, Registrar $registrar)
 	{
-		$this->auth = $auth;
-		$this->registrar = $registrar;
-		
 		$this->middleware('guest', [
 				'except' => 'getLogout'
 			]);
+		
+		return parent::__construct($auth, $registrar);
 	}
 	
 		/**

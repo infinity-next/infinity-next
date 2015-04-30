@@ -33,4 +33,8 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 */
 	protected $hidden = ['password', 'remember_token'];
 	
+	public function payments()
+	{
+		return $this->hasMany('\App\Payment', 'customer', 'id');
+	}
 }

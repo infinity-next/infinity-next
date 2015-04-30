@@ -1,6 +1,6 @@
 <nav class="boardlist">
 	<ul class="boardlist-categories">
-	@foreach (\App\Board::getBoardList() as $boards)
+	@foreach ($boardbar as $boards)
 		<li class="boardlist-category">
 			<ul class="boardlist-items">
 				@foreach ($boards as $board)
