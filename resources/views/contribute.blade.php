@@ -71,6 +71,7 @@
 	</section>
 	
 	@include('widgets.devtimer')
+	@include('widgets.donorlist')
 	
 	<section class="contrib-section section-me">
 		<blockquote class="me-autobio grid-container">

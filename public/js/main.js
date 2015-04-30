@@ -378,7 +378,7 @@
 			},
 			
 			paymentChange  : function(event) {
-				var workFactor = 0.1875;
+				var workFactor = 0.1;
 				var timestamp = "";
 				
 				var paymentVal = $(widget.options.selector['inputs-cycle']).filter(":checked").val();

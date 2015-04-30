@@ -104,7 +104,7 @@
 				</div>
 			</div>
 			
-			<div class="field-row" id="payment-time"><strong>$12 USD</strong> will afford up to <strong>2.25 hours</strong> of development time</div>
+			<div class="field-row" id="payment-time"><strong>$12 USD</strong> will afford up to <strong>1.25 hours</strong> of development time</div>
 			
 			<div id="payment-submit">
 				<button type="submit" class="field-submit">Submit Donation</button>

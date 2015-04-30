@@ -70,6 +70,7 @@ class DonateController extends MainController {
 		// Build our \App\Payment model.
 		$payment = [
 			'customer'     => ($fakeUser ? NULL : $user->id ),
+			'attribution'  => $input['attribution'],
 			'ip'           => $request->getClientIp(),
 			'amount'       => $input['amount'] * 100,
 			'subscription' => NULL,

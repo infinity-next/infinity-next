@@ -23,7 +23,7 @@ class Payment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['customer', 'ip', 'amount', 'subscription'];
+	protected $fillable = ['customer', 'attribution', 'ip', 'amount', 'subscription'];
 	
 	/**
 	 * Disable automatic timestamp management.
