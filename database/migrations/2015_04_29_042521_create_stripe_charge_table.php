@@ -21,6 +21,7 @@ class CreateStripeChargeTable extends Migration {
 			$table->string('ip', 46);
 			$table->timestamp('created_at');
 			$table->integer('amount');
+			$table->string('currency', 3);
 			$table->string('subscription', 64)->nullable();
 			
 			// Keys

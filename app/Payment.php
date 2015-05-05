@@ -32,7 +32,6 @@ class Payment extends Model {
 	 */
 	public $timestamps = false;
 	
-	
 	public static function boot()
 	{
 		parent::boot();

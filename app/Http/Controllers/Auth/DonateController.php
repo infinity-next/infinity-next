@@ -73,6 +73,7 @@ class DonateController extends MainController {
 			'attribution'  => $input['attribution'],
 			'ip'           => $request->getClientIp(),
 			'amount'       => $input['amount'] * 100,
+			'currency'     => "usd",
 			'subscription' => NULL,
 		];
 		
@@ -116,7 +117,7 @@ class DonateController extends MainController {
 		if ($request->ajax())
 		{
 			return response()->json([
-				'amount'  => "\${$payment['amount']}",
+				'amount'  => "\$" . ($payment['amount'] / 100),
 				'errors'  => $errors,
 			]);
 		}

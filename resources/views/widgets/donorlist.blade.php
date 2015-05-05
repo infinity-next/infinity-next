@@ -1,6 +1,7 @@
 <section class="contrib-donorlist">
 	@foreach ($donors as $groupName => $group)
 	@if (count($group) > 0)
+	<div class="donorgroup donors-{!! $groupName !!}">
 	<ul class="donors donors-{!! $groupName !!} grid-container">
 		@foreach ($group as $donor)
 		<li class="donor grid-{!! $donorWeight[$groupName] !!}">
@@ -15,6 +16,7 @@
 		</li>
 		@endforeach
 	</ul>
+	</div>
 	@endif
 	@endforeach
 </section>

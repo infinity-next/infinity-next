@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', "/{$board->uri}/")
+@section('title', "{$board->title}")
 @section('description', $board->description)
 
 @section('content')

@@ -110,6 +110,15 @@
 			
 			$message = $(widget.options.template[className]);
 			$message.append(message).appendTo(widget.$widget);
+			
+			// Scroll our window up to meet the notification if required.
+			$('html, body').animate(
+				{
+					scrollTop : $message.offset().top - $(".board-header").height() - 10
+				},
+				250
+			);
+			
 			return $message;
 		},
 		
@@ -223,20 +232,23 @@
 			},
 			
 			ccnChange      : function(event) {
-				$(this).validateCreditCard(
-					widget.events.ccnValidate,
-					{
-						accept: [
-							'visa',
-							'mastercard',
-							'amex',
-							'jcb',
-							'discover',
-							'diners_club_international',
-							'diners_club_carte_blanche'
-						]
-					}
-				);
+				var $ccn = $(this);
+				
+				$ccn.val( $ccn.val().trim() );
+				$ccn.validateCreditCard(
+						widget.events.ccnValidate,
+						{
+							accept: [
+								'visa',
+								'mastercard',
+								'amex',
+								'jcb',
+								'discover',
+								'diners_club_international',
+								'diners_club_carte_blanche'
+							]
+						}
+					);
 			},
 			
 			ccnValidate    : function(result) {
