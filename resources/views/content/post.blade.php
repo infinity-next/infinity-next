@@ -6,8 +6,8 @@
 		<li class="post-detail post-postedon"><time class="postedon">{{{ $thread->created_at }}}</time></li>
 		<li class="post-detail post-authorid"><span class="authorid"></span></li>
 		<li class="post-detail post-id">
-			<a href="/{!! $board->uri !!}/thread/{!! $thread->board_id !!}#{!! $thread->board_id !!}" class="postid">No.</a>
-			<a href="/{!! $board->uri !!}/thread/{!! $thread->board_id !!}#reply-{!! $thread->board_id !!}" class="postid">{!! $thread->board_id !!}</a>
+			<a href="{!! url("{$board->uri}/thread/{$thread->board_id}#{$thread->board_id}") !!}" class="post-no">No.</a>
+			<a href="{!! url("{$board->uri}/thread/{$thread->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
 		</li>
 	</ul>
 	

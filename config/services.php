@@ -31,7 +31,7 @@ return [
 	
 	'stripe' => [
 		'model'  => 'App\User',
-		'secret' => 'sk_test_emgMsHCzzlpC7QkvHhx2waqC',
+		'secret' => env('APP_DEBUG') ? env('STRIPE_TEST_SECRET', false) : env('STRIPE_LIVE_SECRET', true),
 	],
 	
 ];

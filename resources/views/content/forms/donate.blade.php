@@ -1,7 +1,3 @@
-@if (Request::secure() || env('APP_DEBUG'))
-
-@include('errors.parts.js')
-
 <form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
@@ -153,6 +149,3 @@
 		</blockquote>
 	</div>
 </form>
-@else
-	@include('errors.parts.ssl')
-@endif

@@ -11,7 +11,21 @@
 	@show
 	
 	@section('js')
-		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+		@yield('required-js')
+		
+		<script type="text/javascript">
+			window.app = {
+			@if (env('APP_DEBUG'))
+				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', 'false') !!}",
+				'debug'      : true,
+			@else
+				'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', 'false') !!}",
+				'debug'      : false,
+			@endif
+				
+				'url'        : "{!! env('APP_URL', 'false') !!}"
+			};
+		</script>
 		
 		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
 		<script type="text/javascript" src="/js/vendor/modernizr.custom.81355.js"></script>
