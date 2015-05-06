@@ -73,10 +73,10 @@
 			
 			// HTML Templates for dynamic construction
 			template : {
-				'message'         : "<li class=\"form-message\"><i class=\"fa fa-circle-thin\"></i></li>",
-				'message-info'    : "<li class=\"form-message message-info\"><i class=\"fa fa-info-circle\"></i></li>",
-				'message-success' : "<li class=\"form-message message-success\"><i class=\"fa fa-check\"></i></li>",
-				'message-error'   : "<li class=\"form-message message-error\"><i class=\"fa fa-exclamation-triangle\"></i></li>"
+				'message'         : "<li class=\"form-message\"></li>",
+				'message-info'    : "<li class=\"form-message message-info\"></li>",
+				'message-success' : "<li class=\"form-message message-success\"></li>",
+				'message-error'   : "<li class=\"form-message message-error\"></li>"
 			}
 		},
 		

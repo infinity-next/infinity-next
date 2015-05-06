@@ -104,8 +104,16 @@ form {
 			background: #d5d5d5;
 			color: #7f7f7f;
 		}
-			.form-message .fa {
-				margin: 0 0.5em 0 -0.5em;
+			.form-message::before {
+				display: inline-block;
+				font: normal normal normal 18px/1 FontAwesome;
+				font-size: inherit;
+				text-rendering: auto;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				
+				content: "\f10c";
+				margin: 0 0.5em 0 -0.25em;
 			}
 			.form-message:last-child {
 				margin-bottom: 1em;
@@ -115,16 +123,25 @@ form {
 			background: #cbd7df;
 			color: #60859f;
 		}
+			.form-message.message-info::before {
+				content: "\f05a";
+			}
 		.form-message.message-success {
 			border: 1px solid #4cb266;
 			background: #c5e6cd;
 			color: #4cb266;
 		}
+			.form-message.message-success::before {
+				content: "\f00c";
+			}
 		.form-message.message-error {
 			border: 1px solid #B74B47;
 			background: #F9B5B2;
 			color: #B74B47;
 		}
+			.form-message.message-error::before {
+				content: "\f10c";
+			}
 		
 	
 	.form-fields {

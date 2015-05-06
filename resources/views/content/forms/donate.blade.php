@@ -1,11 +1,15 @@
-@if (!Request::secure())
+@if (Request::secure() || env('APP_DEBUG'))
 
 @include('errors.parts.js')
 
 <form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
-	@include('widgets.messages')
+	@if (env('APP_DEBUG'))
+		@include('widgets.messages', [ 'messages' => [ "<tt>APP_DEBUG</tt> is set to <tt>TRUE</tt>. This form is only a test and will not charge." ] ])
+	@else
+		@include('widgets.messages')
+	@endif
 	
 	<fieldset id="card-details" class="form-fields require-js">
 		<legend class="form-legend">Donate to Larachan Development</legend>

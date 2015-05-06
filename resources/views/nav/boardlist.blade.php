@@ -4,7 +4,7 @@
 		<li class="boardlist-category">
 			<ul class="boardlist-items">
 				@foreach ($boards as $board)
-				<li class="boardlist-item"><a href="/{!! $board->uri !!}/" class="boardlist-link">{!! $board->uri !!}</a></li>
+				<li class="boardlist-item"><a href="{!! url($board->uri) !!}" class="boardlist-link">{!! $board->uri !!}</a></li>
 				@endforeach
 			</ul>
 		</li>
