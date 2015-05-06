@@ -25,9 +25,9 @@ return [
 	| your application so that it is used when running Artisan tasks.
 	|
 	*/
-
-	'url' => 'http://localhost',
-
+	
+	'url' => env('APP_URL', 'http://localhost'),
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Application Timezone
@@ -38,9 +38,9 @@ return [
 	| ahead and set this to a sensible default for you out of the box.
 	|
 	*/
-
+	
 	'timezone' => 'UTC',
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Application Locale Configuration
@@ -51,9 +51,9 @@ return [
 	| to any of the locales which will be supported by the application.
 	|
 	*/
-
+	
 	'locale' => 'en',
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Application Fallback Locale
@@ -64,9 +64,9 @@ return [
 	| the language folders that are provided through your application.
 	|
 	*/
-
+	
 	'fallback_locale' => 'en',
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Encryption Key
@@ -77,11 +77,11 @@ return [
 	| will not be safe. Please do this before deploying an application!
 	|
 	*/
-
+	
 	'key' => env('APP_KEY', 'SomeRandomString'),
-
+	
 	'cipher' => MCRYPT_RIJNDAEL_128,
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Logging Configuration
@@ -94,9 +94,9 @@ return [
 	| Available Settings: "single", "daily", "syslog", "errorlog"
 	|
 	*/
-
+	
 	'log' => 'daily',
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Autoloaded Service Providers
