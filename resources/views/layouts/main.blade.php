@@ -40,16 +40,18 @@
 	<header class="board-header">
 		@include('nav.boardlist')
 		
-		<figure class="page-head">
-				<img id="logo" src="/img/logo.png" alt="Larachan" />
+		@section('header-inner')
+			<figure class="page-head">
+					<img id="logo" src="/img/logo.png" alt="Larachan" />
+				
+				<figcaption class="page-details">
+					<h1 class="page-title">@yield('title')</h1>
+					<h2 class="page-desc">@yield('description')</h2>
+				</figcaption>
+			</figure>
 			
-			<figcaption class="page-details">
-				<h1 class="page-title">@yield('title')</h1>
-				<h2 class="page-desc">@yield('description')</h2>
-			</figcaption>
-		</figure>
-		
-		@include('widgets.announcement')
+			@include('widgets.announcement')
+		@show
 	</header>
 	
 	@yield('content')

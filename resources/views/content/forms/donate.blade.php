@@ -79,7 +79,7 @@
 				<div class="field-row">
 					@foreach ($cycles as $cycleName => $cycle)
 					<label class="donate-cycle-label">
-						<input type="radio" name="payment" id="payment-{{!! $cycle !!}" value="{!! $cycle !!}" class="donate-cycle-input" {{ $cycle == "once" ? "checked" : "" }} /> {{{ $cycleName }}}
+						<input type="radio" name="payment" id="payment-{!! $cycle !!}" value="{!! $cycle !!}" class="donate-cycle-input" {{ $cycle == "once" ? "checked" : "" }} /> {{{ $cycleName }}}
 					</label>
 					@endforeach
 				</div>
