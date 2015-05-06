@@ -16,10 +16,10 @@
 		<script type="text/javascript">
 			window.app = {
 			@if (env('APP_DEBUG'))
-				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', 'false') !!}",
+				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
 				'debug'      : true,
 			@else
-				'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', 'false') !!}",
+				'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', '') !!}",
 				'debug'      : false,
 			@endif
 				

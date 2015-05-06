@@ -5,6 +5,15 @@
 	
 	lc.widgets = {};
 	
+	lc.config = function(name, configDefault) {
+		if (typeof window.app !== "undefined" && typeof window.app[name] !+= "undefined")
+		{
+			return window.app[name];
+		}
+		
+		return configDefault;
+	};
+	
 	lc.widget = function(name, widget) {
 		
 		if (lc[name] !== undefined) {
@@ -140,7 +149,7 @@
 		defaults : {
 			// Config options for this widget.
 			config   : {
-				'stripe-key'    : "pk_test_2GFaAAaqm95AaMlwveuQlRvN"
+				'stripe-key'    : window.lc.config('stripe_key', false)
 			},
 			
 			// Selectors for finding and binding elements.
@@ -318,8 +327,12 @@
 				
 				// Check to see if CVC is valid.
 				var $cvc = $(sel['input-cvc']);
-				if (parseInt($cvc.val(), 10).toString().length !== 3)
+				if (parseInt("1" + $cvc.val(), 10).toString().length !== 4)
 				{
+					// In this check, we take 1+VAL to see if length is 4.
+					// We do this because a CVC can be 000.
+					// If we do parseInt(000).toString().length, we get 1.
+					// If we do parseInt(1000).toString().length, we get 4. 
 					window.lc.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
