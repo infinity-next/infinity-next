@@ -17,7 +17,7 @@ class CreateStripeChargeTable extends Migration {
 			// Bulk data
 			$table->increments('id');
 			$table->integer('customer')->unsigned()->nullable()->default(NULL);
-			$table->string('attribution', 255)->unsigned()->nullable()->default(NULL);
+			$table->string('attribution', 255)->nullable()->default(NULL);
 			$table->string('ip', 46);
 			$table->timestamp('created_at');
 			$table->integer('amount');

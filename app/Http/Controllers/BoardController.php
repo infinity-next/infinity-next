@@ -51,8 +51,14 @@ class BoardController extends MainController {
 	 *
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, $thread)
+	public function getThread(Request $request, Board $board, $thread = NULL)
 	{
+		if (is_null($thread))
+		{
+			return redirect($board->uri);
+		}
+		
+		
 		$post = $thread = $board->getLocalThread($thread);
 		
 		while (!is_null($thread->reply_to))
