@@ -6,7 +6,7 @@
 	lc.widgets = {};
 	
 	lc.config = function(name, configDefault) {
-		if (typeof window.app !== "undefined" && typeof window.app[name] !+= "undefined")
+		if (typeof window.app !== "undefined" && typeof window.app[name] !== "undefined")
 		{
 			return window.app[name];
 		}
@@ -327,12 +327,8 @@
 				
 				// Check to see if CVC is valid.
 				var $cvc = $(sel['input-cvc']);
-				if (parseInt("1" + $cvc.val(), 10).toString().length !== 4)
+				if (/^\d{3}$/.test($cvc.val()) === false)
 				{
-					// In this check, we take 1+VAL to see if length is 4.
-					// We do this because a CVC can be 000.
-					// If we do parseInt(000).toString().length, we get 1.
-					// If we do parseInt(1000).toString().length, we get 4. 
 					window.lc.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
