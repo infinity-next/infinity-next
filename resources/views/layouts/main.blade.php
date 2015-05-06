@@ -31,7 +31,7 @@
 		<script type="text/javascript" src="/js/vendor/modernizr.custom.81355.js"></script>
 		<script type="text/javascript" src="/js/plugins/jquery.creditCardValidator.js"></script>
 		<script type="text/javascript" src="/js/plugins/jquery.blockUI.js"></script>
-		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/main.js?1"></script>
 	@show
 	
 	@yield('head')

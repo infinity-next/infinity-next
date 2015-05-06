@@ -140,7 +140,7 @@ form {
 			color: #B74B47;
 		}
 			.form-message.message-error::before {
-				content: "\f10c";
+				content: "\f071";
 			}
 		
 	
