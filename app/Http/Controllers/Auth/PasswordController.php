@@ -33,8 +33,8 @@ class PasswordController extends CpController {
 	public function __construct(Guard $auth, Registrar $registrar, PasswordBroker $passwords)
 	{
 		$this->passwords = $passwords;
-		$this->middleware('guest', [
-				'except' => ['postIndex', 'getIndex'],
+		$this->middleware('auth', [
+				'except' => ['getEmail', 'postEmail'],
 			]);
 		
 		return parent::__construct($auth, $registrar);

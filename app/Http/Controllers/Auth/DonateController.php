@@ -2,15 +2,15 @@
 
 use App\Payment;
 use App\User;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\Auth\AuthenticatesAndRegistersUsers;
+use App\Http\Controllers\Auth\CpController;
 use App\Http\Requests\DonationRequest;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
 
-class DonateController extends MainController {
+class DonateController extends CpController {
 	
 	/*
 	|--------------------------------------------------------------------------

@@ -179,6 +179,13 @@ form {
 	.field-label {
 		display: block;
 	}
+		.field-label .field-description {
+			display: block;
+			color: #CCC;
+			font-size: 0.8em;
+			margin: 0.1em 0 0.25em 0;
+		}
+	
 	.field-control {
 		display: block;
 		

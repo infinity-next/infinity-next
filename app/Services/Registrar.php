@@ -5,7 +5,7 @@ use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
 class Registrar implements RegistrarContract {
-
+	
 	/**
 	 * Get a validator for an incoming registration request.
 	 *
@@ -15,12 +15,13 @@ class Registrar implements RegistrarContract {
 	public function validator(array $data)
 	{
 		return Validator::make($data, [
-			'name' => 'required|max:255',
-			'email' => 'required|email|max:255|unique:users',
+			'username' => 'required|min:1|max:64|unique:users',
+			'email'    => 'email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
+			'captcha'  => 'required|captcha',
 		]);
 	}
-
+	
 	/**
 	 * Create a new user instance after a valid registration.
 	 *
@@ -30,8 +31,8 @@ class Registrar implements RegistrarContract {
 	public function create(array $data)
 	{
 		return User::create([
-			'name' => $data['name'],
-			'email' => $data['email'],
+			'username' => $data['username'],
+			'email'    => $data['email'],
 			'password' => bcrypt($data['password']),
 		]);
 	}

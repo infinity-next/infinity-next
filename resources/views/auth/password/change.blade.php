@@ -1,5 +1,7 @@
 @extends('layouts.cp')
 
+@section('title', "Change Password")
+
 @section('body')
 <form class="form-pw" role="form" method="POST" action="{{ url('/cp/password/') }}">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />

@@ -11,14 +11,7 @@
 			</div>
 			
 			<div class="cp-frame grid-85">
-				@if (count($errors) > 0)
-					<ul class="alerts">
-					@foreach ($errors->all() as $error)
-						<li class="alert">{{ $error }}</li>
-					@endforeach
-					</ul>
-				@endif
-				
+				@include('widgets.messages')
 				@yield('body')
 			</div>
 		</div>
