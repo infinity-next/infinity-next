@@ -293,7 +293,7 @@
 					<br /><br />
 					However, I have a pipe dream.
 					<br /><br />
-					With enough time and money, I would build what I've taken to calling a <em>confenderation</em>.
+					With enough time and money, I would build what I've taken to calling a <em>confederation</em>.
 					Rather than a single large website with many boards, a confederaton could run with many nodes, each with only a few boards.
 					Other nodes could propagate the content of that board to their own database, and push posts made to the source (if allowed).
 					Confederate nodes could centralize these independantly operated boards and act as an access point, while not revealing the true source of each node.
