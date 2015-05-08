@@ -218,14 +218,19 @@
 			},
 			
 			ajaxDone     : function(data, textStatus, errorThrown) {
-				var $ty = $(widget.options.template['thank-you']);
-				
-				$(widget.options.selector['message']).replaceWith($ty);
-				$ty.hide().fadeIn(500);
-				setTimeout(function() { widget.$widget.unblock(); }, 1500);
-				
-				if (data.amount !== false) {
+				if (data.amount !== false)
+				{
+					var $ty = $(widget.options.template['thank-you']);
+					
+					$(widget.options.selector['message']).replaceWith($ty);
+					$ty.hide().fadeIn(500);
+					setTimeout(function() { widget.$widget.unblock(); }, 1500);
+					
 					window.lc.notice.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
+				}
+				else
+				{
+					widget.$widget.unblock();
 				}
 				
 				$.each(data.errors, function(index, error) {
