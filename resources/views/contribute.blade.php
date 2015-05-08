@@ -75,9 +75,8 @@
 	<section class="contrib-goals grid-container">
 		<ul class="goals">
 			
-			<!-- $1,600 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$1,600 Mark</h4>
+				<h4 class="goal-title">$2,000 Mark</h4>
 				<blockquote class="goal-desc">
 					With my first month's worth of work, I will focus my efforts primarily on the core functionality of an imageboard.
 				</blockquote>
@@ -119,9 +118,8 @@
 				</ul>
 			</li>
 			
-			<!-- $3,200 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$3,200 Mark</h4>
+				<h4 class="goal-title">$4,000 Mark</h4>
 				<blockquote class="goal-desc">
 					With room to breathe, we can top off the core feature set by adding something relatively novel, then revisit existing features and upgrade them.
 				</blockquote>
@@ -160,9 +158,8 @@
 				</ul>
 			</li>
 			
-			<!-- $4,800 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$4,800 Mark</h4>
+				<h4 class="goal-title">$6,000 Mark</h4>
 				<blockquote class="goal-desc">
 					With some big ticket items done and the suite coming together, we can start looking at quality of life improvements.
 				</blockquote>
@@ -202,9 +199,8 @@
 				</ul>
 			</li>
 			
-			<!-- $6,400 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$6,400 Mark</h4>
+				<h4 class="goal-title">$8,000 Mark</h4>
 				<blockquote class="goal-desc">
 					By now, we'd be looking good. Lets try to fix something that's hard to talk about.
 				</blockquote>
@@ -236,25 +232,25 @@
 				</ul>
 			</li>
 			
-			<!-- $8,000 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$8,000 Mark</h4>
+				<h4 class="goal-title">$10,000 Mark</h4>
 				<blockquote class="goal-desc">
-					Fluff! At this point I'd be looking to match the feature-richess of popular imageboard suites.
+					At this level of funding, we can look to match the many smaller features of popular imageboard suites.
 				</blockquote>
 				
 				<ul class="goal-items">
-					<li class="goal-item grid-50">
+					<li class="goal-item grid-33">
 						<span class="goal-part">Quality of life</span>
 						<blockquote class="goal-helper">
 							The Infinity branch of Vichan has a lot of simple JavaScript tools that make its site more usable.
 							Infinite scrolling, inline post tools, thread counters, auto-updaters, etc.
 							These are not complicated systems and are worth reproducing into Larachan.
 							<br /><br />
-							This would also be the time to listen to less citical feedback and implement "It would be nice if..." suggestions.
+							This would also be the time to listen to less citical feedback and implement "It would be nice if..." suggestions, and to go back and deal with anything we wish we had time for.
+							In general, just improve the software as a whole.
 						</blockquote>
 					</li>
-					<li class="goal-item grid-50">
+					<li class="goal-item grid-33">
 						<span class="goal-part">Site-specific donor systems</span>
 						<blockquote class="goal-helper">
 							Specific imageboard owners have been getting shafted by fundraising systems like Patreon and Grattipay.
@@ -263,12 +259,19 @@
 							With that, imageboard owners will be able to raise funds without shelling out to and relying on the social justice bullies.
 						</blockquote>
 					</li>
+					<li class="goal-item grid-33">
+						<span class="goal-part">API</span>
+						<blockquote class="goal-helper">
+							An <em>API</em> is a way for other 3rd party applications to read or interact with your website.
+							Twitter, 4chan, and pretty much every major web application will have an API.
+							While this is a very nice feature to have, it doesn't directly affect the usability of the site, which is why its funding depth is so high.
+						</blockquote>
+					</li>
 				</ul>
 			</li>
 			
-			<!-- $9,600 -->
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$9,600 Mark</h4>
+				<h4 class="goal-title">$12,000 Mark</h4>
 				<div clas="grid-100">
 					<figure class="goal-figure">
 						<img id="goal-newchan" src="/img/assets/newchan.png" alt="Larachan + Other Imageboards Combining" />
@@ -282,7 +285,6 @@
 				</div>
 			</li>
 			
-			<!-- Beyond -->
 			<li class="goal smooth-box">
 				<h4 class="goal-title">Beyond</h4>
 				<blockquote class="goal-desc">
@@ -340,8 +342,7 @@
 				<li class="me-skill skill-css grid-50">
 					<i class="fa fa-css3"></i>
 					<strong class="skill-name">CSS &amp; HTML</strong>
-					<p class="skill-desc">I have strong understanding of what CSS can do (and an encyclopedic understanding of IE6 caveats). Since so much of my job revolved around making live webpages look like static designs, a lot of the last four years have been dedicated to CSS selectors. I was also the guy telling people that their HTML was "unsemantical".<br />
-					No, really, <tt>&lt;a href=&quot;javascript:doSomething()&quot;&gt;</tt> isn't how we do shit in 2015.</p>
+					<p class="skill-desc">I have strong understanding of what CSS can do (and an encyclopedic understanding of IE6 caveats). Since so much of my job revolved around making live webpages look like static designs, a lot of the last four years have been dedicated to CSS selectors. I was also the guy telling people that their HTML was "unsemantical".</p>
 				</li>
 				<li class="me-skill skill-mysql grid-50">
 					<i class="fa fa-database"></i>

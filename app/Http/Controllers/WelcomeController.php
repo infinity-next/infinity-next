@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\Board\BoardStats;
+use Illuminate\Support\Facades\View;
 
 class WelcomeController extends MainController {
 	
@@ -15,6 +17,8 @@ class WelcomeController extends MainController {
 	|
 	*/
 	
+	use BoardStats;
+	
 	/**
 	 * Show the application welcome screen to the user.
 	 *
@@ -22,7 +26,9 @@ class WelcomeController extends MainController {
 	 */
 	public function getIndex()
 	{
-		return view('welcome');
+		return View::make('welcome', [
+			'stats' => $this->boardStats(),
+		]);
 	}
 	
 }

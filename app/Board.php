@@ -76,4 +76,9 @@ class Board extends Model {
 			->take(10)
 			->get();
 	}
+	
+	public function scopeIndexed($query)
+	{
+		return $query;
+	}
 }

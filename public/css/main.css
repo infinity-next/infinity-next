@@ -388,7 +388,7 @@ main.contrib section.contrib-goals {
 			margin: 0.75em 0 1em 1.5em;
 		}
 		section.contrib-goals ul.goal-items {
-			margin: 1em 1em 1.5em 1em;
+			margin: -1em 1em 1.5em 1em;
 		}
 		section.contrib-goals ul.goal-items::after {
 			content: ' ';
@@ -396,7 +396,7 @@ main.contrib section.contrib-goals {
 			clear: both;
 		}
 			section.contrib-goals li.goal-item {
-				margin: 0;
+				margin: 1em 0 0 0;
 			}
 			section.contrib-goals span.goal-part {
 			}

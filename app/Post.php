@@ -113,4 +113,9 @@ class Post extends Model {
 			->get()
 			->reverse();
 	}
+	
+	public function scopeRecent($query)
+	{
+		return $query->where('created_at', '>=', 'NOW() - 3600');
+	}
 }

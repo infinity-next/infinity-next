@@ -51,5 +51,5 @@ Route::group([
 	'where'  => ['board' => '[a-z]{1,31}'],
 ], function()
 {
-	Route::controller('', 'BoardController');
+	Route::controller('', 'Board\BoardController');
 });
