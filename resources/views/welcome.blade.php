@@ -90,6 +90,16 @@
 					Without a reliable codebase and a developer who can afford to maintain and direct it, these problems will not go away and, at best, will stay the same.
 				</p>
 				
+				<h3>How can I contribute?</h3>
+				<p>
+					Larachan will be open-source once we enter version 0.1, which will happen immediately after I've written documentation for what I've already built.
+					I cannot offer pay for work, as I'm already strapped for cash, but I will gladly serve as a reference to any serious contributors.
+					If you are interested, I would seriously advise looking into the Laravel framework and familiarizing yourself with its architecture. There is a slight learning curve.
+				</p>
+				<p>
+					If you want to be notified when the github repository is opened, please email me at <a href="mailt:josh@larachan.org">josh@larachan.org</a>.
+				</p>
+				
 				<h3>Why did you build your own donation system? Why build it first thing?</h3>
 				<p>
 					Larachan's donation form was developed with Laravel's Stripe integration <em>specifically</em> to avoid Patreon, GoFundMe, Grattipay, and Kickstarter.
