@@ -66,6 +66,10 @@ a.button:hover {
 	background: #b74b47;
 }
 
+:focus {
+	outline: #f4645f auto 5px;
+}
+
 /*
  * Generic definitions
  */
@@ -178,11 +182,27 @@ form {
 	
 	.field {
 		margin: 1em 0;
+		position: relative;
 	}
 	.field-label {
 		display: block;
 	}
-		.field-label .field-description {
+		.label-inline .field-label {
+			background: none;
+			border: 1px solid #dee0df;
+			border-radius: 0 0.75em 0.75em 0;
+			padding: 0.2em 0.4em;
+			
+			color: #dee0df;
+			line-height: 1.4em;
+			font-size: 120%;
+			
+			position: absolute;
+			min-width: 3.75em;
+			width: auto;
+			top: 0;
+		}
+		 .field-label .field-description {
 			display: block;
 			color: #CCC;
 			font-size: 0.8em;
@@ -201,6 +221,15 @@ form {
 		font-size: 120%;
 		line-height: 1.4em;
 	}
+		.label-inline .field-control {
+			padding-left: 5em;
+		}
+		.label-inline .field-control:focus + .field-label {
+			border: 1px solid transparent;
+			background: #f4645f;
+			color: #fff;
+		}
+		
 		.field-control.control-valid {
 			background: #c5e6cd;
 			border: 1px solid #4cb266;
@@ -477,7 +506,7 @@ main.contrib section.contrib-donorlist {
 		text-shadow: rgba(224, 224, 224, 1) -1px -1px 0px;
 	}
 		section.contrib-donorlist .donor-desc {
-			padding: 0.2em 0.5em;
+			padding: 0.2em 0.1em;
 			text-align: center;
 			line-height: 1.25em;
 			vertical-align: middle;
@@ -679,32 +708,42 @@ main {
 section.index-form {
 }
 	form.form-post {
-		position: fixed;
-		top: 3.4em;
-		right: 1vw;
-		
-		display: block;
 		background: #fff;
 		border-radius: 4px;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 		padding: 0.75em;
-		width: 300px;
-		opacity: 0.7;
+		margin: 0 auto 1em auto;
+		max-width: 480px;
 	}
-	form.form-post:hover {
-		opacity: 1;
+	form.form-post .field {
+		margin: 0.5em 0;
+	}
+	form.form-post .row-post .field-control {
+		height: 6.25em;
+		font-size: 90%;
+		max-height: 50vh;
 	}
 	
+	
+	@media (min-width: 1028px) and (min-height: 640px) {
+		form.form-post {
+			position: fixed;
+			z-index: 1000;
+			top: 3.4em;
+			right: 1vw;
+			
+			display: block;
+			width: 300px;
+			opacity: 1;
+		}
+		form.form-post:hover {
+			opacity: 1;
+		}
+	}
 
 section.index-threads {
-	
+	margin: -1em 0 0 0;
 }
-	.field-label.field-post {
-		display: none;
-		padding: 0;
-		margin: 0.2em;
-	}
-	
 	/* Threads */
 	.thread {
 		margin: 0 0 0 1em;
@@ -742,6 +781,7 @@ section.index-threads {
 		border-radius: 4px;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 		padding: 0.75em;
+		margin: 0 355px 0 0;
 	}
 		.post-details {
 			margin-bottom: 0.60em;
