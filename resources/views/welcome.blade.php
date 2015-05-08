@@ -90,6 +90,12 @@
 					Without a reliable codebase and a developer who can afford to maintain and direct it, these problems will not go away and, at best, will stay the same.
 				</p>
 				
+				<h3>Will this website compete with 4chan and 8chan?</h3>
+				<p>
+					<em>No.</em> I am building software, not a community.
+					Content added to this site may vanish at any time, as it is for development and testing.
+				</p>
+				
 				<h3>How can I contribute?</h3>
 				<p>
 					Larachan will be open-source once we enter version 0.1, which will happen immediately after I've written documentation for what I've already built.
