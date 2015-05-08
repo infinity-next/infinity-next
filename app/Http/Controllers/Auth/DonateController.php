@@ -104,10 +104,17 @@ class DonateController extends CpController {
 			break;
 		}
 		
-		// Record our payment.
-		// This stores no identifying information,
-		// besides an optional user ID.
-		Payment::create($payment)->save();
+		if ($receipt !== false)
+		{
+			// Record our payment.
+			// This stores no identifying information,
+			// besides an optional user ID.
+			Payment::create($payment)->save();
+		}
+		else
+		{
+			$errors[] = "Your card failed to process and has not been charged.";
+		}
 		
 		if ($fakeUser === true)
 		{
@@ -117,7 +124,7 @@ class DonateController extends CpController {
 		if ($request->ajax())
 		{
 			return response()->json([
-				'amount'  => "\$" . ($payment['amount'] / 100),
+				'amount'  => count($errors) ? false : "\$" . ($payment['amount'] / 100),
 				'errors'  => $errors,
 			]);
 		}
