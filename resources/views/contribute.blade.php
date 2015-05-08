@@ -246,7 +246,7 @@
 							Infinite scrolling, inline post tools, thread counters, auto-updaters, etc.
 							These are not complicated systems and are worth reproducing into Larachan.
 							<br /><br />
-							This would also be the time to listen to less citical feedback and implement "It would be nice if..." suggestions, and to go back and deal with anything we wish we had time for.
+							This would also be the time to listen to less critical feedback and implement "It would be nice if..." suggestions, and to go back and deal with anything we wish we had time for.
 							In general, just improve the software as a whole.
 						</blockquote>
 					</li>
