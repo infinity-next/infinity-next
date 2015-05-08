@@ -304,7 +304,7 @@ header.contrib-header {
 }
 
 main.contrib section {
-	margin: 1em auto;
+	margin: 0 auto;
 }
 	main.contrib section:first-child {
 		margin-top: 0;
@@ -313,39 +313,43 @@ main.contrib section {
 		margin-bottom: -1em;
 	}
 
-section.contrib-howto ul.contrib-options {
-	text-align: center;
+main.contrib section.contrib-howto {
+	margin: 0 auto 1em auto;
 }
-	ul.contrib-options::after {
-		content: ' ';
-		clear: both;
-		display: block;
+	section.contrib-howto ul.contrib-options {
+		text-align: center;
 	}
-	li.contrib-option {
-		border-bottom: 1px solid #f4645f;
-		padding-bottom: 1em;
-		padding-right: 10px;
-		margin-bottom: 1em;
-	}
-	li.contrib-option:last-child {
-		border-bottom: none;
-	}
-		a.option-link {
+		ul.contrib-options::after {
+			content: ' ';
+			clear: both;
 			display: block;
-			color: #f4645f;
-			font-size: 300%;
-			font-weight: bold;
-			text-decoration: none;
 		}
-		a.option-link h3 {
-			margin: 0;
+		li.contrib-option {
+			border-bottom: 1px solid #f4645f;
+			padding-bottom: 1em;
+			padding-right: 10px;
+			margin-bottom: 1em;
 		}
-		blockquote.option-desc {
-			margin: 0;
+		li.contrib-option:last-child {
+			border-bottom: none;
 		}
+			a.option-link {
+				display: block;
+				color: #f4645f;
+				font-size: 300%;
+				font-weight: bold;
+				text-decoration: none;
+			}
+			a.option-link h3 {
+				margin: 0;
+			}
+			blockquote.option-desc {
+				margin: 0;
+			}
 
-section.contrib-shekel {
+main.contrib section.contrib-shekel {
 	display: block;
+	background: rgba(255,255,255,0.5);
 }
 	h3.shekel-title {
 		display: block;
@@ -366,8 +370,60 @@ section.contrib-shekel {
 		margin: 0;
 	}
 
-section.contrib-donorlist {
-	
+main.contrib section.contrib-goals {
+	margin: 1em auto;
+}
+	section.contrib-goals ul.goals {
+	}
+	section.contrib-goals li.goal {
+		margin: 0 0 1em 0;
+		padding: 0;
+	}
+		section.contrib-goals h4.goal-title {
+			margin: 0;
+			padding: 1.5em 0 0.75em 1.5em;
+			border-bottom: 0.25em solid #f4645f;
+		}
+		section.contrib-goals blockquote.goal-desc {
+			margin: 0.75em 0 1em 1.5em;
+		}
+		section.contrib-goals ul.goal-items {
+			margin: 1em 1em 1.5em 1em;
+		}
+		section.contrib-goals ul.goal-items::after {
+			content: ' ';
+			display: block;
+			clear: both;
+		}
+			section.contrib-goals li.goal-item {
+				margin: 0;
+			}
+			section.contrib-goals span.goal-part {
+			}
+			section.contrib-goals blockquote.goal-helper {
+				border-top: 1px dashed rgba(0, 0, 0, 0.1);
+				margin: 0.5em 0 0 0;
+				padding: 0.5em 0 0 0;
+				
+				color: #666;
+				font-size: 0.9em;
+			}
+			
+			section.contrib-goals .goal-figure {
+				text-align: center;
+			}
+			section.contrib-goals #goal-newchan {
+				margin-bottom: 1em;
+				width: 200px;
+			}
+			section.contrib-goals figcaption.goal-helper {
+				display: block;
+				margin: 0 auto;
+				max-width: 600px;
+			}
+
+main.contrib section.contrib-donorlist {
+	margin: 0 0 -1em 0;
 }
 	section.contrib-donorlist div.donorsgroup {
 		clear: both;
@@ -1121,11 +1177,11 @@ footer {
 	margin: 1em 0 0 0;
 }
 	#footnotes {
-		background: #fafafa;
+		background: #333;
 		margin-top: 1em;
 		padding: 0.5em 1em;
 		
-		color: #aeaeae;
+		color: #ffffff;
 		font-size: 16px;
 		text-align: center;
 	}

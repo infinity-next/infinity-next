@@ -71,6 +71,242 @@
 	</section>
 	
 	@include('widgets.devtimer')
+	
+	<section class="contrib-goals grid-container">
+		<ul class="goals">
+			
+			<!-- $1,600 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$1,600 Mark</h4>
+				<blockquote class="goal-desc">
+					With my first month's worth of work, I will focus my efforts primarily on the core functionality of an imageboard.
+				</blockquote>
+				
+				<ul class="goal-items">
+					<li class="goal-item grid-25">
+						<span class="goal-part">Image attachments</span>
+						<blockquote class="goal-helper">
+							Attachments will be stored with a hashed name and recorded in the database with detailed information.
+							This helps streamline future feature additions, assist with DMCA takedowns, and blacklist child pornography before it ever hits the servers.
+							Currently, existing imageboards offer no such thing and similar features are hacked in.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Moderator tools</span>
+						<blockquote class="goal-helper">
+							Commonly, moderation tools are usually just links to command pages and are awkward to use.
+							Spammers and raiders have an upper hand because posting systems are very streamlined while moderation tools are not.
+							Having a lot of experience in JS+AJAX, I can build moderator tools that are many times more effecient.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Ban management</span>
+						<blockquote class="goal-helper">
+							Managing users and stopping spam is an eternal problem.
+							Imageboards are intentionally crude in this regard, but rudamentary ban placement, ban management, and appeal systems are extremely important.
+							Proper constrution of the ban system poises it for feature-richness in the later, long-term goals.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Site management &amp; config</span>
+						<blockquote class="goal-helper">
+							Configuration is usually ignored by developers because it is presumed that the website admin will be technically competent.
+							However, modern imageboards have expanded to allow users to create their own boards.
+							Exposing them to an unpolished, glitchy, complicated, and featureless backend is frustrating for everyone.
+							As a final ambition for the $1,600 stretch goal, the framework for a proper board configuration will be laid.
+						</blockquote>
+					</li>
+				</ul>
+			</li>
+			
+			<!-- $3,200 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$3,200 Mark</h4>
+				<blockquote class="goal-desc">
+					With room to breathe, we can top off the core feature set by adding something relatively novel, then revisit existing features and upgrade them.
+				</blockquote>
+				
+				<ul class="goal-items">
+					<li class="goal-item grid-25">
+						<span class="goal-part">User board creation</span>
+						<blockquote class="goal-helper">
+							A wildly successful feature on the Infinity Branch of Vichan, implementing an optional board creation system is a must.
+							User created accounts will be able to build their own and manage them neatly from their user control panel.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Moderator permissions</span>
+						<blockquote class="goal-helper">
+							A large issue with the extant imageboards is a lack of proper permission heirarchy, meaning that (from a developer standpoint) determining who can do what is awkward.
+							This problems compounds with the issue of single-board owners and their local volunteers.
+							Larachan account permissions will be based on group masks common in large software suites to allow for granular control of user permissions.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Board management &amp; config</span>
+						<blockquote class="goal-helper">
+							Mixing together the fine tuned moderator permissions and site management panel, we can begin to build config specific to board owners.
+							This would include local volunteers, board-specific assets, and other settings to personalize each board.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Local bans &amp; public lists</span>
+						<blockquote class="goal-helper">
+							Taking the existing ban system, we can improve site transparency and publish bans for each board.
+							This will include details for who placed them, how long they last, why it was placed, and if an appeal was denied.
+							Board owners will be responsible for their own user management and handling their bans.
+						</blockquote>
+					</li>
+				</ul>
+			</li>
+			
+			<!-- $4,800 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$4,800 Mark</h4>
+				<blockquote class="goal-desc">
+					With some big ticket items done and the suite coming together, we can start looking at quality of life improvements.
+				</blockquote>
+				
+				<ul class="goal-items">
+					<li class="goal-item grid-25">
+						<span class="goal-part">Better posting tools</span>
+						<blockquote class="goal-helper">
+							Imageboards have used the same textarea for the last 15 years.
+							There exists a variety of parsers we can look at and decide upon.
+							Considering the importance of a post in the imageboard, there's no reason not to make the posting tool nice.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Multiple attachments</span>
+						<blockquote class="goal-helper">
+							Infinity Branch currently has multiple image attachments, but the way that attachments are inlined is clunky.
+							Aside from just getting the feature working (which is the easy part), having a proper, unobstructive display is crucial.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Embeds and custom embeds</span>
+						<blockquote class="goal-helper">
+							There are dozens of popular websites that have APIs for embedding content.
+							Everything you can imagine, from YouTube and Vimeo to Strawpoll and Imgur.
+							While utilizing a single embed is easy, building out a system for site administrators to customize their embeds is time consuming but a very strong feature to have.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-25">
+						<span class="goal-part">Multimedia attachments</span>
+						<blockquote class="goal-helper">
+							A longstanding feature request on imageboard suites is the ability to attach MP3s and other multimedia formats to their posts.
+							Music, video, flash, and many other topical boards stand to gain a lot from this.
+							Just lumping an attachment onto the system is easy, but I'd like to take the time to add user interfaces for these.
+						</blockquote>
+					</li>
+				</ul>
+			</li>
+			
+			<!-- $6,400 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$6,400 Mark</h4>
+				<blockquote class="goal-desc">
+					By now, we'd be looking good. Lets try to fix something that's hard to talk about.
+				</blockquote>
+				
+				<ul class="goal-items">
+					<li class="goal-item grid-50">
+						<span class="goal-part">Attachment bans</span>
+						<blockquote class="goal-helper">
+							Staff running a large imageboard often have to deal with illegal or copyrighted content.
+							The systems in place to automatically root out this stuff on YouTube or other large systems is widely unavailable to smaller websites.
+							At this mark, in preparation of moving large imageboards onto Larachan, I can begin to deal with <em>attachment bans</em>.
+							<br /><br />
+							This handles two tasks.
+							First, allowing media of any format to be banned based on its hash.
+							The second more complicated task is "fuzzy hashing", or banning images based on what they look like.
+							A small, single-pixel change to a banned image (like child pornography) will completely change its hash.
+							However, by utilizing special algorithms, it's possible to accurately ban this content based on what it looks like without having to store any illegal content on the server.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-50">
+						<span class="goal-part">Hash &amp; spam databases</span>
+						<blockquote class="goal-helper">
+							<em>AdBlock</em> is an extremel popular advertisement blocking software that utilizes a shared database to propagate bans to evreyone using the plugin.
+							Similarly, I can take time to set up Larachan to have databases of illegal hashes and known spam methods.
+							Any instance of Larachan that <strong>opts in</strong> to use this database would learn bad hashes before ever seeing it itself.
+							We can apply this to spam as well, and strengthen the security of all websites using the technology.
+						</blockquote>
+					</li>
+				</ul>
+			</li>
+			
+			<!-- $8,000 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$8,000 Mark</h4>
+				<blockquote class="goal-desc">
+					Fluff! At this point I'd be looking to match the feature-richess of popular imageboard suites.
+				</blockquote>
+				
+				<ul class="goal-items">
+					<li class="goal-item grid-50">
+						<span class="goal-part">Quality of life</span>
+						<blockquote class="goal-helper">
+							The Infinity branch of Vichan has a lot of simple JavaScript tools that make its site more usable.
+							Infinite scrolling, inline post tools, thread counters, auto-updaters, etc.
+							These are not complicated systems and are worth reproducing into Larachan.
+							<br /><br />
+							This would also be the time to listen to less citical feedback and implement "It would be nice if..." suggestions.
+						</blockquote>
+					</li>
+					<li class="goal-item grid-50">
+						<span class="goal-part">Site-specific donor systems</span>
+						<blockquote class="goal-helper">
+							Specific imageboard owners have been getting shafted by fundraising systems like Patreon and Grattipay.
+							The financial system is a bit of a monopoly, and this unfairness was what led me to build my own fundraising tools.
+							I can re-implement this contribution system as a stand alone donation form.
+							With that, imageboard owners will be able to raise funds without shelling out to and relying on the social justice bullies.
+						</blockquote>
+					</li>
+				</ul>
+			</li>
+			
+			<!-- $9,600 -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">$9,600 Mark</h4>
+				<div clas="grid-100">
+					<figure class="goal-figure">
+						<img id="goal-newchan" src="/img/assets/newchan.png" alt="Larachan + Other Imageboards Combining" />
+						<figcaption class="goal-helper">
+							Having achieved a feature richness that meets and exceeds large, existing websites,
+							it is likely that they will want to adopt the technology.<br />
+							<br />
+							I can now build migration scripts for popular imageboard software.
+						</figucaption>
+					</figure>
+				</div>
+			</li>
+			
+			<!-- Beyond -->
+			<li class="goal smooth-box">
+				<h4 class="goal-title">Beyond</h4>
+				<blockquote class="goal-desc">
+					Once all expectations are met, Larachan can continue forward with new features, and constantly fine-tuning tools and user interfaces.
+					In truth, development never ends, and I try not to abandon my work.
+					<br /><br />
+					However, I have a pipe dream.
+					<br /><br />
+					With enough time and money, I would build what I've taken to calling a <em>confenderation</em>.
+					Rather than a single large website with many boards, a confederaton could run with many nodes, each with only a few boards.
+					Other nodes could propagate the content of that board to their own database, and push posts made to the source (if allowed).
+					Confederate nodes could centralize these independantly operated boards and act as an access point, while not revealing the true source of each node.
+					<br /><br />
+					Using this setup, information pushed into the confederation could not die.
+					Malicious entities or governments who attempted to destroy one node would not cost the network any information.
+					It would continue to propagate forward to as many individual nodes as possible.
+					<br /><br />
+					Just a pipe dream.
+				</blockquote>
+			</li>
+			
+		</ul>
+	</section>
+	
 	@include('widgets.donorlist')
 	
 	<section class="contrib-section section-me">

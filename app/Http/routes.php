@@ -28,14 +28,23 @@ Route::group(['prefix' => 'cp'], function()
 	
 	Route::controllers([
 		'auth'     => 'Auth\AuthController',
-		'donate'   => 'Auth\DonateController',
 		'home'     => 'Auth\HomeController',
 		'password' => 'Auth\PasswordController',
 	]);
+	
+	if (env('CONTRIB_ENABLED', false))
+	{
+		Route::controllers([
+			'donate'   => 'Auth\DonateController',
+		]);
+	}
 });
 
-Route::get('contribute', 'ContributeController@index');
-Route::get('contribute/donate', 'ContributeController@donate');
+if (env('CONTRIB_ENABLED', false))
+{
+	Route::get('contribute', 'ContributeController@index');
+	Route::get('contribute/donate', 'ContributeController@donate');
+}
 
 Route::group([
 	'prefix' => '{board}',

@@ -3,8 +3,13 @@
 		<ul class="boardlist-categories">
 			<li class="boardlist-category">
 				<ul class="boardlist-items">
+					<!-- Site Index -->
 					<li class="boardlist-item"><a href="{!! url("/") !!}" class="boardlist-link">Home</a></li>
+					
+					@if (env('CONTRIB_ENABLED', false))
+					<!-- Fundraiser Page -->
 					<li class="boardlist-item"><a href="{!! url("contribute") !!}" class="boardlist-link">Contribute</a></li>
+					@endif
 				</ul>
 			</li>
 		</li>

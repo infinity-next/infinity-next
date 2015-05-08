@@ -13,6 +13,7 @@
 			</li>
 			@endif
 			
+			@if (env('CONTRIB_ENABLED', false))
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name">Sponsorship</a>
 				
@@ -22,6 +23,7 @@
 					</li>
 				</ul>
 			</li>
+			@endif
 		</ul>
 	</section>
 </nav>
