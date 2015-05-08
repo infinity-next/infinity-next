@@ -17,6 +17,9 @@ body {
 	display: flex;
 	min-height: 100vh;
 	flex-direction: column;
+	
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
 }
 
 a,
@@ -267,7 +270,7 @@ figure.error {
 	}
 	#site-info {
 		clear: both;
-		margin: 0;
+		margin: 0 0 1em 0;
 	}
 		#site-info::after,
 		#site-info::before {
@@ -296,6 +299,20 @@ figure.error {
 	#index-boardlist {
 		clear: both;
 		margin: 1em 0 0 0;
+	}
+	
+	#site-intro {
+		border-bottom: 1px solid #ccc;
+		margin: 0 0 1em 0;
+	}
+	#frontpage h2 {
+		margin: 0 0 0.5em 0;
+	}
+	#frontpage h3 {
+		margin: 0 0 0.5em 0;
+	}
+	#frontpage p {
+		margin: 0 0 1em 0;
 	}
 
 /* Contributory Block */
