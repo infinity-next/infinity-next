@@ -72,7 +72,13 @@
 					Having been in teams and seen the long-term problems of code complications first hand,
 					I know a complete rewrite with a proper foundation is the only real solution to the problem.
 					The limited numbers of individuals working on separate code bases do not have the resources to slowly reform thousands of lines of code.
-					Without a framework, the state of affairs will continue to deterroriate as more is done by more developers..
+					Without a framework, the state of affairs will continue to deterroriate as more is done by more developers.
+				</p>
+				<p>
+					With Larachan, we can aspire to add new features much quicker.
+					Complex user permission masks, a wider variety of 3rd party embeds in posts, streamlined attachment management (such as hash banning).
+					Even features that are currently impossible to do, like password protected boards, are a cinch when the current caching methods are discarded.
+					These things are all very doable in a new architecture, and that is what I want to build.
 				</p>
 				<p>
 					<strong><a href="{{{url('contribute')}}}">Help me build Larachan, and help the imageboard communities go beyond.</a></strong>
