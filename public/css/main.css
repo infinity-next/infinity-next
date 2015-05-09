@@ -788,8 +788,9 @@ section.index-threads {
 	}
 	
 	.reply {
-		margin: 0.5em 0 0.5em 2em;
-		padding: 0;
+		margin: 0.5em 0 0.5em 0.75em;
+		padding: 0 0 0 1.25em;
+		border-left: 2px dashed rgba(0,0,0,0.1);
 	}	
 	
 	.post {
@@ -814,32 +815,53 @@ section.index-threads {
 		background: #fff;
 		border-radius: 4px;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-		padding: 0.75em;
 		margin: 0 355px 0 0;
+		overflow: hidden;
 	}
-		.post-details {
-			margin-bottom: 0.60em;
+		.post-content {
+			padding: 0.75em;
 		}
-			.post-detail {
-				display: inline-block;
+			.post-details {
+				margin-bottom: 0.60em;
 			}
-				.subject {
-					display: inline-block;
-					margin: 0;
-					font-size: 1em;
-				}
-				.author {
-					display: inline-block;
-					color: #117743;
-				}
-				.createdon {
+				.post-detail {
 					display: inline-block;
 				}
-				.authorid {
-					display: inline-block;
+					.subject {
+						display: inline-block;
+						margin: 0;
+						font-size: 1em;
+					}
+					.author {
+						display: inline-block;
+						color: #117743;
+					}
+					.createdon {
+						display: inline-block;
+					}
+					.authorid {
+						display: inline-block;
+					}
+					.postid {
+						display: inline-block;
+					}
+		
+		ul.post-actions {
+			border-top: 1px solid rgba(0, 0, 0, 0.15);
+			border-radius: 4px;
+			margin: 0.1em 0 -1px 0;
+		}
+			li.post-action {
+			}
+				a.post-action-link {
+					float: left;
+					color: #ccc;
+					font-size: 80%;
+					padding: 0.2em 0.9375em 0.2em;
 				}
-				.postid {
-					display: inline-block;
+				a.post-action-link:hover{
+					color: #fff;
+					background: #f4645f;
 				}
 
 section.auth-form {

@@ -23,7 +23,8 @@ class BoardController extends MainController {
 	
 	/**
 	 * Show the board index for the user.
-	 * This is usually the last few threads.
+	 * This is usually the last few threads, depending on the optional page
+	 * parameter, which determines the thread offset.
 	 *
 	 * @return Response
 	 */
@@ -69,9 +70,61 @@ class BoardController extends MainController {
 		] );
 	}
 	
+	
 	/**
-	 * Show the board index for the user.
-	 * This is usually the last few threads.
+	 * Redirects to a specific post in a thread, or
+	 * allows moderators to manages a post.
+	 *
+	 * @return Response
+	 */
+	public function getPost(Request $request, Board $board, $post = NULL, $action = NULL)
+	{
+		// If no post is specified, we can't do anything.
+		// Push the user to the index.
+		if (is_null($post))
+		{
+			return redirect($board->uri);
+		}
+		
+		// If there is no action, we're just finding a specific post.
+		// Push the user to that thread.
+		if (is_null($action))
+		{
+			return $this->getThread($request, $board, $post);
+		}
+		
+		// Find the post.
+		$post = $board->getLocalThread($post);
+		
+		if (!$post)
+		{
+			return abort(404);
+		}
+		
+		// Handle the action.
+		switch ($action)
+		{
+			case "delete" :
+				if ($post->canDelete($this->auth->user()))
+				{
+					$post->delete();
+					return redirect($board->uri);
+				}
+				break;
+			
+			// If the requested action is not recognized,
+			// abort with a file not found error.
+			default :
+				return abort(404);
+		}
+		
+		// If we did not default, that means we failed a check.
+		// Abort with a restriction error.
+		return abort(403);
+	}
+	
+	/**
+	 * Renders a thread.
 	 *
 	 * @return Response
 	 */
@@ -104,14 +157,12 @@ class BoardController extends MainController {
 			'threads'  => [$thread],
 			'posts'    => $posts,
 			'reply_to' => $thread->board_id,
-		] );
+		]);
 	}
 	
 	/**
 	 * Handles the creation of a new thread or reply.
 	 *
-	 * @param  string  $uri (board uri)
-	 * @param  int     $thread_id (optional, new thread is unspecified)
 	 * @return Response (redirects to the thread view)
 	 */
 	public function postThread(Request $request, Board $board, $thread_id = false)

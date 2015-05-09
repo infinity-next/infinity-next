@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Board;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -36,5 +37,20 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	public function payments()
 	{
 		return $this->hasMany('\App\Payment', 'customer', 'id');
+	}
+	
+	
+	/**
+	 *
+	 *
+	 */
+	public function canDelete(Board $board)
+	{
+		if ($this->id == 1)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 }

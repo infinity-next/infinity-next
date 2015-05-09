@@ -3,6 +3,7 @@
 use App\Services\ContentFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Request;
 
 class Post extends Model {
 	
@@ -62,6 +63,20 @@ class Post extends Model {
 		});
 	}
 	
+	public function canDelete($user = null)
+	{
+		if ($this->author_ip == Request::ip())
+		{
+			return true;
+		}
+		
+		if (is_a($user, "\App\User"))
+		{
+			return $user->canDelete($this->getBoard());
+		}
+		
+		return false;
+	}
 	
 	public function canReply()
 	{

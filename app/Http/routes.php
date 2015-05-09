@@ -40,20 +40,29 @@ Route::group(['prefix' => 'cp'], function()
 	}
 });
 
+/*
+| Contribution (contribute)
+| Only enabled if CONTRIB_ENABLED is set to TRUE.
+| Opens the fundraiser page.
+*/
 if (env('CONTRIB_ENABLED', false))
 {
 	Route::get('contribute', 'ContributeController@index');
 	Route::get('contribute/donate', 'ContributeController@donate');
 }
 
+
+/*
+| Board (/anything/)
+| A catch all. Used to load boards.
+*/
 Route::group([
 	'prefix' => '{board}',
 	'where'  => ['board' => '[a-z]{1,31}'],
 ], function()
 {
+	// Indexes
+	// The number immediately preceding the board is what page we're on.
 	Route::get('{id}', 'Board\BoardController@getIndex')->where(['id' => '[0-9]+']);
-	
-	Route::controllers([
-		'/' => 'Board\BoardController',
-	]);
+	Route::controller('', 'Board\BoardController');
 });
