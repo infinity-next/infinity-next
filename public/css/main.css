@@ -14,12 +14,15 @@ body {
 	background-image: url('/img/noise.png');
 	background-repeat: repeat;
 	
-	display: flex;
 	min-height: 100vh;
-	flex-direction: column;
 	
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
 }
 
 a,
@@ -714,7 +717,11 @@ nav.boardlist {
 
 /* Main Content */
 main {
-	flex: 1;
+	-ms-flex: 1 0 auto;
+	-webkit-flex: 1 0 auto;
+	flex: 1 0 auto;
+	
+	min-height: 100vh;
 }
 
 /* Board Index */
@@ -1313,13 +1320,15 @@ figcaption.page-details {
 
 /* Page Footer */
 footer {
+	flex: 1;
+	clear: both;
 	padding: 0;
 	margin: 1em 0 0 0;
 }
 	#footnotes {
 		background: #333;
 		margin-top: 1em;
-		padding: 0.5em 1em;
+		padding: 0.5em 0;
 		
 		color: #ffffff;
 		font-size: 16px;
