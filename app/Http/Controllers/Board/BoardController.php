@@ -124,6 +124,7 @@ class BoardController extends MainController {
 				]);
 			
 			$post = new Post($input);
+			$post->author_ip = $request->ip();
 			
 			if ($thread_id !== false)
 			{

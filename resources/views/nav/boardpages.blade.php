@@ -1,3 +1,4 @@
+@if (isset($pages))
 <nav class="pagination">
 	<div class="pagination-buttons buttons-before">
 		@if ($page > 1)
@@ -35,3 +36,4 @@
 		@endif
 	</div>
 </nav>
+@endif

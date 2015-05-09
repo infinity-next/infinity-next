@@ -25,7 +25,7 @@ class CreatePostsTable extends Migration {
 			// Embedded information
 			$table->timestamps();
 			$table->softDeletes();
-			$table->string('author_ip', 16);
+			$table->string('author_ip', 46);
 			
 			
 			// Content information
