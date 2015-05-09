@@ -44,7 +44,7 @@ class Post extends Model {
 			
 			if ($post->reply_to)
 			{
-				$op = $post->op;
+				$op = $post->getOp();
 				
 				if ($op && $op->canReply())
 				{
@@ -82,7 +82,7 @@ class Post extends Model {
 	
 	public function op()
 	{
-		return $this->belongsTo('\App\Post', 'id', 'reply_to');
+		return $this->belongsTo('\App\Post', 'reply_to', 'id');
 	}
 	
 	public function replies()
@@ -93,7 +93,7 @@ class Post extends Model {
 	
 	public function getBoard()
 	{
-		return $this->board()->get();
+		return $this->board()->get()->first();
 	}
 	
 	public static function getPostForBoard($uri, $board_id)
@@ -103,7 +103,7 @@ class Post extends Model {
 	
 	public function getOp()
 	{
-		return $this->op()->get();
+		return $this->op()->get()->first();
 	}
 	
 	public function getReplies()
