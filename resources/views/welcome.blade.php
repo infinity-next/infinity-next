@@ -28,7 +28,7 @@
 					<div class="infobox-title">Larachan</div>
 					<div class="infobox-info">
 						<p>Welcome to Larachan, the live development envrionment for the Larachan Imageboard Software.</p>
-						<p>Feel free to <a href="{!! url("a") !!}">try it</a> out and consider <a href="{!! url("contribute") !!}">contributing</a>.</p>
+						<p>Feel free to <a href="{!! url("test") !!}">try it</a> out and consider <a href="{!! url("contribute") !!}">contributing</a>.</p>
 					</div>
 				</div>
 			</div>
