@@ -19,7 +19,7 @@
 				
 				<ul class="cp-linkitems">
 					<li class="cp-linkitem">
-						<a class="linkitem-name" href="{!! url('cp/donate') !!}">Donate</a>
+						<a class="linkitem-name" href="{!! secure_url('cp/donate') !!}">Donate</a>
 					</li>
 				</ul>
 			</li>

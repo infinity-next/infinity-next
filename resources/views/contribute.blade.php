@@ -23,7 +23,7 @@
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="{!! url('cp/donate') !!}">
+				<a class="option-link" href="{!! secure_url('cp/donate') !!}">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-ils fa-stack-1x fa-inverse"></i>
