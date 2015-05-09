@@ -717,11 +717,21 @@ nav.boardlist {
 
 /* Main Content */
 main {
-	-ms-flex: 1 0 auto;
-	-webkit-flex: 1 0 auto;
-	flex: 1 0 auto;
+	flex: 1;
 	
-	min-height: 100vh;
+	/* 
+		Microsoft is a piece of shit and I hope they all get ass cancer.
+		For whatever reason, flex items in MS11 do not have a height.
+		Instead, the main body gets a height of 0, and the footer appears
+		right below the header.
+		
+		I've tried many other alternatives to this but there doesn't seem
+		to be a way to have a flexible height sticky footer.
+		The only solution is to use the easy layout for all modern browsers
+		and let IE degrade gracefully, with the footer appearing where it
+		would be without Flexbox.
+	*/
+	-ms-flex: none;
 }
 
 /* Board Index */
@@ -1320,7 +1330,6 @@ figcaption.page-details {
 
 /* Page Footer */
 footer {
-	flex: 1;
 	clear: both;
 	padding: 0;
 	margin: 1em 0 0 0;
