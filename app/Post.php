@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Services\ContentFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -61,15 +62,16 @@ class Post extends Model {
 		});
 	}
 	
-	public static function getPostForBoard($uri, $board_id)
-	{
-		return static::where([ 'uri' => $uri, 'board_id' => $board_id ])->first();
-	}
-	
 	
 	public function canReply()
 	{
 		return true;
+	}
+	
+	public function getBodyFormatted()
+	{
+		$ContentFormatter = new ContentFormatter();
+		return $ContentFormatter->formatPost($this);
 	}
 	
 	
@@ -94,6 +96,11 @@ class Post extends Model {
 		return $this->board()->get();
 	}
 	
+	public static function getPostForBoard($uri, $board_id)
+	{
+		return static::where([ 'uri' => $uri, 'board_id' => $board_id ])->first();
+	}
+	
 	public function getOp()
 	{
 		return $this->op()->get();
@@ -113,6 +120,7 @@ class Post extends Model {
 			->get()
 			->reverse();
 	}
+	
 	
 	public function scopeOp($query)
 	{

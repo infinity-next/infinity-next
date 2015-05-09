@@ -781,14 +781,14 @@ section.index-threads {
 		padding: 0;
 		max-width: 75vw;
 	}
-		.post p {
+		.post p.line {
 			display: block;
 			margin: 0;
 			padding: 0;
 			min-height: 1.1em;
 			line-height: 1.1em;
 		}
-		.post .quote {
+		.post p.line.quote {
 			color: #789922;
 		}
 	

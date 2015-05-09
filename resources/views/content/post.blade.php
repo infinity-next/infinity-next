@@ -12,7 +12,7 @@
 	</ul>
 	
 	<blockquote class="post ugc">
-		<p>{{{ $thread->body }}}</p>
+		<p>{!! $thread->getBodyFormatted() !!}</p>
 	</blockquote>
 	
 	<!--
@@ -20,6 +20,10 @@
 		<li class="post-action actio"
 	</ul>
 	-->
+</div>
+
+<div class="thread-replies-omitted">
+
 </div>
 
 @if (isset($posts[ $thread->id ]))
