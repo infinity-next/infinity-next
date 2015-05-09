@@ -12,7 +12,7 @@ return [
 	|
 	*/
 	
-	'anonymous'         => "Anonyous",
+	'anonymous'         => "Anonmyous",
 	
 	// These fit together as "Omitted 3 posts" or "Omitted 3 posts with 2 files"
 	// with pluralized localizations.
