@@ -70,6 +70,7 @@ class Board extends Model {
 		if (!isset($this->settings))
 		{
 			$this->settings = [
+				'defaultName'  => trans('board.anonymous'),
 				'postsPerPage' => 10,
 			];
 		}
