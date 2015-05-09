@@ -27,21 +27,18 @@ class Board extends Model {
 	protected $fillable = ['uri', 'title', 'description'];
 	
 	/**
+	 * Cached settings for this board.
+	 *
+	 * @var array
+	 */
+	protected $settings;
+	
+	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
-	
-	public static function getBoardListBar()
-	{
-		return [ static::where('posts_total', '>', '-1')
-			->orderBy('uri', 'asc')
-			->take(20)
-			->get()
-		];
-	}
-	
 	
 	public function posts()
 	{
@@ -53,6 +50,44 @@ class Board extends Model {
 		return $this->hasMany('\App\Post', 'uri');
 	}
 	
+	public static function getBoardListBar()
+	{
+		return [
+			static::where('posts_total', '>', '-1')
+				->orderBy('uri', 'asc')
+				->take(20)
+				->get()
+		];
+	}
+	
+	public function getPageCount()
+	{
+		return ceil( $this->threads()->op()->visible()->count() / (int) $this->getSetting('postsPerPage') );
+	}
+	
+	public function getSettings()
+	{
+		if (!isset($this->settings))
+		{
+			$this->settings = [
+				'postsPerPage' => 10,
+			];
+		}
+		
+		return $this->settings;
+	}
+	
+	public function getSetting($setting, $fallback = null)
+	{
+		$settings = $this->getSettings();
+		
+		if (isset($settings[$setting]))
+		{
+			return $settings[$setting];
+		}
+		
+		return $fallback;
+	}
 	
 	public function getLocalThread($post)
 	{
@@ -68,12 +103,14 @@ class Board extends Model {
 	
 	public function getThreadsForIndex($page = 0)
 	{
+		$postsPerPage = $this->getSetting('postsPerPage', 10);
+		
 		return $this->threads()
-			->where('reply_to', null)
-			->where('deleted_at', null)
+			->op()
+			->visible()
 			->orderBy('reply_last', 'desc')
-			->skip(10 * $page)
-			->take(10)
+			->skip($postsPerPage * ( $page - 1 ))
+			->take($postsPerPage)
 			->get();
 	}
 	

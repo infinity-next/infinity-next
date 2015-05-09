@@ -14,7 +14,6 @@
 	</section>
 	
 	<section class="index-threads static">
-		
 		<ul class="thread-list">
 			@foreach ($threads as $thread)
 			<li class="thread-item">
@@ -25,5 +24,7 @@
 			@endforeach
 		</ul>
 	</section>
+	
+	@include('nav.boardpages')
 </main>
 @stop

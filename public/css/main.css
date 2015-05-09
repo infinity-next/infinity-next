@@ -42,6 +42,7 @@ a.button {
 	display: inline-block;
 	padding: 0.2em 1em 0.25em;
 	margin-bottom: 0;
+	box-sizing: bordebox;
 	
 	background: #f4645f;
 	border: none;
@@ -61,10 +62,23 @@ a.button {
 	text-align: center;
 	vertical-align: middle;
 }
-button:hover,
-a.button:hover {
-	background: #b74b47;
-}
+	button:hover,
+	a.button:hover {
+		background: #b74b47;
+	}
+		button:disabled,
+		a.button.disabled {
+			background: #fff;
+			border: 1px solid #ccc;
+			color: #ccc;
+			cursor: default;
+		}
+		button:disabled:hover,
+		a.button.disabled:hover {
+			background: #fff;
+			border-color: #ccc;
+			color: #ccc;
+		}
 
 :focus {
 	outline: #f4645f auto 5px;
@@ -225,9 +239,8 @@ form {
 			padding-left: 5em;
 		}
 		.label-inline .field-control:focus + .field-label {
-			border: 1px solid transparent;
-			background: #f4645f;
-			color: #fff;
+			border: 1px solid #f4645f;
+			color: #f4645f;
 		}
 		
 		.field-control.control-valid {
@@ -739,6 +752,10 @@ section.index-form {
 		form.form-post:hover {
 			opacity: 1;
 		}
+		
+		section.index-threads .post-container {
+			margin-right: 1em;
+		}
 	}
 
 section.index-threads {
@@ -812,6 +829,72 @@ section.auth-form {
 	max-width: 640px;
 }
 
+nav.pagination {
+	background: #fff;
+	padding: 0.25em 0;
+	margin: 0 0 -1em 0;
+	color: #f4645f;
+}
+	nav.pagination::after {
+		display: block;
+		content: ' ';
+		clear: both;
+	}
+	
+	div.pagination-buttons {
+		float: left;
+		margin: 0 1em;
+	}
+		div.pagination-buttons .pagination-button {
+			line-height: 1.2;
+			margin: 0.2em 0;
+			padding: 0.15em 0.75em 0.2em;
+		}
+	
+	ul.pagination-pages::before,
+	ul.pagination-pages::after,
+	li.pagination-page::after {
+		display: inline-block;
+		float: left;
+		padding: 0.25em 0.1em;
+	}
+	
+	ul.pagination-pages {
+		font-size: 110%;
+		margin: 0 -0.1em;
+	}
+	ul.pagination-pages::before {
+		content: '[';
+		opacity: 0.6;
+		cursor: default;
+	}
+	ul.pagination-pages::after {
+		content: ']';
+		opacity: 0.6;
+		cursor: default;
+	}
+		li.pagination-page {
+			display: inline-block;
+			float: left;
+		}
+		li.pagination-page::after {
+			content: '/';
+			opacity: 0.6;
+			cursor: default;
+		}
+		li.pagination-page:last-child::after {
+			content: '';
+			display: none;
+		}
+			a.pagination-link {
+				display: inline-block;
+				float: left;
+				padding: 0.25em 0.5em;
+				text-align: center;
+			}
+			a.pagination-link.pagination-active {
+				font-weight: bold;
+			}
 
 
 /* Control Panel */

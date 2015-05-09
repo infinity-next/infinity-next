@@ -27,9 +27,28 @@ class BoardController extends MainController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Request $request, Board $board)
+	public function getIndex(Request $request, Board $board, $page = 1)
 	{
-		$threads = $board->getThreadsForIndex();
+		// Determine what page we are on.
+		$pages = $board->getPageCount();
+		
+		// Clamp the page to real values.
+		if ($page <= 0)
+		{
+			$page = 1;
+		}
+		elseif ($page > $pages)
+		{
+			$page = $pages;
+		}
+		
+		// Determine if we have a next/prev button.
+		$pagePrev = ($page > 1) ? $page - 1 : false;
+		$pageNext = ($page < $pages) ? $page + 1 : false;
+		
+		
+		// Load our list of threads and their latest replies.
+		$threads = $board->getThreadsForIndex($page);
 		
 		$posts = array();
 		foreach ($threads as $thread)
@@ -42,6 +61,11 @@ class BoardController extends MainController {
 			'threads'  => $threads,
 			'posts'    => $posts,
 			'reply_to' => false,
+			
+			'pages'    => $pages,
+			'page'     => $page,
+			'pagePrev' => $pagePrev,
+			'pageNext' => $pageNext,
 		] );
 	}
 	

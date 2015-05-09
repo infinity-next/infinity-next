@@ -107,15 +107,25 @@ class Post extends Model {
 	public function getRepliesForIndex()
 	{
 		return $this->replies()
-			->where('deleted_at', null)
+			->visible()
 			->orderBy('id', 'desc')
 			->take(5)
 			->get()
 			->reverse();
 	}
 	
+	public function scopeOp($query)
+	{
+		return $query->where('reply_to', null);
+	}
+	
 	public function scopeRecent($query)
 	{
 		return $query->where('created_at', '>=', 'NOW() - 3600');
+	}
+	
+	public function scopeVisible($query)
+	{
+		return $query->where('deleted_at', null);
 	}
 }

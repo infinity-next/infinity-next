@@ -51,5 +51,9 @@ Route::group([
 	'where'  => ['board' => '[a-z]{1,31}'],
 ], function()
 {
-	Route::controller('', 'Board\BoardController');
+	Route::get('{id}', 'Board\BoardController@getIndex')->where(['id' => '[0-9]+']);
+	
+	Route::controllers([
+		'/' => 'Board\BoardController',
+	]);
 });
