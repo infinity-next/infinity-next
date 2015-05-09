@@ -12,7 +12,7 @@
 	</ul>
 	
 	<blockquote class="post ugc">
-		<p>{!! $thread->getBodyFormatted() !!}</p>
+		{!! $thread->getBodyFormatted() !!}
 	</blockquote>
 	
 	<!--
