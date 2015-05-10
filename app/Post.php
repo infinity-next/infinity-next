@@ -2,10 +2,12 @@
 
 use App\Services\ContentFormatter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Request;
 
 class Post extends Model {
+	
+	use SoftDeletes;
 	
 	/**
 	 * The database table used by the model.
@@ -28,11 +30,22 @@ class Post extends Model {
 	 */
 	protected $hidden = ['author_ip'];
 	
+	/**
+	 * 
+	 *
+	 * @var array
+	 */
+	protected $dates = ['deleted_at'];
+	
+	
 	public static function boot()
 	{
 		parent::boot();
 		
 		// Setup event bindings...
+		
+		// When creating a post in reply to a thread,
+		// update its last reply timestamp and add to its reply total.
 		static::creating(function($post)
 		{
 			$board = $post->board;
@@ -60,6 +73,12 @@ class Post extends Model {
 			
 			$board->save();
 			return true;
+		});
+		
+		// When deleting a post, delete its children.
+		static::deleting(function($post)
+		{
+			static::replyTo($post->id)->delete();
 		});
 	}
 	
@@ -145,6 +164,18 @@ class Post extends Model {
 	public function scopeRecent($query)
 	{
 		return $query->where('created_at', '>=', 'NOW() - 3600');
+	}
+	
+	public function scopeReplyTo($query, $replies = false)
+	{
+		if(is_numeric($replies))
+		{
+			return $query->where('reply_to', '=', $replies);
+		}
+		else
+		{
+			return $query->where('reply_to', 'not', null);
+		}
 	}
 	
 	public function scopeVisible($query)
