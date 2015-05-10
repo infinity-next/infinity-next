@@ -38,7 +38,7 @@ In the name of preventing conflict and keeping the codebase clean, I am implemen
 > Laravel follows the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) and [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md) coding standards. In addition to these standards, the following coding standards should be followed:
 >
 > * The class namespace declaration must be on the same line as `<?php`.
-> * A class' opening `{` must be on the same line as the class name.
+> * A class's opening `{` must be on the same line as the class name.
 > * Functions and control structures must use Allman style braces.
 > Indent with tabs, align with spaces.
 
