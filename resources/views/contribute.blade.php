@@ -76,7 +76,7 @@
 		<ul class="goals">
 			
 			<li class="goal smooth-box">
-				<h4 class="goal-title">$2,000 Mark</h4>
+				<h4 class="goal-title">$2,000 Mark @if ($donations >= 200000)<span class="goal-funded">Funded!</span>@endif</h4>
 				<blockquote class="goal-desc">
 					With my first month's worth of work, I will focus my efforts primarily on the core functionality of an imageboard.
 				</blockquote>

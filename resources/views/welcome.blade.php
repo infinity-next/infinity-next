@@ -51,7 +51,7 @@
 	<div class="grid-container">
 		<!-- Intro -->
 		<div class="smooth-box">
-			@include('widgets.messages', [ 'messages' => [ "Infinity's fundraiser has not officially started. Please send feedback for these pages to josh@infinitydev.org"] ])
+			@include('widgets.messages', [ 'messages' => [ "Infinity's fundraiser has not officially started. Please send feedback for these pages to " . env('MAIL_ADDR_ADMIN')] ])
 			
 			<section id="site-intro">
 				<h2>Introduction to Infinity</h2>
@@ -236,7 +236,7 @@
 					If you are interested, I would seriously advise looking into the Laravel framework and familiarizing yourself with its architecture. There is a slight learning curve.
 				</p>
 				<p>
-					If you want to be notified when the github repository is opened, please email me at <a href="mailt:josh@Infinity.org">josh@Infinity.org</a>.
+					If you want to be notified when the github repository is opened, please email me at <a href="mailto:{!! env('MAIL_ADDR_ADMIN') !!}">{!! env('MAIL_ADDR_ADMIN') !!}</a>.
 				</p>
 				
 				<h3>Why did you build your own donation system? Why build it first thing?</h3>
