@@ -163,7 +163,7 @@ class Post extends Model {
 	
 	public function scopeRecent($query)
 	{
-		return $query->where('created_at', '>=', 'NOW() - 3600');
+		return $query->where('created_at', '>=', static::freshTimestamp()->subHour());
 	}
 	
 	public function scopeReplyTo($query, $replies = false)
