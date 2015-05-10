@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-	<title>@yield('title', 'Larachan')</title>
+	<title>@yield('title', 'Infinity')</title>
 	
 	@section('css')
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
@@ -42,7 +42,7 @@
 		
 		@section('header-inner')
 			<figure class="page-head">
-					<img id="logo" src="/img/logo.png" alt="Larachan" />
+					<img id="logo" src="/img/logo.png" alt="Infinity" />
 				
 				<figcaption class="page-details">
 					<h1 class="page-title">@yield('title')</h1>
@@ -60,7 +60,7 @@
 		@include('nav.boardlist')
 		
 		<section id="footnotes">
-			<div>Larachan &copy; Larachan Development Group 2015</div>
+			<div>Infinity Next &copy; Infinity Next Development Group 2015</div>
 		</section>
 	</footer>
 </body>

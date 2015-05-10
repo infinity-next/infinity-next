@@ -10,7 +10,7 @@
 	<section class="grid-80 push-20" id="site-warning">
 		Warning: Some boards on this site might contain content of an adult or offensive nature.<wbr />
 		Please cease use of this site if it is illegal for you to view such content.<wbr />
-		The boards on this site are made entirely by the users and do not represent the opinions of the administration of Larachan.<wbr />
+		The boards on this site are made entirely by the users and do not represent the opinions of the administration of Infinity.<wbr />
 		In the interest of free speech, only content that directly violates the DMCA or other US laws is deleted.<wbr />
 	</section>
 </div>
@@ -25,9 +25,9 @@
 			
 			<div class="grid-40" id="site-description">
 				<div class="infobox">
-					<div class="infobox-title">Larachan</div>
+					<div class="infobox-title">Infinity</div>
 					<div class="infobox-info">
-						<p>Welcome to Larachan, the live development envrionment for the Larachan Imageboard Software.</p>
+						<p>Welcome to Infinity, the live development envrionment for the Infinity Imageboard Software.</p>
 						<p>Feel free to <a href="{!! url("test") !!}">try it</a> out and consider <a href="{!! url("contribute") !!}">contributing</a>.</p>
 					</div>
 				</div>
@@ -51,21 +51,21 @@
 	<div class="grid-container">
 		<!-- Intro -->
 		<div class="smooth-box">
-			@include('widgets.messages', [ 'messages' => [ "Larachan's fundraiser has not officially started. Please send feedback for these pages to josh@larachan.org"] ])
+			@include('widgets.messages', [ 'messages' => [ "Infinity's fundraiser has not officially started. Please send feedback for these pages to josh@infinitydev.org"] ])
 			
 			<section id="site-intro">
-				<h2>Introduction to Larachan</h2>
+				<h2>Introduction to Infinity</h2>
 				<p>
-					<em>Larachan</em> is an open-source imageboard software suite built on the <a href="//laravel.com">Laravel</a> framework in PHP.
+					<em>Infinity</em>, or <em>Infinity Next</em>, is an open-source imageboard software suite built on the <a href="//laravel.com">Laravel</a> framework in PHP.
 					It is being built with the intention of superceding all currently available imageboard applications,
 					inspired by my own long time use of imageboards and general low expectations for existing options.
-					My two large contributions with the <a href="https://github.com/ctrlcctrlv/infinity">Infinity Development Group</a> gave rise to the concept of starting from scratch.
+					My two large contributions with the original <a href="https://github.com/ctrlcctrlv/infinity">Infinity Development Group</a> gave rise to the concept of starting from scratch.
 				</p>
 				<p>
 					The ultimate problem with these older codebases is their lack of direction.
 					New, shiny features have to be built around existing flaws.
 					When an inflatable springs a leak and you only apply a patch, the sides of the patch will also start to leak.
-					Without adequaely addressing the problem, eventually end up with a large mass that doesn't actually improve the feature.
+					Without adequaely addressing the problem, you eventually end up with a large mass that doesn't actually improve the feature.
 					This is where we are at now.
 				</p>
 				<p>
@@ -76,13 +76,13 @@
 					Without a framework, the state of affairs will continue to deterroriate as more is done by more developers.
 				</p>
 				<p>
-					With Larachan, we can aspire to add new features much quicker.
+					With Infinity, we can aspire to add new features much quicker.
 					Complex user permission masks, a wider variety of 3rd party embeds in posts, streamlined attachment management (such as hash banning).
-					Even features that are currently impossible to do, like password protected boards, are a cinch when the current caching methods are discarded.
-					These things are all very doable in a new architecture, and that is what I want to build.
+					Even features that are currently impossible to do, like password protected boards, are a cinch when old caching methods are discarded in favor of better technologies.
+					These things are all very doable in a new architecture, which is what I aim to build.
 				</p>
 				<p>
-					<strong><a href="{{{url('contribute')}}}">Help me build Larachan, and help the imageboard communities go beyond.</a></strong>
+					<strong><a href="{{{url('contribute')}}}">Help me build Infinity, and help the imageboard communities go beyond.</a></strong>
 				</p>
 			</section>
 		</div>
@@ -99,13 +99,13 @@
 						Every page on a board has a subsequent <tt>2.html</tt> file.
 						The reason an imageboard commonly has an arbitary 15 page limit is due to the time it takes to recache every page after a new thread is created.
 						Some developers think they're clever by writing caches to the harddisk, but the bottleneck becomes the very expensive and hard limited disk I/O.
-						With Larachan, posts never need to be deleted.
+						With Infinity, posts never need to be deleted.
 						Caching will work with existing technologies like Memcached.
 					</p>
 					<p>
 						Aside from being ineffecient, it also causes <em>problems</em>.
 						If you wanted to make a password-protected board, you'd not be able to, because, once unlocked, the page would be recached without a password form.
-						Features (like the already extant delete-your-own-post button on Larachan) are impossible because the site cannot modify the view based on the request.
+						Features (like the already extant delete-your-own-post button on Infinity) are impossible because the site cannot modify the view based on the request.
 						Everything becomes more complicated with system built like this.
 					</p>
 					<p>
@@ -135,7 +135,7 @@
 					<p>
 						There is no front-end controller.<br />
 						As previously mentioned, files are distributed from physical points on the harddrive after being generated by specific events.<br />
-						Routing and dealing with requests is a cinch in Laravel. See how controllers work on <a href="https://github.com/8n-tech/larachan/blob/master/app/Http/routes.php">this very website</a>.
+						Routing and dealing with requests is a cinch in Laravel. See how controllers work on <a href="https://github.com/8n-tech/infinity-next/blob/master/app/Http/routes.php">this very website</a>.
 					</p>
 					<p>
 						There is no ODB, or even classes.<br />
@@ -196,11 +196,11 @@
 						Go ahead and shitpost on <a href="{{{url('/test/')}}}">&gt;&gt;&gt;/test/</a> real quick.
 						You'll notice that, on your post, there is a delete button.
 						This is something that <em>already exists</em> on this software that is completely impossible on existing imageboards due to flaws in the technology.
-						There is no way to render a page differently depending on who accesses it, but on Larachan, it is.
+						There is no way to render a page differently depending on who accesses it, but on Infinity, it is.
 					</p>
 					<p>
 						Password protected boards, boards restricted to board owners / site staff, variable user permissions, a built-in thread archival, a robust API (for 3rd party tools), board settings for things like number of threads per page, and so on.
-						The list of what existing imageboards <em>cannot do</em> that Larachan and Laravel are readily capable of is gigantic.
+						The list of what existing imageboards <em>cannot do</em> that Infinity and Laravel are readily capable of is gigantic.
 						Even if you don't like specifc ideas, the fact is that they are <em>possible</em>.
 					</p>
 					<p>
@@ -231,22 +231,22 @@
 				
 				<h3>How can I contribute?</h3>
 				<p>
-					Larachan will be open-source once we enter version 0.1, which will happen immediately after I've written documentation for what I've already built.
+					Infinity will be open-source once we enter version 0.1, which will happen immediately after I've written documentation for what I've already built.
 					I cannot offer pay for work, as I'm already strapped for cash, but I will gladly serve as a reference to any serious contributors.
 					If you are interested, I would seriously advise looking into the Laravel framework and familiarizing yourself with its architecture. There is a slight learning curve.
 				</p>
 				<p>
-					If you want to be notified when the github repository is opened, please email me at <a href="mailt:josh@larachan.org">josh@larachan.org</a>.
+					If you want to be notified when the github repository is opened, please email me at <a href="mailt:josh@Infinity.org">josh@Infinity.org</a>.
 				</p>
 				
 				<h3>Why did you build your own donation system? Why build it first thing?</h3>
 				<p>
-					Larachan's donation form was developed with Laravel's Stripe integration <em>specifically</em> to avoid Patreon, GoFundMe, Grattipay, and Kickstarter.
+					Infinity's donation form was developed with Laravel's Stripe integration <em>specifically</em> to avoid Patreon, GoFundMe, Grattipay, and Kickstarter.
 				</p>
 				<p>
 					Users of particular imageboards may be aware that those services are unfaithful to their patrons, despite taking a gratuitous 5 to 10% out of donations.
 					They will kick anyone off their programs for any reason, or no reason at all.
-					In the interest of webmasters, I've built a custom cashier system that can later be converted into a donation form for any website running Larachan.
+					In the interest of webmasters, I've built a custom cashier system that can later be converted into a donation form for any website running Infinity.
 					That way, only Stripe can cut funding to the website, and reliance on meddling, self-serving middleman can be avoided entirely.
 				</p>
 				
@@ -261,12 +261,12 @@
 					Since Wordpress is the most popular software suite on the Internet these days, it's impossible to find a host that doesn't accept PHP.
 				</p>
 				<p>
-					<strong>PHP is a very forgiving syntax.</strong> It shouldn't be hard to get Larachan hosted and configured to your liking.
+					<strong>PHP is a very forgiving syntax.</strong> It shouldn't be hard to get Infinity hosted and configured to your liking.
 					PHP is a very easy, rookie-friendly language that even a novice host can make changes to.
 				</p>
 				<p>
 					<strong>You know PHP.</strong> Every webmaster on the Internet has at least dabbled in PHP.
-					With a gargantuan developer pool, finding help and contributions for Larachan will be easier on PHP.
+					With a gargantuan developer pool, finding help and contributions for Infinity will be easier on PHP.
 				</p>
 				<p>
 					<strong>It's what I'm best at!</strong> Almost all of my experience as a developer comes from working with PHP.

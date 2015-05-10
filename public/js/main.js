@@ -1,11 +1,11 @@
 // Enter into a closed namespace where we can freely
 // define variables without messing up the window.
 (function(window, $, undefined) {
-	var lc = window.lc = function() {};
+	var ib = window.ib = function() {};
 	
-	lc.widgets = {};
+	ib.widgets = {};
 	
-	lc.config = function(name, configDefault) {
+	ib.config = function(name, configDefault) {
 		if (typeof window.app !== "undefined" && typeof window.app[name] !== "undefined")
 		{
 			return window.app[name];
@@ -14,18 +14,18 @@
 		return configDefault;
 	};
 	
-	lc.widget = function(name, widget) {
+	ib.widget = function(name, widget) {
 		
-		if (lc[name] !== undefined) {
-			console.log("Trying to re-declare Larachan Widget \""+name+"\".");
+		if (ib[name] !== undefined) {
+			console.log("Trying to re-declare widget \""+name+"\".");
 			return false;
 		}
 		
-		lc[name] = widget;
+		ib[name] = widget;
 		return true;
 	};
 	
-	lc.widgetArguments  = function(args) {
+	ib.widgetArguments  = function(args) {
 		var widget  = this;
 		var target  = args[0];
 		var options = args[1];
@@ -55,8 +55,8 @@
 	$(document).on('ready', function() {
 		$("[data-widget]").each(function() {
 			var requestedWidget = this.getAttribute('data-widget');
-			if (lc[requestedWidget]) {
-				lc[requestedWidget].init.call(this);
+			if (ib[requestedWidget]) {
+				ib[requestedWidget].init.call(this);
 			}
 			else {
 				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
@@ -64,7 +64,7 @@
 		});
 	});
 	
-	return lc;
+	return ib;
 })(window, jQuery);
 
 
@@ -132,11 +132,11 @@
 		},
 		
 		init     : function(target, options) {
-			window.lc.widgetArguments.call(widget, arguments);
+			window.ib.widgetArguments.call(widget, arguments);
 		}
 	};
 	
-	window.lc.widget("notice", widget);
+	window.ib.widget("notice", widget);
 })(window, jQuery);
 
 
@@ -149,7 +149,7 @@
 		defaults : {
 			// Config options for this widget.
 			config   : {
-				'stripe-key'    : window.lc.config('stripe_key', false)
+				'stripe-key'    : window.ib.config('stripe_key', false)
 			},
 			
 			// Selectors for finding and binding elements.
@@ -226,7 +226,7 @@
 					$ty.hide().fadeIn(500);
 					setTimeout(function() { widget.$widget.unblock(); }, 1500);
 					
-					window.lc.notice.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
+					window.ib.notice.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
 				}
 				else
 				{
@@ -234,7 +234,7 @@
 				}
 				
 				$.each(data.errors, function(index, error) {
-					window.lc.notice.push(error, "error");
+					window.ib.notice.push(error, "error");
 				});
 			},
 			
@@ -242,7 +242,7 @@
 				console.log(data);
 				
 				widget.$widget.unblock();
-				window.lc.notice.push("The server responded with an unknown error. You were not charged. Please report this issue.", "error");
+				window.ib.notice.push("The server responded with an unknown error. You were not charged. Please report this issue.", "error");
 			},
 			
 			ccnChange      : function(event) {
@@ -316,7 +316,7 @@
 			},
 			
 			formSubmit     : function(event) {
-				window.lc.notice.clear();
+				window.ib.notice.clear();
 				
 				var valid = true;
 				var sel   = widget.options.selector;
@@ -325,7 +325,7 @@
 				var $ccn  = $(sel['input-ccn']);
 				if (!$ccn.is(".control-valid"))
 				{
-					window.lc.notice.push("Please enter a valid credit card number.", 'error');
+					window.ib.notice.push("Please enter a valid credit card number.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
 				}
@@ -334,7 +334,7 @@
 				var $cvc = $(sel['input-cvc']);
 				if (/^\d{3}$/.test($cvc.val()) === false)
 				{
-					window.lc.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
+					window.ib.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
 				}
@@ -346,7 +346,7 @@
 				var expiredBy  = new Date().getMonth() + (new Date().getFullYear() * 12);
 				if (expiration < expiredBy)
 				{
-					window.lc.notice.push("Double-check your expiration date. This card is invalid.", 'error');
+					window.ib.notice.push("Double-check your expiration date. This card is invalid.", 'error');
 					valid = false;
 				}
 				
@@ -356,7 +356,7 @@
 				var amount     = 0;
 				if (!$amountSel.length)
 				{
-					window.lc.notice.push("Please enter an amount.", 'error');
+					window.ib.notice.push("Please enter an amount.", 'error');
 					valid = false;
 				}
 				else if ($amountSel.val() == "Other")
@@ -365,13 +365,13 @@
 					
 					if (isNaN(amount) || amount <= 3)
 					{
-						window.lc.notice.push("Please enter a real amount that is greater than $3.", 'error');
+						window.ib.notice.push("Please enter a real amount that is greater than $3.", 'error');
 						$amountInp.focus();
 						valid = false;
 					}
 					else if (amount.toString() !== $amountInp.val())
 					{
-						window.lc.notice.push("Please enter a real, whole number as a donation amount.", 'error');
+						window.ib.notice.push("Please enter a real, whole number as a donation amount.", 'error');
 						$amountInp.focus();
 						valid = false;
 					}
@@ -445,7 +445,7 @@
 				
 				if (response.error) {
 					// Show the errors on the form
-					window.lc.notice.push(response.error.message, "error");
+					window.ib.notice.push(response.error.message, "error");
 					
 					$form.unblock();
 					$form.find('button').prop('disabled', false);
@@ -490,11 +490,11 @@
 		
 		// Widget building.
 		init     : function(target, options) {
-			window.lc.widgetArguments.call(widget, arguments);
+			window.ib.widgetArguments.call(widget, arguments);
 		}
 	};
 	
-	window.lc.widget("donate", widget);
+	window.ib.widget("donate", widget);
 })(window, jQuery);
 
 

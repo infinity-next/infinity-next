@@ -8,7 +8,7 @@
 	@endif
 	
 	<fieldset id="card-details" class="form-fields require-js">
-		<legend class="form-legend">Donate to Larachan Development</legend>
+		<legend class="form-legend">Donate to Infinity Development</legend>
 		
 		<div id="card-form">
 			<div class="field-row">

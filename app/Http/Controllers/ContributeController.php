@@ -11,7 +11,7 @@ class ContributeController extends MainController {
 	| Contribute Controller
 	|--------------------------------------------------------------------------
 	|
-	| This controller handles any requests regarding the Larachan development.
+	| This controller handles any requests regarding the development fundraiser.
 	| Stripe and other merchant services are included in this.
 	|
 	*/

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', "Contribute to Larachan")
+@section('title', "Contribute to Infinity Next")
 @section('description', "Pushing imageboard communities beyond")
 
 @section('content')
@@ -8,7 +8,7 @@
 	<section class="contrib-howto grid-container">
 		<ul class="contrib-options smooth-box">
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="https://github.com/8n-tech/larachan/">
+				<a class="option-link" href="https://github.com/8n-tech/infinity-next/">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-github-alt fa-stack-1x fa-inverse"></i>
@@ -18,7 +18,7 @@
 				</a>
 				
 				<blockquote class="option-desc">
-					Larachan runs on the Laravel, the world's most popular PHP framework.<br />
+					Infinity runs on the Laravel, the world's most popular PHP framework.<br />
 					If you have experience with either, check out our GitHub.
 				</blockquote>
 			</li>
@@ -33,12 +33,12 @@
 				</a>
 				
 				<blockquote class="option-desc">
-					I run on food and require electricity to power my laptop.<br />
-					If you would like to support Larachan's full-time development, I can accept your faith with Stripe or in Bitcoins.
+					I run on food and require electricity.<br />
+					If you would like to support Infinity Next's full-time development, I can accept your faith with Stripe or in Bitcoins.
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="{!! url('/larachan/') !!}">
+				<a class="option-link" href="{!! url('/infinity/') !!}">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-lightbulb-o fa-stack-1x fa-inverse"></i>
@@ -137,7 +137,7 @@
 						<blockquote class="goal-helper">
 							A large issue with the extant imageboards is a lack of proper permission heirarchy, meaning that (from a developer standpoint) determining who can do what is awkward.
 							This problems compounds with the issue of single-board owners and their local volunteers.
-							Larachan account permissions will be based on group masks common in large software suites to allow for granular control of user permissions.
+							Infinity account permissions will be based on group masks common in large software suites to allow for granular control of user permissions.
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
@@ -211,7 +211,7 @@
 						<blockquote class="goal-helper">
 							Staff running a large imageboard often have to deal with illegal or copyrighted content.
 							The systems in place to automatically root out this stuff on YouTube or other large systems is widely unavailable to smaller websites.
-							At this mark, in preparation of moving large imageboards onto Larachan, I can begin to deal with <em>attachment bans</em>.
+							At this mark, in preparation of moving large imageboards onto Infinity, I can begin to deal with <em>attachment bans</em>.
 							<br /><br />
 							This handles two tasks.
 							First, allowing media of any format to be banned based on its hash.
@@ -224,8 +224,8 @@
 						<span class="goal-part">Hash &amp; spam databases</span>
 						<blockquote class="goal-helper">
 							<em>AdBlock</em> is an extremel popular advertisement blocking software that utilizes a shared database to propagate bans to evreyone using the plugin.
-							Similarly, I can take time to set up Larachan to have databases of illegal hashes and known spam methods.
-							Any instance of Larachan that <strong>opts in</strong> to use this database would learn bad hashes before ever seeing it itself.
+							Similarly, I can take time to set up Infinity to have databases of illegal hashes and known spam methods.
+							Any instance of Infinity that <strong>opts in</strong> to use this database would learn bad hashes before ever seeing it itself.
 							We can apply this to spam as well, and strengthen the security of all websites using the technology.
 						</blockquote>
 					</li>
@@ -244,7 +244,7 @@
 						<blockquote class="goal-helper">
 							The Infinity branch of Vichan has a lot of simple JavaScript tools that make its site more usable.
 							Infinite scrolling, inline post tools, thread counters, auto-updaters, etc.
-							These are not complicated systems and are worth reproducing into Larachan.
+							These are not complicated systems and are worth reproducing into Infinity.
 							<br /><br />
 							This would also be the time to listen to less critical feedback and implement "It would be nice if..." suggestions, and to go back and deal with anything we wish we had time for.
 							In general, just improve the software as a whole.
@@ -274,7 +274,7 @@
 				<h4 class="goal-title">$12,000 Mark</h4>
 				<div clas="grid-100">
 					<figure class="goal-figure">
-						<img id="goal-newchan" src="/img/assets/newchan.png" alt="Larachan + Other Imageboards Combining" />
+						<img id="goal-newchan" src="/img/assets/newchan.png" alt="Infinity + Other Imageboards Combining" />
 						<figcaption class="goal-helper">
 							Having achieved a feature richness that meets and exceeds large, existing websites,
 							it is likely that they will want to adopt the technology.<br />
@@ -288,7 +288,7 @@
 			<li class="goal smooth-box">
 				<h4 class="goal-title">Beyond</h4>
 				<blockquote class="goal-desc">
-					Once all expectations are met, Larachan can continue forward with new features, and constantly fine-tuning tools and user interfaces.
+					Once all expectations are met, Infinity can continue forward with new features, and constantly fine-tuning tools and user interfaces.
 					In truth, development never ends, and I try not to abandon my work.
 					<br /><br />
 					However, I have a pipe dream.
@@ -321,7 +321,7 @@
 			<p>Two years later, the company handled over $4,000,000,000 in payroll that annuam. It was no longer a start-up and they could afford to pay me enough to move out of my friend's place. Over the course of my employment with them, I had moved seven times in just under four years, traveling well over 16,000 miles combined. But, as they continued to grow, the rigid structures closed in around me. I was no longer able to set my own times and was never allowed to participate in the creation of solutions. People hired into positions over me handed decisions from on high and that is what I had to code. The thrill of the job had evaporated.</p>
 			<p>As a developer, I thrive off passion. Knowing what I build is used and enjoyed, knowing that people depend on me. When every client was "the most important" and big deals could make or break the entire company, sixty hour weeks and sixteen hour shifts were adventures, not labor. By the end of my run with the company, it had gone as far from that as possible. Everything was dull, and again I was bored.</p>
 			<p>So, I left.</p>
-			<p>I am poised to do anything I want. With four years of work experience, I meet the minimum requirements for most jobs in my industry without having a diploma. I could whip up a portfolio website and find a replacement job in no time. I've already gotten offers, but that's not what I want to do.<br />My goals are now elsewhere: passion projects. This is where Larachan (and you) fit in.</p>
+			<p>I am poised to do anything I want. With four years of work experience, I meet the minimum requirements for most jobs in my industry without having a diploma. I could whip up a portfolio website and find a replacement job in no time. I've already gotten offers, but that's not what I want to do.<br />My goals are now elsewhere: passion projects. This is where Infinity (and you) fit in.</p>
 		</blockquote>
 		
 		<div class="me-skillset grid-container">
