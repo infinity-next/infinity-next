@@ -793,6 +793,7 @@ section.index-threads {
 		margin: 0 auto 0 0;
 		padding: 0;
 		max-width: 75vw;
+		min-width: 20vw;
 	}
 		.post p.line {
 			display: block;
@@ -853,7 +854,7 @@ section.index-threads {
 					float: left;
 				}
 					figure.attachment {
-						margin: 0 1em 0 0;
+						margin: 0 1em 1em 0;
 					}
 						a.attachment-link {
 							
