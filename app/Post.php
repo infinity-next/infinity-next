@@ -186,7 +186,7 @@ class Post extends Model {
 	public function scopeForIndex($query)
 	{
 		return $query->visible()
-			->orderBy('id', 'desc')
+			->orderBy('id', 'asc')
 			->take(5);
 	}
 	
