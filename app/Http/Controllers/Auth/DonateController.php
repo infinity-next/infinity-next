@@ -84,7 +84,7 @@ class DonateController extends CpController {
 		{
 			case "once":
 				$tx = [
-					'description'   => "infinity dev donation",
+					'description'   => "larachan dev donation",
 					'source'        => $input['stripeToken'],
 					'receipt_email' => $input['email'],
 				];

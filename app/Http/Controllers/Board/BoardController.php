@@ -1,11 +1,16 @@
 <?php namespace App\Http\Controllers\Board;
 
 use App\Board;
+use App\FileStorage;
+use App\FileAttachment;
 use App\Post;
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
+use File;
+use Storage;
+use Response;
 
 class BoardController extends MainController {
 	
@@ -51,7 +56,7 @@ class BoardController extends MainController {
 		// Load our list of threads and their latest replies.
 		$threads = $board->getThreadsForIndex($page);
 		
-		$posts = array();
+		$posts = [];
 		foreach ($threads as $thread)
 		{
 			$posts[$thread->id] = $thread->getRepliesForIndex();
@@ -77,7 +82,7 @@ class BoardController extends MainController {
 	 *
 	 * @return Response
 	 */
-	public function getPost(Request $request, Board $board, $post = NULL, $action = NULL)
+	public function anyPost(Request $request, Board $board, $post = NULL, $action = NULL)
 	{
 		// If no post is specified, we can't do anything.
 		// Push the user to the index.
@@ -112,6 +117,16 @@ class BoardController extends MainController {
 				}
 				break;
 			
+			case "edit" :
+				if ($post->canEdit($this->auth->user()))
+				{
+					return View::make('content.', [
+						'board'    => $board,
+						'post'     => $post,
+					]);
+				}
+				break;
+			
 			// If the requested action is not recognized,
 			// abort with a file not found error.
 			default :
@@ -121,6 +136,32 @@ class BoardController extends MainController {
 		// If we did not default, that means we failed a check.
 		// Abort with a restriction error.
 		return abort(403);
+	}
+	
+	
+	/**
+	 * Delivers a file.
+	 *
+	 * @return Response
+	 */
+	public function getFile(Request $request, Board $board, $hash = false, $filename = false)
+	{
+		if ($hash !== false && $filename !== false)
+		{
+			$FileStorage = FileStorage::getHash($hash);
+			
+			if ($FileStorage instanceof FileStorage && Storage::exists("attachments/{$hash}"))
+			{
+				$responseFile = Storage::get("attachments/{$hash}");
+				$response = Response::make($responseFile, 200);
+				$response->header('content-type', $FileStorage->mime);
+				return $response;
+			}
+			
+			return abort(404);
+		}
+		
+		return redirect($board->uri);
 	}
 	
 	/**
@@ -165,14 +206,29 @@ class BoardController extends MainController {
 	 *
 	 * @return Response (redirects to the thread view)
 	 */
-	public function postThread(Request $request, Board $board, $thread_id = false)
+	public function putThread(Request $request, Board $board, $thread_id = false)
 	{
 		if ($input = Input::all())
 		{
-			$this->validate($request, [
-					'body' => 'required',
+			$canAttach = $board->canAttach($this->auth->user());
+			
+			if (!$canAttach)
+			{
+				$requirements = [
+					'body'    => 'required|max:' . $board->getSetting('postMaxLength'),
 					'captcha' => 'required|captcha',
-				]);
+				];
+			}
+			else
+			{
+				$requirements = [
+					'body'    => 'required_without:file|max:' . $board->getSetting('postMaxLength'),
+					'file'    => 'mimes:jpeg,gif,png|between:1,512',
+					'captcha' => 'required|captcha',
+				];
+			}
+			
+			$this->validate($request, $requirements);
 			
 			$post = new Post($input);
 			$post->author_ip = $request->ip();
@@ -184,6 +240,46 @@ class BoardController extends MainController {
 			}
 			
 			$board->threads()->save($post);
+			
+			// Add attachment
+			$upload = $request->file('file');
+			if ($upload && $canAttach)
+			{
+				$fileContent = File::get($upload);
+				$fileMD5     = md5(File::get($upload));
+				$fileTime    = $post->freshTimestamp();
+				$storage     = FileStorage::getHash($fileMD5);
+				
+				if (!($storage instanceof FileStorage))
+				{
+					$storage = new FileStorage();
+					$storage->hash     = $fileMD5;
+					$storage->banned   = false;
+					$storage->filesize = $upload->getSize();
+					$storage->mime     = $upload->getClientMimeType();
+					$storage->first_uploaded_at = $fileTime;
+					$storage->upload_count = 0;
+				}
+				
+				$storage->last_uploaded_at = $fileTime;
+				$storage->upload_count += 1;
+				$storage->save();
+				
+				if (!$storage->banned)
+				{
+					$attachment = new FileAttachment();
+					$attachment->post = $post->id;
+					$attachment->file = $storage->id;
+					$attachment->filename = $upload->getFilename() . '.' . $upload->guessExtension();
+					$attachment->save();
+					
+					if (!Storage::exists("attachments/{$fileMD5}"))
+					{
+						Storage::put("attachments/{$fileMD5}", $fileContent);
+					}
+				}
+			}
+			
 			
 			if ($thread_id === false)
 			{

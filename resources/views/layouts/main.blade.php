@@ -57,6 +57,8 @@
 	@yield('content')
 	
 	<footer>
+		@yield('footer')
+		
 		@include('nav.boardlist')
 		
 		<section id="footnotes">

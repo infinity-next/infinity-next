@@ -668,10 +668,6 @@ nav.boardlist {
 	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
-		
-		position: absolute;
-		left: 0;
-		right: 0;
 	}
 		footer .boardlist-row.row-pages {
 			display: none;
@@ -790,7 +786,7 @@ section.index-threads {
 		margin: 0.5em 0 0.5em 0.75em;
 		padding: 0 0 0 1.25em;
 		border-left: 2px dashed rgba(0,0,0,0.1);
-	}	
+	}
 	
 	.post {
 		font-size: 105%;
@@ -820,6 +816,11 @@ section.index-threads {
 		.post-content {
 			padding: 0.75em;
 		}
+		.post-content::after {
+			content: ' ';
+			clear: both;
+			display: block;
+		}
 			.post-details {
 				margin-bottom: 0.60em;
 			}
@@ -844,6 +845,23 @@ section.index-threads {
 					.postid {
 						display: inline-block;
 					}
+			
+			ul.post-attachments {
+				
+			}
+				li.post-attachment {
+					float: left;
+				}
+					figure.attachment {
+						margin: 0 1em 0 0;
+					}
+						a.attachment-link {
+							
+						}
+							img.attachment-img {
+								max-height: 250px;
+								max-width: 250px;
+							}
 		
 		ul.post-actions {
 			border-top: 1px solid rgba(0, 0, 0, 0.15);
@@ -870,7 +888,7 @@ section.auth-form {
 nav.pagination {
 	background: #fff;
 	padding: 0.25em 0;
-	margin: 0 0 -1em 0;
+	margin: 0;
 	color: #f4645f;
 }
 	nav.pagination::after {
@@ -886,7 +904,7 @@ nav.pagination {
 		div.pagination-buttons .pagination-button {
 			line-height: 1.2;
 			margin: 0.2em 0;
-			padding: 0.15em 0.75em 0.2em;
+			padding: 0.15em 0.75em 0.25em;
 		}
 	
 	ul.pagination-pages::before,
@@ -1357,7 +1375,6 @@ footer {
 }
 	#footnotes {
 		background: #333;
-		margin-top: 1em;
 		padding: 0.5em 0;
 		
 		color: #ffffff;

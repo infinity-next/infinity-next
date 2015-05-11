@@ -18,13 +18,15 @@
 			@foreach ($threads as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include('content.post', [ 'board' => $board, 'thread' => $thread, 'posts' => $posts ])
+					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'posts' => $posts ])
 				</article>
 			</li>
 			@endforeach
 		</ul>
 	</section>
-	
-	@include('nav.boardpages')
 </main>
+@stop
+
+@section('footer')
+	@include('nav.boardpages')
 @stop

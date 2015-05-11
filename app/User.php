@@ -44,6 +44,34 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 *
 	 */
+	public function canAttach(Board $board)
+	{
+		if ($this->id == 1)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 *
+	 *
+	 */
+	public function canEdit(Board $board)
+	{
+		if ($this->id == 1)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 *
+	 *
+	 */
 	public function canDelete(Board $board)
 	{
 		if ($this->id == 1)

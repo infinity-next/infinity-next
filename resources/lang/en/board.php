@@ -12,6 +12,23 @@ return [
 	|
 	*/
 	
+	// Form Legends
+	// These appear above a post form.
+	'form_reply'        => "Reply",
+	'form_thread'       => "New Thread",
+	
+	// Form Fields
+	// Specific fields in the form
+	'field_subject'     => "Subject",
+	'field_author'      => "Author",
+	'field_email'       => "Email",
+	
+	// Form Actions
+	'action_reply'      => "Post Reply",
+	'action_thread'     => "Create Thread",
+	
+	
+	// Default Values
 	'anonymous'         => "Anonymous",
 	
 	// These fit together as "Omitted 3 posts" or "Omitted 3 posts with 2 files"

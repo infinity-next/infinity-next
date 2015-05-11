@@ -40,6 +40,7 @@ class Board extends Model {
 	 */
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
+	
 	public function posts()
 	{
 		return $this->hasMany('\App\Post', 'uri');
@@ -49,6 +50,18 @@ class Board extends Model {
 	{
 		return $this->hasMany('\App\Post', 'uri');
 	}
+	
+	
+	public function canAttach($user = null)
+	{
+		if ($user instanceof \App\User)
+		{
+			return $user->canAttach($this);
+		}
+		
+		return false;
+	}
+	
 	
 	public static function getBoardListBar()
 	{
@@ -70,8 +83,9 @@ class Board extends Model {
 		if (!isset($this->settings))
 		{
 			$this->settings = [
-				'defaultName'  => trans('board.anonymous'),
-				'postsPerPage' => 10,
+				'defaultName'   => trans('board.anonymous'),
+				'postMaxLength' => 2048,
+				'postsPerPage'  => 10,
 			];
 		}
 		

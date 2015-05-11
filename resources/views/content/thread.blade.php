@@ -12,6 +12,18 @@
 			</li>
 		</ul>
 		
+		<ul class="post-attachments">
+			@foreach ($thread->attachments as $attachment)
+			<li class="post-attachment">
+				<figure class="attachment">
+					<a class="attachment-link" href="{!! url("{$board->uri}/file/{$attachment->storage->hash}/{$attachment->filename}") !!}">
+						<img class="attachment-img" src="{!! url("{$board->uri}/file/{$attachment->storage->hash}/{$attachment->filename}") !!}" alt="{{ $attachment->filename }}" />
+					</a>
+				</figure>
+			</li>
+			@endforeach
+		</ul>
+		
 		<blockquote class="post ugc">
 			{!! $thread->getBodyFormatted() !!}
 		</blockquote>
@@ -21,6 +33,10 @@
 		<li class="post-action">
 			@if ($thread->canDelete($user))
 			<a class="post-action-link" href="{{{url("{$board->uri}/post/{$thread->board_id}/delete")}}}">Delete</a>
+			@endif
+			
+			@if ($thread->canEdit($user))
+			<a class="post-action-link" href="{{{url("{$board->uri}/post/{$thread->board_id}/edit")}}}">Edit</a>
 			@endif
 		</li>
 	</ul>
@@ -35,7 +51,7 @@
 	@foreach ($posts[ $thread->id ] as $thread)
 	<li class="thread-reply">
 		<article class="reply">
-			@include('content.post', [ 'thread' => $thread, 'posts' => $posts ])
+			@include('content.thread', [ 'thread' => $thread, 'posts' => $posts ])
 		</article>
 	</li>
 	@endforeach

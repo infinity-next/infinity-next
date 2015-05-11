@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Services\ContentFormatter;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Request;
@@ -82,6 +83,16 @@ class Post extends Model {
 		});
 	}
 	
+	public function canEdit($user = null)
+	{
+		if ($user instanceof \App\User)
+		{
+			return $user->canEdit($this->getBoard());
+		}
+		
+		return false;
+	}
+	
 	public function canDelete($user = null)
 	{
 		if ($this->author_ip == Request::ip())
@@ -89,7 +100,7 @@ class Post extends Model {
 			return true;
 		}
 		
-		if (is_a($user, "\App\User"))
+		if ($user instanceof \App\User)
 		{
 			return $user->canDelete($this->getBoard());
 		}
@@ -108,6 +119,17 @@ class Post extends Model {
 		return $ContentFormatter->formatPost($this);
 	}
 	
+	public function getAttachments()
+	{
+		$this->storage()->get();
+		return [];
+	}
+	
+	
+	public function attachments()
+	{
+		return $this->hasMany('\App\FileAttachment', 'post', 'id');
+	}
 	
 	public function board()
 	{
@@ -147,12 +169,7 @@ class Post extends Model {
 	
 	public function getRepliesForIndex()
 	{
-		return $this->replies()
-			->visible()
-			->orderBy('id', 'desc')
-			->take(5)
-			->get()
-			->reverse();
+		return $this->replies()->forIndex()->get();
 	}
 	
 	
@@ -166,9 +183,27 @@ class Post extends Model {
 		return $query->where('created_at', '>=', static::freshTimestamp()->subHour());
 	}
 	
+	public function scopeForIndex($query)
+	{
+		return $query->visible()
+			->orderBy('id', 'desc')
+			->take(5);
+	}
+	
 	public function scopeReplyTo($query, $replies = false)
 	{
-		if(is_numeric($replies))
+		if ($replies instanceof \Illuminate\Database\Eloquent\Collection)
+		{
+			$thread_ids = [];
+			
+			foreach ($replies as $thread)
+			{
+				$thread_ids[] = (int) $thread->id;
+			}
+			
+			return $query->whereIn('reply_to', $thread_ids);
+		}
+		else if (is_numeric($replies))
 		{
 			return $query->where('reply_to', '=', $replies);
 		}

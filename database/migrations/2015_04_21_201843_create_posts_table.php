@@ -24,6 +24,7 @@ class CreatePostsTable extends Migration {
 			
 			// Embedded information
 			$table->timestamps();
+			$table->integer('updated_by')->unsigned()->nullable();
 			$table->softDeletes();
 			$table->string('author_ip', 46);
 			

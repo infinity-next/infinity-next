@@ -64,5 +64,6 @@ Route::group([
 	// Indexes
 	// The number immediately preceding the board is what page we're on.
 	Route::get('{id}', 'Board\BoardController@getIndex')->where(['id' => '[0-9]+']);
+	Route::any('file', 'Board\BoardController@getFile');
 	Route::controller('', 'Board\BoardController');
 });
