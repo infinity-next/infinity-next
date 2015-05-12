@@ -5,12 +5,10 @@ use App\Post;
 
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
-use Illuminate\Http\Redirect;
 
 use File;
 use Storage;
 use Request;
-use Redirect;
 
 class FileController extends MainController {
 	
@@ -35,7 +33,7 @@ class FileController extends MainController {
 	 * @param  string $prefx
 	 * @return Response
 	 */
-	public function getFile(Request $request, Board $board, $hash = false, $filename = false, $prefix="/static/")
+	public function getFile(Request $request, Board $board, $hash = false, $filename = false, $prefix="/uploads/")
 	{
 		if ($hash !== false && $filename !== false)
 		{
