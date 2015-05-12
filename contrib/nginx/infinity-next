@@ -12,7 +12,7 @@ server {
         location ~ /uploads/ {
             autoindex off;
             access_log off; 
-            root /srv/http/infinity-next/server/storage/app/attachments/;
+            root /srv/http/infinity-next/storage/app/attachments/;
             break;
         }
         
