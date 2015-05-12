@@ -39,7 +39,8 @@ class FileController extends MainController {
 			// redirect to static image directory
 			$split = explode($filename, ".");
 			$ext = end($split);
-			$url = "${prefix}{$hash}.{$ext}";
+			//$url = "${prefix}{$hash}.{$ext}";
+            $url = $filename;
 			return redirect($url);
 		}
 		
