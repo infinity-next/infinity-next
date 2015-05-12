@@ -148,6 +148,7 @@ return [
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
+		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
 		
 		/*
@@ -158,7 +159,7 @@ return [
 		/*
 		 * Captcha
 		 */
-		'Mews\Captcha\CaptchaServiceProvider',
+		'App\Services\CaptchaServiceProvider',
 	],
 
 	/*
@@ -212,7 +213,7 @@ return [
 		/*
 		 * Captcha
 		 */
-		'Captcha' => 'Mews\Captcha\Facades\Captcha',
+		'Captcha' => 'App\Support\Facades\Captcha',
 	],
 
 ];
