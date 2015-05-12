@@ -40,9 +40,9 @@ class FileController extends MainController {
 		if ($hash !== false && $filename !== false)
 		{
 			// redirect to static image directory
-			var $split = explode($filename, ".");
-			var $ext = end($split);
-			var $url = "${prefix}{$hash}.{$ext}";
+			$split = explode($filename, ".");
+			$ext = end($split);
+			$url = "${prefix}{$hash}.{$ext}";
 			return redirect($url);
 		}
 		

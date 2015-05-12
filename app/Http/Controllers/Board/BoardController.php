@@ -229,10 +229,10 @@ class BoardController extends MainController {
 					$attachment = new FileAttachment();
 					$attachment->post = $post->id;
 					$attachment->file = $storage->id;
-					var $extension = $upload->guessExtension();
+					$extension = $upload->guessExtension();
 					$attachment->filename = $upload->getFilename() . '.' . $extension ;
 					$attachment->save();
-					var $storage_path = "attachments/{$fileMD5}.${extension}";
+					$storage_path = "attachments/{$fileMD5}.${extension}";
 					if (!Storage::exists($storage_path))
 					{
 						Storage::put($storage_path, $fileContent);
