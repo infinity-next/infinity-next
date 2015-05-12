@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 use File;
 use Storage;
-use Request;
 
 class FileController extends MainController {
 	
