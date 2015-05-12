@@ -21,9 +21,9 @@ class FileStorage extends Model {
 	public $timestamps = false;
 	
 	
-	public function attachments()
+	public function posts()
 	{
-		return $this->hasMany('\App\FileAttachment', 'post', 'id');
+		return $this->belongsToMany("\App\Post", 'file_attachments', 'file', 'post')->withPivot('filename');
 	}
 	
 	

@@ -4,6 +4,7 @@ use App\Services\ContentFormatter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Request;
 
 class Post extends Model {
@@ -63,6 +64,7 @@ class Post extends Model {
 				
 				if ($op && $op->canReply())
 				{
+					$op->reply_count += 1;
 					$op->reply_last = $post->created_at;
 					$op->save();
 				}
@@ -79,6 +81,14 @@ class Post extends Model {
 		// When deleting a post, delete its children.
 		static::deleting(function($post)
 		{
+			// Subtract a reply from OP.
+			if ($post->reply_to)
+			{
+				$post->op->reply_count -= 1;
+				$post->op->save();
+			}
+			
+			// Delete any replies.
 			static::replyTo($post->id)->delete();
 		});
 	}
@@ -87,7 +97,7 @@ class Post extends Model {
 	{
 		if ($user instanceof \App\User)
 		{
-			return $user->canEdit($this->getBoard());
+			return $user->canEdit($this);
 		}
 		
 		return false;
@@ -102,7 +112,7 @@ class Post extends Model {
 		
 		if ($user instanceof \App\User)
 		{
-			return $user->canDelete($this->getBoard());
+			return $user->canDelete($this);
 		}
 		
 		return false;
@@ -119,16 +129,10 @@ class Post extends Model {
 		return $ContentFormatter->formatPost($this);
 	}
 	
-	public function getAttachments()
-	{
-		$this->storage()->get();
-		return [];
-	}
-	
 	
 	public function attachments()
 	{
-		return $this->hasMany('\App\FileAttachment', 'post', 'id');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post', 'file')->withPivot('filename');
 	}
 	
 	public function board()
@@ -169,7 +173,10 @@ class Post extends Model {
 	
 	public function getRepliesForIndex()
 	{
-		return $this->replies()->forIndex()->get();
+		return $this->replies()
+			->forIndex()
+			->get()
+			->reverse();
 	}
 	
 	
@@ -186,7 +193,7 @@ class Post extends Model {
 	public function scopeForIndex($query)
 	{
 		return $query->visible()
-			->orderBy('id', 'asc')
+			->orderBy('id', 'desc')
 			->take(5);
 	}
 	

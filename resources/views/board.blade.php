@@ -15,10 +15,10 @@
 	
 	<section class="index-threads static">
 		<ul class="thread-list">
-			@foreach ($threads as $thread)
+			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'posts' => $posts ])
+					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'op' => true ])
 				</article>
 			</li>
 			@endforeach

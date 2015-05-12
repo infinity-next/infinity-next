@@ -1,8 +1,6 @@
 <?php namespace App\Http\Controllers\Board;
 
 use App\Board;
-use App\FileStorage;
-use App\FileAttachment;
 use App\Post;
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
@@ -52,19 +50,11 @@ class BoardController extends MainController {
 		$pagePrev = ($page > 1) ? $page - 1 : false;
 		$pageNext = ($page < $pages) ? $page + 1 : false;
 		
-		
 		// Load our list of threads and their latest replies.
-		$threads = $board->getThreadsForIndex($page);
-		
-		$posts = [];
-		foreach ($threads as $thread)
-		{
-			$posts[$thread->id] = $thread->getRepliesForIndex();
-		}
+		$posts = $board->getThreadsForIndex($page);
 		
 		return View::make('board', [
 			'board'    => $board,
-			'threads'  => $threads,
 			'posts'    => $posts,
 			'reply_to' => false,
 			
@@ -140,31 +130,6 @@ class BoardController extends MainController {
 	
 	
 	/**
-	 * Delivers a file.
-	 *
-	 * @return Response
-	 */
-	public function getFile(Request $request, Board $board, $hash = false, $filename = false)
-	{
-		if ($hash !== false && $filename !== false)
-		{
-			$FileStorage = FileStorage::getHash($hash);
-			
-			if ($FileStorage instanceof FileStorage && Storage::exists("attachments/{$hash}"))
-			{
-				$responseFile = Storage::get("attachments/{$hash}");
-				$response = Response::make($responseFile, 200);
-				$response->header('content-type', $FileStorage->mime);
-				return $response;
-			}
-			
-			return abort(404);
-		}
-		
-		return redirect($board->uri);
-	}
-	
-	/**
 	 * Renders a thread.
 	 *
 	 * @return Response
@@ -189,14 +154,9 @@ class BoardController extends MainController {
 			return redirect("{$board->uri}/thread/{$thread->board_id}#{$post->board_id}");
 		}
 		
-		
-		$posts = array();
-		$posts[$thread->id] = $thread->getReplies();
-		
 		return View::make('board', [
 			'board'    => $board,
-			'threads'  => [$thread],
-			'posts'    => $posts,
+			'posts'    => [ $thread ],
 			'reply_to' => $thread->board_id,
 		]);
 	}

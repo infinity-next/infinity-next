@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Collection;
 
 class Board extends Model {
 	
@@ -75,7 +76,11 @@ class Board extends Model {
 	
 	public function getPageCount()
 	{
-		return ceil( $this->threads()->op()->visible()->count() / (int) $this->getSetting('postsPerPage') );
+		$visibleThreads = $this->threads()->op()->visible()->count();
+		$threadsPerPage = (int) $this->getSetting('postsPerPage');
+		$pageCount      = ceil( $visibleThreads / $threadsPerPage );
+		
+		return $pageCount > 0 ? $pageCount : 1;
 	}
 	
 	public function getSettings()
@@ -113,20 +118,30 @@ class Board extends Model {
 	
 	public function getThreads()
 	{
-		return $this->threads()->get();
+		return $this->threads()
+			->with('attachments')
+			->get();
 	}
 	
 	public function getThreadsForIndex($page = 0)
 	{
 		$postsPerPage = $this->getSetting('postsPerPage', 10);
 		
-		return $this->threads()
+		$threads = $this->threads()
+			->with('attachments', 'replies', 'replies.attachments')
 			->op()
 			->visible()
 			->orderBy('reply_last', 'desc')
 			->skip($postsPerPage * ( $page - 1 ))
 			->take($postsPerPage)
 			->get();
+		
+		foreach ($threads as &$thread)
+		{
+			$thread->replies = $thread->replies->take(-5);
+		}
+		
+		return $threads;
 	}
 	
 	public function scopeIndexed($query)

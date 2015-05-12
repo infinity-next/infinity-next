@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Board;
+use App\Post;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -58,7 +59,7 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 *
 	 */
-	public function canEdit(Board $board)
+	public function canEdit(Post $post)
 	{
 		if ($this->id == 1)
 		{
@@ -72,7 +73,7 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 *
 	 */
-	public function canDelete(Board $board)
+	public function canDelete(Post $post)
 	{
 		if ($this->id == 1)
 		{

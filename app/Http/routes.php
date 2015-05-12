@@ -24,17 +24,22 @@ Route::get('/', 'WelcomeController@getIndex');
 */
 Route::group(['prefix' => 'cp'], function()
 {
+	// Simple /cp/ requests go directly to /cp/home
 	Route::any('/', 'Auth\HomeController@getIndex');
 	
 	Route::controllers([
+		// /cp/auth handles sign-ins and registrar work.
 		'auth'     => 'Auth\AuthController',
+		// /cp/home is a landing page.
 		'home'     => 'Auth\HomeController',
+		// /cp/password handles password resets and recovery.
 		'password' => 'Auth\PasswordController',
 	]);
 	
 	if (env('CONTRIB_ENABLED', false))
 	{
 		Route::controllers([
+			// /cp/donate is a Stripe cashier system for donations.
 			'donate'   => 'Auth\DonateController',
 		]);
 	}
@@ -48,7 +53,6 @@ Route::group(['prefix' => 'cp'], function()
 if (env('CONTRIB_ENABLED', false))
 {
 	Route::get('contribute', 'ContributeController@index');
-	Route::get('contribute/donate', 'ContributeController@donate');
 }
 
 
@@ -57,13 +61,30 @@ if (env('CONTRIB_ENABLED', false))
 | A catch all. Used to load boards.
 */
 Route::group([
-	'prefix' => '{board}',
-	'where'  => ['board' => '[a-z]{1,31}'],
+	'namespace' => 'Board',
+	'prefix'    => '{board}',
+	'where'     => ['board' => '[a-z]{1,31}'],
 ], function()
 {
-	// Indexes
-	// The number immediately preceding the board is what page we're on.
-	Route::get('{id}', 'Board\BoardController@getIndex')->where(['id' => '[0-9]+']);
-	Route::any('file', 'Board\BoardController@getFile');
-	Route::controller('', 'Board\BoardController');
+	// /board/file/ requests (for thumbnails & files) goes to the FileController.
+	Route::group([
+		'prefix'    => 'file',
+	], function()
+	{
+		Route::get('/', 'FileController@getIndex');
+		
+		Route::get('{hash}/{filename}', 'FileController@getFile')
+			->where([
+				'hash'     => "[a-f0-9]{32}",
+			]);
+	});
+	
+	// Pushes simple /board/ requests to their index page.
+	Route::any('/',    'BoardController@getIndex');
+	
+	// Routes /board/1 to an index page for a specific pagination point.
+	Route::get('{id}', 'BoardController@getIndex')->where(['id' => '[0-9]+']);
+	
+	// More complicated /board/view requests.
+	Route::controller('', 'BoardController');
 });

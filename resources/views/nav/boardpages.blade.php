@@ -2,15 +2,15 @@
 <nav class="pagination">
 	<div class="pagination-buttons buttons-before">
 		@if ($page > 1)
-			<a class="button pagination-button pagination-first" href="{{{url($board->uri)}}}">&lt;&lt;</a>
+			<a class="button pagination-button pagination-first" href="{{{url($board->uri)}}}" title="@lang('board.first')">&lt;&lt;</a>
 		@else
-			<button class="pagination-button pagination-first" disabled>&lt;&lt;</button>
+			<button class="pagination-button pagination-first" title="@lang('board.first')" disabled>&lt;&lt;</button>
 		@endif
 		
 		@if ($pagePrev !== false)
-			<a class="button pagination-button pagination-prev" href="{{{url("{$board->uri}/{$pagePrev}")}}}">&lt;</a>
+			<a class="button pagination-button pagination-prev" href="{{{url("{$board->uri}/{$pagePrev}")}}}" title="@lang('board.previous')">&lt;</a>
 		@else
-			<button class="pagination-button pagination-prev" disabled>&lt;</button>
+			<button class="pagination-button pagination-prev" title="@lang('board.previous')" disabled>&lt;</button>
 		@endif
 	</div>
 	
@@ -24,15 +24,15 @@
 	
 	<div class="pagination-buttons buttons-after">
 		@if ($pageNext !== false)
-			<a class="button pagination-button pagination-next" href="{{{url("{$board->uri}/{$pageNext}")}}}">&gt;</a>
+			<a class="button pagination-button pagination-next" href="{{{url("{$board->uri}/{$pageNext}")}}}" title="@lang('board.next')">&gt;</a>
 		@else
-			<button class="pagination-button pagination-next" disabled>&gt;</button>
+			<button class="pagination-button pagination-next" title="@lang('board.next')" disabled>&gt;</button>
 		@endif
 		
 		@if ($page < $pages)
-			<a class="button pagination-button pagination-last" href="{{{url("{$board->uri}/{$pages}")}}}">&gt;&gt;</a>
+			<a class="button pagination-button pagination-last" href="{{{url("{$board->uri}/{$pages}")}}}" title="@lang('board.last')">&gt;&gt;</a>
 		@else
-			<button class="pagination-button pagination-last" disabled>&gt;&gt;</button>
+			<button class="pagination-button pagination-last" title="@lang('board.last')" disabled>&gt;&gt;</button>
 		@endif
 	</div>
 </nav>
