@@ -18,7 +18,7 @@
 			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'op' => true ])
+					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'op' => $thread ])
 				</article>
 			</li>
 			@endforeach

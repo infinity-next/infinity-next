@@ -173,6 +173,18 @@ class Post extends Model {
 		return static::where([ 'uri' => $uri, 'board_id' => $board_id ])->first();
 	}
 	
+	public static function getThread($post)
+	{
+		return $this->posts()
+			->with('attachments', 'replies', 'replies.attachments')
+			->op()
+			->visible()
+			->orderBy('reply_last', 'desc')
+			->where('board_id', $post)
+			->orWhere('reply_to', $post)
+			->get();
+	}
+	
 	public function getOp()
 	{
 		return $this->op()->get()->first();

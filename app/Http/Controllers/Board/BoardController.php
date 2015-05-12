@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers\Board;
 
 use App\Board;
+use App\FileStorage;
+use App\FileAttachment;
 use App\Post;
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
@@ -69,6 +71,7 @@ class BoardController extends MainController {
 	/**
 	 * Redirects to a specific post in a thread, or
 	 * allows moderators to manages a post.
+	 * TODO: Replace this with a controller.
 	 *
 	 * @return Response
 	 */
@@ -141,17 +144,12 @@ class BoardController extends MainController {
 			return redirect($board->uri);
 		}
 		
+		// Pull the thread.
+		$thread = $board->getThread($thread);
 		
-		$post = $thread = $board->getLocalThread($thread);
-		
-		while (!is_null($thread->reply_to))
+		if ($thread->reply_to)
 		{
-			$thread = Post::find($thread->reply_to);
-		}
-		
-		if ($post->board_id != $thread->board_id)
-		{
-			return redirect("{$board->uri}/thread/{$thread->board_id}#{$post->board_id}");
+			return redirect("{$board->uri}/thread/{$thread->op->board_id}");
 		}
 		
 		return View::make('board', [

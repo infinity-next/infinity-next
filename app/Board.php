@@ -109,10 +109,14 @@ class Board extends Model {
 		return $fallback;
 	}
 	
-	public function getLocalThread($post)
+	public function getThread($post)
 	{
-		return $this->threads()
+		return $this->posts()
 			->where('board_id', $post)
+			->with('attachments', 'replies', 'replies.attachments')
+			->visible()
+			->orderBy('reply_last', 'desc')
+			->get()
 			->first();
 	}
 	
