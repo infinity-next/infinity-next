@@ -204,14 +204,15 @@ class BoardController extends MainController {
 			if ($upload && $canAttach)
 			{
 				$fileContent = File::get($upload);
-				$fileMD5     = md5(File::get($upload));
+				$fileMD5     = md5($fileContent);
 				$fileTime    = $post->freshTimestamp();
 				$storage     = FileStorage::getHash($fileMD5);
 				
 				if (!($storage instanceof FileStorage))
 				{
 					$storage = new FileStorage();
-					$storage->hash     = $fileMD5;
+					$storage->hash	   = $fileMD5;
+					// XXX: check for ban?
 					$storage->banned   = false;
 					$storage->filesize = $upload->getSize();
 					$storage->mime     = $upload->getClientMimeType();
@@ -228,12 +229,13 @@ class BoardController extends MainController {
 					$attachment = new FileAttachment();
 					$attachment->post = $post->id;
 					$attachment->file = $storage->id;
-					$attachment->filename = $upload->getFilename() . '.' . $upload->guessExtension();
+					var $extension = $upload->guessExtension();
+					$attachment->filename = $upload->getFilename() . '.' . $extension ;
 					$attachment->save();
-					
-					if (!Storage::exists("attachments/{$fileMD5}"))
+					var $storage_path = "attachments/{$fileMD5}.${extension}";
+					if (!Storage::exists($storage_path))
 					{
-						Storage::put("attachments/{$fileMD5}", $fileContent);
+						Storage::put($storage_path, $fileContent);
 					}
 				}
 			}

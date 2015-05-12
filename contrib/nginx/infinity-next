@@ -1,0 +1,36 @@
+server {
+       listen [::]:80;
+                
+        root /srv/http/infinity-next/public;
+        index index.php;
+        server_name infinity;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        location /img/ {
+            autoindex off;
+            root /srv/http/infinity-next/server/storage/app/attachments/
+        }
+        
+        location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+            access_log off;
+            expires max;
+        }
+        
+        # unless the request is for a valid file (image, js, css, etc.), route to larvel
+        if (!-e $request_filename) {
+            rewrite ^/(.*)$ /index.php?/$1 last;
+            break;
+        }
+        
+        
+        location ~ \.php$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param   SCRIPT_FILENAME         $document_root$fastcgi_script_name;
+        }
+}

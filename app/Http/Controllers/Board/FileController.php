@@ -1,16 +1,16 @@
 <?php namespace App\Http\Controllers\Board;
 
 use App\Board;
-use App\FileStorage;
-use App\FileAttachment;
 use App\Post;
 
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
+use Illuminate\Http\Redirect;
 
 use File;
 use Storage;
-use Response;
+use Request;
+use Redirect;
 
 class FileController extends MainController {
 	
@@ -24,31 +24,26 @@ class FileController extends MainController {
 	*/
 	
 	/**
-	 * Delivers a file.
+	 * redirects to a file.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * TODO: make prefix configurable
+	 *
+	 * @param  \Illuminate\Http\Request	 $request
 	 * @param  \App\Board $board
 	 * @param  \App\FileStorage->hash $hash
 	 * @param  \App\FileAttachment->hash $filename
+	 * @param  string $prefx
 	 * @return Response
 	 */
-	public function getFile(Request $request, Board $board, $hash = false, $filename = false)
+	public function getFile(Request $request, Board $board, $hash = false, $filename = false, $prefix="/static/")
 	{
 		if ($hash !== false && $filename !== false)
 		{
-			$FileStorage = FileStorage::getHash($hash);
-			
-			if ($FileStorage instanceof FileStorage && Storage::exists("attachments/{$hash}"))
-			{
-				$responseFile = Storage::get("attachments/{$hash}");
-				
-				$response = Response::make($responseFile, 200);
-				$response->header('content-type', $FileStorage->mime);
-				$response->header('content-disposition', "inline");
-				$response->header('filename', $filename);
-				
-				return $response;
-			}
+			// redirect to static image directory
+			var $split = explode($filename, ".");
+			var $ext = end($split);
+			var $url = "${prefix}{$hash}.{$ext}";
+			return redirect($url);
 		}
 		
 		return abort(404);
