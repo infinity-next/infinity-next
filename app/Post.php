@@ -81,15 +81,27 @@ class Post extends Model {
 		// When deleting a post, delete its children.
 		static::deleting(function($post)
 		{
-			// Subtract a reply from OP.
+			static::replyTo($post->id)->delete();
+		});
+		
+		static::deleted(function($post) {
+			// Subtract a reply from OP and update its last reply time.
 			if ($post->reply_to)
 			{
+				$lastReply = $post->op->getReplyLast();
+				
+				if ($lastReply)
+				{
+					$post->op->reply_last = $lastReply->created_at;
+				}
+				else
+				{
+					$post->op->reply_last = $post->op->created_at;
+				}
+				
 				$post->op->reply_count -= 1;
 				$post->op->save();
 			}
-			
-			// Delete any replies.
-			static::replyTo($post->id)->delete();
 		});
 	}
 	
@@ -164,6 +176,22 @@ class Post extends Model {
 	public function getOp()
 	{
 		return $this->op()->get()->first();
+	}
+	
+	
+	/**
+	 * Returns the latest reply to a post.
+	 *
+	 * @return Post|null
+	 */
+	public function getReplyLast()
+	{
+		return $this->replies()
+			->visible()
+			->orderBy('id', 'desc')
+			->take(1)
+			->get()
+			->first();
 	}
 	
 	public function getReplies()
