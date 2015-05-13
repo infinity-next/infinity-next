@@ -53,16 +53,22 @@ class CreateRolePivots extends Migration {
 		});
 		
 		
-		$boardRoles = [];
+		$userRoles = [
+			[
+				'user'  => 1,
+				'role'  => 2,
+				'cache' => NULL,
+			]
+		];
 		foreach (Board::get() as $board)
 		{
-			$boardRoles[] =  [
+			$userRoles[] =  [
 				'user'  => $board->operated_by,
 				'role'  => $board->getOwnerRole()->id,
 				'cache' => NULL,
 			];
 		}
-		DB::table('user_roles')->insert($boardRoles);
+		DB::table('user_roles')->insert($userRoles);
 	}
 	
 	/**
