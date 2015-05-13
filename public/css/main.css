@@ -755,18 +755,17 @@ section.index-form {
 			position: fixed;
 			z-index: 1000;
 			top: 3.4em;
-			right: 1vw;
+			right: 10px;
 			
 			display: block;
 			width: 300px;
-			opacity: 1;
-		}
-		form.form-post:hover {
-			opacity: 1;
 		}
 		
-		section.index-threads .post-container {
-			margin-right: 1em;
+		section.index-threads .thread {
+			margin-right: 350px;
+		}
+		section.index-threads .post {
+			max-width: 70vw;
 		}
 	}
 
@@ -775,7 +774,7 @@ section.index-threads {
 }
 	/* Threads */
 	.thread {
-		margin: 0 0 0 1em;
+		margin: 0 1em 0 1em;
 		padding: 1em 0 1em 0;
 	}
 	.thread-item:nth-child(even) {
@@ -792,7 +791,6 @@ section.index-threads {
 		font-size: 105%;
 		margin: 0 auto 0 0;
 		padding: 0;
-		max-width: 75vw;
 		min-width: 20vw;
 	}
 		.post p.line {
@@ -806,12 +804,18 @@ section.index-threads {
 			color: #789922;
 		}
 	
+	.thread-replies-omitted {
+		color: #ccc;
+		font-size: 90%;
+		margin: 0.25em 0.5em;
+	}
+	
 	.post-container {
 		display: inline-block;
 		background: #fff;
 		border-radius: 4px;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-		margin: 0 355px 0 0;
+		margin: 0;
 		overflow: hidden;
 	}
 		.post-content {

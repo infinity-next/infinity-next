@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 class FileAttachment extends Model {
+	
 	/**
 	 * The database table used by the model.
 	 *
@@ -29,4 +30,5 @@ class FileAttachment extends Model {
 	{
 		return $this->belongsTo('\App\FileStorage', 'file', 'id');
 	}
+	
 }

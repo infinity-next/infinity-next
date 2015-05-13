@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Collection;
@@ -52,6 +53,11 @@ class Board extends Model {
 		return $this->hasMany('\App\Post', 'uri');
 	}
 	
+	public function roles()
+	{
+		return $this->hasMany('\App\Role', 'board', 'uri');
+	}
+	
 	
 	public function canAttach($user = null)
 	{
@@ -90,6 +96,15 @@ class Board extends Model {
 		$pageCount      = ceil( $visibleThreads / $threadsPerPage );
 		
 		return $pageCount > 0 ? $pageCount : 1;
+	}
+	
+	public function getOwnerRole()
+	{
+		return $this->roles()
+			->where('role', "owner")
+			->where('caste', NULL)
+			->get()
+			->first();
 	}
 	
 	public function getSettings()
