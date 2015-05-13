@@ -7,6 +7,7 @@ use App\Post;
 
 use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use File;
 use Storage;
@@ -36,16 +37,24 @@ class FileController extends MainController {
 	{
 		if ($hash !== false && $filename !== false)
 		{
-			$FileStorage = FileStorage::getHash($hash);
+			$FileStorage     = FileStorage::getHash($hash);
+			$storagePath     = "attachments/{$hash}";
+			$storagePathFull = storage_path() . "/app/" . $storagePath;
 			
-			if ($FileStorage instanceof FileStorage && Storage::exists("attachments/{$hash}"))
+			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
-				$responseFile = Storage::get("attachments/{$hash}");
+				$responeSize     = Storage::size($storagePath);
+				$responseHeaders = [
+					'Cache-Control'       => "public, max-age=315360000",
+					'Content-Disposition' => "inline",
+					'Content-Length'      => $responeSize,
+					'Content-Type'        => $FileStorage->mime,
+					'Filename'            => $filename,
+				];
 				
-				$response = Response::make($responseFile, 200);
-				$response->header('content-type', $FileStorage->mime);
-				$response->header('content-disposition', "inline");
-				$response->header('filename', $filename);
+				$response = Response::stream(function() use ($storagePathFull) {
+					readfile($storagePathFull);
+				}, 200, $responseHeaders);
 				
 				return $response;
 			}

@@ -74,6 +74,15 @@ class Board extends Model {
 		];
 	}
 	
+	public function getLocalThread($local_id)
+	{
+		return $this->threads()
+			->op()
+			->where('board_id', $local_id)
+			->get()
+			->first();
+	}
+	
 	public function getPageCount()
 	{
 		$visibleThreads = $this->threads()->op()->visible()->count();
