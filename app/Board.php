@@ -164,7 +164,7 @@ class Board extends Model {
 			->take($postsPerPage)
 			->get();
 		
-		foreach ($threads as &$thread)
+		foreach ($threads as $thread)
 		{
 			$thread->replies = $thread->replies->take(-5);
 		}
