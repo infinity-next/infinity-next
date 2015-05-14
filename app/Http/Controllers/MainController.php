@@ -19,10 +19,11 @@ abstract class MainController extends Controller {
 	 */
 	public function __construct(Guard $auth, Registrar $registrar)
 	{
-		$this->auth = $auth;
+		$this->auth      = $auth;
 		$this->registrar = $registrar;
+		$this->user      = $this->auth->user();
 		
 		View::share('boardbar', Board::getBoardListBar());
-		View::share('user', $this->auth->user());
+		View::share('user', $this->user);
 	}
 }

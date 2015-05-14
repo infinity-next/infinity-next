@@ -146,6 +146,7 @@ return [
 		 */
 		'App\Providers\AppServiceProvider',
 		'App\Providers\BusServiceProvider',
+		'App\Providers\CaptchaServiceProvider',
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
@@ -155,11 +156,6 @@ return [
 		 * Stripe
 		 */
 		'Laravel\Cashier\CashierServiceProvider',
-		
-		/*
-		 * Captcha
-		 */
-		'App\Services\CaptchaServiceProvider',
 	],
 
 	/*
@@ -213,7 +209,7 @@ return [
 		/*
 		 * Captcha
 		 */
-		'Captcha' => 'App\Support\Facades\Captcha',
+		'Captcha'   => 'App\Support\Facades\Captcha',
 	],
 
 ];

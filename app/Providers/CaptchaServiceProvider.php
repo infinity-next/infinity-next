@@ -1,5 +1,7 @@
-<?php namespace App\Services;
+<?php namespace App\Providers;
 
+use App\Support\Captcha;
+use App\Validators\CaptchaValidator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
 
