@@ -16,19 +16,19 @@ class FileAttachment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['post', 'file', 'filename'];
+	protected $fillable = ['post_id', 'file_id', 'filename'];
 	
 	public $timestamps = false;
 	
 	
 	public function post()
 	{
-		return $this->belongsTo('\App\Post', 'post', 'id');
+		return $this->belongsTo('\App\Post', 'post_id');
 	}
 	
 	public function storage()
 	{
-		return $this->belongsTo('\App\FileStorage', 'file', 'id');
+		return $this->belongsTo('\App\FileStorage', 'file_id');
 	}
 	
 }

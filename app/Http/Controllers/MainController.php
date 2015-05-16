@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Board;
+use App\Support\Anonymous;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Bus\DispatchesCommands;
@@ -21,7 +22,15 @@ abstract class MainController extends Controller {
 	{
 		$this->auth      = $auth;
 		$this->registrar = $registrar;
-		$this->user      = $this->auth->user();
+		
+		if ($auth->guest())
+		{
+			$this->user  = new Anonymous;
+		}
+		else
+		{
+			$this->user  = $auth->user();
+		}
 		
 		View::share('boardbar', Board::getBoardListBar());
 		View::share('user', $this->user);

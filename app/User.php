@@ -2,6 +2,8 @@
 
 use App\Board;
 use App\Post;
+use App\Contracts\PermissionUser as PermissionUserContract;
+use App\Traits\PermissionUser;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -10,9 +12,17 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\Contracts\Billable as BillableContract;
 
-class User extends Model implements AuthenticatableContract, BillableContract, CanResetPasswordContract {
+class User extends Model implements AuthenticatableContract, BillableContract, CanResetPasswordContract, PermissionUserContract {
 	
-	use Authenticatable, Billable, CanResetPassword;
+	use Authenticatable, Billable, CanResetPassword, PermissionUser;
+	
+	/**
+	 * Distinguishes this model from an Anonymous user.
+	 *
+	 * @var boolean
+	 */
+	protected $anonymous = false;
+	
 	
 	/**
 	 * The database table used by the model.
@@ -20,6 +30,13 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 * @var string
 	 */
 	protected $table = 'users';
+	
+	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'user_id';
 	
 	/**
 	 * The attributes that are mass assignable.
@@ -37,49 +54,11 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	
 	public function payments()
 	{
-		return $this->hasMany('\App\Payment', 'customer', 'id');
+		return $this->hasMany('\App\Payment', 'customer_id', 'user_id');
 	}
 	
-	
-	/**
-	 *
-	 *
-	 */
-	public function canAttach(Board $board)
+	public function roles()
 	{
-		if ($this->id == 1)
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 *
-	 *
-	 */
-	public function canEdit(Post $post)
-	{
-		if ($this->id == 1)
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 *
-	 *
-	 */
-	public function canDelete(Post $post)
-	{
-		if ($this->id == 1)
-		{
-			return true;
-		}
-		
-		return false;
+		return $this->hasMany('\App\UserRole', 'user_id');
 	}
 }

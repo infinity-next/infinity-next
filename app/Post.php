@@ -19,11 +19,18 @@ class Post extends Model {
 	protected $table = 'posts';
 	
 	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'post_id';
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['uri', 'board_id', 'reply_to', 'author_ip', 'subject', 'author', 'email', 'body'];
+	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'author_ip', 'subject', 'author', 'email', 'body'];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -81,7 +88,7 @@ class Post extends Model {
 		// When deleting a post, delete its children.
 		static::deleting(function($post)
 		{
-			static::replyTo($post->id)->delete();
+			static::replyTo($post->post_id)->delete();
 		});
 		
 		static::deleted(function($post) {
@@ -105,29 +112,14 @@ class Post extends Model {
 		});
 	}
 	
-	public function canEdit($user = null)
+	public function canEdit($user)
 	{
-		if ($user instanceof \App\User)
-		{
-			return $user->canEdit($this);
-		}
-		
-		return false;
+		return $user->canEdit($this);
 	}
 	
-	public function canDelete($user = null)
+	public function canDelete($user)
 	{
-		if ($this->author_ip == Request::ip())
-		{
-			return true;
-		}
-		
-		if ($user instanceof \App\User)
-		{
-			return $user->canDelete($this);
-		}
-		
-		return false;
+		return $user->canDelete($this);
 	}
 	
 	public function canReply()
@@ -144,33 +136,39 @@ class Post extends Model {
 	
 	public function attachments()
 	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post', 'file')->withPivot('filename');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
 	}
 	
 	public function board()
 	{
-		return $this->belongsTo('\App\Board', 'uri');
+		return $this->belongsTo('\App\Board', 'board_uri');
 	}
 	
 	public function op()
 	{
-		return $this->belongsTo('\App\Post', 'reply_to', 'id');
+		return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
 	}
 	
 	public function replies()
 	{
-		return $this->hasMany('\App\Post', 'reply_to', 'id');
+		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
 	}
 	
 	
 	public function getBoard()
 	{
-		return $this->board()->get()->first();
+		return $this->board()
+			->get()
+			->first();
 	}
 	
 	public static function getPostForBoard($uri, $board_id)
 	{
-		return static::where([ 'uri' => $uri, 'board_id' => $board_id ])->first();
+		return static::where([
+				'board_uri' => $uri,
+				'board_id' => $board_id,
+			])
+			->first();
 	}
 	
 	public static function getThread($post)
@@ -187,7 +185,9 @@ class Post extends Model {
 	
 	public function getOp()
 	{
-		return $this->op()->get()->first();
+		return $this->op()
+			->get()
+			->first();
 	}
 	
 	
@@ -200,7 +200,7 @@ class Post extends Model {
 	{
 		return $this->replies()
 			->visible()
-			->orderBy('id', 'desc')
+			->orderBy('post_id', 'desc')
 			->take(1)
 			->get()
 			->first();
@@ -208,7 +208,8 @@ class Post extends Model {
 	
 	public function getReplies()
 	{
-		return $this->replies()->get();
+		return $this->replies()
+			->get();
 	}
 	
 	public function getRepliesForIndex()
@@ -233,7 +234,7 @@ class Post extends Model {
 	public function scopeForIndex($query)
 	{
 		return $query->visible()
-			->orderBy('id', 'desc')
+			->orderBy('post_id', 'desc')
 			->take(5);
 	}
 	
@@ -245,7 +246,7 @@ class Post extends Model {
 			
 			foreach ($replies as $thread)
 			{
-				$thread_ids[] = (int) $thread->id;
+				$thread_ids[] = (int) $thread->post_id;
 			}
 			
 			return $query->whereIn('reply_to', $thread_ids);

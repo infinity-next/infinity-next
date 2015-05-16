@@ -14,7 +14,7 @@ class CreateBoardsTable extends Migration {
 	{
 		Schema::create('boards', function(Blueprint $table)
 		{
-			$table->string('uri', 255)->unique();
+			$table->string('board_uri', 255)->unique();
 			$table->string('title', 255);
 			$table->string('description', 255)->default(NULL)->nullable();
 			$table->timestamps();
@@ -22,9 +22,16 @@ class CreateBoardsTable extends Migration {
 			$table->integer('operated_by')->unsigned();
 			$table->integer('posts_total')->unsigned()->default(0);
 			
-			$table->primary('uri');
-			$table->foreign('created_by')->references('id')->on('users');
-			$table->foreign('operated_by')->references('id')->on('users');
+			// Foreigns and Indexes
+			$table->primary('board_uri');
+			
+			$table->foreign('created_by')
+				->references('user_id')->on('users')
+				->onDelete('cascade')->onUpdate('cascade');
+			
+			$table->foreign('operated_by')
+				->references('user_id')->on('users')
+				->onDelete('cascade')->onUpdate('cascade');
 		});
 	}
 

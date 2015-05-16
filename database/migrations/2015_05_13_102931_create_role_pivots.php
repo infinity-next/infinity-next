@@ -1,7 +1,5 @@
 <?php
 
-use App\Board;
-use App\Role;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -16,59 +14,40 @@ class CreateRolePivots extends Migration {
 	{
 		Schema::create('user_roles', function(Blueprint $table)
 		{
-			$table->integer('user')->unsigned();
-			$table->integer('role')->unsigned();
-			$table->binary('cache')->nullable()->default(NULL);
+			$table->integer('user_id')->unsigned();
+			$table->integer('role_id')->unsigned();
 			
-			$table->primary(['user', 'role']);
-			$table->index('user');
-			$table->index('role');
+			$table->primary(['user_id', 'role_id']);
+			$table->index('user_id');
+			$table->index('role_id');
 			
-			$table->foreign('user')
-				->references('id')->on('users')
+			$table->foreign('user_id')
+				->references('user_id')->on('users')
 				->onDelete('cascade')->onUpdate('cascade');
 			
-			$table->foreign('role')
-				->references('id')->on('roles')
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
 				->onDelete('cascade')->onUpdate('cascade');
 		});
 		
 		Schema::create('role_permissions', function(Blueprint $table)
 		{
-			$table->integer('role')->unsigned();
-			$table->string('permission');
+			$table->integer('role_id')->unsigned();
+			$table->string('permission_id');
 			$table->boolean('value');
 			
-			$table->primary(['role', 'permission']);
-			$table->index('role');
-			$table->index('permission');
+			$table->primary(['role_id', 'permission_id']);
+			$table->index('role_id');
+			$table->index('permission_id');
 			
-			$table->foreign('role')
-				->references('id')->on('roles')
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
 				->onDelete('cascade')->onUpdate('cascade');
 				
-			$table->foreign('permission')
-				->references('permission')->on('permissions')
+			$table->foreign('permission_id')
+				->references('permission_id')->on('permissions')
 				->onDelete('cascade')->onUpdate('cascade');
 		});
-		
-		
-		$userRoles = [
-			[
-				'user'  => 1,
-				'role'  => 2,
-				'cache' => NULL,
-			]
-		];
-		foreach (Board::get() as $board)
-		{
-			$userRoles[] =  [
-				'user'  => $board->operated_by,
-				'role'  => $board->getOwnerRole()->id,
-				'cache' => NULL,
-			];
-		}
-		DB::table('user_roles')->insert($userRoles);
 	}
 	
 	/**

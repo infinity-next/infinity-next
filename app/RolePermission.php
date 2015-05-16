@@ -16,19 +16,19 @@ class RolePermissions extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['role', 'permission', 'value'];
+	protected $fillable = ['role_id', 'permission_id', 'value'];
 	
 	public $timestamps = false;
 	
 	
 	public function permission()
 	{
-		return $this->belongsTo('\App\Permission', 'permission');
+		return $this->belongsTo('\App\Permission', 'permission_id');
 	}
 	
 	public function role()
 	{
-		return $this->belongsTo('\App\Role', 'role', 'id');
+		return $this->belongsTo('\App\Role', 'role_id');
 	}
 	
 }

@@ -12,6 +12,13 @@ class FileStorage extends Model {
 	protected $table = 'files';
 	
 	/**
+	 * The database primary key.
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'file_id';
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -23,7 +30,7 @@ class FileStorage extends Model {
 	
 	public function posts()
 	{
-		return $this->belongsToMany("\App\Post", 'file_attachments', 'file', 'post')->withPivot('filename');
+		return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename');
 	}
 	
 	

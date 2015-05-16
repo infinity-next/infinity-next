@@ -1,4 +1,4 @@
-<form class="form-post" method="POST" action="{{ url($board->uri . '/thread/' . ($reply_to ?: "")) }}" enctype="multipart/form-data">
+<form class="form-post" method="POST" action="{{ url($board->board_uri . '/thread/' . ($reply_to ?: "")) }}" enctype="multipart/form-data">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	<input type="hidden" name="_method" value="PUT" />
 	

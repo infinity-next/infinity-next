@@ -19,14 +19,14 @@ class Board extends Model {
 	 *
 	 * @var string
 	 */
-	protected $primaryKey = 'uri';
+	protected $primaryKey = 'board_uri';
 	
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['uri', 'title', 'description'];
+	protected $fillable = ['board_uri', 'title', 'description'];
 	
 	/**
 	 * Cached settings for this board.
@@ -45,28 +45,23 @@ class Board extends Model {
 	
 	public function posts()
 	{
-		return $this->hasMany('\App\Post', 'uri');
+		return $this->hasMany('\App\Post', 'board_uri');
 	}
 	
 	public function threads()
 	{
-		return $this->hasMany('\App\Post', 'uri');
+		return $this->hasMany('\App\Post', 'board_uri');
 	}
 	
 	public function roles()
 	{
-		return $this->hasMany('\App\Role', 'board', 'uri');
+		return $this->hasMany('\App\Role', 'board_uri');
 	}
 	
 	
-	public function canAttach($user = null)
+	public function canAttach($user)
 	{
-		if ($user instanceof \App\User)
-		{
-			return $user->canAttach($this);
-		}
-		
-		return false;
+		return $user->canAttach($this);
 	}
 	
 	
@@ -74,7 +69,7 @@ class Board extends Model {
 	{
 		return [
 			static::where('posts_total', '>', '-1')
-				->orderBy('uri', 'asc')
+				->orderBy('board_uri', 'asc')
 				->take(20)
 				->get()
 		];
@@ -84,6 +79,14 @@ class Board extends Model {
 	{
 		return $this->threads()
 			->op()
+			->where('board_id', $local_id)
+			->get()
+			->first();
+	}
+	
+	public function getLocalReply($local_id)
+	{
+		return $this->posts()
 			->where('board_id', $local_id)
 			->get()
 			->first();

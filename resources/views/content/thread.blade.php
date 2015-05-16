@@ -8,11 +8,11 @@
 			<li class="post-detail post-authorid"><span class="authorid"></span></li>
 			<li class="post-detail post-id">
 				@if ($thread->reply_to)
-				<a href="{!! url("{$board->uri}/thread/{$op->board_id}#{$thread->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
-				<a href="{!! url("{$board->uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
+				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#{$thread->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
+				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
 				@else
-				<a href="{!! url("{$board->uri}/thread/{$op->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
-				<a href="{!! url("{$board->uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
+				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
+				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
 				@endif
 			</li>
 		</ul>
@@ -21,8 +21,8 @@
 			@foreach ($thread->attachments as $attachment)
 			<li class="post-attachment">
 				<figure class="attachment">
-					<a class="attachment-link" target="_new" href="{!! url("{$board->uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}">
-						<img class="attachment-img" src="{!! url("{$board->uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}" alt="{{ $attachment->pivot->filename }}" />
+					<a class="attachment-link" target="_new" href="{!! url("{$board->board_uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}">
+						<img class="attachment-img" src="{!! url("{$board->board_uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}" alt="{{ $attachment->pivot->filename }}" />
 					</a>
 				</figure>
 			</li>
@@ -37,11 +37,11 @@
 	<ul class="post-actions">
 		<li class="post-action">
 			@if ($thread->canDelete($user))
-			<a class="post-action-link" href="{{{url("{$board->uri}/post/{$thread->board_id}/delete")}}}">@lang('board.action_delete')</a>
+			<a class="post-action-link" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/delete") !!}">@lang('board.action_delete')</a>
 			@endif
 			
 			@if ($thread->canEdit($user))
-			<a class="post-action-link" href="{{{url("{$board->uri}/post/{$thread->board_id}/edit")}}}">@lang('board.action_edit')</a>
+			<a class="post-action-link" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/edit") !!}">@lang('board.action_edit')</a>
 			@endif
 		</li>
 	</ul>

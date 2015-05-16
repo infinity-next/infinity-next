@@ -16,14 +16,14 @@ class Payment extends Model {
 	 *
 	 * @var string
 	 */
-	protected $primaryKey = 'id';
+	protected $primaryKey = 'payment_id';
 	
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['customer', 'attribution', 'ip', 'amount', 'subscription'];
+	protected $fillable = ['customer_id', 'attribution', 'ip', 'amount', 'subscription'];
 	
 	/**
 	 * Disable automatic timestamp management.
@@ -46,6 +46,6 @@ class Payment extends Model {
 	
 	public function customer()
 	{
-		return $this->belongsTo('\App\User', 'id', 'customer');
+		return $this->belongsTo('\App\User', 'user_id', 'customer_id');
 	}
 }

@@ -81,7 +81,7 @@ class BoardController extends MainController {
 		// Push the user to the index.
 		if (is_null($post))
 		{
-			return redirect($board->uri);
+			return redirect($board->board_uri);
 		}
 		
 		// If there is no action, we're just finding a specific post.
@@ -92,7 +92,7 @@ class BoardController extends MainController {
 		}
 		
 		// Find the post.
-		$post = $board->getLocalThread($post);
+		$post = $board->getLocalReply($post);
 		
 		if (!$post)
 		{
@@ -103,15 +103,15 @@ class BoardController extends MainController {
 		switch ($action)
 		{
 			case "delete" :
-				if ($post->canDelete($this->auth->user()))
+				if ($post->canDelete($this->user))
 				{
 					$post->delete();
-					return redirect($board->uri);
+					return redirect($board->board_uri);
 				}
 				break;
 			
 			case "edit" :
-				if ($post->canEdit($this->auth->user()))
+				if ($post->canEdit($this->user))
 				{
 					return View::make('content.', [
 						'board'    => $board,
@@ -141,7 +141,7 @@ class BoardController extends MainController {
 	{
 		if (is_null($thread))
 		{
-			return redirect($board->uri);
+			return redirect($board->board_uri);
 		}
 		
 		// Pull the thread.
@@ -149,7 +149,7 @@ class BoardController extends MainController {
 		
 		if ($thread->reply_to)
 		{
-			return redirect("{$board->uri}/thread/{$thread->op->board_id}");
+			return redirect("{$board->board_uri}/thread/{$thread->op->board_id}");
 		}
 		
 		return View::make('board', [
@@ -168,7 +168,7 @@ class BoardController extends MainController {
 	{
 		if ($input = Input::all())
 		{
-			$canAttach = $board->canAttach($this->auth->user());
+			$canAttach = $board->canAttach($this->user);
 			
 			if (!$canAttach)
 			{
@@ -194,7 +194,7 @@ class BoardController extends MainController {
 			if ($thread_id !== false)
 			{
 				$thread = $board->getLocalThread($thread_id);
-				$post->reply_to = $thread->id;
+				$post->reply_to = $thread->post_id;
 			}
 			
 			$board->threads()->save($post);
@@ -226,8 +226,8 @@ class BoardController extends MainController {
 				if (!$storage->banned)
 				{
 					$attachment = new FileAttachment();
-					$attachment->post = $post->id;
-					$attachment->file = $storage->id;
+					$attachment->post_id  = $post->post_id;
+					$attachment->file_id  = $storage->file_id;
 					$attachment->filename = $upload->getFilename() . '.' . $upload->guessExtension();
 					$attachment->save();
 					
@@ -241,14 +241,14 @@ class BoardController extends MainController {
 			
 			if ($thread_id === false)
 			{
-				return redirect("{$board->uri}/thread/{$post->board_id}");
+				return redirect("{$board->board_uri}/thread/{$post->board_id}");
 			}
 			else
 			{
-				return redirect("{$board->uri}/thread/{$thread->board_id}#{$post->board_id}");
+				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
 			}
 		}
 		
-		return redirect($board->uri);
+		return redirect($board->board_uri);
 	}
 }

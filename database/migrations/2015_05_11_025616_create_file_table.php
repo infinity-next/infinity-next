@@ -14,7 +14,7 @@ class CreateFileTable extends Migration {
 	{
 		Schema::create('files', function(Blueprint $table)
 		{
-			$table->bigIncrements('id');
+			$table->bigIncrements('file_id');
 			$table->char('hash', 32);
 			$table->boolean('banned')->default(false);
 			$table->integer('filesize')->unsigned();
@@ -29,15 +29,21 @@ class CreateFileTable extends Migration {
 		
 		Schema::create('file_attachments', function(Blueprint $table)
 		{
-			$table->bigIncrements('id');
-			$table->bigInteger('post')->unsigned();
-			$table->bigInteger('file')->unsigned();
+			$table->bigIncrements('attachment_id');
+			$table->bigInteger('post_id')->unsigned();
+			$table->bigInteger('file_id')->unsigned();
 			
 			$table->string('filename', 255);
 			
 			
-			$table->foreign('post')->references('id')->on('posts');
-			$table->foreign('file')->references('id')->on('files');
+			// Foreigns and Indexes
+			$table->foreign('file_id')
+				->references('file_id')->on('files')
+				->onUpdate('cascade');
+			
+			$table->foreign('post_id')
+				->references('post_id')->on('posts')
+				->onDelete('cascade')->onUpdate('cascade');
 		});
 	}
 	

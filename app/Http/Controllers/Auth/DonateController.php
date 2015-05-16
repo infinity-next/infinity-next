@@ -69,7 +69,7 @@ class DonateController extends CpController {
 		
 		// Build our \App\Payment model.
 		$payment = [
-			'customer'     => ($fakeUser ? NULL : $user->id ),
+			'customer'     => ($fakeUser ? NULL : $user->user_id),
 			'attribution'  => $input['attribution'],
 			'ip'           => $request->getClientIp(),
 			'amount'       => $input['amount'] * 100,

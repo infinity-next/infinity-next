@@ -16,19 +16,19 @@ class UserRole extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['user', 'role', 'cache'];
+	protected $fillable = ['user_id', 'role_id'];
 	
 	public $timestamps = false;
 	
 	
 	public function user()
 	{
-		return $this->belongsTo('\App\User', 'user', 'id');
+		return $this->belongsTo('\App\User', 'user_id');
 	}
 	
 	public function role()
 	{
-		return $this->belongsTo('\App\Role', 'role', 'id');
+		return $this->belongsTo('\App\Role', 'role_id');
 	}
 	
 }

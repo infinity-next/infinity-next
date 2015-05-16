@@ -15,8 +15,8 @@ class CreateStripeChargeTable extends Migration {
 		Schema::create('payments', function(Blueprint $table)
 		{
 			// Bulk data
-			$table->increments('id');
-			$table->integer('customer')->unsigned()->nullable()->default(NULL);
+			$table->increments('payment_id');
+			$table->integer('customer_id')->unsigned()->nullable()->default(NULL);
 			$table->string('attribution', 255)->nullable()->default(NULL);
 			$table->string('ip', 46);
 			$table->timestamp('created_at');
@@ -24,8 +24,10 @@ class CreateStripeChargeTable extends Migration {
 			$table->string('currency', 3);
 			$table->string('subscription', 64)->nullable();
 			
-			// Keys
-			$table->foreign('customer')->references('id')->on('users');
+			// Foreigns and Indexes
+			$table->foreign('customer_id')
+				->references('user_id')->on('users')
+				->onUpdate('cascade');
 		});
 	}
 	
