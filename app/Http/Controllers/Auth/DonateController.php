@@ -32,9 +32,8 @@ class DonateController extends CpController {
 	public function getIndex(Request $request)
 	{
 		$donated = 0;
-		$user    = $this->auth->user();
 		
-		if ($user)
+		if (!$user->isAnonymous())
 		{
 			$donated = $user->payments()->sum('amount');
 		}
@@ -57,11 +56,11 @@ class DonateController extends CpController {
 		$errors   = [];
 		$fakeUser = false;
 		
-		$user     = $this->auth->user();
+		$user     = $this->user;
 		$input    = Input::all();
 		
-		// Create a dummy account if we're not authenticated.
-		if (!$user)
+		// Create a dummy account if we're not using a registered account.
+		if ($user->isAnonymous())
 		{
 			$fakeUser = true;
 			$user = new User();
@@ -69,7 +68,7 @@ class DonateController extends CpController {
 		
 		// Build our \App\Payment model.
 		$payment = [
-			'customer'     => ($fakeUser ? NULL : $user->user_id),
+			'customer'     => $user->user_id,
 			'attribution'  => $input['attribution'],
 			'ip'           => $request->getClientIp(),
 			'amount'       => $input['amount'] * 100,

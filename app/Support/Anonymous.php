@@ -24,7 +24,9 @@ class Anonymous implements PermissionUserContract
 	 *
 	 * @var mixed
 	 */
-	public $user_id = null;
+	public $user_id  = null;
+	public $username = null;
+	public $email    = null;
 	
 	/**
 	 * Distinguishes this model from an Anonymous user.
