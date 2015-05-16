@@ -33,7 +33,7 @@ class DonateController extends CpController {
 	{
 		$donated = 0;
 		
-		if (!$user->isAnonymous())
+		if (!$this->user->isAnonymous())
 		{
 			$donated = $user->payments()->sum('amount');
 		}
