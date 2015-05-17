@@ -738,7 +738,7 @@ section.index-form {
 		border-radius: 4px;
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 		padding: 0.75em;
-		margin: 0 auto 1em auto;
+		margin: 0 auto 2em auto;
 		max-width: 480px;
 	}
 	form.form-post .field {
@@ -758,6 +758,7 @@ section.index-form {
 			right: 10px;
 			
 			display: block;
+			margin: 0;
 			width: 300px;
 		}
 		
@@ -780,6 +781,12 @@ section.index-form {
 			section.index-threads aside.advertisement.bottom-right figure.advertisement {
 				display: block;
 			}
+	}
+	
+	@media (max-width: 768px) {
+		section.index-threads aside.advertisement.top-left {
+			display: none;
+		}
 	}
 
 section.index-threads {
