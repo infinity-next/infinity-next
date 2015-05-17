@@ -114,7 +114,7 @@ class BoardController extends MainController {
 					
 					if ($reply_to)
 					{
-						return redirect("{$board->board_uri}/thread/{$reply_to}");
+						return redirect("{$board->board_uri}/thread/{$post->op->board_id}");
 					}
 					else
 					{
@@ -244,7 +244,7 @@ class BoardController extends MainController {
 			
 			
 			// Store attachments
-			$uploads = Input::file('files');
+			$uploads = array_filter(Input::file('files'));
 			
 			if ($canAttach && count($uploads) > 0)
 			{
@@ -256,7 +256,7 @@ class BoardController extends MainController {
 					$fileValidator = Validator::make([
 						'file' => $upload,
 					], [
-						'file' => 'mimes:jpeg,gif,png|between:0,5120'
+						'file' => 'required|mimes:jpeg,gif,png|between:1,5120'
 					]);
 					
 					if ($fileValidator->passes())
