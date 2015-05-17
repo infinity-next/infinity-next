@@ -731,6 +731,7 @@ main {
 
 /* Board Index */
 section.index-form {
+	
 }
 	form.form-post {
 		background: #fff;
@@ -749,7 +750,6 @@ section.index-form {
 		max-height: 50vh;
 	}
 	
-	
 	@media (min-width: 1028px) and (min-height: 640px) {
 		form.form-post {
 			position: fixed;
@@ -767,17 +767,45 @@ section.index-form {
 		section.index-threads .post {
 			max-width: 70vw;
 		}
+		
+		/* Advertisements */
+		section.index-threads aside.advertisement.top-left {
+			text-align: left;
+		}
+		section.index-threads aside.advertisement.bottom-right {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+		}
+			section.index-threads aside.advertisement.bottom-right figure.advertisement {
+				display: block;
+			}
 	}
 
 section.index-threads {
 	margin: -1em 0 0 0;
+	position: relative;
 }
+	/* Advertisements */
+	aside.advertisement.top-left {
+		padding: 1em;
+		text-align: center;
+	}
+	aside.advertisement.bottom-right {
+		text-align: center;
+	}
+		aside.advertisement.bottom-right figure.advertisement {
+			display: inline-block;
+			margin: 10px;
+		}
+	
 	/* Threads */
 	.thread {
 		margin: 0 1em 0 1em;
 		padding: 1em 0 1em 0;
 	}
-	.thread-item:nth-child(even) {
+	.thread-item:nth-child(even),
+	section.index-threads .advertisement.top-left {
 		background: rgba(255,255,255,0.5);
 	}
 	

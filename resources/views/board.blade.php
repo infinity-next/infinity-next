@@ -6,14 +6,12 @@
 @section('content')
 <main class="board-index page-1">
 	<section class="index-form">
-		<aside class="advertisement left"></aside>
-		
 		@include('content.forms.post', [ 'board' => $board ])
-		
-		<aside class="advertisement right"></aside>
 	</section>
 	
 	<section class="index-threads static">
+		@include('ads.board_top_left')
+		
 		<ul class="thread-list">
 			@foreach ($posts as $thread)
 			<li class="thread-item">
@@ -23,6 +21,8 @@
 			</li>
 			@endforeach
 		</ul>
+		
+		@include('ads.board_bottom_right')
 	</section>
 </main>
 @stop

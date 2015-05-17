@@ -83,7 +83,7 @@ class DonateController extends CpController {
 		{
 			case "once":
 				$tx = [
-					'description'   => "larachan dev donation",
+					'description'   => "Infinity Next Dev",
 					'source'        => $input['stripeToken'],
 					'receipt_email' => $input['email'],
 				];
@@ -93,7 +93,7 @@ class DonateController extends CpController {
 			
 			case "monthly":
 				$tx = [
-					'description'   => "larachan dev donation",
+					'description'   => "Infinity Next Dev",
 					'source'        => $input['stripeToken'],
 					'email'         => $input['email'],
 				];
