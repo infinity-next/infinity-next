@@ -140,7 +140,7 @@ class Board extends Model {
 	{
 		return $this->posts()
 			->where('board_id', $post)
-			->with('attachments', 'replies', 'replies.attachments')
+			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
 			->visible()
 			->orderBy('reply_last', 'desc')
 			->get()
@@ -159,7 +159,7 @@ class Board extends Model {
 		$postsPerPage = $this->getSetting('postsPerPage', 10);
 		
 		$threads = $this->threads()
-			->with('attachments', 'replies', 'replies.attachments')
+			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
 			->op()
 			->visible()
 			->orderBy('stickied', 'desc')

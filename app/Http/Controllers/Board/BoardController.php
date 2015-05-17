@@ -216,6 +216,28 @@ class BoardController extends MainController {
 				$post->reply_to = $thread->post_id;
 			}
 			
+			if ($input['capcode'])
+			{
+				if (!$this->user->isAnonymous())
+				{
+					$role = $this->user->roles->where('role_id', $input['capcode'])->first();
+					
+					if ($role && $role->capcode != "")
+					{
+						$post->capcode_id = (int) $role->role_id;
+						$post->author     = $this->user->username;
+					}
+					else
+					{
+						return abort(403);
+					}
+				}
+				else
+				{
+					return abort(403);
+				}
+			}
+			
 			$board->threads()->save($post);
 			
 			// Add attachment

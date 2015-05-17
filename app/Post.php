@@ -164,6 +164,11 @@ class Post extends Model {
 		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
 	}
 	
+	public function capcode()
+	{
+		return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
+	}
+	
 	
 	public function getBoard()
 	{
@@ -184,7 +189,7 @@ class Post extends Model {
 	public static function getThread($post)
 	{
 		return $this->posts()
-			->with('attachments', 'replies', 'replies.attachments')
+			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
 			->op()
 			->visible()
 			->orderBy('reply_last', 'desc')

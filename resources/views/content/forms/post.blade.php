@@ -42,6 +42,18 @@
 		
 		<div class="field row-submit">
 			<button type="submit" class="field-submit">{{ $reply_to ? trans('board.action_reply') : trans('board.action_thread') }}</button>
+			
+			@if (!$user->isAnonymous())
+			@if ($user->roles->filter(function($role){return $role->capcode;}))
+				<select class="field-capcode" name="capcode">
+					<option value=""></option>
+					
+					@foreach ($user->roles->filter(function($role){return $role->capcode;}) as $role)
+						<option value="{!! $role->role_id !!}">{{{ $role->capcode }}}</option>
+					@endforeach
+				</select>
+			@endif
+			@endif
 		</div>
 	</fieldset>
 </form>

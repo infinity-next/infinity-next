@@ -887,6 +887,18 @@ section.index-threads {
 					.postid {
 						display: inline-block;
 					}
+					
+					.capcode {
+						display: inline-block;
+					}
+						.capcode::before {
+							display: inline-block;
+							content: '##';
+							margin: 0 0.15em;
+						}
+						.capcode-admin .capcode {
+							color: red;
+						}
 			
 			ul.post-attachments {
 				

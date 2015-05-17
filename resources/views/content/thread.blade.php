@@ -1,13 +1,19 @@
-<div class="post-container">
+<div class="post-container @if ($thread->capcode_id > 0) capcode-{{{ $thread->capcode->role }}} @endif">
 	<div class="post-content">
 		<a name="{!! $thread->board_id !!}"></a>
 		<ul class="post-details">
 			<li class="post-detail post-subject"><h3 class="subject">{{{ $thread->subject }}}</h3></li>
-			<li class="post-detail post-author"><strong class="author">
+			<li class="post-detail post-author">
+				<strong class="author">
 				@if ($thread->email)<a href="mailto:{{{ $thread->email }}}">@endif
-				{{{ $thread->author ?: $board->getSetting('defaultName') }}}
+					{{{ $thread->author ?: $board->getSetting('defaultName') }}}
 				@if ($thread->email)</a>@endif
-			</strong></li>
+				</strong>
+				
+				@if ($thread->capcode_id > 0)
+				<strong class="capcode">{{{ $thread->capcode->capcode }}}</strong>
+				@endif
+			</li>
 			<li class="post-detail post-postedon"><time class="postedon">{{{ $thread->created_at }}}</time></li>
 			<li class="post-detail post-authorid"><span class="authorid"></span></li>
 			<li class="post-detail post-id">
