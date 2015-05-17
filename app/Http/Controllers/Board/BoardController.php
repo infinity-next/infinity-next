@@ -220,7 +220,7 @@ class BoardController extends MainController {
 				$post->reply_to = $thread->post_id;
 			}
 			
-			if ($input['capcode'])
+			if (isset($input['capcode']) && $input['capcode'])
 			{
 				if (!$this->user->isAnonymous())
 				{
