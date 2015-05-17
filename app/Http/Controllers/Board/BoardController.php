@@ -249,7 +249,9 @@ class BoardController extends MainController {
 			if ($canAttach && count($uploads) > 0)
 			{
 				$uploadsSuccessful = true;
-				foreach ($uploads as $upload)
+				$uploadStorage = [];
+				
+				foreach ($uploads as $uploadIndex => $upload)
 				{
 					$fileValidator = Validator::make([
 						'file' => $upload,
@@ -259,7 +261,6 @@ class BoardController extends MainController {
 					
 					if ($fileValidator->passes())
 					{
-						$fileContent  = File::get($upload);
 						$fileMD5      = md5(File::get($upload));
 						$fileTime     = $post->freshTimestamp();
 						$storage      = FileStorage::getHash($fileMD5);
@@ -281,7 +282,7 @@ class BoardController extends MainController {
 						
 						if (!$storage->banned)
 						{
-							$upload->storage = $storage;
+							$uploadStorage[ $uploadIndex ] = $storage;
 						}
 						else
 						{
@@ -301,29 +302,31 @@ class BoardController extends MainController {
 				
 				if ($uploadsSuccessful)
 				{
-					
 					$board->threads()->save($post);
 					
-					foreach ($uploads as $upload)
+					foreach ($uploads as $uploadIndex => $upload)
 					{
+						$fileContent = File::get($upload);
+						$storage     = $uploadStorage[ $uploadIndex ];
+						
 						$attachment = new FileAttachment();
 						$attachment->post_id  = $post->post_id;
-						$attachment->file_id  = $upload->storage->file_id;
+						$attachment->file_id  = $storage->file_id;
 						$attachment->filename = $upload->getClientOriginalName() . '.' . $upload->guessExtension();
 						$attachment->save();
 						
-						if (!Storage::exists($upload->storage->getPath()))
+						if (!Storage::exists($storage->getPath()))
 						{
-							Storage::put($upload->storage->getPath(), $fileContent);
-							Storage::makeDirectory($upload->storage->getDirectoryThumb());
+							Storage::put($storage->getPath(), $fileContent);
+							Storage::makeDirectory($storage->getDirectoryThumb());
 							
 							$imageManager = new ImageManager;
 							$imageManager
-								->make($upload->storage->getFullPath())
+								->make($storage->getFullPath())
 								->resize(255, 255, function($constraint) {
 									$constraint->aspectRatio();
 								})
-								->save($upload->storage->getFullPathThumb());
+								->save($storage->getFullPathThumb());
 						}
 					}
 				}
