@@ -199,7 +199,7 @@ class BoardController extends MainController {
 			{
 				$requirements = [
 					'body'    => 'required_without:file|max:' . $board->getSetting('postMaxLength'),
-					'file'    => 'mimes:jpeg,gif,png|between:1,512',
+					'file'    => 'mimes:jpeg,gif,png|between:1,5120',
 					'captcha' => 'required|captcha',
 				];
 			}
