@@ -402,6 +402,6 @@ class Captcha
 	 */
 	public function img($config = null)
 	{
-		return "<img src=\"" . $this->src($config) . "\" alt=\"captca security image\" class=\"captcha\" />";
+		return "<img src=\"" . $this->src($config) . "\" alt=\"captcha security image\" class=\"captcha\" />";
 	}
 }

@@ -77,6 +77,11 @@ Route::group([
 			->where([
 				'hash'     => "[a-f0-9]{32}",
 			]);
+		
+		Route::get('thumb/{hash}/{filename}', 'FileController@getThumbnail')
+			->where([
+				'hash'     => "[a-f0-9]{32}",
+			]);
 	});
 	
 	// Pushes simple /board/ requests to their index page.

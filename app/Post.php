@@ -260,7 +260,7 @@ class Post extends Model {
 	{
 		return $query->visible()
 			->orderBy('post_id', 'desc')
-			->take(5);
+			->take( $this->stickied_at ? 1 : 5 );
 	}
 	
 	public function scopeReplyTo($query, $replies = false)

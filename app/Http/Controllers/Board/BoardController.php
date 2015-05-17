@@ -8,6 +8,7 @@ use App\Http\Controllers\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
+use Intervention\Image\ImageManager;
 use File;
 use Storage;
 use Response;
@@ -221,10 +222,10 @@ class BoardController extends MainController {
 			$upload = $request->file('file');
 			if ($upload && $canAttach)
 			{
-				$fileContent = File::get($upload);
-				$fileMD5     = md5(File::get($upload));
-				$fileTime    = $post->freshTimestamp();
-				$storage     = FileStorage::getHash($fileMD5);
+				$fileContent  = File::get($upload);
+				$fileMD5      = md5(File::get($upload));
+				$fileTime     = $post->freshTimestamp();
+				$storage      = FileStorage::getHash($fileMD5);
 				
 				if (!($storage instanceof FileStorage))
 				{
@@ -246,16 +247,24 @@ class BoardController extends MainController {
 					$attachment = new FileAttachment();
 					$attachment->post_id  = $post->post_id;
 					$attachment->file_id  = $storage->file_id;
-					$attachment->filename = $upload->getFilename() . '.' . $upload->guessExtension();
+					$attachment->filename = $upload->getClientOriginalName() . '.' . $upload->guessExtension();
 					$attachment->save();
 					
-					if (!Storage::exists("attachments/{$fileMD5}"))
+					if (!Storage::exists($storage->getPath()))
 					{
-						Storage::put("attachments/{$fileMD5}", $fileContent);
+						Storage::put($storage->getPath(), $fileContent);
+						Storage::makeDirectory($storage->getDirectoryThumb());
+						
+						$imageManager = new ImageManager;
+						$imageManager
+							->make($storage->getFullPath())
+							->resize(255, 255, function($constraint) {
+								$constraint->aspectRatio();
+							})
+							->save($storage->getFullPathThumb());
 					}
 				}
 			}
-			
 			
 			if ($thread_id === false)
 			{

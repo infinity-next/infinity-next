@@ -170,7 +170,7 @@ class Board extends Model {
 		
 		foreach ($threads as $thread)
 		{
-			$thread->replies = $thread->replies->take(-5);
+			$thread->replies = $thread->replies->take( $thread->stickied ? -1 : -5 );
 		}
 		
 		return $threads;

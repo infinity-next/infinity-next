@@ -39,6 +39,44 @@ class FileStorage extends Model {
 		return static::hash($hash)->get()->first();
 	}
 	
+	public static function getHashPrefix($hash)
+	{
+		return implode(str_split(substr($hash, 0, 4)), "/");
+	}
+	
+	public function getDirectory()
+	{
+		$prefix = $this->getHashPrefix($this->hash);
+		
+		return "attachments/full/{$prefix}";
+	}
+	
+	public function getDirectoryThumb()
+	{
+		$prefix = $this->getHashPrefix($this->hash);
+		
+		return "attachments/thumb/{$prefix}";
+	}
+	
+	public function getFullPath()
+	{
+		return storage_path() . "/app/" . $this->getPath();
+	}
+	
+	public function getFullPathThumb()
+	{
+		return storage_path() . "/app/" . $this->getPathThumb();
+	}
+	
+	public function getPath()
+	{
+		return $this->getDirectory() . "/" . $this->hash;
+	}
+	
+	public function getPathThumb()
+	{
+		return $this->getDirectoryThumb() . "/" . $this->hash;
+	}
 	
 	public function scopeHash($query, $hash)
 	{
