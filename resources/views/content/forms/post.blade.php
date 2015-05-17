@@ -28,7 +28,7 @@
 		
 		@if ($board->canAttach($user))
 		<div class="field row-file">
-			<input class="field-control" id="file" name="file" type="file" />
+			<input class="field-control" id="file" name="files[]" type="file" multiple />
 		</div>
 		@endif
 		

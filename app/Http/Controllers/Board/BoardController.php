@@ -5,13 +5,16 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\Post;
 use App\Http\Controllers\MainController;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
 use Intervention\Image\ImageManager;
+
+use Input;
 use File;
 use Storage;
 use Response;
+use Validator;
+use View;
 
 class BoardController extends MainController {
 	
@@ -199,13 +202,14 @@ class BoardController extends MainController {
 			else
 			{
 				$requirements = [
-					'body'    => 'required_without:file|max:' . $board->getSetting('postMaxLength'),
-					'file'    => 'mimes:jpeg,gif,png|between:1,5120',
+					'body'    => 'required_without:files|max:' . $board->getSetting('postMaxLength'),
+					'files'   => 'array',
 					'captcha' => 'required|captcha',
 				];
 			}
 			
-			$this->validate($request, $requirements);
+			$validator = Validator::make($input, $requirements);
+			
 			
 			$post = new Post($input);
 			$post->author_ip = $request->ip();
@@ -238,63 +242,104 @@ class BoardController extends MainController {
 				}
 			}
 			
-			$board->threads()->save($post);
 			
-			// Add attachment
-			$upload = $request->file('file');
-			if ($upload && $canAttach)
+			// Store attachments
+			$uploads = Input::file('files');
+			
+			if ($canAttach && count($uploads) > 0)
 			{
-				$fileContent  = File::get($upload);
-				$fileMD5      = md5(File::get($upload));
-				$fileTime     = $post->freshTimestamp();
-				$storage      = FileStorage::getHash($fileMD5);
-				
-				if (!($storage instanceof FileStorage))
+				$uploadsSuccessful = true;
+				foreach ($uploads as $upload)
 				{
-					$storage = new FileStorage();
-					$storage->hash     = $fileMD5;
-					$storage->banned   = false;
-					$storage->filesize = $upload->getSize();
-					$storage->mime     = $upload->getClientMimeType();
-					$storage->first_uploaded_at = $fileTime;
-					$storage->upload_count = 0;
-				}
-				
-				$storage->last_uploaded_at = $fileTime;
-				$storage->upload_count += 1;
-				$storage->save();
-				
-				if (!$storage->banned)
-				{
-					$attachment = new FileAttachment();
-					$attachment->post_id  = $post->post_id;
-					$attachment->file_id  = $storage->file_id;
-					$attachment->filename = $upload->getClientOriginalName() . '.' . $upload->guessExtension();
-					$attachment->save();
+					$fileValidator = Validator::make([
+						'file' => $upload,
+					], [
+						'file' => 'mimes:jpeg,gif,png|between:0,5120'
+					]);
 					
-					if (!Storage::exists($storage->getPath()))
+					if ($fileValidator->passes())
 					{
-						Storage::put($storage->getPath(), $fileContent);
-						Storage::makeDirectory($storage->getDirectoryThumb());
+						$fileContent  = File::get($upload);
+						$fileMD5      = md5(File::get($upload));
+						$fileTime     = $post->freshTimestamp();
+						$storage      = FileStorage::getHash($fileMD5);
 						
-						$imageManager = new ImageManager;
-						$imageManager
-							->make($storage->getFullPath())
-							->resize(255, 255, function($constraint) {
-								$constraint->aspectRatio();
-							})
-							->save($storage->getFullPathThumb());
+						if (!($storage instanceof FileStorage))
+						{
+							$storage = new FileStorage();
+							$storage->hash     = $fileMD5;
+							$storage->banned   = false;
+							$storage->filesize = $upload->getSize();
+							$storage->mime     = $upload->getClientMimeType();
+							$storage->first_uploaded_at = $fileTime;
+							$storage->upload_count = 0;
+						}
+						
+						$storage->last_uploaded_at = $fileTime;
+						$storage->upload_count += 1;
+						$storage->save();
+						
+						if (!$storage->banned)
+						{
+							$upload->storage = $storage;
+						}
+						else
+						{
+							$uploadsSuccessful = false;
+							$validator->errors()->add('files', "The image \"" . $upload->getClientOriginalName() . "\" is banned from being uploaded.");
+						}
+					}
+					else
+					{
+						$uploadsSuccessful = false;
+						foreach ($fileValidator->errors()->all() as $fileFieldError)
+						{
+							$validator->errors()->add('files', $fileFieldError);
+						}
 					}
 				}
+				
+				if ($uploadsSuccessful)
+				{
+					
+					$board->threads()->save($post);
+					
+					foreach ($uploads as $upload)
+					{
+						$attachment = new FileAttachment();
+						$attachment->post_id  = $post->post_id;
+						$attachment->file_id  = $upload->storage->file_id;
+						$attachment->filename = $upload->getClientOriginalName() . '.' . $upload->guessExtension();
+						$attachment->save();
+						
+						if (!Storage::exists($upload->storage->getPath()))
+						{
+							Storage::put($upload->storage->getPath(), $fileContent);
+							Storage::makeDirectory($upload->storage->getDirectoryThumb());
+							
+							$imageManager = new ImageManager;
+							$imageManager
+								->make($upload->storage->getFullPath())
+								->resize(255, 255, function($constraint) {
+									$constraint->aspectRatio();
+								})
+								->save($upload->storage->getFullPathThumb());
+						}
+					}
+				}
+			}
+			else
+			{
+				$board->threads()->save($post);
 			}
 			
 			if ($thread_id === false)
 			{
-				return redirect("{$board->board_uri}/thread/{$post->board_id}");
+				return redirect("{$board->board_uri}/thread/{$post->board_id}")->withErrors($validator->errors());
 			}
 			else
 			{
-				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
+				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}")->withErrors($validator->errors());
 			}
 		}
 		
