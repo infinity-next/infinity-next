@@ -1,9 +1,9 @@
-<aside class="advertisement bottom-right">
-	<figure class="advertisement">
+<aside class="ad bottom-right">
+	<figure class="ad">
 		<img src="{{ url('img/templates/ad_300x250.png') }}" alt="Advertimsent placeholder" />
 	</figure>
 	
-	<figure class="advertisement">
+	<figure class="ad">
 		<img src="{{ url('img/templates/ad_300x250.png') }}" alt="Advertimsent placeholder" />
 	</figure>
 </aside>

@@ -770,21 +770,21 @@ section.index-form {
 		}
 		
 		/* Advertisements */
-		section.index-threads aside.advertisement.top-left {
+		section.index-threads aside.ad.top-left {
 			text-align: left;
 		}
-		section.index-threads aside.advertisement.bottom-right {
+		section.index-threads aside.ad.bottom-right {
 			position: absolute;
 			bottom: 0;
 			right: 0;
 		}
-			section.index-threads aside.advertisement.bottom-right figure.advertisement {
+			section.index-threads aside.ad.bottom-right figure.ad {
 				display: block;
 			}
 	}
 	
 	@media (max-width: 768px) {
-		section.index-threads aside.advertisement.top-left {
+		section.index-threads aside.ad.top-left {
 			display: none;
 		}
 	}
@@ -794,14 +794,14 @@ section.index-threads {
 	position: relative;
 }
 	/* Advertisements */
-	aside.advertisement.top-left {
+	aside.ad.top-left {
 		padding: 1em;
 		text-align: center;
 	}
-	aside.advertisement.bottom-right {
+	aside.ad.bottom-right {
 		text-align: center;
 	}
-		aside.advertisement.bottom-right figure.advertisement {
+		aside.ad.bottom-right figure.ad {
 			display: inline-block;
 			margin: 10px;
 		}
