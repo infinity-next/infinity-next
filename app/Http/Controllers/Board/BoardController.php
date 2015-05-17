@@ -138,7 +138,7 @@ class BoardController extends MainController {
 				if ($post->canSticky($this->user))
 				{
 					$post->setSticky( $action == "sticky" )->save();
-					return redirect("{$board->board_uri}/thread/{$post->post_id}");
+					return redirect("{$board->board_uri}/thread/{$post->board_id}");
 				}
 				break;
 			
@@ -325,6 +325,7 @@ class BoardController extends MainController {
 								->make($storage->getFullPath())
 								->resize(255, 255, function($constraint) {
 									$constraint->aspectRatio();
+									$constraint->upsize();
 								})
 								->save($storage->getFullPathThumb());
 						}
