@@ -39,7 +39,7 @@ trait PermissionUser {
 	{
 		if (!is_bool($this->accountable))
 		{
-			
+			$this->accountable = true;
 		}
 		
 		return $this->accountable;

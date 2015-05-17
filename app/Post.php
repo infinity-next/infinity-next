@@ -122,9 +122,19 @@ class Post extends Model {
 		return $user->canDelete($this);
 	}
 	
-	public function canReply()
+	public function canReply($user = null)
 	{
+		if (!is_null($user))
+		{
+			return $user->canReply($this);
+		}
+		
 		return true;
+	}
+	
+	public function canSticky($user)
+	{
+		return $user->canSticky($this);
 	}
 	
 	public function getBodyFormatted()
@@ -220,6 +230,21 @@ class Post extends Model {
 			->reverse();
 	}
 	
+	public function setSticky($sticky = true)
+	{
+		if ($sticky)
+		{
+			$this->stickied = true;
+			$this->stickied_at = $this->freshTimestamp();
+		}
+		else
+		{
+			$this->stickied = false;
+			$this->stickied_at = null;
+		}
+		
+		return $this;
+	}
 	
 	public function scopeOp($query)
 	{

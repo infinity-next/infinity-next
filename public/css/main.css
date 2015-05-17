@@ -1376,7 +1376,7 @@ figcaption.page-details {
 footer {
 	clear: both;
 	padding: 0;
-	margin: 1em 0 0 0;
+	margin: 0 0 0 0;
 }
 	#footnotes {
 		background: #333;

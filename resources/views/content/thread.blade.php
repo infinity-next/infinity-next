@@ -3,7 +3,11 @@
 		<a name="{!! $thread->board_id !!}"></a>
 		<ul class="post-details">
 			<li class="post-detail post-subject"><h3 class="subject">{{{ $thread->subject }}}</h3></li>
-			<li class="post-detail post-author"><strong class="author">{{{ $thread->author ?: $board->getSetting('defaultName') }}}</strong></li>
+			<li class="post-detail post-author"><strong class="author">
+				@if ($thread->email)<a href="mailto:{{{ $thread->email }}}">@endif
+				{{{ $thread->author ?: $board->getSetting('defaultName') }}}
+				@if ($thread->email)</a>@endif
+			</strong></li>
 			<li class="post-detail post-postedon"><time class="postedon">{{{ $thread->created_at }}}</time></li>
 			<li class="post-detail post-authorid"><span class="authorid"></span></li>
 			<li class="post-detail post-id">
@@ -15,6 +19,10 @@
 				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
 				@endif
 			</li>
+			
+			@if ($thread->stickied_at)
+			<li class="post-detail post-sticky"><i class="fa fa-thumb-tack"></i></li>
+			@endif
 		</ul>
 		
 		<ul class="post-attachments">
@@ -37,11 +45,19 @@
 	<ul class="post-actions">
 		<li class="post-action">
 			@if ($thread->canDelete($user))
-			<a class="post-action-link" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/delete") !!}">@lang('board.action_delete')</a>
+			<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/delete") !!}">@lang('board.action_delete')</a>
 			@endif
 			
 			@if ($thread->canEdit($user))
-			<a class="post-action-link" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/edit") !!}">@lang('board.action_edit')</a>
+			<a class="post-action-link action-link-edit" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/edit") !!}">@lang('board.action_edit')</a>
+			@endif
+			
+			@if ($thread->canSticky($user) && $op)
+			@if (!$thread->stickied_at)
+			<a class="post-action-link action-link-sticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/sticky") !!}">@lang('board.action_sticky')</a>
+			@else
+			<a class="post-action-link action-link-unsticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/unsticky") !!}">@lang('board.action_unsticky')</a>
+			@endif
 			@endif
 		</li>
 	</ul>

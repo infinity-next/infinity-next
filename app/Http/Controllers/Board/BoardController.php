@@ -105,8 +105,17 @@ class BoardController extends MainController {
 			case "delete" :
 				if ($post->canDelete($this->user))
 				{
+					$reply_to = $post->reply_to;
 					$post->delete();
-					return redirect($board->board_uri);
+					
+					if ($reply_to)
+					{
+						return redirect("{$board->board_uri}/thread/{$reply_to}");
+					}
+					else
+					{
+						return redirect($board->board_uri);
+					}
 				}
 				break;
 			
@@ -117,6 +126,15 @@ class BoardController extends MainController {
 						'board'    => $board,
 						'post'     => $post,
 					]);
+				}
+				break;
+			
+			case "unsticky" :
+			case "sticky" :
+				if ($post->canSticky($this->user))
+				{
+					$post->setSticky( $action == "sticky" )->save();
+					return redirect("{$board->board_uri}/thread/{$post->post_id}");
 				}
 				break;
 			

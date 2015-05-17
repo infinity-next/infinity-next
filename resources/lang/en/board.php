@@ -44,6 +44,8 @@ return [
 	// Post Actions
 	'action_delete'     => "Delete",
 	'action_edit'       => "Edit",
+	'action_sticky'     => "Sticky",
+	'action_unsticky'   => "Unsticky",
 	
 	
 	/**

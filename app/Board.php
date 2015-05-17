@@ -162,6 +162,7 @@ class Board extends Model {
 			->with('attachments', 'replies', 'replies.attachments')
 			->op()
 			->visible()
+			->orderBy('stickied', 'desc')
 			->orderBy('reply_last', 'desc')
 			->skip($postsPerPage * ( $page - 1 ))
 			->take($postsPerPage)
