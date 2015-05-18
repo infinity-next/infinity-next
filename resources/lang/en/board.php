@@ -42,10 +42,18 @@ return [
 	
 	
 	// Post Actions
-	'action_delete'     => "Delete",
-	'action_edit'       => "Edit",
-	'action_sticky'     => "Sticky",
-	'action_unsticky'   => "Unsticky",
+	'action'            => [
+		'ban'               => "Ban",
+		'ban_delete'        => "Ban &amp; Delete",
+		'ban_delete_board'  => "Ban &amp; Delete Board-wide",
+		'ban_delete_global' => "Ban &amp; Delete Site-wide",
+		'delete'            => "Delete",
+		'delete_board'      => "Delete Board-wide",
+		'delete_global'     => "Delete Site-wide",
+		'edit'              => "Edit",
+		'sticky'            => "Sticky",
+		'unsticky'          => "Unsticky",
+	],
 	
 	
 	/**

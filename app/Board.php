@@ -64,6 +64,16 @@ class Board extends Model {
 		return $user->canAttach($this);
 	}
 	
+	public function canBan($user)
+	{
+		return $user->canBan($this);
+	}
+	
+	public function canDelete($user)
+	{
+		return $user->canDeleteLocally($this);
+	}
+	
 	
 	public static function getBoardListBar()
 	{

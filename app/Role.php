@@ -43,4 +43,57 @@ class Role extends Model {
 		return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
 	}
 	
+	
+	/**
+	 * Builds a single role mask for all boards, called by name.
+	 *
+	 * @return array
+	 */
+	public static function getRoleMaskByName($roleMasks)
+	{
+		$roles = static::whereIn('role', (array) $roleMasks)
+			->with('permissions')
+			->get();
+		
+		return static::getRolePermissions($roles);
+	}
+	
+	/**
+	 * Builds a single role mask for all boards, called by id.
+	 *
+	 * @return array
+	 */
+	public static function getRoleMaskByID($roleIDs)
+	{
+		$roles = static::whereIn('role_id', (array) $roleIDs)
+			->with('permissions')
+			->get();
+		
+		return static::getRolePermissions($roles);
+	}
+	
+	/**
+	 * Compiles a set of roles into a permission mask.
+	 *
+	 * @return array
+	 */
+	protected static function getRolePermissions($roles)
+	{
+		$permissions = [];
+		
+		foreach ($roles as $role)
+		{
+			if (!isset($permissions[$role->board_uri]))
+			{
+				$permissions[$role->board_uri] = [];
+			}
+			
+			foreach ($role->permissions as $permission)
+			{
+				$permissions[$permission->board_uri][$permission->permission_id] = !!$permission->pivot->value;
+			}
+		}
+		
+		return $permissions;
+	}
 }

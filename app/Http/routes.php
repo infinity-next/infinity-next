@@ -22,25 +22,28 @@ Route::get('/', 'WelcomeController@getIndex');
 | - Board creation, Board management, Volunteer management.
 | - Top level site management.
 */
-Route::group(['prefix' => 'cp'], function()
+Route::group([
+	'namespace' => 'Auth',
+	'prefix'    => 'cp',
+], function()
 {
 	// Simple /cp/ requests go directly to /cp/home
-	Route::any('/', 'Auth\HomeController@getIndex');
+	Route::any('/', 'HomeController@getIndex');
 	
 	Route::controllers([
 		// /cp/auth handles sign-ins and registrar work.
-		'auth'     => 'Auth\AuthController',
+		'auth'     => 'AuthController',
 		// /cp/home is a landing page.
-		'home'     => 'Auth\HomeController',
+		'home'     => 'HomeController',
 		// /cp/password handles password resets and recovery.
-		'password' => 'Auth\PasswordController',
+		'password' => 'PasswordController',
 	]);
 	
 	if (env('CONTRIB_ENABLED', false))
 	{
 		Route::controllers([
 			// /cp/donate is a Stripe cashier system for donations.
-			'donate'   => 'Auth\DonateController',
+			'donate'   => 'DonateController',
 		]);
 	}
 });
@@ -82,6 +85,14 @@ Route::group([
 			->where([
 				'hash'     => "[a-f0-9]{32}",
 			]);
+	});
+	
+	Route::group([
+		'prefix'    => 'post/{post}',
+		'where'     => ['{post}' => '[1-9]\d*'],
+	], function()
+	{
+		Route::controller('', 'PostController');
 	});
 	
 	// Pushes simple /board/ requests to their index page.

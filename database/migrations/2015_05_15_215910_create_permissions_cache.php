@@ -1,6 +1,5 @@
 <?php
 
-use App\Permission;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -32,7 +31,7 @@ class CreatePermissionsCache extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('user_permission_cache');;
+		Schema::drop('user_permission_cache');
 	}
 	
 }

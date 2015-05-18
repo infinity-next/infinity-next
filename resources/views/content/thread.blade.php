@@ -50,20 +50,38 @@
 	
 	<ul class="post-actions">
 		<li class="post-action">
-			@if ($thread->canDelete($user))
-			<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/delete") !!}">@lang('board.action_delete')</a>
-			@endif
-			
 			@if ($thread->canEdit($user))
-			<a class="post-action-link action-link-edit" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/edit") !!}">@lang('board.action_edit')</a>
+			<a class="post-action-link action-link-edit" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/edit") !!}">@lang('board.action.edit')</a>
 			@endif
 			
 			@if ($thread->canSticky($user) && $op)
 			@if (!$thread->stickied_at)
-			<a class="post-action-link action-link-sticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/sticky") !!}">@lang('board.action_sticky')</a>
+			<a class="post-action-link action-link-sticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/sticky") !!}">@lang('board.action.sticky')</a>
 			@else
-			<a class="post-action-link action-link-unsticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/unsticky") !!}">@lang('board.action_unsticky')</a>
+			<a class="post-action-link action-link-unsticky" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/unsticky") !!}">@lang('board.action.unsticky')</a>
 			@endif
+			@endif
+			
+			@if ($board->canBan($user))
+			<a class="post-action-link action-link-ban" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/ban") !!}">@lang('board.action.ban')</a>
+			@endif
+			
+			@if ($thread->canDelete($user))
+				<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
+				<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
+				
+				@if ($board->canBan($user))
+					<a class="post-action-link action-link-bandelete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
+					<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/ban/delete/all") !!}">@lang('board.action.ban_delete_board')</a>
+				@endif
+				
+				@if ($user->canDeleteGlobally())
+					<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete/global") !!}">@lang('board.action.delete_global')</a>
+					
+					@if ($user->canBanGlobally())
+					<a class="post-action-link action-link-bandelete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/ban/delete/global") !!}">@lang('board.action.ban_delete_global')</a>
+					@endif
+				@endif
 			@endif
 		</li>
 	</ul>

@@ -59,14 +59,16 @@ trait PermissionUser {
 	
 	
 	/**
+	 * Uses flexible argument options to challenge a permission/board
+	 * combination against the user's permission mask.
 	 *
-	 *
+	 * @return boolean
 	 */
 	public function can($permission, $board = null)
 	{
 		if ($permission instanceof Permission)
 		{
-			$permission = $permission->permission;
+			$permission = $permission->permission_id;
 		}
 		
 		if ($board instanceof Board)
@@ -93,6 +95,28 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user ban others from this board?
+	 *
+	 * @return boolean
+	 */
+	public function canBan(Board $board)
+	{
+		// The only thing we care about for this setting is the permission mask.
+		return $this->can("board.user.ban.free", $board) || $this->can("board.user.ban.reason", $board);
+	}
+	
+	/**
+	 * Can this user ban others across the entire site?
+	 *
+	 * @return boolean
+	 */
+	public function canBanGlobally()
+	{
+		// The only thing we care about for this setting is the permission mask.
+		return $this->can("board.user.ban.free") || $this->can("board.user.ban.reason");
+	}
+	
+	/**
 	 * Can this user delete this post?
 	 *
 	 * @return boolean
@@ -113,6 +137,26 @@ trait PermissionUser {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Can this user delete on this board?
+	 *
+	 * @return boolean
+	 */
+	public function canDeleteLocally(Board $board)
+	{
+		return $this->can("board.post.delete.other", $board->board_uri);
+	}
+	
+	/**
+	 * Can this user delete posts across the entire site?
+	 *
+	 * @return boolean
+	 */
+	public function canDeleteGlobally()
+	{
+		return $this->can("board.post.delete.other");
 	}
 	
 	/**
@@ -175,15 +219,36 @@ trait PermissionUser {
 	{
 		$permissions = $this->getPermissions();
 		
-		// Check for a localized permisison.
-		if (isset($permissions[$board][$permission]))
+		// Determine the branch for this permission mask.
+		if ($this->isAnonymous())
 		{
-			return $permissions[$board][$permission];
+			// If the user is anonymous (no account),
+			// then the permission mask is under anonymous.
+			$permissionMask = &$permissions['anonymous'];
+			
+			// If the user is unaccountable (Tor),
+			// then the permission mask is instead under unaccountable.
+			if (!$this->isAccountable())
+			{
+				$permissionMask = &$permissions['unaccountable'];
+			}
+		}
+		else
+		{
+			// Users with accounts are always accountable.
+			// Their permission masks do not have branches.
+			$permissionMask = &$permissions;
+		}
+		
+		// Check for a localized permisison.
+		if (isset($permissionMask[$board][$permission]))
+		{
+			return $permissionMask[$board][$permission];
 		}
 		// Check for a global permission.
-		else if (isset($permissions[null][$permission]))
+		else if (isset($permissionMask[null][$permission]))
 		{
-			return $permissions[null][$permission];
+			return $permissionMask[null][$permission];
 		}
 		
 		// Assume false if not explicitly set.
@@ -202,7 +267,12 @@ trait PermissionUser {
 		
 		if ($UserPermissionCache)
 		{
-			return $UserPermissionCache->first()->cache;
+			$cache = $UserPermissionCache->first()->cache;
+			
+			if (!is_null($cache))
+			{
+				return json_decode($cache, true);
+			}
 		}
 		
 		return null;
@@ -223,16 +293,21 @@ trait PermissionUser {
 			if (!$this->permissions)
 			{
 				$this->permissions = [];
-				$userRoles         = [];
-				$roleMasks         = [];
 				
-				
+				// Fetch our permission mask.
 				if ($this->isAnonymous())
 				{
-					$roleMasks[] = "anonymous";
+					$this->permissions["anonymous"] = Role::getRoleMaskByName("anonymous");
+					
+					if (!$this->isAccountable())
+					{
+						$this->permissions["unaccountable"] = Role::getRoleMaskByName("unaccountable");
+					}
 				}
 				else
 				{
+					$userRoles = [];
+					
 					foreach ($this->roles as $role)
 					{
 						$userRoles[] = $role->role_id;
@@ -240,38 +315,32 @@ trait PermissionUser {
 					
 					if (!count($userRoles))
 					{
-						$roleMasks[] = "anonymous";
+						$this->permissions = Role::getRoleMaskByName("anonymous");
 					}
-				}
-				
-				if (!$this->isAccountable())
-				{
-					$roleMasks[] = "unaccountable";
-				}
-				
-				$roles = Role::whereIn('role', $roleMasks)
-					->orWhereIn('role_id', $userRoles)
-					->with('permissions')
-					->get();
-				
-				foreach ($roles as $role)
-				{
-					if (!isset($this->permissions[$role->board_uri]))
+					else
 					{
-						$this->permissions[$role->board_uri] = [];
-					}
-					
-					foreach ($role->permissions as $permission)
-					{
-						if (is_null($permission->board_uri))
-						{
-							$this->permissions[null][$permission->permission_id] = !!$permission->pivot->value;
-						}
+						$this->permissions = Role::getRoleMaskByID($userRoles);
 					}
 				}
+				
+				$this->setPermissionCache();
 			}
 		}
 		
 		return $this->permissions;
+	}
+	
+	
+	/**
+	 * Caches a permission mask for this user.
+	 *
+	 * @return \App\UserPermissionCache
+	 */
+	protected function setPermissionCache()
+	{
+		return UserPermissionCache::updateOrCreate([
+			'user_id' => $this->user_id,
+			'cache'   => json_encode($this->permissions),
+		]);
 	}
 }
