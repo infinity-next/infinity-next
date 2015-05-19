@@ -259,7 +259,7 @@ class PostController extends MainController {
 		{
 			return View::make(static::VIEW_EDIT, [
 				"actions" => ["edit"],
-				"form"    => "edit",
+				"form"    => "post",
 				"board"   => $board,
 				"post"    => $post,
 			]);
@@ -290,9 +290,10 @@ class PostController extends MainController {
 			$post->save();
 			
 			return View::make(static::VIEW_EDIT, [
-				"action" => "edit",
-				"board"  => $board,
-				"post"   => $post,
+				"actions" => ["edit"],
+				"form"    => "post",
+				"board"   => $board,
+				"post"    => $post,
 			]);
 		}
 		
