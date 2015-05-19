@@ -40,12 +40,17 @@ class CreateBans extends Migration {
 			$table->timestamps();
 			$table->timestamp('expires_at')->nullable()->default(null);
 			
+			$table->string('board_uri', 32)->nullable()->default(null);
 			$table->integer('mod_id')->unsigned()->nullable()->default(null);
 			$table->bigInteger('post_id')->unsigned()->nullable()->default(null);
 			$table->integer('ban_reason_id')->unsigned()->nullable()->default(null);
 			$table->string('justification')->default(null);
 			
 			// Foreigns and Indexes
+			$table->foreign('board_uri')
+				->references('board_uri')->on('boards')
+				->onDelete('cascade')->onUpdate('cascade');
+			
 			$table->foreign('mod_id')
 				->references('user_id')->on('users')
 				->onDelete('set null')->onUpdate('cascade');

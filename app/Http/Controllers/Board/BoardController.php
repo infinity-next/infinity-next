@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Board;
 
+use App\Ban;
 use App\Board;
 use App\FileStorage;
 use App\FileAttachment;
@@ -30,6 +31,10 @@ class BoardController extends MainController {
 	|
 	*/
 	
+	const VIEW_BANNED = "banned";
+	const VIEW_BOARD  = "board";
+	const VIEW_THREAD = "board";
+	
 	/**
 	 * Show the board index for the user.
 	 * This is usually the last few threads, depending on the optional page
@@ -59,7 +64,7 @@ class BoardController extends MainController {
 		// Load our list of threads and their latest replies.
 		$posts = $board->getThreadsForIndex($page);
 		
-		return View::make('board', [
+		return View::make(static::VIEW_BOARD, [
 			'board'    => $board,
 			'posts'    => $posts,
 			'reply_to' => false,
@@ -86,12 +91,17 @@ class BoardController extends MainController {
 		// Pull the thread.
 		$thread = $board->getThread($thread);
 		
+		if (!$thread)
+		{
+			return abort(404);
+		}
+		
 		if ($thread->reply_to)
 		{
 			return redirect("{$board->board_uri}/thread/{$thread->op->board_id}");
 		}
 		
-		return View::make('board', [
+		return View::make(static::VIEW_THREAD, [
 			'board'    => $board,
 			'posts'    => [ $thread ],
 			'reply_to' => $thread->board_id,
@@ -107,27 +117,62 @@ class BoardController extends MainController {
 	{
 		if ($input = Input::all())
 		{
+			// Clean up input some.
+			// Having an [null] file array passes validation.
+			if (is_array($input['files']))
+			{
+				$input['files'] = array_filter($input['files']);
+			}
+			
+			// Prefetch some permissions.
 			$canAttach = $board->canAttach($this->user);
+			$canPostWithoutCaptcha = $board->canPostWithoutCaptcha($this->user);
+			
+			// Validate input.
+			$requirements = [
+				'body' => 'max:' . $board->getSetting('postMaxLength'),
+			];
 			
 			if (!$canAttach)
 			{
-				$requirements = [
-					'body'    => 'required|max:' . $board->getSetting('postMaxLength'),
-					'captcha' => 'required|captcha',
-				];
+				$requirements['body'] .= "|required";
 			}
 			else
 			{
-				$requirements = [
-					'body'    => 'required_without:files|max:' . $board->getSetting('postMaxLength'),
-					'files'   => 'array',
-					'captcha' => 'required|captcha',
-				];
+				$requirements['body']  .= "|required_without:files";
+				$requirements['files'] = "array|min:1|max:5";
 			}
 			
 			$validator = Validator::make($input, $requirements);
 			
+			$validator->sometimes('captcha', "required|captcha", function($input) use ($canPostWithoutCaptcha) {
+				return !$canPostWithoutCaptcha;
+			});
 			
+			$validator->after(function($validator) use ($request, $board) {
+				if (Ban::isBanned($request->ip(), $board))
+				{
+					$validator->errors()->add('body', "You are banned.");
+				}
+			});
+			
+			if ($validator->fails())
+			{
+				if ($thread_id)
+				{
+					return redirect($request->path())
+						->withErrors($validator->errors()->all())
+						->withInput();
+				}
+				else
+				{
+					return redirect($board->board_uri)
+						->withErrors($validator->errors()->all())
+						->withInput();
+				}
+			}
+			
+			// Create post.
 			$post = new Post($input);
 			$post->author_ip = $request->ip();
 			
@@ -148,24 +193,21 @@ class BoardController extends MainController {
 						$post->capcode_id = (int) $role->role_id;
 						$post->author     = $this->user->username;
 					}
-					else
-					{
-						return abort(403);
-					}
-				}
-				else
-				{
-					return abort(403);
 				}
 			}
 			
 			
 			// Store attachments
-			$uploads = array_filter(Input::file('files'));
+			$uploads = [];
+			
+			if (is_array($files = Input::file('files')))
+			{
+				$uploads = array_filter($files);
+			}
 			
 			if ($canAttach && count($uploads) > 0)
 			{
-				$uploadsSuccessful = true;
+				$uploadsSuccessful = null;
 				$uploadStorage = [];
 				
 				foreach ($uploads as $uploadIndex => $upload)
@@ -199,6 +241,7 @@ class BoardController extends MainController {
 						
 						if (!$storage->banned)
 						{
+							$uploadsSuccessful = is_null($uploadsSuccessful) ? true : $uploadsSuccessful;
 							$uploadStorage[ $uploadIndex ] = $storage;
 						}
 						else
@@ -217,7 +260,7 @@ class BoardController extends MainController {
 					}
 				}
 				
-				if ($uploadsSuccessful)
+				if ($uploadsSuccessful === true)
 				{
 					$board->threads()->save($post);
 					
@@ -248,6 +291,12 @@ class BoardController extends MainController {
 						}
 					}
 				}
+				else
+				{
+					return redirect( $request->path() )
+						->withErrors($validator->errors()->all())
+						->withInput();
+				}
 			}
 			else
 			{
@@ -256,11 +305,11 @@ class BoardController extends MainController {
 			
 			if ($thread_id === false)
 			{
-				return redirect("{$board->board_uri}/thread/{$post->board_id}")->withErrors($validator->errors());
+				return redirect("{$board->board_uri}/thread/{$post->board_id}");
 			}
 			else
 			{
-				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}")->withErrors($validator->errors());
+				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
 			}
 		}
 		

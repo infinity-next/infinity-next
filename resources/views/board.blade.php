@@ -6,7 +6,10 @@
 @section('content')
 <main class="board-index page-1">
 	<section class="index-form">
-		@include('content.forms.post', [ 'board' => $board ])
+		@include('content.forms.post', [
+			'board'   => $board,
+			'actions' => [ $reply_to ? "reply" : "thread" ],
+		])
 	</section>
 	
 	<section class="index-threads static">
@@ -16,7 +19,11 @@
 			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include('content.thread', [ 'board' => $board, 'thread' => $thread, 'op' => $thread ])
+					@include('content.thread', [
+						'board'  => $board,
+						'thread' => $thread,
+						'op'     => $thread,
+					])
 				</article>
 			</li>
 			@endforeach

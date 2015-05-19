@@ -1,5 +1,6 @@
 <?php namespace App\Traits;
 
+use App\Ban;
 use App\Board;
 use App\Permission;
 use App\Post;
@@ -187,6 +188,16 @@ trait PermissionUser {
 	 *
 	 * @return boolean
 	 */
+	public function canPostWithoutCaptcha(Board $board)
+	{
+		return !$this->isAnonymous();
+	}
+	
+	/**
+	 * Can this user report this post?
+	 *
+	 * @return boolean
+	 */
 	public function canReport(Post $post)
 	{
 		// We can always report a thread, for now.
@@ -329,7 +340,6 @@ trait PermissionUser {
 		
 		return $this->permissions;
 	}
-	
 	
 	/**
 	 * Caches a permission mask for this user.

@@ -1,52 +1,26 @@
 <div class="post-container @if ($thread->capcode_id > 0) capcode-{{{ $thread->capcode->role }}} @endif">
-	<div class="post-content">
-		<a name="{!! $thread->board_id !!}"></a>
-		<ul class="post-details">
-			<li class="post-detail post-subject"><h3 class="subject">{{{ $thread->subject }}}</h3></li>
-			<li class="post-detail post-author">
-				<strong class="author">
-				@if ($thread->email)<a href="mailto:{{{ $thread->email }}}">@endif
-					{{{ $thread->author ?: $board->getSetting('defaultName') }}}
-				@if ($thread->email)</a>@endif
-				</strong>
-				
-				@if ($thread->capcode_id > 0)
-				<strong class="capcode">{{{ $thread->capcode->capcode }}}</strong>
-				@endif
-			</li>
-			<li class="post-detail post-postedon"><time class="postedon">{{{ $thread->created_at }}}</time></li>
-			<li class="post-detail post-authorid"><span class="authorid"></span></li>
-			<li class="post-detail post-id">
-				@if ($thread->reply_to)
-				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#{$thread->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
-				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
-				@else
-				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
-				<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$thread->board_id}") !!}" class="post-reply">{!! $thread->board_id !!}</a>
-				@endif
-			</li>
-			
-			@if ($thread->stickied_at)
-			<li class="post-detail post-sticky"><i class="fa fa-thumb-tack"></i></li>
+	@include('content.post', [
+		'board'  => $board,
+		'post'   => $thread,
+	])
+	
+	<ul class="post-metas">
+		@if ($thread->ban_id)
+		<li class="post-meta meta-ban_reason">
+			@if ($thread->ban_reason != "")
+			<i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $thread->ban_reason ])
+			@else
+			<i class="fa fa-ban"></i> @lang('board.meta.banned')
 			@endif
-		</ul>
+		</li>
+		@endif
 		
-		<ul class="post-attachments">
-			@foreach ($thread->attachments as $attachment)
-			<li class="post-attachment">
-				<figure class="attachment">
-					<a class="attachment-link" target="_new" href="{!! url("{$board->board_uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}">
-						<img class="attachment-img" src="{!! url("{$board->board_uri}/file/thumb/{$attachment->hash}/{$attachment->pivot->filename}") !!}" alt="{{ $attachment->pivot->filename }}" />
-					</a>
-				</figure>
-			</li>
-			@endforeach
-		</ul>
-		
-		<blockquote class="post ugc">
-			{!! $thread->getBodyFormatted() !!}
-		</blockquote>
-	</div>
+		@if ($thread->updated_by)
+		<li class="post-meta meta-updated_by">
+			<i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [ 'name' => $thread->updated_by_username, 'time' => $thread->updated_at ])
+		</li>
+		@endif
+	</ul>
 	
 	<ul class="post-actions">
 		<li class="post-action">
@@ -68,7 +42,10 @@
 			
 			@if ($thread->canDelete($user))
 				<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
-				<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
+				
+				@if ($board->canDelete($user))
+					<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
+				@endif
 				
 				@if ($board->canBan($user))
 					<a class="post-action-link action-link-bandelete" href="{!! url("{$board->board_uri}/post/{$thread->board_id}/mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
@@ -100,7 +77,12 @@
 	@foreach ($thread->replies as $reply)
 	<li class="thread-reply">
 		<article class="reply">
-			@include('content.thread', [ 'board' => $board, 'thread' => $reply, 'op' => $op])
+			@include('content.thread', [
+				'board'    => $board,
+				'thread'   => $reply,
+				'op'       => $op,
+				'reply_to' => $reply_to,
+			])
 		</article>
 	</li>
 	@endforeach

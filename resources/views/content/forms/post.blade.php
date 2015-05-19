@@ -1,49 +1,118 @@
-<form class="form-post" method="POST" action="{{ url($board->board_uri . '/thread/' . ($reply_to ?: "")) }}" enctype="multipart/form-data">
-	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
-	<input type="hidden" name="_method" value="PUT" />
-	
+@if (isset($post))
+{!! Form::model($post, [
+	'url'    => Request::url(),
+	'method' => "PATCH",
+	'files'  => true,
+	'id'     => "mod-form",
+	'class'  => "form-mod smooth-box",
+]) !!}
+@else
+{!! Form::open([
+	'url'    => url($board->board_uri . '/thread/' . ($reply_to ?: "")),
+	'files'  => true,
+	'method' => "PUT",
+	'class'  => "form-post",
+]) !!}
+@endif
 	@include('widgets.messages')
 	
 	<fieldset class="form-fields">
-		<legend class="form-legend">{{ $reply_to ? trans('board.form_reply') : trans('board.form_thread') }}</legend>
+		<legend class="form-legend">{{ trans("board.legend." . implode($actions, "+")) }}</legend>
 		
 		<div class="field row-subject label-inline">
-			<input class="field-control" id="subject" name="subject" type="text" maxlength="255" value="{{ old('subject') }}" />
-			<label class="field-label" for="subject">@lang('board.field_subject')</label>
+			{!! Form::text(
+				'subject',
+				old('subject'),
+				[
+					'id'        => "subject",
+					'class'     => "field-control",
+					'maxlength' => 255,
+			]) !!}
+			{!! Form::label(
+				"subject",
+				trans('board.field.subject'),
+				[
+					'class' => "field-label",
+			]) !!}
 		</div>
 		
 		<div class="field row-author label-inline">
-			<input class="field-control" id="author" name="author" type="text" maxlength="255" value="{{ old('author') }}" />
-			<label class="field-label" for="author">@lang('board.field_author')</label>
+			{!! Form::text(
+				'author',
+				isset($post) ? $post->author . ($post->capcode_id ? " ## {$post->capcode->capcode}" : "") : old('author'),
+				[
+					'id'        => "author",
+					'class'     => "field-control",
+					'maxlength' => 255,
+					isset($post) && $post->capcode_id ? "disabled" : "data-enabled",
+			]) !!}
+			{!! Form::label(
+				"author",
+				trans('board.field.author'),
+				[
+					'class' => "field-label",
+			]) !!}
 		</div>
 		
 		<div class="field row-email label-inline">
-			<input class="field-control" id="email" name="email" type="text" maxlength="255" value="{{ old('email') }}" />
-			<label class="field-label" for="email">@lang('board.field_email')</label>
+			{!! Form::text(
+				'email',
+				old('email'),
+				[
+					'id'        => "email",
+					'class'     => "field-control",
+					'maxlength' => 254,
+			]) !!}
+			{!! Form::label(
+				"email",
+				trans('board.field.email'),
+				[
+					'class' => "field-label",
+			]) !!}
 		</div>
 		
 		<div class="field row-post">
-			<textarea class="field-control" id="body" name="body">{{ old('body') }}</textarea>
+			{!! Form::textarea(
+				'body',
+				old('body'),
+				[
+					'id'        => "body",
+					'class'     => "field-control",
+			]) !!}
 		</div>
 		
-		@if ($board->canAttach($user))
+		@if ($board->canAttach($user) && !isset($post))
 		<div class="field row-file">
 			<input class="field-control" id="file" name="files[]" type="file" multiple />
 		</div>
 		@endif
 		
+		@if (!$board->canPostWithoutCaptcha($user))
 		<div class="field row-captcha">
 			<label class="field-label" for="captcha">
 				{!! Captcha::img() !!}
 				<span class="field-validation"></span>
 			</label>
-			<input class="field-control" id="captcha" name="captcha" type="text" />
+			
+			{!! Form::text(
+				'captcha',
+				"",
+				[
+					'id'        => "captcha",
+					'class'     => "field-control",
+			]) !!}
 		</div>
+		@endif
 		
 		<div class="field row-submit">
-			<button type="submit" class="field-submit">{{ $reply_to ? trans('board.action_reply') : trans('board.action_thread') }}</button>
+			{!! Form::button(
+				trans("board.submit." . implode($actions, "+")),
+				[
+					'type'      => "submit",
+					'class'     => "field-submit",
+			]) !!}
 			
-			@if (!$user->isAnonymous())
+			@if (!$user->isAnonymous() && !isset($post))
 			@if ($user->roles->filter(function($role){return $role->capcode;}))
 				<select class="field-capcode" name="capcode">
 					<option value=""></option>
@@ -56,4 +125,7 @@
 			@endif
 		</div>
 	</fieldset>
+	
+@if (!isset($form) || $form)
 </form>
+@endif

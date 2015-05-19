@@ -17,18 +17,45 @@ return [
 	 */
 	// Form Legends
 	// These appear above a post form.
-	'form_reply'        => "Reply",
-	'form_thread'       => "New Thread",
+	'legend'            => [
+		"edit"   => "Edit Post",
+		"reply"  => "Reply",
+		"thread" => "New Thread",
+		
+		"ban"               => "Ban user from :board for post",
+		"ban+global"        => "Ban user from entire site for post",
+		"ban+delete"        => "Ban user and delete post",
+		"all+ban+delete"    => "Ban user and delete all their posts on :board",
+		"ban+delete+global" => "Ban user and wipe all their posts from entire site",
+	],
 	
 	// Form Fields
 	// Specific fields in the form
-	'field_subject'     => "Subject",
-	'field_author'      => "Author",
-	'field_email'       => "Email",
+	'field'             => [
+		'subject'     => "Subject",
+		'author'      => "Author",
+		'email'       => "Email",
+		
+		'ip'              => "IP",
+		'justification'   => "Reason",
+		'expires'         => "Ban Expiry",
+		'expires-days'    => "Days",
+		'expires-hours'   => "Hours",
+		'expires-minutes' => "Minutes",
+	],
 	
-	// Form Actions
-	'action_reply'      => "Post Reply",
-	'action_thread'     => "Create Thread",
+	// Form Submit Buttons
+	'submit'            => [
+		"edit"   => "Submit Modification",
+		"reply"  => "Post Reply",
+		"thread" => "Create Thread",
+		
+		"ban"               => "Submit :board ban",
+		"ban+global"        => "Submit global ban",
+		"ban+delete"        => "Submit :board ban and delete post",
+		"all+ban+delete"    => "Submit :board ban and delete user's posts",
+		"ban+delete+global" => "Submit global ban and wipe user posts",
+	],
 	
 	
 	/**
@@ -55,6 +82,11 @@ return [
 		'unsticky'          => "Unsticky",
 	],
 	
+	'meta'              => [
+		'banned'            => "User was banned for this post.",
+		'banned_for'        => "User was banned for this post. Reason: <em>:reason</em>",
+		'updated_by'        => "This post was last edited by :name at :time.",
+	],
 	
 	/**
 	 * Thread View

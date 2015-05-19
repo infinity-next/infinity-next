@@ -156,6 +156,11 @@ return [
 		 * Stripe
 		 */
 		'Laravel\Cashier\CashierServiceProvider',
+		
+		/*
+		 * Forms
+		 */
+		'Collective\Html\HtmlServiceProvider',
 	],
 
 	/*
@@ -210,6 +215,12 @@ return [
 		 * Captcha
 		 */
 		'Captcha'   => 'App\Support\Facades\Captcha',
+		
+		/*
+		 * Forms
+		 */
+		'Form' => 'Collective\Html\FormFacade',
+		'Html' => 'Collective\Html\HtmlFacade',
 	],
 
 ];

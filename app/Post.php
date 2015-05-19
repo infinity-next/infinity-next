@@ -154,6 +154,11 @@ class Post extends Model {
 		return $this->belongsTo('\App\Board', 'board_uri');
 	}
 	
+	public function capcode()
+	{
+		return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
+	}
+	
 	public function op()
 	{
 		return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
@@ -164,9 +169,9 @@ class Post extends Model {
 		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
 	}
 	
-	public function capcode()
+	public function editor()
 	{
-		return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
+		return $this->hasOne('\App\User', 'user_id', 'updated_by');
 	}
 	
 	
@@ -190,6 +195,8 @@ class Post extends Model {
 	{
 		return $this->posts()
 			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
+			->andBan()
+			->andEditor()
 			->op()
 			->visible()
 			->orderBy('reply_last', 'desc')
@@ -249,6 +256,32 @@ class Post extends Model {
 		}
 		
 		return $this;
+	}
+	
+	
+	public function scopeAndBan($query)
+	{
+		return $query
+			->leftJoin('bans', function($join)
+			{
+				$join->on('bans.post_id', '=', 'posts.post_id');
+			})
+			->addSelect(
+				'bans.ban_id',
+				'bans.justification as ban_reason'
+			);
+	}
+	public function scopeAndEditor($query)
+	{
+		return $query
+			->leftJoin('users', function($join)
+			{
+				$join->on('users.user_id', '=', 'posts.updated_by');
+			})
+			->addSelect(
+				'posts.*',
+				'users.username as updated_by_username'
+			);
 	}
 	
 	public function scopeOp($query)

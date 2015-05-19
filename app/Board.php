@@ -74,6 +74,11 @@ class Board extends Model {
 		return $user->canDeleteLocally($this);
 	}
 	
+	public function canPostWithoutCaptcha($user)
+	{
+		return $user->canPostWithoutCaptcha($this);
+	}
+	
 	
 	public static function getBoardListBar()
 	{
@@ -151,6 +156,8 @@ class Board extends Model {
 		return $this->posts()
 			->where('board_id', $post)
 			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
+			->andBan()
+			->andEditor()
 			->visible()
 			->orderBy('reply_last', 'desc')
 			->get()
@@ -170,6 +177,8 @@ class Board extends Model {
 		
 		$threads = $this->threads()
 			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
+			->andBan()
+			->andEditor()
 			->op()
 			->visible()
 			->orderBy('stickied', 'desc')

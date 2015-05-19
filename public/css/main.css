@@ -226,6 +226,11 @@ form {
 			margin: 0.1em 0 0.25em 0;
 		}
 	
+	.row-inline {
+		display: inline-block;
+		margin: 0 1em 0 0;
+	}
+	
 	.field-control {
 		display: block;
 		
@@ -238,6 +243,11 @@ form {
 		font-size: 120%;
 		line-height: 1.4em;
 	}
+		.row-inline .field-control {
+			display: inline-block;
+			width: auto;
+		}
+		
 		.label-inline .field-control {
 			padding-left: 5em;
 		}
@@ -789,6 +799,13 @@ section.index-form {
 		}
 	}
 
+section.moderate-post {
+	margin: 0 auto 1em auto;
+}
+	section.moderate-post #mod-form {
+		margin: 0 auto 1em auto;
+	}
+
 section.index-threads {
 	margin: -1em 0 0 0;
 	position: relative;
@@ -917,10 +934,21 @@ section.index-threads {
 								max-width: 250px;
 							}
 		
+		
+		ul.post-metas {
+			border-top: 1px solid rgb(216, 216, 216);
+			margin: 0 0 -1px 0;
+		}
+			li.post-meta {
+				display: block;
+				color: #333;
+				font-size: 90%;
+				padding: 0.2em 0.6em;
+			}
+		
 		ul.post-actions {
-			border-top: 1px solid rgba(0, 0, 0, 0.15);
-			border-radius: 4px;
-			margin: 0.1em 0 -1px 0;
+			border-top: 1px solid rgb(216, 216, 216);
+			margin: 0 0 -1px 0;
 		}
 			li.post-action {
 			}
