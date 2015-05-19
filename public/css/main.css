@@ -681,7 +681,7 @@ section.contrib-donate {
 /* Navigation */
 nav.boardlist {
 	padding: 0 1em;
-	font-size: 0.8em;
+	font-size: 1em;
 }
 	nav.boardlist .boardlist-row {
 		height: 1.4em;
@@ -1453,7 +1453,7 @@ nav.cp-side {
 /* Page Header */
 header {
 	/* background: #fff; */
-	border-top: 2.2em solid #EEF2FF;
+	border-top: 2.5em solid #EEF2FF;
 	color: #333;
 	padding: 0;
 	margin: 0 0 1em 0;
