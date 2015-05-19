@@ -410,7 +410,6 @@ main.contrib section {
 		margin-top: 0;
 	}
 	main.contrib section:last-child {
-		margin-bottom: -1em;
 	}
 
 main.contrib section.contrib-howto {
@@ -435,7 +434,7 @@ main.contrib section.contrib-howto {
 		}
 			a.option-link {
 				display: block;
-				color: #EEF2FF;
+				color: #34345C;
 				font-size: 300%;
 				font-weight: bold;
 				text-decoration: none;
@@ -1032,6 +1031,7 @@ nav.pagination {
 		display: inline-block;
 		float: left;
 		padding: 0.25em 0.1em;
+		color: #34345C;
 	}
 	
 	ul.pagination-pages {
