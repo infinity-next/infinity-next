@@ -7,12 +7,12 @@ return [
 		'height'     => 38,
 		'quality'    => 100,
 		'angle'      => 12,
-		'blur'       => 1,
-		'contrast'   => 32,
-		'lines'      => 6,
-		'bgImage'    => true,
-		'bgColor'    => '#000',
-		'fontColors' => ['#b74b47', '#f4645f', '#f9b5b2'],
+		'blur'       => 0,
+		'contrast'   => 0,
+		'lines'      => 4,
+		'bgImage'    => false,
+		'bgColor'    => '#2a2a2a',
+		'fontColors' => ['#dee0df', '#ffffff', '#cccccc'],
 	],
 	
 	'flat'   => [
