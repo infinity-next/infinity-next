@@ -1,10 +1,13 @@
 <div class="post-content @if ($post->capcode_id > 0) capcode-{{{ $post->capcode->role }}} @endif">
 	<a name="{!! $post->board_id !!}"></a>
 	<ul class="post-details">
+		@if ($post->subject)
 		<li class="post-detail post-subject"><h3 class="subject">{{{ $post->subject }}}</h3></li>
+		@endif
+		
 		<li class="post-detail post-author">
 			<strong class="author">
-			@if ($post->email)<a href="mailto:{{{ $post->email }}}">@endif
+			@if ($post->email)<a href="mailto:{{{ $post->email }}}" class="email">@endif
 				{{{ $post->author ?: $board->getSetting('defaultName') }}}
 			@if ($post->email)</a>@endif
 			</strong>
