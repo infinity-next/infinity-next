@@ -405,6 +405,7 @@ header.contrib-header {
 
 main.contrib section {
 	margin: 0 auto;
+	font-size: 130%;
 }
 	main.contrib section:first-child {
 		margin-top: 0;
