@@ -114,7 +114,7 @@ class ContributeController extends MainController {
 			}
 		}
 		
-		return View::make('contribute', [
+		return View::make('content.contribute', [
 			"devTimer"    => $devTimer,
 			"donations"   => $devTimeSum,
 			"donors"      => $donorGroups,

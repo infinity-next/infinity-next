@@ -76,6 +76,15 @@ class BoardController extends MainController {
 		] );
 	}
 	
+	
+	public function getLogs(Request $request, Board $board)
+	{
+		return View::make('content.logs', [
+			'board' => $board,
+			'logs'  => $board->getLogs(),
+		]);
+	}
+	
 	/**
 	 * Renders a thread.
 	 *

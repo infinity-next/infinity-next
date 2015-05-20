@@ -1,6 +1,6 @@
 <nav class="cp-top">
 	<section class="cp-linklists">
-		@if ($user)
+		@if (!$user->isAnonymous())
 		<ul class="cp-linkgroups">
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Home</a>
@@ -9,7 +9,7 @@
 		@endif
 		
 		<ul class="cp-linkgroups linkgroups-user">
-			@if ($user)
+			@if (!$user->isAnonymous())
 			<li class="cp-linkgroup">
 				Signed in as {!! $user->username !!}
 			</li>

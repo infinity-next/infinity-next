@@ -48,6 +48,11 @@ class Board extends Model {
 		return $this->hasMany('\App\Post', 'board_uri');
 	}
 	
+	public function logs()
+	{
+		return $this->hasMany('\App\Log', 'board_uri');
+	}
+	
 	public function threads()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');
@@ -105,6 +110,13 @@ class Board extends Model {
 			->where('board_id', $local_id)
 			->get()
 			->first();
+	}
+	
+	public function getLogs()
+	{
+		return $this->logs()
+			->with('users')
+			->get();
 	}
 	
 	public function getPageCount()
