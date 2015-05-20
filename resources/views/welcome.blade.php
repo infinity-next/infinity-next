@@ -51,7 +51,7 @@
 	<div class="grid-container">
 		<!-- Intro -->
 		<div class="smooth-box">
-			@include('widgets.messages', [ 'messages' => [ "Infinity's fundraiser has not officially started. Please send feedback for these pages to " . env('MAIL_ADDR_ADMIN')] ])
+			@include('widgets.messages')
 			
 			<section id="site-intro">
 				<h2>Introduction to Infinity</h2>

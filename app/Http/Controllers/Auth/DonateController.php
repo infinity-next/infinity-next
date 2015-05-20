@@ -35,7 +35,7 @@ class DonateController extends CpController {
 		
 		if (!$this->user->isAnonymous())
 		{
-			$donated = $user->payments()->sum('amount');
+			$donated = $this->user->payments()->sum('amount');
 		}
 		
 		return View::make('content.donate', [

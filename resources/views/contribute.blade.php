@@ -174,7 +174,7 @@
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Multiple attachments</span>
+						<span class="goal-part">Multiple attachments <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Infinity Branch currently has multiple image attachments, but the way that attachments are inlined is clunky.
 							Aside from just getting the feature working (which is the easy part), having a proper, unobstructive display is crucial.

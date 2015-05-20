@@ -1246,6 +1246,13 @@ nav.cp-side {
 				display: block;
 				clear: both;
 			}
+			#payment-form .field-control {
+				background-color: #ffffff;
+				color: #000000;
+				line-height: 1.4em;
+				font-size: 1.3em;
+				min-height: 34px;
+			}
 			#payment-form .field {
 				float: left;
 				margin: 0.5em 0.5em 0.5em 0;
@@ -1291,13 +1298,13 @@ nav.cp-side {
 						border: 1px solid #dddddd;
 						background: #fff;
 						color: #333;
-						line-height: 1em;
-						vertical-align: top;
+						font-size: 1.2em;
+						line-height: 1.2em;
+						vertical-align: text-bottom;
 						font-weight: bold;
 					}
 					#donate-details .donate-cycle-input {
-						transform: scale(1.2);
-						vertical-align: middle;
+						vertical-align: text-bottom;
 					}
 					
 					#donate-details .donate-option-input {
@@ -1317,7 +1324,7 @@ nav.cp-side {
 						height: 5em;
 						line-height: 5;
 						border-radius: 0.3em;
-						color: #fff;
+						color: #34345C;
 						cursor: pointer;
 						box-sizing: border-box;
 						transition: all 0.2s ease 0s;
@@ -1326,8 +1333,9 @@ nav.cp-side {
 					#donate-details .donate-option-label:active,
 					#donate-details .donate-option-input:checked + .donate-option-label,
 					#donate-details .donate-option-label.checked {
-						background: none repeat scroll 0% 0% #B74B47 !important;
+						background: none repeat scroll 0% 0% #34345C !important;
 						box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25) inset;
+						color: #ffffff;
 					}
 					#donate-details #input_amount_other_label {
 						line-height: 2.5;
@@ -1337,7 +1345,7 @@ nav.cp-side {
 						display: block;
 						width: 64px;
 						margin: 0px 2px;
-						background: none repeat scroll 0% 0% #F9B5B2;
+						background: none repeat scroll 0% 0% #FFFFFF;
 						line-height: 1;
 						padding: 0.25em;
 						border: 0px none;
@@ -1346,7 +1354,7 @@ nav.cp-side {
 						color: #333;
 					}
 						#donate-details #input_amount_other_box:focus {
-							background: none repeat scroll 0% 0% #FFF;
+							background: none repeat scroll 0% 0% #FFFFFF;
 						}
 
 	#payment-time {
@@ -1456,7 +1464,7 @@ header {
 	/* background: #fff; */
 	border-top: 2.5em solid #EEF2FF;
 	color: #333;
-	padding: 0;
+	padding: 0.5em 0 0 0;
 	margin: 0 0 1em 0;
 }
 
