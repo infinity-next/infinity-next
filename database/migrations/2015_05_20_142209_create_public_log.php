@@ -17,9 +17,9 @@ class CreatePublicLog extends Migration {
 			$table->increments('action_id');
 			$table->string('action_name');
 			$table->binary('action_details')->nullable()->default(null);
-			$table->integer('user_id')->unsigned();
+			$table->integer('user_id')->unsigned()->nullable()->default(null);
 			$table->string('user_ip', 46);
-			$table->string('board_uri', 32);
+			$table->string('board_uri', 32)->nullable()->default(null);
 			$table->timestamps();
 			
 			

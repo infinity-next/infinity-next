@@ -14,10 +14,12 @@ use App\Board;
 use App\Post;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
+use Laravel\Cashier\Billable;
+use Laravel\Cashier\Contracts\Billable as BillableContract;
 
-class Anonymous implements PermissionUserContract
+class Anonymous implements BillableContract, PermissionUserContract
 {
-	use PermissionUser;
+	use Billable, PermissionUser;
 	
 	/**
 	 * Dummy properties for User models.
@@ -28,10 +30,35 @@ class Anonymous implements PermissionUserContract
 	public $username = null;
 	public $email    = null;
 	
+	
+	/**
+	 * Dummy properties for anonymous donations.
+	 *
+	 * @var mixed
+	 */
+	public $stripe_active           = null;
+	public $stripe_id               = null;
+	public $stripe_subscription     = null;
+	public $stripe_plan             = null;
+	public $last_four               = null;
+	public $trial_ends_at           = null;
+	public $subscription_ends_at    = null;
+	public $subscription_kill_token = null;
+	
 	/**
 	 * Distinguishes this model from an Anonymous user.
 	 *
 	 * @var boolean
 	 */
 	protected $anonymous = true;
+	
+	/**
+	 * Allow Stripe to run properly.
+	 *
+	 * @var App\Support\Anonymous
+	 */
+	public function save()
+	{
+		return $this;
+	}
 }

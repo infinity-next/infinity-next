@@ -22,6 +22,7 @@ class CreateBoardsTable extends Migration {
 			$table->integer('operated_by')->unsigned();
 			$table->integer('posts_total')->unsigned()->default(0);
 			
+			
 			// Foreigns and Indexes
 			$table->primary('board_uri');
 			

@@ -59,13 +59,6 @@ class DonateController extends CpController {
 		$user     = $this->user;
 		$input    = Input::all();
 		
-		// Create a dummy account if we're not using a registered account.
-		if ($user->isAnonymous())
-		{
-			$fakeUser = true;
-			$user = new User();
-		}
-		
 		// Build our \App\Payment model.
 		$payment = [
 			'customer'     => $user->user_id,
@@ -113,11 +106,6 @@ class DonateController extends CpController {
 		else
 		{
 			$errors[] = "Your card failed to process and has not been charged.";
-		}
-		
-		if ($fakeUser === true)
-		{
-			$user->delete();
 		}
 		
 		if ($request->ajax())
