@@ -35,17 +35,25 @@ class FileController extends MainController {
 	 */
 	public function getFile(Request $request, Board $board, $hash = false, $filename = false, $thumbnail = false)
 	{
+		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+			header('HTTP/1.1 304 Not Modified');
+			die();
+		}
+		
 		if ($hash !== false && $filename !== false)
 		{
 			$FileStorage     = FileStorage::getHash($hash);
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
+			$cacheTime       =  315360000; /// 10 years
 			
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
 				$responseSize    = Storage::size($storagePath);
 				$responseHeaders = [
-					'Cache-Control'       => "public, max-age=315360000",
+					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
+					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
+					'Last-Modified'       => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
 					'Content-Disposition' => "inline",
 					'Content-Length'      => $responseSize,
 					'Content-Type'        => $FileStorage->mime,
