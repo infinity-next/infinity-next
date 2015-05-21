@@ -278,10 +278,15 @@ class BoardController extends MainController {
 						$fileContent = File::get($upload);
 						$storage     = $uploadStorage[ $uploadIndex ];
 						
+						$uploadname  = $upload->getClientOriginalName();
+						$uploadext   = pathinfo($uploadname, PATHINFO_EXTENSION);
+						$filename    = basename($uploadname, "." . $uploadext);
+						$fileext     = $upload->guessExtension();
+						
 						$attachment = new FileAttachment();
 						$attachment->post_id  = $post->post_id;
 						$attachment->file_id  = $storage->file_id;
-						$attachment->filename = $upload->getClientOriginalName() . '.' . $upload->guessExtension();
+						$attachment->filename = "{$filename}.{$fileext}";
 						$attachment->save();
 						
 						if (!Storage::exists($storage->getPath()))

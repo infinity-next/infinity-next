@@ -98,8 +98,9 @@
 				'captcha',
 				"",
 				[
-					'id'        => "captcha",
-					'class'     => "field-control",
+					'id'          => "captcha",
+					'class'       => "field-control",
+					'placeholder' => "Security Code",
 			]) !!}
 		</div>
 		@endif
