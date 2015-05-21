@@ -307,6 +307,25 @@ form {
 			border-top: 1px solid #dee0df;
 		}
 
+/* Tables */
+table {
+	border: none;
+	border-collapse: separate;
+	border-spacing: 1em;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+	table thead {
+	}
+		table thead th {
+			border-top: none;
+			padding: 0.5em;
+			text-align: left;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+		}
+
 
 /*
  * Errors
@@ -440,6 +459,10 @@ main.contrib section.contrib-howto {
 				font-weight: bold;
 				text-decoration: none;
 			}
+				a.option-link:link:hover,
+				a.option-link:visited:hover {
+					color: #ff0000;
+				}
 			a.option-link h3 {
 				margin: 0;
 			}
@@ -1078,62 +1101,62 @@ div.cp-box {
 	position: relative;
 	padding: 3.1em 0 0 0;
 }
-
-div.cp-frame:first-child {
-	border-right: 1px solid #e0e0e0;
-}
-div.cp-frame:last-child {
-	border-left: 1px solid #e0e0e0;
-	margin-left: -1px;
-	padding-top: 1em;
-	padding-bottom: 1em;
-}
-
-nav.cp-top {
-	background: #333;
-	padding: 0.5em 0.5em;
-	margin: 0;
-	line-height: 1.0em;
 	
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-}
-	nav.cp-top section.cp-linklists {
+	div.cp-frame:first-child {
+		border-right: 1px solid #e0e0e0;
 	}
-	nav.cp-top section.cp-linklists::after {
-		content: ' ';
-		clear: both;
-		display: block;
+	div.cp-frame:last-child {
+		border-left: 1px solid #e0e0e0;
+		margin-left: -1px;
+		padding-top: 1em;
+		padding-bottom: 1em;
 	}
 	
-	nav.cp-top ul.cp-linkgroups {
-		display: block;
-		float: left;
+	nav.cp-top {
+		background: #333;
+		padding: 0.5em 0.5em;
+		margin: 0;
+		line-height: 1.0em;
+		
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
 	}
-	nav.cp-top ul.cp-linkgroups.linkgroups-user {
-		float: right;
-	}
-		nav.cp-top li.cp-linkgroup {
-			display: inline-block;
-			color: #e0e0e0;
+		nav.cp-top section.cp-linklists {
 		}
-			nav.cp-top a.linkgroup-name,
-			nav.cp-top a.linkitem-name {
+		nav.cp-top section.cp-linklists::after {
+			content: ' ';
+			clear: both;
+			display: block;
+		}
+		
+		nav.cp-top ul.cp-linkgroups {
+			display: block;
+			float: left;
+		}
+		nav.cp-top ul.cp-linkgroups.linkgroups-user {
+			float: right;
+		}
+			nav.cp-top li.cp-linkgroup {
 				display: inline-block;
-				background: #222;
-				border-radius: 4px;
-				padding: 0.5em;
 				color: #e0e0e0;
-				font-weight: bold;
-				line-height: 1em;
 			}
-			nav.cp-top ul.cp-linkitems {
-				display: none;
-			}
-				nav.cp-top li.cp-linkitem {
+				nav.cp-top a.linkgroup-name,
+				nav.cp-top a.linkitem-name {
+					display: inline-block;
+					background: #222;
+					border-radius: 4px;
+					padding: 0.5em;
+					color: #e0e0e0;
+					font-weight: bold;
+					line-height: 1em;
 				}
+				nav.cp-top ul.cp-linkitems {
+					display: none;
+				}
+					nav.cp-top li.cp-linkitem {
+					}
 
 nav.cp-side {
 	box-sizing: border-box;

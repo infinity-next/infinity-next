@@ -115,7 +115,9 @@ class Board extends Model {
 	public function getLogs()
 	{
 		return $this->logs()
-			->with('users')
+			->with('user')
+			->take(100)
+			->orderBy('created_at', 'desc')
 			->get();
 	}
 	

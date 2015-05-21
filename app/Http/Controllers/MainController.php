@@ -43,7 +43,12 @@ abstract class MainController extends Controller {
 		$board_uri      = null;
 		$action_details = null;
 		
-		if ($board instanceof Board)
+		if ($board instanceof \App\Board)
+		{
+			$board_uri      = $board->board_uri;
+			$action_details = $data;
+		}
+		else if ($board instanceof \App\Post)
 		{
 			$board_uri      = $board->board_uri;
 			$action_details = $data;

@@ -317,6 +317,16 @@ class BoardController extends MainController {
 				$board->threads()->save($post);
 			}
 			
+			if ($post->capcode_id)
+			{
+				$this->log('log.post.capcode', $post, [
+					"board_id"  => $post->board_id,
+					"board_uri" => $post->board_uri,
+					"capcode"   => $role->capcode,
+					"role"      => $role->role,
+				]);
+			}
+			
 			if ($thread_id === false)
 			{
 				return redirect("{$board->board_uri}/thread/{$post->board_id}");

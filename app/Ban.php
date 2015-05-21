@@ -81,8 +81,8 @@ class Ban extends Model {
 		return $query
 			->where(function($query) {
 				$query
-					->where('expires_at', '<', $this->freshTimestamp())
-					->orWhere('seen', false);
+					->where('expires_at', '>', $this->freshTimestamp())
+					->orWhere('seen', 0);
 			});
 	}
 }

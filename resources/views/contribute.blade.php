@@ -8,7 +8,7 @@
 	<section class="contrib-howto grid-container">
 		<ul class="contrib-options smooth-box">
 			<li class="contrib-option option-code grid-25">
-				<a class="option-link" href="https://github.com/infinity-next/infinity-next/">
+				<a class="option-link" href="https://github.com/8n-tech/infinity-next/">
 					<span class="option-stack fa-stack">
 						<i class="fa fa-square fa-stack-2x"></i>
 						<i class="fa fa-github-alt fa-stack-1x fa-inverse"></i>
@@ -19,7 +19,7 @@
 				
 				<blockquote class="option-desc">
 					Infinity runs on the Laravel, the world's most popular PHP framework.<br />
-					If you have experience with either, <a href="https://github.com/infinity-next/infinity-next/">check out our GitHub</a>.
+					If you have experience with either, check out our GitHub.
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
@@ -34,7 +34,7 @@
 				
 				<blockquote class="option-desc">
 					I run on food and require electricity.<br />
-					If you would like to support Infinity Next's full-time development, I can accept your faith with <a href="{!! secure_url('cp/donate') !!}">Stripe or in Bitcoins</a>.
+					If you would like to support Infinity Next's full-time development, I can accept your faith with Stripe or in Bitcoins.
 				</blockquote>
 			</li>
 			<li class="contrib-option option-code grid-25">
@@ -49,7 +49,7 @@
 				
 				<blockquote class="option-desc">
 					The look and use of an imageboard is very important to its feel and culture.<br />
-					I'm always <a href="{!! url('/infinity/') !!}">listening to feedback</a> and will often be pitching ideas to see how people respond.
+					I'm always listening to feedback and will often be pitching ideas to see how people respond.
 				</blockquote>
 			</li>
 			<li class="option-code grid-25">
@@ -64,7 +64,7 @@
 				
 				<blockquote class="option-desc">
 					Even if you have nothing else to give, you can still spread the word that this project exists. Helping shill increases our exposure to new donors.<br />
-					Seeing excitement over the project is also a huge motivational factor that I sincerely appreciate. Feel free to even <a href="mailto:{{env('MAIL_ADDR_ADMIN')}}">drop me a letter.</a>
+					Seeing excitement over the project is also a huge motivational factor that I sincerely appreciate.
 				</blockquote>
 			</li>
 		</ul>

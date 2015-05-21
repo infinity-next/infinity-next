@@ -79,8 +79,16 @@ class PostController extends MainController {
 				}
 				
 				
-				Post::where('author_ip', $post->author_ip)
-					->delete();
+				$posts = Post::where('author_ip', $post->author_ip);
+				
+				$this->log('log.post.delete.global', $post, [
+					"board_id"  => $post->board_id,
+					"board_uri" => $post->board_uri,
+					"ip"        => $post->author_ip,
+					"posts"     => $posts->count(),
+				]);
+				
+				$posts->delete();
 				
 				return redirect($board->board_uri);
 			}
@@ -93,14 +101,42 @@ class PostController extends MainController {
 				
 				if ($all)
 				{
-					Post::where('author_ip', $post->author_ip)
-						->where('board_uri', $board->board_uri)
-						->delete();
+					$posts = Post::where('author_ip', $post->author_ip)
+						->where('board_uri', $board->board_uri);
+					
+					$this->log('log.post.delete.local', $post, [
+						"board_id"  => $post->board_id,
+						"board_uri" => $post->board_uri,
+						"ip"        => $post->author_ip,
+						"posts"     => $posts->count(),
+					]);
+					
+					$posts->delete();
 					
 					return redirect($board->board_uri);
 				}
 				else
 				{
+					if ($post->author_ip != Request::ip())
+					{
+						if ($post->reply_to)
+						{
+							$this->log('log.post.delete.reply', $post, [
+								"board_id"  => $post->board_id,
+								"board_uri" => $post->board_uri,
+								"op_id"     => $post->op->board_id,
+							]);
+						}
+						else
+						{
+							$this->log('log.post.delete.op', $post, [
+								"board_id"  => $post->board_id,
+								"board_uri" => $post->board_uri,
+								"replies"   => $post->replies()->count(),
+							]);
+						}
+					}
+					
 					$post->delete();
 					
 					if ($post->reply_to)
@@ -158,15 +194,39 @@ class PostController extends MainController {
 			'expires_minutes' => 'required|min:0|max:59',
 		]);
 		
+		$banLengthStr   = [];
+		$expiresDays    = Input::get('expires_days');
+		$expiresHours   = Input::get('expires_hours');
+		$expiresMinutes = Input::get('expires_minutes');
+		
+		if ($expiresDays > 0)
+		{
+			$banLengthStr[] = "{$expiresDays}d";
+		}
+		if ($expiresHours > 0)
+		{
+			$banLengthStr[] = "{$expiresHours}h";
+		}
+		if ($expiresMinutes > 0)
+		{
+			$banLengthStr[] = "{$expiresMinutes}m";
+		}
+		if ($expiresDays == 0 && $expiresHours == 0 && $expiresMinutes == 0)
+		{
+			$banLengthStr[] = "&Oslash;";
+		}
+		
+		$banLengthStr = implode($banLengthStr, " ");
+		
 		$ban = new Ban();
 		$ban->ban_ip        = Input::get('ban_ip');
 		$ban->seen          = false;
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;
 		$ban->expires_at    = clone $ban->created_at;
-		$ban->expires_at->addDays(Input::get('expires_days'));
-		$ban->expires_at->addHours(Input::get('expires_hours'));
-		$ban->expires_at->addMinutes(Input::get('expires_minutes'));
+		$ban->expires_at->addDays($expiresDays);
+		$ban->expires_at->addHours($expiresHours);
+		$ban->expires_at->addMinutes($expiresMinutes);
 		$ban->mod_id        = $this->user->user_id;
 		$ban->post_id       = $post->post_id;
 		$ban->ban_reason_id = null;
@@ -185,10 +245,25 @@ class PostController extends MainController {
 				$ban->save();
 			}
 			
+			$this->log('log.post.ban.global', $post, [
+				"board_id"      => $post->board_id,
+				"board_uri"     => $post->board_uri,
+				"ip"            => $post->author_ip,
+				"justification" => $ban->justification,
+				"time"          => $banLengthStr,
+			]);
+			
 			if ($delete)
 			{
-				Post::where('author_ip', $post->author_ip)
-					->delete();
+				$posts = Post::where('author_ip', $post->author_ip);
+				
+				$this->log('log.post.ban.delete', $post, [
+					"board_id"  => $post->board_id,
+					"board_uri" => $post->board_uri,
+					"posts"     => $posts->count(),
+				]);
+				
+				$posts->delete();
 				
 				return redirect($board->board_uri);
 			}
@@ -206,18 +281,39 @@ class PostController extends MainController {
 				$ban->save();
 			}
 			
+			$this->log('log.post.ban.local', $post, [
+				"board_id"      => $post->board_id,
+				"board_uri"     => $post->board_uri,
+				"ip"            => $post->author_ip,
+				"justification" => $ban->justification,
+				"time"          => $banLengthStr,
+			]);
+			
 			if ($delete)
 			{
 				if ($all)
 				{
-					Post::where('author_ip', $post->author_ip)
-						->where('board_uri', $board->board_uri)
-						->delete();
+					$posts = Post::where('author_ip', $post->author_ip)
+						->where('board_uri', $board->board_uri);
+					
+					$this->log('log.post.ban.delete', $post, [
+						"board_id"  => $post->board_id,
+						"board_uri" => $post->board_uri,
+						"posts"     => $posts->count(),
+					]);
+					
+					$posts->delete();
 					
 					return redirect($board->board_uri);
 				}
 				else
 				{
+					$this->log('log.post.ban.delete', $post, [
+						"board_id"  => $post->board_id,
+						"board_uri" => $post->board_uri,
+						"posts"     => 1,
+					]);
+					
 					$post->delete();
 					
 					if ($post->reply_to)
@@ -289,6 +385,11 @@ class PostController extends MainController {
 			$post->updated_by = $this->user->user_id;
 			$post->save();
 			
+			$this->log('log.post.edit', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+			]);
+			
 			return View::make(static::VIEW_EDIT, [
 				"actions" => ["edit"],
 				"form"    => "post",
@@ -316,6 +417,12 @@ class PostController extends MainController {
 		if ($post->canSticky($this->user))
 		{
 			$post->setSticky( $sticky )->save();
+			
+			$this->log($sticky ? 'log.post.sticky' : 'log.post.unsticky', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+			]);
+			
 			return redirect("{$board->board_uri}/thread/{$post->board_id}");
 		}
 		
