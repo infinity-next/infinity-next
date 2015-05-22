@@ -106,21 +106,21 @@
 				<h4>Existing software has poor HTML, CSS &amp; JS conventions</h4>
 				<p>
 					While working on Infinity, I decided I would try to resolve a few quality of life complaints users were having in /operate/.
-					One of the &quot;easy&quot; requests I saw was a simply to add a &quot;Post a reply&quot; link at the bottom of the page to open the reply box.
+					One of the &quot;easy&quot; requests I saw was to add a &quot;Post a reply&quot; link at the bottom of the page that would open the reply box.
 				</p>
 				<p>
 					This simple fix turned into a two-day affair.
 					I used JS to insert the link (as opening the reply box required JS).
-					To do this, I needed an anchor element to insert the link after in the footer.
-					I didn't find anything suitable, so did a little work in the footer to give new class names to elements.
+					To do this, I needed another element to insert the link after in the footer.
+					I didn't find anything suitable, so did a little work to give new class names to elements.
 					<em>Big mistake.</em>
 				</p>
 				<p>
-					This simple change broke every script we had because they all relied on the arbitrary jQuery selector <tt>$('form[name="postcontrols"] > .delete:first')</tt>.
-					This had been copy+pasted into every single utility dealing with the thread view.
+					This simple change broke all thread scripts because they relied on the arbitrary an arbitrary jQuery selector: <tt>$('form[name="postcontrols"] > .delete:first')</tt>.
+					This had been copy+pasted into every single utility script we had for thread and post views.
 				</p>
 				<p>
-					And the unfortunate reality is everything is like this, needlessly.
+					The unfortunate reality is that everything is like this, needlessly.
 					It's so easy to write good HTML, CSS, and jQuery and for some reason it just was not done.
 				</p>
 				

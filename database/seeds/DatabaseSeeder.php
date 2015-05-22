@@ -16,10 +16,14 @@ class DatabaseSeeder extends Seeder {
 		
 		$this->call('UserSeeder');
 		$this->call('BoardSeeder');
+		
 		$this->call('PermissionSeeder');
 		$this->call('RoleSeeder');
 		$this->call('UserRoleSeeder');
 		$this->call('RolePermissionSeeder');
+		
+		$this->call('OptionSeeder');
+		$this->call('OptionGroupSeeder');
 	}
 
 }
@@ -41,24 +45,33 @@ class UserSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Creating first user ...');
+		$this->command->info("Seeding admin user.");
 		
-		// Generate a password.
-		$password = [];
-		for ($i = 0; $i < 4; ++$i)
+		if (User::count() < 0)
 		{
-			$password[] = static::$potential_pass_words[array_rand(static::$potential_pass_words)];
+			// Generate a password.
+			$password = [];
+			for ($i = 0; $i < 4; ++$i)
+			{
+				$password[] = static::$potential_pass_words[array_rand(static::$potential_pass_words)];
+			}
+			$password = implode($password, " ");
+			
+			// Create the user.
+			$user = User::firstOrCreate([
+				'user_id'  =>1,
+			], [
+				'user_id'  => 1,
+				'username' => "Admin",
+				'password' => bcrypt($password),
+			]);
+			
+			$this->command->info("User \"Admin\" has been created with the following password:\n{$password}");
 		}
-		$password = implode($password, " ");
-		
-		// Create the user.
-		$user = User::firstOrCreate([
-			'user_id'  => 1,
-			'username' => "Admin",
-			'password' => bcrypt($password),
-		]);
-		
-		$this->command->info("User \"Admin\" has been created with the following password: {$password}");
+		else
+		{
+			$this->command->info("Skipped. Users exist.");
+		}
 	}
 }
 
@@ -69,17 +82,24 @@ class BoardSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Creating first test board ...');
+		$this->command->info("Seeding boards.");
 		
-		$board = Board::firstOrCreate([
+		if (Board::count() < 1)
+		{
+			$board = Board::firstOrCreate([
 				'board_uri'   => "test",
 				'title'       => "Test",
 				'description' => "Discover software features on your own",
 				'created_by'  => 1,
 				'operated_by' => 1,
 			]);
-		
-		$this->command->info("Board exists now. Accessible at /test/.");
+			
+			$this->command->info("Success. Board exists now. Accessible at /test/.");
+		}
+		else
+		{
+			$this->command->info("Skipped. Site has a board.");
+		}
 	}
 }
 
@@ -90,9 +110,29 @@ class PermissionSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Creating permission sets ...');
+		$this->command->info("Seeding permissions.");
 		
-		DB::table('permissions')->insert([
+		$permission_count = Permission::count();
+		
+		foreach ($this->slugs() as $slug)
+		{
+			Permission::updateOrCreate([
+				'permission_id' => $slug['permission_id'],
+			], $slug);
+		}
+		
+		$permission_count = Permission::count() - $permission_count;
+		
+		$this->command->info("Done. Seeded {$permission_count} new permission(s).");
+	}
+	
+	private function slugs()
+	{
+		return [
+			[
+				'permission_id' => "board.config",
+				'base_value' => 0,
+			],
 			[
 				'permission_id' => "board.create",
 				'base_value' => 0,
@@ -165,7 +205,12 @@ class PermissionSeeder extends Seeder {
 				'permission_id' => "board.image.spoiler.other",
 				'base_value' => 0,
 			],
-		]);
+			
+			[
+				'permission_id' => "site.config",
+				'base_value' => 0,
+			],
+		];
 	}
 }
 
@@ -176,11 +221,44 @@ class RoleSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Adding roles ...');
+		$this->command->info('Seeding roles.');
 		
-		DB::table('roles')->insert([
+		foreach ($this->slugs() as $slug)
+		{
+			Role::updateOrCreate([
+				'role_id'   => $slug['role_id'],
+				'role'      => $slug['role'],
+				'board_uri' => $slug['board_uri'],
+				'caste'     => $slug['caste'],
+			], $slug);
+		}
+		
+		foreach (Board::get() as $board)
+		{
+			$boardRole = [
+				'role'       => "owner",
+				'board_uri'  => $board->board_uri,
+				'caste'      => NULL,
+				'inherit_id' => Role::$ROLE_OWNER,
+				'name'       => "Board Owner",
+				'capcode'    => "Board Owner",
+				'system'     => false,
+			];
+			
+			Role::updateOrCreate([
+				'role'      => $boardRole['role'],
+				'board_uri' => $boardRole['board_uri'],
+				'caste'     => $boardRole['caste'],
+			], $boardRole);
+		}
+		
+	}
+	
+	private function slugs()
+	{
+		return [
 			[
-				'role_id'    => 1,
+				'role_id'    => Role::$ROLE_ANONYMOUS,
 				'role'       => "anonymous",
 				'board_uri'  => NULL,
 				'caste'      => NULL,
@@ -190,72 +268,56 @@ class RoleSeeder extends Seeder {
 				'system'     => true,
 			],
 			[
-				'role_id'       => 2,
-				'role'     => "admin",
-				'board_uri' => NULL,
-				'caste'    => NULL,
-				'inherit_id' => NULL,
-				'name'     => "Administrator",
-				'capcode'  => "Administrator",
-				'system'   => true,
-			],
-			[
-				'role_id'       => 3,
-				'role'     => "moderator",
-				'board_uri' => NULL,
-				'caste'    => NULL,
-				'inherit_id' => NULL,
-				'name'     => "Global Volunteer",
-				'capcode'  => "Global Volunteer",
-				'system'   => true,
-			],
-			[
-				'role_id'       => 4,
-				'role'     => "owner",
-				'board_uri' => NULL,
-				'caste'    => NULL,
-				'inherit_id' => NULL,
-				'name'     => "Board Owner",
-				'capcode'  => "Board Owner",
-				'system'   => true,
-			],
-			[
-				'role_id'       => 5,
-				'role'     => "volunteer",
-				'board_uri' => NULL,
-				'caste'    => NULL,
-				'inherit_id' => NULL,
-				'name'     => "Board Volunteer",
-				'capcode'  => "Board Volunteer",
-				'system'   => true,
-			],
-			[
-				'role_id'   => 6,
-				'role'      => "unaccountable",
-				'board_uri' => NULL,
-				'caste'     => NULL,
-				'inherit_id'  => 1,
-				'name'      => "Proxy User",
-				'capcode'   => NULL,
-				'system'    => true,
-			],
-		]);
-		
-		$boardRoles = [];
-		foreach (Board::get() as $board)
-		{
-			$boardRoles[] = [
-				'role'       => "owner",
-				'board_uri'  => $board->board_uri,
+				'role_id'    => Role::$ROLE_ADMIN,
+				'role'       => "admin",
+				'board_uri'  => NULL,
 				'caste'      => NULL,
-				'inherit_id' => 4,
+				'inherit_id' => NULL,
+				'name'       => "Administrator",
+				'capcode'    => "Administrator",
+				'system'     => true,
+			],
+			[
+				'role_id'    => Role::$ROLE_MODERATOR,
+				'role'       => "moderator",
+				'board_uri'  => NULL,
+				'caste'      => NULL,
+				'inherit_id' => NULL,
+				'name'       => "Global Volunteer",
+				'capcode'    => "Global Volunteer",
+				'system'     => true,
+			],
+			[
+				'role_id'    => Role::$ROLE_OWNER,
+				'role'       => "owner",
+				'board_uri'  => NULL,
+				'caste'      => NULL,
+				'inherit_id' => NULL,
 				'name'       => "Board Owner",
 				'capcode'    => "Board Owner",
-				'system'     => false,
-			];
-		}
-		
-		DB::table('roles')->insert($boardRoles);
+				'system'     => true,
+			],
+			[
+				'role_id'    => Role::$ROLE_VOLUTNEER,
+				'role'       => "volunteer",
+				'board_uri'  => NULL,
+				'caste'      => NULL,
+				'inherit_id' => NULL,
+				'name'       => "Board Volunteer",
+				'capcode'    => "Board Volunteer",
+				'system'     => true,
+			],
+			[
+				'role_id'    => Role::$ROLE_UNACCOUNTABLE,
+				'role'       => "unaccountable",
+				'board_uri'  => NULL,
+				'caste'      => NULL,
+				'inherit_id' => 1,
+				'name'       => "Proxy User",
+				'capcode'    => NULL,
+				'system'     => true,
+			],
+		];
 	}
 }
 
@@ -266,12 +328,12 @@ class UserRoleSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Associating roles ...');
+		$this->command->info('Seeding role to user associations.');
 		
 		$userRoles = [
 			[
 				'user_id'  => 1,
-				'role_id'  => 2,
+				'role_id'  => Role::$ROLE_ADMIN,
 			]
 		];
 		foreach (Board::get() as $board)
@@ -281,7 +343,11 @@ class UserRoleSeeder extends Seeder {
 				'role_id' => $board->getOwnerRole()->role_id,
 			];
 		}
-		DB::table('user_roles')->insert($userRoles);
+		
+		foreach ($userRoles as $userRole)
+		{
+			UserRole::firstOrCreate($userRole);
+		}
 	}
 }
 
@@ -292,8 +358,40 @@ class RolePermissionSeeder extends Seeder {
 	
 	public function run()
 	{
+		$this->command->info('Seeding permission to role associations.');
+		
 		// Insert default permissions.
-		$defaultPermissions = [
+		foreach ($this->slugs() as $slug)
+		{
+			RolePermission::firstOrCreate([
+				'role_id'       => $slug['role_id'],
+				'permission_id' => $slug['permission_id'],
+			]);
+		}
+		
+		
+		// Give admin permissions.
+		$permissions = Permission::get();
+		
+		if (count($permissions))
+		{
+			foreach ($permissions as $permission)
+			{
+				RolePermission::firstOrCreate([
+					'role_id'       => Role::$ROLE_ADMIN,
+					'permission_id' => $permission->permission_id,
+				], [
+					'role_id'       => Role::$ROLE_ADMIN,
+					'permission_id' => $permission->permission_id,
+					'value'         => 1,
+				]);
+			}
+		}
+	}
+	
+	private function slugs()
+	{
+		return [
 			['role_id' => 1, 'value' => 1, 'permission_id' => "board.image.delete.self"],
 			['role_id' => 1, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
 			['role_id' => 1, 'value' => 1, 'permission_id' => "board.post.delete.self"],
@@ -312,21 +410,134 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => 3, 'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => 3, 'value' => 1, 'permission_id' => "board.user.unban",],
 		];
+	}
+}
+
+
+use App\Option;
+
+class OptionSeeder extends Seeder {
+	
+	public function run()
+	{
+		$this->command->info('Seeding system options.');
 		
-		$permissions = Permission::get();
+		$option_count = Option::count();
 		
-		if (count($permissions))
+		foreach ($this->slugs() as $slug)
 		{
-			foreach ($permissions as $permission)
-			{
-				$defaultPermissions[] = [
-					'role_id'       => 2,
-					'permission_id' => $permission->permission_id,
-					'value'         => 1,
-				];
-			}
+			$option = Option::updateOrCreate([
+				'option_name' => $slug['option_name'],
+			], $slug);
 		}
 		
-		DB::table('role_permissions')->insert($defaultPermissions);
+		$option_count = Option::count() - $option_count;
+		
+		$this->command->info("Done. Seeded {$option_count} new permission(s).");
+	}
+	
+	private function slugs()
+	{
+		return [
+			[
+				'option_name'           => "attachmentFilesize",
+				'default_value'         => "1024",
+				'option_value'          => "1024",
+				'format'                => "spinbox",
+				'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+				'data_type'             => "unsigned_integer",
+				'validation_parameters' => 'required|min:$min'
+			],
+			[
+				'option_name'           => "attachmentThumbnailSize",
+				'default_value'         => "250",
+				'option_value'          => "250",
+				'format'                => "spinbox",
+				'format_parameters'     => json_encode( [ 'min' => 50 ] ),
+				'data_type'             => "unsigned_integer",
+				'validation_parameters' => 'required|min:$min'
+			],
+			
+			[
+				'option_name'           => "banMaxLength",
+				'default_value'         => "30",
+				'option_value'          => "30",
+				'format'                => "spinbox",
+				'format_parameters'     => json_encode( [ 'min' => -1 ] ),
+				'data_type'             => "integer",
+				'validation_parameters' => 'required|min:$min'
+			],
+			[
+				'option_name'           => "banSubnets",
+				'default_value'         => 1,
+				'option_value'          => 1,
+				'format'                => "onoff",
+				'data_type'             => "boolean",
+				'validation_parameters' => 'required|boolean'
+			],
+		];
+	}
+}
+
+
+use App\OptionGroup;
+use App\OptionGroupAssignment;
+
+class OptionGroupSeeder extends Seeder
+{
+	
+	public function run()
+	{
+		$this->command->info('Seeding option groups and relationships.');
+		
+		foreach ($this->slugs() as $slug)
+		{
+			$optionGroupOptions = $slug['options'];
+			unset($slug['options']);
+			
+			$optionGroup = OptionGroup::firstOrCreate([
+				'group_name' => $slug['group_name'],
+			], $slug);
+			
+			$optionGroup->save();
+			
+			foreach ($optionGroupOptions as $optionGroupIndex => $optionGroupOption)
+			{
+				$optionGroupOptionModels[] = OptionGroupAssignment::firstOrCreate([
+					'option_name'     => $optionGroupOption,
+					'option_group_id' => $optionGroup->option_group_id,
+				], [
+					'option_name'     => $optionGroupOption,
+					'option_group_id' => $optionGroup->option_group_id,
+					'display_order'   => $optionGroupIndex * 10,
+				]);
+			}
+		}
+	}
+	
+	private function slugs()
+	{
+		return [
+			[
+				'group_name'    => "attachments",
+				'debug_only'    => false,
+				'display_order' => 100,
+				
+				'options'       => [
+					"attachmentFilesize",
+					"attachmentThumbnailSize",
+				],
+			],
+			[
+				'group_name'    => "bans",
+				'debug_only'    => false,
+				'display_order' => 200,
+				
+				'options'       => [
+					"banMaxLength",
+					"banSubnets",
+				],
+			],
+		];
 	}
 }

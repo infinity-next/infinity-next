@@ -5,6 +5,18 @@
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Home</a>
 			</li>
+			
+			@if ($user->canAny('board.config'))
+			<li class="cp-linkgroup">
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Boards</a>
+			</li>
+			@endif
+			
+			@if ($user->can('site.config'))
+			<li class="cp-linkgroup">
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Site</a>
+			</li>
+			@endif
 		</ul>
 		@endif
 		

@@ -85,6 +85,29 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Accepts a permission and checks if *any* board allows it.
+	 *
+	 * @return boolean
+	 */
+	public function canAny($permission)
+	{
+		if ($permission instanceof Permission)
+		{
+			$permission = $permission->permission_id;
+		}
+		
+		foreach ($this->getPermissions() as $board_uri => $board_permissions)
+		{
+			if ($this->getPermission($permission, $board_uri))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Can this user reply with attachments for this board?
 	 *
 	 * @return boolean

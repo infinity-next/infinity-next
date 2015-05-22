@@ -5,6 +5,16 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model {
 	
 	/**
+	 * These static variables represent the hard ID top-level roles.
+	 */
+	public static $ROLE_ANONYMOUS     = 1;
+	public static $ROLE_ADMIN         = 2;
+	public static $ROLE_MODERATOR     = 3;
+	public static $ROLE_OWNER         = 4;
+	public static $ROLE_VOLUTNEER     = 5;
+	public static $ROLE_UNACCOUNTABLE = 6;
+	
+	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
