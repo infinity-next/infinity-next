@@ -27,4 +27,6 @@ return [
 		'banMaxLength'            => "Maximum length for global bans (days)",
 		'banSubnets'              => "Allow subnet bans",
 	],
+	
+	'submit' => "Save Changes",
 ];

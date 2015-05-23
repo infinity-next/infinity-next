@@ -1,15 +1,17 @@
 @extends('layouts.cp')
 
+@section('nav-secondary')
+	@include('nav.cp.site')
+@endsection
+
 @section('body')
 {!! Form::open([
 	'url'    => Request::url(),
-	'method' => "PUT",
+	'method' => "PATCH",
 	'files'  => true,
 	'id'     => "config-site",
 	'class'  => "form-config",
 ]) !!}
-	@include('widgets.messages')
-	
 	<h3 class="config-title">{{ trans("config.title.site") }}</h3>
 	
 	@foreach ($groups as $group)
@@ -21,5 +23,14 @@
 		@endforeach
 	</fieldset>
 	@endforeach
+	
+	<div class="field row-submit">
+		{!! Form::button(
+			trans("config.submit"),
+			[
+				'type'      => "submit",
+				'class'     => "field-submit",
+		]) !!}
+	</div>
 {!! Form::close() !!}
 @endsection

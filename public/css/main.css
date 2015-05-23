@@ -329,31 +329,36 @@ form.form-config {
 		padding: 0.5em 0;
 		width: 100%;
 	}
-	dl.option {
-		display: block;
-		clear: both;
-		margin: 1em 0;
-	}
-		dt.option-term {
-			display: inline-block;
-			margin: 0 1em 0 0;
-			padding: 0.2em 0;
-			line-height: 1.4;
-			width: 32%;
-			min-width: 300px;
-			text-align: right;
+		dl.option {
+			display: block;
+			clear: both;
+			margin: 1em 0;
 		}
-		
-		dd.option-definition {
-			display: inline-block;
-			margin: 0 0 0 1em;
-			text-align: left;
-			width: auto;
-		}
-			dd.option-definition label.field-label {
+			dt.option-term {
 				display: inline-block;
-				vertical-align: top;
+				margin: 0 1em 0 0;
+				padding: 0.2em 0;
+				line-height: 1.4;
+				width: 32%;
+				min-width: 300px;
+				text-align: right;
 			}
+			
+			dd.option-definition {
+				display: inline-block;
+				margin: 0 0 0 1em;
+				text-align: left;
+				width: auto;
+			}
+				dd.option-definition label.field-label {
+					display: inline-block;
+					vertical-align: top;
+				}
+		
+		form.form-config .row-submit {
+			margin-left: 32%;
+			padding-left: 2em;
+		}
 
 /* Tables */
 table {
@@ -1200,6 +1205,8 @@ div.cp-box {
 					color: #e0e0e0;
 					font-weight: bold;
 					line-height: 1em;
+					min-width: 4em;
+					text-align: center;
 				}
 				nav.cp-top ul.cp-linkitems {
 					display: none;
@@ -1231,9 +1238,6 @@ nav.cp-side {
 				color: #525252;
 				font-size: 18px;
 			}
-			nav.cp-side a.linkgroup-name,
-			nav.cp-side a.linkitem-name {
-			}
 			nav.cp-side ul.cp-linkitems {
 				display: block;
 				border-top: 1px dashed #e0e0e0;
@@ -1244,8 +1248,12 @@ nav.cp-side {
 					display: block;
 					margin: 0.2em 0 0 0;
 				}
+					nav.cp-side a.linkgroup-name,
 					nav.cp-side a.linkitem-name {
-						font-size: 90%;
+						display: block;
+					}
+					nav.cp-side a.linkitem-name {
+						line-height: 1.6;
 					}
 
 #payment-form {

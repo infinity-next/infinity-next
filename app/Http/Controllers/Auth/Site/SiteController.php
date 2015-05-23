@@ -22,7 +22,7 @@ class SiteController extends CpController {
 	 */
 	public function getIndex()
 	{
-		return "Hello, world.";
+		return view('auth.site');
 	}
 	
 }

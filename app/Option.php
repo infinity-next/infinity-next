@@ -78,4 +78,51 @@ class Option extends Model {
 				return "auth.config.option.{$this->format}";
 		}
 	}
+	
+	public function getValidation()
+	{
+		$requirement = "";
+		switch ($this->data_type)
+		{
+			case "unsigned_integer" :
+				$requirement = "integer";
+				break;
+			
+			case "integer" :
+				$requirement = "integer|min:0";
+				break;
+			
+			case "boolean" :
+				$requirement = "boolean";
+				break;
+		}
+		
+		$validation = $this->validation_parameters;
+		$parameters = $this->getFormatParameters();
+		
+		if (is_array($parameters))
+		{
+			$validation = preg_replace_callback('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)/', function($match) use ($parameters) {
+				if (isset($parameters[$match[1]])) {
+					return $parameters[$match[1]];
+				}
+				
+				return $match[0];
+			}, $validation);
+		}
+		
+		if ($validation != "")
+		{
+			if ($requirement != "")
+			{
+				$requirement .= "|" . $validation;
+			}
+			else
+			{
+				$requirement = $validation;
+			}
+		}
+		
+		return $requirement;
+	}
 }

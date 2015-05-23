@@ -1,7 +1,7 @@
 @extends('layouts.cp')
 
 @section('nav-secondary')
-	@include('nav.cp.home')
+	@include('nav.cp.site')
 @endsection
 
 @section('body')

@@ -4,10 +4,12 @@
 <main class="cp">
 	<div class="cp-container grid-container">
 		<div class="cp-box smooth-box">
-			@include('nav.cp')
+			@section('nav-primary')
+				@include('nav.cp')
+			@show
 			
 			<div class="cp-frame grid-15">
-				@include('nav.cp.home')
+				@yield('nav-secondary')
 			</div>
 			
 			<div class="cp-frame grid-85">

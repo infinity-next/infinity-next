@@ -14,7 +14,7 @@
 			
 			@if ($user->can('site.config'))
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Site</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/site') !!}">Site</a>
 			</li>
 			@endif
 		</ul>
