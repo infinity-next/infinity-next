@@ -19,6 +19,8 @@ interface PermissionUser {
 	
 	public function can($permission, $board = null);
 	
+	public function canAny($permission);
+	
 	public function canAttach(\App\Board $board);
 	
 	public function canDelete(\App\Post $post);

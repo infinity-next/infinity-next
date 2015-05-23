@@ -28,7 +28,7 @@ Route::group([
 ], function()
 {
 	// Simple /cp/ requests go directly to /cp/home
-	Route::any('/', 'HomeController@getIndex');
+	Route::get('/', 'HomeController@getIndex');
 	
 	Route::controllers([
 		// /cp/auth handles sign-ins and registrar work.
@@ -39,13 +39,32 @@ Route::group([
 		'password' => 'PasswordController',
 	]);
 	
+	// /cp/donate is a Stripe cashier system for donations.
 	if (env('CONTRIB_ENABLED', false))
 	{
-		Route::controllers([
-			// /cp/donate is a Stripe cashier system for donations.
-			'donate'   => 'DonateController',
-		]);
+		Route::controller('donate', 'DonateController');
 	}
+	
+	Route::group([
+		'namespace' => 'Site',
+		'prefix'    => 'site',
+	], function()
+	{
+		// Simple /cp/ requests go directly to /cp/home
+		Route::get('/', 'SiteController@getIndex');
+		
+		Route::controllers([
+			'config' => 'ConfigController',
+		]);
+	});
+	
+	Route::group([
+		'namespace' => 'Board',
+		'prefix'    => 'board',
+	], function()
+	{
+		
+	});
 });
 
 /*

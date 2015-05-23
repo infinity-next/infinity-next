@@ -323,6 +323,7 @@ class RoleSeeder extends Seeder {
 
 
 use App\UserRole;
+use App\UserPermissionCache;
 
 class UserRoleSeeder extends Seeder {
 	
@@ -360,12 +361,15 @@ class RolePermissionSeeder extends Seeder {
 	{
 		$this->command->info('Seeding permission to role associations.');
 		
+		UserPermissionCache::truncate();
+		
 		// Insert default permissions.
 		foreach ($this->slugs() as $slug)
 		{
 			RolePermission::firstOrCreate([
 				'role_id'       => $slug['role_id'],
 				'permission_id' => $slug['permission_id'],
+				'value'         => $slug['value'],
 			]);
 		}
 		

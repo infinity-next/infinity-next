@@ -12,6 +12,13 @@ class OptionGroup extends Model {
 	protected $table = 'option_groups';
 	
 	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'option_group_id';
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -31,4 +38,9 @@ class OptionGroup extends Model {
 		return $this->belongsToMany("\App\Option", 'option_group_assignments', 'option_group_id', 'option_name')->withPivot('display_order');
 	}
 	
+	
+	public static function getSiteConfig()
+	{
+		return static::with('options')->get();
+	}
 }

@@ -306,6 +306,54 @@ form {
 			border: none;
 			border-top: 1px solid #dee0df;
 		}
+	
+
+form.form-config {
+	
+}
+	h3.config-title {
+		margin: 0 0 1em 0;
+		
+	}
+	
+	form.form-config fieldset.form-fields {
+		border-bottom: 1px solid #EEF2FF;
+	}
+		form.form-config fieldset.form-fields:last-child {
+			border-bottom: none;
+		}
+	
+	form.form-config legend.form-legend {
+		display: block;
+		font-size: 110%;
+		padding: 0.5em 0;
+		width: 100%;
+	}
+	dl.option {
+		display: block;
+		clear: both;
+		margin: 1em 0;
+	}
+		dt.option-term {
+			display: inline-block;
+			margin: 0 1em 0 0;
+			padding: 0.2em 0;
+			line-height: 1.4;
+			width: 32%;
+			min-width: 300px;
+			text-align: right;
+		}
+		
+		dd.option-definition {
+			display: inline-block;
+			margin: 0 0 0 1em;
+			text-align: left;
+			width: auto;
+		}
+			dd.option-definition label.field-label {
+				display: inline-block;
+				vertical-align: top;
+			}
 
 /* Tables */
 table {
@@ -641,7 +689,7 @@ main.contrib section.contrib-donorlist {
 				font-size: 0.8em;
 			}
 
-section.section-me {
+main.contrib section.section-me {
 	background: #333;
 	color: white;
 }
@@ -657,7 +705,7 @@ section.section-me {
 		.skill-desc {
 		}
 
-section.contrib-donate {
+main.contrib section.contrib-donate {
 	background: #EEFFF2;
 }
 	section.contrib-donate #payment-form {
@@ -1102,11 +1150,12 @@ div.cp-box {
 	padding: 3.1em 0 0 0;
 }
 	
-	div.cp-frame:first-child {
+	div.cp-frame {
 		border-right: 1px solid #e0e0e0;
 	}
 	div.cp-frame:last-child {
 		border-left: 1px solid #e0e0e0;
+		border-right: none;
 		margin-left: -1px;
 		padding-top: 1em;
 		padding-bottom: 1em;

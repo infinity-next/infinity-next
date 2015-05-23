@@ -38,4 +38,44 @@ class Option extends Model {
 		return $this->belongsToMany("\App\OptionGroup", 'option_group_assignments', 'option_name', 'option_group_id');
 	}
 	
+	
+	protected $decoded_format_parameters;
+	
+	public function getFormatParameter($parameter)
+	{
+		$parameters = $this->getFormatParameters();
+		
+		if (isset($parameters[$parameter]))
+		{
+			return $parameters[$parameter];
+		}
+		
+		return null;
+	}
+	
+	public function getFormatParameters()
+	{
+		if (!isset($this->decoded_format_parameters))
+		{
+			$this->decoded_format_parameters = json_decode($this->format_parameters, true);
+		}
+		
+		return $this->decoded_format_parameters;
+	}
+	
+	public function getTemplate()
+	{
+		switch ($this->format)
+		{
+			case "template":
+				return $this->getFormatParameter('template');
+			
+			case "callback":
+				## TODO ##
+				return "Callback not supported.";
+			
+			default:
+				return "auth.config.option.{$this->format}";
+		}
+	}
 }
