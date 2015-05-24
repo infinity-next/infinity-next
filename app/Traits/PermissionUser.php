@@ -373,6 +373,8 @@ trait PermissionUser {
 	{
 		return UserPermissionCache::updateOrCreate([
 			'user_id' => $this->user_id,
+		],[
+			'user_id' => $this->user_id,
 			'cache'   => json_encode($this->permissions),
 		]);
 	}

@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use DB;
 use Request;
 
 class Post extends Model {
@@ -55,8 +56,33 @@ class Post extends Model {
 		
 		// When creating a post in reply to a thread,
 		// update its last reply timestamp and add to its reply total.
+			/*
 		static::creating(function($post)
 		{
+			$posts_total = 0;
+			
+			$post->reply_last = $post->freshTimestamp();
+			$post->setCreatedAt($post->reply_last);
+			$post->setUpdatedAt($post->reply_last);
+			
+			DB::transaction(function() use ($post)
+			{
+				DB::table('boards')
+					->where('board_uri', $post->board_uri)
+					->increment('posts_total');
+				
+				if ($post->reply_to)
+				{
+					$reply_count = DB::table('posts')
+						->where('post_id', $post->reply_to)
+						->increment('reply_count');
+				}
+				
+				$post->board_id = $posts_total;
+			});
+			
+			return true;
+		});
 			$board = $post->board;
 			$board->posts_total += 1;
 			$post->board_id = $board->posts_total;
@@ -80,10 +106,7 @@ class Post extends Model {
 					return false;
 				}
 			}
-			
-			$board->save();
-			return true;
-		});
+			$board->save();*/
 		
 		// When deleting a post, delete its children.
 		static::deleting(function($post)
@@ -327,5 +350,41 @@ class Post extends Model {
 	public function scopeVisible($query)
 	{
 		return $query->where('deleted_at', null);
+	}
+	
+	public function transact()
+	{
+		$post = &$this;
+		if (!isset($post->board_id))
+		{
+			$post->reply_last = $post->freshTimestamp();
+			$post->setCreatedAt($post->reply_last);
+			$post->setUpdatedAt($post->reply_last);
+			
+			DB::transaction(function() use ($post)
+			{
+				DB::table('boards')
+					->where('board_uri', $post->board_uri)
+					->increment('posts_total');
+				
+				$boards = DB::table('boards')
+					->where('board_uri', $post->board_uri)
+					->lockForUpdate()
+					->select('posts_total')
+					->get();
+				
+				$posts_total = $boards[0]->posts_total;
+				
+				if ($post->reply_to)
+				{
+					$reply_count = DB::table('posts')
+						->where('post_id', $post->reply_to)
+						->increment('reply_count');
+				}
+				
+				$post->board_id = $posts_total;
+				$post->save();
+			});
+		}
 	}
 }

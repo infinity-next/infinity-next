@@ -2,6 +2,7 @@
 
 use App\Board;
 use App\Log;
+use App\Option;
 use App\Support\Anonymous;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -12,6 +13,11 @@ use Request;
 use View;
 
 abstract class MainController extends Controller {
+	
+	/**
+	 * @var Cache of the system's options
+	 */
+	protected $options;
 	
 	/**
 	 * Create a new authentication controller instance.
@@ -38,6 +44,15 @@ abstract class MainController extends Controller {
 		View::share('user', $this->user);
 	}
 	
+	
+	/**
+	 * Logs an action.
+	 *
+	 * @param String $action
+	 * @param App\Board|String $board
+	 * @param Array $data
+	 * @return App\Log
+	 */
 	public function log($action, $board = null, $data = null)
 	{
 		$board_uri      = null;
@@ -83,5 +98,29 @@ abstract class MainController extends Controller {
 		]);
 		
 		return $log->save();
+	}
+	
+	
+	/**
+	 * Returns an system option's value.
+	 *
+	 * @param String $option
+	 */
+	public function option($option)
+	{
+		if (!isset($this->options))
+		{
+			$this->options = Option::get();
+		}
+		
+		foreach ($this->options as $option)
+		{
+			if ($option->option_name == $option)
+			{
+				return $option->open_value;
+			}
+		}
+		
+		return null;
 	}
 }

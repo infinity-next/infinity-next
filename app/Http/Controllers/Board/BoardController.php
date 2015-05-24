@@ -183,6 +183,7 @@ class BoardController extends MainController {
 			
 			// Create post.
 			$post = new Post($input);
+			$post->board_uri = $board->board_uri;
 			$post->author_ip = $request->ip();
 			
 			if ($thread_id !== false)
@@ -271,7 +272,7 @@ class BoardController extends MainController {
 				
 				if ($uploadsSuccessful === true)
 				{
-					$board->threads()->save($post);
+					$post->transact();
 					
 					foreach ($uploads as $uploadIndex => $upload)
 					{
@@ -297,10 +298,14 @@ class BoardController extends MainController {
 							$imageManager = new ImageManager;
 							$imageManager
 								->make($storage->getFullPath())
-								->resize(255, 255, function($constraint) {
-									$constraint->aspectRatio();
-									$constraint->upsize();
-								})
+								->resize(
+									$this->option('attachmentThumbnailSize'),
+									$this->option('attachmentThumbnailSize'),
+									function($constraint) {
+										$constraint->aspectRatio();
+										$constraint->upsize();
+									}
+								)
 								->save($storage->getFullPathThumb());
 						}
 					}
@@ -314,7 +319,7 @@ class BoardController extends MainController {
 			}
 			else
 			{
-				$board->threads()->save($post);
+				$post->transact();
 			}
 			
 			if ($post->capcode_id)
