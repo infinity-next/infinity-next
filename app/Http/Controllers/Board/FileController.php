@@ -27,10 +27,10 @@ class FileController extends MainController {
 	/**
 	 * Delivers a file.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\Board $board
-	 * @param  \App\FileStorage->hash $hash
-	 * @param  \App\FileAttachment->hash $filename
+	 * @param \Illuminate\Http\Request $request
+	 * @param \App\Board $board
+	 * @param \App\FileStorage->hash $hash
+	 * @param \App\FileAttachment->hash $filename
 	 * @return Response
 	 */
 	public function getFile(Request $request, Board $board, $hash = false, $filename = false, $thumbnail = false)
@@ -73,10 +73,10 @@ class FileController extends MainController {
 	/**
 	 * Delivers a file's thumbnail by rerouting the request to getFile with an optional parameter set.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\Board $board
-	 * @param  \App\FileStorage->hash $hash
-	 * @param  \App\FileAttachment->hash $filename
+	 * @param \Illuminate\Http\Request $request
+	 * @param \App\Board $board
+	 * @param \App\FileStorage->hash $hash
+	 * @param \App\FileAttachment->hash $filename
 	 * @return Response
 	 */
 	public function getThumbnail(Request $request, Board $board, $hash = false, $filename = false)

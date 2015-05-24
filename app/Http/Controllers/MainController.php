@@ -15,15 +15,17 @@ use View;
 abstract class MainController extends Controller {
 	
 	/**
-	 * @var Cache of the system's options
+	 * Cache of the system's options
+	 *
+	 * @var array
 	 */
 	protected $options;
 	
 	/**
 	 * Create a new authentication controller instance.
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
+	 * @param \Illuminate\Contracts\Auth\Guard $auth
+	 * @param \Illuminate\Contracts\Auth\Registrar $registrar
 	 * @return void
 	 */
 	public function __construct(Guard $auth, Registrar $registrar)

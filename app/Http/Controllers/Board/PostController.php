@@ -442,7 +442,9 @@ class PostController extends MainController {
 	/**
 	 * Check the request for all post controller methods.
 	 *
-	 * @return HttpException|RedirectResponse|\App\Post
+	 * @var Board $board
+	 * @var Post $post
+	 * @return HttpException|RedirectResponse|Post
 	 */
 	protected function validatePost(Board $board, $post)
 	{

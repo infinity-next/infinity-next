@@ -8,13 +8,62 @@ use View;
 
 class PostRequest extends Request {
 	
+	/**
+	 * Current Board set by controller.
+	 *
+	 * @var Board
+	 */
 	protected $board;
+	
+	/**
+	 * Current Board set by controller.
+	 *
+	 * @var User|Support\Anonymous
+	 */
 	protected $user;
+	
+	/**
+	 *
+	 *
+	 *
+	 */
+	public function all()
+	{
+		$input = parent::all();
+		
+		if (is_array($input['files']))
+		{
+			// Having an [null] file array passes validation.
+			$input['files'] = array_filter($input['files']);
+		}
+		
+		if (isset($input['capcode']) && $input['capcode'])
+		{
+			$user = $this->getUser();
+			
+			if (!$user->isAnonymous())
+			{
+				$role = $user->roles->where('role_id', $input['capcode'])->first();
+				
+				if ($role && $role->capcode != "")
+				{
+					$input['capcode_id'] = (int) $role->role_id;
+					$input['author']     = $user->username;
+				}
+			}
+			else
+			{
+				unset($input['capcode']);
+			}
+		}
+		
+		return $input;
+	}
 	
 	/**
 	 * Returns if the client has access to this form.
 	 *
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function authorize()
 	{
@@ -24,7 +73,8 @@ class PostRequest extends Request {
 	/**
 	 * Returns validation rules for this request.
 	 *
-	 * @return Array (\Validation rules)
+	 * @param BoardController $controller
+	 * @return array
 	 */
 	public function rules(BoardController $controller)
 	{
@@ -64,6 +114,20 @@ class PostRequest extends Request {
 	}
 	
 	/**
+	 * Get the response for a forbidden operation.
+	 *
+	 * @param array $errors
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function response(array $errors)
+	{
+		$redirectURL = $this->getRedirectUrl();
+		
+		return redirect($redirectURL)
+			->withInput($this->except($this->dontFlash))
+			->withErrors($errors, $this->errorBag);
+	}
+	/**
 	 * Validate the class instance.
 	 * This overrides the default invocation to provide additional rules after the controller is setup.
 	 *
@@ -91,48 +155,43 @@ class PostRequest extends Request {
 		}
 	}
 	
-	
+	/**
+	 * Returns the request's current board.
+	 *
+	 * @return Board
+	 */
 	public function getBoard()
 	{
 		return $this->board;
 	}
 	
+	/**
+	 * Returns the request's current user.
+	 *
+	 * @return User|Support\Anonymous
+	 */
 	public function getUser()
 	{
 		return $this->board;
 	}
 	
+	/**
+	 * Sets the request's board.
+	 *
+	 * @return void
+	 */
 	public function setBoard(Board $board)
 	{
-		return ($this->board = $board);
+		$this->board = $board;
 	}
 	
+	/**
+	 * Returns the request's user.
+	 *
+	 * @return void
+	 */
 	public function setUser($user)
 	{
-		return ($this->user = $user);
-	}
-	
-	
-	/*
-	// OPTIONAL OVERRIDE
-	public function forbiddenResponse()
-	{
-		// Optionally, send a custom response on authorize failure 
-		// (default is to just redirect to initial page with errors)
-		// 
-		// Can return a response, a view, a redirect, or whatever else
-		return Response::make('Permission denied foo!', 403);
-	}
-	
-	*/
-	
-	// OPTIONAL OVERRIDE
-	public function response(array $errors)
-	{
-		$redirectURL = $this->getRedirectUrl();
-		
-		return redirect($redirectURL)
-			->withInput($this->except($this->dontFlash))
-			->withErrors($errors, $this->errorBag);
+		$this->user = $user;
 	}
 }

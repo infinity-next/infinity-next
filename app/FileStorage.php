@@ -88,22 +88,34 @@ class FileStorage extends Model {
 		return $query->where('hash', $hash);
 	}
 	
+	
+	/**
+	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
+	 *
+	 * @param UploadedFile $upload
+	 * @return FileStorage
+	 */
 	public static function storeUpload(UploadedFile $upload)
 	{
 		$fileContent  = File::get($upload);
 		$fileMD5      = md5(File::get($upload));
 		$storage      = static::getHash($fileMD5);
-		$fileTime     = $storage->freshTimestamp();
 		
 		if (!($storage instanceof static))
 		{
-			$storage = new static();
+			$storage           = new static();
+			$fileTime          = $storage->freshTimestamp();
+			
 			$storage->hash     = $fileMD5;
 			$storage->banned   = false;
 			$storage->filesize = $upload->getSize();
 			$storage->mime     = $upload->getClientMimeType();
 			$storage->first_uploaded_at = $fileTime;
 			$storage->upload_count = 0;
+		}
+		else
+		{
+			$fileTime = $storage->freshTimestamp();
 		}
 		
 		$storage->last_uploaded_at = $fileTime;

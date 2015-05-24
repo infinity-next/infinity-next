@@ -37,6 +37,9 @@ class BoardController extends MainController {
 	 * This is usually the last few threads, depending on the optional page
 	 * parameter, which determines the thread offset.
 	 *
+	 * @var \App\Http\Requests\Request $request
+	 * @var Board $board
+	 * @var integer $page
 	 * @return Response
 	 */
 	public function getIndex(Request $request, Board $board, $page = 1)
@@ -73,7 +76,13 @@ class BoardController extends MainController {
 		] );
 	}
 	
-	
+	/**
+	 * Renders a thread.
+	 *
+	 * @var \App\Http\Requests\Request $request
+	 * @var Board $board
+	 * @return Response
+	 */
 	public function getLogs(Request $request, Board $board)
 	{
 		return View::make('content.logs', [
@@ -85,6 +94,9 @@ class BoardController extends MainController {
 	/**
 	 * Renders a thread.
 	 *
+	 * @var \App\Http\Requests\Request $request
+	 * @var Board $board
+	 * @var integer|null $thread
 	 * @return Response
 	 */
 	public function getThread(Request $request, Board $board, $thread = null)
@@ -117,6 +129,9 @@ class BoardController extends MainController {
 	/**
 	 * Handles the creation of a new thread or reply.
 	 *
+	 * @var \App\Http\Requests\PostRequest $request
+	 * @var Board $board
+	 * @var integer|null $thread
 	 * @return Response (redirects to the thread view)
 	 */
 	public function putThread(PostRequest $request, Board $board, $thread = null)
@@ -133,37 +148,9 @@ class BoardController extends MainController {
 		$request->validate();
 		
 		
-		// Clean up and authorize input.
-		$input = Input::all();
-		
-		if (is_array($input['files']))
-		{
-			// Having an [null] file array passes validation.
-			$input['files'] = array_filter($input['files']);
-		}
-		
-		if (isset($input['capcode']) && $input['capcode'])
-		{
-			if (!$this->user->isAnonymous())
-			{
-				$role = $this->user->roles->where('role_id', $input['capcode'])->first();
-				
-				if ($role && $role->capcode != "")
-				{
-					$this->capcode_id = (int) $role->role_id;
-					$this->author     = $this->user->username;
-				}
-			}
-			else
-			{
-				unset($input['capcode']);
-			}
-		}
-		
-		
 		// Create the post.
-		$post = new Post();
-		$post->submit($input, $board, $thread);
+		$post = new Post($request->all());
+		$post->submitTo($board, $thread);
 		
 		
 		// Log staff posts.

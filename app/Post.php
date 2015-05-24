@@ -309,11 +309,13 @@ class Post extends Model {
 		return $query->where('deleted_at', null);
 	}
 	
-	public function submit(array &$input, Board &$board, &$thread = null)
+	public function submitTo(Board &$board, &$thread = null)
 	{
-		$this->fill($input);
-		$this->board_uri = $board->board_uri;
-		$this->author_ip = Request::getClientIp();
+		$this->board_uri  = $board->board_uri;
+		$this->author_ip  = Request::getClientIp();
+		$this->reply_last = $this->freshTimestamp();
+		$this->setCreatedAt($this->reply_last);
+		$this->setUpdatedAt($this->reply_last);
 		
 		if (!is_null($thread) && !($thread instanceof Post))
 		{
@@ -330,11 +332,7 @@ class Post extends Model {
 		}
 		
 		
-		// Create the post
-		$this->reply_last = $this->freshTimestamp();
-		$this->setCreatedAt($this->reply_last);
-		$this->setUpdatedAt($this->reply_last);
-		
+		// Store the post in the database.
 		$post = &$this;
 		DB::transaction(function() use ($post)
 		{
