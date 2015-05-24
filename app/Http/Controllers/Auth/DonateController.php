@@ -26,7 +26,7 @@ class DonateController extends CpController {
 	/**
 	 * Opens the password reset form.
 	 *
-	 * @param  Request  $request
+	 * @param Request $request
 	 * @return Response
 	 */
 	public function getIndex(Request $request)
@@ -48,7 +48,7 @@ class DonateController extends CpController {
 	/**
 	 * Handles a payment.
 	 *
-	 * @param  App/Http/Requests/DonationRequest  $request
+	 * @param App/Http/Requests/DonationRequest $request
 	 * @return Response
 	 */
 	public function postIndex(DonationRequest $request)

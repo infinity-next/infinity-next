@@ -1,11 +1,15 @@
 <?php namespace App;
 
+use App\FileStorage;
+use App\FileAttachment;
 use App\Services\ContentFormatter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
+use Input;
+use File;
 use Request;
 
 class Post extends Model {
@@ -54,59 +58,11 @@ class Post extends Model {
 		
 		// Setup event bindings...
 		
-		// When creating a post in reply to a thread,
-		// update its last reply timestamp and add to its reply total.
-			/*
+		// When creating a thread, make sure it has a board_id.
 		static::creating(function($post)
 		{
-			$posts_total = 0;
-			
-			$post->reply_last = $post->freshTimestamp();
-			$post->setCreatedAt($post->reply_last);
-			$post->setUpdatedAt($post->reply_last);
-			
-			DB::transaction(function() use ($post)
-			{
-				DB::table('boards')
-					->where('board_uri', $post->board_uri)
-					->increment('posts_total');
-				
-				if ($post->reply_to)
-				{
-					$reply_count = DB::table('posts')
-						->where('post_id', $post->reply_to)
-						->increment('reply_count');
-				}
-				
-				$post->board_id = $posts_total;
-			});
-			
-			return true;
+			return isset($post->board_id);
 		});
-			$board = $post->board;
-			$board->posts_total += 1;
-			$post->board_id = $board->posts_total;
-			
-			$post->reply_last = $post->freshTimestamp();
-			$post->setCreatedAt($post->reply_last);
-			$post->setUpdatedAt($post->reply_last);
-			
-			if ($post->reply_to)
-			{
-				$op = $post->getOp();
-				
-				if ($op && $op->canReply())
-				{
-					$op->reply_count += 1;
-					$op->reply_last = $post->created_at;
-					$op->save();
-				}
-				else
-				{
-					return false;
-				}
-			}
-			$board->save();*/
 		
 		// When deleting a post, delete its children.
 		static::deleting(function($post)
@@ -114,8 +70,8 @@ class Post extends Model {
 			static::replyTo($post->post_id)->delete();
 		});
 		
+		// After a post is deleted, update OP's reply count.
 		static::deleted(function($post) {
-			// Subtract a reply from OP and update its last reply time.
 			if ($post->reply_to)
 			{
 				$lastReply = $post->op->getReplyLast();
@@ -294,6 +250,7 @@ class Post extends Model {
 				'bans.justification as ban_reason'
 			);
 	}
+	
 	public function scopeAndEditor($query)
 	{
 		return $query
@@ -352,39 +309,89 @@ class Post extends Model {
 		return $query->where('deleted_at', null);
 	}
 	
-	public function transact()
+	public function submit(array &$input, Board &$board, &$thread = null)
 	{
-		$post = &$this;
-		if (!isset($post->board_id))
+		$this->fill($input);
+		$this->board_uri = $board->board_uri;
+		$this->author_ip = Request::getClientIp();
+		
+		if (!is_null($thread) && !($thread instanceof Post))
 		{
-			$post->reply_last = $post->freshTimestamp();
-			$post->setCreatedAt($post->reply_last);
-			$post->setUpdatedAt($post->reply_last);
+			$thread = $board->getLocalThread($thread);
+			$this->reply_to = $thread->post_id;
+		}
+		
+		// Store attachments
+		$uploads = [];
+		
+		if (is_array($files = Input::file('files')))
+		{
+			$uploads = array_filter($files);
+		}
+		
+		
+		// Create the post
+		$this->reply_last = $this->freshTimestamp();
+		$this->setCreatedAt($this->reply_last);
+		$this->setUpdatedAt($this->reply_last);
+		
+		$post = &$this;
+		DB::transaction(function() use ($post)
+		{
+			// The objective of this transaction is to prevent concurrency issues in the database
+			// on the unique joint index [board_uri,board_id] which is generated procedurall
+			// alongside the primary autoincrement column post_id.
 			
-			DB::transaction(function() use ($post)
+			// First instruction is to add +1 to posts_total.
+			DB::table('boards')
+				->where('board_uri', $post->board_uri)
+				->increment('posts_total');
+			
+			// Second, we record this value and lock the table.
+			$boards = DB::table('boards')
+				->where('board_uri', $post->board_uri)
+				->lockForUpdate()
+				->select('posts_total')
+				->get();
+			
+			$posts_total = $boards[0]->posts_total;
+			
+			// Optionally, the OP of this thread needs a +1 to reply count.
+			if ($post->reply_to)
 			{
-				DB::table('boards')
-					->where('board_uri', $post->board_uri)
-					->increment('posts_total');
+				$reply_count = DB::table('posts')
+					->where('post_id', $post->reply_to)
+					->increment('reply_count');
+			}
+			
+			// Finally, we set our board_id and save.
+			$post->board_id = $posts_total;
+			$post->save();
+			
+			// Queries and locks are handled automatically after this closure ends.
+		});
+		
+		
+		// Process uploads.
+		if (count($uploads) > 0)
+		{
+			foreach ($uploads as $uploadIndex => $upload)
+			{
+				$uploadName  = $upload->getClientOriginalName();
+				$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
 				
-				$boards = DB::table('boards')
-					->where('board_uri', $post->board_uri)
-					->lockForUpdate()
-					->select('posts_total')
-					->get();
+				$fileContent = File::get($upload);
+				$fileName    = basename($uploadName, "." . $uploadExt);
+				$fileExt     = $upload->guessExtension();
 				
-				$posts_total = $boards[0]->posts_total;
+				$storage     = FileStorage::storeUpload($upload);
 				
-				if ($post->reply_to)
-				{
-					$reply_count = DB::table('posts')
-						->where('post_id', $post->reply_to)
-						->increment('reply_count');
-				}
-				
-				$post->board_id = $posts_total;
-				$post->save();
-			});
+				$attachment  = new FileAttachment();
+				$attachment->post_id  = $this->post_id;
+				$attachment->file_id  = $storage->file_id;
+				$attachment->filename = "{$fileName}.{$fileExt}";
+				$attachment->save();
+			}
 		}
 	}
 }

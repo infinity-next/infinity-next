@@ -106,7 +106,7 @@ abstract class MainController extends Controller {
 	 *
 	 * @param String $option
 	 */
-	public function option($option)
+	public function option($option_name)
 	{
 		if (!isset($this->options))
 		{
@@ -115,9 +115,9 @@ abstract class MainController extends Controller {
 		
 		foreach ($this->options as $option)
 		{
-			if ($option->option_name == $option)
+			if ($option->option_name == $option_name)
 			{
-				return $option->open_value;
+				return $option->option_value;
 			}
 		}
 		

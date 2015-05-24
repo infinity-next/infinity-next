@@ -2,17 +2,14 @@
 
 use App\Ban;
 use App\Board;
-use App\FileStorage;
-use App\FileAttachment;
 use App\Post;
 use App\Http\Controllers\MainController;
+use App\Http\Requests\PostRequest;
 
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
 
 use Input;
 use File;
-use Storage;
 use Response;
 use Validator;
 use View;
@@ -90,7 +87,7 @@ class BoardController extends MainController {
 	 *
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, $thread = NULL)
+	public function getThread(Request $request, Board $board, $thread = null)
 	{
 		if (is_null($thread))
 		{
@@ -122,226 +119,73 @@ class BoardController extends MainController {
 	 *
 	 * @return Response (redirects to the thread view)
 	 */
-	public function putThread(Request $request, Board $board, $thread_id = false)
+	public function putThread(PostRequest $request, Board $board, $thread = null)
 	{
-		if ($input = Input::all())
+		// Check for bans.
+		if (Ban::isBanned($request->ip(), $board))
 		{
-			// Clean up input some.
+			return abort(403);
+		}
+		
+		// Re-validate the request with new rules specific to the board.
+		$request->setBoard($board);
+		$request->setUser($this->user);
+		$request->validate();
+		
+		
+		// Clean up and authorize input.
+		$input = Input::all();
+		
+		if (is_array($input['files']))
+		{
 			// Having an [null] file array passes validation.
-			if (is_array($input['files']))
+			$input['files'] = array_filter($input['files']);
+		}
+		
+		if (isset($input['capcode']) && $input['capcode'])
+		{
+			if (!$this->user->isAnonymous())
 			{
-				$input['files'] = array_filter($input['files']);
-			}
-			
-			// Prefetch some permissions.
-			$canAttach = $board->canAttach($this->user);
-			$canPostWithoutCaptcha = $board->canPostWithoutCaptcha($this->user);
-			
-			// Validate input.
-			$requirements = [
-				'body' => 'max:' . $board->getSetting('postMaxLength'),
-			];
-			
-			if (!$canAttach)
-			{
-				$requirements['body'] .= "|required";
-			}
-			else
-			{
-				$requirements['body']  .= "|required_without:files";
-				$requirements['files'] = "array|min:1|max:5";
-			}
-			
-			$validator = Validator::make($input, $requirements);
-			
-			$validator->sometimes('captcha', "required|captcha", function($input) use ($canPostWithoutCaptcha) {
-				return !$canPostWithoutCaptcha;
-			});
-			
-			$validator->after(function($validator) use ($request, $board) {
-				if (Ban::isBanned($request->ip(), $board))
-				{
-					$validator->errors()->add('body', "You are banned.");
-				}
-			});
-			
-			if ($validator->fails())
-			{
-				if ($thread_id)
-				{
-					return redirect($request->path())
-						->withErrors($validator->errors()->all())
-						->withInput();
-				}
-				else
-				{
-					return redirect($board->board_uri)
-						->withErrors($validator->errors()->all())
-						->withInput();
-				}
-			}
-			
-			// Create post.
-			$post = new Post($input);
-			$post->board_uri = $board->board_uri;
-			$post->author_ip = $request->ip();
-			
-			if ($thread_id !== false)
-			{
-				$thread = $board->getLocalThread($thread_id);
-				$post->reply_to = $thread->post_id;
-			}
-			
-			if (isset($input['capcode']) && $input['capcode'])
-			{
-				if (!$this->user->isAnonymous())
-				{
-					$role = $this->user->roles->where('role_id', $input['capcode'])->first();
-					
-					if ($role && $role->capcode != "")
-					{
-						$post->capcode_id = (int) $role->role_id;
-						$post->author     = $this->user->username;
-					}
-				}
-			}
-			
-			
-			// Store attachments
-			$uploads = [];
-			
-			if (is_array($files = Input::file('files')))
-			{
-				$uploads = array_filter($files);
-			}
-			
-			if ($canAttach && count($uploads) > 0)
-			{
-				$uploadsSuccessful = null;
-				$uploadStorage = [];
+				$role = $this->user->roles->where('role_id', $input['capcode'])->first();
 				
-				foreach ($uploads as $uploadIndex => $upload)
+				if ($role && $role->capcode != "")
 				{
-					$fileValidator = Validator::make([
-						'file' => $upload,
-					], [
-						'file' => 'required|mimes:jpeg,gif,png|between:1,5120'
-					]);
-					
-					if ($fileValidator->passes())
-					{
-						$fileMD5      = md5(File::get($upload));
-						$fileTime     = $post->freshTimestamp();
-						$storage      = FileStorage::getHash($fileMD5);
-						
-						if (!($storage instanceof FileStorage))
-						{
-							$storage = new FileStorage();
-							$storage->hash     = $fileMD5;
-							$storage->banned   = false;
-							$storage->filesize = $upload->getSize();
-							$storage->mime     = $upload->getClientMimeType();
-							$storage->first_uploaded_at = $fileTime;
-							$storage->upload_count = 0;
-						}
-						
-						$storage->last_uploaded_at = $fileTime;
-						$storage->upload_count += 1;
-						$storage->save();
-						
-						if (!$storage->banned)
-						{
-							$uploadsSuccessful = is_null($uploadsSuccessful) ? true : $uploadsSuccessful;
-							$uploadStorage[ $uploadIndex ] = $storage;
-						}
-						else
-						{
-							$uploadsSuccessful = false;
-							$validator->errors()->add('files', "The image \"" . $upload->getClientOriginalName() . "\" is banned from being uploaded.");
-						}
-					}
-					else
-					{
-						$uploadsSuccessful = false;
-						foreach ($fileValidator->errors()->all() as $fileFieldError)
-						{
-							$validator->errors()->add('files', $fileFieldError);
-						}
-					}
-				}
-				
-				if ($uploadsSuccessful === true)
-				{
-					$post->transact();
-					
-					foreach ($uploads as $uploadIndex => $upload)
-					{
-						$fileContent = File::get($upload);
-						$storage     = $uploadStorage[ $uploadIndex ];
-						
-						$uploadname  = $upload->getClientOriginalName();
-						$uploadext   = pathinfo($uploadname, PATHINFO_EXTENSION);
-						$filename    = basename($uploadname, "." . $uploadext);
-						$fileext     = $upload->guessExtension();
-						
-						$attachment = new FileAttachment();
-						$attachment->post_id  = $post->post_id;
-						$attachment->file_id  = $storage->file_id;
-						$attachment->filename = "{$filename}.{$fileext}";
-						$attachment->save();
-						
-						if (!Storage::exists($storage->getPath()))
-						{
-							Storage::put($storage->getPath(), $fileContent);
-							Storage::makeDirectory($storage->getDirectoryThumb());
-							
-							$imageManager = new ImageManager;
-							$imageManager
-								->make($storage->getFullPath())
-								->resize(
-									$this->option('attachmentThumbnailSize'),
-									$this->option('attachmentThumbnailSize'),
-									function($constraint) {
-										$constraint->aspectRatio();
-										$constraint->upsize();
-									}
-								)
-								->save($storage->getFullPathThumb());
-						}
-					}
-				}
-				else
-				{
-					return redirect( $request->path() )
-						->withErrors($validator->errors()->all())
-						->withInput();
+					$this->capcode_id = (int) $role->role_id;
+					$this->author     = $this->user->username;
 				}
 			}
 			else
 			{
-				$post->transact();
-			}
-			
-			if ($post->capcode_id)
-			{
-				$this->log('log.post.capcode', $post, [
-					"board_id"  => $post->board_id,
-					"board_uri" => $post->board_uri,
-					"capcode"   => $role->capcode,
-					"role"      => $role->role,
-				]);
-			}
-			
-			if ($thread_id === false)
-			{
-				return redirect("{$board->board_uri}/thread/{$post->board_id}");
-			}
-			else
-			{
-				return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
+				unset($input['capcode']);
 			}
 		}
 		
-		return redirect($board->board_uri);
+		
+		// Create the post.
+		$post = new Post();
+		$post->submit($input, $board, $thread);
+		
+		
+		// Log staff posts.
+		if ($post->capcode_id)
+		{
+			$this->log('log.post.capcode', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+				"capcode"   => $role->capcode,
+				"role"      => $role->role,
+			]);
+		}
+		
+		
+		// Redirect to the new post or thread.
+		if (is_null($thread))
+		{
+			return redirect("{$board->board_uri}/thread/{$post->board_id}");
+		}
+		else
+		{
+			return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
+		}
 	}
 }

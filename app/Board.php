@@ -144,9 +144,10 @@ class Board extends Model {
 		if (!isset($this->settings))
 		{
 			$this->settings = [
-				'defaultName'   => trans('board.anonymous'),
-				'postMaxLength' => 20480,
-				'postsPerPage'  => 10,
+				'attachmentsMax' => 5,
+				'defaultName'    => trans('board.anonymous'),
+				'postMaxLength'  => 20480,
+				'postsPerPage'   => 10,
 			];
 		}
 		

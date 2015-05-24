@@ -22,11 +22,7 @@ class DonationRequest extends Request {
 			'amount'       => 'required|numeric|min:3',
 		];
 		
-		if (Auth::check())
-		{
-			
-		}
-		
+		if (Au
 		return $rules;
 	}
 	

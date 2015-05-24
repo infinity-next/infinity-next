@@ -1,6 +1,11 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Intervention\Image\ImageManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use File;
+use Storage;
 
 class FileStorage extends Model {
 	
@@ -81,5 +86,49 @@ class FileStorage extends Model {
 	public function scopeHash($query, $hash)
 	{
 		return $query->where('hash', $hash);
+	}
+	
+	public static function storeUpload(UploadedFile $upload)
+	{
+		$fileContent  = File::get($upload);
+		$fileMD5      = md5(File::get($upload));
+		$storage      = static::getHash($fileMD5);
+		$fileTime     = $storage->freshTimestamp();
+		
+		if (!($storage instanceof static))
+		{
+			$storage = new static();
+			$storage->hash     = $fileMD5;
+			$storage->banned   = false;
+			$storage->filesize = $upload->getSize();
+			$storage->mime     = $upload->getClientMimeType();
+			$storage->first_uploaded_at = $fileTime;
+			$storage->upload_count = 0;
+		}
+		
+		$storage->last_uploaded_at = $fileTime;
+		$storage->upload_count += 1;
+		$storage->save();
+		
+		if (!Storage::exists($storage->getPath()))
+		{
+			Storage::put($storage->getPath(), $fileContent);
+			Storage::makeDirectory($storage->getDirectoryThumb());
+			
+			$imageManager = new ImageManager;
+			$imageManager
+				->make($storage->getFullPath())
+				->resize(
+					300,//$controller->option('attachmentThumbnailSize'),
+					300,//$controller->option('attachmentThumbnailSize'),
+					function($constraint) {
+						$constraint->aspectRatio();
+						$constraint->upsize();
+					}
+				)
+				->save($storage->getFullPathThumb());
+		}
+		
+		return $storage;
 	}
 }
