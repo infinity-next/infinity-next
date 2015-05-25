@@ -22,7 +22,6 @@ class DonationRequest extends Request {
 			'amount'       => 'required|numeric|min:3',
 		];
 		
-		if (Au
 		return $rules;
 	}
 	
