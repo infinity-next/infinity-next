@@ -159,8 +159,8 @@ class BoardController extends MainController {
 			$this->log('log.post.capcode', $post, [
 				"board_id"  => $post->board_id,
 				"board_uri" => $post->board_uri,
-				"capcode"   => $role->capcode,
-				"role"      => $role->role,
+				"capcode"   => $post->capcode->capcode,
+				"role"      => $post->capcode->role,
 			]);
 		}
 		

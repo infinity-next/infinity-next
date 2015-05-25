@@ -23,9 +23,9 @@ class PostRequest extends Request {
 	protected $user;
 	
 	/**
+	 * Get all form input.
 	 *
-	 *
-	 *
+	 * @return array
 	 */
 	public function all()
 	{
@@ -41,7 +41,7 @@ class PostRequest extends Request {
 		{
 			$user = $this->getUser();
 			
-			if (!$user->isAnonymous())
+			if ($user)// && !$user->isAnonymous())
 			{
 				$role = $user->roles->where('role_id', $input['capcode'])->first();
 				
@@ -172,7 +172,7 @@ class PostRequest extends Request {
 	 */
 	public function getUser()
 	{
-		return $this->board;
+		return $this->user;
 	}
 	
 	/**

@@ -35,7 +35,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'author_ip', 'subject', 'author', 'email', 'body'];
+	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'author_ip', 'capcode_id', 'subject', 'author', 'email', 'body'];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
