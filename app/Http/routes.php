@@ -23,7 +23,7 @@ Route::get('/', 'WelcomeController@getIndex');
 | - Top level site management.
 */
 Route::group([
-	'namespace' => 'Auth',
+	'namespace' => 'Panel',
 	'prefix'    => 'cp',
 ], function()
 {
@@ -68,13 +68,12 @@ Route::group([
 });
 
 /*
-| Contribution (contribute)
-| Only enabled if CONTRIB_ENABLED is set to TRUE.
-| Opens the fundraiser page.
+| Page Controllers
+| Catches specific strings to route to static content.
 */
 if (env('CONTRIB_ENABLED', false))
 {
-	Route::get('contribute', 'ContributeController@index');
+	Route::get('contribute', 'PageController@getContribute');
 }
 
 

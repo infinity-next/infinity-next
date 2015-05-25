@@ -63,7 +63,13 @@ class Option extends Model {
 		return $this->decoded_format_parameters;
 	}
 	
-	public function getTemplate()
+	/**
+	 * Gets the view path of the option's template for the config panel.
+	 *
+	 * @param  \App\Http\Controller|descendant $controller
+	 * @return string
+	 */
+	public function getTemplate($controller)
 	{
 		switch ($this->format)
 		{
@@ -75,7 +81,7 @@ class Option extends Model {
 				return "Callback not supported.";
 			
 			default:
-				return "auth.config.option.{$this->format}";
+				return $controller->template("panel.site.config.option.{$this->format}");
 		}
 	}
 	

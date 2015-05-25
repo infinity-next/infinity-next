@@ -5,7 +5,7 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\Post;
 
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -13,7 +13,7 @@ use File;
 use Storage;
 use Response;
 
-class FileController extends MainController {
+class FileController extends Controller {
 	
 	/*
 	|--------------------------------------------------------------------------

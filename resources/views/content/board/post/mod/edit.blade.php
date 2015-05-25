@@ -1,0 +1,1 @@
+@include( $c->template('board.post.form') )

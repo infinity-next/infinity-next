@@ -3,7 +3,7 @@
 use App\Ban;
 use App\Board;
 use App\Post;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 
 use Illuminate\Http\Request;
@@ -12,9 +12,8 @@ use Input;
 use File;
 use Response;
 use Validator;
-use View;
 
-class BoardController extends MainController {
+class BoardController extends Controller {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -28,9 +27,10 @@ class BoardController extends MainController {
 	|
 	*/
 	
-	const VIEW_BANNED = "banned";
+	const VIEW_BANNED = "errors.banned";
 	const VIEW_BOARD  = "board";
 	const VIEW_THREAD = "board";
+	const VIEW_LOGS   = "board.logs";
 	
 	/**
 	 * Show the board index for the user.
@@ -64,7 +64,7 @@ class BoardController extends MainController {
 		// Load our list of threads and their latest replies.
 		$posts = $board->getThreadsForIndex($page);
 		
-		return View::make(static::VIEW_BOARD, [
+		return $this->view(static::VIEW_BOARD, [
 			'board'    => $board,
 			'posts'    => $posts,
 			'reply_to' => false,
@@ -85,7 +85,7 @@ class BoardController extends MainController {
 	 */
 	public function getLogs(Request $request, Board $board)
 	{
-		return View::make('content.logs', [
+		return $this->view(static::VIEW_LOGS, [
 			'board' => $board,
 			'logs'  => $board->getLogs(),
 		]);
@@ -119,7 +119,7 @@ class BoardController extends MainController {
 			return redirect("{$board->board_uri}/thread/{$thread->op->board_id}");
 		}
 		
-		return View::make(static::VIEW_THREAD, [
+		return $this->view(static::VIEW_THREAD, [
 			'board'    => $board,
 			'posts'    => [ $thread ],
 			'reply_to' => $thread->board_id,

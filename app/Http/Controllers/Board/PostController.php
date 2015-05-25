@@ -3,15 +3,14 @@
 use App\Ban;
 use App\Board;
 use App\Post;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Input;
 use Request;
 use Validator;
-use View;
 
-class PostController extends MainController {
+class PostController extends Controller {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -26,8 +25,8 @@ class PostController extends MainController {
 	| 
 	*/
 	
-	const VIEW_EDIT = "content.forms.mod";
-	const VIEW_MOD  = "content.forms.mod";
+	const VIEW_EDIT = "board.post.mod";
+	const VIEW_MOD  = "board.post.mod";
 	
 	/**
 	 * 
@@ -62,7 +61,7 @@ class PostController extends MainController {
 		
 		if ($ban)
 		{
-			return View::make(static::VIEW_MOD, [
+			return $this->view(static::VIEW_MOD, [
 				"actions"      => $modActions,
 				"form"         => "ban",
 				"board"        => $board,
@@ -365,9 +364,9 @@ class PostController extends MainController {
 		
 		if ($post->canEdit($this->user))
 		{
-			return View::make(static::VIEW_EDIT, [
+			return $this->view(static::VIEW_EDIT, [
 				"actions" => ["edit"],
-				"form"    => "post",
+				"form"    => "edit",
 				"board"   => $board,
 				"post"    => $post,
 			]);
@@ -402,9 +401,9 @@ class PostController extends MainController {
 				"board_uri" => $post->board_uri,
 			]);
 			
-			return View::make(static::VIEW_EDIT, [
+			return $this->view(static::VIEW_EDIT, [
 				"actions" => ["edit"],
-				"form"    => "post",
+				"form"    => "edit",
 				"board"   => $board,
 				"post"    => $post,
 			]);

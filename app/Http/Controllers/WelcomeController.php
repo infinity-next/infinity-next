@@ -1,10 +1,11 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Controllers\MainController;
 use App\Http\Controllers\Board\BoardStats;
 use Illuminate\Support\Facades\View;
 
-class WelcomeController extends MainController {
+class WelcomeController extends Controller {
+	
+	use BoardStats;
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -17,7 +18,12 @@ class WelcomeController extends MainController {
 	|
 	*/
 	
-	use BoardStats;
+	/**
+	 * View file for the main index page container.
+	 *
+	 * @var string
+	 */
+	const VIEW_INDEX = "index";
 	
 	/**
 	 * Show the application welcome screen to the user.
@@ -26,7 +32,7 @@ class WelcomeController extends MainController {
 	 */
 	public function getIndex()
 	{
-		return View::make('welcome', [
+		return $this->view(static::VIEW_INDEX, [
 			'stats' => $this->boardStats(),
 		]);
 	}
