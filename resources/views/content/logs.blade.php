@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title', "/{$board->board_uri}/ Staff Logs")
-@section('description', $board->descriptios)
+@section('description', $board->description)
 
 @section('content')
 <main class="board-logs">

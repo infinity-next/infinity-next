@@ -1,5 +1,9 @@
 @extends('layouts.cp')
 
+@section('nav-secondary')
+	@include('nav.cp.home')
+@endsection
+
 @section('body')
 <main>
 	@if (Request::secure() || env('APP_DEBUG', false))
