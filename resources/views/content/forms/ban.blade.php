@@ -45,18 +45,22 @@
 		</div>
 		
 		
+		@if ($banMaxLength > 0)
 		<div class="field row-inline row-expires row-expires-days">
 			<span class="field-label">@lang('board.field.expires')</span>
 			{!! Form::selectRange(
 				'expires_days',
 				0,
-				30,
+				$banMaxLength,
 				0,
 				[
 					'class' => "field-control",
 			]) !!}
 			@lang('board.field.expires-days')
 		</div>
+		@else
+			{!! Form::hidden('expires_days', 0) !!}
+		@endif
 		
 		<div class="field row-inline row-expires row-expires-hours">
 			<span class="field-label"></span>

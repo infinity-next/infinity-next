@@ -63,10 +63,12 @@ class PostController extends MainController {
 		if ($ban)
 		{
 			return View::make(static::VIEW_MOD, [
-				"actions" => $modActions,
-				"form"    => "ban",
-				"board"   => $board,
-				"post"    => $post,
+				"actions"      => $modActions,
+				"form"         => "ban",
+				"board"        => $board,
+				"post"         => $post,
+				
+				"banMaxLength" => $this->option('banMaxLength'),
 			]);
 		}
 		else if ($delete)
@@ -186,13 +188,23 @@ class PostController extends MainController {
 		}
 		
 		
-		Validator::make(Input::all(), [
+		$validator = Validator::make(Input::all(), [
 			'ban_ip'          => 'required|ip',
 			'justification'   => 'max:255',
-			'expires_days'    => 'required|min:0|max:30',
-			'expires_hours'   => 'required|min:0|max:23',
-			'expires_minutes' => 'required|min:0|max:59',
+			'expires_days'    => 'required|integer|min:0|max:' . $this->option('banMaxLength'),
+			'expires_hours'   => 'required|integer|min:0|max:23',
+			'expires_minutes' => 'required|integer|min:0|max:59',
 		]);
+		
+		if (!$validator->passes())
+		{
+			return redirect()
+				->back()
+				->withInput(Input::all())
+				->withErrors($validator->errors());
+		}
+		
+		dd(-1);
 		
 		$banLengthStr   = [];
 		$expiresDays    = Input::get('expires_days');

@@ -24,7 +24,7 @@ return [
 	'option' => [
 		'attachmentFilesize'      => "Maximum filesize (KiB)",
 		'attachmentThumbnailSize' => "Attachment preview size (px)",
-		'banMaxLength'            => "Maximum length for global bans (days)",
+		'banMaxLength'            => "Maximum length for bans (days)",
 		'banSubnets'              => "Allow subnet bans",
 	],
 	
