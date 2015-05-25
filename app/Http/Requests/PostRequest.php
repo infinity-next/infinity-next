@@ -23,6 +23,13 @@ class PostRequest extends Request {
 	protected $user;
 	
 	/**
+	 * Input items that should not be returned when reloading the page.
+	 *
+	 * @var array
+	 */
+	protected $dontFlash = ['password', 'password_confirmation', 'captcha'];
+	
+	/**
 	 * Get all form input.
 	 *
 	 * @return array
@@ -31,7 +38,7 @@ class PostRequest extends Request {
 	{
 		$input = parent::all();
 		
-		if (is_array($input['files']))
+		if (isset($input['files']) && is_array($input['files']))
 		{
 			// Having an [null] file array passes validation.
 			$input['files'] = array_filter($input['files']);
@@ -41,7 +48,7 @@ class PostRequest extends Request {
 		{
 			$user = $this->getUser();
 			
-			if ($user)// && !$user->isAnonymous())
+			if ($user && !$user->isAnonymous())
 			{
 				$role = $user->roles->where('role_id', $input['capcode'])->first();
 				
