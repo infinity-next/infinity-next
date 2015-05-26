@@ -1,4 +1,4 @@
-@extends('layouts.simplebox')
+@extends('layouts.main.simplebox')
 
 @section('title', "Reset Password")
 

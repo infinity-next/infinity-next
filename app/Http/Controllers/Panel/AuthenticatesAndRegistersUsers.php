@@ -60,7 +60,7 @@ trait AuthenticatesAndRegistersUsers {
 	 */
 	public function getLogin()
 	{
-		return view(static::VIEW_LOGIN);
+		return $this->view(static::VIEW_LOGIN);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ trait AuthenticatesAndRegistersUsers {
 	 */
 	protected function getFailedLoginMessage()
 	{
-		return 'These credentials do not match our records.';
+		return trans('auth.mismatch');
 	}
 	
 	/**
