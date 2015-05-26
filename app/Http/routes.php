@@ -13,6 +13,7 @@
 
 Route::get('/', 'WelcomeController@getIndex');
 
+
 /*
 | Control Panel (cp)
 | Anything having to deal with secure information goes here.
@@ -67,6 +68,7 @@ Route::group([
 	});
 });
 
+
 /*
 | Page Controllers
 | Catches specific strings to route to static content.
@@ -87,37 +89,73 @@ Route::group([
 	'where'     => ['board' => '[a-z]{1,31}'],
 ], function()
 {
-	// /board/file/ requests (for thumbnails & files) goes to the FileController.
+	/*
+	| Board Attachment Routes (Files)
+	*/
 	Route::group([
-		'prefix'    => 'file',
+		'prefix' => 'file',
 	], function()
 	{
 		Route::get('/', 'FileController@getIndex');
 		
 		Route::get('{hash}/{filename}', 'FileController@getFile')
 			->where([
-				'hash'     => "[a-f0-9]{32}",
+				'hash' => "[a-f0-9]{32}",
 			]);
 		
 		Route::get('thumb/{hash}/{filename}', 'FileController@getThumbnail')
 			->where([
-				'hash'     => "[a-f0-9]{32}",
+				'hash' => "[a-f0-9]{32}",
 			]);
 	});
 	
+	
+	/*
+	| Board Post Routes (Modding)
+	*/
 	Route::group([
-		'prefix'    => 'post/{post}',
-		'where'     => ['{post}' => '[1-9]\d*'],
+		'prefix' => 'post/{post}',
+		'where'  => ['{post}' => '[1-9]\d*'],
 	], function()
 	{
 		Route::controller('', 'PostController');
 	});
 	
+	
+	
+	/*
+	| Legacy Routes
+	*/
+	if (env('LEGACY_ROUTES', false))
+	{
+		Route::any('/index.html', function(App\Board $board) {
+			return redirect("{$board->board_uri}");
+		});
+		Route::any('/catalog.html', function(App\Board $board) {
+			return redirect("{$board->board_uri}/catalog");
+		});
+		Route::any('/{id}.html', function(App\Board $board, $id) {
+			return redirect("{$board->board_uri}/{$id}");
+		})->where(['id' => '[0-9]+']);
+		Route::any('/res/{id}.html', function(App\Board $board, $id) {
+			return redirect("{$board->board_uri}/thread/{$id}");
+		})->where(['id' => '[0-9]+']);
+		Route::any('/res/{id}+{last}.html', function(App\Board $board, $id, $last) {
+			return redirect("{$board->board_uri}/thread/{$id}/{$last}");
+		})->where(['id' => '[0-9]+', 'last' => '[0-9]+']);
+	}
+	
+	
+	/*
+	| Board Controller Routes
+	| These are greedy and will redirect before others, so make sure they stay last.
+	*/
 	// Pushes simple /board/ requests to their index page.
-	Route::any('/',    'BoardController@getIndex');
+	Route::any('/', 'BoardController@getIndex');
 	
 	// Routes /board/1 to an index page for a specific pagination point.
-	Route::get('{id}', 'BoardController@getIndex')->where(['id' => '[0-9]+']);
+	Route::get('{id}', 'BoardController@getIndex')
+		->where(['id' => '[0-9]+']);
 	
 	// More complicated /board/view requests.
 	Route::controller('', 'BoardController');
