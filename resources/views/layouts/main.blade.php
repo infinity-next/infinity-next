@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
 		<link rel="stylesheet" type="text/css" href="/css/boilerplate.css" />
 		<link rel="stylesheet" type="text/css" href="/css/grid-responsive.css" />
-		<link rel="stylesheet" type="text/css" href="/css/main.css?1431077369" />
+		<link rel="stylesheet" type="text/css" href="/css/main.css?1431077370" />
 	@show
 	
 	@section('js')

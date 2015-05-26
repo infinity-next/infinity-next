@@ -41,9 +41,11 @@
 				'author',
 				isset($post) ? $post->author . ($post->capcode_id ? " ## {$post->capcode->capcode}" : "") : old('author'),
 				[
-					'id'        => "author",
-					'class'     => "field-control",
-					'maxlength' => 255,
+					'id'          => "author",
+					'class'       => "field-control",
+					'maxlength'   => 255,
+					'placeholder' => $board->getSetting('defaultName'),
+					
 					isset($post) && $post->capcode_id ? "disabled" : "data-enabled",
 			]) !!}
 			{!! Form::label(

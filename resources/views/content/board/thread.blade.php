@@ -1,4 +1,4 @@
-<div class="post-container @if ($thread->capcode_id > 0) capcode-{{{ $thread->capcode->role }}} @endif">
+<div class="post-container @if ($op === $thread) op-container @else reply-container @endif">
 	@include( $c->template('board.post.single'), [
 		'board'  => $board,
 		'post'   => $thread,

@@ -851,8 +851,10 @@ section.index-form {
 }
 	form.form-post {
 		background: #d6daf0;
-		border-radius: 4px;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+		border-color: #B7C5D9;
+		border-width: 1px;
+		border-style: none solid solid none;
+		
 		padding: 0.75em;
 		margin: 0 auto 2em auto;
 		max-width: 480px;
@@ -879,7 +881,7 @@ section.index-form {
 		}
 		
 		section.index-threads .thread {
-			margin-right: 350px;
+			padding-right: 350px;
 		}
 		section.index-threads .post {
 			max-width: 70vw;
@@ -931,13 +933,18 @@ section.index-threads {
 		}
 	
 	/* Threads */
-	.thread {
-		margin: 0 1em 0 1em;
-		padding: 1em 0 1em 0;
+	.thread,
+	section.index-threads aside.advertiser.top-left {
+		border-top: 1px solid rgba(0,0,0,0.15);
+		border-bottom: 1px solid rgba(0,0,0,0.05);
+		padding: 1em;
 	}
 	.thread-item:nth-child(even),
 	section.index-threads aside.advertiser.top-left {
-		background: rgba(255,255,255,0.35);
+		background: rgba(255,255,255,0.40);
+	}
+	.thread-item:last-child{
+		border-bottom: none;
 	}
 	
 	.reply {
@@ -983,6 +990,7 @@ section.index-threads {
 		border-width: 1px;
 		border-style: none solid solid none;
 	}
+		
 		.post-content {
 			padding: 0.75em;
 		}
