@@ -84,9 +84,10 @@ class ConfigController extends PanelController {
 				if ($option->option_value != $input[$option->option_name])
 				{
 					$option->option_value = $input[$option->option_name];
-					$option->save();
 				}
 			}
+			
+			$optionGroup->push();
 		}
 		
 		return $this->view(static::VIEW_CONFIG, [

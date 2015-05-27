@@ -68,7 +68,6 @@ a.button {
 	
 	background: rgba(255, 255, 255, 0.35);
 	border: 1px solid #34345C;
-	border-radius: 5px;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	outline: 0;
@@ -104,14 +103,16 @@ a.button {
 		}
 
 input,
-textarea {
+textarea,
+select {
 	background: #2a2a2a;
 	border: 1px solid #dee0df;
 	color: #dee0df;
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
 	outline: #34345C auto 5px;
 }
 
@@ -229,6 +230,7 @@ form {
 		margin: 1em 0;
 		position: relative;
 	}
+	
 	.field-label {
 		display: block;
 	}
@@ -306,7 +308,17 @@ form {
 			border: none;
 			border-top: 1px solid #dee0df;
 		}
+
+form.form-post {
 	
+}
+	form.form-post button.field-submit {
+		width: 118px;
+		margin: 0 5px 0 0;
+	}
+	form.form-post select.field-capcode {
+		width: 173px;
+	}
 
 form.form-config {
 	
@@ -808,11 +820,11 @@ nav.boardlist {
 	
 	nav.boardlist .boardlist-item::after {
 		content: '/';
-		margin: 0 0 0 0.4em;
+		margin: 0 0.15em 0 0.4em;
 		opacity: 0.6;
 	}
 	nav.boardlist .boardlist-item:last-child::after {
-		content: '';
+		display: none;
 	}
 	
 	nav.boardlist .boardlist-link {

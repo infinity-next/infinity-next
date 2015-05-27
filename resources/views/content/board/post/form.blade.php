@@ -107,18 +107,19 @@
 		</div>
 		@endif
 		
-		<div class="field row-submit">
+		<div class="field row-submit row-inline">
 			{!! Form::button(
 				trans("board.submit." . implode($actions, "+")),
 				[
 					'type'      => "submit",
+					'id'        => "submit-post",
 					'class'     => "field-submit",
 			]) !!}
 			
 			@if (!$user->isAnonymous() && !isset($post))
 			@if ($user->roles->filter(function($role){return $role->capcode;}))
-				<select class="field-capcode" name="capcode">
-					<option value=""></option>
+				<select id="capcode"class="field-control field-capcode" name="capcode">
+					<option value="" default selected>Capcode</option>
 					
 					@foreach ($user->roles->filter(function($role){return $role->capcode;}) as $role)
 						<option value="{!! $role->role_id !!}">{{{ $role->capcode }}}</option>
