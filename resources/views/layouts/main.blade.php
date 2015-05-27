@@ -4,10 +4,7 @@
 	<title>@yield('title', 'Infinity')</title>
 	
 	@section('css')
-		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css" />
-		<link rel="stylesheet" type="text/css" href="/css/boilerplate.css" />
-		<link rel="stylesheet" type="text/css" href="/css/grid-responsive.css" />
-		<link rel="stylesheet" type="text/css" href="/css/main.css?1431077370" />
+		{!! Minify::stylesheetDir('/css/') !!}
 	@show
 	
 	@section('js')
@@ -27,11 +24,7 @@
 			};
 		</script>
 		
-		<script type="text/javascript" src="/js/vendor/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="/js/vendor/modernizr.custom.81355.js"></script>
-		<script type="text/javascript" src="/js/plugins/jquery.creditCardValidator.js"></script>
-		<script type="text/javascript" src="/js/plugins/jquery.blockUI.js"></script>
-		<script type="text/javascript" src="/js/main.js?1431077369"></script>
+		{!! Minify::javascriptDir('/js/') !!}
 	@show
 	
 	@yield('head')
