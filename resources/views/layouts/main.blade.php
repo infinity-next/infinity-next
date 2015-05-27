@@ -4,7 +4,8 @@
 	<title>@yield('title', 'Infinity')</title>
 	
 	@section('css')
-		{!! Minify::stylesheetDir('/css/') !!}
+		{!! Minify::stylesheetDir('/css/vendor/') !!}
+		{!! Minify::stylesheetDir('/css/app/') !!}
 	@show
 	
 	@section('js')
@@ -24,7 +25,9 @@
 			};
 		</script>
 		
-		{!! Minify::javascriptDir('/js/') !!}
+		{!! Minify::javascriptDir('/js/vendor/lib/') !!}
+		{!! Minify::javascriptDir('/js/vendor/plugins/') !!}
+		{!! Minify::javascriptDir('/js/app/') !!}
 	@show
 	
 	@yield('head')
