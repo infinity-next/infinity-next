@@ -149,7 +149,7 @@ abstract class Controller extends BaseController {
 	 * @param  string  $template
 	 * @return string
 	 */
-	public function template($template)
+	public static function template($template)
 	{
 		return "content.{$template}";
 	}

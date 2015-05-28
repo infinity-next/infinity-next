@@ -846,7 +846,13 @@ section.index-form {
 			width: 155px;
 		}
 
+/* BoardLogs */
+section.board-logs-table {
+	margin-bottom: 1em;
+}
 
+
+/* Moderation */
 section.moderate-post {
 	margin: 0 auto 1em auto;
 }
@@ -854,6 +860,7 @@ section.moderate-post {
 		margin: 0 auto 1em auto;
 	}
 
+/* Thrad View */
 section.index-threads {
 	margin: -1em 0 0 0;
 }

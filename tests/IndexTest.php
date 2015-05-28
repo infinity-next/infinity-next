@@ -1,4 +1,4 @@
-<?php namespace Tests\Controller;
+<?php namespace Tests;
 
 use TestCase;
 
