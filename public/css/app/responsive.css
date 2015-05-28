@@ -15,7 +15,7 @@
 	/**
 	 * Thread & Posts
 	 */
-	section.index-threads aside.advertiser.bottom-right {
+	body.responsive section.index-threads aside.advertiser.bottom-right {
 		display: block;
 	}
 }
@@ -29,25 +29,25 @@
 	/**
 	 * Contribution Page
 	 */
-	li.contrib-option {
+	body.responsive li.contrib-option {
 		border-bottom: none;
 		border-right: 1px solid #EEF2FF;
 		padding-bottom: 0;
 		padding-right: 9px;
 		min-height: 360px;
 	}
-	li.contrib-option:last-child {
+	body.responsive li.contrib-option:last-child {
 		padding-right: 10px;
 		border-right: none;
 	}
 	
-	.me-skill:first-child {
+	body.responsive .me-skill:first-child {
 		padding-right: 3em;
 	}
-	.me-skill:last-child {
+	body.responsive .me-skill:last-child {
 		padding-left: 3em;
 	}
-		.me-skill .fa {
+		body.responsive .me-skill .fa {
 			display: block;
 			font-size: 300%;
 			vertical-align: top;
@@ -57,24 +57,24 @@
 			bottom: 0;
 			left: -1.5em;
 		}
-		.me-skill:last-child .fa {
+		body.responsive .me-skill:last-child .fa {
 			left: -0.5em;
 		}
 	
 	/**
 	 * Thread & Posts
 	 */
-	form.form-post {
+	body.responsive form.form-post {
 		margin-left: auto;
 		margin-right: auto;
 	}
 	
-	section.index-threads aside.advertiser.top-left {
+	body.responsive section.index-threads aside.advertiser.top-left {
 		display: block;
 		text-align: center;
 	}
 	
-	section.index-threads .thread {
+	body.responsive section.index-threads .thread {
 		padding: 0;
 	}
 }
@@ -84,7 +84,7 @@
  * Desktop
  */
 @media (min-width: 1028px) and (min-height: 640px) {
-	form.form-post {
+	body.responsive form.form-post {
 		position: fixed;
 		z-index: 1000;
 		top: 3.4em;
@@ -95,24 +95,24 @@
 		width: 300px;
 	}
 	
-	section.index-threads .thread {
+	body.responsive section.index-threads .thread {
 		padding: 1em;
 		padding-right: 320px;
 	}
-	section.index-threads .post {
+	body.responsive section.index-threads .post {
 		max-width: 70vw;
 	}
 	
 	/* Advertisements */
-	section.index-threads aside.advertiser.top-left {
+	body.responsive section.index-threads aside.advertiser.top-left {
 		text-align: left;
 	}
-	section.index-threads aside.advertiser.bottom-right {
+	body.responsive section.index-threads aside.advertiser.bottom-right {
 		position: absolute;
 		bottom: 0;
 		right: 0;
 	}
-		aside.advertiser.bottom-right figure.ad-field {
+		body.responsive aside.advertiser.bottom-right figure.ad-field {
 			display: block;
 			width: 310px;
 		}

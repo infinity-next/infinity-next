@@ -36,7 +36,7 @@
 	
 	@yield('head')
 </head>
-<body class="larachan">
+<body class="infinity-next responsive">
 	<header class="board-header">
 		@include('nav.boardlist')
 		
