@@ -1,17 +1,18 @@
-<?php
+<?php namespace Tests\Controller;
 
-class ExampleTest extends TestCase {
+use TestCase;
 
+class IndexTest extends TestCase {
+	
 	/**
 	 * A basic functional test example.
 	 *
 	 * @return void
 	 */
-	public function testBasicExample()
+	public function testIndex()
 	{
 		$response = $this->call('GET', '/');
-
+		
 		$this->assertEquals(200, $response->getStatusCode());
 	}
-
 }

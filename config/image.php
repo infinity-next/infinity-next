@@ -12,6 +12,6 @@ return [
 	|
 	*/
 	
-	'debug' => env('LIB_IMAGE', 'gd'), // gd|imagick
+	'driver' => env('LIB_IMAGE', 'gd'), // gd|imagick
 	
 ];

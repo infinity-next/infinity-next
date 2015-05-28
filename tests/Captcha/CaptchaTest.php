@@ -1,7 +1,6 @@
 <?php namespace Tests\Captcha;
 
 use TestCase;
-use Mockery;
 
 class CaptchaTest extends TestCase
 {
