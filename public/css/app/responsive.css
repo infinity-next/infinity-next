@@ -1,0 +1,119 @@
+
+/**
+ * 360px Width
+ * Vertical phones
+ */
+@media (min-width: 360px) {
+	
+}
+
+/**
+ * 640px Width
+ * Horizontal phones
+ */
+@media (min-width: 640px) {
+	/**
+	 * Thread & Posts
+	 */
+	section.index-threads aside.advertiser.bottom-right {
+		display: block;
+	}
+}
+
+
+/**
+ * 768px Width
+ * Tablets
+ */
+@media (min-width: 728px) {
+	/**
+	 * Contribution Page
+	 */
+	li.contrib-option {
+		border-bottom: none;
+		border-right: 1px solid #EEF2FF;
+		padding-bottom: 0;
+		padding-right: 9px;
+		min-height: 360px;
+	}
+	li.contrib-option:last-child {
+		padding-right: 10px;
+		border-right: none;
+	}
+	
+	.me-skill:first-child {
+		padding-right: 3em;
+	}
+	.me-skill:last-child {
+		padding-left: 3em;
+	}
+		.me-skill .fa {
+			display: block;
+			font-size: 300%;
+			vertical-align: top;
+			
+			position: absolute;
+			top: 5px;
+			bottom: 0;
+			left: -1.5em;
+		}
+		.me-skill:last-child .fa {
+			left: -0.5em;
+		}
+	
+	/**
+	 * Thread & Posts
+	 */
+	form.form-post {
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	section.index-threads aside.advertiser.top-left {
+		display: block;
+		text-align: center;
+	}
+	
+	section.index-threads .thread {
+		padding: 0;
+	}
+}
+
+/**
+ * 1028px width and 640px height
+ * Desktop
+ */
+@media (min-width: 1028px) and (min-height: 640px) {
+	form.form-post {
+		position: fixed;
+		z-index: 1000;
+		top: 3.4em;
+		right: 10px;
+		
+		display: block;
+		margin: 0;
+		width: 300px;
+	}
+	
+	section.index-threads .thread {
+		padding: 1em;
+		padding-right: 320px;
+	}
+	section.index-threads .post {
+		max-width: 70vw;
+	}
+	
+	/* Advertisements */
+	section.index-threads aside.advertiser.top-left {
+		text-align: left;
+	}
+	section.index-threads aside.advertiser.bottom-right {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+		aside.advertiser.bottom-right figure.ad-field {
+			display: block;
+			width: 310px;
+		}
+}

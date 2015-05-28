@@ -5,7 +5,7 @@
 	
 	@section('css')
 		{!! Minify::stylesheetDir('/css/vendor/') !!}
-		{!! Minify::stylesheetDir('/css/app/') !!}
+		{!! Minify::stylesheet([ '/css/app/main.css', '/css/app/responsive.css' ]) !!}
 	@show
 	
 	@section('js')
@@ -28,6 +28,10 @@
 		{!! Minify::javascriptDir('/js/vendor/lib/') !!}
 		{!! Minify::javascriptDir('/js/vendor/plugins/') !!}
 		{!! Minify::javascriptDir('/js/app/') !!}
+	@show
+	
+	@section('meta')
+		<meta name="viewport" content="width=device-width" />
 	@show
 	
 	@yield('head')

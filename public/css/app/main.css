@@ -1,14 +1,10 @@
-/*
+/**
  * z-index list of importance
  * 9999 - Stripe overlay. NEVER SURPASS.
  * 1000 - Boardlist, top. Shold be highest element on boards and threads.
-*/
-
-/*
- * Generic tag definitions
  */
 
-/*
+/**
  * Color references:
  *
  * Larachan
@@ -22,6 +18,11 @@
  *
  * #2a2a2a - Black
  * #dee0df - Off-White
+ */
+
+
+/**
+ * Generic tag definitions
  */
 
 html,
@@ -310,17 +311,6 @@ form {
 			border: none;
 			border-top: 1px solid #dee0df;
 		}
-
-form.form-post {
-	
-}
-	form.form-post button.field-submit {
-		width: 118px;
-		margin: 0 5px 0 0;
-	}
-	form.form-post select.field-capcode {
-		width: 173px;
-	}
 
 form.form-config {
 	
@@ -734,41 +724,6 @@ main.contrib section.contrib-donate {
 		border-radius: 4px;
 	}
 
-@media (min-width: 768px) {
-	li.contrib-option {
-		border-bottom: none;
-		border-right: 1px solid #EEF2FF;
-		padding-bottom: 0;
-		padding-right: 9px;
-		min-height: 360px;
-	}
-	li.contrib-option:last-child {
-		padding-right: 10px;
-		border-right: none;
-	}
-	
-	.me-skill:first-child {
-		padding-right: 3em;
-	}
-	.me-skill:last-child {
-		padding-left: 3em;
-	}
-		.me-skill .fa {
-			display: block;
-			font-size: 300%;
-			vertical-align: top;
-			
-			position: absolute;
-			top: 5px;
-			bottom: 0;
-			left: -1.5em;
-		}
-		.me-skill:last-child .fa {
-			left: -0.5em;
-		}
-}
-
-
 /* Navigation */
 nav.boardlist {
 	padding: 0 1em;
@@ -870,8 +825,9 @@ section.index-form {
 		border-style: none solid solid none;
 		
 		padding: 0.75em;
-		margin: 0 auto 2em auto;
-		max-width: 480px;
+		margin: 0 1em 2em 1em;
+		max-width: 728px;
+		box-sizing: border-box;
 	}
 	form.form-post .field {
 		margin: 0.5em 0;
@@ -881,45 +837,15 @@ section.index-form {
 		font-size: 90%;
 		max-height: 50vh;
 	}
-	
-	@media (min-width: 1028px) and (min-height: 640px) {
-		form.form-post {
-			position: fixed;
-			z-index: 1000;
-			top: 3.4em;
-			right: 10px;
-			
-			display: block;
-			margin: 0;
-			width: 300px;
-		}
 		
-		section.index-threads .thread {
-			padding-right: 350px;
+		form.form-post button.field-submit {
+			width: 118px;
+			margin: 0 5px 0 0;
 		}
-		section.index-threads .post {
-			max-width: 70vw;
+		form.form-post select.field-capcode {
+			width: 155px;
 		}
-		
-		/* Advertisements */
-		section.index-threads aside.advertiser.top-left {
-			text-align: left;
-		}
-		section.index-threads aside.advertiser.bottom-right {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-		}
-			section.index-threads aside.advertiser.bottom-right figure.ad-field {
-				display: block;
-			}
-	}
-	
-	@media (max-width: 768px) {
-		section.index-threads aside.advertiser.top-left {
-			display: none;
-		}
-	}
+
 
 section.moderate-post {
 	margin: 0 auto 1em auto;
@@ -934,7 +860,7 @@ section.index-threads {
 	/* Advertisements */
 	aside.advertiser.top-left {
 		box-sizing: border-box;
-		padding: 1em;
+		padding: 0.5em;
 		text-align: center;
 	}
 	aside.advertiser.bottom-right {
@@ -943,8 +869,12 @@ section.index-threads {
 	}
 		aside.advertiser.bottom-right figure.ad-field {
 			display: inline-block;
-			margin: 10px;
+			margin: 1em 5px;
 		}
+	
+	section.index-threads aside.advertiser.top-left {
+		display: none;
+	}
 	
 	/* Threads */
 	.thread,
