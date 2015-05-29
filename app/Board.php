@@ -3,6 +3,7 @@
 use App\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Cache;
 use Collection;
 
 class Board extends Model {
@@ -107,7 +108,7 @@ class Board extends Model {
 	public function getLocalReply($local_id)
 	{
 		return $this->posts()
-			->where('board_id', $local_id)
+			->where('board_id', $local_id)	
 			->get()
 			->first();
 	}
@@ -168,16 +169,18 @@ class Board extends Model {
 	
 	public function getThread($post)
 	{
-		return $this->posts()
-			->where('board_id', $post)
-			->with('attachments', 'replies', 'replies.attachments')
-			->andCapcode()
-			->andBan()
-			->andEditor()
-			->visible()
-			->orderBy('reply_last', 'desc')
-			->get()
-			->first();
+		return Cache::remember("board.{$this->board_uri}.threads.{$post}", 30, function() use ($post) {
+			return $this->posts()
+				->where('board_id', $post)
+				->with('attachments', 'replies', 'replies.attachments')
+				->andCapcode()
+				->andBan()
+				->andEditor()
+				->visible()
+				->orderBy('reply_last', 'desc')
+				->get()
+				->first();
+		});
 	}
 	
 	public function getThreads()
@@ -191,18 +194,20 @@ class Board extends Model {
 	{
 		$postsPerPage = $this->getSetting('postsPerPage', 10);
 		
-		$threads = $this->threads()
-			->with('attachments', 'replies', 'replies.attachments')
-			->andCapcode()
-			->andBan()
-			->andEditor()
-			->op()
-			->visible()
-			->orderBy('stickied', 'desc')
-			->orderBy('reply_last', 'desc')
-			->skip($postsPerPage * ( $page - 1 ))
-			->take($postsPerPage)
-			->get();
+		$threads = Cache::remember("board.{$this->board_uri}.threads.index", 30, function() {
+			return $this->threads()
+				->with('attachments', 'replies', 'replies.attachments')
+				->andCapcode()
+				->andBan()
+				->andEditor()
+				->op()
+				->visible()
+				->orderBy('stickied', 'desc')
+				->orderBy('reply_last', 'desc')
+				->get();
+		});
+		
+		$threads = $threads->splice( $postsPerPage * ( $page - 1 ), $postsPerPage );
 		
 		foreach ($threads as $thread)
 		{

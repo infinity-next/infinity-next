@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
+use Cache;
 use Input;
 use File;
 use Request;
@@ -348,8 +349,7 @@ class Post extends Model {
 		
 		
 		// Store the post in the database.
-		$post = &$this;
-		DB::transaction(function() use ($post)
+		DB::transaction(function() use ($thread)
 		{
 			// The objective of this transaction is to prevent concurrency issues in the database
 			// on the unique joint index [board_uri,board_id] which is generated procedurall
@@ -357,12 +357,12 @@ class Post extends Model {
 			
 			// First instruction is to add +1 to posts_total.
 			DB::table('boards')
-				->where('board_uri', $post->board_uri)
+				->where('board_uri', $this->board_uri)
 				->increment('posts_total');
 			
 			// Second, we record this value and lock the table.
 			$boards = DB::table('boards')
-				->where('board_uri', $post->board_uri)
+				->where('board_uri', $this->board_uri)
 				->lockForUpdate()
 				->select('posts_total')
 				->get();
@@ -370,23 +370,28 @@ class Post extends Model {
 			$posts_total = $boards[0]->posts_total;
 			
 			// Optionally, the OP of this thread needs a +1 to reply count.
-			if ($post->reply_to)
+			if (!is_null($thread) && !($thread instanceof Post))
 			{
-				DB::table('posts')
-					->where('post_id', $post->reply_to)
-					->update(['reply_last' => $post->created_at]);
-				
-				$reply_count = DB::table('posts')
-					->where('post_id', $post->reply_to)
-					->increment('reply_count');
+				$thread->reply_last  = $this->created_at;
+				$thread->reply_count += 1;
+				$thread->save();
 			}
 			
 			// Finally, we set our board_id and save.
-			$post->board_id = $posts_total;
-			$post->save();
+			$this->board_id = $posts_total;
+			$this->save();
 			
 			// Queries and locks are handled automatically after this closure ends.
 		});
+		
+		
+		// Clear cache.
+		Cache::forget("board.{$this->board_uri}.threads.index");
+		
+		if ($this->reply_to)
+		{
+			Cache::forget("board.{$this->board_uri}.threads.{$thread->board_id}");
+		}
 		
 		
 		// Process uploads.

@@ -3,6 +3,7 @@
 use App\Board;
 use App\Post;
 use Illuminate\Http\Request;
+use Cache;
 
 trait BoardStats {
 	
@@ -35,29 +36,36 @@ trait BoardStats {
 	 */
 	protected function boardStats()
 	{
-		$stats = [];
+		$controller = &$this;
 		
-		foreach ($this->boardStats as $boardStat)
+		$stats = Cache::remember('index.boardstats', 60, function() use ($controller)
 		{
-			switch ($boardStat)
+			$stats = [];
+			
+			foreach ($controller->boardStats as $boardStat)
 			{
-				case "boardCount" :
-					$stats[$boardStat] = Board::indexed()->count();
-					break;
-				
-				case "boardIndexedCount" :
-					$stats[$boardStat] = Board::count();
-					break;
-				
-				case "postCount" :
-					$stats[$boardStat] = Post::count();
-					break;
-				
-				case "postRecentCount" :
-					$stats[$boardStat] = Post::recent()->count();
-					break;
+				switch ($boardStat)
+				{
+					case "boardCount" :
+						$stats[$boardStat] = Board::indexed()->count();
+						break;
+					
+					case "boardIndexedCount" :
+						$stats[$boardStat] = Board::count();
+						break;
+					
+					case "postCount" :
+						$stats[$boardStat] = Post::count();
+						break;
+					
+					case "postRecentCount" :
+						$stats[$boardStat] = Post::recent()->count();
+						break;
+				}
 			}
-		}
+			
+			return $stats;
+		});
 		
 		return $stats;
 	}

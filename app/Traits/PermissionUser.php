@@ -6,8 +6,8 @@ use App\Permission;
 use App\Post;
 use App\Role;
 use App\RolePermission;
-use App\UserPermissionCache;
 use Request;
+use Cache;
 
 trait PermissionUser {
 	
@@ -290,29 +290,6 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Return the user's permission cache, if it exists.
-	 * build it if nessecary.
-	 *
-	 * @return array|null
-	 */
-	protected function getPermissionCache()
-	{
-		$UserPermissionCache = UserPermissionCache::where( [ 'user_id' => $this->user_id ])->get()->first();
-		
-		if ($UserPermissionCache)
-		{
-			$cache = $UserPermissionCache->cache;
-			
-			if (!is_null($cache))
-			{
-				return json_decode($cache, true);
-			}
-		}
-		
-		return null;
-	}
-	
-	/**
 	 * Return the user's entire permission object,
 	 * build it if nessecary.
 	 *
@@ -322,20 +299,18 @@ trait PermissionUser {
 	{
 		if (!isset($this->permissions))
 		{
-			$this->permissions = $this->getPermissionCache();
-			
-			if (!$this->permissions)
+			$this->permissions = Cache::remember("user.{$this->user_id}.permissions", 3600, function()
 			{
-				$this->permissions = [];
+				$permissions = [];
 				
 				// Fetch our permission mask.
 				if ($this->isAnonymous())
 				{
-					$this->permissions["anonymous"] = Role::getRoleMaskByName("anonymous");
+					$permissions["anonymous"] = Role::getRoleMaskByName("anonymous");
 					
 					if (!$this->isAccountable())
 					{
-						$this->permissions["unaccountable"] = Role::getRoleMaskByName("unaccountable");
+						$permissions["unaccountable"] = Role::getRoleMaskByName("unaccountable");
 					}
 				}
 				else
@@ -349,33 +324,18 @@ trait PermissionUser {
 					
 					if (!count($userRoles))
 					{
-						$this->permissions = Role::getRoleMaskByName("anonymous");
+						$permissions = Role::getRoleMaskByName("anonymous");
 					}
 					else
 					{
-						$this->permissions = Role::getRoleMaskByID($userRoles);
+						$permissions = Role::getRoleMaskByID($userRoles);
 					}
 				}
 				
-				$this->setPermissionCache();
-			}
+				return $permissions;
+			});
 		}
 		
 		return $this->permissions;
-	}
-	
-	/**
-	 * Caches a permission mask for this user.
-	 *
-	 * @return \App\UserPermissionCache
-	 */
-	protected function setPermissionCache()
-	{
-		return UserPermissionCache::updateOrCreate([
-			'user_id' => $this->user_id,
-		],[
-			'user_id' => $this->user_id,
-			'cache'   => json_encode($this->permissions),
-		]);
 	}
 }
