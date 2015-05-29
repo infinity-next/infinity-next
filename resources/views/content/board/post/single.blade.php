@@ -1,4 +1,4 @@
-<div class="post-content @if ($post->capcode_id > 0) capcode-{{{ $post->capcode->role }}} @endif">
+<div class="post-content @if ($post->capcode_capcode > 0) capcode-{{{ $post->capcode_role }}} @endif">
 	<a name="{!! $post->board_id !!}"></a>
 	<ul class="post-details">
 		@if ($post->subject)
@@ -12,8 +12,8 @@
 			@if ($post->email)</a>@endif
 			</strong>
 			
-			@if ($post->capcode_id > 0)
-			<strong class="capcode">{{{ $post->capcode->capcode }}}</strong>
+			@if ($post->capcode_capcode > 0)
+			<strong class="capcode">{{{ $post->capcode_role }}}</strong>
 			@endif
 		</li>
 		<li class="post-detail post-postedon"><time class="postedon">{{{ $post->created_at }}}</time></li>

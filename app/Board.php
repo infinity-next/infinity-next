@@ -109,6 +109,8 @@ class Board extends Model {
 	
 	public function clearCachedPages()
 	{
+		Cache::forget("board.{$this->board_uri}.pages");
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -169,11 +171,14 @@ class Board extends Model {
 	
 	public function getPageCount()
 	{
-		$visibleThreads = $this->threads()->op()->visible()->count();
-		$threadsPerPage = (int) $this->getSetting('postsPerPage');
-		$pageCount      = ceil( $visibleThreads / $threadsPerPage );
-		
-		return $pageCount > 0 ? $pageCount : 1;
+		return Cache::remember("board.{$this->board_uri}.pages", 60, function()
+		{
+			$visibleThreads = $this->threads()->op()->visible()->count();
+			$threadsPerPage = (int) $this->getSetting('postsPerPage');
+			$pageCount      = ceil( $visibleThreads / $threadsPerPage );
+			
+			return $pageCount > 0 ? $pageCount : 1;
+		});
 	}
 	
 	public function getOwnerRole()
