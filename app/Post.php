@@ -246,8 +246,23 @@ class Post extends Model {
 				$join->on('bans.post_id', '=', 'posts.post_id');
 			})
 			->addSelect(
+				'posts.*',
 				'bans.ban_id',
 				'bans.justification as ban_reason'
+			);
+	}
+	
+	public function scopeAndCapcode($query)
+	{
+		return $query
+			->leftJoin('roles', function($join)
+			{
+				$join->on('roles.role_id', '=', 'posts.capcode_id');
+			})
+			->addSelect(
+				'posts.*',
+				'roles.capcode as capcode_capcode',
+				'roles.role as capcode_role'
 			);
 	}
 	
@@ -357,6 +372,10 @@ class Post extends Model {
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($post->reply_to)
 			{
+				DB::table('posts')
+					->where('post_id', $post->reply_to)
+					->update(['reply_last' => $post->created_at]);
+				
 				$reply_count = DB::table('posts')
 					->where('post_id', $post->reply_to)
 					->increment('reply_count');

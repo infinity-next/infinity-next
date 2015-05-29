@@ -12,15 +12,10 @@ class BoardTest extends TestCase {
 	private $board;
 	
 	/**
-	 * Picks a random board upon construction.
+	 * Tests the board model and depndant views.
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-	
 	public function testModel()
 	{
 		// Get a board.

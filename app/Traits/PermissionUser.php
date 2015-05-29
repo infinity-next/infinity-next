@@ -297,11 +297,11 @@ trait PermissionUser {
 	 */
 	protected function getPermissionCache()
 	{
-		$UserPermissionCache = UserPermissionCache::find($this->user_id);
+		$UserPermissionCache = UserPermissionCache::where( [ 'user_id' => $this->user_id ])->get()->first();
 		
 		if ($UserPermissionCache)
 		{
-			$cache = $UserPermissionCache->first()->cache;
+			$cache = $UserPermissionCache->cache;
 			
 			if (!is_null($cache))
 			{

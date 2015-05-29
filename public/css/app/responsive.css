@@ -27,6 +27,18 @@
  */
 @media (min-width: 728px) {
 	/**
+	 * Index
+	 */
+	#site-logo-img {
+		margin-top: 24px;
+	}
+	
+	#site-description .infobox,
+	#site-statistics .infobox {
+		min-height: 10em;
+	}
+	
+	/**
 	 * Contribution Page
 	 */
 	body.responsive li.contrib-option {
@@ -83,7 +95,10 @@
  * 1028px width and 640px height
  * Desktop
  */
-@media (min-width: 1028px) and (min-height: 640px) {
+@media (min-width: 1028px) and (min-height: 480px) {
+	/**
+	 * Posts and Threads
+	 */
 	body.responsive form.form-post {
 		position: fixed;
 		z-index: 1000;

@@ -422,15 +422,15 @@ figure.error {
 	
 }
 	#site-warning {
+		display: block;
 		color: #f33;
-		margin: 0 0 1em 0;
+		margin: -1em 0 1em 0;
 		font-size: 0.8em;
 		text-align: center;
 		text-shadow: rgba(224, 224, 224, 0.5) 1px 1px 0px;
 	}
 	#site-info {
 		clear: both;
-		margin: 0 0 1em 0;
 	}
 		#site-info::after,
 		#site-info::before {
@@ -440,21 +440,27 @@ figure.error {
 		}
 		#site-logo {
 			margin: 0;
-			height: 1px;
 		}
+			#site-logo::after {
+				content: ' ';
+				clear: both;
+				display: block;
+			}
 			#site-logo-img {
-				margin: 32px 0 0 0;
-				width: 100%;
+				margin: 0 auto 1em auto;
+				width: 220px;
+				max-width: 100%;
+				display: block;
 			}
 		
-		#site-description .infobox,
-		#site-statistics .infobox {
-			min-height: 145px;
+		#site-description,
+		#site-statistics {
+			margin-bottom: 1em;
 		}
-		#site-description .infobox-info,
-		#site-statistics .infobox-info {
-			text-align: center;
-		}
+			#site-description .infobox-info,
+			#site-statistics .infobox-info {
+				text-align: center;
+			}
 	
 	#index-boardlist {
 		clear: both;
@@ -733,7 +739,7 @@ nav.boardlist {
 		height: 1.4em;
 		line-height: 1.4em;
 		padding: 0;
-		margin: 0;
+		margin: 0 1em 0 0;
 	}
 	header nav.boardlist {
 		background: #d6daf0;
@@ -886,8 +892,6 @@ section.index-threads {
 	/* Threads */
 	.thread,
 	section.index-threads aside.advertiser.top-left {
-		border-top: 1px solid rgba(0,0,0,0.15);
-		border-bottom: 1px solid rgba(0,0,0,0.05);
 		padding: 1em;
 	}
 	.thread-item:nth-child(even),
@@ -1501,9 +1505,9 @@ nav.cp-side {
 /* Page Header */
 header {
 	/* background: #fff; */
-	border-top: 2.5em solid #EEF2FF;
+	border-top: 3em solid rgba(0,0,0,0);
 	color: #333;
-	padding: 0.5em 0 0 0;
+	padding: 0 0 0 0;
 	margin: 0 0 1em 0;
 }
 

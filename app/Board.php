@@ -170,7 +170,8 @@ class Board extends Model {
 	{
 		return $this->posts()
 			->where('board_id', $post)
-			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
+			->with('attachments', 'replies', 'replies.attachments')
+			->andCapcode()
 			->andBan()
 			->andEditor()
 			->visible()
@@ -191,7 +192,8 @@ class Board extends Model {
 		$postsPerPage = $this->getSetting('postsPerPage', 10);
 		
 		$threads = $this->threads()
-			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
+			->with('attachments', 'replies', 'replies.attachments')
+			->andCapcode()
 			->andBan()
 			->andEditor()
 			->op()
