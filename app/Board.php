@@ -3,6 +3,8 @@
 use App\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
+use DB;
 use Cache;
 use Collection;
 
@@ -86,6 +88,49 @@ class Board extends Model {
 	}
 	
 	
+	public function clearCachedThreads()
+	{
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+				break;
+			
+			case "database" :
+				DB::table('cache')
+					->where('key', 'like', "board.{$this->board_uri}.thread.%")
+					->delete();
+				break;
+			
+			default :
+				Cache::tags("board.{$this->board_uri}.threads")->flush();
+				break;
+		}
+	}
+	
+	public function clearCachedPages()
+	{
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+				for ($i = 1; $i <= $this->getPageCount(); ++$i)
+				{
+					Cache::forget("board.{$this->board_uri}.page.{$i}");
+				}
+				break;
+			
+			case "database" :
+				DB::table('cache')
+					->where('key', 'like', "%board.{$this->board_uri}.page.%")
+					->delete();
+				break;
+			
+			default :
+				Cache::tags("board.{$this->board_uri}.pages")->flush();
+				break;
+		}
+	}
+	
+	
 	public static function getBoardListBar()
 	{
 		return [
@@ -108,7 +153,7 @@ class Board extends Model {
 	public function getLocalReply($local_id)
 	{
 		return $this->posts()
-			->where('board_id', $local_id)	
+			->where('board_id', $local_id)
 			->get()
 			->first();
 	}
@@ -169,7 +214,10 @@ class Board extends Model {
 	
 	public function getThread($post)
 	{
-		return Cache::remember("board.{$this->board_uri}.threads.{$post}", 30, function() use ($post) {
+		$rememberTags    = ["board.{$this->board_uri}.threads"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board_uri}.thread.{$post}";
+		$rememberClosure = function() use ($post) {
 			return $this->posts()
 				->where('board_id', $post)
 				->with('attachments', 'replies', 'replies.attachments')
@@ -178,9 +226,22 @@ class Board extends Model {
 				->andEditor()
 				->visible()
 				->orderBy('reply_last', 'desc')
-				->get()
-				->first();
-		});
+				->get();
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $thread->first();
 	}
 	
 	public function getThreads()
@@ -194,7 +255,10 @@ class Board extends Model {
 	{
 		$postsPerPage = $this->getSetting('postsPerPage', 10);
 		
-		$threads = Cache::remember("board.{$this->board_uri}.threads.index", 30, function() {
+		$rememberTags    = ["board.{$this->board_uri}.pages"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board_uri}.page.{$page}";
+		$rememberClosure = function() use ($page, $postsPerPage) {
 			return $this->threads()
 				->with('attachments', 'replies', 'replies.attachments')
 				->andCapcode()
@@ -204,10 +268,22 @@ class Board extends Model {
 				->visible()
 				->orderBy('stickied', 'desc')
 				->orderBy('reply_last', 'desc')
+				->skip($postsPerPage * ( $page - 1 ))
+				->take($postsPerPage)
 				->get();
-		});
+		};
 		
-		$threads = $threads->splice( $postsPerPage * ( $page - 1 ), $postsPerPage );
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
 		
 		foreach ($threads as $thread)
 		{

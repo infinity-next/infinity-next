@@ -370,7 +370,7 @@ class Post extends Model {
 			$posts_total = $boards[0]->posts_total;
 			
 			// Optionally, the OP of this thread needs a +1 to reply count.
-			if (!is_null($thread) && !($thread instanceof Post))
+			if ($thread instanceof Post)
 			{
 				$thread->reply_last  = $this->created_at;
 				$thread->reply_count += 1;
@@ -386,11 +386,11 @@ class Post extends Model {
 		
 		
 		// Clear cache.
-		Cache::forget("board.{$this->board_uri}.threads.index");
+		$board->clearCachedPages();
 		
 		if ($this->reply_to)
 		{
-			Cache::forget("board.{$this->board_uri}.threads.{$thread->board_id}");
+			Cache::forget("board.{$this->board_uri}.thread.{$thread->board_id}");
 		}
 		
 		
