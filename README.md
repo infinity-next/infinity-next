@@ -6,7 +6,7 @@ Infinity Next is distributed under the [AGPL 3.0](http://choosealicense.com/lice
 In short:
 * You may use Infinity Next for any reason you please.
 * You may modify Infinity Next as you see fit.
-* You may distribute modifications of Infinity Next with the same license.
+* You must distribute modifications of Infinity Next with the same license if you run the code in public.
 * You may profit with Infinity Next.
 
 However, you also agree that:
