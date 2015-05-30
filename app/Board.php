@@ -295,7 +295,35 @@ class Board extends Model {
 			$thread->replies = $thread->replies->take( $thread->stickied ? -1 : -5 );
 		}
 		
+		
 		return $threads;
+	}
+	
+	
+	public function scopeAndCreator($query)
+	{
+		return $query
+			->leftJoin('users as creator', function($join)
+			{
+				$join->on('creator.user_id', '=', 'boards.created_by');
+			})
+			->addSelect(
+				'boards.*',
+				'creator.username as created_by_username'
+			);
+	}
+	
+	public function scopeAndOperator($query)
+	{
+		return $query
+			->leftJoin('users as operator', function($join)
+			{
+				$join->on('operator.user_id', '=', 'boards.operated_by');
+			})
+			->addSelect(
+				'boards.*',
+				'operator.username as operated_by_username'
+			);
 	}
 	
 	public function scopeIndexed($query)

@@ -8,7 +8,7 @@
 			
 			@if ($user->canAny('board.config'))
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">@lang('panel.nav.primary.board')</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/boards') !!}">@lang('panel.nav.primary.board')</a>
 			</li>
 			@endif
 			

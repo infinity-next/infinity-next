@@ -47,7 +47,7 @@ class UserSeeder extends Seeder {
 	{
 		$this->command->info("Seeding admin user.");
 		
-		if (User::count() < 0)
+		if (User::count() === 0)
 		{
 			// Generate a password.
 			$password = [];
@@ -59,7 +59,7 @@ class UserSeeder extends Seeder {
 			
 			// Create the user.
 			$user = User::firstOrCreate([
-				'user_id'  =>1,
+				'user_id'  => 1,
 			], [
 				'user_id'  => 1,
 				'username' => "Admin",
@@ -323,7 +323,6 @@ class RoleSeeder extends Seeder {
 
 
 use App\UserRole;
-use App\UserPermissionCache;
 
 class UserRoleSeeder extends Seeder {
 	
@@ -360,8 +359,6 @@ class RolePermissionSeeder extends Seeder {
 	public function run()
 	{
 		$this->command->info('Seeding permission to role associations.');
-		
-		UserPermissionCache::truncate();
 		
 		// Insert default permissions.
 		foreach ($this->slugs() as $slug)

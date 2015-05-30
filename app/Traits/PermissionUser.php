@@ -141,6 +141,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user create and assume control of a new board?
+	 *
+	 * @return boolean
+	 */
+	public function canCreateBoard()
+	{
+		return true;
+	}
+	
+	/**
 	 * Can this user delete this post?
 	 *
 	 * @return boolean
@@ -207,6 +217,23 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user edit this board's config?
+	 *
+	 * @return boolean
+	 */
+	public function canEditConfig($board)
+	{
+		$board_uri = $board;
+		
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		
+		return $this->can("board.config", $board_uri);
+	}
+	
+	/**
 	 * Can this user report this post?
 	 *
 	 * @return boolean
@@ -243,6 +270,37 @@ trait PermissionUser {
 		return false;
 	}
 	
+	
+	/**
+	 * Returns a list of board_uris where the canEditConfig permission is given.
+	 *
+	 */
+	public function getBoardsWithConfigRights()
+	{
+		$boards = [];
+		
+		foreach ($this->getPermissions() as $board_uri => $permissions)
+		{
+			if ($this->canEditConfig($board_uri))
+			{
+				if ($board_uri == "")
+				{
+					return Board::andCreator()
+						->andOperator()
+						->get();
+				}
+				else
+				{
+					$boards[] = $board_uri;
+				}
+			}
+		}
+		
+		return Board::find($boards)
+			->andCreator()
+			->andOperator()
+			->get();
+	}
 	
 	/**
 	 * Determine the user's permission for a specific item.

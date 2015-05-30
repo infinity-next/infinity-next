@@ -60,8 +60,18 @@ Route::group([
 	});
 	
 	Route::group([
+		'namespace' => 'Boards',
+		'prefix'    => 'boards',
+	], function()
+	{
+		
+		// Simple /cp/ requests go directly to /cp/home
+		Route::get('/', 'BoardsController@getIndex');
+	});
+	
+	Route::group([
 		'namespace' => 'Board',
-		'prefix'    => 'board',
+		'prefix'    => '{board}',
 	], function()
 	{
 		
@@ -86,7 +96,6 @@ if (env('CONTRIB_ENABLED', false))
 Route::group([
 	'namespace' => 'Board',
 	'prefix'    => '{board}',
-	'where'     => ['board' => '[a-z]{1,31}'],
 ], function()
 {
 	/*

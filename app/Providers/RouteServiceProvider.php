@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 		
+		$router->pattern('board', '[a-z]{1,31}');
 		$router->model('board', 'App\Board');
 	}
 
