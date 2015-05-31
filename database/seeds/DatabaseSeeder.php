@@ -129,87 +129,27 @@ class PermissionSeeder extends Seeder {
 	private function slugs()
 	{
 		return [
-			[
-				'permission_id' => "board.config",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.create",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.delete",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.reassign",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.post.create",
-				'base_value' => 1,
-			],
-			[
-				'permission_id' => "board.post.delete.self",
-				'base_value' => 1,
-			],
-			[
-				'permission_id' => "board.post.delete.other",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.post.edit.self",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.post.edit.other",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.post.sticky",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.user.unban",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.user.ban.reason",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.user.ban.free",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.image.ban",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.image.upload",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.image.delete.self",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.image.delete.other",
-				'base_value' => 0,
-			],
-			[
-				'permission_id' => "board.image.spoiler.upload",
-				'base_value' => 1,
-			],
-			[
-				'permission_id' => "board.image.spoiler.other",
-				'base_value' => 0,
-			],
+			['base_value' => 0, 'permission_id' => "board.config",],
+			['base_value' => 0, 'permission_id' => "board.create",],
+			['base_value' => 0, 'permission_id' => "board.delete",],
+			['base_value' => 0, 'permission_id' => "board.reassign",],
+			['base_value' => 1, 'permission_id' => "board.post.create",],
+			['base_value' => 1, 'permission_id' => "board.post.delete.self",],
+			['base_value' => 0, 'permission_id' => "board.post.delete.other",],
+			['base_value' => 0, 'permission_id' => "board.post.edit.self",],
+			['base_value' => 0, 'permission_id' => "board.post.edit.other",],
+			['base_value' => 0, 'permission_id' => "board.post.sticky",],
+			['base_value' => 0, 'permission_id' => "board.user.unban",],
+			['base_value' => 0, 'permission_id' => "board.user.ban.reason",],
+			['base_value' => 0, 'permission_id' => "board.user.ban.free",],
+			['base_value' => 0, 'permission_id' => "board.image.ban",],
+			['base_value' => 0, 'permission_id' => "board.image.upload",],
+			['base_value' => 0, 'permission_id' => "board.image.delete.self",],
+			['base_value' => 0, 'permission_id' => "board.image.delete.other",],
+			['base_value' => 1, 'permission_id' => "board.image.spoiler.upload",],
+			['base_value' => 0, 'permission_id' => "board.image.spoiler.other",],
 			
-			[
-				'permission_id' => "site.config",
-				'base_value' => 0,
-			],
+			['base_value' => 0, 'permission_id' => "site.config",],
 		];
 	}
 }
@@ -393,23 +333,23 @@ class RolePermissionSeeder extends Seeder {
 	private function slugs()
 	{
 		return [
-			['role_id' => 1, 'value' => 1, 'permission_id' => "board.image.delete.self"],
-			['role_id' => 1, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
-			['role_id' => 1, 'value' => 1, 'permission_id' => "board.post.delete.self"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.delete.self"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.post.delete.self"],
 			
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.post.delete.other",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.post.delete.self",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.post.edit.other",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.post.edit.self",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.post.sticky",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.image.ban",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.image.delete.other",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.image.delete.self",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.image.spoiler.other",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.image.spoiler.upload",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.user.ban.free",],
-			['role_id' => 3, 'value' => 1, 'permission_id' => "board.user.unban",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.other",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.self",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.edit.other",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.sticky",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.ban",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.delete.other",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.delete.self",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.spoiler.other",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.spoiler.upload",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.free",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.unban",],
 		];
 	}
 }

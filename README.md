@@ -6,13 +6,15 @@ Infinity Next is distributed under the [AGPL 3.0](http://choosealicense.com/lice
 In short:
 * You may use Infinity Next for any reason you please.
 * You may modify Infinity Next as you see fit.
-* You may distribute modifications of Infinity Next with the same license.
 * You may profit with Infinity Next.
 
 However, you also agree that:
 * Infinity Next & Contributors are not liable for this software and any damage it may do.
 * Infinity Next & Contributors are not liable if this software is used to break the law.
-* You will not redistribute modifications of Infinity Next under any license other than the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/).
+* You will not sell copies or modifications of this source code (no sublicensing).
+* You *must* distribute the source code for any publicly hosted modifications of Infinity Next under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/) license in a conventional format.
+
+The AGPL3 license is designed to protect the end user by keeping modified copies of the source open and free.
 
 While not binding, I do ask that users link back to this git repository or to https://infinitydev.org on their website. Sharing is caring. ♥
 
@@ -24,13 +26,31 @@ Larachan runs on Laravel 5 and has the same requirements.
   * `php5-curl` for Stripe.
   * `php5-gd` for captcha codes and other image manipulation.
 
+When installing from source,
+* `composer`
+
+# Installation
+Infinity Next is currently below its first release version. When it is finished, a compiled archive will be available with an installation process. Right now, however, you must build it yourself and have access to a command line interface.
+
+1. Pull the code and navigate to the directory where the `.env` file is.
+2. Edit the `.env` to your liking. This is where you enter database details.
+3. Issue the command `composer update` and wait as 3rd party libraries are added.
+4. Issue the command `php artisan migrate` or `./artisan migrate`
+5. Issue the command `php artisan db:seed` or `./artisan db:seed`
+    * Take note of the Admin account password that will be created for you.
+6. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
+7. You should now have a `/test/` board. The admin account will be named `Admin`.
+
 # Contributing
 Everyone is welcome to contribute, but please follow repository etiquette.
 
 * Fork the repository.
-* Raise an issue for everything you fix.
+* Raise a separate issue for everything you intend to fix.
+* Plan your fix and allow for discussion.
 * Tie your commits to issues.
 * Keep pull requests concise, list issues addressed, and make it easy to pull them.
+
+It would benefit you to make sure your solution has the OK before writing any code.
 
 ## Coding Standards
 In the name of preventing conflict and keeping the codebase clean, I am implementing the **[exact same standards of Laravel contributors](http://laravel.com/docs/4.2/contributions#coding-style)**.

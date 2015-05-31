@@ -81,7 +81,7 @@ class Option extends Model {
 				return "Callback not supported.";
 			
 			default:
-				return $controller->template("panel.site.config.option.{$this->format}");
+				return "widgets.config.option.{$this->format}";
 		}
 	}
 	

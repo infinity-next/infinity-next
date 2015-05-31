@@ -51,7 +51,6 @@ Route::group([
 		'prefix'    => 'site',
 	], function()
 	{
-		// Simple /cp/ requests go directly to /cp/home
 		Route::get('/', 'SiteController@getIndex');
 		
 		Route::controllers([
@@ -64,17 +63,17 @@ Route::group([
 		'prefix'    => 'boards',
 	], function()
 	{
-		
-		// Simple /cp/ requests go directly to /cp/home
 		Route::get('/', 'BoardsController@getIndex');
 	});
 	
 	Route::group([
-		'namespace' => 'Board',
-		'prefix'    => '{board}',
+		'namespace' => 'Boards',
+		'prefix'    => 'board',
 	], function()
 	{
-		
+		Route::controllers([
+			'{board}' => 'ConfigController',
+		]);
 	});
 });
 

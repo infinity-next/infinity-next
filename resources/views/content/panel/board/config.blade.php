@@ -11,7 +11,7 @@
 	<h3 class="config-title">{{ trans("config.title.site") }}</h3>
 	
 	@foreach ($groups as $group)
-		@include( $c->template('widgets.config.group') )
+		@include('widgets.config.group')
 	@endforeach
 	
 	<div class="field row-submit">
