@@ -53,6 +53,11 @@ class Post extends Model {
 	protected $dates = ['deleted_at'];
 	
 	
+	/**
+	 * Ties database triggers to the model.
+	 *
+	 * @return void
+	 */
 	public static function boot()
 	{
 		parent::boot();
@@ -92,16 +97,34 @@ class Post extends Model {
 		});
 	}
 	
+	/**
+	 * Determines if the user can edit this post.
+	 *
+	 * @param  App\User|App\Support\Anonymous  $user
+	 * @return boolean
+	 */
 	public function canEdit($user)
 	{
 		return $user->canEdit($this);
 	}
 	
+	/**
+	 * Determines if the user can delete this post.
+	 *
+	 * @param  App\User|App\Support\Anonymous  $user
+	 * @return boolean
+	 */
 	public function canDelete($user)
 	{
 		return $user->canDelete($this);
 	}
 	
+	/**
+	 * Determines if the user can edit this post, or if this thread is open to replies in general.
+	 *
+	 * @param  App\User|App\Support\Anonymous|null  $user
+	 * @return boolean
+	 */
 	public function canReply($user = null)
 	{
 		if (!is_null($user))
@@ -112,11 +135,23 @@ class Post extends Model {
 		return true;
 	}
 	
+	/**
+	 * Determines if the user can sticky or unsticky this post.
+	 *
+	 * @param  App\User|App\Support\Anonymous  $user
+	 * @return boolean
+	 */
 	public function canSticky($user)
 	{
 		return $user->canSticky($this);
 	}
 	
+	
+	/**
+	 * Returns the fully rendered HTML content of this post.
+	 *
+	 * @return string
+	 */
 	public function getBodyFormatted()
 	{
 		$ContentFormatter = new ContentFormatter();
@@ -155,6 +190,11 @@ class Post extends Model {
 	}
 	
 	
+	/**
+	 * Returns the board model for this post.
+	 *
+	 * @return \App\Board
+	 */
 	public function getBoard()
 	{
 		return $this->board()
@@ -162,29 +202,27 @@ class Post extends Model {
 			->first();
 	}
 	
-	public static function getPostForBoard($uri, $board_id)
+	/**
+	 * Returns the post model using the board's URI and the post's local board ID.
+	 *
+	 * @param  string  $board_uri
+	 * @param  integer  $board_id
+	 * @return \App\Post
+	 */
+	public static function getPostForBoard($board_uri, $board_id)
 	{
 		return static::where([
-				'board_uri' => $uri,
+				'board_uri' => $board_uri,
 				'board_id' => $board_id,
 			])
 			->first();
 	}
 	
-	public static function getThread($post)
-	{
-		return $this->posts()
-			->with('attachments', 'replies', 'replies.attachments', 'capcode', 'replies.capcode')
-			->andBan()
-			->andEditor()
-			->op()
-			->visible()
-			->orderBy('reply_last', 'desc')
-			->where('board_id', $post)
-			->orWhere('reply_to', $post)
-			->get();
-	}
-	
+	/**
+	 * Returns the model for this post's original post (what it is a reply to).
+	 *
+	 * @return \App\Post
+	 */
 	public function getOp()
 	{
 		return $this->op()
@@ -208,12 +246,22 @@ class Post extends Model {
 			->first();
 	}
 	
+	/**
+	 * Returns all replies to a post.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
 	public function getReplies()
 	{
 		return $this->replies()
 			->get();
 	}
 	
+	/**
+	 * Returns the last few replies to a thread for index views.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
 	public function getRepliesForIndex()
 	{
 		return $this->replies()
@@ -222,6 +270,12 @@ class Post extends Model {
 			->reverse();
 	}
 	
+	/**
+	 * Sets the sticky property of a post and updates relevant timestamps.
+	 *
+	 * @param  bolean  $sticky
+	 * @return \App\Post
+	 */
 	public function setSticky($sticky = true)
 	{
 		if ($sticky)
@@ -325,6 +379,17 @@ class Post extends Model {
 		return $query->where('deleted_at', null);
 	}
 	
+	
+	/**
+	 * Pushes the post to the specified board, as a new thread or as a reply.
+	 * This autoatically handles concurrency issues. Creating a new reply without
+	 * using this method is forbidden by the `creating` event in ::boot.
+	 *
+	 *
+	 * @param  App\Board  &$board
+	 * @param  App\Post   &$thread
+	 * @return void
+	 */
 	public function submitTo(Board &$board, &$thread = null)
 	{
 		$this->board_uri  = $board->board_uri;
@@ -352,8 +417,8 @@ class Post extends Model {
 		DB::transaction(function() use ($thread)
 		{
 			// The objective of this transaction is to prevent concurrency issues in the database
-			// on the unique joint index [board_uri,board_id] which is generated procedurall
-			// alongside the primary autoincrement column post_id.
+			// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
+			// alongside the primary autoincrement column `post_id`.
 			
 			// First instruction is to add +1 to posts_total.
 			DB::table('boards')

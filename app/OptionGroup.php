@@ -41,6 +41,37 @@ class OptionGroup extends Model {
 	
 	public static function getSiteConfig()
 	{
-		return static::with('options')->get();
+		return static::with(['options' => function($query)
+		{
+			$query->where('option_type', "site");
+			
+			$query->leftJoin('site_settings', function($join) {
+				$join->on('site_settings.option_name', '=', 'options.option_name');
+			});
+			
+			$query->addSelect(
+				'options.*',
+				'site_settings.option_value as option_value'
+			);
+		}])->get();
+	}
+	
+	public static function getBoardConfig(\App\Board $board)
+	{
+		return static::with(['options' => function($query) use ($board)
+		{
+			$query->where('option_type', "board");
+			
+			$query->leftJoin('board_settings', function($join) use ($board)
+			{
+				$join->on('board_settings.option_name', '=', 'options.option_name');
+				$join->where('board_settings.board_uri', '=', $board->board_uri);
+			});
+			
+			$query->addSelect(
+				'options.*',
+				'board_settings.option_value as option_value'
+			);
+		}])->get();
 	}
 }

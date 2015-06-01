@@ -19,11 +19,16 @@
 			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include( $c->template('board.thread'), [
-						'board'  => $board,
-						'thread' => $thread,
-						'op'     => $thread,
-					])
+					@include($c->view(
+						'board.thread',
+						[
+							'board'  => $board,
+							'thread' => $thread,
+							'op'     => $thread,
+						],
+						( $reply_to ? "view.board.{$board->board_uri}.thread.{$reply_to}" : "view.board.{$board->board_uri}" ),
+						5
+					))
 				</article>
 			</li>
 			@endforeach

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Cache;
 use Request;
 use View;
 
@@ -135,7 +136,7 @@ abstract class Controller extends BaseController {
 	 * @param  array  $options
 	 * @return View
 	 */
-	public function view($template, array $options = [])
+	public function view($template, array $options = array())
 	{
 		return View::make(
 			$this->template($template),
@@ -160,7 +161,7 @@ abstract class Controller extends BaseController {
 	 * @param  array  $options
 	 * @return array
 	 */
-	public function templateOptions(array $options = [])
+	public function templateOptions(array $options = array())
 	{
 		return (array) array_merge([
 			'c'          => &$this,

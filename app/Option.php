@@ -23,7 +23,7 @@ class Option extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['option_name', 'default_value', 'option_value', 'format', 'format_parameters', 'data_type'];
+	protected $fillable = ['option_name', 'default_value', 'format', 'format_parameters', 'data_type'];
 	
 	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
@@ -61,6 +61,18 @@ class Option extends Model {
 		}
 		
 		return $this->decoded_format_parameters;
+	}
+	
+	public function getSanitaryInput($input)
+	{
+		switch ($this->data_type)
+		{
+			case "boolean" :
+				$input = !!$input;
+				break;
+		}
+		
+		return $input;
 	}
 	
 	/**

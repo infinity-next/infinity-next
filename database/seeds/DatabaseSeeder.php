@@ -414,7 +414,7 @@ class OptionSeeder extends Seeder {
 				'option_value'          => 1,
 				'format'                => "onoff",
 				'data_type'             => "boolean",
-				'validation_parameters' => 'required|boolean'
+				'validation_parameters' => 'boolean'
 			],
 		];
 	}

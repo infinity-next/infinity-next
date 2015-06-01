@@ -22,6 +22,13 @@ class ConfigController extends PanelController {
 	const VIEW_CONFIG = "panel.site.config";
 	
 	/**
+	 * View path for the secondary (sidebar) navigation.
+	 *
+	 * @var string
+	 */
+	public static $navSecondary = "nav.panel.site";
+	
+	/**
 	 * Show the application dashboard to the user.
 	 *
 	 * @return Response
@@ -52,6 +59,7 @@ class ConfigController extends PanelController {
 			return abort(403);
 		}
 		
+		$input        = Input::all();
 		$optionGroups = OptionGroup::getSiteConfig();
 		$requirements = [];
 		
@@ -63,11 +71,11 @@ class ConfigController extends PanelController {
 			{
 				// Pull the validation parameter string,
 				$requirements[$option->option_name] = $option->getValidation();
+				$input[$option->option_name]        = $option->getSanitaryInput($input[$option->option_name]);
 			}
 		}
 		
 		// Build our validator.
-		$input     = Input::all();
 		$validator = Validator::make($input, $requirements);
 		
 		if ($validator->fails())
