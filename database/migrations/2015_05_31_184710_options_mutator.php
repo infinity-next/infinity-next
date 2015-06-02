@@ -16,10 +16,10 @@ class OptionsMutator extends Migration {
 		// Create site settings table
 		Schema::create('site_settings', function($table)
 		{
+			$table->increments('site_setting_id');
 			$table->string('option_name');
 			$table->binary('option_value');
 			
-			$table->primary('option_name');
 			$table->index('option_name');
 			
 			// Foreigns and Indexes
@@ -31,12 +31,12 @@ class OptionsMutator extends Migration {
 		// Create board settings table
 		Schema::create('board_settings', function($table)
 		{
+			$table->increments('board_setting_id');
 			$table->string('option_name');
 			$table->string('board_uri', 32);
 			$table->binary('option_value');
 			
-			$table->primary('option_name');
-			$table->index('option_name');
+			$table->index(['option_name', 'board_uri']);
 			
 			// Foreigns and Indexes
 			$table->foreign('option_name')
@@ -62,8 +62,6 @@ class OptionsMutator extends Migration {
 		// Mutate the old options table.
 		Schema::table('options', function($table)
 		{
-			$table->index('option_name');
-				
 			$table->enum('option_type', [
 				'board',
 				'site',

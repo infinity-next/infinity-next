@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
+use App\BoardSetting;
 use App\OptionGroup;
 use App\Http\Controllers\Panel\PanelController;
+use App\Validators\ComparisonValidator;
 use DB;
 use Input;
 use Request;
@@ -28,6 +30,14 @@ class ConfigController extends PanelController {
 	 * @var string
 	 */
 	public static $navSecondary = "nav.panel.board";
+	
+	protected function boot()
+	{
+		Validator::resolver(function($translator, $data, $rules, $messages)
+		{
+			return new ComparisonValidator($translator, $data, $rules, $messages);
+		});
+	}
 	
 	/**
 	 * Show the application dashboard to the user.
@@ -55,7 +65,7 @@ class ConfigController extends PanelController {
 	 */
 	public function patchIndex(Request $request, Board $board)
 	{
-		if (!$this->user->can('site.config'))
+		if (!$this->user->can('board.config'))
 		{
 			return abort(403);
 		}
@@ -86,17 +96,19 @@ class ConfigController extends PanelController {
 				->withInput();
 		}
 		
-		foreach ($optionGroups as $optionGroup)
+		foreach ($optionGroups as &$optionGroup)
 		{
-			foreach ($optionGroup->options as $option)
+			foreach ($optionGroup->options as &$option)
 			{
-				if ($option->option_value != $input[$option->option_name])
-				{
-					$option->option_value = $input[$option->option_name];
-				}
+				$setting = BoardSetting::firstOrNew([
+					'option_name'  => $option->option_name,
+					'board_uri'    => $board->board_uri,
+				]);
+				
+				$option->option_value  = $input[$option->option_name];
+				$setting->option_value = $input[$option->option_name];
+				$setting->save();
 			}
-			
-			$optionGroup->push();
 		}
 		
 		return $this->view(static::VIEW_CONFIG, [

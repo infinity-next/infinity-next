@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Panel\Site;
 
 use App\OptionGroup;
+use App\SiteSetting;
 use App\Http\Controllers\Panel\PanelController;
 use DB;
 use Input;
@@ -85,17 +86,18 @@ class ConfigController extends PanelController {
 				->withInput();
 		}
 		
-		foreach ($optionGroups as $optionGroup)
+		foreach ($optionGroups as &$optionGroup)
 		{
-			foreach ($optionGroup->options as $option)
+			foreach ($optionGroup->options as &$option)
 			{
-				if ($option->option_value != $input[$option->option_name])
-				{
-					$option->option_value = $input[$option->option_name];
-				}
+				$setting = SiteSetting::firstOrNew([
+					'option_name'  => $option->option_name,
+				]);
+				
+				$option->option_value  = $input[$option->option_name];
+				$setting->option_value = $input[$option->option_name];
+				$setting->save();
 			}
-			
-			$optionGroup->push();
 		}
 		
 		return $this->view(static::VIEW_CONFIG, [

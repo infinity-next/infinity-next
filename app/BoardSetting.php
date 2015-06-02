@@ -9,14 +9,21 @@ class BoardSetting extends Model {
 	 *
 	 * @var string
 	 */
-	protected $table = 'board_setting';
+	protected $table = 'board_settings';
 	
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['option_name', 'board_uri', 'option_value'];
+	protected $fillable = ['board_setting_id', 'option_name', 'board_uri', 'option_value'];
+	
+	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'board_setting_id';
 	
 	public $timestamps = false;
 	

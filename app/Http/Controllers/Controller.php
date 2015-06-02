@@ -2,7 +2,7 @@
 
 use App\Board;
 use App\Log;
-use App\Option;
+use App\SiteSetting;
 use App\Support\Anonymous;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -26,6 +26,7 @@ abstract class Controller extends BaseController {
 	
 	/**
 	 * Create a new authentication controller instance.
+	 * Don't overwrite __construct in any children. Use ::boot
 	 *
 	 * @param  \Illuminate\Auth\Guard  $auth
 	 * @param  \Illuminate\Auth\Registrar  $registrar
@@ -47,6 +48,18 @@ abstract class Controller extends BaseController {
 		
 		View::share('boardbar', Board::getBoardListBar());
 		View::share('user', $this->user);
+		
+		$this->boot();
+	}
+	
+	/**
+	 * Hook called immediately after __construct.
+	 *
+	 * @return void
+	 */
+	protected function boot()
+	{
+		// Nothing!
 	}
 	
 	/**
@@ -115,7 +128,7 @@ abstract class Controller extends BaseController {
 	{
 		if (!isset($this->options))
 		{
-			$this->options = Option::get();
+			$this->options = SiteSetting::get();
 		}
 		
 		foreach ($this->options as $option)

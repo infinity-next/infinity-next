@@ -131,6 +131,8 @@ class FileStorage extends Model {
 			$imageManager
 				->make($storage->getFullPath())
 				->resize(
+					## TODO ##
+					// Add a way for options to be recovered without a controller.
 					300,//$controller->option('attachmentThumbnailSize'),
 					300,//$controller->option('attachmentThumbnailSize'),
 					function($constraint) {

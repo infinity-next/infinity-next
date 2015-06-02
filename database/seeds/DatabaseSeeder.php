@@ -365,11 +365,15 @@ class OptionSeeder extends Seeder {
 		
 		$option_count = Option::count();
 		
-		foreach ($this->slugs() as $slug)
+		foreach ($this->slugs() as $slugType => $slugs)
 		{
-			$option = Option::updateOrCreate([
-				'option_name' => $slug['option_name'],
-			], $slug);
+			foreach ($slugs as $slug)
+			{
+				$slug['option_type'] = $slugType;
+				$option = Option::updateOrCreate([
+					'option_name' => $slug['option_name'],
+				], $slug);
+			}
 		}
 		
 		$option_count = Option::count() - $option_count;
@@ -380,41 +384,58 @@ class OptionSeeder extends Seeder {
 	private function slugs()
 	{
 		return [
-			[
-				'option_name'           => "attachmentFilesize",
-				'default_value'         => "1024",
-				'option_value'          => "1024",
-				'format'                => "spinbox",
-				'format_parameters'     => json_encode( [ 'min' => 0 ] ),
-				'data_type'             => "unsigned_integer",
-				'validation_parameters' => 'required|min:$min'
-			],
-			[
-				'option_name'           => "attachmentThumbnailSize",
-				'default_value'         => "250",
-				'option_value'          => "250",
-				'format'                => "spinbox",
-				'format_parameters'     => json_encode( [ 'min' => 50 ] ),
-				'data_type'             => "unsigned_integer",
-				'validation_parameters' => 'required|min:$min'
+			'site' => [
+				[
+					'option_name'           => "attachmentFilesize",
+					'default_value'         => "1024",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min'
+				],
+				[
+					'option_name'           => "attachmentThumbnailSize",
+					'default_value'         => "250",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 50 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min'
+				],
+				
+				[
+					'option_name'           => "banMaxLength",
+					'default_value'         => "30",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => -1 ] ),
+					'data_type'             => "integer",
+					'validation_parameters' => 'required|min:$min'
+				],
+				[
+					'option_name'           => "banSubnets",
+					'default_value'         => 1,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => 'boolean'
+				],
 			],
 			
-			[
-				'option_name'           => "banMaxLength",
-				'default_value'         => "30",
-				'option_value'          => "30",
-				'format'                => "spinbox",
-				'format_parameters'     => json_encode( [ 'min' => -1 ] ),
-				'data_type'             => "integer",
-				'validation_parameters' => 'required|min:$min'
-			],
-			[
-				'option_name'           => "banSubnets",
-				'default_value'         => 1,
-				'option_value'          => 1,
-				'format'                => "onoff",
-				'data_type'             => "boolean",
-				'validation_parameters' => 'boolean'
+			'board' => [
+				[
+					'option_name'           => "postMaxLength",
+					'default_value'         => null,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'integer|min:$min|max:$max|greater_than:postMinLength',
+				],
+				[
+					'option_name'           => "postMinLength",
+					'default_value'         => null,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'integer|min:$min|max:$max',
+				],
 			],
 		];
 	}

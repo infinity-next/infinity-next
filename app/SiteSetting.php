@@ -16,7 +16,14 @@ class SiteSetting extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['option_name', 'option_value'];
+	protected $fillable = ['site_setting_id', 'option_name', 'option_value'];
+	
+	/**
+	 * The primary key that is used by ::get()
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'site_setting_id';
 	
 	public $timestamps = false;
 	
