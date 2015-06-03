@@ -516,6 +516,26 @@ class OptionGroupSeeder extends Seeder
 					"banSubnets",
 				],
 			],
+			[
+				'group_name'    => "board_posts",
+				'debug_only'    => false,
+				'display_order' => 300,
+				
+				'options'       => [
+					"postAttachmentsMax",
+					"banMaxLength",
+					"banSubnets",
+				],
+			],
+			[
+				'group_name'    => "board_threads",
+				'debug_only'    => false,
+				'display_order' => 400,
+				
+				'options'       => [
+					"postsPerPage",
+				],
+			],
 		];
 	}
 }
