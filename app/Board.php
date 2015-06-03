@@ -66,6 +66,11 @@ class Board extends Model {
 		return $this->hasMany('\App\Role', 'board_uri');
 	}
 	
+	public function settings()
+	{
+		return $this->hasMany('\App\BoardSetting', 'board_uri');
+	}
+	
 	
 	public function canAttach($user)
 	{
@@ -174,7 +179,7 @@ class Board extends Model {
 		return Cache::remember("board.{$this->board_uri}.pages", 60, function()
 		{
 			$visibleThreads = $this->threads()->op()->visible()->count();
-			$threadsPerPage = (int) $this->getSetting('postsPerPage');
+			$threadsPerPage = (int) $this->getSetting('postsPerPage', 10);
 			$pageCount      = ceil( $visibleThreads / $threadsPerPage );
 			
 			return $pageCount > 0 ? $pageCount : 1;
@@ -194,24 +199,22 @@ class Board extends Model {
 	{
 		if (!isset($this->settings))
 		{
-			$this->settings = [
-				'attachmentsMax' => 5,
-				'defaultName'    => trans('board.anonymous'),
-				'postMaxLength'  => 20480,
-				'postsPerPage'   => 10,
-			];
+			$this->settings = $this->settings()->get();
 		}
 		
 		return $this->settings;
 	}
 	
-	public function getSetting($setting, $fallback = null)
+	public function getSetting($option_name, $fallback = null)
 	{
 		$settings = $this->getSettings();
 		
-		if (isset($settings[$setting]))
+		foreach ($settings as $setting)
 		{
-			return $settings[$setting];
+			if ($setting->option_name == $option_name)
+			{
+				return $setting->option_value;
+			}
 		}
 		
 		return $fallback;

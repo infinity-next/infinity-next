@@ -117,7 +117,6 @@ abstract class Controller extends BaseController {
 		return $log->save();
 	}
 	
-	
 	/**
 	 * Returns an system option's value.
 	 *

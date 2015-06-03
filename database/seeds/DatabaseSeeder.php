@@ -421,6 +421,14 @@ class OptionSeeder extends Seeder {
 			
 			'board' => [
 				[
+					'option_name'           => "postAttachmentsMax",
+					'default_value'         => "5",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 10 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
 					'option_name'           => "postMaxLength",
 					'default_value'         => null,
 					'format'                => "spinbox",
@@ -435,6 +443,14 @@ class OptionSeeder extends Seeder {
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'integer|min:$min|max:$max',
+				],
+				[
+					'option_name'           => "postsPerPage",
+					'default_value'         => "10",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 5, 'max' => 20 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
 				],
 			],
 		];
