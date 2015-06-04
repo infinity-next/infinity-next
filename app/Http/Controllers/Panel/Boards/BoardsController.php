@@ -16,6 +16,7 @@ class BoardsController extends PanelController {
 	*/
 	
 	const VIEW_DASHBOARD = "panel.board.dashboard";
+	const VIEW_CREATE    = "panel.board.create";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -38,4 +39,18 @@ class BoardsController extends PanelController {
 		]);
 	}
 	
+	/**
+	 * Allows for the creation of a new board.
+	 *
+	 * @return Response
+	 */
+	public function getCreate()
+	{
+		if (!$this->user->canCreateBoard())
+		{
+			return abort(403);
+		}
+		
+		return $this->view(static::VIEW_CREATE);
+	}
 }
