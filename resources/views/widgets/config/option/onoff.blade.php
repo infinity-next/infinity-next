@@ -4,7 +4,7 @@
 	<dd class="option-definition">
 		{!! Form::checkbox(
 			$option->option_name,
-			$option->option_value,
+			is_null($option->option_value) ? $option->default_value : $option->option_value,
 			[
 				'id'        => $option->option_name,
 				'class'     => "field-control",
