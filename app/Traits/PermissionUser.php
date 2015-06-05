@@ -396,4 +396,14 @@ trait PermissionUser {
 		
 		return $this->permissions;
 	}
+	
+	/**
+	 * Drops the user's permission cache.
+	 *
+	 * @return void.
+	 */
+	public function forgetPermissions()
+	{
+		Cache::forget("user.{$this->user_id}.permissions");
+	}
 }

@@ -1,10 +1,6 @@
 @extends('layouts.main.panel')
 
 @section('body')
-	@if ($user->canCreateBoard())
-	<a href="#"></a>
-	@endif
-	
 	@if (count($boards))
 	<table>
 		<thead>

@@ -8,7 +8,7 @@
 	'id'     => "config-site",
 	'class'  => "form-config",
 ]) !!}
-	<h3 class="config-title">{{ trans("config.title.site") }}</h3>
+	<h3 class="config-title">@lang("config.title.board")</h3>
 	
 	@foreach ($groups as $group)
 		@include('widgets.config.group')

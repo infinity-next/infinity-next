@@ -1,6 +1,9 @@
 <?php namespace App;
 
 use App\Role;
+use App\User;
+use App\UserRole;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -25,11 +28,18 @@ class Board extends Model {
 	protected $primaryKey = 'board_uri';
 	
 	/**
+	 * Denotes our primary key is not an AA.
+	 *
+	 * @var string
+	 */
+	public $incrementing = false;
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'title', 'description'];
+	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by'];
 	
 	/**
 	 * Cached settings for this board.
@@ -300,6 +310,27 @@ class Board extends Model {
 		
 		
 		return $threads;
+	}
+	
+	
+	public function setOwner(User $user)
+	{
+		$user->forgetPermissions();
+		
+		$role = Role::firstOrCreate([
+			'role'       => "owner",
+			'board_uri'  => $this->board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::$ROLE_OWNER,
+			'name'       => "Board Owner",
+			'capcode'    => "Board Owner",
+			'system'     => false,
+		]);
+		
+		return UserRole::create([
+			'user_id' => $user->user_id,
+			'role_id' => $role->role_id,
+		]);
 	}
 	
 	

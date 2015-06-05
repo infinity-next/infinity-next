@@ -33,7 +33,7 @@ class Role extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['role', 'board_uri', 'caste', 'inherits', 'name', 'capcode', 'system'];
+	protected $fillable = ['role', 'board_uri', 'caste', 'inherit_id', 'name', 'capcode', 'system'];
 	
 	public $timestamps = false;
 	

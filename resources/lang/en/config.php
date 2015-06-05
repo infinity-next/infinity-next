@@ -19,6 +19,9 @@ return [
 	'legend' => [
 		'attachments' => "Attachment Options",
 		'bans'        => "Ban Options",
+		
+		'board_posts'   => "Post Options",
+		'board_threads' => "Thread Options",
 	],
 	
 	'option' => [
@@ -26,6 +29,12 @@ return [
 		'attachmentThumbnailSize' => "Attachment preview size (px)",
 		'banMaxLength'            => "Maximum length for bans (days)",
 		'banSubnets'              => "Allow subnet bans",
+		
+		'postAttachmentsMax'      => "Maximum attachments per post",
+		'postMaxLength'           => "Maximum characters per post",
+		'postMinLength'           => "Minimum characters per post",
+		
+		'postsPerPage'            => "Threads per page",
 	],
 	
 	'submit' => "Save Changes",

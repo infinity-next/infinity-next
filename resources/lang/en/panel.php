@@ -21,6 +21,8 @@ return [
 		],
 		
 		'secondary' => [
+			
+			
 			'home' => [
 				'account'         => "Account",
 				'password_change' => "Change Password",
@@ -32,6 +34,13 @@ return [
 			'site' => [
 				'setup'           => "Setup",
 				'config'          => "Config",
+			],
+			
+			
+			'boards' => "Boards",
+			'board'  => [
+				'config'          => "Config",
+				'create'          => "Create a Board",
 			],
 		],
 	],

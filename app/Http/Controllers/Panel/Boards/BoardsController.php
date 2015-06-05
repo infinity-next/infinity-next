@@ -1,6 +1,10 @@
 <?php namespace App\Http\Controllers\Panel\Boards;
 
+use App\Board;
 use App\Http\Controllers\Panel\PanelController;
+use Input;
+use Request;
+use Validator;
 
 class BoardsController extends PanelController {
 	
@@ -52,5 +56,51 @@ class BoardsController extends PanelController {
 		}
 		
 		return $this->view(static::VIEW_CREATE);
+	}
+	
+	/**
+	 * Allows for the creation of a new board.
+	 *
+	 * @return Response
+	 */
+	public function putCreate(Request $request)
+	{
+		if (!$this->user->canCreateBoard())
+		{
+			return abort(403);
+		}
+		
+		// Validate the basic boardconstraints.
+		$input        = Input::all();
+		$input['board_uri'] = strtolower( (string) $input['board_uri'] );
+		$requirements = [
+			'board_uri'   => "required|string|between:1,31",
+			'title'       => "required|string|between:1,255",
+			'description' => "string|between:0,255"
+		];
+		
+		$validator = Validator::make($input, $requirements);
+		
+		if ($validator->fails())
+		{
+			return redirect(Request::path())
+				->withErrors($validator->errors()->all())
+				->withInput();
+		}
+		
+		// Create the board.
+		$board = new Board([
+			'board_uri'   => $input['board_uri'],
+			'title'       => $input['title'],
+			'description' => $input['description'],
+			'created_by'  => $this->user->user_id,
+			'operated_by' => $this->user->user_id,
+		]);
+		$board->save();
+		
+		// Seed board ownership.
+		$board->setOwner($this->user);
+		
+		return redirect("cp/board/{$board->board_uri}");
 	}
 }
