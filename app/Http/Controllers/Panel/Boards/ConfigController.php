@@ -65,7 +65,7 @@ class ConfigController extends PanelController {
 	 */
 	public function patchIndex(Request $request, Board $board)
 	{
-		if (!$this->user->can('board.config'))
+		if (!$this->user->can('board.config', $board))
 		{
 			return abort(403);
 		}

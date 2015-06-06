@@ -8,9 +8,12 @@
 					<li class="cp-linkitem">
 						<a class="linkitem-name" href="{!! url('cp/boards/create') !!}">@lang('panel.nav.secondary.board.create')</a>
 					</li>
+					
+					@if ($user->canEditConfig())
 					<li class="cp-linkitem">
 						<a class="linkitem-name" href="{!! url('cp/boards') !!}">@lang('panel.nav.secondary.board.config')</a>
 					</li>
+					@endif
 				</ul>
 			</li>
 		</ul>

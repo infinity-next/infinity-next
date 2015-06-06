@@ -10,76 +10,74 @@
 ]) !!}
 	<h3 class="config-title">@lang("config.title.board_create")</h3>
 	
-	<fieldset class="form-fields group-board_basic">
-		<legend class="form-legend">@lang("config.legend.board_basic")</legend>
+	@if ($user->isAnonymous())
+		@include($c->template('panel.auth.register.form'))
+	@endif
+	
+	<fieldset class="form-fields" id="fields-board_basic">
+		<legend class="form-legend">@lang('config.legend.board_basic')</legend>
 		
-		<dl class="option option-field-board_uri">
-			<dt class="option-term">
+		<!-- Board URI -->
+		<div class="field row-board_uri">
 				{!! Form::label(
 					"board_uri",
 					trans("config.option.board_uri"),
 					[
 						'class' => "field-label",
 				]) !!}
-				<span class="option-desc">@lang("config.option.desc.board_uri").</span>
-			</dt>
-			
-			<dd class="option-definition">
+				
+				<span class="field-description">@lang("config.option.desc.board_uri")</span>
+				
 				{!! Form::text(
 					"board_uri",
-					"",
+					old('username'),
 					[
-						'id'        => "board_uri",
-						'class'     => "field-control",
+						'id'         => "board_uri",
+						'class'      => "field-control",
+						'max-length' => 31,
 				]) !!}
-			</dd>
-		</dl>
+		</div>
 		
-		<dl class="option option-field-title">
-			<dt class="option-term">
+		<!-- Board title -->
+		<div class="field row-board_uri">
 				{!! Form::label(
 					"title",
 					trans("config.option.title"),
 					[
 						'class' => "field-label",
 				]) !!}
-			</dt>
-			
-			<dd class="option-definition">
+				
 				{!! Form::text(
 					"title",
-					"",
+					old('username'),
 					[
-						'id'        => "title",
-						'class'     => "field-control",
+						'id'         => "title",
+						'class'      => "field-control",
+						'max-length' => 255,
 				]) !!}
-			</dd>
-		</dl>
+		</div>
 		
-		<dl class="option option-field-description">
-			<dt class="option-term">
+		<!-- Board title -->
+		<div class="field row-description">
 				{!! Form::label(
 					"description",
 					trans("config.option.description"),
 					[
 						'class' => "field-label",
 				]) !!}
-			</dt>
-			
-			<dd class="option-definition">
+				
 				{!! Form::text(
 					"description",
-					"",
+					old('description'),
 					[
-						'id'        => "description",
-						'class'     => "field-control",
+						'id'         => "description",
+						'class'      => "field-control",
+						'max-length' => 255,
 				]) !!}
-			</dd>
-		</dl>
-		
+		</div>
 	</fieldset>
 	
-	<div class="field row-submit">
+	<div class="field">
 		{!! Form::button(
 			trans("config.create"),
 			[
