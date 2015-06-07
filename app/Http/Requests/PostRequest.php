@@ -1,26 +1,18 @@
 <?php namespace App\Http\Requests;
 
+use App\Ban;
 use App\Board;
 use App\Http\Controllers\Board\BoardController;
+use App\Http\Requests\RequestAcceptsUserAndBoard;
 
 use Auth;
 use View;
 
 class PostRequest extends Request {
 	
-	/**
-	 * Current Board set by controller.
-	 *
-	 * @var Board
-	 */
-	protected $board;
+	const VIEW_BANNED = "errors.banned";
 	
-	/**
-	 * Current Board set by controller.
-	 *
-	 * @var User|Support\Anonymous
-	 */
-	protected $user;
+	use RequestAcceptsUserAndBoard;
 	
 	/**
 	 * Input items that should not be returned when reloading the page.
@@ -74,6 +66,11 @@ class PostRequest extends Request {
 	 */
 	public function authorize()
 	{
+		if (!is_null($board = $this->getBoard()))
+		{
+			return !Ban::isBanned($this->ip(), $this->getBoard());
+		}
+		
 		return true;
 	}
 	
@@ -160,45 +157,5 @@ class PostRequest extends Request {
 		{
 			$this->failedValidation($validator);
 		}
-	}
-	
-	/**
-	 * Returns the request's current board.
-	 *
-	 * @return Board
-	 */
-	public function getBoard()
-	{
-		return $this->board;
-	}
-	
-	/**
-	 * Returns the request's current user.
-	 *
-	 * @return User|Support\Anonymous
-	 */
-	public function getUser()
-	{
-		return $this->user;
-	}
-	
-	/**
-	 * Sets the request's board.
-	 *
-	 * @return void
-	 */
-	public function setBoard(Board $board)
-	{
-		$this->board = $board;
-	}
-	
-	/**
-	 * Returns the request's user.
-	 *
-	 * @return void
-	 */
-	public function setUser($user)
-	{
-		$this->user = $user;
 	}
 }

@@ -14,6 +14,7 @@ return [
 	'title' => [
 		'board' => "Board Configuration",
 		'site'  => "Site Configuration",
+		'board_create' => "Create a Board",
 	],
 	
 	'legend' => [
@@ -22,9 +23,14 @@ return [
 		
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
+		'board_basic'   => "Basic Details",
 	],
 	
 	'option' => [
+		'board_uri'               => "URI",
+		'title'                   => "Title",
+		'description'             => "Subtitle",
+		
 		'attachmentFilesize'      => "Maximum filesize (KiB)",
 		'attachmentThumbnailSize' => "Attachment preview size (px)",
 		'banMaxLength'            => "Maximum length for bans (days)",
@@ -35,6 +41,10 @@ return [
 		'postMinLength'           => "Minimum characters per post",
 		
 		'postsPerPage'            => "Threads per page",
+		
+		'desc' => [
+			'board_uri' => "Part of the URL used to open your board. Cannot be changed.",
+		],
 	],
 	
 	'submit' => "Save Changes",

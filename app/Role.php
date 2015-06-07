@@ -45,7 +45,7 @@ class Role extends Model {
 	
 	public function inherits()
 	{
-		return $this->belongsTo('\App\Role', 'inherit_id', 'role_id');
+		return $this->hasOne('\App\Role', 'role_id', 'inherit_id');
 	}
 	
 	public function permissions()
@@ -93,6 +93,29 @@ class Role extends Model {
 		
 		foreach ($roles as $role)
 		{
+			$inherited = [];
+			
+			if (is_numeric($role->inherit_id))
+			{
+				$inherited = static::getRolePermissions([$role->inherits]);
+				
+				foreach ($inherited as $board_uri => $inherited_permissions)
+				{
+					if ($board_uri == $role->board_uri || $board_uri == "")
+					{
+						foreach ($inherited_permissions as $permission_id => $value)
+						{
+							$permission = &$permissions[$role->board_uri][$permission_id];
+							
+							if (!isset($permission) || $permission !== 0)
+							{
+								$permission = (int) $value;
+							}
+						}
+					}
+				}
+			}
+			
 			if (!isset($permissions[$role->board_uri]))
 			{
 				$permissions[$role->board_uri] = [];
@@ -100,7 +123,30 @@ class Role extends Model {
 			
 			foreach ($role->permissions as $permission)
 			{
-				$permissions[$permission->board_uri][$permission->permission_id] = !!$permission->pivot->value;
+				$value = null;
+				
+				if (isset($inherited[null][$permission->permission_id]))
+				{
+					$value = (int) $inherited[null][$permission->permission_id];
+				}
+				
+				if ($value !== 0)
+				{
+					if (isset($inherited[$role->board_uri][$permission->permission_id]))
+					{
+						$value = (int) $inherited[$role->board_uri][$permission->permission_id];
+					}
+					
+					if ($value !== 0)
+					{
+						$value = !!$permission->pivot->value;
+					}
+				}
+				
+				if ($value)
+				{
+					$permissions[$role->board_uri][$permission->permission_id] = true;
+				}
 			}
 		}
 		

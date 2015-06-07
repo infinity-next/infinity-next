@@ -253,9 +253,9 @@ form {
 			top: 1px;
 			left: 1px;
 		}
-		 .field-label .field-description {
+		.field-description {
 			display: block;
-			color: #CCC;
+			color: #AAA;
 			font-size: 0.8em;
 			margin: 0.1em 0 0.25em 0;
 		}
@@ -313,8 +313,10 @@ form {
 		}
 
 form.form-config {
-	
+	max-width: 450px;
+	margin: 0 auto 0 0;
 }
+	
 	h3.config-title {
 		margin: 0 0 1em 0;
 		

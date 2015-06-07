@@ -2,8 +2,8 @@
 
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
+use Illuminate\Http\Request;
 use Input;
-use Request;
 use Validator;
 
 class BoardsController extends PanelController {
@@ -70,11 +70,27 @@ class BoardsController extends PanelController {
 			return abort(403);
 		}
 		
+		// Validate input.
+		// If the user is anonymous, we must also be creating an account.
+		$input = Input::all();
+		
+		if ($this->user->isAnonymous())
+		{
+			$validator = $this->registrar->validator($input);
+			
+			if ($validator->fails())
+			{
+				$this->throwValidationException(
+					$request,
+					$validator
+				);
+			}
+		}
+		
 		// Validate the basic boardconstraints.
-		$input        = Input::all();
 		$input['board_uri'] = strtolower( (string) $input['board_uri'] );
 		$requirements = [
-			'board_uri'   => "required|string|between:1,31",
+			'board_uri'   => "required|string|alpha_num|between:1,31",
 			'title'       => "required|string|between:1,255",
 			'description' => "string|between:0,255"
 		];
@@ -83,9 +99,16 @@ class BoardsController extends PanelController {
 		
 		if ($validator->fails())
 		{
-			return redirect(Request::path())
-				->withErrors($validator->errors()->all())
-				->withInput();
+			$this->throwValidationException(
+				$request,
+				$validator
+			);
+		}
+		
+		if ($this->user->isAnonymous())
+		{
+			$this->auth->login($this->registrar->create($request->all()));
+			$this->user = $this->auth->user();
 		}
 		
 		// Create the board.

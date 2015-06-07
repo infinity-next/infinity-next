@@ -221,16 +221,23 @@ trait PermissionUser {
 	 *
 	 * @return boolean
 	 */
-	public function canEditConfig($board)
+	public function canEditConfig($board = null)
 	{
-		$board_uri = $board;
-		
-		if ($board instanceof Board)
+		if (!is_null($board))
 		{
-			$board_uri = $board->board_uri;
+			$board_uri = $board;
+			
+			if ($board instanceof Board)
+			{
+				$board_uri = $board->board_uri;
+			}
+			
+			return $this->can("board.config", $board_uri);
 		}
-		
-		return $this->can("board.config", $board_uri);
+		else
+		{
+			return $this->canAny("board.config");
+		}
 	}
 	
 	/**
@@ -296,7 +303,7 @@ trait PermissionUser {
 			}
 		}
 		
-		return Board::find($boards)
+		return Board::whereIn('board_uri', $boards)
 			->andCreator()
 			->andOperator()
 			->get();

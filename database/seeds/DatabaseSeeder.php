@@ -337,6 +337,7 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.post.delete.self"],
 			
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.create",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.other",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.self",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.edit.other",],
@@ -350,6 +351,35 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.unban",],
+			
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.config",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.delete.other",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.delete.self",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.edit.other",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.sticky",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.ban",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.delete.other",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.delete.self",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.spoiler.other",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.spoiler.upload",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.reason",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.free",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.unban",],
+			
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.other",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.self",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.edit.other",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.sticky",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.ban",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.delete.other",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.delete.self",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.spoiler.other",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.spoiler.upload",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.ban.free",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.unban",],
 		];
 	}
 }

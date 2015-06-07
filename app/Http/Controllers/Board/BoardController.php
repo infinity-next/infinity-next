@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers\Board;
 
-use App\Ban;
 use App\Board;
 use App\Post;
 use App\Http\Controllers\Controller;
@@ -27,7 +26,6 @@ class BoardController extends Controller {
 	|
 	*/
 	
-	const VIEW_BANNED = "errors.banned";
 	const VIEW_BOARD  = "board";
 	const VIEW_THREAD = "board";
 	const VIEW_LOGS   = "board.logs";
@@ -136,12 +134,6 @@ class BoardController extends Controller {
 	 */
 	public function putThread(PostRequest $request, Board $board, $thread = null)
 	{
-		// Check for bans.
-		if (Ban::isBanned($request->ip(), $board))
-		{
-			return abort(403);
-		}
-		
 		// Re-validate the request with new rules specific to the board.
 		$request->setBoard($board);
 		$request->setUser($this->user);

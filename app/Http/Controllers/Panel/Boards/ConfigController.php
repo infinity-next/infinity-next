@@ -3,6 +3,7 @@
 use App\Board;
 use App\BoardSetting;
 use App\OptionGroup;
+use App\Http\Requests\BoardConfigRequest;
 use App\Http\Controllers\Panel\PanelController;
 use App\Validators\ComparisonValidator;
 use DB;
@@ -63,15 +64,15 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function patchIndex(Request $request, Board $board)
+	public function patchIndex(Board $board, BoardConfigRequest $request)
 	{
-		if (!$this->user->can('board.config'))
+		if (!$this->user->can('board.config', $board))
 		{
 			return abort(403);
 		}
 		
 		$input        = Input::all();
-		$optionGroups = OptionGroup::getBoardConfig($board);
+		
 		$requirements = [];
 		
 		// From each group,
