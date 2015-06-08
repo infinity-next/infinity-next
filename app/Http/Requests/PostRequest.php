@@ -12,8 +12,6 @@ class PostRequest extends Request {
 	
 	const VIEW_BANNED = "errors.banned";
 	
-	use RequestAcceptsUserAndBoard;
-	
 	/**
 	 * Input items that should not be returned when reloading the page.
 	 *

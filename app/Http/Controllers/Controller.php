@@ -3,12 +3,12 @@
 use App\Board;
 use App\Log;
 use App\SiteSetting;
-use App\Support\Anonymous;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
+use App\Services\UserManager;
+
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+
 use Cache;
 use Request;
 use View;
@@ -25,26 +25,14 @@ abstract class Controller extends BaseController {
 	protected $options;
 	
 	/**
-	 * Create a new authentication controller instance.
-	 * Don't overwrite __construct in any children. Use ::boot
-	 *
-	 * @param  \Illuminate\Auth\Guard  $auth
-	 * @param  \Illuminate\Auth\Registrar  $registrar
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar)
+	public function __construct(UserManager $manager)
 	{
-		$this->auth      = $auth;
-		$this->registrar = $registrar;
-		
-		if ($auth->guest())
-		{
-			$this->user  = new Anonymous;
-		}
-		else
-		{
-			$this->user  = $auth->user();
-		}
+		$this->userManager = $manager;
+		$this->auth        = $manager->auth;
+		$this->registrar   = $manager->registrar;
+		$this->user        = $manager->user;
 		
 		View::share('boardbar', Board::getBoardListBar());
 		View::share('user', $this->user);

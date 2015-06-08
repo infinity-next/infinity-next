@@ -22,15 +22,14 @@ class HomeController extends PanelController {
 	/**
 	 * Create a new authentication controller instance.
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
+	 * @param  \App\Services\UserManager  $manager
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar)
+	public function __construct(\App\Services\UserManager $manager)
 	{
 		$this->middleware('auth');
 		
-		return parent::__construct($auth, $registrar);
+		return parent::__construct($manager);
 	}
 	
 	/**

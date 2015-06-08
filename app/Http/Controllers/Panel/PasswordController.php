@@ -29,18 +29,18 @@ class PasswordController extends PanelController {
 	/**
 	 * Create a new password controller instance.
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
+	 * @param  \App\Services\UserManager  $auth
 	 * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar, PasswordBroker $passwords)
+	public function __construct(\App\Services\UserManager $manager, PasswordBroker $passwords)
 	{
 		$this->passwords = $passwords;
 		$this->middleware('auth', [
 				'except' => ['getEmail', 'postEmail'],
 			]);
 		
-		return parent::__construct($auth, $registrar);
+		return parent::__construct($manager);
 	}
 	
 	/**

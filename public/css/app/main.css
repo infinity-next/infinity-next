@@ -316,6 +316,9 @@ form.form-config {
 	max-width: 450px;
 	margin: 0 auto 0 0;
 }
+	form.form-config#config-site {
+		max-width: none;
+	}
 	
 	h3.config-title {
 		margin: 0 0 1em 0;

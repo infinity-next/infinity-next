@@ -2,15 +2,14 @@
 
 use App\Board;
 use App\OptionGroup;
+use App\Services\UserManager;
 
-use App\Http\Requests\RequestAcceptsUserAndBoard;
+use Illuminate\Routing\Controller;
 
 use Auth;
 use View;
 
 class BoardConfigRequest extends Request {
-	
-	use RequestAcceptsUserAndBoard;
 	
 	/**
 	 * A list of applicable board option groups.
@@ -18,6 +17,16 @@ class BoardConfigRequest extends Request {
 	 * @var App\OptionGroup
 	 */
 	protected $boardOptionGroups;
+	
+	/**
+	 * Fetches the user and our board config.
+	 *
+	 * @return void
+	 */
+	public function __construct(UserManager $manager, Board $board)
+	{
+		$this->user = $manager->user;
+	}
 	
 	/**
 	 * Get all form input.
@@ -28,11 +37,11 @@ class BoardConfigRequest extends Request {
 	{
 		$input = parent::all();
 		
-		if ($optionGroups = $this->getBoardOptionGroups())
+		foreach ($this->getBoardOptions() as $optionGroup)
 		{
-			foreach ($optionGroups as $optionGroup)
+			foreach ($optionGroup->options as $option)
 			{
-				foreach ($optionGroup->options as $option)
+				if (isset($input[$option->option_name]))
 				{
 					$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
 				}
@@ -51,14 +60,11 @@ class BoardConfigRequest extends Request {
 	{
 		$rules = [];
 		
-		if ($optionGroups = $this->getBoardOptionGroups())
+		foreach ($this->getBoardOptions() as $optionGroup)
 		{
-			foreach ($optionGroups as $optionGroup)
+			foreach ($optionGroup->options as $option)
 			{
-				foreach ($optionGroup->options as $option)
-				{
-					$rules[$option->option_name] = $option->getValidation();
-				}
+				$rules[$option->option_name] = $option->getValidation();
 			}
 		}
 		
@@ -72,34 +78,21 @@ class BoardConfigRequest extends Request {
 	 */
 	public function authorize()
 	{
-		if (($user = $this->getUser()) && ($board = $this->getBoard()))
-		{
-			return $user->can('board.config', $board);
-		}
-		
-		return true;
+		return $this->user->can('board.config', $this->board);
 	}
 	
-	
 	/**
-	 * Sets the request's board and fetches option groups.
 	 *
-	 * @param  Board  $board
-	 * @return void
-	 */
-	public function setBoard(Board $board)
-	{
-		$this->board             = $board;
-		$this->boardOptionGroups = OptionGroup::getBoardConfig($board);
-	}
-	
-	/**
-	 * Gets the board options as set in setBoard.
 	 *
 	 * @return array
 	 */
-	public function getBoardOptionGroups()
+	public function getBoardOptions()
 	{
+		if (!isset($this->boardOptionGroups))
+		{
+			$this->boardOptionGroups = OptionGroup::getBoardConfig($this->board);
+		}
+		
 		return $this->boardOptionGroups;
 	}
 	
