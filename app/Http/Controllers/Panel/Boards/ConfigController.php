@@ -45,7 +45,7 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Board $board)
+	public function getIndex(BoardConfigRequest $request, Board $board)
 	{
 		if (!$this->user->can('board.config', $board))
 		{
@@ -64,42 +64,19 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function patchIndex(Board $board, BoardConfigRequest $request)
+	public function patchIndex(BoardConfigRequest $request, Board $board)
 	{
-		if (!$this->user->can('board.config', $board))
-		{
-			return abort(403);
-		}
+		// Re-validate the request with new rules specific to the board.
+		$request->setBoard($board);
+		$request->setUser($this->user);
+		$request->validate();
 		
-		$input        = Input::all();
+		$input        = $request->all();
+		$optionGroups = $request->getBoardOptionGroups();
 		
-		$requirements = [];
-		
-		// From each group,
 		foreach ($optionGroups as $optionGroup)
 		{
-			// From each option within each group,
 			foreach ($optionGroup->options as $option)
-			{
-				// Pull the validation parameter string,
-				$requirements[$option->option_name] = $option->getValidation();
-				$input[$option->option_name]        = $option->getSanitaryInput($input[$option->option_name]);
-			}
-		}
-		
-		// Build our validator.
-		$validator = Validator::make($input, $requirements);
-		
-		if ($validator->fails())
-		{
-			return redirect(Request::path())
-				->withErrors($validator->errors()->all())
-				->withInput();
-		}
-		
-		foreach ($optionGroups as &$optionGroup)
-		{
-			foreach ($optionGroup->options as &$option)
 			{
 				$setting = BoardSetting::firstOrNew([
 					'option_name'  => $option->option_name,
