@@ -2,8 +2,7 @@
 
 use App\Ban;
 use App\Board;
-use App\Http\Controllers\Board\BoardController;
-use App\Http\Requests\RequestAcceptsUserAndBoard;
+use App\Services\UserManager;
 
 use Auth;
 use View;
@@ -18,6 +17,16 @@ class PostRequest extends Request {
 	 * @var array
 	 */
 	protected $dontFlash = ['password', 'password_confirmation', 'captcha'];
+	
+	/**
+	 * Fetches the user and our board config.
+	 *
+	 * @return void
+	 */
+	public function __construct(UserManager $manager)
+	{
+		$this->user = $manager->user;
+	}
 	
 	/**
 	 * Get all form input.
@@ -36,7 +45,7 @@ class PostRequest extends Request {
 		
 		if (isset($input['capcode']) && $input['capcode'])
 		{
-			$user = $this->getUser();
+			$user = $this->user;
 			
 			if ($user && !$user->isAnonymous())
 			{
@@ -64,24 +73,18 @@ class PostRequest extends Request {
 	 */
 	public function authorize()
 	{
-		if (!is_null($board = $this->getBoard()))
-		{
-			return !Ban::isBanned($this->ip(), $this->getBoard());
-		}
-		
-		return true;
+		return !Ban::isBanned($this->ip(), $this->board);
 	}
 	
 	/**
 	 * Returns validation rules for this request.
 	 *
-	 * @param BoardController $controller
 	 * @return array
 	 */
-	public function rules(BoardController $controller)
+	public function rules()
 	{
-		$board = $this->getBoard();
-		$user  = $this->getUser();
+		$board = $this->board;
+		$user  = $this->user;
 		$rules = [
 			// Nothing, by default.
 			// Post options are contingent on board settings and user permissions.
@@ -91,23 +94,31 @@ class PostRequest extends Request {
 		if ($board && $user)
 		{
 			$rules = [
-				'body' => "max:" . $board->getSetting('postMaxLength'),
+				'body' => [ "max:" . $board->getSetting('postMaxLength', 65534) ],
 			];
 			
-			if (!$board->canAttach($this->user))
+			if (!$board->canAttach($user))
 			{
-				$rules['body'] .= "|required";
-				$rules['files'] = "array|max:0";
+				$rules['body'][]  = "required";
+				$rules['files'][] = "array";
+				$rules['files'][] = "max:0";
 			}
 			else
 			{
-				$rules['body'] .= "|required_without:files";
-				$rules['files'] = "array|min:1|max:" . $board->getSetting('attachmentsMax');
+				$attachmentsMax = $board->getSetting('attachmentsMax', 1);
+				
+				$rules['body'][]  = "required_without:files";
+				$rules['files'][] = "array";
+				$rules['files'][] = "min:1";
+				$rules['files'][] = "max:{$attachmentsMax}";
 				
 				// Create an additional rule for each possible file.
-				for ($attachment = 0; $attachment < $board->getSetting('attachmentsMax'); ++$attachment)
+				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
-					$rules["files.{$attachment}"] = "mimes:jpeg,gif,png|between:0," . $controller->option('attachmentFilesize');
+					$rules["files.{$attachment}"] = [
+						"mimes:jpeg,gif,png",
+						"between:0,8000",// . $controller->option('attachmentFilesize'),
+					];
 				}
 			}
 		}
@@ -137,8 +148,8 @@ class PostRequest extends Request {
 	 */
 	public function validate()
 	{
-		$board = $this->getBoard();
-		$user  = $this->getUser();
+		$board = $this->board;
+		$user  = $this->user;
 		
 		if (!$board || !$user)
 		{

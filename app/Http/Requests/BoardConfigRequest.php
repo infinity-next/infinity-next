@@ -4,12 +4,17 @@ use App\Board;
 use App\OptionGroup;
 use App\Services\UserManager;
 
-use Illuminate\Routing\Controller;
-
 use Auth;
 use View;
 
 class BoardConfigRequest extends Request {
+	
+	/**
+	 * Input items that should not be returned when reloading the page.
+	 *
+	 * @var array
+	 */
+	protected $dontFlash = ['password', 'password_confirmation', 'captcha'];
 	
 	/**
 	 * A list of applicable board option groups.
@@ -23,7 +28,7 @@ class BoardConfigRequest extends Request {
 	 *
 	 * @return void
 	 */
-	public function __construct(UserManager $manager, Board $board)
+	public function __construct(UserManager $manager)
 	{
 		$this->user = $manager->user;
 	}

@@ -20,16 +20,13 @@ class HomeController extends PanelController {
 	const VIEW_HOME = "panel.home";
 	
 	/**
-	 * Create a new authentication controller instance.
+	 * Asserts middleware.
 	 *
-	 * @param  \App\Services\UserManager  $manager
 	 * @return void
 	 */
-	public function __construct(\App\Services\UserManager $manager)
+	public function boot()
 	{
 		$this->middleware('auth');
-		
-		return parent::__construct($manager);
 	}
 	
 	/**

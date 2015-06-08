@@ -351,6 +351,7 @@ form.form-config {
 				width: 32%;
 				min-width: 300px;
 				text-align: right;
+				vertical-align: top;
 			}
 			
 			dd.option-definition {
@@ -358,6 +359,7 @@ form.form-config {
 				margin: 0 0 0 1em;
 				text-align: left;
 				width: auto;
+				vertical-align: top;
 			}
 				dd.option-definition label.field-label {
 					display: inline-block;

@@ -24,18 +24,14 @@ class AuthController extends PanelController {
 	use AuthenticatesAndRegistersUsers;
 	
 	/**
-	 * Create a new authentication controller instance.
+	 * Asserts middleware.
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar)
+	public function boot()
 	{
 		$this->middleware('guest', [
-				'except' => 'getLogout'
-			]);
-		
-		return parent::__construct($auth, $registrar);
+			'except' => 'getLogout'
+		]);
 	}
 }
