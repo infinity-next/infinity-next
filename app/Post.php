@@ -254,6 +254,11 @@ class Post extends Model {
 	public function getReplies()
 	{
 		return $this->replies()
+			->with('attachments', 'replies', 'replies.attachments')
+			->andCapcode()
+			->andBan()
+			->andEditor()
+			->visible()
 			->get();
 	}
 	

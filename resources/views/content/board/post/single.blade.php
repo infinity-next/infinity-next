@@ -8,7 +8,7 @@
 		<li class="post-detail post-author">
 			<strong class="author">
 			@if ($post->email)<a href="mailto:{{{ $post->email }}}" class="email">@endif
-				{{{ $post->author ?: $board->getSetting('defaultName') }}}
+				{{{ $post->author ?: $board->getSetting('defaultName', trans('board.anonymous')) }}}
 			@if ($post->email)</a>@endif
 			</strong>
 			
