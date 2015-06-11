@@ -117,11 +117,11 @@
 			]) !!}
 			
 			@if (!$user->isAnonymous() && !isset($post))
-			@if ($user->roles->filter(function($role){return $role->capcode;}))
+			@if ($user->getCapcodes($board))
 				<select id="capcode"class="field-control field-capcode" name="capcode">
 					<option value="" default selected>Capcode</option>
 					
-					@foreach ($user->roles->filter(function($role){return $role->capcode;}) as $role)
+					@foreach ($user->getCapcodes($board) as $role)
 						<option value="{!! $role->role_id !!}">{{{ $role->capcode }}}</option>
 					@endforeach
 				</select>

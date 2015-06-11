@@ -119,7 +119,6 @@ return [
 		 * Laravel Framework Service Providers...
 		 */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
-		'Illuminate\Auth\AuthServiceProvider',
 		'Illuminate\Bus\BusServiceProvider',
 		'Illuminate\Cache\CacheServiceProvider',
 		'Illuminate\Foundation\Providers\ConsoleSupportServiceProvider',
@@ -145,6 +144,7 @@ return [
 		 * Application Service Providers...
 		 */
 		'App\Providers\AppServiceProvider',
+		'App\Providers\AuthServiceProvider',
 		'App\Providers\BusServiceProvider',
 		'App\Providers\CaptchaServiceProvider',
 		'App\Providers\ConfigServiceProvider',

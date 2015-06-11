@@ -279,6 +279,35 @@ trait PermissionUser {
 	
 	
 	/**
+	 * Gets the user's roles with capcodes for this board.
+	 * A capcode is a text colum associated with a role.
+	 *
+	 * @param  \App\Board  $board
+	 * @return array|Collection
+	 */
+	public function getCapcodes(Board $board)
+	{
+		if (!$this->isAnonymous())
+		{
+			// Only return roles 
+			return $this->roles->filter(function($role) use ($board) {
+				
+				if (!$role->capcode)
+				{
+					return false;
+				}
+				
+				if (is_null($role->board_uri) || $role->board_uri == $board->board_uri)
+				{
+					return true;
+				}
+			});
+		}
+		
+		return [];
+	}
+	
+	/**
 	 * Returns a list of board_uris where the canEditConfig permission is given.
 	 *
 	 */

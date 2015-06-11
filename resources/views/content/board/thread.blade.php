@@ -74,7 +74,7 @@
 @endif
 
 <ul class="thread-replies">
-	@foreach ($thread->replies as $reply)
+	@foreach ($thread->getReplies() as $reply)
 	<li class="thread-reply">
 		<article class="reply">
 			@include( $c->template('board.thread'), [
