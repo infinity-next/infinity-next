@@ -4,7 +4,6 @@ use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Contracts\Auth\Registrar;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
@@ -21,10 +20,22 @@ class PasswordController extends PanelController {
 	|
 	*/
 	
-	use ResetsPasswords;
-	
 	const VIEW_CHANGE = "panel.password.change";
 	const VIEW_FORGOT = "panel.password.forgot";
+	
+	/**
+	 * The Guard implementation.
+	 *
+	 * @var Guard
+	 */
+	protected $auth;
+	
+	/**
+	 * The password broker implementation.
+	 *
+	 * @var PasswordBroker
+	 */
+	protected $passwords;
 	
 	/**
 	 * Create a new password controller instance.
@@ -43,16 +54,6 @@ class PasswordController extends PanelController {
 		return parent::__construct($manager);
 	}
 	
-	/**
-	 * Display the form to request a password reset link.
-	 *
-	 * @return Response
-	 */
-	public function getEmail()
-	{
-		return $this->view(static::VIEW_FORGOT);
-	}
-
 	/**
 	 * Opens the password reset form.
 	 *
@@ -95,6 +96,72 @@ class PasswordController extends PanelController {
 			->withErrors(['username' => trans('custom.validate.password_old')]);
 	}
 	
+	
+	/**
+	 * Display the password reset view for the given token.
+	 *
+	 * @param  string  $token
+	 * @return Response
+	 */
+	public function getReset($token = null)
+	{
+		if (is_null($token))
+		{
+			retunr abort(404);
+		}
+		
+		return view('auth.reset')->with('token', $token);
+	}
+	
+	/**
+	 * Reset the given user's password.
+	 *
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function postReset(Request $request)
+	{
+		$this->validate($request, [
+			'token' => 'required',
+			'email' => 'required|email',
+			'password' => 'required|confirmed',
+		]);
+		
+		$credentials = $request->only(
+			'email', 'password', 'password_confirmation', 'token'
+		);
+		
+		$response = $this->passwords->reset($credentials, function($user, $password)
+		{
+			$user->password = bcrypt($password);
+			
+			$user->save();
+			
+			$this->auth->login($user);
+		});
+		
+		switch ($response)
+		{
+			case PasswordBroker::PASSWORD_RESET:
+				return redirect("/cp/home");
+			
+			default:
+				return redirect()->back()
+					->withInput($request->only('email'))
+					->withErrors(['email' => trans($response)]);
+		}
+	}
+	
+	/**
+	 * Display the form to request a password reset link.
+	 *
+	 * @return Response
+	 */
+	public function getEmail()
+	{
+		return $this->view(static::VIEW_FORGOT);
+	}
+	
 	/**
 	 * Send a reset link to the given user.
 	 *
@@ -107,6 +174,19 @@ class PasswordController extends PanelController {
 				'email'   => 'required|email',
 				'captcha' => 'required|captcha',
 			]);
-		return parent::postEmail($request);
+		
+		$response = $this->passwords->sendResetLink($request->only('email'), function($m)
+		{
+			$m->subject(trans($this->subject));
+		});
+		
+		switch ($response)
+		{
+			case PasswordBroker::RESET_LINK_SENT:
+				return redirect()->back()->with('status', trans($response));
+			
+			case PasswordBroker::INVALID_USER:
+				return redirect()->back()->withErrors(['email' => trans($response)]);
+		}
 	}
-}
+	
