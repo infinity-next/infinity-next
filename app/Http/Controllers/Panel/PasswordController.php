@@ -38,6 +38,13 @@ class PasswordController extends PanelController {
 	protected $passwords;
 	
 	/**
+	 * The email subject.
+	 *
+	 * @var PasswordBroker
+	 */
+	protected $subject = "email.password.subject";
+	
+	/**
 	 * Create a new password controller instance.
 	 *
 	 * @param  \App\Services\UserManager  $auth
@@ -47,9 +54,13 @@ class PasswordController extends PanelController {
 	public function __construct(\App\Services\UserManager $manager, PasswordBroker $passwords)
 	{
 		$this->passwords = $passwords;
+		
+		/*
 		$this->middleware('auth', [
 				'except' => ['getEmail', 'postEmail'],
 			]);
+		)
+		*/
 		
 		return parent::__construct($manager);
 	}
@@ -88,11 +99,11 @@ class PasswordController extends PanelController {
 			
 			$this->auth->login($user);
 			
-			return view('auth.password.change')
+			return $this->view('panel.password.change')
 				->withStatus(trans('custom.success.password_new'));
 		}
 		
-		return view('auth.password.change')
+		return $this->view('panel.password.change')
 			->withErrors(['username' => trans('custom.validate.password_old')]);
 	}
 	
@@ -107,10 +118,10 @@ class PasswordController extends PanelController {
 	{
 		if (is_null($token))
 		{
-			retunr abort(404);
+			return abort(404);
 		}
 		
-		return view('auth.reset')->with('token', $token);
+		return $this->view('panel.password.reset')->with('token', $token);
 	}
 	
 	/**
@@ -177,7 +188,9 @@ class PasswordController extends PanelController {
 		
 		$response = $this->passwords->sendResetLink($request->only('email'), function($m)
 		{
-			$m->subject(trans($this->subject));
+			$m->subject(trans($this->subject, [
+				'site' => env('SITE_NAME'),
+			]));
 		});
 		
 		switch ($response)
@@ -190,3 +203,4 @@ class PasswordController extends PanelController {
 		}
 	}
 	
+}

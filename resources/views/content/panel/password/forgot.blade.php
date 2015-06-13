@@ -7,7 +7,7 @@
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
 	<fieldset class="form-fields">
-		<legend class="form-legend">Reset Password</legend>
+		<legend class="form-legend">@lang('panel.password.reset')</legend>
 		
 		<div class="field row-email">
 			<label class="field-label" for="email">E-Mail Address</label>
