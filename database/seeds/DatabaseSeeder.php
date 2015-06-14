@@ -139,9 +139,10 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.post.edit.self",],
 			['base_value' => 0, 'permission_id' => "board.post.edit.other",],
 			['base_value' => 0, 'permission_id' => "board.post.sticky",],
-			['base_value' => 0, 'permission_id' => "board.user.unban",],
+			['base_value' => 0, 'permission_id' => "board.user.role",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.reason",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.free",],
+			['base_value' => 0, 'permission_id' => "board.user.unban",],
 			['base_value' => 0, 'permission_id' => "board.image.ban",],
 			['base_value' => 0, 'permission_id' => "board.image.upload",],
 			['base_value' => 0, 'permission_id' => "board.image.delete.self",],
@@ -150,6 +151,10 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.image.spoiler.other",],
 			
 			['base_value' => 0, 'permission_id' => "site.config",],
+			['base_value' => 0, 'permission_id' => "site.user.create",],
+			['base_value' => 0, 'permission_id' => "site.user.ban",],
+			['base_value' => 0, 'permission_id' => "site.user.delete",],
+			['base_value' => 0, 'permission_id' => "site.user.pm",],
 		];
 	}
 }
@@ -333,9 +338,11 @@ class RolePermissionSeeder extends Seeder {
 	private function slugs()
 	{
 		return [
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.create"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.delete.self"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.post.delete.self"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "site.user.create"],
 			
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.create",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.other",],
@@ -351,6 +358,7 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.unban",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.role",],
 			
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.config",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.delete.other",],
@@ -366,6 +374,7 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.reason",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.unban",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "site.user.create"],
 			
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.other",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.self",],

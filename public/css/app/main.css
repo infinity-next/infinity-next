@@ -312,7 +312,7 @@ form {
 			border-top: 1px solid #dee0df;
 		}
 
-form.form-config {
+main.cp form.form-config {
 	max-width: 450px;
 	margin: 0 auto 0 0;
 }

@@ -22,6 +22,8 @@ class PasswordController extends PanelController {
 	
 	const VIEW_CHANGE = "panel.password.change";
 	const VIEW_FORGOT = "panel.password.forgot";
+	const VIEW_RESET  = "panel.password.reset";
+	
 	
 	/**
 	 * The Guard implementation.
@@ -38,11 +40,13 @@ class PasswordController extends PanelController {
 	protected $passwords;
 	
 	/**
-	 * The email subject.
+	 * The email subject for password resets..
 	 *
 	 * @var PasswordBroker
 	 */
 	protected $subject = "email.password.subject";
+	
+	
 	
 	/**
 	 * Create a new password controller instance.
@@ -99,11 +103,11 @@ class PasswordController extends PanelController {
 			
 			$this->auth->login($user);
 			
-			return $this->view('panel.password.change')
+			return $this->view(static::VIEW_CHANGE)
 				->withStatus(trans('custom.success.password_new'));
 		}
 		
-		return $this->view('panel.password.change')
+		return $this->view(static::VIEW_CHANGE)
 			->withErrors(['username' => trans('custom.validate.password_old')]);
 	}
 	
@@ -121,7 +125,7 @@ class PasswordController extends PanelController {
 			return abort(404);
 		}
 		
-		return $this->view('panel.password.reset')->with('token', $token);
+		return $this->view(static::VIEW_RESET)->with('token', $token);
 	}
 	
 	/**
@@ -139,7 +143,10 @@ class PasswordController extends PanelController {
 		]);
 		
 		$credentials = $request->only(
-			'email', 'password', 'password_confirmation', 'token'
+			'email',
+			'password',
+			'password_confirmation',
+			'token'
 		);
 		
 		$response = $this->passwords->reset($credentials, function($user, $password)

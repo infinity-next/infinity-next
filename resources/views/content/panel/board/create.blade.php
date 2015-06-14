@@ -1,4 +1,4 @@
-@extends('layouts.main.panel')
+@extends($user->isAnonymous() ? 'layouts.main.simplebox' : 'layouts.main.panel')
 
 @section('body')
 {!! Form::open([

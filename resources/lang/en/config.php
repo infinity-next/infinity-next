@@ -47,5 +47,6 @@ return [
 		],
 	],
 	
+	'create' => "Create",
 	'submit' => "Save Changes",
 ];

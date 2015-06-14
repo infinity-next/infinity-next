@@ -191,6 +191,21 @@ class Post extends Model {
 	
 	
 	/**
+	 * Determines if this is a bumpless post.
+	 *
+	 * @return boolean
+	 */
+	public function isBumpless()
+	{
+		if ($this->email == "sage")
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Returns the board model for this post.
 	 *
 	 * @return \App\Board
@@ -417,7 +432,6 @@ class Post extends Model {
 			$uploads = array_filter($files);
 		}
 		
-		
 		// Store the post in the database.
 		DB::transaction(function() use ($thread)
 		{
@@ -442,7 +456,11 @@ class Post extends Model {
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($thread instanceof Post)
 			{
-				$thread->reply_last  = $this->created_at;
+				if (!$this->isBumpless())
+				{
+					$thread->reply_last  = $this->created_at;
+				}
+				
 				$thread->reply_count += 1;
 				$thread->save();
 			}
