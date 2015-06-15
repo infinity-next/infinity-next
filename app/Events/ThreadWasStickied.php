@@ -16,6 +16,13 @@ class ThreadWasStickied extends Event
 	public $post;
 	
 	/**
+	 * The board page which must be cleared as a result of this event.
+	 *
+	 * @var integer|true
+	 */
+	public $page;
+	
+	/**
 	 * Create a new event instance.
 	 *
 	 * @param  \App\Post  $post
@@ -24,5 +31,9 @@ class ThreadWasStickied extends Event
 	public function __construct(Post $post)
 	{
 		$this->post = $post;
+		
+		## TODO ##
+		// Make this only clear the pages on or before the bump page.
+		$this->page = true;
 	}
 }

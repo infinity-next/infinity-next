@@ -16,6 +16,13 @@ class ThreadWasDeleted extends Event
 	public $post;
 	
 	/**
+	 * The board page which must be cleared as a result of this event.
+	 *
+	 * @var integer|true
+	 */
+	public $page;
+	
+	/**
 	 * Create a new event instance.
 	 *
 	 * @param  \App\Post  $post

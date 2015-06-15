@@ -3,6 +3,7 @@
 use App\FileStorage;
 use App\FileAttachment;
 use App\Services\ContentFormatter;
+
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,10 @@ use DB;
 use Input;
 use File;
 use Request;
+
+use Event;
+use App\Event\ThreadWasCreated;
+use App\Events\PostWasAdded;
 
 class Post extends Model {
 	
@@ -493,4 +498,5 @@ class Post extends Model {
 			}
 		}
 	}
+	
 }

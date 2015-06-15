@@ -1,12 +1,11 @@
 <?php namespace App\Listeners;
 
+use App\Post;
 use App\Events\PostWasUpdated;
 use App\Events\ThreadWasUpdated;
 use App\Listeners\Listener;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class BoardCacheManager extends Listener
+class BoardRecachePages extends Listener
 {
 	/**
 	 * Create the event listener.
@@ -21,11 +20,14 @@ class BoardCacheManager extends Listener
 	/**
 	 * Handle the event.
 	 *
-	 * @param  PodcastWasPurchased  $event
+	 * @param  Event  $event
 	 * @return void
 	 */
-	public function handle(PodcastWasPurchased $event)
+	public function handle($event)
 	{
-		// Access the podcast using $event->podcast...
+		if ($event->pages === true)
+		{
+			$event->board->clearCachedPages();
+		}
 	}
 }
