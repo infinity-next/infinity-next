@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<main>
+<main class="simplebox">
 	<section class="auth-form grid-container smooth-box">
 		@include('widgets.messages')
 		

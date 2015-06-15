@@ -55,7 +55,6 @@ return [
 		'password_new'         => "New Password",
 		'password_new_confirm' => "Confirm New Password",
 		'remember'             => "Remember Me",
-		'register'             => "Register",
 		'uid'                  => "Username or Email",
 		'username'             => "Username",
 		

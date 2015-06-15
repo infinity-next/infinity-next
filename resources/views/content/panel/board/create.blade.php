@@ -8,10 +8,11 @@
 	'id'     => "board-create",
 	'class'  => "form-config",
 ]) !!}
-	<h3 class="config-title">@lang("config.title.board_create")</h3>
-	
 	@if ($user->isAnonymous())
-		@include($c->template('panel.auth.register.form'))
+		<h3 class="config-title">@lang("config.title.board_create_your")</h3>
+	@else
+		<h3 class="config-title">@lang("config.title.board_create")</h3>
+		@section('title', trans("config.title.board_create"))
 	@endif
 	
 	<fieldset class="form-fields" id="fields-board_basic">
@@ -76,6 +77,10 @@
 				]) !!}
 		</div>
 	</fieldset>
+	
+	@if ($user->isAnonymous())
+		@include($c->template('panel.auth.register.form'))
+	@endif
 	
 	<div class="field">
 		{!! Form::button(

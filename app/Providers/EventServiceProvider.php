@@ -11,8 +11,35 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'event.name' => [
-			'EventListener',
+		// Thread (OP) Events
+		'App\Events\ThreadWasBumped' => [
+			
+		],
+		'App\Events\ThreadWasCreated' => [
+			
+		],
+		'App\Events\ThreadWasDeleted' => [
+			
+		],
+		'App\Events\ThreadWasModified' => [
+			
+		],
+		'App\Events\ThreadWasStickied' => [
+			
+		],
+		
+		// Post (Reply or OP) Events
+		'App\Events\PostWasAdded' => [
+			
+		],
+		'App\Events\PostWasBanned' => [
+			
+		],
+		'App\Events\PostWasDeleted' => [
+			
+		],
+		'App\Events\PostWasModified' => [
+			
 		],
 	];
 
@@ -25,8 +52,6 @@ class EventServiceProvider extends ServiceProvider {
 	public function boot(DispatcherContract $events)
 	{
 		parent::boot($events);
-
-		//
 	}
 
 }

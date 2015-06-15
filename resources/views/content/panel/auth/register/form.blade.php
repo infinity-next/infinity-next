@@ -1,5 +1,5 @@
 <fieldset class="form-fields" id="fields-register">
-	<legend class="form-legend">@lang('panel.field.register')</legend>
+	<legend class="form-legend">@lang('config.legend.account_basic')</legend>
 	
 	<div class="field row-username">
 		<label class="field-label" for="username">@lang('panel.field.username')</label>

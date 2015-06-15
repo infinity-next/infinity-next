@@ -12,14 +12,16 @@ return [
 	*/
 	
 	'title' => [
-		'board' => "Board Configuration",
-		'site'  => "Site Configuration",
-		'board_create' => "Create a Board",
+		'board'             => "Board Configuration",
+		'site'              => "Site Configuration",
+		'board_create'      => "Create a Board",
+		'board_create_your' => "Create your Board",
 	],
 	
 	'legend' => [
-		'attachments' => "Attachment Options",
-		'bans'        => "Ban Options",
+		'account_basic' => "Account Details",
+		'attachments'   => "Attachment Options",
+		'bans'          => "Ban Options",
 		
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",

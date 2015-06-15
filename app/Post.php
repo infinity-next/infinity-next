@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use DB;
-use Cache;
 use Input;
 use File;
 use Request;
@@ -471,16 +470,6 @@ class Post extends Model {
 			
 			// Queries and locks are handled automatically after this closure ends.
 		});
-		
-		
-		// Clear cache.
-		$board->clearCachedPages();
-		
-		if ($this->reply_to)
-		{
-			Cache::forget("board.{$this->board_uri}.thread.{$thread->board_id}");
-		}
-		
 		
 		// Process uploads.
 		if (count($uploads) > 0)
