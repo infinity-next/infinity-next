@@ -277,8 +277,11 @@ class Board extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.page.{$page}";
 		$rememberClosure = function() use ($page, $postsPerPage) {
-			return $this->threads()
-				->with('attachments', 'replies', 'replies.attachments')
+			$threads = $this->threads()
+				->with('attachments')
+				->with(['replies' => function($query) {
+					$query->forIndex();
+				}])
 				->andCapcode()
 				->andBan()
 				->andEditor()
@@ -289,6 +292,13 @@ class Board extends Model {
 				->skip($postsPerPage * ( $page - 1 ))
 				->take($postsPerPage)
 				->get();
+			
+			foreach ($threads as $thread)
+			{
+				$thread->replies = $thread->replies->reverse();
+			}
+			
+			return $threads;
 		};
 		
 		switch (env('CACHE_DRIVER'))
@@ -302,12 +312,6 @@ class Board extends Model {
 				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
-		
-		foreach ($threads as $thread)
-		{
-			$thread->replies = $thread->replies->take( $thread->stickied ? -1 : -5 );
-		}
-		
 		
 		return $threads;
 	}

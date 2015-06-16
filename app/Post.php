@@ -272,8 +272,13 @@ class Post extends Model {
 	 */
 	public function getReplies()
 	{
+		if (isset($this->replies))
+		{
+			return $this->replies;
+		}
+		
 		return $this->replies()
-			->with('attachments', 'replies', 'replies.attachments')
+			->with('attachments')
 			->andCapcode()
 			->andBan()
 			->andEditor()
@@ -371,6 +376,10 @@ class Post extends Model {
 	public function scopeForIndex($query)
 	{
 		return $query->visible()
+			->with('attachments')
+			->andCapcode()
+			->andBan()
+			->andEditor()
 			->orderBy('post_id', 'desc')
 			->take( $this->stickied_at ? 1 : 5 );
 	}
