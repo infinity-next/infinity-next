@@ -36,9 +36,12 @@
 	
 	@yield('head')
 </head>
-<body class="infinity-next responsive">
+<body class="infinity-next responsive @yield('body-class')">
+	@section('header')
 	<header class="board-header">
-		@include('nav.boardlist')
+		@section('boardlist')
+			@include('nav.boardlist')
+		@show
 		
 		@section('header-inner')
 			<figure class="page-head">
@@ -53,17 +56,22 @@
 			@include('widgets.announcement')
 		@show
 	</header>
+	@show
 	
 	@yield('content')
 	
+	@section('footer')
 	<footer>
-		@yield('footer')
+		@yield('footer-inner')
 		
-		@include('nav.boardlist')
+		@section('boardlist')
+			@include('nav.boardlist')
+		@show
 		
 		<section id="footnotes">
 			<div>Infinity Next &copy; Infinity Next Development Group 2015</div>
 		</section>
 	</footer>
+	@show
 </body>
 </html>

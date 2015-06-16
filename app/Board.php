@@ -293,6 +293,8 @@ class Board extends Model {
 				->take($postsPerPage)
 				->get();
 			
+			// The way that replies are fetched forIndex pulls them in reverse order.
+			// Fix that.
 			foreach ($threads as $thread)
 			{
 				$thread->replies = $thread->replies->reverse();

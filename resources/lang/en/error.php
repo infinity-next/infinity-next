@@ -11,8 +11,17 @@ return [
 	|
 	*/
 	
+	'403' => [
+		'title' => "Forbidden",
+	],
+	'404' => [
+		'title' => "Not Found",
+	],
+	'500' => [
+		'title' => "Unexpected Error",
+	],
 	'503' => [
-		'title' => "Be right back.",
+		'title' => "Maintenance",
 	],
 	
 	'js'  => [

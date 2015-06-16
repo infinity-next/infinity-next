@@ -1513,6 +1513,56 @@ nav.cp-side {
 					background-position: 2px -331px;
 				}
 
+body.error {
+	background-color: rgba(238, 242, 255, 0.8);
+}
+body.error::before {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+	
+	display: block;
+	content: ' ';
+	
+	background-image: url('/img/errors/whitenoise.gif');
+}
+	main#error {
+	}
+		section.error-flair {
+			padding: 0;
+			margin-left: auto;
+			margin-right: auto;
+			
+			overflow: hidden;
+			max-width: 500px;
+			max-height: 500px;
+		}
+			figure.error-figure {
+				margin: 0;
+				padding: 0;
+				position: relative;
+			}
+			figure.error-figure img.error-image {
+				
+			}
+			figure.error-figure figcaption.error-caption {
+				display: block;
+				height: 1em;
+				text-indent: 1em;
+				
+				position: absolute;
+				bottom: 1em;
+				
+				text-align: right;
+			}
+				figure.error-figure a.error-credit {
+					color: white;
+					text-shadow: 1px black;
+					text-align: right;
+				}
 
 /* Page Header */
 header {
@@ -1554,7 +1604,7 @@ figcaption.page-details {
 footer {
 	clear: both;
 	padding: 0;
-	margin: 0 0 0 0;
+	margin: 1em 0 0 0;
 }
 	#footnotes {
 		background: #333;

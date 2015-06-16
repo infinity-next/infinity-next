@@ -34,6 +34,6 @@
 </main>
 @stop
 
-@section('footer')
+@section('footer-inner')
 	@include('nav.board.pages')
 @stop
