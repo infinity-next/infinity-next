@@ -5,7 +5,7 @@
 	@foreach ($group->options as $option)
 		@include( $option->getTemplate($controller), [
 			'option' => $option,
-			'value'  => $option->option_value ?: $option->default_value,
+			'value'  => !is_null($option->option_value) || $option->option_value != "" ? $option->option_value : $option->default_value,
 			'group'  => $group,
 		])
 	@endforeach
