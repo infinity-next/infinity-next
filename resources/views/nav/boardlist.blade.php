@@ -1,3 +1,4 @@
+@if(isset($boardbar))
 <nav class="boardlist">
 	<div class="boardlist-row row-pages">
 		<ul class="boardlist-categories">
@@ -34,3 +35,4 @@
 		</ul>
 	</div>
 </nav>
+@endif
