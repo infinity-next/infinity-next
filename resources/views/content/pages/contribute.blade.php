@@ -83,7 +83,7 @@
 				
 				<ul class="goal-items">
 					<li class="goal-item grid-25">
-						<span class="goal-part">Image attachments</span>
+						<span class="goal-part">Image attachments <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Attachments will be stored with a hashed name and recorded in the database with detailed information.
 							This helps streamline future feature additions, assist with DMCA takedowns, and blacklist child pornography before it ever hits the servers.
@@ -91,7 +91,7 @@
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Moderator tools</span>
+						<span class="goal-part">Moderator tools <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Commonly, moderation tools are usually just links to command pages and are awkward to use.
 							Spammers and raiders have an upper hand because posting systems are very streamlined while moderation tools are not.
@@ -99,7 +99,7 @@
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Ban management</span>
+						<span class="goal-part">Ban management <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Managing users and stopping spam is an eternal problem.
 							Imageboards are intentionally crude in this regard, but rudamentary ban placement, ban management, and appeal systems are extremely important.
@@ -107,7 +107,7 @@
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Site management &amp; config</span>
+						<span class="goal-part">Site management &amp; config <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Configuration is usually ignored by developers because it is presumed that the website admin will be technically competent.
 							However, modern imageboards have expanded to allow users to create their own boards.
@@ -126,7 +126,7 @@
 				
 				<ul class="goal-items">
 					<li class="goal-item grid-25">
-						<span class="goal-part">User board creation</span>
+						<span class="goal-part">User board creation <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							A wildly successful feature on the Infinity Branch of Vichan, implementing an optional board creation system is a must.
 							User created accounts will be able to build their own and manage them neatly from their user control panel.

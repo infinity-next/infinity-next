@@ -5,7 +5,8 @@
 	@foreach ($group->options as $option)
 		@include( $option->getTemplate($controller), [
 			'option' => $option,
-			'group' => $group,
+			'value'  => $option->option_value ?: $option->default_value,
+			'group'  => $group,
 		])
 	@endforeach
 </fieldset>

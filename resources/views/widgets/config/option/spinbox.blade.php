@@ -11,7 +11,7 @@
 	<dd class="option-definition">
 		{!! Form::number(
 			$option->option_name,
-			$option->option_value,
+			$value,
 			[
 				'id'        => $option->option_name,
 				'class'     => "field-control",
