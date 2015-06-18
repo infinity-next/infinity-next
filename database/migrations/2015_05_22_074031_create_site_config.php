@@ -15,7 +15,7 @@ class CreateSiteConfig extends Migration {
 		Schema::create('options', function(Blueprint $table)
 		{
 			$table->string('option_name');
-			$table->binary('default_value');
+			$table->binary('default_value')->nullable();
 			$table->binary('option_value');
 			$table->enum('format', [
 				'textbox',
