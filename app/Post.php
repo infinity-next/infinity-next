@@ -14,8 +14,9 @@ use File;
 use Request;
 
 use Event;
-use App\Event\ThreadWasCreated;
 use App\Events\PostWasAdded;
+use App\Events\PostWasDeleted;
+use App\Events\PostWasModified;
 
 class Post extends Model {
 	
@@ -68,10 +69,15 @@ class Post extends Model {
 		
 		// Setup event bindings...
 		
-		// When creating a thread, make sure it has a board_id.
+		// When creating a post, make sure it has a board_id.
 		static::creating(function($post)
 		{
 			return isset($post->board_id);
+		});
+		
+		// Fire events on post created.
+		static::created(function(Post $post) {
+			Event::fire(new PostWasAdded($post));
 		});
 		
 		// When deleting a post, delete its children.
@@ -98,7 +104,15 @@ class Post extends Model {
 				$post->op->reply_count -= 1;
 				$post->op->save();
 			}
+			
+			Event::fire(new PostWasDeleted($post));
 		});
+		
+		// Fire events on post updated.
+		static::updated(function(Post $post) {
+			Event::fire(new PostWasModified($post));
+		});
+		
 	}
 	
 	/**
