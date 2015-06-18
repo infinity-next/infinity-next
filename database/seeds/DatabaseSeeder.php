@@ -58,13 +58,13 @@ class UserSeeder extends Seeder {
 			$password = implode($password, " ");
 			
 			// Create the user.
-			$user = User::firstOrCreate([
+			$user = User::firstOrNew([
 				'user_id'  => 1,
-			], [
-				'user_id'  => 1,
-				'username' => "Admin",
-				'password' => bcrypt($password),
 			]);
+			
+			$user->username = "Admin";
+			$user->password = bcrypt($password);
+			$user->save();
 			
 			$this->command->info("User \"Admin\" has been created with the following password:\n{$password}");
 		}
