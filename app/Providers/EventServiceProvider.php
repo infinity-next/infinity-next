@@ -11,24 +11,28 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		// Thread (OP) Events
-		'App\Events\ThreadWasStickied' => [
-			'App\Listeners\BoardRecachePages',
-		],
-		
-		// Post (Reply or OP) Events
 		'App\Events\PostWasAdded' => [
+			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasBanned' => [
+			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasDeleted' => [
+			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasModified' => [
+			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
+		
+		'App\Events\ThreadWasStickied' => [
+			'App\Listeners\BoardRecachePages',
+			'App\Listeners\ThreadRecache',
+		],
+		
 	];
 
 	/**

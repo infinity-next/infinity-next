@@ -10,6 +10,9 @@ use Input;
 use Request;
 use Validator;
 
+use Event;
+use App\Events\PostWasBanned;
+
 class PostController extends Controller {
 	
 	/*
@@ -203,8 +206,6 @@ class PostController extends Controller {
 				->withErrors($validator->errors());
 		}
 		
-		dd(-1);
-		
 		$banLengthStr   = [];
 		$expiresDays    = Input::get('expires_days');
 		$expiresHours   = Input::get('expires_hours');
@@ -338,6 +339,8 @@ class PostController extends Controller {
 				}
 			}
 		}
+		
+		Event::fire(new PostWasBanned($post));
 		
 		if ($post->reply_to)
 		{

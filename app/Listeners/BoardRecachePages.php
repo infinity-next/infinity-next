@@ -25,9 +25,9 @@ class BoardRecachePages extends Listener
 	 */
 	public function handle($event)
 	{
-		if ($event->pages === true)
+		if ($event->post instanceof Post)
 		{
-			$event->board->clearCachedPages();
+			$event->post->board->clearCachedPages();
 		}
 	}
 }

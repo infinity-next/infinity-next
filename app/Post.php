@@ -292,11 +292,7 @@ class Post extends Model {
 		}
 		
 		return $this->replies()
-			->with('attachments')
-			->andCapcode()
-			->andBan()
-			->andEditor()
-			->visible()
+			->withEverything()
 			->get();
 	}
 	
@@ -335,6 +331,11 @@ class Post extends Model {
 		return $this;
 	}
 	
+	
+	public function scopeAndAttachments($query)
+	{
+		return $query->with('attachments');
+	}
 	
 	public function scopeAndBan($query)
 	{
@@ -377,6 +378,13 @@ class Post extends Model {
 			);
 	}
 	
+	public function scopeAndReplies($query)
+	{
+		return $query->with(['replies' => function($query) {
+			$query->withEverything();
+		}]);
+	}
+	
 	public function scopeOp($query)
 	{
 		return $query->where('reply_to', null);
@@ -389,11 +397,7 @@ class Post extends Model {
 	
 	public function scopeForIndex($query)
 	{
-		return $query->visible()
-			->with('attachments')
-			->andCapcode()
-			->andBan()
-			->andEditor()
+		return $query->withEverything()
 			->orderBy('post_id', 'desc')
 			->take( $this->stickied_at ? 1 : 5 );
 	}
@@ -424,6 +428,15 @@ class Post extends Model {
 	public function scopeVisible($query)
 	{
 		return $query->where('deleted_at', null);
+	}
+	
+	public function scopeWithEverything($query)
+	{
+		return $query->visible()
+			->andAttachments()
+			->andCapcode()
+			->andBan()
+			->andEditor();
 	}
 	
 	

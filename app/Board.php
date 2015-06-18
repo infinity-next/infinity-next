@@ -238,11 +238,7 @@ class Board extends Model {
 		$rememberClosure = function() use ($post) {
 			return $this->posts()
 				->where('board_id', $post)
-				->with('attachments', 'replies', 'replies.attachments')
-				->andCapcode()
-				->andBan()
-				->andEditor()
-				->visible()
+				->withEverything()
 				->orderBy('reply_last', 'desc')
 				->get();
 		};
