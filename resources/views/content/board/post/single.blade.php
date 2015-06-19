@@ -12,8 +12,8 @@
 			@if ($post->email)</a>@endif
 			</strong>
 			
-			@if ($post->capcode_capcode > 0)
-			<strong class="capcode">{{{ $post->capcode_role }}}</strong>
+			@if ($post->capcode_id > 0)
+			<strong class="capcode">{{{ $post->capcode_name }}}</strong>
 			@endif
 		</li>
 		<li class="post-detail post-postedon"><time class="postedon">{{{ $post->created_at }}}</time></li>

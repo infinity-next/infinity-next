@@ -11,7 +11,9 @@
 	<h3 class="config-title">@lang("config.title.site")</h3>
 	
 	@foreach ($groups as $group)
-		@include( 'widgets.config.group' )
+		@include('widgets.config.group',[
+			'group' => $group,
+		])
 	@endforeach
 	
 	<div class="field row-submit">

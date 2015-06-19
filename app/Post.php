@@ -88,7 +88,7 @@ class Post extends Model {
 		
 		// After a post is deleted, update OP's reply count.
 		static::deleted(function($post) {
-			if ($post->reply_to)
+			if (!is_null($post->reply_to))
 			{
 				$lastReply = $post->op->getReplyLast();
 				
@@ -361,7 +361,8 @@ class Post extends Model {
 			->addSelect(
 				'posts.*',
 				'roles.capcode as capcode_capcode',
-				'roles.role as capcode_role'
+				'roles.role as capcode_role',
+				'roles.name as capcode_name'
 			);
 	}
 	
@@ -434,9 +435,18 @@ class Post extends Model {
 	{
 		return $query->visible()
 			->andAttachments()
-			->andCapcode()
 			->andBan()
+			->andCapcode()
 			->andEditor();
+	}
+	
+	public function scopeWithEverythingAndReplies($query)
+	{
+		return $query->op()
+			->withEverything()
+			->with(['replies' => function($query) {
+				$query->withEverything();
+			}]);
 	}
 	
 	

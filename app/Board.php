@@ -117,14 +117,14 @@ class Board extends Model {
 				break;
 			
 			default :
-				Cache::tags("board.{$this->board_uri}.threads")->flush();
+				Cache::tags("board.{$this->board_uri}", "threads")->flush();
 				break;
 		}
 	}
 	
 	public function clearCachedPages()
 	{
-		Cache::forget("board.{$this->board_uri}.pages");
+		Cache::forget("board.{$this->board_uri}", "pages");
 		
 		switch (env('CACHE_DRIVER'))
 		{
@@ -232,13 +232,13 @@ class Board extends Model {
 	
 	public function getThread($post)
 	{
-		$rememberTags    = ["board.{$this->board_uri}.threads"];
+		$rememberTags    = ["board.{$this->board_uri}", "threads"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.thread.{$post}";
 		$rememberClosure = function() use ($post) {
 			return $this->posts()
 				->where('board_id', $post)
-				->withEverything()
+				->withEverythingAndReplies()
 				->orderBy('reply_last', 'desc')
 				->get();
 		};
@@ -251,7 +251,7 @@ class Board extends Model {
 				break;
 			
 			default :
-				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				$thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
 		
@@ -274,15 +274,11 @@ class Board extends Model {
 		$rememberKey     = "board.{$this->board_uri}.page.{$page}";
 		$rememberClosure = function() use ($page, $postsPerPage) {
 			$threads = $this->threads()
-				->with('attachments')
+				->op()
+				->withEverything()
 				->with(['replies' => function($query) {
 					$query->forIndex();
 				}])
-				->andCapcode()
-				->andBan()
-				->andEditor()
-				->op()
-				->visible()
 				->orderBy('stickied', 'desc')
 				->orderBy('reply_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))

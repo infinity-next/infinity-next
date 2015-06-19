@@ -3,7 +3,7 @@
 	<legend class="form-legend">{{ trans("config.legend.{$group->group_name}") }}</legend>
 	
 	@foreach ($group->options as $option)
-		@include( $option->getTemplate($controller), [
+		@include($option->getTemplate($controller), [
 			'option' => $option,
 			'value'  => !is_null($option->option_value) || $option->option_value != "" ? $option->option_value : $option->default_value,
 			'group'  => $group,

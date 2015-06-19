@@ -323,14 +323,13 @@ class RolePermissionSeeder extends Seeder {
 		{
 			foreach ($permissions as $permission)
 			{
-				RolePermission::firstOrCreate([
+				$permission = RolePermission::firstOrNew([
 					'role_id'       => Role::$ROLE_ADMIN,
 					'permission_id' => $permission->permission_id,
-				], [
-					'role_id'       => Role::$ROLE_ADMIN,
-					'permission_id' => $permission->permission_id,
-					'value'         => 1,
 				]);
+				
+				$permission->value = 1;
+				$permission->save();
 			}
 		}
 	}
@@ -512,22 +511,26 @@ class OptionGroupSeeder extends Seeder
 			$optionGroupOptions = $slug['options'];
 			unset($slug['options']);
 			
-			$optionGroup = OptionGroup::firstOrCreate([
+			$optionGroup = OptionGroup::firstOrNew([
 				'group_name' => $slug['group_name'],
-			], $slug);
+			]);
+			
+			$optionGroup->debug_only = $slug['debug_only'];
+			$optionGroup->display_order = $slug['display_order'];
 			
 			$optionGroup->save();
 			
 			foreach ($optionGroupOptions as $optionGroupIndex => $optionGroupOption)
 			{
-				$optionGroupOptionModels[] = OptionGroupAssignment::firstOrCreate([
+				$optionGroupOptionModel = OptionGroupAssignment::firstOrNew([
 					'option_name'     => $optionGroupOption,
 					'option_group_id' => $optionGroup->option_group_id,
-				], [
-					'option_name'     => $optionGroupOption,
-					'option_group_id' => $optionGroup->option_group_id,
-					'display_order'   => $optionGroupIndex * 10,
 				]);
+				
+				$optionGroupOptionModel->display_order = $optionGroupIndex * 10;
+				$optionGroupOptionModel->save();
+				
+				$optionGroupOptionModels[] = $optionGroupOptionModel;
 			}
 		}
 	}
@@ -562,8 +565,6 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"postAttachmentsMax",
-					"banMaxLength",
-					"banSubnets",
 				],
 			],
 			[
