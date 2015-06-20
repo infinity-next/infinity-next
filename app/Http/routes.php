@@ -47,18 +47,6 @@ Route::group([
 	}
 	
 	Route::group([
-		'namespace' => 'Site',
-		'prefix'    => 'site',
-	], function()
-	{
-		Route::get('/', 'SiteController@getIndex');
-		
-		Route::controllers([
-			'config' => 'ConfigController',
-		]);
-	});
-	
-	Route::group([
 		'namespace' => 'Boards',
 		'prefix'    => 'boards',
 	], function()
@@ -77,6 +65,28 @@ Route::group([
 			'{board}' => 'ConfigController',
 		]);
 	});
+	
+	Route::group([
+		'namespace' => 'Site',
+		'prefix'    => 'site',
+	], function()
+	{
+		Route::get('/', 'SiteController@getIndex');
+		Route::get('/phpinfo', 'SiteController@getPhpinfo');
+		
+		Route::controllers([
+			'config' => 'ConfigController',
+		]);
+	});
+	
+	Route::group([
+		'namespace' => 'Users',
+		'prefix'    => 'users',
+	], function()
+	{
+		Route::get('/', 'UsersController@getIndex');
+	});
+	
 });
 
 

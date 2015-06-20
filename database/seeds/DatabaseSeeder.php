@@ -131,6 +131,7 @@ class PermissionSeeder extends Seeder {
 		return [
 			['base_value' => 0, 'permission_id' => "board.config",],
 			['base_value' => 0, 'permission_id' => "board.create",],
+			['base_value' => 0, 'permission_id' => "board.create.infinite",],
 			['base_value' => 0, 'permission_id' => "board.delete",],
 			['base_value' => 0, 'permission_id' => "board.reassign",],
 			['base_value' => 1, 'permission_id' => "board.post.create",],
@@ -150,7 +151,11 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 1, 'permission_id' => "board.image.spoiler.upload",],
 			['base_value' => 0, 'permission_id' => "board.image.spoiler.other",],
 			
+			['base_value' => 0, 'permission_id' => "site.cache",],
 			['base_value' => 0, 'permission_id' => "site.config",],
+			['base_value' => 0, 'permission_id' => "site.phpinfo",],
+			['base_value' => 0, 'permission_id' => "site.group.assign",],
+			['base_value' => 0, 'permission_id' => "site.group.edit",],
 			['base_value' => 0, 'permission_id' => "site.user.create",],
 			['base_value' => 0, 'permission_id' => "site.user.ban",],
 			['base_value' => 0, 'permission_id' => "site.user.delete",],
@@ -455,6 +460,23 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => 'boolean'
 				],
+				
+				[
+					'option_name'           => "boardCreateMax",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "integer",
+					'validation_parameters' => 'required|min:$min'
+				],
+				[
+					'option_name'           => "boardCreateTimer",
+					'default_value'         => 15,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "integer",
+					'validation_parameters' => 'required|min:$min'
+				],
 			],
 			
 			'board' => [
@@ -527,8 +549,20 @@ class OptionGroupSeeder extends Seeder
 					'option_group_id' => $optionGroup->option_group_id,
 				]);
 				
-				$optionGroupOptionModel->display_order = $optionGroupIndex * 10;
-				$optionGroupOptionModel->save();
+				if ($optionGroupOptionModel->exists)
+				{
+					OptionGroupAssignment::where([
+						'option_name'     => $optionGroupOption,
+						'option_group_id' => $optionGroup->option_group_id,
+					])->update([
+						'display_order' => $optionGroupIndex * 10,
+					]);
+				}
+				else
+				{
+					$optionGroupOptionModel->display_order = $optionGroupIndex * 10;
+					$optionGroupOptionModel->save();
+				}
 				
 				$optionGroupOptionModels[] = $optionGroupOptionModel;
 			}
@@ -559,9 +593,19 @@ class OptionGroupSeeder extends Seeder
 				],
 			],
 			[
-				'group_name'    => "board_posts",
+				'group_name'    => "boards",
 				'debug_only'    => false,
 				'display_order' => 300,
+				
+				'options'       => [
+					"boardCreateMax",
+					"boardCreateTimer",
+				],
+			],
+			[
+				'group_name'    => "board_posts",
+				'debug_only'    => false,
+				'display_order' => 400,
 				
 				'options'       => [
 					"postAttachmentsMax",
@@ -570,7 +614,7 @@ class OptionGroupSeeder extends Seeder
 			[
 				'group_name'    => "board_threads",
 				'debug_only'    => false,
-				'display_order' => 400,
+				'display_order' => 500,
 				
 				'options'       => [
 					"postsPerPage",

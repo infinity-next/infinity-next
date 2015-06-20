@@ -16,6 +16,10 @@
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/site') !!}">@lang('panel.nav.primary.site')</a>
 			</li>
+			
+			<li class="cp-linkgroup">
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/users') !!}">@lang('panel.nav.primary.users')</a>
+			</li>
 			@endif
 		</ul>
 		@endif

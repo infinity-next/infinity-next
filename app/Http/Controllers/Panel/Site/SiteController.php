@@ -6,7 +6,7 @@ class SiteController extends PanelController {
 	
 	/*
 	|--------------------------------------------------------------------------
-	| Home Controller
+	| Site Controller
 	|--------------------------------------------------------------------------
 	|
 	| This controller renders your application's "dashboard" for users that
@@ -34,4 +34,18 @@ class SiteController extends PanelController {
 		return $this->view( static::VIEW_DASHBOARD );
 	}
 	
+	/**
+	 * Spit out phpinfo() input and stop.
+	 *
+	 * @return Response
+	 */
+	public function getPhpinfo()
+	{
+		if (!$this->user->can('site.config'))
+		{
+			return abort(403);
+		}
+		
+		phpinfo();
+	}
 }

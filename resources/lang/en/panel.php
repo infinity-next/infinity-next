@@ -16,13 +16,12 @@ return [
 	'nav'       => [
 		'primary' => [
 			'home'  => "Home",
-			'board' => "Board",
+			'board' => "Boards",
 			'site'  => "Site",
+			'user'  => "Users",
 		],
 		
 		'secondary' => [
-			
-			
 			'home' => [
 				'account'         => "Account",
 				'password_change' => "Change Password",
