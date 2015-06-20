@@ -1,5 +1,7 @@
 @extends($user->isAnonymous() ? 'layouts.main.simplebox' : 'layouts.main.panel')
 
+@section('title', $user->isAnonymous()) ? trans("config.title.board_create") : "")
+
 @section('body')
 {!! Form::open([
 	'url'    => Request::url(),
@@ -8,11 +10,11 @@
 	'id'     => "board-create",
 	'class'  => "form-config",
 ]) !!}
+	
 	@if ($user->isAnonymous())
 		<h3 class="config-title">@lang("config.title.board_create_your")</h3>
 	@else
 		<h3 class="config-title">@lang("config.title.board_create")</h3>
-		@section('title', trans("config.title.board_create"))
 	@endif
 	
 	<fieldset class="form-fields" id="fields-board_basic">

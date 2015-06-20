@@ -2,7 +2,7 @@
 	<section class="cp-linklists">
 		<ul class="cp-linkgroups">
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name">@lang('panel.nav.secondary.boards')</a>
+				<a class="linkgroup-name">@lang('panel.nav.secondary.board.boards')</a>
 				
 				<ul class="cp-linkitems">
 					<li class="cp-linkitem">

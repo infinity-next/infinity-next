@@ -18,11 +18,11 @@ return [
 			'home'  => "Home",
 			'board' => "Boards",
 			'site'  => "Site",
-			'user'  => "Users",
+			'users' => "Users",
 		],
 		
 		'secondary' => [
-			'home' => [
+			'home'   => [
 				'account'         => "Account",
 				'password_change' => "Change Password",
 				
@@ -30,16 +30,21 @@ return [
 				'donate'          => "Donate",
 			],
 			
-			'site' => [
+			'site'   => [
 				'setup'           => "Setup",
 				'config'          => "Config",
 			],
 			
 			
-			'boards' => "Boards",
 			'board'  => [
+				'boards'          => "Boards",
 				'config'          => "Config",
 				'create'          => "Create a Board",
+			],
+			
+			'users'  => [
+				'permissions'    => "Permissions",
+				'group_permissions' => "Group Permissions",
 			],
 		],
 	],
