@@ -2,7 +2,9 @@
 
 use App\Permission;
 use App\Role;
+use App\RolePermission;
 use App\Http\Controllers\Panel\PanelController;
+use Input;
 
 class PermissionsController extends PanelController {
 	
@@ -36,6 +38,52 @@ class PermissionsController extends PanelController {
 		{
 			return abort(403);
 		}
+		
+		return $this->view(static::VIEW_PERMISSIONS, [
+			'role'        => $role,
+			'permissions' => Permission::all(),
+		]);
+	}
+	
+	public function patchIndex(Role $role)
+	{
+		if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions())
+		{
+			return abort(403);
+		}
+		
+		$input           = Input::all();
+		$permissions     = Permission::all();
+		$rolePermissions = [];
+		
+		RolePermission::where(['role_id' => $role->role_id])->delete();
+		
+		foreach ($permissions as $permission)
+		{
+			foreach ($input as $permission_id => $permission_value)
+			{
+				$permission_id = str_replace("_", ".", $permission_id);
+				
+				if ($permission->permission_id == $permission_id)
+				{
+					switch ($permission_value)
+					{
+						case "allow" :
+						case "deny"  :
+							$rolePermissions[] = [
+								'role_id'       => $role->role_id,
+								'permission_id' => $permission_id,
+								'value'         => $permission_value == "allow",
+							];
+						break;
+					}
+					
+					break;
+				}
+			}
+		}
+		
+		RolePermission::insert($rolePermissions);
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
 			'role'        => $role,
