@@ -9,9 +9,8 @@ class SiteController extends PanelController {
 	| Site Controller
 	|--------------------------------------------------------------------------
 	|
-	| This controller renders your application's "dashboard" for users that
-	| are authenticated. Of course, you are free to change or remove the
-	| controller as you wish. It is just here to get your app started!
+	| This controller is the landing page for basic application level config
+	| and controls.
 	|
 	*/
 	

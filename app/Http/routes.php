@@ -72,7 +72,7 @@ Route::group([
 	], function()
 	{
 		Route::get('/', 'SiteController@getIndex');
-		Route::get('/phpinfo', 'SiteController@getPhpinfo');
+		Route::get('phpinfo', 'SiteController@getPhpinfo');
 		
 		Route::controllers([
 			'config' => 'ConfigController',
@@ -85,6 +85,15 @@ Route::group([
 	], function()
 	{
 		Route::get('/', 'UsersController@getIndex');
+	});
+	
+	Route::group([
+		'namespace' => 'Roles',
+		'prefix'    => 'roles',
+	], function()
+	{
+		Route::controller('permissions/{role}', 'PermissionsController');
+		Route::get('permissions', 'RolesController@getPermissions');
 	});
 	
 });

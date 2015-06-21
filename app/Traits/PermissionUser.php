@@ -107,6 +107,97 @@ trait PermissionUser {
 		return false;
 	}
 	
+	
+	/**
+	 * Can this user administrate ANY board?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminBoards()
+	{
+		return $this->can('sys.boards');
+	}
+	
+	/**
+	 * Can this user clear the system cache?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminCache()
+	{
+		return $this->can('sys.cache');
+	}
+	
+	/**
+	 * Can this user administrate the system config?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminConfig()
+	{
+		return $this->can('sys.config');
+	}
+	
+	/**
+	 * Can this user administrate the system logs?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminLogs()
+	{
+		return $this->can('sys.logs');
+	}
+	
+	/**
+	 * Can this user administrate groups and their permissions?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminRoles()
+	{
+		return $this->can('sys.roles');
+	}
+	
+	/**
+	 * Can this user administrate the system config?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminPayments()
+	{
+		return $this->can('sys.payments');
+	}
+	
+	/**
+	 * Can this user administrate the system config?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminPermissions()
+	{
+		return $this->can('sys.permissions');
+	}
+	
+	/**
+	 * Can this user administrate the system config?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminTools()
+	{
+		return $this->can('sys.tools');
+	}
+	
+	/**
+	 * Can this user administrate the system config?
+	 *
+	 * @return boolean
+	 */
+	public function canAdminUsers()
+	{
+		return $this->can('sys.users');
+	}
+	
 	/**
 	 * Can this user reply with attachments for this board?
 	 *

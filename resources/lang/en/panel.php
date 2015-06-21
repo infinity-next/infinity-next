@@ -43,8 +43,8 @@ return [
 			],
 			
 			'users'  => [
-				'permissions'    => "Permissions",
-				'group_permissions' => "Group Permissions",
+				'permissions'     => "Permissions",
+				'role_permissions' => "Role Permissions",
 			],
 		],
 	],

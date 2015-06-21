@@ -151,15 +151,20 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 1, 'permission_id' => "board.image.spoiler.upload",],
 			['base_value' => 0, 'permission_id' => "board.image.spoiler.other",],
 			
-			['base_value' => 0, 'permission_id' => "site.cache",],
-			['base_value' => 0, 'permission_id' => "site.config",],
-			['base_value' => 0, 'permission_id' => "site.phpinfo",],
-			['base_value' => 0, 'permission_id' => "site.group.assign",],
-			['base_value' => 0, 'permission_id' => "site.group.edit",],
 			['base_value' => 0, 'permission_id' => "site.user.create",],
-			['base_value' => 0, 'permission_id' => "site.user.ban",],
-			['base_value' => 0, 'permission_id' => "site.user.delete",],
-			['base_value' => 0, 'permission_id' => "site.user.pm",],
+			['base_value' => 0, 'permission_id' => "site.user.merge",],
+			['base_value' => 0, 'permission_id' => "site.pm",],
+			
+			['base_value' => 0, 'permission_id' => "sys.boards",],
+			['base_value' => 0, 'permission_id' => "sys.cache",],
+			['base_value' => 0, 'permission_id' => "sys.config",],
+			['base_value' => 0, 'permission_id' => "sys.logs",],
+			['base_value' => 0, 'permission_id' => "sys.roles",],
+			['base_value' => 0, 'permission_id' => "sys.payments",],
+			['base_value' => 0, 'permission_id' => "sys.permissions",],
+			['base_value' => 0, 'permission_id' => "sys.tools",],
+			['base_value' => 0, 'permission_id' => "sys.users",],
+			
 		];
 	}
 }
