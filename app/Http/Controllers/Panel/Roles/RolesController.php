@@ -28,7 +28,7 @@ class RolesController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex()
+	public function getPermissions()
 	{
 		if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions())
 		{

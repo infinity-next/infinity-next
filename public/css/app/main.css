@@ -313,7 +313,7 @@ form {
 		}
 
 main.cp form.form-config {
-	max-width: 450px;
+	max-width: 600px;
 	margin: 0 auto 0 0;
 }
 	form.form-config#config-site {
@@ -348,6 +348,10 @@ main.cp form.form-config {
 			clear: both;
 			margin: 1em 0;
 		}
+			#config-permissions dl.option {
+				margin: 0;
+			}
+		
 			dt.option-term {
 				display: inline-block;
 				margin: 0 1em 0 0;
@@ -370,6 +374,36 @@ main.cp form.form-config {
 					display: inline-block;
 					vertical-align: top;
 				}
+				
+				label.option-permission {
+					display: inline-block;
+					float: left;
+					
+					background-image: url('/img/backgrounds/permission-highlight.png');
+					background-position: top left;
+					background-repeat: repeat-x;
+					
+					height: 2.4em;
+					line-height: 2.4em;
+					text-align: center;
+					
+					padding: 0 2em;
+					margin: 0;
+				}
+					label.option-permission .field-control {
+						vertical-align: text-top;
+						height: 2em;
+						width: auto;
+					}
+					label.option-permission-unset {
+						background-color: #CCC;
+					}
+					label.option-permission-allow {
+						background-color: #44BB44;
+					}
+					label.option-permission-deny {
+						background-color: #C11 ;
+					}
 		
 		form.form-config .row-submit {
 			margin-left: 32%;

@@ -1,4 +1,3 @@
-
 <dl class="option option-{{{ $option->option_name }}}">
 	<dt class="option-term">
 		{!! Form::label(

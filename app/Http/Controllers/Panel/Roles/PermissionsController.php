@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Panel\Roles;
 
+use App\Permission;
 use App\Role;
 use App\Http\Controllers\Panel\PanelController;
 
@@ -15,7 +16,7 @@ class PermissionsController extends PanelController {
 	|
 	*/
 	
-	const VIEW_PERMISSIONS = "panel.roles.permissions";
+	const VIEW_PERMISSIONS = "panel.roles.permissions.edit";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -37,7 +38,8 @@ class PermissionsController extends PanelController {
 		}
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
-			'role' => $role,
+			'role'        => $role,
+			'permissions' => Permission::all(),
 		]);
 	}
 }

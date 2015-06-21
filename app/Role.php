@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Permission;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model {
@@ -51,6 +52,25 @@ class Role extends Model {
 	public function permissions()
 	{
 		return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
+	}
+	
+	
+	/*
+	 * Returns the individual value for a requested permission.
+	 *
+	 * @return boolean|null
+	 */
+	public function getPermission(Permission $permission)
+	{
+		foreach ($this->permissions as $thisPermission)
+		{
+			if ($thisPermission->permission_id == $permission->permission_id)
+			{
+				return !!$thisPermission->pivot->value;
+			}
+		}
+		
+		return null;
 	}
 	
 	
@@ -152,4 +172,5 @@ class Role extends Model {
 		
 		return $permissions;
 	}
+	
 }
