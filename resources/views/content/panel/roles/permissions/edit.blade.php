@@ -8,7 +8,7 @@
 	'id'     => "config-permissions",
 	'class'  => "form-config",
 ]) !!}
-	<h3 class="config-title">@lang("config.title.permissions")</h3>
+	<h3 class="config-title">@lang("config.title.permissions", [ 'role' => $role->name ])</h3>
 	
 	{{-- @foreach ($permissions as $permission) --}}
 	@include('widgets.config.permissions',[

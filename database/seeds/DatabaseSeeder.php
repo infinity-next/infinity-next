@@ -131,7 +131,6 @@ class PermissionSeeder extends Seeder {
 		return [
 			['base_value' => 0, 'permission_id' => "board.config",],
 			['base_value' => 0, 'permission_id' => "board.create",],
-			['base_value' => 0, 'permission_id' => "board.create.infinite",],
 			['base_value' => 0, 'permission_id' => "board.delete",],
 			['base_value' => 0, 'permission_id' => "board.reassign",],
 			['base_value' => 1, 'permission_id' => "board.post.create",],

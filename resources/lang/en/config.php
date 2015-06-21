@@ -16,6 +16,7 @@ return [
 		'site'              => "Site Configuration",
 		'board_create'      => "Create a Board",
 		'board_create_your' => "Create your Board",
+		'permissions'       => ":role Role Permissions",
 	],
 	
 	'legend' => [
@@ -46,6 +47,72 @@ return [
 		
 		'desc' => [
 			'board_uri' => "Part of the URL used to open your board. Cannot be changed.",
+		],
+	],
+	
+	'permission' => [
+		'board' => [
+			'config' => "Edit board config",
+			'create' => "Create board",
+			'delete' => "Delete board",
+			
+			'image' => [
+				'ban' => "Ban attachments",
+				'delete' => [
+					'other' => "Delete anyone's attachments",
+					'self' => "Delete own attachments",
+				],
+				'spoiler' => [
+					'other' => "Spoiler anyone's attachments",
+					'upload' => "Spoiler own attachments",
+				],
+				'upload' => "Upload attachments",
+			],
+			
+			'post' => [
+				'create' => "Post threads and replies",
+				'delete' => [
+					'other' => "Delete anyone's content",
+					'self' => "Delete own content",
+				],
+				'edit' => [
+					'other' => "Edit anyone's content",
+					'self' => "Edit own content",
+				],
+				'sticky' => "Sticky anyone's threads",
+			],
+			
+			'reassign' => "Reassign board",
+			
+			'user' => [
+				'ban' => [
+					'free' => "Ban IP freely for any reason ",
+					'reason' => "Ban IP for post and reason",
+				],
+				'role' => "Assign board roles to user",
+				'unban' => "Unban IP",
+			],
+			
+		],
+		
+		'site' => [
+			'pm' => "PM users",
+			'user' => [
+				'create' => "Create user",
+				'merge' => "Merge user into own account",
+			],
+		],
+		
+		'sys' => [
+			'boards' => "Edit other's boards",
+			'cache' => "Clear system cache",
+			'config' => "Edit system config",
+			'logs' => "View and manipulate logs",
+			'payments' => "Edit payments and donations",
+			'permissions' => "Edit role permissions",
+			'roles' => "Edit roles",
+			'tools' => "Access system tools",
+			'users' => "Manage users",
 		],
 	],
 	
