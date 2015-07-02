@@ -40,8 +40,8 @@
 		@foreach ($post->attachments as $attachment)
 		<li class="post-attachment">
 			<figure class="attachment">
-				<a class="attachment-link" target="_new" href="{!! url("{$board->board_uri}/file/{$attachment->hash}/{$attachment->pivot->filename}") !!}">
-					<img class="attachment-img" src="{!! url("{$board->board_uri}/file/thumb/{$attachment->hash}/{$attachment->pivot->filename}") !!}" alt="{{ $attachment->pivot->filename }}" />
+				<a class="attachment-link" target="_new" href="{!! $attachment->getDownloadURL($board) !!}">
+					<img class="attachment-img" src="{!! $attachment->getDownloadURL($board) !!}" />
 				</a>
 			</figure>
 		</li>

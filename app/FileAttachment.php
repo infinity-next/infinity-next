@@ -30,5 +30,4 @@ class FileAttachment extends Model {
 	{
 		return $this->belongsTo('\App\FileStorage', 'file_id');
 	}
-	
 }

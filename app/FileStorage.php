@@ -63,6 +63,16 @@ class FileStorage extends Model {
 		return "attachments/thumb/{$prefix}";
 	}
 	
+	public function getAsFile()
+	{
+		return new File($this->getFullPath());
+	}
+	
+	public function getAsFileThumb()
+	{
+		return new File($this->getFullPathThumb());
+	}
+	
 	public function getFullPath()
 	{
 		return storage_path() . "/app/" . $this->getPath();
@@ -88,6 +98,52 @@ class FileStorage extends Model {
 		return $query->where('hash', $hash);
 	}
 	
+	/**
+	 * A dumb way to guess the file type based on the mime
+	 * 
+	 * @return string
+	 */
+	
+	public function guessExtension()
+	{
+		$mimes = explode("/", $this->mime);
+		
+		switch ($this->mime)
+		{
+			case "image/jpeg" :
+			case "image/jpg" :
+				return "jpg";
+			
+			case "image/gif" :
+				return "gif";
+			
+			case "image/png" :
+				return "png";
+			
+			case "text/plain" :
+				return "txt";
+		}
+		
+		return $mimes[1];
+	}
+	
+	/**
+	 * Supplies a clean URL for downloading an attachment on a board.
+	 *
+	 * @param  App\Board  $board
+	 * @return string
+	 */
+	public function getDownloadURL(Board $board)
+	{
+		if (isset($this->pivot) && isset($this->pivot->filename))
+		{
+			return url("{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
+		}
+		else
+		{
+			return url("{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+		}
+	}
 	
 	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.

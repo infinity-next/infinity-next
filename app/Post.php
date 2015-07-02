@@ -527,20 +527,22 @@ class Post extends Model {
 		{
 			foreach ($uploads as $uploadIndex => $upload)
 			{
-				$uploadName  = $upload->getClientOriginalName();
-				$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
-				
-				$fileContent = File::get($upload);
-				$fileName    = basename($uploadName, "." . $uploadExt);
-				$fileExt     = $upload->guessExtension();
-				
-				$storage     = FileStorage::storeUpload($upload);
-				
-				$attachment  = new FileAttachment();
-				$attachment->post_id  = $this->post_id;
-				$attachment->file_id  = $storage->file_id;
-				$attachment->filename = "{$fileName}.{$fileExt}";
-				$attachment->save();
+				if(file_exists($upload->getPathname()))
+				{
+					$uploadName  = urlencode($upload->getClientOriginalName());
+					$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
+					
+					$fileName    = basename($uploadName, "." . $uploadExt);
+					$fileExt     = $upload->guessExtension();
+					
+					$storage     = FileStorage::storeUpload($upload);
+					
+					$attachment  = new FileAttachment();
+					$attachment->post_id  = $this->post_id;
+					$attachment->file_id  = $storage->file_id;
+					$attachment->filename = urlencode("{$fileName}.{$fileExt}");
+					$attachment->save();
+				}
 			}
 		}
 	}

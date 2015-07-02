@@ -87,7 +87,10 @@ return [
 	*/
 	
 	'custom' => [
+		'file_corrupt' => "<tt>:filename</tt> is corrupt or has an invalid file name.",
+		
 		'validate' => [
+			
 		],
 	],
 	

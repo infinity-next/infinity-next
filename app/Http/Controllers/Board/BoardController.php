@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 
 use Illuminate\Http\Request;
+use App\Validators\FileValidator;
 
 use Input;
 use File;

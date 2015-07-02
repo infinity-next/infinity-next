@@ -93,8 +93,8 @@ class PostRequest extends Request {
 		// Modify the validation rules based on what we've been supplied.
 		if ($board && $user)
 		{
-			$rules = [
-				'body' => [ "max:" . $board->getSetting('postMaxLength', 65534) ],
+			$rules['body'] = [
+				"max:" . $board->getSetting('postMaxLength', 65534),
 			];
 			
 			if (!$board->canAttach($user))
@@ -117,6 +117,9 @@ class PostRequest extends Request {
 				{
 					$rules["files.{$attachment}"] = [
 						"mimes:jpeg,gif,png",
+						
+						## TODO ##
+						// Make maximum filesize a config option.
 						"between:0,8000",// . $controller->option('attachmentFilesize'),
 					];
 				}
@@ -140,6 +143,7 @@ class PostRequest extends Request {
 			->withInput($this->except($this->dontFlash))
 			->withErrors($errors, $this->errorBag);
 	}
+	
 	/**
 	 * Validate the class instance.
 	 * This overrides the default invocation to provide additional rules after the controller is setup.
@@ -165,6 +169,31 @@ class PostRequest extends Request {
 		if (!$validator->passes())
 		{
 			$this->failedValidation($validator);
+		}
+		else
+		{
+			// This is a hack, but ...
+			// If a file is uploaded that has a specific filename, it breaks the process.
+			
+			$input   = $this->all();
+			$uploads = $input['files'];
+			
+			// Process uploads.
+			if (count($uploads) > 0)
+			{
+				foreach ($uploads as $uploadIndex => $upload)
+				{
+					if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
+					{
+						$messages = $validator->errors();
+						$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
+							"filename" => $upload->getClientOriginalName(),
+						]));
+						$this->failedValidation($validator);
+						break;
+					}
+				}
+			}
 		}
 	}
 }

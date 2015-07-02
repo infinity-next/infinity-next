@@ -3,22 +3,24 @@
 		@if (!$user->isAnonymous())
 		<ul class="cp-linkgroups">
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">@lang('panel.nav.primary.home')</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Home</a>
 			</li>
 			
 			@if ($user->canAny('board.config'))
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/boards') !!}">@lang('panel.nav.primary.board')</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/boards') !!}">Boards</a>
 			</li>
 			@endif
 			
-			@if ($user->can('site.config'))
+			@if ($user->canAdminConfig())
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/site') !!}">@lang('panel.nav.primary.site')</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/site') !!}">Site</a>
 			</li>
+			@endif
 			
+			@if ($user->canAdminUsers() || $user->canAdminPermissions())
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/users') !!}">@lang('panel.nav.primary.users')</a>
+				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/users') !!}">Users</a>
 			</li>
 			@endif
 		</ul>
@@ -27,17 +29,17 @@
 		<ul class="cp-linkgroups linkgroups-user">
 			@if (!$user->isAnonymous())
 			<li class="cp-linkgroup">
-				@lang('panel.authed_as', [ 'name' => $user->username ] )
+				Signed in as {!! $user->username !!}
 			</li>
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name" href="{!! url('cp/auth/logout') !!}">@lang('panel.field.logout')</a>
+				<a class="linkgroup-name" href="{!! url('cp/auth/logout') !!}">Logout</a>
 			</li>
 			@else
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name" href="{!! url('cp/auth/register') !!}">@lang('panel.field.register')</a>
+				<a class="linkgroup-name" href="{!! url('cp/auth/register') !!}">Register</a>
 			</li>
 			<li class="cp-linkgroup">
-				<a class="linkgroup-name" href="{!! url('cp/auth/login') !!}">@lang('panel.field.login')</a>
+				<a class="linkgroup-name" href="{!! url('cp/auth/login') !!}">Login</a>
 			</li>
 			@endif
 		</ul>
