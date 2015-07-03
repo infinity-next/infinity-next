@@ -176,21 +176,25 @@ class PostRequest extends Request {
 			// If a file is uploaded that has a specific filename, it breaks the process.
 			
 			$input   = $this->all();
-			$uploads = $input['files'];
 			
 			// Process uploads.
-			if (count($uploads) > 0)
+			if (isset($inpput['files']))
 			{
-				foreach ($uploads as $uploadIndex => $upload)
+				$uploads = $input['files'];
+				
+				if(count($uploads) > 0)
 				{
-					if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
+					foreach ($uploads as $uploadIndex => $upload)
 					{
-						$messages = $validator->errors();
-						$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
-							"filename" => $upload->getClientOriginalName(),
-						]));
-						$this->failedValidation($validator);
-						break;
+						if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
+						{
+							$messages = $validator->errors();
+							$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
+								"filename" => $upload->getClientOriginalName(),
+							]));
+							$this->failedValidation($validator);
+							break;
+						}
 					}
 				}
 			}
