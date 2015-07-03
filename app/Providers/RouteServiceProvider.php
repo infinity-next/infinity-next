@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
-		$router->pattern('board', Board::URI_PATTERN . "{1,30}");
+		$router->pattern('board', Board::URI_PATTERN);
 		$router->model('board', 'App\Board');
 		
 		$router->model('role', 'App\Role');
