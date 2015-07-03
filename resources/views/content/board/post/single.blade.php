@@ -2,21 +2,21 @@
 	<a name="{!! $post->board_id !!}"></a>
 	<ul class="post-details">
 		@if ($post->subject)
-		<li class="post-detail post-subject"><h3 class="subject">{{{ $post->subject }}}</h3></li>
+		<li class="post-detail post-subject"><h3 class="subject">{{ $post->subject }}</h3></li>
 		@endif
 		
 		<li class="post-detail post-author">
 			<strong class="author">
-			@if ($post->email)<a href="mailto:{{{ $post->email }}}" class="email">@endif
-				{{{ $post->author ?: $board->getSetting('defaultName', trans('board.anonymous')) }}}
+			@if ($post->email)<a href="mailto:{{ $post->email }}" class="email">@endif
+				{{ $post->author ?: $board->getSetting('defaultName', trans('board.anonymous')) }}
 			@if ($post->email)</a>@endif
 			</strong>
 			
 			@if ($post->capcode_id > 0)
-			<strong class="capcode">{{{ $post->capcode_name }}}</strong>
+			<strong class="capcode">{{ $post->capcode_name }}</strong>
 			@endif
 		</li>
-		<li class="post-detail post-postedon"><time class="postedon">{{{ $post->created_at }}}</time></li>
+		<li class="post-detail post-postedon"><time class="postedon">{{ $post->created_at }}</time></li>
 		<li class="post-detail post-authorid"><span class="authorid"></span></li>
 		
 		@if (isset($op))

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
-@section('title', "{$board->title} - /{$board->board_uri}/")
-@section('description', $board->description)
+@section('title', e("{$board->title} - /{$board->board_uri}/"))
+@section('description', e($board->description))
 
 @section('content')
 <main class="board-index page-1">
