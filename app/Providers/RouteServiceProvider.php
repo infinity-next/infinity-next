@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use App\Board;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -22,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
-		$router->pattern('board', '[a-z]{1,31}');
+		$router->pattern('board', Board::URI_PATTERN . "{1,30}");
 		$router->model('board', 'App\Board');
 		
 		$router->model('role', 'App\Role');

@@ -90,7 +90,7 @@ class BoardsController extends PanelController {
 		// Validate the basic boardconstraints.
 		$input['board_uri'] = strtolower( (string) $input['board_uri'] );
 		$requirements = [
-			'board_uri'   => "required|string|alpha_num|between:1,31",
+			'board_uri'   => "required|string|between:1,30|regex:" . Board::URI_PATTERN,
 			'title'       => "required|string|between:1,255",
 			'description' => "string|between:0,255"
 		];

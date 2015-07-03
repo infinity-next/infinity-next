@@ -14,6 +14,13 @@ use Collection;
 class Board extends Model {
 	
 	/**
+	 * The RegEx used to check the validity of a board uri.
+	 *
+	 * @var string
+	 */
+	const URI_PATTERN = "[a-z0-9]";
+	
+	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
