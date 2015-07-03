@@ -39,6 +39,13 @@ trait AuthenticatesAndRegistersUsers {
 	public function postRegister(Request $request)
 	{
 		$validator = $this->registrar->validator($request->all());
+		$rules     = $validator->getRules();
+		
+		$rules['username'][] = "alpha_num";
+		$rules['username'][] = "unique:users,username";
+		$rules['username'][] = "unique:users,email";
+		
+		$validator->setRules($rules);
 		
 		if ($validator->fails())
 		{
@@ -48,6 +55,7 @@ trait AuthenticatesAndRegistersUsers {
 			);
 		}
 		
+		dd(true);
 		$this->auth->login($this->registrar->create($request->all()));
 		
 		return redirect($this->redirectPath());
