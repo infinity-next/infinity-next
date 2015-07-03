@@ -55,7 +55,6 @@ trait AuthenticatesAndRegistersUsers {
 			);
 		}
 		
-		dd(true);
 		$this->auth->login($this->registrar->create($request->all()));
 		
 		return redirect($this->redirectPath());
