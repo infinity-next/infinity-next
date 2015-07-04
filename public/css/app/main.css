@@ -277,6 +277,15 @@ form {
 		font-size: 120%;
 		line-height: 1.4em;
 	}
+		span.field-control {
+			border-color: rgba(0,0,0,0);
+		}
+		.field-control[type="checkbox"] {
+			display: inline-block;
+			margin: 0 0.5em 0 0;
+			width: auto;
+		}
+		
 		.row-inline .field-control {
 			display: inline-block;
 			width: auto;

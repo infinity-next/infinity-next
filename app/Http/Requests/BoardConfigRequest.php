@@ -63,7 +63,12 @@ class BoardConfigRequest extends Request {
 	 */
 	public function rules()
 	{
-		$rules = [];
+		$rules = [
+			'boardBasicTitle'    => "required|string|between:1,255",
+			'boardBasicDesc'     => "string|between:1,255",
+			'boardBasicIndexed'  => "boolean",
+			'boardBasicWorksafe' => "boolean",
+		];
 		
 		foreach ($this->getBoardOptions() as $optionGroup)
 		{

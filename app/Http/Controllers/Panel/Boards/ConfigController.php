@@ -51,6 +51,7 @@ class ConfigController extends PanelController {
 		$optionGroups = OptionGroup::getBoardConfig($board);
 		
 		return $this->view(static::VIEW_CONFIG, [
+			'board'  => $board,
 			'groups' => $optionGroups,
 		]);
 	}
@@ -80,7 +81,14 @@ class ConfigController extends PanelController {
 			}
 		}
 		
+		$board->title       = $input['boardBasicTitle'];
+		$board->description = $input['boardBasicDesc'];
+		$board->is_indexed  = isset($input['boardBasicIndexed']) && !!$input['boardBasicIndexed'];
+		$board->is_worksafe = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
+		$board->save();
+		
 		return $this->view(static::VIEW_CONFIG, [
+			'board'  => $board,
 			'groups' => $optionGroups,
 		]);
 	}

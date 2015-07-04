@@ -332,6 +332,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user edit a board's URI?
+	 *
+	 * @return boolean
+	 */
+	public function canEditBoardUri(Board $board)
+	{
+		return false;
+	}
+	
+	/**
 	 * Can this user report this post?
 	 *
 	 * @return boolean

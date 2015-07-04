@@ -46,7 +46,7 @@ class Board extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by'];
+	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by', 'is_worksafe', 'is_indexed'];
 	
 	/**
 	 * Cached settings for this board.

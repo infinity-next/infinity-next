@@ -8,7 +8,7 @@
 		]) !!}
 	</dt>
 	<dd class="option-definition">
-		{!! Form::number(
+		{!! Form::text(
 			$option_name,
 			$option_value,
 			[
