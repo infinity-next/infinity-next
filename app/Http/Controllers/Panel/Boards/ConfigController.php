@@ -12,6 +12,9 @@ use Input;
 use Request;
 use Validator;
 
+use Event;
+use App\Events\BoardWasModified;
+
 class ConfigController extends PanelController {
 	
 	/*
@@ -81,11 +84,14 @@ class ConfigController extends PanelController {
 			}
 		}
 		
-		$board->title       = $input['boardBasicTitle'];
-		$board->description = $input['boardBasicDesc'];
-		$board->is_indexed  = isset($input['boardBasicIndexed']) && !!$input['boardBasicIndexed'];
-		$board->is_worksafe = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
+		$board->title        = $input['boardBasicTitle'];
+		$board->description  = $input['boardBasicDesc'];
+		$board->is_overboard = isset($input['boardBasicOverboard']) && !!$input['boardBasicOverboard'];
+		$board->is_indexed   = isset($input['boardBasicIndexed']) && !!$input['boardBasicIndexed'];
+		$board->is_worksafe  = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
 		$board->save();
+		
+		Event::fire(new BoardWasModified($board));
 		
 		return $this->view(static::VIEW_CONFIG, [
 			'board'  => $board,

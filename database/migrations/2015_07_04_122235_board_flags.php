@@ -16,6 +16,7 @@ class BoardFlags extends Migration {
 		{
 			$table->boolean('is_indexed')->default(true);
 			$table->boolean('is_worksafe')->default(false);
+			$table->boolean('is_overboard')->default(true);
 		});
 	}
 
@@ -26,10 +27,11 @@ class BoardFlags extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('users', function(Blueprint $table)
+		Schema::table('boards', function(Blueprint $table)
 		{
 			$table->dropColumn('is_indexed');
 			$table->dropColumn('is_worksafe');
+			$table->dropColumn('is_overboard');
 		});
 	}
 

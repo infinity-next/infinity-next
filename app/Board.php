@@ -46,7 +46,7 @@ class Board extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by', 'is_worksafe', 'is_indexed'];
+	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by', 'is_overboard', 'is_worksafe', 'is_indexed'];
 	
 	/**
 	 * Cached settings for this board.
@@ -159,6 +159,7 @@ class Board extends Model {
 	{
 		return [
 			static::where('posts_total', '>', '-1')
+				->where('is_indexed', 1)
 				->orderBy('board_uri', 'asc')
 				->take(20)
 				->get()

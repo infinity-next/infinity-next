@@ -32,6 +32,11 @@
 		])
 		
 		@include("widgets.config.option.onoff", [
+			'option_name'  => "boardBasicOverboard",
+			'option_value' => $board->is_overboard,
+		])
+		
+		@include("widgets.config.option.onoff", [
 			'option_name'  => "boardBasicIndexed",
 			'option_value' => $board->is_indexed,
 		])

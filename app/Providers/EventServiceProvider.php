@@ -11,6 +11,7 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
+		// Post specific events
 		'App\Events\PostWasAdded' => [
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
@@ -28,9 +29,15 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\ThreadRecache',
 		],
 		
+		// Thread (OP) specific Events
 		'App\Events\ThreadWasStickied' => [
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
+		],
+		
+		// Board specific events
+		'App\Events\ThreadWasStickied' => [
+			'App\Listeners\BoardListRecache',
 		],
 		
 	];

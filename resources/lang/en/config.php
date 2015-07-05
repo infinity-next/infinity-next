@@ -37,6 +37,7 @@ return [
 		'boardBasicUri'           => "URI",
 		'boardBasicTitle'         => "Title",
 		'boardBasicDesc'          => "Description",
+		'boardBasicOverboard'     => "Stream to Overboard",
 		'boardBasicIndexed'       => "Publicly Indexed",
 		'boardBasicWorksafe'      => "Safe for Work",
 		
