@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Panel\Roles;
 
 use App\Permission;
+use App\PermissionGroup;
 use App\Role;
 use App\RolePermission;
 use App\Http\Controllers\Panel\PanelController;
@@ -39,9 +40,11 @@ class PermissionsController extends PanelController {
 			return abort(403);
 		}
 		
+		$permission_groups = PermissionGroup::withPermissions()->get();
+		
 		return $this->view(static::VIEW_PERMISSIONS, [
-			'role'        => $role,
-			'permissions' => Permission::all(),
+			'role'   => $role,
+			'groups' => $permission_groups,
 		]);
 	}
 	

@@ -1,6 +1,6 @@
 @if (count($permissions) > 0)
 <fieldset class="form-fields">
-	<legend class="form-legend"><!-- --></legend>
+	<legend class="form-legend">{{ trans("config.legend.permissions.{$group->group_name}") }}</legend>
 	
 	@foreach ($permissions as $permission)
 		@if ($user->can($permission->permission_id))

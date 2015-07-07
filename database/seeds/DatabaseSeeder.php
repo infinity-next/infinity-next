@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder {
 		$this->call('BoardSeeder');
 		
 		$this->call('PermissionSeeder');
+		$this->call('PermissionGroupSeeder');
+		
 		$this->call('RoleSeeder');
 		$this->call('UserRoleSeeder');
 		$this->call('RolePermissionSeeder');
@@ -164,6 +166,144 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "sys.tools",],
 			['base_value' => 0, 'permission_id' => "sys.users",],
 			
+		];
+	}
+}
+
+
+use App\PermissionGroup;
+use App\PermissionGroupAssignment;
+
+class PermissionGroupSeeder extends Seeder
+{
+	
+	public function run()
+	{
+		$this->command->info('Seeding permission groups and relationships.');
+		
+		foreach ($this->slugs() as $slug)
+		{
+			$permissionGrouppermissions = $slug['permissions'];
+			unset($slug['permissions']);
+			
+			$permissionGroup = PermissionGroup::firstOrNew([
+				'group_name' => $slug['group_name'],
+			]);
+			
+			$permissionGroup->group_name      = $slug['group_name'];
+			$permissionGroup->is_system_only  = !!(isset($slug['is_system_only']) ? $slug['is_system_only'] : false);
+			$permissionGroup->is_account_only = !!(isset($slug['is_account_only']) ? $slug['is_account_only'] : false);
+			
+			$permissionGroup->save();
+			
+			foreach ($permissionGrouppermissions as $permissionGroupIndex => $permissionGroupPermission)
+			{
+				$permissionGrouppermissionModel = PermissionGroupAssignment::firstOrNew([
+					'permission_id'       => $permissionGroupPermission,
+					'permission_group_id' => $permissionGroup->permission_group_id,
+				]);
+				
+				if ($permissionGrouppermissionModel->exists)
+				{
+					PermissionGroupAssignment::where([
+						'permission_id'       => $permissionGroupPermission,
+						'permission_group_id' => $permissionGroup->permission_group_id,
+					])->update([
+						'display_order' => $permissionGroupIndex * 10,
+					]);
+				}
+				else
+				{
+					$permissionGrouppermissionModel->display_order = $permissionGroupIndex * 10;
+					$permissionGrouppermissionModel->save();
+				}
+				
+				$permissionGrouppermissionModels[] = $permissionGrouppermissionModel;
+			}
+		}
+	}
+	
+	private function slugs()
+	{
+		return [
+			[
+				'group_name'    => "board_controls",
+				'display_order' => 100,
+				
+				'permissions'   => [
+					"board.config",
+					"board.create",
+					"board.delete",
+					"board.reassign",
+				],
+			],
+			[
+				'group_name'    => "board_images",
+				'display_order' => 200,
+				
+				'permissions'   => [
+					"board.image.ban",
+					"board.image.delete.other",
+					"board.image.delete.self",
+					"board.image.spoiler.other",
+					"board.image.spoiler.upload",
+					"board.image.upload",
+				],
+			],
+			[
+				'group_name'    => "board_posts",
+				'display_order' => 300,
+				
+				'permissions'   => [
+					"board.post.create",
+					"board.post.delete.other",
+					"board.post.delete.self",
+					"board.post.edit.other",
+					"board.post.edit.self",
+					"board.post.sticky",
+				],
+			],
+			[
+				'group_name'    => "board_users",
+				'display_order' => 400,
+				
+				'permissions'   => [
+					"board.user.ban.free",
+					"board.user.ban.reason",
+					"board.user.role",
+					"board.user.unban",
+				],
+			],
+			
+			[
+				'group_name'    => "site_tools",
+				'is_system_only'=> true,
+				'display_order' => 500,
+				
+				'permissions'   => [
+					"site.pm",
+					"site.user.create",
+					"site.user.merge",
+				],
+			],
+			
+			[
+				'group_name'    => "system_tools",
+				'is_system_only'=> true,
+				'display_order' => 600,
+				
+				'permissions'   => [
+					"sys.boards",
+					"sys.cache",
+					"sys.config",
+					"sys.logs",
+					"sys.payments",
+					"sys.permissions",
+					"sys.roles",
+					"sys.tools",
+					"sys.users",
+				],
+			],
 		];
 	}
 }

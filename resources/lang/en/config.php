@@ -20,10 +20,20 @@ return [
 	],
 	
 	'legend' => [
+		'permissions'   => [
+			'board_controls' => "Board Controls",
+			'board_images'   => "Images",
+			'board_posts'    => "Posting",
+			'board_users'    => "User Tools",
+			'site_tools'     => "Site Tools",
+			'system_tools'   => "System Tools",
+		],
+		
 		'account_basic' => "Account Details",
 		'attachments'   => "Attachment Options",
 		'bans'          => "Ban Options",
 		
+		'boards'        => "Board Options",
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
 		'board_basic'   => "Basic Details",
@@ -40,6 +50,9 @@ return [
 		'boardBasicOverboard'     => "Stream to Overboard",
 		'boardBasicIndexed'       => "Publicly Indexed",
 		'boardBasicWorksafe'      => "Safe for Work",
+		
+		'boardCreateMax'          => "Maximum boards per user",
+		'boardCreateTimer'        => "Cooldown between board creations (min)",
 		
 		'attachmentFilesize'      => "Maximum filesize (KiB)",
 		'attachmentThumbnailSize' => "Attachment preview size (px)",

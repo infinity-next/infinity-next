@@ -40,7 +40,7 @@ class SiteController extends PanelController {
 	 */
 	public function getPhpinfo()
 	{
-		if (!$this->user->can('site.config'))
+		if (!$this->user->canAdminConfig())
 		{
 			return abort(403);
 		}

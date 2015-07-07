@@ -10,11 +10,11 @@
 ]) !!}
 	<h3 class="config-title">@lang("config.title.permissions", [ 'role' => $role->name ])</h3>
 	
-	{{-- @foreach ($permissions as $permission) --}}
-	@include('widgets.config.permissions',[
-		'permissions' => $permissions,
-	])
-	{{-- @endforeach --}}
+	@foreach ($groups as $group)
+		@include('widgets.config.permissions',[
+			'permissions' => $group->permissions,
+		])
+	@endforeach
 	
 	<div class="field row-submit">
 		{!! Form::button(

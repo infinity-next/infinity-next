@@ -36,7 +36,7 @@ class ConfigController extends PanelController {
 	 */
 	public function getIndex()
 	{
-		if (!$this->user->can('site.config'))
+		if (!$this->user->canAdminConfig())
 		{
 			return abort(403);
 		}
@@ -55,7 +55,7 @@ class ConfigController extends PanelController {
 	 */
 	public function patchIndex(Request $request)
 	{
-		if (!$this->user->can('site.config'))
+		if (!$this->user->canAdminConfig())
 		{
 			return abort(403);
 		}
