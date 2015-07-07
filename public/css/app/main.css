@@ -220,7 +220,7 @@ form {
 	
 	.form-fields {
 		border: none;
-		padding: 0;
+		padding: 0 0 1em 0;
 		margin: 0;
 	}
 	.form-legend {
@@ -398,6 +398,10 @@ main.cp form.form-config {
 					
 					padding: 0 2em;
 					margin: 0;
+					
+					box-sizing: border-box;
+					width: 5em;
+					text-align: center;
 				}
 					label.option-permission .field-control {
 						vertical-align: text-top;
@@ -412,6 +416,13 @@ main.cp form.form-config {
 					}
 					label.option-permission-deny {
 						background-color: #C11 ;
+					}
+					
+					label.option-master {
+						border-radius: 4px;
+						font-size: 80%;
+						padding: 0;
+						width: 6.25em;
 					}
 		
 		form.form-config .row-submit {

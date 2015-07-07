@@ -71,6 +71,20 @@ return [
 	],
 	
 	'permission' => [
+		'master' => [
+			'help' => [
+				'quickcheck' => "Quick check all",
+				
+				'inherit'    => "Defaults to 'no', but will inherit a 'yes' from parent roles.",
+				'allow'      => "Give the role permission.",
+				'deny'       => "Never allows this role to have this permission, even if a parent role allows it.",
+			],
+			
+			'inherit' => "Inherit",
+			'allow'   => "Allow",
+			'deny'    => "Never",
+		],
+		
 		'board' => [
 			'config' => "Edit board config",
 			'create' => "Create board",

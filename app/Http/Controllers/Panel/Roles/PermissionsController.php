@@ -58,33 +58,39 @@ class PermissionsController extends PanelController {
 		$input           = Input::all();
 		$permissions     = Permission::all();
 		$rolePermissions = [];
-		
-		RolePermission::where(['role_id' => $role->role_id])->delete();
+		$nullPermissions = [];
 		
 		foreach ($permissions as $permission)
 		{
-			foreach ($input as $permission_id => $permission_value)
+			if ($this->user->can($permission->permission_id))
 			{
-				$permission_id = str_replace("_", ".", $permission_id);
+				$nullPermissions[] = $permission->permission_id;
 				
-				if ($permission->permission_id == $permission_id)
+				foreach ($input as $permission_id => $permission_value)
 				{
-					switch ($permission_value)
+					$permission_id = str_replace("_", ".", $permission_id);
+					
+					if ($permission->permission_id == $permission_id)
 					{
-						case "allow" :
-						case "deny"  :
-							$rolePermissions[] = [
-								'role_id'       => $role->role_id,
-								'permission_id' => $permission_id,
-								'value'         => $permission_value == "allow",
-							];
+						switch ($permission_value)
+						{
+							case "allow" :
+							case "deny"  :
+								$rolePermissions[] = [
+									'role_id'       => $role->role_id,
+									'permission_id' => $permission_id,
+									'value'         => $permission_value == "allow",
+								];
+							break;
+						}
+						
 						break;
 					}
-					
-					break;
 				}
 			}
 		}
+		
+		RolePermission::where(['role_id' => $role->role_id])->whereIn('permission_id', $nullPermissions)->delete();
 		
 		RolePermission::insert($rolePermissions);
 		
