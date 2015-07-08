@@ -70,6 +70,11 @@ class ConfigController extends PanelController {
 			// From each option within each group,
 			foreach ($optionGroup->options as $option)
 			{
+				if (!isset($input[$option->option_name]))
+				{
+					$input[$option->option_name] = null;
+				}
+				
 				// Pull the validation parameter string,
 				$requirements[$option->option_name] = $option->getValidation();
 				$input[$option->option_name]        = $option->getSanitaryInput($input[$option->option_name]);

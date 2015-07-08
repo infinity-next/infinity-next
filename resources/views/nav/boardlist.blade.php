@@ -1,4 +1,3 @@
-@if(isset($boardbar))
 <nav class="boardlist">
 	<div class="boardlist-row row-pages">
 		<ul class="boardlist-categories">
@@ -26,6 +25,8 @@
 			</li>
 		</li>
 	</div>
+	
+	@if(isset($boardbar))
 	<div class="boardlist-row row-boards">
 		<ul class="boardlist-categories">
 		@foreach ($boardbar as $boards)
@@ -39,5 +40,5 @@
 		@endforeach
 		</ul>
 	</div>
+	@endif
 </nav>
-@endif

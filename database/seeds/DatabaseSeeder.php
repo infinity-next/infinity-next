@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder {
-
+	
 	/**
 	 * Run the database seeds.
 	 *
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('OptionSeeder');
 		$this->call('OptionGroupSeeder');
 	}
-
+	
 }
 
 
@@ -621,6 +621,13 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "integer",
 					'validation_parameters' => 'required|min:$min'
 				],
+				[
+					'option_name'           => "boardListShow",
+					'default_value'         => 1,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				]
 			],
 			
 			'board' => [
@@ -762,6 +769,15 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"postsPerPage",
+				],
+			],
+			[
+				'group_name'    => "navigation",
+				'debug_only'    => false,
+				'display_order' => 600,
+				
+				'options'       => [
+					"boardListShow",
 				],
 			],
 		];

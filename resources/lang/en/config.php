@@ -37,6 +37,8 @@ return [
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
 		'board_basic'   => "Basic Details",
+		
+		'navigation'    => "Site Navigation",
 	],
 	
 	'option' => [
@@ -53,6 +55,8 @@ return [
 		
 		'boardCreateMax'          => "Maximum boards per user",
 		'boardCreateTimer'        => "Cooldown between board creations (min)",
+		
+		'boardListShow'           => "Show top boards in primary navigation",
 		
 		'attachmentFilesize'      => "Maximum filesize (KiB)",
 		'attachmentThumbnailSize' => "Attachment preview size (px)",
