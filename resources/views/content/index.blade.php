@@ -6,23 +6,20 @@
 
 @section('content')
 <div class="grid-container">
-	<section class="grid-80 push-20" id="site-warning">
-		Warning: Some boards on this site might contain content of an adult or offensive nature.<wbr />
-		Please cease use of this site if it is illegal for you to view such content.<wbr />
-		The boards on this site are made entirely by the users and do not represent the opinions of the administration of Infinity.<wbr />
-		In the interest of free speech, only content that directly violates the DMCA or other US laws is deleted.<wbr />
+	<section class="grid-80 push-20">
+		@include($c->template('index.modules.warning'))
 	</section>
 </div>
 
 <main id="frontpage">
 	<div class="grid-container">
 		<section id="site-info">
-			<figure class="grid-20" id="site-logo">
-				<img src="/img/logo.png" alt="Site Logo" id="site-logo-img" />
-			</figure>
+			<div class="grid-20">
+				@include($c->template('index.modules.logo'))
+			</div>
 			
-			<div class="grid-40" id="site-description">
-				<div class="infobox">
+			<div class="grid-40">
+				<div class="infobox" id="site-description">
 					<div class="infobox-title">Infinity</div>
 					<div class="infobox-info">
 						<p>Welcome to Infinity, the live development environment for the Infinity Imageboard Software.</p>

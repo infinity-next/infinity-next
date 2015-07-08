@@ -10,6 +10,11 @@
 					<!-- Fundraiser Page -->
 					<li class="boardlist-item"><a href="{!! url("cp") !!}" class="boardlist-link">Control Panel</a></li>
 					
+					@if ($user->canCreateBoard())
+					<!-- Create a Board -->
+					<li class="boardlist-item"><a href="{!! url("cp/boards/create") !!}" class="boardlist-link">Create Board</a></li>
+					@endif
+					
 					@if (env('CONTRIB_ENABLED', false))
 					<!-- Fundraiser Page -->
 					<li class="boardlist-item"><a href="{!! url("contribute") !!}" class="boardlist-link">Contribute</a></li>
