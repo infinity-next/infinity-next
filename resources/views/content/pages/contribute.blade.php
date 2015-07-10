@@ -223,7 +223,7 @@
 					<li class="goal-item grid-50">
 						<span class="goal-part">Hash &amp; spam databases</span>
 						<blockquote class="goal-helper">
-							<em>AdBlock</em> is an extremel popular advertisement blocking software that utilizes a shared database to propagate bans to evreyone using the plugin.
+							<em>AdBlock</em> is an extremely popular advertisement blocking software that utilizes a shared database to propagate bans to evreyone using the plugin.
 							Similarly, I can take time to set up Infinity to have databases of illegal hashes and known spam methods.
 							Any instance of Infinity that <strong>opts in</strong> to use this database would learn bad hashes before ever seeing it itself.
 							We can apply this to spam as well, and strengthen the security of all websites using the technology.
