@@ -120,7 +120,7 @@ class BoardsController extends PanelController {
 			]);
 		}
 		
-		if ($boardCreateTimer > 0 && $boardLastCreated->diffInMinutes() < $boardCreateTimer)
+		if ($boardCreateTimer > 0 && !is_null($boardLastCreated) && $boardLastCreated->diffInMinutes() < $boardCreateTimer)
 		{
 			$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->diffInMinutes(), [
 				'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
