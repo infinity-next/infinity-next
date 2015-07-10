@@ -329,6 +329,10 @@ class Board extends Model {
 		return $threads;
 	}
 	
+	public function setEmailAttribute($value)
+	{
+		$this->attributes['email'] = empty($value) ? NULL : $value;
+	}
 	
 	public function setOwner(User $user)
 	{
