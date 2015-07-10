@@ -119,6 +119,11 @@ Route::group([
 ], function()
 {
 	/*
+	| Board Stylesheet Request
+	*/
+	Route::get('style.css', 'BoardController@getStylesheet');
+	
+	/*
 	| Board Attachment Routes (Files)
 	*/
 	Route::group([

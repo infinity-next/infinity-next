@@ -37,6 +37,7 @@ return [
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
 		'board_basic'   => "Basic Details",
+		'style'         => "Styling",
 		
 		'navigation'    => "Site Navigation",
 	],
@@ -52,6 +53,7 @@ return [
 		'boardBasicOverboard'     => "Stream to Overboard",
 		'boardBasicIndexed'       => "Publicly Indexed",
 		'boardBasicWorksafe'      => "Safe for Work",
+		'boardCustomCSS'          => "Custom CSS",
 		
 		'boardCreateMax'          => "Maximum boards per user",
 		'boardCreateTimer'        => "Cooldown between board creations (min)",

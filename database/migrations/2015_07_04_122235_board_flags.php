@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class BoardFlags extends Migration {
-
+	
 	/**
 	 * Run the migrations.
 	 *
@@ -19,7 +19,7 @@ class BoardFlags extends Migration {
 			$table->boolean('is_overboard')->default(true);
 		});
 	}
-
+	
 	/**
 	 * Reverse the migrations.
 	 *
@@ -34,5 +34,5 @@ class BoardFlags extends Migration {
 			$table->dropColumn('is_overboard');
 		});
 	}
-
+	
 }

@@ -162,4 +162,25 @@ class BoardController extends Controller {
 			return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
 		}
 	}
+	
+	/**
+	 * Supplies a user generated stylesheet based on board options.
+	 *
+	 * @var  Board  $board
+	 * @return Response
+	 */
+	public function getStylesheet(Board $board)
+	{
+		$stylesheet  = $board->getStylesheet();
+		$statusCode  = 200;
+		$contentType = "text/css";
+		
+		if (strlen((string) $stylesheet) == 0)
+		{
+			return abort(404);
+		}
+		
+		return response($stylesheet, $statusCode)
+			->header('Content-Type', $contentType);
+	}
 }

@@ -3,6 +3,10 @@
 @section('title', e("{$board->title} - /{$board->board_uri}/"))
 @section('description', e($board->description))
 
+@if ($board->getStylesheet())
+	@section('css-addendum', "<link href=\"/{$board->board_uri}/style.css\" rel=\"stylesheet\" />")
+@endif
+
 @section('content')
 <main class="board-index page-1">
 	<section class="index-form">

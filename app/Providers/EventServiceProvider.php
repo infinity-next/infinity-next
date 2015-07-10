@@ -36,8 +36,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		
 		// Board specific events
-		'App\Events\ThreadWasStickied' => [
+		'App\Events\BoardWasModified' => [
 			'App\Listeners\BoardListRecache',
+			'App\Listeners\BoardStyleRecache',
 		],
 		
 	];

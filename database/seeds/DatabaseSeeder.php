@@ -634,6 +634,14 @@ class OptionSeeder extends Seeder {
 			
 			'board' => [
 				[
+					'option_name'           => "boardCustomCSS",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+					'data_type'             => "string",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
 					'option_name'           => "postAttachmentsMax",
 					'default_value'         => "5",
 					'format'                => "spinbox",
@@ -782,6 +790,15 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"boardListShow",
+				],
+			],
+			[
+				'group_name'    => "style",
+				'debug_only'    => false,
+				'display_order' => 1000,
+				
+				'options'       => [
+					"boardCustomCSS",
 				],
 			],
 		];

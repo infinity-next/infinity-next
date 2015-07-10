@@ -238,6 +238,17 @@ class Board extends Model {
 		return $fallback;
 	}
 	
+	public function getStylesheet()
+	{
+		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
+		{
+			$style = $this->getSetting('boardCustomCSS');
+			$style = htmlentities($style);
+			
+			return $style;
+		});
+	}
+	
 	public function getThread($post)
 	{
 		$rememberTags    = ["board.{$this->board_uri}", "threads"];

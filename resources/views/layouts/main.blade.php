@@ -6,6 +6,8 @@
 	@section('css')
 		{!! Minify::stylesheetDir('/css/vendor/') !!}
 		{!! Minify::stylesheet([ '/css/app/main.css', '/css/app/responsive.css' ]) !!}
+		
+		@yield('css-addendum')
 	@show
 	
 	@section('js')
