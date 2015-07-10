@@ -1,4 +1,3 @@
-
 <div class="grid-container">
 	<!-- Intro -->
 	<div class="smooth-box">

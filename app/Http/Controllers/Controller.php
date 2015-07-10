@@ -34,7 +34,7 @@ abstract class Controller extends BaseController {
 		$this->registrar   = $manager->registrar;
 		$this->user        = $manager->user;
 		
-		if ($this->option('boardListBar'))
+		if ($this->option('boardListShow'))
 		{
 			View::share('boardbar', Board::getBoardListBar());
 		}

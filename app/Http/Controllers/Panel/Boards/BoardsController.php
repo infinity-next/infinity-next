@@ -3,6 +3,7 @@
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Http\Request;
+use Lang;
 use Input;
 use Validator;
 
@@ -55,7 +56,29 @@ class BoardsController extends PanelController {
 			return abort(403);
 		}
 		
-		return $this->view(static::VIEW_CREATE);
+		$boardLastCreated = 0;
+		$boardsOwned = 0;
+		
+		if (!$this->user->isAnonymous())
+		{
+			foreach ($this->user->createdBoards as $board)
+			{
+				++$boardsOwned;
+				
+				if ($board->created_at->timestamp > $boardLastCreated)
+				{
+					$boardLastCreated = $board->created_at->timestamp;
+				}
+			}
+		}
+		
+		return $this->view(static::VIEW_CREATE, [
+			'boardLastCreated'  => $boardLastCreated,
+			'boardsOwned'       => $boardsOwned,
+			
+			'boardCreateTimer'  => $this->option('boardCreateTimer'),
+			'boardsCreateMax'   => $this->option('boardCreateMax'),
+		]);
 	}
 	
 	/**
@@ -69,6 +92,46 @@ class BoardsController extends PanelController {
 		{
 			return abort(403);
 		}
+		
+		
+		$configErrors     = [];
+		$boardLastCreated = null;
+		$boardsOwned      = 0;
+		$boardCreateTimer = $this->option('boardCreateTimer');
+		$boardsCreateMax  = $this->option('boardCreateMax');
+		
+		if (!$this->user->isAnonymous())
+		{
+			foreach ($this->user->createdBoards as $board)
+			{
+				++$boardsOwned;
+				
+				if (is_null($boardLastCreated) || $board->created_at->timestamp > $boardLastCreated->timestamp)
+				{
+					$boardLastCreated = $board->created_at;
+				}
+			}
+		}
+		
+		if ($boardsCreateMax > 0 && $boardsOwned >= $boardsCreateMax)
+		{
+			$configErrors[] = Lang::choice("panel.error.board.create_more_than_max", $boardsCreateMax, [
+				'boardsCreateMax' => $boardsCreateMax,
+			]);
+		}
+		
+		if ($boardCreateTimer > 0 && $boardLastCreated->diffInMinutes() < $boardCreateTimer)
+		{
+			$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->diffInMinutes(), [
+				'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
+			]);
+		}
+		
+		if (count($configErrors))
+		{
+			return redirect()->back()->withInput()->withErrors($configErrors);
+		}
+		
 		
 		// Validate input.
 		// If the user is anonymous, we must also be creating an account.
@@ -126,7 +189,7 @@ class BoardsController extends PanelController {
 		]);
 		$board->save();
 		
-		// Seed board ownership.
+		// Seed board ownership permissions.
 		$board->setOwner($this->user);
 		
 		return redirect("cp/board/{$board->board_uri}");

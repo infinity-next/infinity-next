@@ -13,6 +13,13 @@ return [
 	
 	'authed_as' => "Signed in as :name",
 	
+	'error' => [
+		'board' => [
+			'create_more_than_max' => "{1}You may not create more than 1 board.|[2,Inf]You may not create more than :boardCreateMax boards.",
+			'create_so_soon'       => "{1}You must wait 1 minute before creating another board.|[2,Inf]You must wait :boardCreateTimer minutes before creating another board.",
+		]
+	],
+	
 	'nav'       => [
 		'primary' => [
 			'home'  => "Home",

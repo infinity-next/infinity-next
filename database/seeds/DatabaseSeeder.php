@@ -181,6 +181,8 @@ class PermissionGroupSeeder extends Seeder
 	{
 		$this->command->info('Seeding permission groups and relationships.');
 		
+		PermissionGroupAssignment::truncate();
+		
 		foreach ($this->slugs() as $slug)
 		{
 			$permissionGrouppermissions = $slug['permissions'];
@@ -678,6 +680,8 @@ class OptionGroupSeeder extends Seeder
 	public function run()
 	{
 		$this->command->info('Seeding option groups and relationships.');
+		
+		OptionGroupAssignment::truncate();
 		
 		foreach ($this->slugs() as $slug)
 		{
