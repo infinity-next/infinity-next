@@ -639,7 +639,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "postAttachmentsMax",
