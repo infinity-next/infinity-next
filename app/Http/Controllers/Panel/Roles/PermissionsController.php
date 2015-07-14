@@ -94,9 +94,11 @@ class PermissionsController extends PanelController {
 		
 		RolePermission::insert($rolePermissions);
 		
+		$permission_groups = PermissionGroup::withPermissions()->get();
+		
 		return $this->view(static::VIEW_PERMISSIONS, [
-			'role'        => $role,
-			'permissions' => Permission::all(),
+			'role'   => $role,
+			'groups' => $permission_groups,
 		]);
 	}
 }

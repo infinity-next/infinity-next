@@ -82,6 +82,7 @@ class Role extends Model {
 	public static function getRoleMaskByName($roleMasks)
 	{
 		$roles = static::whereIn('role', (array) $roleMasks)
+			->orWhere('role_id', static::$ROLE_ANONYMOUS)
 			->with('permissions')
 			->get();
 		
@@ -96,6 +97,7 @@ class Role extends Model {
 	public static function getRoleMaskByID($roleIDs)
 	{
 		$roles = static::whereIn('role_id', (array) $roleIDs)
+			->orWhere('role_id', static::$ROLE_ANONYMOUS)
 			->with('permissions')
 			->get();
 		
