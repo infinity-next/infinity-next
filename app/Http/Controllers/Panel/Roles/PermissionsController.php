@@ -5,7 +5,11 @@ use App\PermissionGroup;
 use App\Role;
 use App\RolePermission;
 use App\Http\Controllers\Panel\PanelController;
+
 use Input;
+
+use Event;
+use App\Events\RoleWasModified;
 
 class PermissionsController extends PanelController {
 	
@@ -95,6 +99,9 @@ class PermissionsController extends PanelController {
 		RolePermission::insert($rolePermissions);
 		
 		$permission_groups = PermissionGroup::withPermissions()->get();
+		
+		
+		Event::fire(new RoleWasModified($role));
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
 			'role'   => $role,

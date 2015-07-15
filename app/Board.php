@@ -119,7 +119,7 @@ class Board extends Model {
 			
 			case "database" :
 				DB::table('cache')
-					->where('key', 'like', "board.{$this->board_uri}.thread.%")
+					->where('key', 'like', "%board.{$this->board_uri}.thread.%")
 					->delete();
 				break;
 			

@@ -238,7 +238,7 @@ trait PermissionUser {
 	 */
 	public function canCreateBoard()
 	{
-		return true;
+		return $this->can("board.create");
 	}
 	
 	/**
@@ -494,7 +494,10 @@ trait PermissionUser {
 	{
 		if (!isset($this->permissions))
 		{
-			$this->permissions = Cache::remember("user.{$this->user_id}.permissions", 3600, function()
+			$rememberTags    = ["user.{$this->user_id}", "permissions"];
+			$rememberTimer   = 3600;
+			$rememberKey     = "user.{$this->user_id}.permissions";
+			$rememberClosure = function()
 			{
 				$permissions = [];
 				
@@ -528,7 +531,19 @@ trait PermissionUser {
 				}
 				
 				return $permissions;
-			});
+			};
+			
+			switch (env('CACHE_DRIVER'))
+			{
+				case "file" :
+				case "database" :
+					$this->permissions = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+					break;
+				
+				default :
+					$this->permissions = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+					break;
+			}
 		}
 		
 		return $this->permissions;
