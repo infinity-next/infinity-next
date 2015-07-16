@@ -92,6 +92,7 @@ return [
 		],
 		
 		'board' => [
+			'logs'   => "View staff logs",
 			'config' => "Edit board config",
 			'create' => "Create board",
 			'delete' => "Delete board",

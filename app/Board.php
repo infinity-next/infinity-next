@@ -238,6 +238,24 @@ class Board extends Model {
 		return $fallback;
 	}
 	
+	public function getStaff()
+	{
+		$staff = [];
+		$roles = Role::with('users')
+			->where('board_uri', $this->board_uri)
+			->get();
+		
+		foreach ($this->roles as $role)
+		{
+			foreach ($role->users as $user)
+			{
+				$staff[$user->user_id] = $user;
+			}
+		}
+		
+		return $staff;
+	}
+	
 	public function getStylesheet()
 	{
 		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()

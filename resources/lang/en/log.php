@@ -12,6 +12,18 @@ return [
 	|
 	*/
 	
+	'board' => [
+		'create' => "Board created.",
+	],
+	
+	'role' => [
+		'add'        => "Added caste <span class=\"role\">:caste</span>",
+		
+		'permission' => [
+			'modified' => "Modified <span class=\"role\">:role</span> permissions.",
+		],
+	],
+	
 	'post' => [
 		'ban' => [
 			'local'         => "Banned <span class=\"ip\">:ip</span> from /:board_uri:/ for :time. Reason: \"<em class=\"ban-reason\">:justification</em>\".",

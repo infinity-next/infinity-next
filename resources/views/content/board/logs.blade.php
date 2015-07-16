@@ -25,7 +25,12 @@
 					<tr>
 						<td><time datetime="{{ $log->created_at }}">{{ $log->created_at }}</time></td>
 						<td>{{ $log->user->username }}</td>
+						
+						@if ($log->action_details)
 						<td>@lang($log->action_name, json_decode($log->action_details, true))</td>
+						@else
+						<td>@lang($log->action_name)</td>
+						@endif
 					</tr>
 					@endforeach
 				</tbody>

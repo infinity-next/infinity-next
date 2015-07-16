@@ -22,7 +22,7 @@ class ConfigController extends PanelController {
 	| Config Controller
 	|--------------------------------------------------------------------------
 	|
-	| This is the site config controller, available only to admins.
+	| This is the board config controller, available only to the board owner and admins.
 	| Its only job is to load config panels and to validate and save the changes.
 	|
 	*/

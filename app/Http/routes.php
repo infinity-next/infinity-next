@@ -58,11 +58,12 @@ Route::group([
 	
 	Route::group([
 		'namespace' => 'Boards',
-		'prefix'    => 'board',
+		'prefix'    => 'board/{board}',
 	], function()
 	{
 		Route::controllers([
-			'{board}' => 'ConfigController',
+			'staff' => 'StaffController',
+			'/'     => 'ConfigController',
 		]);
 	});
 	

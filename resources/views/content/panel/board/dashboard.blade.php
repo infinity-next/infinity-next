@@ -6,6 +6,7 @@
 		<thead>
 			<tr>
 				<th>Board</th>
+				<th>Staff</th>
 				<th>Owned By</th>
 				<th>Created By</th>
 				<th>Total Posts</th>
@@ -15,6 +16,15 @@
 			@foreach ($boards as $board)
 			<tr>
 				<td><a href="{{{ url("/cp/board/{$board->board_uri}") }}}">/{{{ $board->board_uri }}}/</a></td>
+				<td><a href="{{{ url("/cp/board/{$board->board_uri}/staff") }}}">{{{
+					Lang::choice(
+						'panel.field.staff_count',
+						count($board->getStaff()),
+						[
+							"staff_count" => count($board->getStaff())
+						]
+					)
+				}}}</a></td>
 				<td><a href="{{{ url("/cp/user/{$board->operated_by_username}.{$board->operated_by}/") }}}">{{{ $board->operated_by_username }}}</a></td>
 				<td><a href="{{{ url("/cp/user/{$board->created_by_username}.{$board->created_by}/") }}}">{{{ $board->created_by_username }}}</a></td>
 				<td>{{{ $board->posts_total }}}</td>

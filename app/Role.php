@@ -54,6 +54,11 @@ class Role extends Model {
 		return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
 	}
 	
+	public function users()
+	{
+		return $this->belongsToMany('\App\User', 'user_roles', 'role_id', 'user_id');
+	}
+	
 	
 	/*
 	 * Returns the individual value for a requested permission.

@@ -22,6 +22,7 @@ class BoardsController extends PanelController {
 	
 	const VIEW_DASHBOARD = "panel.board.dashboard";
 	const VIEW_CREATE    = "panel.board.create";
+	const VIEW_STAFF     = "panel.board.staff";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -94,42 +95,46 @@ class BoardsController extends PanelController {
 		}
 		
 		
-		$configErrors     = [];
-		$boardLastCreated = null;
-		$boardsOwned      = 0;
-		$boardCreateTimer = $this->option('boardCreateTimer');
-		$boardsCreateMax  = $this->option('boardCreateMax');
-		
-		if (!$this->user->isAnonymous())
+		// Check time and quantity restraints.
+		if (!$this->user->canAdminConfig())
 		{
-			foreach ($this->user->createdBoards as $board)
+			$configErrors     = [];
+			$boardLastCreated = null;
+			$boardsOwned      = 0;
+			$boardCreateTimer = $this->option('boardCreateTimer');
+			$boardsCreateMax  = $this->option('boardCreateMax');
+			
+			if (!$this->user->isAnonymous())
 			{
-				++$boardsOwned;
-				
-				if (is_null($boardLastCreated) || $board->created_at->timestamp > $boardLastCreated->timestamp)
+				foreach ($this->user->createdBoards as $board)
 				{
-					$boardLastCreated = $board->created_at;
+					++$boardsOwned;
+					
+					if (is_null($boardLastCreated) || $board->created_at->timestamp > $boardLastCreated->timestamp)
+					{
+						$boardLastCreated = $board->created_at;
+					}
 				}
 			}
-		}
-		
-		if ($boardsCreateMax > 0 && $boardsOwned >= $boardsCreateMax)
-		{
-			$configErrors[] = Lang::choice("panel.error.board.create_more_than_max", $boardsCreateMax, [
-				'boardsCreateMax' => $boardsCreateMax,
-			]);
-		}
-		
-		if ($boardCreateTimer > 0 && !is_null($boardLastCreated) && $boardLastCreated->diffInMinutes() < $boardCreateTimer)
-		{
-			$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->diffInMinutes(), [
-				'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
-			]);
-		}
-		
-		if (count($configErrors))
-		{
-			return redirect()->back()->withInput()->withErrors($configErrors);
+			
+			if ($boardsCreateMax > 0 && $boardsOwned >= $boardsCreateMax)
+			{
+				$configErrors[] = Lang::choice("panel.error.board.create_more_than_max", $boardsCreateMax, [
+					'boardsCreateMax' => $boardsCreateMax,
+				]);
+			}
+			
+			if ($boardCreateTimer > 0 && ( !is_null($boardLastCreated) && $boardLastCreated->diffInMinutes() < $boardCreateTimer))
+			{
+				$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->diffInMinutes() + 1, [
+					'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
+				]);
+			}
+			
+			if (count($configErrors))
+			{
+				return redirect()->back()->withInput()->withErrors($configErrors);
+			}
 		}
 		
 		
@@ -192,6 +197,9 @@ class BoardsController extends PanelController {
 		// Seed board ownership permissions.
 		$board->setOwner($this->user);
 		
+		$this->log("log.board.create", $board->board_uri);
+		
 		return redirect("cp/board/{$board->board_uri}");
 	}
+	
 }
