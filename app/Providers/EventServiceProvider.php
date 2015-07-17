@@ -36,6 +36,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		
 		// Board specific events
+		'App\Events\BoardWasCreated' => [
+			'App\Listeners\UserRecachePermissions',
+		],
 		'App\Events\BoardWasModified' => [
 			'App\Listeners\BoardListRecache',
 			'App\Listeners\BoardStyleRecache',

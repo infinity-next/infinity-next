@@ -3,6 +3,7 @@
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Http\Request;
+
 use Lang;
 use Input;
 use Validator;
@@ -126,7 +127,7 @@ class BoardsController extends PanelController {
 			
 			if ($boardCreateTimer > 0 && ( !is_null($boardLastCreated) && $boardLastCreated->diffInMinutes() < $boardCreateTimer))
 			{
-				$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->diffInMinutes() + 1, [
+				$configErrors[] = Lang::choice("panel.error.board.create_so_soon", $boardLastCreated->addMinutes($boardCreateTimer)->diffInMinutes() + 1, [
 					'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
 				]);
 			}

@@ -2,6 +2,8 @@
 
 use App\Role;
 use App\Listeners\Listener;
+use App\Traits\PermissionUser;
+
 use Cache;
 use DB;
 
@@ -25,21 +27,30 @@ class UserRecachePermissions extends Listener
 	 */
 	public function handle($event)
 	{
-		switch (env('CACHE_DRIVER'))
+		$user = $event->user;
+		
+		if ($user instanceof PermissionUser)
 		{
-			case "file" :
-				Cache::flush();
-				break;
-			
-			case "database" :
-				DB::table('cache')
-					->where('key', 'like', "%user.%.permissions")
-					->delete();
-				break;
-			
-			default :
-				Cache::tags("permissions")->flush();
-				break;
+			Cache::forget("user.{$user->user_id}.permissions");
+		}
+		else
+		{
+			switch (env('CACHE_DRIVER'))
+			{
+				case "file" :
+					Cache::flush();
+					break;
+				
+				case "database" :
+					DB::table('cache')
+						->where('key', 'like', "%user.%.permissions")
+						->delete();
+					break;
+				
+				default :
+					Cache::tags("permissions")->flush();
+					break;
+			}
 		}
 	}
 }
