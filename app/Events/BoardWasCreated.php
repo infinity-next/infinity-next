@@ -2,7 +2,7 @@
 
 use App\Board;
 use App\Events\Event;
-use App\Traits\PermissionUser;
+use App\Contracts\PermissionUser;
 use Illuminate\Queue\SerializesModels;
 
 class BoardWasCreated extends Event

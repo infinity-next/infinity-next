@@ -2,7 +2,7 @@
 
 use App\Role;
 use App\Listeners\Listener;
-use App\Traits\PermissionUser;
+use App\Contracts\PermissionUser;
 
 use Cache;
 use DB;
