@@ -52,6 +52,29 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 */
 	protected $hidden = ['password', 'remember_token'];
 	
+	/**
+	 * Ties database triggers to the model.
+	 *
+	 * @return void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+		
+		// Setup event bindings...
+		
+		// When creating a user, make empty email fields into NULL.
+		static::creating(function($user)
+		{
+			if ($user->email == "")
+			{
+				$user->email = NULL;
+			}
+			
+			return true;
+		});
+	}
+	
 	public function boards()
 	{
 		return $this->hasMany('\App\Board', 'operated_by', 'user_id');
