@@ -1,5 +1,10 @@
 @if (isset($pages))
 <nav class="pagination">
+	<div class="pagination-buttons buttons-pages">
+		<a class="button pagination-button" href="/{{ $board->board_uri }}/catalog">Catalog</a>
+		<a class="button pagination-button" href="/{{ $board->board_uri }}/logs">Logs</a>
+	</div>
+	
 	<div class="pagination-buttons buttons-before">
 		@if ($page > 1)
 			<a class="button pagination-button pagination-first" href="{{{url($board->board_uri)}}}" title="@lang('board.first')">&lt;&lt;</a>

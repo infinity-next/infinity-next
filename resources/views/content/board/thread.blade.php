@@ -1,7 +1,8 @@
 <div class="post-container @if ($op === $thread) op-container @else reply-container @endif">
 	@include( $c->template('board.post.single'), [
-		'board'  => $board,
-		'post'   => $thread,
+		'board'   => $board,
+		'post'    => $thread,
+		'catalog' => false,
 	])
 	
 	<ul class="post-metas">

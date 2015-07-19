@@ -55,6 +55,8 @@
 				<figcaption class="page-details">
 					<h1 class="page-title">@yield('title')</h1>
 					<h2 class="page-desc">@yield('description')</h2>
+					
+					@section('header-details')
 				</figcaption>
 			</figure>
 			

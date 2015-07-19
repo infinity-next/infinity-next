@@ -2,5 +2,6 @@
 	@include( $c->template('board.post.single'), [
 		'board'   => $board,
 		'post'    => $thread,
+		'catalog' => true,
 	])
 </div>

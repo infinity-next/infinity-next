@@ -941,7 +941,7 @@ section.index-form {
 			margin: 0 5px 0 0;
 		}
 		form.form-post select.field-capcode {
-			width: 155px;
+			width: 140 	px;
 		}
 
 /* BoardLogs */
@@ -1153,10 +1153,57 @@ section.index-threads {
 			font-weight: normal;
 			font-size: 11px;
 			
-			min-width: 140px;
-			max-width: 140px;
-			max-height: 192px;
+			height: 300px;
+			width: 205px;
+			min-width: 200px;
+			max-width: 200px;
+			max-height: 274px;
 		}
+			main.index-catalog .post-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+			}
+				main.index-catalog .post-open {
+					display: block;
+					height: 2em;
+					line-height: 2em;
+					
+					background: rgba(111, 111, 111, 0.34);
+					color: #ffffff;
+				}
+				
+				main.index-catalog .post-content {
+					padding: 0;
+				}
+					main.index-catalog .post-attachment {
+						float: none;
+						text-align: center;
+					}
+						main.index-catalog .attachment {
+							margin: 0;
+						}
+							main.index-catalog .attachment-img {
+								max-height: 100px;
+								max-width: 200px;
+							}
+					
+					main.index-catalog .post-detail {
+						display: block;
+						margin: 0.4em 0 0 0;
+					}
+					
+					main.index-catalog .post {
+						display: block;
+						width: 100%;
+						min-width: 0px;
+						max-width: none;
+						
+						text-align: left;
+						padding: 0 0.5em;
+					}
 
 section.auth-form {
 	max-width: 640px;
@@ -1763,6 +1810,22 @@ figcaption.page-details {
 		font-size: 1em;
 		font-weight: normal;
 	}
+	
+	ul.page-links {
+		display: block;
+		margin: 0.5em 0 0 0;
+	}
+		li.page-link {
+			display: inline-block;
+		}
+			li.page-link::after {
+				display: inline-block;
+				content: '|';
+				margin: 0 0.25em;
+			}
+			li.page-link:last-child::after {
+				display: none;
+			}
 
 /* Page Footer */
 footer {
