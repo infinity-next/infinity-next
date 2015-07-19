@@ -32,6 +32,15 @@ class FileStorage extends Model {
 	
 	public $timestamps = false;
 	
+	public function attachments()
+	{
+		return $this->hasMany('\App\FileAttachment', 'file_id');
+	}
+	
+	public function assets()
+	{
+		return $this->hasMany('\App\BoardAsset', 'file_id');
+	}
 	
 	public function posts()
 	{
@@ -96,6 +105,25 @@ class FileStorage extends Model {
 	public function scopeHash($query, $hash)
 	{
 		return $query->where('hash', $hash);
+	}
+	
+	
+	/**
+	 * Will trigger a file deletion if the storage item is not used anywhere.
+	 *
+	 * @return boolean
+	 */
+	public function challengeExistence()
+	{
+		$count = $this->assets->count() + $this->attachments->count();
+		
+		if ($count === 0)
+		{
+			$this->forceDelete();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**

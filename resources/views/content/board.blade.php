@@ -7,6 +7,10 @@
 	@section('css-addendum', "<link href=\"/{$board->board_uri}/style.css\" rel=\"stylesheet\" />")
 @endif
 
+@if (count($board->getBanners()))
+	@section('header-logo', $board->getBannerRandom()->asHTML());
+@endif
+
 @section('content')
 <main class="board-index page-1">
 	<section class="index-form">

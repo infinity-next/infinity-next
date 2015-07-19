@@ -19,8 +19,9 @@
 		"illuminate/support": "~5.0",
 		"illuminate/hashing": "~5.0",
 		"intervention/image": "~2.1",
+		"cviebrock/image-validator" : "2.0.*@beta",
 		
-		 "devfactory/minify": "1.0.*"
+		"devfactory/minify" : "1.0.*"
 	},
 	
 	"require-dev": {

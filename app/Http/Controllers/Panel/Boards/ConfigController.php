@@ -1,8 +1,11 @@
 <?php namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
+use App\BoardAsset;
 use App\BoardSetting;
+use App\FileStorage;
 use App\OptionGroup;
+
 use App\Http\Requests\BoardConfigRequest;
 use App\Http\Controllers\Panel\PanelController;
 use App\Validators\ComparisonValidator;
@@ -63,8 +66,88 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getAssets(Request $request, Board $board)
+	public function getAssets(Board $board)
 	{
+		return $this->view(static::VIEW_CONFIG, [
+			'board'   => $board,
+			'banners' => $board->getBanners(),
+			
+			'tab'     => "assets",
+		]);
+	}
+	
+	/**
+	 * Removes existing assets.
+	 *
+	 * @return Response
+	 */
+	public function patchAssets(Board $board)
+	{
+		$banners = $board->getBanners();
+		$input   = Input::all();
+		
+		foreach ($banners as $bannerIndex => $banner)
+		{
+			if (!isset($input['banner'][$banner->board_asset_id]) || !$input['banner'][$banner->board_asset_id])
+			{
+				$storage = $banner->storage;
+				
+				$banner->forceDelete();
+				unset($banners[$bannerIndex]);
+				
+				$storage->challengeExistence();
+			}
+		}
+		
+		return $this->view(static::VIEW_CONFIG, [
+			'board'   => $board,
+			'banners' => $banners,
+			
+			'tab'     => "assets",
+		]);
+	}
+	
+	/**
+	 * Display existing assets.
+	 *
+	 * @return Response
+	 */
+	public function putAssets(Request $request, Board $board)
+	{
+		$input     = Input::all();
+		$validator = Validator::make($input, [
+			'asset_type' => [
+				"required",
+				"in:board_banner,file_deleted,file_none,file_spoiler",
+			],
+			
+			'new_board_banner' => [
+				"required_if:asset_type,board_banner",
+				"image",
+				"image_size:<=300,<=100",
+			],
+		]);
+		
+		if (!$validator->passes())
+		{
+			return redirect()
+				->back()
+				->withErrors($validator->errors());
+		}
+		
+		// Fetch the asset.
+		$upload = Input::file("new_{$input['asset_type']}");
+		
+		if(file_exists($upload->getPathname()))
+		{
+			$storage     = FileStorage::storeUpload($upload);
+			
+			$asset       = new BoardAsset();
+			$asset->board_uri = $board->board_uri;
+			$asset->file_id   = $storage->file_id;
+			$asset->save();
+		}
+		
 		return $this->view(static::VIEW_CONFIG, [
 			'board'   => $board,
 			'banners' => $board->getBanners(),

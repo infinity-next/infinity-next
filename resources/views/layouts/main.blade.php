@@ -48,7 +48,9 @@
 		
 		@section('header-inner')
 			<figure class="page-head">
+				@section('header-logo')
 					<img id="logo" src="/img/logo.png" alt="Infinity" />
+				@show
 				
 				<figcaption class="page-details">
 					<h1 class="page-title">@yield('title')</h1>

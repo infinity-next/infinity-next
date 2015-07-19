@@ -1,51 +1,76 @@
-{{-- Banner List --}}
-<fieldset class="form-fields group-board_banners">
-	<legend class="form-legend">{{ trans("config.legend.board_banners") }}</legend>
+{!! Form::open([
+	'url'    => Request::url(),
+	'method' => "PUT",
+	'files'  => true,
+	'id'     => "banner-upload",
+	'class'  => "form-config",
+]) !!}
+	<fieldset class="form-fields group-new_board_banner">
+		<dl class="option option-new_board_banner">
+			<dt class="option-term">
+				{!! Form::label(
+					"new_board_banner",
+					trans("config.option.banner_upload"),
+					[
+						'class' => "field-label",
+				]) !!}
+			</dt>
+			<dd class="option-definition">
+				<input class="field-control" id="new_board_banner" name="new_board_banner" type="file" />
+			</dd>
+		</dl>
+	</fieldset>
 	
-	<dl class="option option-banner_upload">
-		<dt class="option-term">
-			{!! Form::label(
-				"banner_upload",
-				trans("config.option.banner_upload"),
-				[
-					'class' => "field-label",
-			]) !!}
-		</dt>
-		<dd class="option-definition">
-			<input class="field-control" id="banner_upload" name="banner_upload" type="file" multiple />
-		</dd>
-	</dl>
+	{!! Form::hidden('asset_type', 'board_banner') !!}
 	
-	@if (count($banners))
-	{{-- @foreach ($banners as $banner)
-	<dl class="option option-banner">
-		<dt class="option-term"></dt>
-		<dd class="option-definition">
-			{!! Form::checkbox(
-				,
-				1,
-				!!$option_value,
-				[
-					'id'        => $option_name,
-					'class'     => "field-control",
-			]) !!}
-			{!! Form::label(
-				$option_name,
-				trans("config.option.{$option_name}"),
-				[
-					'class' => "field-label",
-			]) !!}
-		</dd>
-	</dl>
-	@endforeach --}}
-	@endif
-</fieldset>
+	<div class="field row-submit">
+		{!! Form::button(
+			trans("config.submit"),
+			[
+				'type'      => "submit",
+				'class'     => "field-submit",
+		]) !!}
+	</div>
+{!! Form::close() !!}
 
-<div class="field row-submit">
-	{!! Form::button(
-		trans("config.submit"),
-		[
-			'type'      => "submit",
-			'class'     => "field-submit",
-	]) !!}
-</div>
+@if (count($banners))
+{!! Form::open([
+	'url'    => Request::url(),
+	'method' => "PATCH",
+	'files'  => true,
+	'id'     => "banner-board",
+	'class'  => "form-config",
+]) !!}
+	<fieldset class="form-fields group-board_banners">
+		<legend class="form-legend">{{ trans("config.legend.board_banners") }}</legend>
+		
+		@foreach ($banners as $banner)
+		<dl class="option option-banner">
+			<dt class="option-term"></dt>
+			<dd class="option-definition">
+				<label for="banner[{$banner->board_asset_id}]" class="field-label">
+					{!! Form::checkbox(
+						"banner[{$banner->board_asset_id}]",
+						1,
+						true,
+						[
+							'class'     => "field-control",
+					]) !!}
+					
+					{!! $banner->asHTML() !!}
+				</label>
+			</dd>
+		</dl>
+		@endforeach
+	</fieldset>
+	
+	<div class="field row-submit">
+		{!! Form::button(
+			trans("config.submit"),
+			[
+				'type'      => "submit",
+				'class'     => "field-submit",
+		]) !!}
+	</div>
+{!! Form::close() !!}
+@endif

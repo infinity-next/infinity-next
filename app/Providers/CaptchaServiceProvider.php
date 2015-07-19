@@ -22,16 +22,6 @@ class CaptchaServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		//
-	}
-	
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
 		//$this->mergeConfigFrom('captcha');
 		
 		/**
@@ -69,14 +59,17 @@ class CaptchaServiceProvider extends ServiceProvider {
 			return $captcha->create($config);
 		});
 		
-		$this->app['validator'] = $this->app->share(function($app) {
-			$validator = new Factory($app['translator']);
-			$validator->setPresenceVerifier($this->app['validation.presence']);
-			$validator->resolver(function($translator, $data, $rules, $messages) {
-				return new CaptchaValidator($translator, $data, $rules, $messages);
-			});
-			return $validator;
-		});
+		$this->app['validator']->extend("captcha", 'App\Validators\CaptchaValidator@validateCaptcha', 'validation.captcha');
+	}
+	
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		
 	}
 	
 	/**

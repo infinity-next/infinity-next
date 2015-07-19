@@ -151,6 +151,7 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		
 		/*
 		 * Forms

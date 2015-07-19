@@ -171,9 +171,34 @@ class Board extends Model {
 		];
 	}
 	
+	/**
+	 * Returns all board_banner type BoardAsset items.
+	 *
+	 * @return Collection
+	 */
 	public function getBanners()
 	{
-		return $this->assets->where('asset_type', "board_banner");
+		$this->load('assets', 'assets.storage');
+		
+		return $this->assets
+			->where('asset_type', "board_banner");
+	}
+	
+	/**
+	 * Returns a single board_banner BoardAsset.
+	 *
+	 * @return BoardAsset
+	 */
+	public function getBannerRandom()
+	{
+		$banners = $this->getBanners();
+		
+		if (count($banners) > 0)
+		{
+			return $banners->random();
+		}
+		
+		return false;
 	}
 	
 	public function getLocalThread($local_id)

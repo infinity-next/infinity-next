@@ -12,6 +12,13 @@ class BoardAsset extends Model {
 	protected $table = 'board_assets';
 	
 	/**
+	 * The database primary key.
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'board_asset_id';
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -27,5 +34,10 @@ class BoardAsset extends Model {
 	public function storage()
 	{
 		return $this->belongsTo('\App\FileStorage', 'file_id');
+	}
+	
+	public function asHTML()
+	{
+		return "<img src=\"/{$this->board_uri}/file/{$this->storage->hash}/banner.png\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
 	}
 }
