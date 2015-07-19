@@ -296,7 +296,6 @@ class Board extends Model {
 		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
 		{
 			$style = $this->getSetting('boardCustomCSS');
-			$style = htmlentities($style);
 			
 			return $style;
 		});
