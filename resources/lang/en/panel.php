@@ -20,6 +20,15 @@ return [
 		]
 	],
 	
+	'title' => [
+		'board'             => "/:board_uri/ Board Configuration",
+		'site'              => "Site Configuration",
+		'board_create'      => "Create a Board",
+		'board_create_your' => "Create your Board",
+		'board_staff_list'  => "/:board_uri/ Staff List",
+		'permissions'       => ":role Role Permissions",
+	],
+	
 	'nav'       => [
 		'primary' => [
 			'home'  => "Home",
@@ -52,6 +61,15 @@ return [
 			'users'  => [
 				'permissions'     => "Permissions",
 				'role_permissions' => "Role Permissions",
+			],
+		],
+		
+		'tertiary' => [
+			'board_settings' => [
+				'assets'  => "Assets",
+				'basic'   => "Basic Details",
+				'staff'   => "Staff",
+				'style'   => "Styling",
 			],
 		],
 	],

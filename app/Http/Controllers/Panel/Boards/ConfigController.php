@@ -27,7 +27,9 @@ class ConfigController extends PanelController {
 	|
 	*/
 	
+	const VIEW_ASSETS = "panel.board.assets";
 	const VIEW_CONFIG = "panel.board.config";
+	const VIEW_STAFF  = "panel.board.staff";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -36,6 +38,18 @@ class ConfigController extends PanelController {
 	 */
 	public static $navSecondary = "nav.panel.board";
 	
+	/**
+	 * View path for the tertiary (inner) navigation.
+	 *
+	 * @var string
+	 */
+	public static $navTertiary = "nav.panel.board.settings";
+	
+	/**
+	 * Add a unique validator upon boot.
+	 *
+	 * @return void
+	 */
 	protected function boot()
 	{
 		Validator::resolver(function($translator, $data, $rules, $messages)
@@ -43,6 +57,22 @@ class ConfigController extends PanelController {
 			return new ComparisonValidator($translator, $data, $rules, $messages);
 		});
 	}
+	
+	/**
+	 * Display existing assets.
+	 *
+	 * @return Response
+	 */
+	public function getAssets(Request $request, Board $board)
+	{
+		return $this->view(static::VIEW_CONFIG, [
+			'board'   => $board,
+			'banners' => $board->getBanners(),
+			
+			'tab'     => "assets",
+		]);
+	}
+	
 	
 	/**
 	 * Show the application dashboard to the user.
@@ -56,6 +86,8 @@ class ConfigController extends PanelController {
 		return $this->view(static::VIEW_CONFIG, [
 			'board'  => $board,
 			'groups' => $optionGroups,
+			
+			'tab'    => "basic",
 		]);
 	}
 	
@@ -96,6 +128,28 @@ class ConfigController extends PanelController {
 		return $this->view(static::VIEW_CONFIG, [
 			'board'  => $board,
 			'groups' => $optionGroups,
+			
+			'tab'    => "basic",
+		]);
+	}
+	
+	
+	/**
+	 * List all staff members to the user.
+	 *
+	 * @return Response
+	 */
+	public function getStaff(Board $board)
+	{
+		$roles = $board->roles;
+		$staff = $board->getStaff();
+		
+		return $this->view(static::VIEW_STAFF, [
+			'board'  => $board,
+			'roles'  => $roles,
+			'staff'  => $staff,
+			
+			'tab'    => "staff",
 		]);
 	}
 }

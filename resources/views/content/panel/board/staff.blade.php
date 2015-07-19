@@ -1,5 +1,9 @@
 @extends('layouts.main.panel')
 
+@section('title', trans("panel.title.board_staff_list", [
+	'board_uri' => $board->board_uri,
+]))
+
 @section('body')
 	@if (count($staff))
 	<table>

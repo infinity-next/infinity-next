@@ -108,15 +108,13 @@ a.button {
 input,
 textarea,
 select {
-	background: #2a2a2a;
-	border: 1px solid #dee0df;
-	color: #dee0df;
+	
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-	outline: #34345C auto 5px;
+	
 }
 
 /*
@@ -329,7 +327,7 @@ main.cp form.form-config {
 		max-width: none;
 	}
 	
-	h3.config-title {
+	h3.panel-title {
 		margin: 0 0 0.5em 0;
 	}
 	
@@ -1185,7 +1183,9 @@ div.cp-box {
 }
 	
 	div.cp-frame {
+		margin-top: -1px;
 		border-right: 1px solid #e0e0e0;
+		overflow: hidden;
 	}
 	div.cp-frame:last-child {
 		border-left: 1px solid #e0e0e0;
@@ -1258,8 +1258,6 @@ nav.cp-side {
 	nav.cp-side ul.cp-linkgroups {
 		display: block;
 	}
-	nav.cp-side ul.cp-linkgroups {
-	}
 		nav.cp-side li.cp-linkgroup {
 			display: block;
 		}
@@ -1280,9 +1278,63 @@ nav.cp-side {
 					nav.cp-side a.linkgroup-name,
 					nav.cp-side a.linkitem-name {
 						display: block;
+						padding: 0.2em 0;
 					}
 					nav.cp-side a.linkitem-name {
 						line-height: 1.6;
+					}
+
+nav.cp-inner {
+	display: block;
+	padding: 0;
+	margin: -0.25em -1em 0 -1em;
+}
+	nav.cp-tabs section.cp-linklists {
+	}
+	
+	nav.cp-inner ul.cp-linkgroups {
+	}
+		nav.cp-inner li.cp-linkgroup {
+		}
+			nav.cp-inner a.linkgroup-name {
+				/* Usually not set. */
+			}
+			
+			nav.cp-inner ul.cp-linkitems {
+				display: block;
+				display: table;
+				box-sizing: border-box;
+				width: 100%;
+				min-height: 23px;
+				_height: 23px;
+				
+				font-size: 11px;
+				padding: 1em 1.5em 0 1.5em;
+				border-bottom: 1px solid #e0e0e0;
+				word-wrap: normal;
+			}
+				nav.cp-inner li.cp-linkitem {
+				}
+					nav.cp-inner a.linkitem-name {
+						display: inline-block;
+						cursor: pointer;
+						
+						background: none;
+						border: 1px solid #e0e0e0;
+						border-radius: 5px 5px 0 0;
+						outline: 0 none;
+						padding: 0 1em;
+						margin: 0 -1px -1px 0;
+						
+						color: #525252;
+						text-decoration: none;
+						line-height: 22px;
+						height: 22px;
+						white-space: nowrap;
+						word-wrap: normal;
+					}
+					nav.cp-inner a.linkitem-name.linkitem-active {
+						border-bottom: 1px solid white;
 					}
 
 #payment-form {

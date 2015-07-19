@@ -11,14 +11,6 @@ return [
 	|
 	*/
 	
-	'title' => [
-		'board'             => "/:board_uri/ Board Configuration",
-		'site'              => "Site Configuration",
-		'board_create'      => "Create a Board",
-		'board_create_your' => "Create your Board",
-		'permissions'       => ":role Role Permissions",
-	],
-	
 	'legend' => [
 		'permissions'   => [
 			'board_controls' => "Board Controls",

@@ -63,6 +63,11 @@ class Board extends Model {
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
 	
+	public function assets()
+	{
+		return $this->hasMany('\App\BoardAsset', 'board_uri');
+	}
+	
 	public function posts()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');
@@ -164,6 +169,11 @@ class Board extends Model {
 				->take(20)
 				->get()
 		];
+	}
+	
+	public function getBanners()
+	{
+		return $this->assets->where('asset_type', "board_banner");
 	}
 	
 	public function getLocalThread($local_id)

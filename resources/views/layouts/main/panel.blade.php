@@ -15,7 +15,16 @@
 			</div>
 			
 			<div class="cp-frame grid-85">
+				<h3 class="panel-title">@yield('title')</h3>
+				
+				@if (isset($c::$navTertiary))
+				@section('nav-tertiary')
+					@include( $c::$navTertiary)
+				@show
+				@endif
+				
 				@include('widgets.messages')
+				
 				@yield('body')
 			</div>
 		</div>
