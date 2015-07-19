@@ -27,9 +27,10 @@ class BoardController extends Controller {
 	|
 	*/
 	
-	const VIEW_BOARD  = "board";
-	const VIEW_THREAD = "board";
-	const VIEW_LOGS   = "board.logs";
+	const VIEW_BOARD   = "board";
+	const VIEW_CATALOG = "catalog";
+	const VIEW_THREAD  = "board";
+	const VIEW_LOGS    = "board.logs";
 	
 	/**
 	 * Show the board index for the user.
@@ -72,6 +73,25 @@ class BoardController extends Controller {
 			'page'     => $page,
 			'pagePrev' => $pagePrev,
 			'pageNext' => $pageNext,
+		] );
+	}
+	
+	/**
+	 * Show the catalog (gridded) board view.
+	 *
+	 * @var \App\Http\Requests\Request $request
+	 * @var Board $board
+	 * @return Response
+	 */
+	public function getCatalog(Request $request, Board $board)
+	{
+		// Load our list of threads and their latest replies.
+		$posts = $board->getThreadsForCatalog();
+		
+		return $this->view(static::VIEW_CATALOG, [
+			'board'    => $board,
+			'posts'    => $posts,
+			'reply_to' => false,
 		] );
 	}
 	

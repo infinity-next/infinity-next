@@ -185,6 +185,9 @@ Route::group([
 	// Pushes simple /board/ requests to their index page.
 	Route::any('/', 'BoardController@getIndex');
 	
+	// Loads the catalog.
+	Route::get('catalog', 'BoardController@getCatalog');
+	
 	// Routes /board/1 to an index page for a specific pagination point.
 	Route::get('{id}', 'BoardController@getIndex')
 		->where(['id' => '[0-9]+']);

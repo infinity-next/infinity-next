@@ -107,14 +107,15 @@
 		
 		display: block;
 		margin: 0;
+		padding: 10px 10px 0 10px;
 		width: 300px;
 	}
 	
-	body.responsive section.index-threads .thread {
+	body.responsive .index-threaded section.index-threads .thread {
 		padding: 1em;
 		padding-right: 320px;
 	}
-	body.responsive section.index-threads .post {
+	body.responsive .index-threaded section.index-threads .post {
 		max-width: 70vw;
 	}
 	

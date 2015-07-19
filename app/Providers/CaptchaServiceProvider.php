@@ -59,7 +59,7 @@ class CaptchaServiceProvider extends ServiceProvider {
 			return $captcha->create($config);
 		});
 		
-		$this->app['validator']->extend("captcha", 'App\Validators\CaptchaValidator@validateCaptcha', 'validation.captcha');
+		$this->registerValidationRules($this->app['validator']);
 	}
 	
 	/**
@@ -70,6 +70,11 @@ class CaptchaServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		
+	}
+	
+	protected function registerValidationRules($validator)
+	{
+		$validator->extend("captcha", 'App\Validators\CaptchaValidator@validateCaptcha', 'validation.captcha');
 	}
 	
 	/**

@@ -382,6 +382,43 @@ class Board extends Model {
 		return $threads;
 	}
 	
+	public function getThreadsForCatalog($page = 0)
+	{
+		$rememberTags    = ["board.{$this->board_uri}.pages"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board_uri}.catalog";
+		$rememberClosure = function() {
+			$threads = $this->threads()
+				->op()
+				->withEverything()
+				->orderBy('stickied', 'desc')
+				->orderBy('reply_last', 'desc')
+				->get();
+			
+			// Limit the number of attachments to one.
+			foreach ($threads as $thread)
+			{
+				$thread->attachments = $thread->attachments->splice(0, 1);
+			}
+			
+			return $threads;
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $threads;
+	}
+	
 	public function setEmailAttribute($value)
 	{
 		$this->attributes['email'] = empty($value) ? NULL : $value;

@@ -1,8 +1,6 @@
 <?php namespace App\Validators;
 
-use Illuminate\Validation\Validator;
-
-class CaptchaValidator extends Validator
+class CaptchaValidator
 {
 	public function validateCaptcha($attribute, $value, $parameters)
 	{

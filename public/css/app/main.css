@@ -318,8 +318,11 @@ form {
 		}
 	
 	.row-captcha {
+		/*
 		border: 1px solid #dee0df;
 		width: 300px;
+		*/
+		
 		margin-left: 0;
 		margin-right: auto;
 	}
@@ -979,15 +982,15 @@ section.index-threads {
 	}
 	
 	/* Threads */
-	.thread,
+	main.index-threaded .thread,
 	section.index-threads aside.advertiser.top-left {
 		padding: 1em;
 	}
-	.thread-item:nth-child(even),
+	main.index-threaded .thread-item:nth-child(even),
 	section.index-threads aside.advertiser.top-left {
 		background: rgba(255,255,255,0.40);
 	}
-	.thread-item:last-child{
+	main.index-threaded .thread-item:last-child{
 		border-bottom: none;
 	}
 	
@@ -1127,6 +1130,33 @@ section.index-threads {
 					color: #dee0df;
 					background: #34345C;
 				}
+	
+	
+	/* Catalog View */
+	main.index-catalog {
+		margin: 0 1em;
+	}
+		main.index-catalog .thread {
+			display: inline-block;
+			position: relative;
+			float: left;
+			
+			background: rgba(182, 182, 182, 0.12);
+			border: 2px solid rgba(111, 111, 111, 0.34);
+			overflow: hidden;
+			
+			margin: 0.5em;
+			padding: 2px;
+			
+			vertical-align: top;
+			text-align: center;
+			font-weight: normal;
+			font-size: 11px;
+			
+			min-width: 140px;
+			max-width: 140px;
+			max-height: 192px;
+		}
 
 section.auth-form {
 	max-width: 640px;
