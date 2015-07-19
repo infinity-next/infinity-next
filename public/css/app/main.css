@@ -108,13 +108,19 @@ a.button {
 input,
 textarea,
 select {
-	
+	/*
+	background: #2a2a2a;
+	border: 1px solid #dee0df;
+	color: #dee0df;
+	*/
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-	
+	/*
+	outline: #34345C auto 5px;
+	*/
 }
 
 /*
@@ -266,7 +272,10 @@ form {
 	.field-control {
 		display: block;
 		
+		/*
 		border: 1px solid #34345C;
+		*/
+		
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0.2em 0.4em;
@@ -355,10 +364,16 @@ main.cp form.form-config {
 			clear: both;
 			margin: 1em 0;
 		}
+			dl.option-banner {
+				display: inline-block;
+				
+				box-sizing: border-box;
+				min-width: 33%;
+			}
 			#config-permissions dl.option {
 				margin: 0;
 			}
-		
+			
 			dt.option-term {
 				display: inline-block;
 				margin: 0 1em 0 0;
@@ -369,6 +384,9 @@ main.cp form.form-config {
 				text-align: right;
 				vertical-align: top;
 			}
+				dl.option-banner dt.option-term {
+					display: none;
+				}
 			
 			dd.option-definition {
 				display: inline-block;
@@ -377,6 +395,9 @@ main.cp form.form-config {
 				width: auto;
 				vertical-align: top;
 			}
+				dl.option-banner dd.option-definition {
+					margin: 0;
+				}
 				dd.option-definition label.field-label {
 					display: inline-block;
 					vertical-align: top;
@@ -401,6 +422,10 @@ main.cp form.form-config {
 					width: 5em;
 					text-align: center;
 				}
+					dl.option-banner input.field-control {
+						margin: 0 0.25em;
+					}
+					
 					label.option-permission .field-control {
 						vertical-align: text-top;
 						height: 2em;

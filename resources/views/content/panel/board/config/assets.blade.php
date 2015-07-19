@@ -10,7 +10,7 @@
 			<dt class="option-term">
 				{!! Form::label(
 					"new_board_banner",
-					trans("config.option.banner_upload"),
+					trans("config.option.boardAssetBannerUpload"),
 					[
 						'class' => "field-label",
 				]) !!}
@@ -25,7 +25,7 @@
 	
 	<div class="field row-submit">
 		{!! Form::button(
-			trans("config.submit"),
+			trans("config.upload"),
 			[
 				'type'      => "submit",
 				'class'     => "field-submit",
@@ -48,13 +48,14 @@
 		<dl class="option option-banner">
 			<dt class="option-term"></dt>
 			<dd class="option-definition">
-				<label for="banner[{$banner->board_asset_id}]" class="field-label">
+				<label for="banner_{{ $banner->board_asset_id }}" class="field-label">
 					{!! Form::checkbox(
 						"banner[{$banner->board_asset_id}]",
 						1,
 						true,
 						[
-							'class'     => "field-control",
+							'id'    => "banner_{$banner->board_asset_id}",
+							'class' => "field-control",
 					]) !!}
 					
 					{!! $banner->asHTML() !!}

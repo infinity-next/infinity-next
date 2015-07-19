@@ -26,9 +26,10 @@ return [
 		'bans'          => "Ban Options",
 		
 		'boards'        => "Board Options",
+		'board_banners' => "Board Banners",
+		'board_basic'   => "Basic Details",
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
-		'board_basic'   => "Basic Details",
 		'style'         => "Styling",
 		
 		'navigation'    => "Site Navigation",
@@ -46,6 +47,8 @@ return [
 		'boardBasicIndexed'       => "Publicly Indexed",
 		'boardBasicWorksafe'      => "Safe for Work",
 		'boardCustomCSS'          => "Custom CSS",
+		
+		'boardAssetBannerUpload'  => "Upload new board banner",
 		
 		'boardCreateMax'          => "Maximum boards per user",
 		'boardCreateTimer'        => "Cooldown between board creations (min)",
@@ -150,5 +153,6 @@ return [
 	],
 	
 	'create' => "Create",
+	'upload' => "Upload",
 	'submit' => "Save Changes",
 ];
