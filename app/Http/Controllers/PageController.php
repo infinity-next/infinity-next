@@ -2,7 +2,10 @@
 
 use App\Payment;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\View;
+
+use Carbon\Carbon;
 
 class PageController extends Controller {
 	
@@ -24,6 +27,8 @@ class PageController extends Controller {
 	 */
 	public function getContribute()
 	{
+		$devCarbon = new Carbon("05/20/15");
+		
 		$devTimeSum  = 0;
 		$devTimer    = "0 hours";
 		$donors      = Payment::where('amount', '>', '0')->orderBy('amount', 'desc')->get();
@@ -76,9 +81,11 @@ class PageController extends Controller {
 		$devDays  = 0;
 		$devInflation = (24 * 7) / (8 * 5); // This inflation factor will make the dev timer reflect off hours too, on the assumption of a 40 hour work week.
 		
-		$devHours = (($devTimeSum / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * $devInflation;
-		$devDays  = (int) ($devHours / 24);
-		$devHours = (int) ($devHours % 24);
+		$devTime   = (($devTimeSum / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * $devInflation;
+		$devCarbon = $devCarbon->addHours($devTime);
+		
+		$devDays   = $devCarbon->diffInDays();
+		$devHours  = $devCarbon->diffInHours() - ($devDays * 24);
 		
 		if ($devHours > 0 || $devDays > 0)
 		{
@@ -115,6 +122,7 @@ class PageController extends Controller {
 		}
 		
 		return $this->view(static::VIEW_CONTRIBUTE, [
+			"devCarbon"   => $devCarbon,
 			"devTimer"    => $devTimer,
 			"donations"   => $devTimeSum,
 			"donors"      => $donorGroups,

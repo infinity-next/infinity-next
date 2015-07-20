@@ -639,6 +639,9 @@ main.contrib section.contrib-shekel {
 		text-align: center;
 		margin: 0;
 	}
+		blockquote.shekel-timer.timer-underfunded {
+			color: #cc0000;
+		}
 	p.shekel-oyvey {
 		display: block;
 		text-align: right;

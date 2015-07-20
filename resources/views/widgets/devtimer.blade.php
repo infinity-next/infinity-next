@@ -1,8 +1,15 @@
 <section class="contrib-shekel">
 	<div class="grid-container">
 		<a id="contribute-shekel"></a>
-		<h3 class="shekel-title">I can afford to work ...</h3>
-		<blockquote class="shekel-timer" title="This is on the assumption of a 40 hour work week.">{{{ $devTimer }}} </blockquote>
-		<p class="shekel-oyvey">... thanks to ${{ number_format($donations / 100) }} donated by generous contributors.</p>
+		
+		@if ($devCarbon->isFuture())
+			<h3 class="shekel-title">I can afford to work ...</h3>
+			<blockquote class="shekel-timer" title="This is on the assumption of a 40 hour work week.">{{{ $devTimer }}} </blockquote>
+			<p class="shekel-oyvey">... thanks to ${{ number_format($donations / 100) }} donated by generous contributors.</p>
+		@else
+			<h3 class="shekel-title">I'm underfunded by ...</h3>
+			<blockquote class="shekel-timer timer-underfunded" title="This is on the assumption of a 40 hour work week.">{{{ $devTimer }}} </blockquote>
+			<p class="shekel-oyvey"> ... and will require <a href="{{ secure_url("contribute") }}">more donations</a> to keep working.</p>
+		@endif
 	</div>
 </section>
