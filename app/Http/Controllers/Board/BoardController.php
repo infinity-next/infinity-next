@@ -113,12 +113,11 @@ class BoardController extends Controller {
 	/**
 	 * Renders a thread.
 	 *
-	 * @var \App\Http\Requests\Request $request
 	 * @var Board $board
 	 * @var integer|null $thread
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, $thread = null)
+	public function getThread(Board $board, $thread = null)
 	{
 		if (is_null($thread))
 		{
@@ -133,16 +132,44 @@ class BoardController extends Controller {
 			return abort(404);
 		}
 		
-		if ($thread->reply_to)
-		{
-			return redirect("{$board->board_uri}/thread/{$thread->op->board_id}");
-		}
-		
 		return $this->view(static::VIEW_THREAD, [
 			'board'    => $board,
 			'posts'    => [ $thread ],
 			'reply_to' => $thread->board_id,
 		]);
+	}
+	
+	/**
+	 * Redirect from a local id to a thread OP..
+	 *
+	 * @param  Board $board
+	 * @param  integer $thread
+	 * @return Redirect
+	 */
+	public function getPost(Board $board, $post)
+	{
+		if (is_null($post))
+		{
+			return redirect($board->board_uri);
+		}
+		
+		// Check to see if the thread exists.
+		$post = $board->posts()
+			->where('board_id', $post)
+			->get()
+			->first();
+		
+		if (!$post)
+		{
+			return abort(404);
+		}
+		
+		if ($post->reply_to)
+		{
+			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
+		}
+		
+		return redirect("{$board->board_uri}/thread/{$post->board_id}");
 	}
 	
 	/**

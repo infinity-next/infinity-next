@@ -2,6 +2,7 @@
 
 use App\FileStorage;
 use App\FileAttachment;
+use App\PostCite;
 use App\Services\ContentFormatter;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -41,7 +42,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'author_ip', 'capcode_id', 'subject', 'author', 'email', 'body'];
+	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'reply_to_board_id', 'author_ip', 'capcode_id', 'subject', 'author', 'email', 'body'];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -56,6 +57,58 @@ class Post extends Model {
 	 * @var array
 	 */
 	protected $dates = ['deleted_at'];
+	
+	
+	
+	public function attachments()
+	{
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
+	}
+	
+	public function board()
+	{
+		return $this->belongsTo('\App\Board', 'board_uri');
+	}
+	
+	public function capcode()
+	{
+		return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
+	}
+	
+	public function cites()
+	{
+		return $this->hasMany('\App\PostCite', 'post_id');
+	}
+	
+	public function citedBy()
+	{
+		return $this->hasMany('\App\PostCite', 'cite_id', 'post_id');
+	}
+	
+	public function citedPosts()
+	{
+		return $this->belongsToMany("\App\Post", 'post_cites', 'post_id');
+	}
+	
+	public function citedByPosts()
+	{
+		return $this->belongsToMany("\App\Post", 'post_cites', 'cite_id', 'post_id');
+	}
+	
+	public function op()
+	{
+		return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
+	}
+	
+	public function replies()
+	{
+		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
+	}
+	
+	public function editor()
+	{
+		return $this->hasOne('\App\User', 'user_id', 'updated_by');
+	}
 	
 	
 	/**
@@ -108,9 +161,47 @@ class Post extends Model {
 			Event::fire(new PostWasDeleted($post));
 		});
 		
+		// Update citation references
+		static::saved(function(Post $post)
+		{
+			$post->cites()->delete();
+			
+			// Process citations.
+			$cited = $post->getCitesFromText();
+			$cites = [];
+			
+			foreach ($cited['posts'] as $citedPost)
+			{
+				$cites[] = new PostCite([
+					'post_board_uri' => $post->board_uri,
+					'post_board_id'  => $post->board_id,
+					'cite_id'        => $citedPost->post_id,
+					'cite_board_uri' => $citedPost->board_uri,
+					'cite_board_id'  => $citedPost->board_id,
+				]);
+			}
+			
+			foreach ($cited['boards'] as $citedBoard)
+			{
+				$cites[] = new PostCite([
+					'post_board_uri' => $post->board_uri,
+					'cite_board_uri' => $citedBoard->board_uri,
+				]);
+			}
+			
+			if (count($cites) > 0)
+			{
+				$post->cites()->saveMany($cites);
+			}
+			
+		});
+		
 		// Fire events on post updated.
 		static::updated(function(Post $post) {
-			Event::fire(new PostWasModified($post));
+			if (is_null($post->deleted_at))
+			{
+				Event::fire(new PostWasModified($post));
+			}
 		});
 		
 	}
@@ -177,37 +268,6 @@ class Post extends Model {
 	}
 	
 	
-	public function attachments()
-	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
-	}
-	
-	public function board()
-	{
-		return $this->belongsTo('\App\Board', 'board_uri');
-	}
-	
-	public function capcode()
-	{
-		return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
-	}
-	
-	public function op()
-	{
-		return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
-	}
-	
-	public function replies()
-	{
-		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
-	}
-	
-	public function editor()
-	{
-		return $this->hasOne('\App\User', 'user_id', 'updated_by');
-	}
-	
-	
 	/**
 	 * Determines if this is a bumpless post.
 	 *
@@ -233,6 +293,16 @@ class Post extends Model {
 		return $this->board()
 			->get()
 			->first();
+	}
+	
+	/**
+	 * Parses the post text for citations.
+	 *
+	 * @return Collection
+	 */
+	public function getCitesFromText()
+	{
+		return ContentFormatter::getCites($this);
 	}
 	
 	/**
@@ -366,6 +436,11 @@ class Post extends Model {
 			);
 	}
 	
+	public function scopeAndCites($query)
+	{
+		return $query->with('cites', 'cites.cite');
+	}
+	
 	public function scopeAndEditor($query)
 	{
 		return $query
@@ -437,6 +512,7 @@ class Post extends Model {
 			->andAttachments()
 			->andBan()
 			->andCapcode()
+			->andCites()
 			->andEditor();
 	}
 	
@@ -521,6 +597,7 @@ class Post extends Model {
 			
 			// Queries and locks are handled automatically after this closure ends.
 		});
+		
 		
 		// Process uploads.
 		if (count($uploads) > 0)

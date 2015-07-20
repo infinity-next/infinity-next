@@ -36,6 +36,11 @@ class Role extends Model {
 	 */
 	protected $fillable = ['role', 'board_uri', 'caste', 'inherit_id', 'name', 'capcode', 'system'];
 	
+	/**
+	 * Indicates their is no autoupdated timetsamps.
+	 *
+	 * @var boolean
+	 */
 	public $timestamps = false;
 	
 	
