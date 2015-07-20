@@ -35,7 +35,15 @@ class AddPostReplyToBoardId extends Migration {
 		foreach ($replies as $reply)
 		{
 			$reply->reply_to_board_id = $reply->op_board_id;
-			$reply->save();
+			
+			try
+			{
+				$reply->save();
+			}
+			catch (Exception $e)
+			{
+				dd($e);
+			}
 		}
 	}
 	

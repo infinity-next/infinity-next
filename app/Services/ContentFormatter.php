@@ -186,19 +186,19 @@ class ContentFormatter {
 			
 			if ($cite->cite_board_id)
 			{
-				$replacements["&gt;&gt;&gt;/{$cite->cite_board_uri}/{$cite->cite_board_id}"] = $this->buildCiteLink($cite, true,  true);
-				$replacements["&gt;&gt;{$cite->cite_board_id}"] = $this->buildCiteLink($cite, false, true);
+				$replacements["/^&gt;&gt;&gt;\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?$/"] = $this->buildCiteLink($cite, true,  true);
+				$replacements["/^&gt;&gt;{$cite->cite_board_id}\r?$/"] = $this->buildCiteLink($cite, false, true);
 			}
 			else
 			{
-				$replacements["&gt;&gt;&gt;/{$cite->cite_board_uri}/"] = $this->buildCiteLink($cite, false, false);
+				$replacements["/^&gt;&gt;&gt;\/{$cite->cite_board_uri}\/\r?$/"] = $this->buildCiteLink($cite, false, false);
 			}
 			
 			foreach ($words as &$word)
 			{
 				foreach ($replacements as $pattern => $replacement)
 				{
-					if ($pattern == $word)
+					if (preg_match($pattern, $word))
 					{
 						$word = $replacement;
 						break;

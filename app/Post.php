@@ -198,10 +198,7 @@ class Post extends Model {
 		
 		// Fire events on post updated.
 		static::updated(function(Post $post) {
-			if (is_null($post->deleted_at))
-			{
-				Event::fire(new PostWasModified($post));
-			}
+			Event::fire(new PostWasModified($post));
 		});
 		
 	}

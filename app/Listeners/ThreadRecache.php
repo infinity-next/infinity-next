@@ -32,7 +32,7 @@ class ThreadRecache extends Listener
 		// If this post is a reply to a thread
 		if ($post->reply_to)
 		{
-			$thread_id = $post->op->board_id;
+			$thread_id = $post->reply_to_board_id;
 		}
 		else
 		{

@@ -77,7 +77,14 @@ class AddPostReplies extends Migration {
 				
 				if (count($cites) > 0)
 				{
-					$post->cites()->saveMany($cites);
+					try
+					{
+						$post->cites()->saveMany($cites);
+					}
+					catch (Exception $e)
+					{
+						dd($post);
+					}
 				}
 			}
 		});
