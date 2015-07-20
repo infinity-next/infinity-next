@@ -68,7 +68,7 @@ class AddPostReplies extends Migration {
 				{
 					$cites[] = new PostCite([
 						'post_board_uri' => $post->board_uri,
-						'cite_board_uri' => $citedPost->board_uri,
+						'cite_board_uri' => $citedBoard->board_uri,
 					]);
 				}
 				
