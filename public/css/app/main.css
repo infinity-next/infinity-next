@@ -1776,13 +1776,13 @@ body.error::before {
 /* Page Header */
 header {
 	/* background: #fff; */
-	border-top: 3em solid rgba(0,0,0,0);
+	border-top: 4.5em solid rgba(0,0,0,0);
 	color: #333;
 	padding: 0 0 0 0;
 	margin: 0 0 1em 0;
 }
 	header.header-height-1 {
-		border-top: 2em solid rgba(0,0,0,0);
+		border-top: 2.5em solid rgba(0,0,0,0);
 	} 
 
 figure.page-head {
