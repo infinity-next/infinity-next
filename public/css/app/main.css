@@ -850,6 +850,7 @@ nav.boardlist {
 	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
+		position: static;
 	}
 		footer .boardlist-row.row-pages {
 			display: none;
