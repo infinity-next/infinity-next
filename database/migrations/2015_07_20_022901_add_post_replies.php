@@ -55,13 +55,16 @@ class AddPostReplies extends Migration {
 				
 				foreach ($cited['posts'] as $citedPost)
 				{
-					$cites[] = new PostCite([
-						'post_board_uri' => $post->board_uri,
-						'post_board_id'  => $post->board_id,
-						'cite_id'        => $citedPost->post_id,
-						'cite_board_uri' => $citedPost->board_uri,
-						'cite_board_id'  => $citedPost->board_id,
-					]);
+					if (is_null($citedPost->deleted_at))
+					{
+						$cites[] = new PostCite([
+							'post_board_uri' => $post->board_uri,
+							'post_board_id'  => $post->board_id,
+							'cite_id'        => $citedPost->post_id,
+							'cite_board_uri' => $citedPost->board_uri,
+							'cite_board_id'  => $citedPost->board_id,
+						]);
+					}
 				}
 				
 				foreach ($cited['boards'] as $citedBoard)
