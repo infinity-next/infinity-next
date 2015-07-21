@@ -640,6 +640,14 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'data_type'             => "string",
 				],
+				[
+					'option_name'           => "postFloodTime",
+					'default_value'         => 30,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "integer",
+					'validation_parameters' => 'required|min:$min'
+				],
 			],
 			
 			'board' => [
@@ -785,6 +793,7 @@ class OptionGroupSeeder extends Seeder
 					"postAttachmentsMax",
 					"postMaxLength",
 					"postMinLength",
+					'postFloodTime',
 				],
 			],
 			[

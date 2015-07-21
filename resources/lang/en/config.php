@@ -64,6 +64,7 @@ return [
 		'postAttachmentsMax'      => "Maximum attachments per post",
 		'postMaxLength'           => "Maximum characters per post",
 		'postMinLength'           => "Minimum characters per post",
+		'postFloodTime'           => "Minimum time between posts (sec)",
 		
 		'postsPerPage'            => "Threads per page",
 		

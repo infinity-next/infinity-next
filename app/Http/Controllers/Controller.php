@@ -119,7 +119,7 @@ abstract class Controller extends BaseController {
 	{
 		if (!isset($this->options))
 		{
-			$this->options = SiteSetting::get();
+			$this->options = SiteSetting::getAll();
 		}
 		
 		foreach ($this->options as $option)

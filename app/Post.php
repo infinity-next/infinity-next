@@ -319,6 +319,26 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns the last post made by this user across the entire site.
+	 *
+	 * @param  string $ip
+	 * @return \App\Post
+	 */
+	public static function getLastPostForIP($ip = null)
+	{
+		if (is_null($ip))
+		{
+			$ip = Request::getClientIp();
+		}
+		
+		return Post::where('author_ip', $ip)
+			->orderBy('created_at', 'desc')
+			->take(1)
+			->get()
+			->first();
+	}
+	
+	/**
 	 * Returns the model for this post's original post (what it is a reply to).
 	 *
 	 * @return \App\Post

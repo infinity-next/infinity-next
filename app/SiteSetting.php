@@ -1,5 +1,7 @@
 <?php namespace App;
 
+use App\SiteSetting;
+
 use Illuminate\Database\Eloquent\Model;
 
 class SiteSetting extends Model {
@@ -33,4 +35,32 @@ class SiteSetting extends Model {
 		return $this->belongsTo('\App\Option', 'option_name');
 	}
 	
+	
+	/**
+	 * Return all site settings.
+	 *
+	 * @return Collection
+	 */
+	public static function getAll()
+	{
+		return static::get();
+	}
+	
+	/**
+	 * Return a specific site setting.
+	 *
+	 * @return mixed
+	 */
+	public static function getValue($site_setting)
+	{
+		foreach (static::getAll() as $setting)
+		{
+			if ($setting->option_name == $site_setting)
+			{
+				return $setting->option_value;
+			}
+		}
+		
+		return null;
+	}
 }
