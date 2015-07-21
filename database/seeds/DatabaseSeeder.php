@@ -616,7 +616,7 @@ class OptionSeeder extends Seeder {
 					'default_value'         => 0,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
-					'data_type'             => "integer",
+					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min'
 				],
 				[
@@ -624,7 +624,7 @@ class OptionSeeder extends Seeder {
 					'default_value'         => 15,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
-					'data_type'             => "integer",
+					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min'
 				],
 				[
@@ -645,7 +645,7 @@ class OptionSeeder extends Seeder {
 					'default_value'         => 30,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
-					'data_type'             => "integer",
+					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min'
 				],
 			],
@@ -688,6 +688,79 @@ class OptionSeeder extends Seeder {
 					'default_value'         => "10",
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 5, 'max' => 20 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				
+				[
+					'option_name'           => "epheSageThreadReply",
+					'default_value'         => 350,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheSageThreadDays",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheSageThreadPage",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheLockThreadReply",
+					'default_value'         => 700,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheLockThreadDays",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheLockThreadPage",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheDeleteThreadReply",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheDeleteThreadDays",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min|max:$max'
+				],
+				[
+					'option_name'           => "epheDeleteThreadPage",
+					'default_value'         => 16,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min|max:$max'
 				],
@@ -782,6 +855,23 @@ class OptionGroupSeeder extends Seeder
 					"boardCreateMax",
 					"boardCreateTimer",
 					"boardUriBanned",
+				],
+			],
+			[
+				'group_name'    => "board_ephemerality",
+				'debug_only'    => false,
+				'display_order' => 300,
+				
+				'options'       => [
+					"epheSageThreadReply",
+					"epheSageThreadDays",
+					"epheSageThreadPage",
+					"epheLockThreadReply",
+					"epheLockThreadDays",
+					"epheLockThreadPage",
+					"epheDeleteThreadReply",
+					"epheDeleteThreadDays",
+					"epheDeleteThreadPage",
 				],
 			],
 			[

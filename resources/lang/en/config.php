@@ -28,6 +28,7 @@ return [
 		'boards'        => "Board Options",
 		'board_banners' => "Board Banners",
 		'board_basic'   => "Basic Details",
+		'board_ephemerality' => "Content Ephemerality",
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
 		'style'         => "Styling",
@@ -65,6 +66,16 @@ return [
 		'postMaxLength'           => "Maximum characters per post",
 		'postMinLength'           => "Minimum characters per post",
 		'postFloodTime'           => "Minimum time between posts (sec)",
+		
+		'epheSageThreadReply'      => "Autosage threads after this many replies",
+		'epheSageThreadDays'       => "Autosage threads after this many days",
+		'epheSageThreadPage'       => "Autosage threads on this page",
+		'epheLockThreadReply'      => "Lock threads after this many replies",
+		'epheLockThreadDays'       => "Lock threads after this many days",
+		'epheLockThreadPage'       => "Lock threads on this page",
+		'epheDeleteThreadReply'    => "Delete threads after this many replies",
+		'epheDeleteThreadDays'     => "Delete threads after this many days",
+		'epheDeleteThreadPage'     => "Delete threads on this page",
 		
 		'postsPerPage'            => "Threads per page",
 		
