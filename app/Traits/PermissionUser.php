@@ -348,7 +348,7 @@ trait PermissionUser {
 	 */
 	public function canPostWithoutCaptcha(Board $board)
 	{
-		return !$this->isAnonymous();
+		return $this->can('board.post.nocaptcha');
 	}
 	
 	/**

@@ -27,9 +27,7 @@ class UserRecachePermissions extends Listener
 	 */
 	public function handle($event)
 	{
-		$user = $event->user;
-		
-		if ($user instanceof PermissionUser)
+		if (isset($event->user))
 		{
 			Cache::forget("user.{$user->user_id}.permissions");
 		}

@@ -141,6 +141,7 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.post.delete.other",],
 			['base_value' => 0, 'permission_id' => "board.post.edit.self",],
 			['base_value' => 0, 'permission_id' => "board.post.edit.other",],
+			['base_value' => 0, 'permission_id' => "board.post.nocaptcha",],
 			['base_value' => 0, 'permission_id' => "board.post.sticky",],
 			['base_value' => 0, 'permission_id' => "board.user.role",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.reason",],
@@ -265,6 +266,7 @@ class PermissionGroupSeeder extends Seeder
 					"board.post.edit.other",
 					"board.post.edit.self",
 					"board.post.sticky",
+					"board.post.nocaptcha",
 				],
 			],
 			[

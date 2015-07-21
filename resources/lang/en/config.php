@@ -117,6 +117,7 @@ return [
 					'self' => "Edit own content",
 				],
 				'sticky' => "Sticky anyone's threads",
+				'nocaptcha' => "Post without CAPTCHAs",
 			],
 			
 			'reassign' => "Reassign board",
