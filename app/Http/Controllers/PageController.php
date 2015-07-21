@@ -20,6 +20,10 @@ class PageController extends Controller {
 	
 	const VIEW_CONTRIBUTE = "pages.contribute";
 	
+	public static $ContributeProjectStart = "05/05/15";
+	public static $ContributePublicStart  = "05/05/15";
+	public static $ContributeDevInflation = 4.2; // (24 * 7) / (8 * 5)
+	
 	/**
 	 * Show the board index for the user.
 	 *
@@ -27,60 +31,28 @@ class PageController extends Controller {
 	 */
 	public function getContribute()
 	{
-		$devStart  = new Carbon("05/05/15");
-		$devCarbon = new Carbon("05/20/15");
+		$devStart  = new Carbon( static::$ContributeProjectStart );
+		$devCarbon = new Carbon( static::$ContributePublicStart );
 		
 		$devTimeSum  = 0;
 		$devTimer    = "0 hours";
-		$donors      = Payment::where('amount', '>', '0')->orderBy('amount', 'desc')->get();
+		$donorGroups = Payment::getDonorGroups();
 		
-		$donorGroups = [
-			'uber'   => [],
-			'plat'   => [],
-			'gold'   => [],
-			'silver' => [],
-			'bronze' => [],
-		];
-		$donorWeights = [
-			'uber'   => 25,
-			'plat'   => 20,
-			'gold'   => 15,
-			'silver' => 10,
-			'bronze' => 10,
-		];
-		
-		foreach ($donors as $donor)
+		foreach ($donorGroups as $donorGroup)
 		{
-			// Add the amount to the dev timer.
-			$devTimeSum += $donor->amount;
-			
-			// Sort each donor into groups.
-			if ($donor->amount >= 10000)
+			foreach ($donorGroup as $donor)
 			{
-				$donorGroups['uber'][] = $donor;
-			}
-			else if ($donor->amount >= 5000)
-			{
-				$donorGroups['plat'][] = $donor;
-			}
-			else if ($donor->amount >= 1800)
-			{
-				$donorGroups['gold'][] = $donor;
-			}
-			else if ($donor->amount >= 1200)
-			{
-				$donorGroups['silver'][] = $donor;
-			}
-			else
-			{
-				$donorGroups['bronze'][] = $donor;
+				// Add the amount to the dev timer.
+				$devTimeSum += $donor->amount;
 			}
 		}
 		
 		// Determine the time in a literal string.
 		$devHours = 0;
 		$devDays  = 0;
-		$devInflation = (24 * 7) / (8 * 5); // This inflation factor will make the dev timer reflect off hours too, on the assumption of a 40 hour work week.
+		$devInflation = static::$ContributeDevInflation; // This inflation factor will make the dev timer reflect off hours too, on the assumption of a 40 hour work week.
+		
+		dd($devInflation);
 		
 		$devTime   = (($devTimeSum / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * $devInflation;
 		$devCarbon->addHours($devTime);
@@ -128,7 +100,6 @@ class PageController extends Controller {
 			"devStart"    => $devStart,
 			"donations"   => $devTimeSum,
 			"donors"      => $donorGroups,
-			"donorWeight" => $donorWeights,
 		]);
 	}
 }

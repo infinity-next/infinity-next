@@ -634,7 +634,7 @@ class OptionSeeder extends Seeder {
 				],
 				[
 					'option_name'           => "boardUriBanned",
-					'default_value'         => 1,
+					'default_value'         => "",
 					'format'                => "textbox",
 					'data_type'             => "string",
 				],

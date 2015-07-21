@@ -12,9 +12,9 @@
 ]) !!}
 	
 	@if ($user->isAnonymous())
-		<h3 class="config-title">@lang("config.title.board_create_your")</h3>
+		<h3 class="config-title">@lang("panel.title.board_create_your")</h3>
 	@else
-		<h3 class="config-title">@lang("config.title.board_create")</h3>
+		<h3 class="config-title">@lang("panel.title.board_create")</h3>
 	@endif
 	
 	<fieldset class="form-fields" id="fields-board_basic">
