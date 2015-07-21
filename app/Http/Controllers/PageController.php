@@ -27,6 +27,7 @@ class PageController extends Controller {
 	 */
 	public function getContribute()
 	{
+		$devStart  = new Carbon("05/05/15");
 		$devCarbon = new Carbon("05/20/15");
 		
 		$devTimeSum  = 0;
@@ -82,7 +83,7 @@ class PageController extends Controller {
 		$devInflation = (24 * 7) / (8 * 5); // This inflation factor will make the dev timer reflect off hours too, on the assumption of a 40 hour work week.
 		
 		$devTime   = (($devTimeSum / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * $devInflation;
-		$devCarbon = $devCarbon->addHours($devTime);
+		$devCarbon->addHours($devTime);
 		
 		$devDays   = $devCarbon->diffInDays();
 		$devHours  = $devCarbon->diffInHours() - ($devDays * 24);
@@ -124,6 +125,7 @@ class PageController extends Controller {
 		return $this->view(static::VIEW_CONTRIBUTE, [
 			"devCarbon"   => $devCarbon,
 			"devTimer"    => $devTimer,
+			"devStart"    => $devStart,
 			"donations"   => $devTimeSum,
 			"donors"      => $donorGroups,
 			"donorWeight" => $donorWeights,
