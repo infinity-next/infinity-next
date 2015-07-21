@@ -21,7 +21,7 @@ class PageController extends Controller {
 	const VIEW_CONTRIBUTE = "pages.contribute";
 	
 	public static $ContributeProjectStart = "05/05/15";
-	public static $ContributePublicStart  = "05/05/15";
+	public static $ContributePublicStart  = "05/20/15";
 	public static $ContributeDevInflation = 4.2; // (24 * 7) / (8 * 5)
 	
 	/**
