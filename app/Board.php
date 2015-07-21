@@ -166,7 +166,7 @@ class Board extends Model {
 		return [
 			static::where('posts_total', '>', '-1')
 				->where('is_indexed', 1)
-				->orderBy('board_uri', 'asc')
+				->orderBy('posts_total', 'desc')
 				->take(20)
 				->get()
 		];

@@ -98,11 +98,11 @@ class BoardsController extends PanelController {
 			return abort(403);
 		}
 		
+		$configErrors = [];
 		
 		// Check time and quantity restraints.
 		if (!$this->user->canAdminConfig())
 		{
-			$configErrors     = [];
 			$boardLastCreated = null;
 			$boardsOwned      = 0;
 			$boardCreateTimer = $this->option('boardCreateTimer');
@@ -134,11 +134,11 @@ class BoardsController extends PanelController {
 					'boardCreateTimer' => $boardLastCreated->diffInMinutes(),
 				]);
 			}
-			
-			if (count($configErrors))
-			{
-				return redirect()->back()->withInput()->withErrors($configErrors);
-			}
+		}
+		
+		if (count($configErrors))
+		{
+			return redirect()->back()->withInput()->withErrors($configErrors);
 		}
 		
 		

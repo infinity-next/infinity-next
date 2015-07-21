@@ -631,7 +631,13 @@ class OptionSeeder extends Seeder {
 					'format'                => "onoff",
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
-				]
+				],
+				[
+					'option_name'           => "boardUriBanned",
+					'default_value'         => 1,
+					'format'                => "textbox",
+					'data_type'             => "string",
+				],
 			],
 			
 			'board' => [
@@ -765,6 +771,7 @@ class OptionGroupSeeder extends Seeder
 				'options'       => [
 					"boardCreateMax",
 					"boardCreateTimer",
+					"boardUriBanned",
 				],
 			],
 			[
@@ -774,6 +781,8 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"postAttachmentsMax",
+					"postMaxLength",
+					"postMinLength",
 				],
 			],
 			[

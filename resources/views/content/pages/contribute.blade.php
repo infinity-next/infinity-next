@@ -142,14 +142,14 @@
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Board management &amp; config</span>
+						<span class="goal-part">Board management &amp; config <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Mixing together the fine tuned moderator permissions and site management panel, we can begin to build config specific to board owners.
 							This would include local volunteers, board-specific assets, and other settings to personalize each board.
 						</blockquote>
 					</li>
 					<li class="goal-item grid-25">
-						<span class="goal-part">Local bans &amp; public lists</span>
+						<span class="goal-part">Local bans &amp; public lists <i class="fa fa-check"></i></span>
 						<blockquote class="goal-helper">
 							Taking the existing ban system, we can improve site transparency and publish bans for each board.
 							This will include details for who placed them, how long they last, why it was placed, and if an appeal was denied.
