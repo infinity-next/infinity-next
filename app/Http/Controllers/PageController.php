@@ -52,8 +52,6 @@ class PageController extends Controller {
 		$devDays  = 0;
 		$devInflation = static::$ContributeDevInflation; // This inflation factor will make the dev timer reflect off hours too, on the assumption of a 40 hour work week.
 		
-		dd($devInflation);
-		
 		$devTime   = (($devTimeSum / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * $devInflation;
 		$devCarbon->addHours($devTime);
 		
