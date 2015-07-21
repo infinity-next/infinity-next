@@ -167,37 +167,39 @@ class PostRequest extends Request {
 			return !$board->canPostWithoutCaptcha($this->user);
 		});
 		
-		
-		// Check last post time for flood.
-		$floodTime = site_setting('postFloodTime');
-		
-		if ($floodTime > 0)
-		{
-			$lastPost = Post::getLastPostForIP();
-			
-			if ($lastPost)
-			{
-				$floodTimer = clone $lastPost->created_at;
-				$floodTimer->addSeconds($floodTime);
-				
-				if ($floodTimer->isFuture())
-				{
-					$messages = $validator->errors();
-					$messages->add("body", trans("validation.custom.post_flood", [
-						'time_left' => $floodTimer->diffInSeconds(),
-					]));
-					$this->failedValidation($validator);
-				}
-			}
-		}
-		
-		
 		if (!$validator->passes())
 		{
 			$this->failedValidation($validator);
 		}
 		else
 		{
+			if (!$this->user->canAdminConfig() && $board->canPostWithoutCaptcha($this->user))
+			{
+				// Check last post time for flood.
+				$floodTime = site_setting('postFloodTime');
+				
+				if ($floodTime > 0)
+				{
+					$lastPost = Post::getLastPostForIP();
+					
+					if ($lastPost)
+					{
+						$floodTimer = clone $lastPost->created_at;
+						$floodTimer->addSeconds($floodTime);
+						
+						if ($floodTimer->isFuture())
+						{
+							$messages = $validator->errors();
+							$messages->add("body", trans("validation.custom.post_flood", [
+								'time_left' => $floodTimer->diffInSeconds(),
+							]));
+							$this->failedValidation($validator);
+						}
+					}
+				}
+			}
+			
+			
 			// This is a hack, but ...
 			// If a file is uploaded that has a specific filename, it breaks the process.
 			
