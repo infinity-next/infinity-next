@@ -38,6 +38,14 @@ class PageController extends Controller {
 		$devTimer    = "0 hours";
 		$donorGroups = Payment::getDonorGroups();
 		
+		$donorWeights = [
+			'uber'   => 25,
+			'plat'   => 20,
+			'gold'   => 15,
+			'silver' => 10,
+			'bronze' => 10,
+		];
+		
 		foreach ($donorGroups as $donorGroup)
 		{
 			foreach ($donorGroup as $donor)
@@ -93,11 +101,12 @@ class PageController extends Controller {
 		}
 		
 		return $this->view(static::VIEW_CONTRIBUTE, [
-			"devCarbon"   => $devCarbon,
-			"devTimer"    => $devTimer,
-			"devStart"    => $devStart,
-			"donations"   => $devTimeSum,
-			"donors"      => $donorGroups,
+			"devCarbon"    => $devCarbon,
+			"devTimer"     => $devTimer,
+			"devStart"     => $devStart,
+			"donations"    => $devTimeSum,
+			"donors"       => $donorGroups,
+			"donorWeight"  => $donorWeights,
 		]);
 	}
 }
