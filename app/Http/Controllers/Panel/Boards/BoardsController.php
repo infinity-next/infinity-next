@@ -160,7 +160,7 @@ class BoardsController extends PanelController {
 		}
 		
 		// Generate a list of banned URIs.
-		$bannedUris = explode("\n", $this->option('boardUriBanned'));
+		$bannedUris = array_filter(explode("\n", $this->option('boardUriBanned')));
 		$bannedUris[] = "cp";
 		$bannedUris = implode(",", $bannedUris);
 		

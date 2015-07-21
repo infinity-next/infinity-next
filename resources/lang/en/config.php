@@ -47,6 +47,7 @@ return [
 		'boardBasicIndexed'       => "Publicly Indexed",
 		'boardBasicWorksafe'      => "Safe for Work",
 		'boardCustomCSS'          => "Custom CSS",
+		'boardUriBanned'          => "Banned Board URIs",
 		
 		'boardAssetBannerUpload'  => "Upload new board banner",
 		
