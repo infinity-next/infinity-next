@@ -829,12 +829,19 @@ main.contrib section.contrib-donate {
 nav.boardlist {
 	padding: 0 1em;
 	font-size: 1em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 }
 	nav.boardlist .boardlist-row {
+		display: inline-block;
+		
 		height: 1.4em;
 		line-height: 1.4em;
 		padding: 0;
-		margin: 0 1em 0 0;
+		margin: 0 0.5em 0 0;
+		
+		white-space: nowrap;
 	}
 	header nav.boardlist {
 		background: #d6daf0;
@@ -847,7 +854,7 @@ nav.boardlist {
 		top: 0;
 		left: 0;
 		right: 0;
-		position: fixed;
+		position: absolute;
 		z-index: 1000;
 	}
 	footer nav.boardlist {
@@ -859,42 +866,42 @@ nav.boardlist {
 			display: none;
 		}
 	
-	nav.boardlist .boardlist-categories,
-	nav.boardlist .boardlist-category,
-	nav.boardlist .boardlist-items,
-	nav.boardlist .boardlist-item {
-		display: inline-block;
-		height: 1em;
-		line-height: 1em;
-	}
-	
-	nav.boardlist .boardlist-category::before {
-		content: '[';
-		opacity: 0.6;
-	}
-	nav.boardlist .boardlist-category::after {
-		content: ']';
-		opacity: 0.6;
-	}
-	
-	nav.boardlist .boardlist-item::after {
-		content: '/';
-		margin: 0 0.15em 0 0.4em;
-		opacity: 0.6;
-	}
-	nav.boardlist .boardlist-item:last-child::after {
-		display: none;
-	}
-	
-	nav.boardlist .boardlist-link {
-		text-decoration: none;
-	}
-	header nav.boardlist .boardlist-link {
-		color: #34345C;
-	}
-	footer nav.boardlist .boardlist-link {
-		color: #ffffff;
-	}
+		nav.boardlist .boardlist-categories,
+		nav.boardlist .boardlist-category,
+		nav.boardlist .boardlist-items,
+		nav.boardlist .boardlist-item {
+			display: inline-block;
+			height: 1em;
+			line-height: 1em;
+		}
+		
+		nav.boardlist .boardlist-category::before {
+			content: '[';
+			opacity: 0.6;
+		}
+		nav.boardlist .boardlist-category::after {
+			content: ']';
+			opacity: 0.6;
+		}
+		
+			nav.boardlist .boardlist-item::after {
+				content: '/';
+				margin: 0 0.15em 0 0.4em;
+				opacity: 0.6;
+			}
+			nav.boardlist .boardlist-item:last-child::after {
+				display: none;
+			}
+			
+				nav.boardlist .boardlist-link {
+					text-decoration: none;
+				}
+					header nav.boardlist .boardlist-link {
+						color: #34345C;
+					}
+					footer nav.boardlist .boardlist-link {
+						color: #ffffff;
+					}
 
 /* Main Content */
 main {

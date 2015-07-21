@@ -41,7 +41,7 @@
 
 <body class="infinity-next responsive @yield('body-class')">
 	@section('header')
-	<header class="board-header header-height-{{ isset($boardbar) ? 2 : 1 }}">
+	<header class="board-header header-height-1">
 		@section('boardlist')
 			@include('nav.boardlist')
 		@show
