@@ -159,12 +159,18 @@ class BoardsController extends PanelController {
 			}
 		}
 		
+		// Generate a list of banned URIs.
+		$bannedUris = explode("\n", $this->option('boardUriBanned'));
+		$bannedUris[] = "cp";
+		$bannedUris = implode(",", $bannedUris);
+		
 		// Validate the basic boardconstraints.
 		$input['board_uri'] = strtolower( (string) $input['board_uri'] );
 		$requirements = [
 			'board_uri'   => [
 				"required",
 				"unique:boards,board_uri",
+				"not_in:{$bannedUris}",
 				"string",
 				"regex:(" . Board::URI_PATTERN . ")",
 			],
