@@ -21,7 +21,7 @@ While not binding, I do ask that users link back to this git repository or to ht
 # Requirements
 Larachan runs on Laravel 5 and has the same requirements.
 
-* `PHP 5.4` or greater.
+* `PHP 5.5.9` or greater.
   * `php5-mycrypt` for bcrypt functions.
   * `php5-curl` for Stripe.
   * `php5-gd` for captcha codes and other image manipulation.
@@ -38,8 +38,10 @@ Infinity Next is currently below its first release version. When it is finished,
 4. Issue the command `php artisan migrate` or `./artisan migrate`
 5. Issue the command `php artisan db:seed` or `./artisan db:seed`
     * Take note of the Admin account password that will be created for you.
-6. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
-7. You should now have a `/test/` board. The admin account will be named `Admin`.
+6. Optionally, if you would like CRON services for content pruning, add the Laravel CRON service provided in `crontab.txt`
+7. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
+
+You should now have a `/test/` board. The admin account will be named `Admin`.
 
 # Contributing
 Everyone is welcome to contribute, but please follow repository etiquette.
