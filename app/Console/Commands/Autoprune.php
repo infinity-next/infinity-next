@@ -41,7 +41,7 @@ class Autoprune extends Command {
 			},
 		])->chunk(100, function($boards) use ($carbonNow) {
 			
-			echo "    Pruning 100 boards...\n";
+			$this->comment("    Pruning 100 boards...");
 			
 			// With each board, fetch their autoprune settings.
 			foreach ($boards as $board)
@@ -68,7 +68,7 @@ class Autoprune extends Command {
 				// Don't do anything unless we have to.
 				if ($sageOnDay || $lockOnDay || $deleteOnDay || $sageOnPage || $lockOnPage || $deleteOnPage)
 				{
-					echo "       Pruning /{$board->board_uri}/...\n";
+					$this->comment("       Pruning /{$board->board_uri}/...");
 					
 					// Modify threads based on these settings.
 					foreach ($board->threads as $threadIndex => $thread)
@@ -87,7 +87,7 @@ class Autoprune extends Command {
 							($sageOnPage > 0 && $sageOnPage <= $threadPage)
 						))
 						{
-							echo "           Bumplocking #{$thread->board_id}\n";
+							$this->comment("           Bumplocking #{$thread->board_id}");
 							$modified = true;
 							$thread->bumplocked_at = $carbonNow;
 						}
@@ -97,7 +97,7 @@ class Autoprune extends Command {
 							($lockOnPage > 0 && $lockOnPage <= $threadPage)
 						))
 						{
-							echo "           Locking #{$thread->board_id}\n";
+							$this->comment("           Locking #{$thread->board_id}");
 							$modified = true;
 							$thread->locked_at = $carbonNow;
 						}
@@ -107,7 +107,7 @@ class Autoprune extends Command {
 							($deleteOnPage > 0 && $deleteOnPage <= $threadPage)
 						))
 						{
-							echo "           Deleting #{$thread->board_id}\n";
+							$this->comment("           Deleting #{$thread->board_id}");
 							$modified = true;
 							$thread->deleted_at = $carbonNow;
 						}
@@ -125,7 +125,7 @@ class Autoprune extends Command {
 					}
 					else
 					{
-							echo "           Nothing to do.\n";
+						$this->comment("           Nothing to do.");
 					}
 				}
 			}

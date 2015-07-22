@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'App\Console\Commands\Autoprune',
+		'App\Console\Commands\Inspire',
 	];
 
 	/**
@@ -22,7 +23,12 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('Autoprune')->hourly();
+		$schedule->command('inspire')
+			->sendOutputTo("./inspire.txt");
+		
+		$schedule->command('autoprune')
+			->hourly()
+			->sendOutputTo("./autoprune.txt");
 	}
 
 }
