@@ -1,3 +1,4 @@
+@if (!$reply_to || !$reply_to->isLocked() || $board->canPostInLockedThreads($user))
 @if (isset($post))
 {!! Form::model($post, [
 	'url'    => Request::url(),
@@ -8,7 +9,7 @@
 ]) !!}
 @else
 {!! Form::open([
-	'url'    => url($board->board_uri . '/thread/' . ($reply_to ?: "")),
+	'url'    => url($board->board_uri . '/thread/' . ($reply_to ? $reply_to->board_id: "")),
 	'files'  => true,
 	'method' => "PUT",
 	'class'  => "form-post",
@@ -132,4 +133,5 @@
 	
 @if (!isset($form) || $form)
 </form>
+@endif
 @endif

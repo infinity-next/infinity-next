@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class PostFeatures extends Migration {
-
+	
 	/**
 	 * Run the migrations.
 	 *
@@ -18,7 +18,7 @@ class PostFeatures extends Migration {
 			$table->timestamp('stickied_at')->nullable()->default(null)->after('stickied');
 		});
 	}
-
+	
 	/**
 	 * Reverse the migrations.
 	 *
@@ -32,5 +32,5 @@ class PostFeatures extends Migration {
 			$table->dropColumn('stickied_at');
 		});
 	}
-
+	
 }

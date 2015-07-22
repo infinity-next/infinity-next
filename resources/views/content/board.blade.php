@@ -17,9 +17,9 @@
 			<li class="thread-item">
 				<article class="thread">
 					@include($c->template('board.thread'), [
-							'board'   => $board,
-							'thread'  => $thread,
-							'op'      => $thread,
+						'board'   => $board,
+						'thread'  => $thread,
+						'op'      => $thread,
 					])
 				</article>
 			</li>

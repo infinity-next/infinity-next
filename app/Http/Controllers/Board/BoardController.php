@@ -135,7 +135,7 @@ class BoardController extends Controller {
 		return $this->view(static::VIEW_THREAD, [
 			'board'    => $board,
 			'posts'    => [ $thread ],
-			'reply_to' => $thread->board_id,
+			'reply_to' => $thread,
 		]);
 	}
 	
@@ -206,7 +206,7 @@ class BoardController extends Controller {
 		}
 		else
 		{
-			return redirect("{$board->board_uri}/thread/{$thread->board_id}#{$post->board_id}");
+			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
 		}
 	}
 	

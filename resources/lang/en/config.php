@@ -128,7 +128,11 @@ return [
 					'other' => "Edit anyone's content",
 					'self' => "Edit own content",
 				],
+				'lock' => "Lock anyone's threads",
+				'bumplock' => "Bumplock anyone's threads",
 				'sticky' => "Sticky anyone's threads",
+				
+				'lock_bypass' => "Post in locked threads",
 				'nocaptcha' => "Post without CAPTCHAs",
 			],
 			

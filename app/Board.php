@@ -115,6 +115,11 @@ class Board extends Model {
 		return $user->canPostWithoutCaptcha($this);
 	}
 	
+	public function canPostInLockedThreads($user)
+	{
+		return $user->canPostInLockedThreads($this);
+	}
+	
 	
 	public function clearCachedThreads()
 	{
@@ -267,7 +272,14 @@ class Board extends Model {
 		{
 			if ($setting->option_name == $option_name)
 			{
-				return $setting->option_value;
+				$option_value = $setting->option_value;
+				
+				if (is_null($option_value) || $option_value === "")
+				{
+					return $fallback;
+				}
+				
+				return $option_value;
 			}
 		}
 		
@@ -311,7 +323,7 @@ class Board extends Model {
 			return $this->posts()
 				->where('board_id', $post)
 				->withEverythingAndReplies()
-				->orderBy('reply_last', 'desc')
+				->orderBy('bumped_last', 'desc')
 				->get();
 		};
 		
@@ -352,7 +364,7 @@ class Board extends Model {
 					$query->forIndex();
 				}])
 				->orderBy('stickied', 'desc')
-				->orderBy('reply_last', 'desc')
+				->orderBy('bumped_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))
 				->take($postsPerPage)
 				->get();

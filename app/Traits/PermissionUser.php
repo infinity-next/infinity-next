@@ -342,7 +342,17 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Can this user report this post?
+	 * Can this user post in locked threads?
+	 *
+	 * @return boolean
+	 */
+	public function canPostInLockedThreads(Board $board)
+	{
+		return $this->can('board.post.lock_bypass');
+	}
+	
+	/**
+	 * Can this user post in this thread without filling out the captcha?
 	 *
 	 * @return boolean
 	 */

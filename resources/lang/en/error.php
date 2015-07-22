@@ -32,6 +32,5 @@ return [
 	'ssl' => [
 		'desc'  => "This form deals in private information. Please use HTTPS.",
 		'title' => "SSL is Required",
-		
 	],
 ];

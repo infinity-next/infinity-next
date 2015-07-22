@@ -227,11 +227,11 @@ form {
 		padding: 0 0 1em 0;
 		margin: 0;
 	}
-	.form-legend {
-		font-weight: bold;
-		margin: 0;
-		padding: 0;
-	}
+		.form-legend {
+			font-weight: bold;
+			margin: 0;
+			padding: 0;
+		}
 	
 	.field {
 		margin: 1em 0;
@@ -829,9 +829,10 @@ main.contrib section.contrib-donate {
 nav.boardlist {
 	padding: 0 1em;
 	font-size: 1em;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+	
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 	nav.boardlist .boardlist-row {
 		display: inline-block;

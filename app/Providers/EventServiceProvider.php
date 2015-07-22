@@ -34,6 +34,9 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
+		'App\Events\ThreadNewReply' => [
+			'App\Listeners\ThreadAutopruneOnReply',
+		],
 		
 		// Board specific events
 		'App\Events\BoardWasCreated' => [

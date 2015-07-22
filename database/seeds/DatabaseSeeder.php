@@ -143,6 +143,9 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.post.edit.other",],
 			['base_value' => 0, 'permission_id' => "board.post.nocaptcha",],
 			['base_value' => 0, 'permission_id' => "board.post.sticky",],
+			['base_value' => 0, 'permission_id' => "board.post.lock",],
+			['base_value' => 0, 'permission_id' => "board.post.bumplock",],
+			['base_value' => 0, 'permission_id' => "board.post.lock_bypass",],
 			['base_value' => 0, 'permission_id' => "board.user.role",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.reason",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.free",],
@@ -265,8 +268,11 @@ class PermissionGroupSeeder extends Seeder
 					"board.post.delete.self",
 					"board.post.edit.other",
 					"board.post.edit.self",
+					"board.post.lock",
+					"board.post.bumplock",
 					"board.post.sticky",
 					"board.post.nocaptcha",
+					"board.post.lock_bypass",
 				],
 			],
 			[
@@ -503,6 +509,9 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.delete.self",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.edit.other",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.lock",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.bumplock",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.lock_bypass",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.sticky",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.ban",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.image.delete.other",],
@@ -519,6 +528,9 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.delete.self",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.edit.other",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.lock",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.bumplock",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.lock_bypass",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.sticky",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.ban",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.image.delete.other",],
@@ -534,6 +546,9 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.self",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.edit.other",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.edit.self",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.lock",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.bumplock",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.lock_bypass",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.sticky",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.ban",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.image.delete.other",],
@@ -689,7 +704,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 5, 'max' => 20 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				
 				[
@@ -698,7 +713,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheSageThreadDays",
@@ -706,7 +721,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheSageThreadPage",
@@ -714,7 +729,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheLockThreadReply",
@@ -722,7 +737,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheLockThreadDays",
@@ -730,7 +745,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheLockThreadPage",
@@ -738,7 +753,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadReply",
@@ -746,7 +761,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadDays",
@@ -754,7 +769,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadPage",
@@ -762,7 +777,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'min:$min|max:$max'
 				],
 			],
 		];

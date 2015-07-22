@@ -67,6 +67,14 @@ return [
 	// The direct link to a post, like No. 11111
 	'post_number'       => "No.",
 	
+	// Details
+	'detail'            => [
+		'sticky'     => "Stickied",
+		'bumplocked' => "Bumplocked",
+		'locked'     => "Locked",
+		'deleted'    => "Deleted",
+	],
+	
 	
 	// Post Actions
 	'action'            => [

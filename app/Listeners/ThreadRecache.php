@@ -1,8 +1,6 @@
 <?php namespace App\Listeners;
 
 use App\Post;
-use App\Events\PostWasUpdated;
-use App\Events\ThreadWasUpdated;
 use App\Listeners\Listener;
 use Cache;
 

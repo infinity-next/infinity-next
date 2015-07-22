@@ -29,7 +29,17 @@
 	</li>
 	@endif
 	
-	@if ($post->stickied_at)
-	<li class="post-detail post-sticky"><i class="fa fa-thumb-tack"></i></li>
+	@if ($post->isStickied())
+	<li class="post-detail post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></li>
+	@elseif ($post->isBumplocked())
+	<li class="post-detail post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-hand-o-down"></i></li>
+	@endif
+	
+	@if ($post->isLocked())
+	<li class="post-detail post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
+	@endif
+	
+	@if ($post->isDeleted())
+	<li class="post-detail post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
 	@endif
 </ul>

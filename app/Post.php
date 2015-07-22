@@ -18,6 +18,7 @@ use Event;
 use App\Events\PostWasAdded;
 use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;
+use App\Events\ThreadNewReply;
 
 class Post extends Model {
 	
@@ -42,7 +43,26 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'board_id', 'reply_to', 'reply_to_board_id', 'author_ip', 'capcode_id', 'subject', 'author', 'email', 'body'];
+	protected $fillable = [
+		'board_uri',
+		'board_id',
+		'reply_to',
+		'reply_to_board_id',
+		'reply_last',
+		'bumped_last',
+		
+		'stickied',
+		'stickied_at',
+		'bumplocked_at',
+		'locked_at',
+		
+		'author_ip',
+		'capcode_id',
+		'subject',
+		'author',
+		'email',
+		'body',
+	];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -52,11 +72,11 @@ class Post extends Model {
 	protected $hidden = ['author_ip'];
 	
 	/**
-	 * 
+	 * Attributes which are automatically sent through a Carbon instance on load.
 	 *
 	 * @var array
 	 */
-	protected $dates = ['deleted_at'];
+	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at'];
 	
 	
 	
@@ -197,8 +217,12 @@ class Post extends Model {
 		});
 		
 		// Fire events on post updated.
-		static::updated(function(Post $post) {
-			Event::fire(new PostWasModified($post));
+		static::updated(function(Post $post)
+		{
+			if ($post->isDirty(['subject', 'author', 'email', 'body']))
+			{
+				Event::fire(new PostWasModified($post));
+			}
 		});
 		
 	}
@@ -281,6 +305,57 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Determines if this thread cannot be bumped.
+	 *
+	 * @return boolean
+	 */
+	public function isBumplocked()
+	{
+		return !is_null($this->bumplocked_at);
+	}
+	
+	/**
+	 * Determines if this is deleted.
+	 *
+	 * @return boolean
+	 */
+	public function isDeleted()
+	{
+		return !is_null($this->deleted_at);
+	}
+	
+	/**
+	 * Determines if this is the first reply in a thread.
+	 *
+	 * @return boolean
+	 */
+	public function isOp()
+	{
+		return is_null($this->reply_to);
+	}
+	
+	/**
+	 * Determines if this thread is locked.
+	 *
+	 * @return boolean
+	 */
+	public function isLocked()
+	{
+		return !is_null($this->locked_at);
+	}
+	
+	/**
+	 * Determines if this thread is stickied.
+	 *
+	 * @return boolean
+	 */
+	public function isStickied()
+	{
+		return !is_null($this->stickied_at);
+	}
+	
+	
+	/**
 	 * Returns the board model for this post.
 	 *
 	 * @return \App\Board
@@ -336,6 +411,26 @@ class Post extends Model {
 			->take(1)
 			->get()
 			->first();
+	}
+	
+	/**
+	 * Returns the page on which this thread appears.
+	 * If the post is a reply, it will return the page it appears on in the thread, which is always 1.
+	 *
+	 * @return \App\Post
+	 */
+	public function getPage()
+	{
+		if ($this->isOp())
+		{
+			$board          = $this->board()->with('settings')->get()->first();
+			$visibleThreads = $board->threads()->op()->visible()->where('bumped_last', '>=', $this->bumped_last)->count();
+			$threadsPerPage = (int) $board->getSetting('postsPerPage', 10);
+			
+			return floor(($visibleThreads - 1) / $threadsPerPage) + 1;
+		}
+		
+		return 1;
 	}
 	
 	/**
@@ -397,9 +492,69 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Sets the bumplock property timestamp.
+	 *
+	 * @param  boolean  $bumplock
+	 * @return \App\Post
+	 */
+	public function setBumplock($bumplock = true)
+	{
+		if ($bumplock)
+		{
+			$this->bumplocked_at = $this->freshTimestamp();
+		}
+		else
+		{
+			$this->bumplocked_at = null;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the deleted timestamp.
+	 *
+	 * @param  boolean  $delete
+	 * @return \App\Post
+	 */
+	public function setDeleted($delete = true)
+	{
+		if ($delete)
+		{
+			$this->deleted_at = $this->freshTimestamp();
+		}
+		else
+		{
+			$this->deleted_at = null;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the locked property timestamp.
+	 *
+	 * @param  boolean  $lock
+	 * @return \App\Post
+	 */
+	public function setLock($lock = true)
+	{
+		if ($lock)
+		{
+			$this->locked_at = $this->freshTimestamp();
+		}
+		else
+		{
+			$this->locked_at = null;
+		}
+		
+		return $this;
+	}
+	
+	/**
 	 * Sets the sticky property of a post and updates relevant timestamps.
 	 *
-	 * @param  bolean  $sticky
+	 * @param  boolean  $sticky
 	 * @return \App\Post
 	 */
 	public function setSticky($sticky = true)
@@ -555,9 +710,10 @@ class Post extends Model {
 	 */
 	public function submitTo(Board &$board, &$thread = null)
 	{
-		$this->board_uri  = $board->board_uri;
-		$this->author_ip  = Request::getClientIp();
-		$this->reply_last = $this->freshTimestamp();
+		$this->board_uri   = $board->board_uri;
+		$this->author_ip   = Request::getClientIp();
+		$this->reply_last  = $this->freshTimestamp();
+		$this->bumped_last = $this->reply_last;
 		$this->setCreatedAt($this->reply_last);
 		$this->setUpdatedAt($this->reply_last);
 		
@@ -599,11 +755,12 @@ class Post extends Model {
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($thread instanceof Post)
 			{
-				if (!$this->isBumpless())
+				if (!$this->isBumpless() && !$thread->isBumplocked())
 				{
-					$thread->reply_last  = $this->created_at;
+					$thread->bumped_last = $this->created_at;
 				}
 				
+				$thread->reply_last  = $this->created_at;
 				$thread->reply_count += 1;
 				$thread->save();
 			}
@@ -638,6 +795,13 @@ class Post extends Model {
 					$attachment->save();
 				}
 			}
+		}
+		
+		
+		// Finally fire event on OP, if it exists.
+		if ($thread instanceof Post)
+		{
+			Event::fire(new ThreadNewReply($thread));
 		}
 	}
 	
