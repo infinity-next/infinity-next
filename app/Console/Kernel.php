@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel {
 		$schedule->command('inspire')
 			->sendOutputTo("./inspire.txt");
 		
+		$schedule->command('inspire')
+			->everyFiveMinutes()
+			->sendOutputTo("./inspire_5.txt");
+		
 		$schedule->command('autoprune')
 			->hourly()
 			->sendOutputTo("./autoprune.txt");

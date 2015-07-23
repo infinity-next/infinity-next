@@ -271,7 +271,7 @@ trait PermissionUser {
 	 */
 	public function canDeleteLocally(Board $board)
 	{
-		return $this->can("board.post.delete.other", $board->board_uri);
+		return $this->can("board.post.delete.other", $board);
 	}
 	
 	/**
@@ -292,7 +292,7 @@ trait PermissionUser {
 	public function canEdit(Post $post)
 	{
 		// If we can edit any post for this board ...
-		if ($this->can("board.post.edit.other", $post->board_uri))
+		if ($this->can("board.post.edit.other", $post))
 		{
 			// Allow post edit.
 			return true;
@@ -348,7 +348,7 @@ trait PermissionUser {
 	 */
 	public function canPostInLockedThreads(Board $board)
 	{
-		return $this->can('board.post.lock_bypass');
+		return $this->can('board.post.lock_bypass', $board->board_uri);
 	}
 	
 	/**
@@ -358,7 +358,7 @@ trait PermissionUser {
 	 */
 	public function canPostWithoutCaptcha(Board $board)
 	{
-		return $this->can('board.post.nocaptcha');
+		return $this->can('board.post.nocaptcha', $board->board_uri);
 	}
 	
 	/**

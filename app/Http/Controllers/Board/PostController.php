@@ -98,7 +98,7 @@ class PostController extends Controller {
 			}
 			else
 			{
-				if (!$board->canDelete($this->user))
+				if (!$this->user->canDelete($post))
 				{
 					return abort(403);
 				}
