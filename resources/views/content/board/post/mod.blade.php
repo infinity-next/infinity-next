@@ -8,7 +8,7 @@
 	<section class="moderate-post grid-container">
 		
 		@if (isset($actions))
-			@include( $c->template("board.post.mod.{$form}"), [ 'actions' => $actions, 'board' => $board, 'post' => $post ])
+			@include( $c->template("board.post.mod.{$form}"), [ 'actions' => $actions, 'board' => $board, 'post' => $post, 'reply_to' => false ])
 		@endif
 		
 		<article class="moderated-content">
