@@ -220,9 +220,9 @@ class Board extends Model {
 		{
 			return $banners->random()->getURL();
 		}
-		else if (!$this->is_worksafe)
+		else if (!$this->isWorksafe() && !$this->getStylesheet())
 		{
-			return "img/logo_yotsuba.png";
+			return "/img/logo_yotsuba.png";
 		}
 		else
 		{
@@ -454,6 +454,11 @@ class Board extends Model {
 		}
 		
 		return $threads;
+	}
+	
+	public function isWorksafe()
+	{
+		return !!$this->is_worksafe;
 	}
 	
 	public function setEmailAttribute($value)

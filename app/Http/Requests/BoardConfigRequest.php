@@ -24,6 +24,20 @@ class BoardConfigRequest extends Request {
 	protected $boardOptionGroups;
 	
 	/**
+	 * The board pertinent to the request.
+	 *
+	 * @var App\Board
+	 */
+	public $board;
+	
+	/**
+	 * The user.
+	 *
+	 * @var App\Trait\PermissionUser
+	 */
+	protected $user;
+	
+	/**
 	 * Fetches the user and our board config.
 	 *
 	 * @return void
@@ -42,13 +56,16 @@ class BoardConfigRequest extends Request {
 	{
 		$input = parent::all();
 		
-		foreach ($this->getBoardOptions() as $optionGroup)
+		if ($this->board)
 		{
-			foreach ($optionGroup->options as $option)
+			foreach ($this->getBoardOptions() as $optionGroup)
 			{
-				if (isset($input[$option->option_name]))
+				foreach ($optionGroup->options as $option)
 				{
-					$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
+					if (isset($input[$option->option_name]))
+					{
+						$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
+					}
 				}
 			}
 		}
@@ -88,7 +105,7 @@ class BoardConfigRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return $this->user->can('board.config', $this->board);
+		return $this->user->canEditConfig($this->board);
 	}
 	
 	/**
@@ -98,12 +115,22 @@ class BoardConfigRequest extends Request {
 	 */
 	public function getBoardOptions()
 	{
-		if (!isset($this->boardOptionGroups))
+		if (isset($this->board))
 		{
-			$this->boardOptionGroups = OptionGroup::getBoardConfig($this->board);
+			if (!isset($this->boardOptionGroups))
+			{
+				$this->boardOptionGroups = OptionGroup::getBoardConfig($this->board);
+			}
+			
+			return $this->boardOptionGroups;
 		}
 		
-		return $this->boardOptionGroups;
+		return [];
 	}
 	
+	
+	public function setBoard(Board $board)
+	{
+		return $this->board = $board;
+	}
 }

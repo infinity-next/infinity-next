@@ -181,6 +181,8 @@ class ConfigController extends PanelController {
 	 */
 	public function patchIndex(BoardConfigRequest $request, Board $board)
 	{
+		$request->setBoard($board);
+		
 		$input        = $request->all();
 		$optionGroups = $request->getBoardOptions();
 		
@@ -193,9 +195,16 @@ class ConfigController extends PanelController {
 					'board_uri'    => $board->board_uri,
 				]);
 				
-				$option->option_value  = $input[$option->option_name];
-				$setting->option_value = $input[$option->option_name];
-				$setting->save();
+				if (isset($input[$option->option_name]))
+				{
+					$option->option_value  = $input[$option->option_name];
+					$setting->option_value = $input[$option->option_name];
+					$setting->save();
+				}
+				else
+				{
+					$setting->delete();
+				}
 			}
 		}
 		

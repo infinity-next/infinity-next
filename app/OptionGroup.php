@@ -1,5 +1,7 @@
 <?php namespace App;
 
+use App\Board;
+
 use Illuminate\Database\Eloquent\Model;
 
 class OptionGroup extends Model {
@@ -56,7 +58,7 @@ class OptionGroup extends Model {
 		}])->get();
 	}
 	
-	public static function getBoardConfig(\App\Board $board)
+	public static function getBoardConfig(Board $board)
 	{
 		return static::with(['options' => function($query) use ($board)
 		{

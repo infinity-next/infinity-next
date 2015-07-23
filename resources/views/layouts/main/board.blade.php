@@ -6,12 +6,10 @@
 @section('css')
 	@parent
 	
-	@if (!$board->is_worksafe)
-	<link href="/css/app/skins/yotsuba.css" rel="stylesheet" />
-	@endif
-	
 	@if ($board->getStylesheet())
 	<link href="/{{ $board->board_uri }}/style.css" rel="stylesheet" />
+	@elseif (!$board->is_worksafe)
+	<link href="/css/app/skins/yotsuba.css" rel="stylesheet" />
 	@endif
 @stop
 
