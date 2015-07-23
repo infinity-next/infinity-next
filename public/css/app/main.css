@@ -1032,7 +1032,7 @@ section.index-threads {
 		font-size: 105%;
 		margin: 0 auto 0 0;
 		padding: 0;
-		min-width: 20vw;
+		min-width: 25vw;
 	}
 		.post p.line {
 			display: block;
@@ -1079,6 +1079,7 @@ section.index-threads {
 			display: block;
 		}
 			.post-details {
+				margin-right: 5em;
 				margin-bottom: 0.60em;
 			}
 				.post-detail {
@@ -1202,14 +1203,13 @@ section.index-threads {
 		span.post-action-tab {
 			display: inline-block;
 			cursor: default;
-			color: #800000;
 			
 			position: absolute;
 			right: 1em;
 			top: 1em;
 			z-index: 10;
 			
-			border: 1px solid #D9BFB7;
+			border: 1px solid #B7C5D9;
 			border-radius: 2px;
 			
 			line-height: 1em;
@@ -1225,8 +1225,8 @@ section.index-threads {
 				top: 1.5em;
 				left: 0;
 				
-				background-color: #F0E0D6;
-				border: 1px solid #D9BFB7;
+				background-color: #D6DAF0;
+				border: 1px solid #B7C5D9;
 				
 				list-style: none;
 				padding: 0;
@@ -1247,7 +1247,7 @@ section.index-threads {
 						vertical-align: top;
 					}
 						li.post-action {
-							border-bottom: 1px solid #D9BFB7;
+							border-bottom: 1px solid #B7C5D9;
 						}
 						li.post-action:last-child {
 							margin-bottom: -1px;
@@ -1255,8 +1255,8 @@ section.index-threads {
 							a.post-action-link {
 								display: block;
 								
-								padding: 2px 4px;
 								vertical-align: middle;
+								color: #34345C;
 								
 								padding: 0.25em 1em 0.25em;
 							}

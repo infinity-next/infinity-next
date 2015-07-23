@@ -58,6 +58,21 @@ header nav.boardlist {
 	ul.post-metas {
 		border-color: #D9BFB7;
 	}
+		span.post-action-tab {
+			color: #800000;
+			border-color: #D9BFB7;
+		}
+			ul.post-action-groups {
+				background-color: #F0E0D6;
+				border: 1px solid #D9BFB7;
+			}
+				li.post-action {
+					border-color: #D9BFB7;
+				}
+					a.post-action-link:hover{
+						color: #dee0df;
+						background-color: #34345C;
+					}
 
 form.form-post {
 	background: #f0e0d6;
