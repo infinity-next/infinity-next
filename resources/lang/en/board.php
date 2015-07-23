@@ -78,13 +78,19 @@ return [
 	
 	// Post Actions
 	'action'            => [
+		'open'              => "Actions",
+		
 		'ban'               => "Ban",
 		'ban_delete'        => "Ban &amp; Delete",
 		'ban_delete_board'  => "Ban &amp; Delete Board-wide",
 		'ban_delete_global' => "Ban &amp; Delete Site-wide",
+		'bumplock'          => "Bumplock",
+		'unbumplock'        => "Un-Bumplock",
 		'delete'            => "Delete",
 		'delete_board'      => "Delete Board-wide",
 		'delete_global'     => "Delete Site-wide",
+		'lock'              => "Lock",
+		'unlock'            => "Unlock",
 		'edit'              => "Edit",
 		'sticky'            => "Sticky",
 		'unsticky'          => "Unsticky",

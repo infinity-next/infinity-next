@@ -138,11 +138,15 @@ class ContentFormatter {
 	{
 		$html    = "";
 		$content = $this->encodeContent($content);
-		$lines   = explode("\n", $content);
 		
-		foreach ($lines as $line)
+		if ($content != "")
 		{
-			$html .= $this->formatLine($line);
+			$lines   = explode("\n", $content);
+			
+			foreach ($lines as $line)
+			{
+				$html .= $this->formatLine($line);
+			}
 		}
 		
 		return $html;

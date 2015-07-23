@@ -29,6 +29,6 @@ class Kernel extends ConsoleKernel {
 		
 		$schedule->command('autoprune')
 			->hourly()
-			->sendOutputTo("./storage/logs/autprune-{$now->toDateTimeString()}.txt");
+			->sendOutputTo("./storage/logs/autoprune-{$now->format('Y-m-d_H')}.txt");
 	}
 }

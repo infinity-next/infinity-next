@@ -28,7 +28,7 @@ class ThreadRecache extends Listener
 		$post = $event->post;
 		
 		// If this post is a reply to a thread
-		if ($post->reply_to)
+		if ($post->reply_to_board_id)
 		{
 			$thread_id = $post->reply_to_board_id;
 		}

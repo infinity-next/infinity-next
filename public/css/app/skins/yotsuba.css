@@ -70,3 +70,10 @@ ul.pagination-pages::after,
 li.pagination-page::after {
 	color: #800000;
 }
+
+button:hover,
+a.button:hover,
+a.post-action-link:hover {
+	color: #FFFFEE;
+	background: #800000;
+}

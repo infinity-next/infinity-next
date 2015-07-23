@@ -232,6 +232,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user bumplock threads?
+	 *
+	 * @return boolean
+	 */
+	public function canBumplock(Post $post)
+	{
+		return $this->can("board.post.bumplock", $post->board_uri);
+	}
+	
+	/**
 	 * Can this user create and assume control of a new board?
 	 *
 	 * @return boolean
@@ -339,6 +349,16 @@ trait PermissionUser {
 	public function canEditBoardUri(Board $board)
 	{
 		return false;
+	}
+	
+	/**
+	 * Can this user lock this thread to replies?
+	 *
+	 * @return boolean
+	 */
+	public function canLock(Post $post)
+	{
+		return $this->can("board.post.lock", $post->board_uri);
 	}
 	
 	/**

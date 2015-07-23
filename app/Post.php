@@ -228,14 +228,19 @@ class Post extends Model {
 	}
 	
 	/**
-	 * Determines if the user can edit this post.
+	 * Determines if the user can bumplock this post
 	 *
 	 * @param  App\User|App\Support\Anonymous  $user
 	 * @return boolean
 	 */
-	public function canEdit($user)
+	public function canBumplock($user)
 	{
-		return $user->canEdit($this);
+		if (!$this->bumplocked_at)
+		{
+			return $user->canBumplock($this);
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -247,6 +252,33 @@ class Post extends Model {
 	public function canDelete($user)
 	{
 		return $user->canDelete($this);
+	}
+	
+	/**
+	 * Determines if the user can edit this post.
+	 *
+	 * @param  App\User|App\Support\Anonymous  $user
+	 * @return boolean
+	 */
+	public function canEdit($user)
+	{
+		return $user->canEdit($this);
+	}
+	
+	/**
+	 * Determines if the user can lock this post
+	 *
+	 * @param  App\User|App\Support\Anonymous  $user
+	 * @return boolean
+	 */
+	public function canLock($user)
+	{
+		if (!$this->locked_at)
+		{
+			return $user->canLock($this);
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -273,7 +305,12 @@ class Post extends Model {
 	 */
 	public function canSticky($user)
 	{
-		return $user->canSticky($this);
+		if (!$this->stickied_at)
+		{
+			return $user->canSticky($this);
+		}
+		
+		return false;
 	}
 	
 	
@@ -721,6 +758,7 @@ class Post extends Model {
 		{
 			$thread = $board->getLocalThread($thread);
 			$this->reply_to = $thread->post_id;
+			$this->reply_to_board_id = $thread->board_id;
 		}
 		
 		// Store attachments

@@ -106,7 +106,7 @@ class PostRequest extends Request {
 			}
 			else
 			{
-				$attachmentsMax = $board->getSetting('attachmentsMax', 1);
+				$attachmentsMax = $board->getSetting('postAttachmentsMax', 1);
 				
 				$rules['body'][]  = "required_without:files";
 				$rules['files'][] = "array";
