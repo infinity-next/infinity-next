@@ -29,7 +29,7 @@ class UserRecachePermissions extends Listener
 	{
 		if (isset($event->user))
 		{
-			Cache::forget("user.{$this->user->user_id}.permissions");
+			Cache::forget("user.{$event->user->user_id}.permissions");
 		}
 		else
 		{
