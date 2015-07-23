@@ -833,10 +833,8 @@ main.contrib section.contrib-donate {
 nav.boardlist {
 	padding: 0 1em;
 	font-size: 1em;
-	
 	white-space: nowrap;
 	overflow: hidden;
-	text-overflow: ellipsis;
 }
 	nav.boardlist .boardlist-row {
 		display: inline-block;
@@ -889,24 +887,33 @@ nav.boardlist {
 			opacity: 0.6;
 		}
 		
-			nav.boardlist .boardlist-item::after {
-				content: '/';
-				margin: 0 0.15em 0 0.4em;
-				opacity: 0.6;
+			nav.boardlist .boardlist-items {
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
-			nav.boardlist .boardlist-item:last-child::after {
-				display: none;
-			}
-			
-				nav.boardlist .boardlist-link {
-					text-decoration: none;
+				nav.boardlist .boardlist-item {
+					display: inline;
 				}
-					header nav.boardlist .boardlist-link {
-						color: #34345C;
+				
+				nav.boardlist .boardlist-item::after {
+					display: inline;
+					content: '/';
+					margin: 0 0.15em 0 0.4em;
+					opacity: 0.6;
+				}
+				nav.boardlist .boardlist-item:last-child::after {
+					display: none;
+				}
+				
+					nav.boardlist .boardlist-link {
+						text-decoration: none;
 					}
-					footer nav.boardlist .boardlist-link {
-						color: #ffffff;
-					}
+						header nav.boardlist .boardlist-link {
+							color: #34345C;
+						}
+						footer nav.boardlist .boardlist-link {
+							color: #ffffff;
+						}
 
 /* Main Content */
 main {
