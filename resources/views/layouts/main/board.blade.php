@@ -3,10 +3,16 @@
 @section('title', e("{$board->title} - /{$board->board_uri}/"))
 @section('description', e($board->description))
 
-@if ($board->getStylesheet())
-	@section('css-addendum', "<link href=\"/{$board->board_uri}/style.css\" rel=\"stylesheet\" />")
-@endif
+@section('css')
+	@parent
+	
+	@if (!$board->is_worksafe)
+	<link href="/css/app/skins/yotsuba.css" rel="stylesheet" />
+	@endif
+	
+	@if ($board->getStylesheet())
+	<link href="/{{ $board->board_uri }}/style.css" rel="stylesheet" />
+	@endif
+@stop
 
-@if (count($board->getBanners()))
-	@section('header-logo', $board->getBannerRandom()->asHTML())
-@endif
+@section('header-logo', $board->getBannerURL())

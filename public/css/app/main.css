@@ -28,8 +28,12 @@
 html,
 body {
 	background-color: #EEF2FF;
-	/* background-image: url('/img/noise.png'); */
-	background-repeat: repeat;
+	background-image: -ms-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
+	background-image: -moz-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
+	background-image: -o-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d1d5ee), color-stop(1em, #d1d5ee), color-stop(200px, #EEF2FF), color-stop(100, #EEF2FF));
+	background-image: -webkit-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
+	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
 	
 	min-height: 100vh;
 	
@@ -998,21 +1002,24 @@ section.index-threads {
 	section.index-threads aside.advertiser.top-left {
 		padding: 1em;
 	}
-	main.index-threaded .thread-item:nth-child(even),
-	section.index-threads aside.advertiser.top-left {
-		background: rgba(255,255,255,0.40);
-	}
 	main.index-threaded .thread-item:last-child{
 		border-bottom: none;
 	}
 	
 	.reply {
-		margin: 0.5em 0 0.5em 0.75em;
-		padding: 0 0 0 1.25em;
-		border-left: 2px dashed rgba(0,0,0,0.1);
+		margin: 0.5em 0 0.5em 0;
+		padding: 0 0 0 0.75em;
 	}
+		.reply::before {
+			display: inline-block;
+			content: '>>';
+			color: #D6DAF0;
+			font-weight: bold;
+			vertical-align: top;
+		}
 	
 	.post {
+		position: relative;
 		font-size: 105%;
 		margin: 0 auto 0 0;
 		padding: 0;
@@ -1048,6 +1055,9 @@ section.index-threads {
 		border-color: #B7C5D9;
 		border-width: 1px;
 		border-style: none solid solid none;
+		
+		border-left: none;
+		border-top: none;
 	}
 		
 		.post-content {

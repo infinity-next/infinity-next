@@ -36,8 +36,14 @@ class BoardAsset extends Model {
 		return $this->belongsTo('\App\FileStorage', 'file_id');
 	}
 	
+	
 	public function asHTML()
 	{
-		return "<img src=\"/{$this->board_uri}/file/{$this->storage->hash}/banner.png\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
+		return "<img src=\"/{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
+	}
+	
+	public function getURL()
+	{
+		return "{$this->board_uri}/file/{$this->storage->hash}/banner.png";
 	}
 }

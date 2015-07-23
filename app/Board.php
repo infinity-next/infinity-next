@@ -207,6 +207,31 @@ class Board extends Model {
 		return false;
 	}
 	
+	/**
+	 * Returns a URL for a single banner, and will consider defaults.
+	 *
+	 * @return string
+	 */
+	public function getBannerURL()
+	{
+		$banners = $this->getBanners();
+		
+		if (count($banners) > 0)
+		{
+			return $banners->random()->getURL();
+		}
+		else if (!$this->is_worksafe)
+		{
+			return "img/logo_yotsuba.png";
+		}
+		else
+		{
+			return "/img/logo.png";
+		}
+		
+		return false;
+	}
+	
 	public function getLocalThread($local_id)
 	{
 		return $this->threads()

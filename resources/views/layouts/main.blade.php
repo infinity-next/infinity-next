@@ -6,8 +6,6 @@
 	@section('css')
 		{!! Minify::stylesheetDir('/css/vendor/') !!}
 		{!! Minify::stylesheet([ '/css/app/main.css', '/css/app/responsive.css' ]) !!}
-		
-		@yield('css-addendum')
 	@show
 	
 	@section('js')
@@ -48,9 +46,7 @@
 		
 		@section('header-inner')
 			<figure class="page-head">
-				@section('header-logo')
-					<img id="logo" src="/img/logo.png" alt="Infinity" />
-				@show
+				<img id="logo" src="@yield('header-logo', "/img/logo.png")" alt="Infinity" />
 				
 				<figcaption class="page-details">
 					<h1 class="page-title">@yield('title')</h1>
