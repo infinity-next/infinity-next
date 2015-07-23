@@ -205,8 +205,8 @@ class Captcha
 	 */
 	public function create($config = 'default')
 	{
-		$this->backgrounds = $this->files->files(base_path() . "/assets/Captcha/backgrounds");
-		$this->fonts = $this->files->files(base_path() . "/assets/Captcha/fonts");
+		$this->backgrounds = $this->files->files(base_path() . "/resources/assets/Captcha/backgrounds");
+		$this->fonts = $this->files->files(base_path() . "/resources/assets/Captcha/fonts");
 		
 		$this->configure($config);
 		

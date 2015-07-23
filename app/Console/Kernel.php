@@ -3,6 +3,8 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use Carbon\Carbon;
+
 class Kernel extends ConsoleKernel {
 
 	/**
@@ -23,8 +25,10 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
+		$now = Carbon::now();
+		
 		$schedule->command('autoprune')
-			->hourly();
+			->hourly()
+			->sendOutputTo("./storage/logs/autprune-{$now->toDateTimeString()}.txt");
 	}
-
 }

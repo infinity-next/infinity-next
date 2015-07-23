@@ -174,6 +174,24 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Supplies a clean thumbnail URL for embedding an attachment on a board.
+	 *
+	 * @param  App\Board  $board
+	 * @return string
+	 */
+	public function getThumbnailURL(Board $board)
+	{
+		if (isset($this->pivot) && isset($this->pivot->filename))
+		{
+			return url("{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . $this->pivot->filename;
+		}
+		else
+		{
+			return url("{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+		}
+	}
+	
+	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
 	 * @param UploadedFile $upload
