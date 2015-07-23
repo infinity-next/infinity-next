@@ -37,6 +37,7 @@ class Autoprune extends Command {
 			'threads' => function($query)
 			{
 				$query->whereNull('reply_to');
+				$query->whereNull('stickied_at');
 				$query->orderBy('bumped_last', 'desc');
 			},
 		])->chunk(100, function($boards) use ($carbonNow) {
