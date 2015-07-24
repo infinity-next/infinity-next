@@ -639,7 +639,7 @@ class Post extends Model {
 	
 	public function scopeAndFirstAttachment($query)
 	{
-		return $query->with([ 'attachments' => function($query)
+		return $query->with(['attachments' => function($query)
 		{
 			$query->limit(1);
 		}]);
@@ -712,8 +712,8 @@ class Post extends Model {
 	public function scopeForIndex($query)
 	{
 		return $query->withEverything()
-			->orderBy('post_id', 'desc')
-			->take( $this->stickied_at ? 1 : 5 );
+			->orderBy('post_id', 'desc');
+			//->take( $this->stickied_at ? 1 : 5 );
 	}
 	
 	public function scopeReplyTo($query, $replies = false)

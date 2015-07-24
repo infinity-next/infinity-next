@@ -398,7 +398,11 @@ class Board extends Model {
 			// Fix that.
 			foreach ($threads as $thread)
 			{
-				$thread->replies = $thread->replies->reverse();
+				$replyTake = $thread->stickied_at ? 1 : 5;
+				
+				$thread->replies = $thread->replies
+					->reverse()
+					->splice(-$replyTake, $replyTake);
 			}
 			
 			return $threads;
