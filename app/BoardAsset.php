@@ -44,6 +44,6 @@ class BoardAsset extends Model {
 	
 	public function getURL()
 	{
-		return "{$this->board_uri}/file/{$this->storage->hash}/banner.png";
+		return "/{$this->board_uri}/file/{$this->storage->hash}/banner.png";
 	}
 }

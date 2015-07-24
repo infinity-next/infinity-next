@@ -1018,6 +1018,7 @@ section.index-threads {
 	.reply {
 		margin: 0.5em 0 0.5em 0;
 		padding: 0 0 0 0.75em;
+		white-space: nowrap;
 	}
 		.reply::before {
 			display: inline-block;
@@ -1025,6 +1026,13 @@ section.index-threads {
 			color: #D6DAF0;
 			font-weight: bold;
 			vertical-align: top;
+			width: 1.5em;
+			float: left;
+		}
+		.reply::after {
+			display: block;
+			clear: both;
+			content: ' ';
 		}
 	
 	.post {
@@ -1033,6 +1041,7 @@ section.index-threads {
 		margin: 0 auto 0 0;
 		padding: 0;
 		min-width: 25vw;
+		white-space: normal;
 	}
 		.post p.line {
 			display: block;
@@ -1279,6 +1288,10 @@ section.index-threads {
 		margin: 0 1em;
 		text-align: left;
 	}
+		main.index-catalog .thread-list {
+			text-align: center;
+		}
+		
 		main.index-catalog .thread-item {
 			display: inline-block;
 			margin: 0 0.25em 0.25em 0;
@@ -1297,8 +1310,8 @@ section.index-threads {
 				font-weight: normal;
 				font-size: 11px;
 				
-				height: 250px;
-				width: 175px;
+				height: 22.5em;
+				width: 15em;
 			}
 				main.index-catalog .post-container {
 					position: absolute;
@@ -1307,52 +1320,62 @@ section.index-threads {
 					right: 0;
 					bottom: 0;
 					
+					border: none;
 					padding-bottom: 2.25em;
 				}
 					main.index-catalog .post-content {
 						padding: 0;
 						height: 100%;
 					}
-						main.index-catalog .post-attachments {
-							background: rgba(255,255,255,0.6);
+						main.index-catalog a.post-open:hover {
+							background: #f0e0d6;
+							box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
+							min-height: 20em;
+							overflow: hidden;
+							bottom: auto;
+							z-index: 2;
 						}
-							main.index-catalog .post-attachment {
-								float: none;
-								text-align: center;
-							}
-								main.index-catalog .attachment {
-									display: inline;
-									margin: 0;
-								}
-									main.index-catalog .attachment-img {
-										display: inline-block;
-										max-height: 100px;
-										max-width: 200px;
-									}
-						
-						main.index-catalog .post-details {
-							margin: 0;
-						}
-							main.index-catalog .post-detail {
-								display: block;
-								margin: 0.4em 0 0 0;
-							}
-								main.index-catalog .post-detail-item.author {
-									padding-right: 0;
-								}
-								main.index-catalog .post-detail-item.capcode {
-									padding-left: 0;
-								}
-						
-						main.index-catalog .post {
-							display: block;
-							width: 100%;
-							min-width: 0px;
-							max-width: none;
 							
-							text-align: left;
-							padding: 0 0.5em;
-						}
+							main.index-catalog .post-attachments {
+								background: rgba(255,255,255,0.6);
+							}
+								main.index-catalog .post-attachment {
+									float: none;
+									text-align: center;
+								}
+									main.index-catalog .attachment {
+										display: inline;
+										margin: 0;
+									}
+										main.index-catalog .attachment-img {
+											display: inline-block;
+											max-height: 100px;
+											max-width: 200px;
+										}
+							
+							main.index-catalog .post-details {
+								margin: 0;
+							}
+								main.index-catalog .post-detail {
+									display: block;
+									margin: 0.4em 0 0 0;
+								}
+									main.index-catalog .post-detail-item.author {
+										padding-right: 0;
+									}
+									main.index-catalog .post-detail-item.capcode {
+										padding-left: 0;
+									}
+							
+							main.index-catalog .post {
+								display: block;
+								width: 100%;
+								min-width: 0px;
+								max-width: none;
+								
+								text-align: left;
+								padding: 0 0.5em;
+							}
 		
 		main.index-catalog blockquote.post {
 			box-sizing: border-box;

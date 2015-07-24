@@ -85,10 +85,6 @@
 		display: block;
 		text-align: center;
 	}
-	
-	body.responsive section.index-threads .thread {
-		padding: 0;
-	}
 }
 
 /**
@@ -112,11 +108,10 @@
 	}
 	
 	body.responsive .index-threaded section.index-threads .thread {
-		padding: 1em;
-		padding-right: 320px;
+		padding-right: 340px;
 	}
 	body.responsive .index-threaded section.index-threads .post {
-		max-width: 70vw;
+		/* max-width: 70vw; */
 	}
 	
 	/* Advertisements */
