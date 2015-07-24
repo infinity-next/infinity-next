@@ -1,21 +1,23 @@
 <ul class="post-details">
-	@if ($post->subject)
-	<li class="post-detail post-subject"><h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3></li>
-	@endif
+	<li class="post-detail post-subject">@if ($post->subject)<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>@endif</li>
 	
 	<li class="post-detail post-author">
 		<strong class="post-detail-item author ugc">
-		@if ($post->email)<a href="mailto:{{ $post->email }}" class="post-detail-item email">@endif
+		@if ($post->email && !$catalog)<a href="mailto:{{ $post->email }}" class="post-detail-item email">@endif
 			{{ $post->author ?: $board->getSetting('defaultName', trans('board.anonymous')) }}
-		@if ($post->email)</a>@endif
+		@if ($post->email && !$catalog)</a>@endif
 		</strong>
 		
 		@if ($post->capcode_id > 0)
 		<strong class="post-detail-item capcode">{{ $post->capcode_name }}</strong>
 		@endif
 	</li>
+	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
+	
+	@if (!$catalog)
 	<li class="post-detail post-authorid"><span class="post-detail-item authorid"></span></li>
+	@endif
 	
 	@if (isset($op))
 	<li class="post-detail post-id">

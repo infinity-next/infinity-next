@@ -325,6 +325,27 @@ class Post extends Model {
 		return $ContentFormatter->formatPost($this);
 	}
 	
+	/**
+	 * Returns a relative URL for opening this post.
+	 *
+	 * @return string
+	 */
+	public function getURL()
+	{
+		$url = "/{$this->board_uri}/thread/";
+		
+		if ($this->reply_to_board_id)
+		{
+			$url .= "{$this->reply_to_board_id}#{$this->board_id}";
+		}
+		else
+		{
+			$url .= "{$this->board_id}";
+		}
+		
+		return $url;
+	}
+	
 	
 	/**
 	 * Determines if this is a bumpless post.
@@ -614,6 +635,14 @@ class Post extends Model {
 	public function scopeAndAttachments($query)
 	{
 		return $query->with('attachments');
+	}
+	
+	public function scopeAndFirstAttachment($query)
+	{
+		return $query->with([ 'attachments' => function($query)
+		{
+			$query->limit(1);
+		}]);
 	}
 	
 	public function scopeAndBan($query)

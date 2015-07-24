@@ -1086,6 +1086,12 @@ section.index-threads {
 					display: inline-block;
 				}
 					.post-detail-item {
+						box-sizing: border-box;
+						max-width: 100%;
+						padding: 0 0.5em;
+						
+						overflow: hidden;
+						text-overflow: ellipsis;
 						vertical-align: top;
 					}
 					
@@ -1207,7 +1213,6 @@ section.index-threads {
 			position: absolute;
 			right: 1em;
 			top: 1em;
-			z-index: 10;
 			
 			border: 1px solid #B7C5D9;
 			border-radius: 2px;
@@ -1217,13 +1222,13 @@ section.index-threads {
 			padding: 0.25em;
 			margin: -0.5em -0.5em 0 0;
 		}
-			
 			ul.post-action-groups {
 				display: none;
 				
 				position: absolute;
 				top: 1.5em;
 				left: 0;
+				z-index: 10;
 				
 				background-color: #D6DAF0;
 				border: 1px solid #B7C5D9;
@@ -1272,75 +1277,111 @@ section.index-threads {
 	/* Catalog View */
 	main.index-catalog {
 		margin: 0 1em;
+		text-align: left;
 	}
-		main.index-catalog .thread {
+		main.index-catalog .thread-item {
 			display: inline-block;
-			position: relative;
-			float: left;
-			
-			background: rgba(182, 182, 182, 0.12);
-			border: 2px solid rgba(111, 111, 111, 0.34);
-			overflow: hidden;
-			
-			margin: 0.5em;
-			padding: 2px;
-			
-			vertical-align: top;
-			text-align: center;
-			font-weight: normal;
-			font-size: 11px;
-			
-			height: 300px;
-			width: 205px;
-			min-width: 200px;
-			max-width: 200px;
-			max-height: 274px;
+			margin: 0 0.25em 0.25em 0;
 		}
-			main.index-catalog .post-container {
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-			}
-				main.index-catalog .post-open {
-					display: block;
-					height: 2em;
-					line-height: 2em;
-					
-					background: rgba(111, 111, 111, 0.34);
-					color: #ffffff;
-				}
+			main.index-catalog .thread {
+				position: relative;
 				
-				main.index-catalog .post-content {
-					padding: 0;
+				background: rgba(182, 182, 182, 0.12);
+				border: 2px solid rgba(111, 111, 111, 0.34);
+				
+				padding: 2px;
+				margin: 0;
+				
+				vertical-align: top;
+				text-align: center;
+				font-weight: normal;
+				font-size: 11px;
+				
+				height: 250px;
+				width: 175px;
+			}
+				main.index-catalog .post-container {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					
+					padding-bottom: 2.25em;
 				}
-					main.index-catalog .post-attachment {
-						float: none;
-						text-align: center;
+					main.index-catalog .post-content {
+						padding: 0;
+						height: 100%;
 					}
-						main.index-catalog .attachment {
+						main.index-catalog .post-attachments {
+							background: rgba(255,255,255,0.6);
+						}
+							main.index-catalog .post-attachment {
+								float: none;
+								text-align: center;
+							}
+								main.index-catalog .attachment {
+									display: inline;
+									margin: 0;
+								}
+									main.index-catalog .attachment-img {
+										display: inline-block;
+										max-height: 100px;
+										max-width: 200px;
+									}
+						
+						main.index-catalog .post-details {
 							margin: 0;
 						}
-							main.index-catalog .attachment-img {
-								max-height: 100px;
-								max-width: 200px;
+							main.index-catalog .post-detail {
+								display: block;
+								margin: 0.4em 0 0 0;
 							}
-					
-					main.index-catalog .post-detail {
-						display: block;
-						margin: 0.4em 0 0 0;
-					}
-					
-					main.index-catalog .post {
-						display: block;
-						width: 100%;
-						min-width: 0px;
-						max-width: none;
+								main.index-catalog .post-detail-item.author {
+									padding-right: 0;
+								}
+								main.index-catalog .post-detail-item.capcode {
+									padding-left: 0;
+								}
 						
-						text-align: left;
-						padding: 0 0.5em;
-					}
+						main.index-catalog .post {
+							display: block;
+							width: 100%;
+							min-width: 0px;
+							max-width: none;
+							
+							text-align: left;
+							padding: 0 0.5em;
+						}
+		
+		main.index-catalog blockquote.post {
+			box-sizing: border-box;
+			padding: 0 0.5em;
+			margin-top: 0.4em;
+		}
+			main.index-catalog p.line {
+				max-width: 100%;
+			}
+		
+		main.index-catalog a.post-open {
+			color: inherit;
+			
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			bottom: 2.25em;
+			
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		
+		main.index-catalog span.post-action-tab {
+			bottom: 0.25em;
+			top: auto;
+			
+			margin: 0 -0.5em 0 -0.5em;
+		}
 
 section.auth-form {
 	max-width: 640px;

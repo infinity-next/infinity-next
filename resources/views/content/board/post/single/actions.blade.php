@@ -53,25 +53,25 @@
 				@endif
 				
 				@if ($post->canDelete($user))
-				<li class="post-action">
-					<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
-				</li>
-				
-				@if ($board->canDelete($user))
-				<li class="post-action">
-					<a class="post-action-link action-link-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
-				</li>
-				@endif
-				
-				@if ($board->canBan($user))
-				<li class="post-action">
-					<a class="post-action-link action-link-ban-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
-				</li>
-				
-				<li class="post-action">
-					<a class="post-action-link action-link-ban-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete/all") !!}">@lang('board.action.ban_delete_board')</a>
-				</li>
-				@endif
+					<li class="post-action">
+						<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
+					</li>
+					
+					@if ($board->canDelete($user))
+					<li class="post-action">
+						<a class="post-action-link action-link-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
+					</li>
+					@endif
+					
+					@if ($board->canBan($user))
+					<li class="post-action">
+						<a class="post-action-link action-link-ban-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
+					</li>
+					
+					<li class="post-action">
+						<a class="post-action-link action-link-ban-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete/all") !!}">@lang('board.action.ban_delete_board')</a>
+					</li>
+					@endif
 				@endif
 			</ul>
 			

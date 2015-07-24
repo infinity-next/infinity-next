@@ -142,7 +142,7 @@ class Board extends Model {
 	
 	public function clearCachedPages()
 	{
-		Cache::forget("board.{$this->board_uri}", "pages");
+		Cache::forget("board.{$this->board_uri}.catalog");
 		
 		switch (env('CACHE_DRIVER'))
 		{
@@ -421,15 +421,21 @@ class Board extends Model {
 	
 	public function getThreadsForCatalog($page = 0)
 	{
+		$postsPerPage    = 100;
+		
 		$rememberTags    = ["board.{$this->board_uri}.pages"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.catalog";
-		$rememberClosure = function() {
+		$rememberClosure = function() use ($page, $postsPerPage) {
 			$threads = $this->threads()
 				->op()
-				->withEverything()
+				->visible()
+				->andFirstAttachment()
+				->andCapcode()
 				->orderBy('stickied', 'desc')
 				->orderBy('reply_last', 'desc')
+				->skip($postsPerPage * ( $page - 1 ))
+				->take($postsPerPage)
 				->get();
 			
 			// Limit the number of attachments to one.

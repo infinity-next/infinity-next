@@ -132,4 +132,11 @@
 			display: block;
 			width: 310px;
 		}
+	
+	/**
+	 * Catalog
+	 */
+	body.responsive .index-catalog {
+		max-width: 70vw;
+	}
 }

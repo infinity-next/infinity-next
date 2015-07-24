@@ -13,7 +13,12 @@
 		
 		<article class="moderated-content">
 			<div class="post-container">
-				@include( $c->template('board.post.single'), [ 'board' => $board, 'post' => $post ])
+				@include( $c->template('board.post.single'), [
+					'board' => $board,
+					'post' => $post,
+					
+					'catalog' => false,
+				])
 			</div>
 		</article>
 	</section>
