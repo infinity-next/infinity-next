@@ -198,6 +198,7 @@ class PermissionGroupSeeder extends Seeder
 			]);
 			
 			$permissionGroup->group_name      = $slug['group_name'];
+			$permissionGroup->display_order   = $slug['display_order'];
 			$permissionGroup->is_system_only  = !!(isset($slug['is_system_only']) ? $slug['is_system_only'] : false);
 			$permissionGroup->is_account_only = !!(isset($slug['is_account_only']) ? $slug['is_account_only'] : false);
 			
