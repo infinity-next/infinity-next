@@ -430,7 +430,7 @@ class Board extends Model {
 			$threads = $this->threads()
 				->op()
 				->visible()
-				->andFirstAttachment()
+				->andAttachments()
 				->andCapcode()
 				->orderBy('stickied', 'desc')
 				->orderBy('reply_last', 'desc')
