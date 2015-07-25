@@ -66,8 +66,6 @@ class OptionsMutator extends Migration {
 				'board',
 				'site',
 			])->default('site')->after('default_value');
-			
-			$table->dropColumn('option_value');
 		});
 	}
 	

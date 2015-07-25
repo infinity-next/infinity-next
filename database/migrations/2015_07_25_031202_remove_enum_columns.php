@@ -1,5 +1,8 @@
 <?php
 
+use App\BoardAssets;
+use App\Options;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -14,31 +17,50 @@ class RemoveEnumColumns extends Migration
 	public function up()
 	{
 		// SQLite cannot use the Enum data type, so we're going to change these to strings.
-		
-		Schema::table('options', function(BLueprint $table)
+		if (Schema::hasColumn('options', 'format'))
 		{
-			$table->dropColumn('format');
-			$table->dropColumn('data_type');
-			$table->dropColumn('option_type');
-		});
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('format');
+			});
+		}
+		
+		if (Schema::hasColumn('options', 'data_type'))
+		{
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('data_type');
+			});
+		}
+		
+		if (Schema::hasColumn('options', 'option_type'))
+		{
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('option_type');
+			});
+		}
 		
 		// I have to run a second transaction for adding columns because otherwise it doesn't recognize they're gone.
 		Schema::table('options', function(BLueprint $table)
 		{
-			$table->string('option_type', 24)->after('default_value');
-			$table->string('format', 24)->after('option_type');
-			$table->string('data_type', 24)->after('format_parameters');
+			$table->string('format', 24)->default('textbox')->after('option_type');
+			$table->string('option_type', 24)->default('string')->after('default_value');
+			$table->string('data_type', 24)->default('board')->after('format_parameters');
 		});
 		
 		
 		Schema::table('board_assets', function(Blueprint $table)
 		{
-			$table->dropColumn('asset_type');
+			if (Schema::hasColumn('board_assets', 'asset_type'))
+			{
+				$table->dropColumn('asset_type');
+			}
 		});
 		
 		Schema::table('board_assets', function(Blueprint $table)
 		{
-			$table->string('asset_type', 24)->after('file_id');
+			$table->string('asset_type', 24)->default('board_banner')->after('file_id');
 		});
 	}
 	
@@ -51,9 +73,20 @@ class RemoveEnumColumns extends Migration
 	{
 		Schema::table('options', function(BLueprint $table)
 		{
-			$table->dropColumn('format');
-			$table->dropColumn('data_type');
-			$table->dropColumn('option_type');
+			if (Schema::hasColumn('options', 'format'))
+			{
+				$table->dropColumn('format');
+			}
+			
+			if (Schema::hasColumn('options', 'data_type'))
+			{
+				$table->dropColumn('data_type');
+			}
+			
+			if (Schema::hasColumn('options', 'option_type'))
+			{
+				$table->dropColumn('option_type');
+			}
 		});
 		
 		Schema::table('options', function(BLueprint $table)
@@ -73,7 +106,7 @@ class RemoveEnumColumns extends Migration
 				'checkbox',
 				'template',
 				'callback',
-			])->after('option_type');
+			])->default('textbox')->after('option_type');
 			
 			$table->enum('data_type', [
 				'string',
@@ -84,14 +117,17 @@ class RemoveEnumColumns extends Migration
 				'positive_integer',
 				'unsigned_integer',
 				'unsigned_numeric',
-			])->after('format_parameters');
+			])->default('string')->after('format_parameters');
 			
 		});
 		
 		
 		Schema::table('board_assets', function(Blueprint $table)
 		{
-			$table->dropColumn('asset_type');
+			if (Schema::hasColumn('board_assets', 'asset_type'))
+			{
+				$table->dropColumn('asset_type');
+			}
 		});
 		
 		Schema::table('board_assets', function(Blueprint $table)
@@ -101,7 +137,7 @@ class RemoveEnumColumns extends Migration
 				'file_deleted',
 				'file_none',
 				'file_spoiler',
-			])->after('file_id');
+			])->default('board_banner')->after('file_id');
 		});
 	}
 	
