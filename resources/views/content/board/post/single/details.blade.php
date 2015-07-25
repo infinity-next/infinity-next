@@ -1,4 +1,8 @@
 <ul class="post-details">
+	@if(!$catalog || $post->canDelete($user))
+	<li class="post-detail post-select"><input class="post-select-input" type="checkbox" value="1" name="post[{{ $post->post_id }}]" /></li>
+	@endif
+	
 	<li class="post-detail post-subject">@if ($post->subject)<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>@endif</li>
 	
 	<li class="post-detail post-author">

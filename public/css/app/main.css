@@ -1097,12 +1097,18 @@ section.index-threads {
 					.post-detail-item {
 						box-sizing: border-box;
 						max-width: 100%;
-						padding: 0 0.5em;
 						
 						overflow: hidden;
 						text-overflow: ellipsis;
 						vertical-align: top;
 					}
+					
+					.post-select {
+						
+					}
+						.post-select-input {
+							vertical-align: text-bottom;
+						}
 					
 					.subject {
 						display: inline-block;
@@ -1359,6 +1365,7 @@ section.index-threads {
 								main.index-catalog .post-detail {
 									display: block;
 									margin: 0.4em 0 0 0;
+									padding: 0 0.5em;
 								}
 									main.index-catalog .post-detail-item.author {
 										padding-right: 0;

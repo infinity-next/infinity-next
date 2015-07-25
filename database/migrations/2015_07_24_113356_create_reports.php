@@ -17,10 +17,12 @@ class CreateReports extends Migration
 		{
 			$table->increments('report_id');
 			$table->string('reason', 1024);
-			$table->string('board_uri', 32);
+			$table->string('board_uri', 32)->nullable();
 			$table->bigInteger('post_id')->nullable()->unsigned();
 			$table->string('ip', 46)->nullable();
 			$table->integer('user_id')->nullable()->unsigned();
+			$table->boolean('is_dismissed')->default(false);
+			$table->boolean('is_successful')->default(false);
 			$table->timestamps();
 			
 			
@@ -47,7 +49,7 @@ class CreateReports extends Migration
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('reports');
 	}
 	
 }

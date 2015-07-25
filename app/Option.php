@@ -1,8 +1,13 @@
 <?php namespace App;
 
+use App\Contracts\PseudoEnum  as PseudoEnumContract;
+use App\Traits\PseudoEnum as PseudoEnum;
+
 use Illuminate\Database\Eloquent\Model;
 
-class Option extends Model {
+class Option extends Model implements PseudoEnumContract {
+	
+	use PseudoEnum;
 	
 	/**
 	 * The database table used by the model.
@@ -24,6 +29,41 @@ class Option extends Model {
 	 * @var array
 	 */
 	protected $fillable = ['option_name', 'default_value', 'format', 'format_parameters', 'data_type'];
+	
+	/**
+	 * Psuedo-enum attributes and their permissable values.
+	 *
+	 * @var array
+	 */
+	protected $enum = [
+		'data_type'   => [
+			'string',
+			'integer',
+			'numeric',
+			'array',
+			'boolean',
+			'positive_integer',
+			'unsigned_integer',
+			'unsigned_numeric',
+		],
+		
+		'format'      => [
+			'textbox',
+			'spinbox',
+			'onoff',
+			'onofftextbox',
+			'radio',
+			'select',
+			'checkbox',
+			'template',
+			'callback',
+		],
+		
+		'option_type' => [
+			'board',
+			'site',
+		],
+	];
 	
 	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.

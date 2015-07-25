@@ -143,8 +143,9 @@ class ConfigController extends PanelController {
 			$storage     = FileStorage::storeUpload($upload);
 			
 			$asset       = new BoardAsset();
-			$asset->board_uri = $board->board_uri;
-			$asset->file_id   = $storage->file_id;
+			$asset->asset_type = "board_banner";
+			$asset->board_uri  = $board->board_uri;
+			$asset->file_id    = $storage->file_id;
 			$asset->save();
 		}
 		

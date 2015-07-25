@@ -1,8 +1,13 @@
 <?php namespace App;
 
+use App\Contracts\PseudoEnum  as PseudoEnumContract;
+use App\Traits\PseudoEnum as PseudoEnum;
+
 use Illuminate\Database\Eloquent\Model;
 
-class BoardAsset extends Model {
+class BoardAsset extends Model implements PseudoEnumContract {
+	
+	use PseudoEnum;
 	
 	/**
 	 * The database table used by the model.
@@ -25,6 +30,19 @@ class BoardAsset extends Model {
 	 */
 	protected $fillable = ['board_uri', 'file_id', 'asset_type'];
 	
+	/**
+	 * Psuedo-enum attributes and their permissable values.
+	 *
+	 * @var array
+	 */
+	protected $enum = [
+		'asset_type' => [
+			'board_banner',
+			'file_deleted',
+			'file_none',
+			'file_spoiler',
+		],
+	];
 	
 	public function board()
 	{
@@ -39,7 +57,7 @@ class BoardAsset extends Model {
 	
 	public function asHTML()
 	{
-		return "<img src=\"/{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
+		return "<img src=\"{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
 	}
 	
 	public function getURL()
