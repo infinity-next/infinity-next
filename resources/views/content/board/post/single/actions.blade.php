@@ -1,3 +1,5 @@
+@section('post-actions')
+@set('postActions', false)
 <span class="post-action-tab">
 	<span class="post-action-label post-action-open">@lang('board.action.open')</span>
 	
@@ -7,12 +9,14 @@
 			<!-- Board specific content management actions -->
 			<ul class="post-actions">
 				@if ($post->canEdit($user))
+				@set('postActions', true)
 				<li class="post-action">
 					<a class="post-action-link action-link-edit" href="{!! url("{$board->board_uri}/post/{$post->board_id}/edit") !!}">@lang('board.action.edit')</a>
 				</li>
 				@endif
 				
 				@if ($post->canSticky($user))
+				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->stickied_at)
 					<a class="post-action-link action-link-sticky" href="{!! url("{$board->board_uri}/post/{$post->board_id}/sticky") !!}">@lang('board.action.sticky')</a>
@@ -23,6 +27,7 @@
 				@endif
 				
 				@if ($post->canLock($user))
+				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->locked_at)
 					<a class="post-action-link action-link-lock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/lock") !!}">@lang('board.action.lock')</a>
@@ -33,6 +38,7 @@
 				@endif
 				
 				@if ($post->canBumplock($user))
+				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->bumplocked_at)
 					<a class="post-action-link action-link-bumplock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/bumplock") !!}">@lang('board.action.bumplock')</a>
@@ -47,12 +53,14 @@
 			<!-- Broad sweeping user & board actions -->
 			<ul class="post-actions">
 				@if ($board->canBan($user))
+				@set('postActions', true)
 				<li class="post-action">
 					<a class="post-action-link action-link-ban" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban") !!}">@lang('board.action.ban')</a>
 				</li>
 				@endif
 				
 				@if ($post->canDelete($user))
+				@set('postActions', true)
 					<li class="post-action">
 						<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
 					</li>
@@ -77,6 +85,7 @@
 			
 			<ul class="post-actions">
 				@if ($user->canDeleteGlobally())
+				@set('postActions', true)
 					<li class="post-action">
 						<a class="post-action-link action-link-delete-global" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete/global") !!}">@lang('board.action.delete_global')</a>
 					</li>
@@ -91,3 +100,9 @@
 		</li>
 	</ul>
 </span>
+
+@if ($postActions)
+	@show
+@else
+	@stop
+@endif

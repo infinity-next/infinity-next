@@ -146,6 +146,7 @@ return [
 		 */
 		'App\Providers\AppServiceProvider',
 		'App\Providers\AuthServiceProvider',
+		'App\Providers\BladeServiceProvider',
 		'App\Providers\BusServiceProvider',
 		'App\Providers\CaptchaServiceProvider',
 		'App\Providers\ConfigServiceProvider',
