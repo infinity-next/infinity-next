@@ -34,7 +34,7 @@
 				
 				@if ($post->canBumplock($user))
 				<li class="post-action">
-					@if (!$post->locked_at)
+					@if (!$post->bumplocked_at)
 					<a class="post-action-link action-link-bumplock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/bumplock") !!}">@lang('board.action.bumplock')</a>
 					@else
 					<a class="post-action-link action-link-unbumplock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/unbumplock") !!}">@lang('board.action.unbumplock')</a>

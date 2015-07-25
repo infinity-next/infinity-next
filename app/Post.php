@@ -219,10 +219,7 @@ class Post extends Model {
 		// Fire events on post updated.
 		static::updated(function(Post $post)
 		{
-			if ($post->isDirty(['subject', 'author', 'email', 'body']))
-			{
-				Event::fire(new PostWasModified($post));
-			}
+			Event::fire(new PostWasModified($post));
 		});
 		
 	}
@@ -235,12 +232,7 @@ class Post extends Model {
 	 */
 	public function canBumplock($user)
 	{
-		if (!$this->bumplocked_at)
-		{
-			return $user->canBumplock($this);
-		}
-		
-		return false;
+		return $user->canBumplock($this);
 	}
 	
 	/**
@@ -273,12 +265,7 @@ class Post extends Model {
 	 */
 	public function canLock($user)
 	{
-		if (!$this->locked_at)
-		{
-			return $user->canLock($this);
-		}
-		
-		return false;
+		return $user->canLock($this);
 	}
 	
 	/**
@@ -595,7 +582,7 @@ class Post extends Model {
 	 * @param  boolean  $lock
 	 * @return \App\Post
 	 */
-	public function setLock($lock = true)
+	public function setLocked($lock = true)
 	{
 		if ($lock)
 		{
@@ -761,6 +748,24 @@ class Post extends Model {
 			->with(['replies' => function($query) {
 				$query->withEverything();
 			}]);
+	}
+	
+	
+	/**
+	 * Sends a redirect to the post's page.
+	 *
+	 * @return Response
+	 */
+	public function redirect()
+	{
+		if ($this->reply_to_board_id)
+		{
+			return redirect("/{$this->board_uri}/thread/{$this->reply_to_board_id}#{$this->board_id}");
+		}
+		else
+		{
+			return redirect("/{$this->board_uri}/thread/{$this->board_id}");
+		}
 	}
 	
 	

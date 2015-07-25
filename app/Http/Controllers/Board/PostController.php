@@ -416,6 +416,80 @@ class PostController extends Controller {
 	}
 	
 	/**
+	 * Locks a thread.
+	 */
+	public function anyLock(Request $request, Board $board, $post, $lock = true)
+	{
+		// Validate the request parameters.
+		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		{
+			// If the response isn't a Post, it's a redirect or error.
+			// Return the message.
+			return $post;
+		}
+		
+		if ($post->canLock($this->user))
+		{
+			$post->setLocked( $lock )->save();
+			
+			$this->log($lock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+			]);
+			
+			return $post->redirect();
+		}
+		
+		return abort(403);
+	}
+	
+	/**
+	 * Unlocks a thread.
+	 */
+	public function anyUnlock(Request $request, Board $board, $lock)
+	{
+		// Redirect to anyBumplock with a flag denoting an unlock.
+		return $this->anyLock($request, $board, $lock, false);
+	}
+	
+	/**
+	 * Bumplocks a thread.
+	 */
+	public function anyBumplock(Request $request, Board $board, $post, $bumplock = true)
+	{
+		// Validate the request parameters.
+		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		{
+			// If the response isn't a Post, it's a redirect or error.
+			// Return the message.
+			return $post;
+		}
+		
+		if ($post->canBumplock($this->user))
+		{
+			$post->setBumplock( $bumplock )->save();
+			
+			$this->log($bumplock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+			]);
+			
+			return $post->redirect();
+		}
+		
+		return abort(403);
+	}
+	
+	/**
+	 * Un-bumplocks a thread.
+	 */
+	public function anyUnbumplock(Request $request, Board $board, $bumplock)
+	{
+		// Redirect to anyBumplock with a flag denoting an unbumplock.
+		return $this->anyBumplock($request, $board, $bumplock, false);
+	}
+	
+	/**
 	 * Stickies a thread.
 	 */
 	public function anySticky(Request $request, Board $board, $post, $sticky = true)
