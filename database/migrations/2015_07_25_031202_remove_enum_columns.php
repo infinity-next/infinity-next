@@ -17,29 +17,7 @@ class RemoveEnumColumns extends Migration
 	public function up()
 	{
 		// SQLite cannot use the Enum data type, so we're going to change these to strings.
-		if (Schema::hasColumn('options', 'format'))
-		{
-			Schema::table('options', function(BLueprint $table)
-			{
-				$table->dropColumn('format');
-			});
-		}
-		
-		if (Schema::hasColumn('options', 'data_type'))
-		{
-			Schema::table('options', function(BLueprint $table)
-			{
-				$table->dropColumn('data_type');
-			});
-		}
-		
-		if (Schema::hasColumn('options', 'option_type'))
-		{
-			Schema::table('options', function(BLueprint $table)
-			{
-				$table->dropColumn('option_type');
-			});
-		}
+		$this->dropEnumColumns();
 		
 		// I have to run a second transaction for adding columns because otherwise it doesn't recognize they're gone.
 		Schema::table('options', function(BLueprint $table)
@@ -47,6 +25,11 @@ class RemoveEnumColumns extends Migration
 			$table->string('format', 24)->default('textbox')->after('option_type');
 			$table->string('option_type', 24)->default('string')->after('default_value');
 			$table->string('data_type', 24)->default('board')->after('format_parameters');
+			
+			$table->binary('option_value')->nullable()->change();
+			$table->binary('format_parameters')->nullable()->change();
+			$table->binary('validation_class')->nullable()->change();
+			$table->binary('validation_parameters')->nullable()->change();
 		});
 		
 		
@@ -71,23 +54,7 @@ class RemoveEnumColumns extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('options', function(BLueprint $table)
-		{
-			if (Schema::hasColumn('options', 'format'))
-			{
-				$table->dropColumn('format');
-			}
-			
-			if (Schema::hasColumn('options', 'data_type'))
-			{
-				$table->dropColumn('data_type');
-			}
-			
-			if (Schema::hasColumn('options', 'option_type'))
-			{
-				$table->dropColumn('option_type');
-			}
-		});
+		$this->dropEnumColumns();
 		
 		Schema::table('options', function(BLueprint $table)
 		{
@@ -141,4 +108,30 @@ class RemoveEnumColumns extends Migration
 		});
 	}
 	
+	private function dropEnumColumns()
+	{
+		if (Schema::hasColumn('options', 'format'))
+		{
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('format');
+			});
+		}
+		
+		if (Schema::hasColumn('options', 'data_type'))
+		{
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('data_type');
+			});
+		}
+		
+		if (Schema::hasColumn('options', 'option_type'))
+		{
+			Schema::table('options', function(BLueprint $table)
+			{
+				$table->dropColumn('option_type');
+			});
+		}
+	}
 }
