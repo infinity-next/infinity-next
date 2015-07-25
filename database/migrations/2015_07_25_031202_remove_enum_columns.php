@@ -22,14 +22,13 @@ class RemoveEnumColumns extends Migration
 		// I have to run a second transaction for adding columns because otherwise it doesn't recognize they're gone.
 		Schema::table('options', function(BLueprint $table)
 		{
-			$table->string('format', 24)->default('textbox')->after('option_type');
 			$table->string('option_type', 24)->default('string')->after('default_value');
+			$table->string('format', 24)->default('textbox')->after('option_type');
 			$table->string('data_type', 24)->default('board')->after('format_parameters');
 			
-			$table->binary('option_value')->nullable()->change();
-			$table->binary('format_parameters')->nullable()->change();
-			$table->binary('validation_class')->nullable()->change();
-			$table->binary('validation_parameters')->nullable()->change();
+			$table->mediumText('format_parameters')->nullable()->change();
+			$table->string('validation_class')->nullable()->change();
+			$table->string('validation_parameters')->nullable()->change();
 		});
 		
 		
