@@ -752,22 +752,44 @@ class Post extends Model {
 	
 	
 	/**
-	 * Sends a redirect to the post's page.
+	 * Fetches a URL for either this thread or an action.
 	 *
-	 * @return Response
+	 * @param  string  $action
+	 * @return string
 	 */
-	public function redirect()
+	public function url($action = null)
 	{
-		if ($this->reply_to_board_id)
+		$url = "";
+		
+		if (is_null($action))
 		{
-			return redirect("/{$this->board_uri}/thread/{$this->reply_to_board_id}#{$this->board_id}");
+			if ($this->reply_to_board_id)
+			{
+				$url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}#{$this->board_id}";
+			}
+			else
+			{
+				$url = "/{$this->board_uri}/thread/{$this->board_id}";
+			}
 		}
 		else
 		{
-			return redirect("/{$this->board_uri}/thread/{$this->board_id}");
+			$url = "/{$this->board_uri}/post/{$this->board_id}/{$action}";
 		}
+		
+		return url($url);
 	}
 	
+	/**
+	 * Sends a redirect to the post's page.
+	 *
+	 * @param  string  $action
+	 * @return Response
+	 */
+	public function redirect($action = null)
+	{
+		return response($this->url($action));
+	}
 	
 	/**
 	 * Pushes the post to the specified board, as a new thread or as a reply.

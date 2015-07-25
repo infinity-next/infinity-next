@@ -9,7 +9,13 @@
 		])
 	</section>
 	
-	<section class="index-threads static">
+	@include('nav.board.pages', [
+		'showCatalog' => true,
+		'showIndex'   => !!$reply_to,
+		'showPages'   => false,
+	])
+	
+	<section class="index-threads">
 		@include( 'widgets.ads.board_top_left' )
 		
 		<ul class="thread-list">
@@ -32,5 +38,9 @@
 @stop
 
 @section('footer-inner')
-	@include('nav.board.pages')
+	@include('nav.board.pages', [
+		'showCatalog' => true,
+		'showIndex'   => !!$reply_to,
+		'showPages'   => true,
+	])
 @stop

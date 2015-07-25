@@ -9,6 +9,12 @@
 		])
 	</section>
 	
+	@include('nav.board.pages', [
+		'showCatalog' => false,
+		'showIndex'   => true,
+		'showPages'   => false,
+	])
+	
 	<section class="index-threads static">
 		<ul class="thread-list">
 			@foreach ($posts as $thread)
@@ -24,4 +30,12 @@
 		</ul>
 	</section>
 </main>
+@stop
+
+@section('footer-inner')
+	@include('nav.board.pages', [
+		'showCatalog' => false,
+		'showIndex'   => true,
+		'showPages'   => true,
+	])
 @stop

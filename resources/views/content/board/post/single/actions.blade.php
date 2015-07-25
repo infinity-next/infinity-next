@@ -11,17 +11,17 @@
 				@if ($post->canEdit($user))
 				@set('postActions', true)
 				<li class="post-action">
-					<a class="post-action-link action-link-edit" href="{!! url("{$board->board_uri}/post/{$post->board_id}/edit") !!}">@lang('board.action.edit')</a>
+					<a class="post-action-link action-link-edit" href="{!! $post->url("edit") !!}">@lang('board.action.edit')</a>
 				</li>
 				@endif
-				
+					
 				@if ($post->canSticky($user))
 				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->stickied_at)
-					<a class="post-action-link action-link-sticky" href="{!! url("{$board->board_uri}/post/{$post->board_id}/sticky") !!}">@lang('board.action.sticky')</a>
+					<a class="post-action-link action-link-sticky" href="{!! $post->url("sticky") !!}">@lang('board.action.sticky')</a>
 					@else
-					<a class="post-action-link action-link-unsticky" href="{!! url("{$board->board_uri}/post/{$post->board_id}/unsticky") !!}">@lang('board.action.unsticky')</a>
+					<a class="post-action-link action-link-unsticky" href="{!! $post->url("unsticky") !!}">@lang('board.action.unsticky')</a>
 					@endif
 				</li>
 				@endif
@@ -30,9 +30,9 @@
 				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->locked_at)
-					<a class="post-action-link action-link-lock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/lock") !!}">@lang('board.action.lock')</a>
+					<a class="post-action-link action-link-lock" href="{!! $post->url("lock") !!}">@lang('board.action.lock')</a>
 					@else
-					<a class="post-action-link action-link-unlock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/unlock") !!}">@lang('board.action.unlock')</a>
+					<a class="post-action-link action-link-unlock" href="{!! $post->url("unlock") !!}">@lang('board.action.unlock')</a>
 					@endif
 				</li>
 				@endif
@@ -41,9 +41,9 @@
 				@set('postActions', true)
 				<li class="post-action">
 					@if (!$post->bumplocked_at)
-					<a class="post-action-link action-link-bumplock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/bumplock") !!}">@lang('board.action.bumplock')</a>
+					<a class="post-action-link action-link-bumplock" href="{!! $post->url("bumplock") !!}">@lang('board.action.bumplock')</a>
 					@else
-					<a class="post-action-link action-link-unbumplock" href="{!! url("{$board->board_uri}/post/{$post->board_id}/unbumplock") !!}">@lang('board.action.unbumplock')</a>
+					<a class="post-action-link action-link-unbumplock" href="{!! $post->url("unbumplock") !!}">@lang('board.action.unbumplock')</a>
 					@endif
 				</li>
 				@endif
@@ -55,29 +55,29 @@
 				@if ($board->canBan($user))
 				@set('postActions', true)
 				<li class="post-action">
-					<a class="post-action-link action-link-ban" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban") !!}">@lang('board.action.ban')</a>
+					<a class="post-action-link action-link-ban" href="{!! $post->url("mod/ban") !!}">@lang('board.action.ban')</a>
 				</li>
 				@endif
 				
 				@if ($post->canDelete($user))
 				@set('postActions', true)
 					<li class="post-action">
-						<a class="post-action-link action-link-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete") !!}">@lang('board.action.delete')</a>
+						<a class="post-action-link action-link-delete" href="{!! $post->url("mod/delete") !!}">@lang('board.action.delete')</a>
 					</li>
 					
 					@if ($board->canDelete($user))
 					<li class="post-action">
-						<a class="post-action-link action-link-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete/all") !!}">@lang('board.action.delete_board')</a>
+						<a class="post-action-link action-link-delete-all" href="{!! $post->url("mod/delete/all") !!}">@lang('board.action.delete_board')</a>
 					</li>
 					@endif
 					
 					@if ($board->canBan($user))
 					<li class="post-action">
-						<a class="post-action-link action-link-ban-delete" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
+						<a class="post-action-link action-link-ban-delete" href="{!! $post->url("mod/ban/delete") !!}">@lang('board.action.ban_delete')</a>
 					</li>
 					
 					<li class="post-action">
-						<a class="post-action-link action-link-ban-delete-all" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete/all") !!}">@lang('board.action.ban_delete_board')</a>
+						<a class="post-action-link action-link-ban-delete-all" href="{!! $post->url("mod/ban/delete/all") !!}">@lang('board.action.ban_delete_board')</a>
 					</li>
 					@endif
 				@endif
@@ -87,12 +87,12 @@
 				@if ($user->canDeleteGlobally())
 				@set('postActions', true)
 					<li class="post-action">
-						<a class="post-action-link action-link-delete-global" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/delete/global") !!}">@lang('board.action.delete_global')</a>
+						<a class="post-action-link action-link-delete-global" href="{!! $post->url("mod/delete/global") !!}">@lang('board.action.delete_global')</a>
 					</li>
 					
 					@if ($user->canBanGlobally())
 					<li class="post-action">
-						<a class="post-action-link action-link-ban-delete-global" href="{!! url("{$board->board_uri}/post/{$post->board_id}/mod/ban/delete/global") !!}">@lang('board.action.ban_delete_global')</a>
+						<a class="post-action-link action-link-ban-delete-global" href="{!! $post->url("mod/ban/delete/global") !!}">@lang('board.action.ban_delete_global')</a>
 					</li>
 					@endif
 				@endif

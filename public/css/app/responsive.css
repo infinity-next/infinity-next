@@ -131,7 +131,7 @@
 	/**
 	 * Catalog
 	 */
-	body.responsive .index-catalog {
+	body.responsive main.index-catalog .index-threads {
 		max-width: 70vw;
 	}
 }

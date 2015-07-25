@@ -12,7 +12,6 @@
 */
 
 Route::group([
-	'domain'     => '{domain}.{tld}',
 	'middleware' => 'App\Http\Middleware\DomainFilter',
 ], function () {
 	
@@ -120,89 +119,95 @@ Route::group([
 	| A catch all. Used to load boards.
 	*/
 	Route::group([
-		'namespace' => 'Board',
 		'prefix'    => '{board}',
 	], function()
 	{
 		/*
-		| Board Stylesheet Request
-		*/
-		Route::get('style.css', 'BoardController@getStylesheet');
-		
-		/*
 		| Board Attachment Routes (Files)
 		*/
 		Route::group([
-			'prefix' => 'file',
+			'prefix'     => 'file',
+			'middleware' => 'App\Http\Middleware\FileFilter',
+			'namespace'  => 'Content',
 		], function()
 		{
-			Route::get('/', 'FileController@getIndex');
-			
-			Route::get('{hash}/{filename}', 'FileController@getFile')
+			Route::get('{hash}/{filename}', 'ImageController@getImage')
 				->where([
 					'hash' => "[a-f0-9]{32}",
 				]);
 			
-			Route::get('thumb/{hash}/{filename}', 'FileController@getThumbnail')
+			Route::get('thumb/{hash}/{filename}', 'ImageController@getThumbnail')
 				->where([
 					'hash' => "[a-f0-9]{32}",
 				]);
 		});
 		
-		
-		/*
-		| Board Post Routes (Modding)
-		*/
 		Route::group([
-			'prefix' => 'post/{post}',
-			'where'  => ['{post}' => '[1-9]\d*'],
+			'namespace' => 'Board',
 		], function()
 		{
-			Route::controller('', 'PostController');
+			
+			/*
+			| Board Stylesheet Request
+			*/
+			Route::get('style.css', 'BoardController@getStylesheet');
+			
+			/*
+			| Board Post Routes (Modding)
+			*/
+			Route::group([
+				'prefix' => 'post/{post}',
+				'where'  => ['{post}' => '[1-9]\d*'],
+			], function()
+			{
+				Route::controller('', 'PostController');
+			});
+			
+			
+			
+			/*
+			| Legacy Routes
+			*/
+			if (env('LEGACY_ROUTES', false))
+			{
+				Route::any('/index.html', function(App\Board $board) {
+					return redirect("{$board->board_uri}");
+				});
+				Route::any('/catalog.html', function(App\Board $board) {
+					return redirect("{$board->board_uri}/catalog");
+				});
+				Route::any('/{id}.html', function(App\Board $board, $id) {
+					return redirect("{$board->board_uri}/{$id}");
+				})->where(['id' => '[0-9]+']);
+				Route::any('/res/{id}.html', function(App\Board $board, $id) {
+					return redirect("{$board->board_uri}/thread/{$id}");
+				})->where(['id' => '[0-9]+']);
+				Route::any('/res/{id}+{last}.html', function(App\Board $board, $id, $last) {
+					return redirect("{$board->board_uri}/thread/{$id}/{$last}");
+				})->where(['id' => '[0-9]+', 'last' => '[0-9]+']);
+			}
+			
+			
+			/*
+			| Board Controller Routes
+			| These are greedy and will redirect before others, so make sure they stay last.
+			*/
+			// Pushes simple /board/ requests to their index page.
+			Route::any('/', 'BoardController@getIndex');
+			
+			// Loads the catalog.
+			Route::get('catalog', 'BoardController@getCatalog');
+			
+			// Routes /board/1 to an index page for a specific pagination point.
+			Route::get('{id}', 'BoardController@getIndex')
+				->where(['id' => '[0-9]+']);
+			
+			// More complicated /board/view requests.
+			Route::controller('', 'BoardController');
 		});
 		
-		
-		
-		/*
-		| Legacy Routes
-		*/
-		if (env('LEGACY_ROUTES', false))
-		{
-			Route::any('/index.html', function(App\Board $board) {
-				return redirect("{$board->board_uri}");
-			});
-			Route::any('/catalog.html', function(App\Board $board) {
-				return redirect("{$board->board_uri}/catalog");
-			});
-			Route::any('/{id}.html', function(App\Board $board, $id) {
-				return redirect("{$board->board_uri}/{$id}");
-			})->where(['id' => '[0-9]+']);
-			Route::any('/res/{id}.html', function(App\Board $board, $id) {
-				return redirect("{$board->board_uri}/thread/{$id}");
-			})->where(['id' => '[0-9]+']);
-			Route::any('/res/{id}+{last}.html', function(App\Board $board, $id, $last) {
-				return redirect("{$board->board_uri}/thread/{$id}/{$last}");
-			})->where(['id' => '[0-9]+', 'last' => '[0-9]+']);
-		}
-		
-		
-		/*
-		| Board Controller Routes
-		| These are greedy and will redirect before others, so make sure they stay last.
-		*/
-		// Pushes simple /board/ requests to their index page.
-		Route::any('/', 'BoardController@getIndex');
-		
-		// Loads the catalog.
-		Route::get('catalog', 'BoardController@getCatalog');
-		
-		// Routes /board/1 to an index page for a specific pagination point.
-		Route::get('{id}', 'BoardController@getIndex')
-			->where(['id' => '[0-9]+']);
-		
-		// More complicated /board/view requests.
-		Route::controller('', 'BoardController');
 	});
+	
 });
 
 Route::group([
@@ -219,5 +224,28 @@ Route::group([
 	{
 		Route::get('contribute', 'PageController@getContribute');
 	}
+	
+});
+
+Route::group([
+	'domain'     => 'static.{domain}.{tld}',
+	'middleware' => 'App\Http\Middleware\DomainFilter',
+	'namespace'  => 'Content',
+], function() {
+	
+	Route::group([
+		'prefix' => "image",
+	], function()
+	{
+		Route::get('{hash}/{filename}', 'ImageController@getImage')
+			->where([
+				'hash' => "[a-f0-9]{32}",
+			]);
+		
+		Route::get('thumb/{hash}/{filename}', 'ImageController@getThumbnail')
+			->where([
+				'hash' => "[a-f0-9]{32}",
+			]);
+	});
 	
 });

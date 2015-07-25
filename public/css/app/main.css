@@ -1174,12 +1174,12 @@ section.index-threads {
 					}
 						a.attachment-link {
 							display: inline;
+							z-index: 5;
 						}
 							img.attachment-img {
 								display: block;
 								max-height: 250px;
 								max-width: 250px;
-								z-index: 5;
 							}
 							
 							figcaption.attachment-details {
@@ -1291,9 +1291,12 @@ section.index-threads {
 	
 	/* Catalog View */
 	main.index-catalog {
-		margin: 0 1em;
 		text-align: left;
 	}
+		main.index-catalog .index-threads {
+			margin: 1em 0 0 0;
+		}
+		
 		main.index-catalog .thread-list {
 			text-align: center;
 		}
@@ -1423,6 +1426,11 @@ nav.pagination {
 	margin: 0;
 	color: #EEF2FF;
 }
+	main.board-index nav.pagination {
+		background: none;
+		margin: 1em 0;
+	}
+	
 	nav.pagination::after {
 		display: block;
 		content: ' ';
@@ -2049,3 +2057,7 @@ footer {
 		font-size: 16px;
 		text-align: center;
 	}
+		#footnotes .agpl-compliance {
+			color: #ffffff;
+			text-decoration: underline;
+		}

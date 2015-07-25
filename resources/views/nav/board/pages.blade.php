@@ -1,10 +1,17 @@
-@if (isset($pages))
-<nav class="pagination">
+<nav class="pagination @if($showPages) pagination-full @endif @if($showCatalog) pagination-catalog @endif @if($showIndex) pagination-index @endif">
 	<div class="pagination-buttons buttons-pages">
+		@if ($showIndex)
+		<a class="button pagination-button" href="/{{ $board->board_uri }}">Index</a>
+		@endif
+		
+		@if ($showCatalog)
 		<a class="button pagination-button" href="/{{ $board->board_uri }}/catalog">Catalog</a>
+		@endif
+		
 		<a class="button pagination-button" href="/{{ $board->board_uri }}/logs">Logs</a>
 	</div>
 	
+	@if (isset($pages) && $showPages)
 	<div class="pagination-buttons buttons-before">
 		@if ($page > 1)
 			<a class="button pagination-button pagination-first" href="{{{url($board->board_uri)}}}" title="@lang('board.first')">&lt;&lt;</a>
@@ -40,5 +47,5 @@
 			<button class="pagination-button pagination-last" title="@lang('board.last')" disabled>&gt;&gt;</button>
 		@endif
 	</div>
+	@endif
 </nav>
-@endif

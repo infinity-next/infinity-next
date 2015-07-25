@@ -165,11 +165,11 @@ class FileStorage extends Model {
 	{
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			return url("{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
+			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
 		}
 		else
 		{
-			return url("{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
 		}
 	}
 	
@@ -183,11 +183,11 @@ class FileStorage extends Model {
 	{
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			return url("{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . $this->pivot->filename;
+			return url("/{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . $this->pivot->filename;
 		}
 		else
 		{
-			return url("{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+			return url("/{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
 		}
 	}
 	
