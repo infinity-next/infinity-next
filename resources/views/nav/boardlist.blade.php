@@ -23,7 +23,7 @@
 					@endif
 				</ul>
 			</li>
-		</li>
+		</ul>
 	</div>
 	
 	@if(isset($boardbar))

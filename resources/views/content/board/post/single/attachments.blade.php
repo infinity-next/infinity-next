@@ -4,13 +4,13 @@
 	<li class="post-attachment">
 		<figure class="attachment">
 			@if (!isset($catalog) || !$catalog)
-			<a class="attachment-link" target="_new" href="{!! $attachment->getDownloadURL($board) !!}">
-				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
-				
+			<a class="attachment-link" target="_blank" href="{!! $attachment->getDownloadURL($board) !!}">
 				<figcaption class="attachment-details">
 					<p class="attachment-detail detail-filename">{{ $attachment->pivot->filename }}</p>
 					<p class="attachment-detail detail-filetime">{{ $attachment->first_uploaded_at }}</p>
 				</figcaption>
+				
+				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
 			</a>
 			@else
 				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />

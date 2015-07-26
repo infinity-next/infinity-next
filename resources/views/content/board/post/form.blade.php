@@ -119,8 +119,8 @@
 			
 			@if (!$user->isAnonymous() && !isset($post))
 			@if ($user->getCapcodes($board))
-				<select id="capcode"class="field-control field-capcode" name="capcode">
-					<option value="" default selected>Capcode</option>
+				<select id="capcode" class="field-control field-capcode" name="capcode">
+					<option value="" selected>Capcode</option>
 					
 					@foreach ($user->getCapcodes($board) as $role)
 						<option value="{!! $role->role_id !!}">{{{ $role->capcode }}}</option>

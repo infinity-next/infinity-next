@@ -1223,7 +1223,7 @@ section.index-threads {
 				padding: 0.2em 0.6em;
 			}
 		
-		span.post-action-tab {
+		div.post-action-tab {
 			display: inline-block;
 			cursor: default;
 			

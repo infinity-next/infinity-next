@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Controller;
 
+use Cookie;
+
 abstract class PanelController extends Controller {
 	
 	/**
@@ -18,4 +20,24 @@ abstract class PanelController extends Controller {
 	 */
 	public static $navSecondary = "nav.panel.home";
 	
+	
+	/**
+	 * Passes a warning message if we do not have a CSRF token.
+	 *
+	 * @param  array  $options
+	 * @return array
+	 */
+	public function templateOptions(array $options = array())
+	{
+		if (is_null(Cookie::get('XSRF-TOKEN')))
+		{
+			$options = (array) array_merge_recursive([
+				'messages' => [
+					trans('panel.error.auth.csrf_token'),
+				],
+			], $options);
+		}
+		
+		return parent::templateOptions($options);
+	}
 }

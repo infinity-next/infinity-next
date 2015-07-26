@@ -11,9 +11,7 @@
 |
 */
 
-Route::group([
-	'middleware' => 'App\Http\Middleware\DomainFilter',
-], function () {
+Route::group([], function () {
 	
 	/*
 	| Index route
@@ -31,8 +29,9 @@ Route::group([
 	| - Top level site management.
 	*/
 	Route::group([
-		'namespace' => 'Panel',
-		'prefix'    => 'cp',
+		'namespace'  => 'Panel',
+		'middleware' => 'App\Http\Middleware\VerifyCsrfToken',
+		'prefix'     => 'cp',
 	], function()
 	{
 		// Simple /cp/ requests go directly to /cp/home
@@ -212,7 +211,6 @@ Route::group([
 
 Route::group([
 	'domain'     => 'api.{domain}.{tld}',
-	'middleware' => 'App\Http\Middleware\DomainFilter',
 	'namespace'  => "API",
 ], function () {
 	
@@ -229,7 +227,6 @@ Route::group([
 
 Route::group([
 	'domain'     => 'static.{domain}.{tld}',
-	'middleware' => 'App\Http\Middleware\DomainFilter',
 	'namespace'  => 'Content',
 ], function() {
 	

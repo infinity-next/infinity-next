@@ -1,6 +1,6 @@
 @section('post-actions')
 @set('postActions', false)
-<span class="post-action-tab">
+<div class="post-action-tab">
 	<span class="post-action-label post-action-open">@lang('board.action.open')</span>
 	
 	<ul class="post-action-groups">
@@ -99,7 +99,7 @@
 			</ul>
 		</li>
 	</ul>
-</span>
+</div>
 
 @if ($postActions)
 	@overwrite
