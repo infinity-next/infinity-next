@@ -1,172 +1,15 @@
-/*! HTML5 Boilerplate v5.1.0 | MIT License | https://html5boilerplate.com/ */
-
-/*
- * What follows is the result of much research on cross-browser styling.
- * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
- * Kroc Camen, and the H5BP dev community and team.
- */
-
-/* ==========================================================================
-   Base styles: opinionated defaults
-   ========================================================================== */
-
-html {
-	color: #222;
-	font-size: 1em;
-	line-height: 1.4;
-	font-family: sans-serif; /* 1 */
-	-ms-text-size-adjust: 100%; /* 2 */
-	-webkit-text-size-adjust: 100%; /* 2 */
-}
-
-/*
- * Remove text-shadow in selection highlight:
- * https://twitter.com/miketaylr/status/12228805301
- *
- * These selection rule sets have to be separate.
- * Customize the background color to match your design.
- */
-
-::-moz-selection {
-	background: #b3d4fc;
-	text-shadow: none;
-}
-
-::selection {
-	background: #b3d4fc;
-	text-shadow: none;
-}
-
-/*
- * A better looking default horizontal rule
- */
-
-hr {
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 1px solid #ccc;
-	margin: 1em 0;
-	padding: 0;
-}
-
-/*
- * Remove the gap between audio, canvas, iframes,
- * images, videos and the bottom of their containers:
- * https://github.com/h5bp/html5-boilerplate/issues/440
- */
-
-audio,
-canvas,
-iframe,
-img,
-svg,
-video {
-	vertical-align: middle;
-}
-
-/*
- * Remove default fieldset styles.
- */
-
-fieldset {
-	border: 0;
-	margin: 0;
-	padding: 0;
-}
-
-/*
- * Allow only vertical resizing of textareas.
- */
-
-textarea {
-	resize: vertical;
-}
-
-/* ==========================================================================
-   Helper classes
-   ========================================================================== */
-
-/*
- * Hide visually and from screen readers:
- */
-
-.hidden {
-	display: none !important;
-}
-
-/*
- * Hide only visually, but have it available for screen readers:
- * http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
- */
-
-.visuallyhidden {
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
-}
-
-/*
- * Extends the .visuallyhidden class to allow the element
- * to be focusable when navigated to via the keyboard:
- * https://www.drupal.org/node/897638
- */
-
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
-	clip: auto;
-	height: auto;
-	margin: 0;
-	overflow: visible;
-	position: static;
-	width: auto;
-}
-
-/*
- * Hide visually and from screen readers, but maintain layout
- */
-
-.invisible {
-	visibility: hidden;
-}
-
-/*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *	`contenteditable` attribute is included anywhere else in the document.
- *	Otherwise it causes space to appear at the top and bottom of elements
- *	that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *	`:before` to contain the top-margins of child elements.
- */
-
-.clearfix:before,
-.clearfix:after {
-	content: " "; /* 1 */
-	display: table; /* 2 */
-}
-
-.clearfix:after {
-	clear: both;
-}
-
-
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 /**
  * 1. Set default font family to sans-serif.
  * 2. Prevent iOS and IE text size adjust after device orientation change,
- *		without disabling user zoom.
+ *    without disabling user zoom.
  */
 
 html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /**
@@ -174,7 +17,7 @@ html {
  */
 
 body {
-	margin: 0;
+  margin: 0;
 }
 
 /* HTML5 display definitions
@@ -200,7 +43,7 @@ menu,
 nav,
 section,
 summary {
-	display: block;
+  display: block;
 }
 
 /**
@@ -212,8 +55,8 @@ audio,
 canvas,
 progress,
 video {
-	display: inline-block; /* 1 */
-	vertical-align: baseline; /* 2 */
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
 }
 
 /**
@@ -222,8 +65,8 @@ video {
  */
 
 audio:not([controls]) {
-	display: none;
-	height: 0;
+  display: none;
+  height: 0;
 }
 
 /**
@@ -233,7 +76,7 @@ audio:not([controls]) {
 
 [hidden],
 template {
-	display: none;
+  display: none;
 }
 
 /* Links
@@ -244,7 +87,7 @@ template {
  */
 
 a {
-	background-color: transparent;
+  background-color: transparent;
 }
 
 /**
@@ -254,7 +97,7 @@ a {
 
 a:active,
 a:hover {
-	outline: 0;
+  outline: 0;
 }
 
 /* Text-level semantics
@@ -265,7 +108,7 @@ a:hover {
  */
 
 abbr[title] {
-	border-bottom: 1px dotted;
+  border-bottom: 1px dotted;
 }
 
 /**
@@ -274,7 +117,7 @@ abbr[title] {
 
 b,
 strong {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 /**
@@ -282,7 +125,7 @@ strong {
  */
 
 dfn {
-	font-style: italic;
+  font-style: italic;
 }
 
 /**
@@ -291,8 +134,8 @@ dfn {
  */
 
 h1 {
-	font-size: 2em;
-	margin: 0.67em 0;
+  font-size: 2em;
+  margin: 0.67em 0;
 }
 
 /**
@@ -300,8 +143,8 @@ h1 {
  */
 
 mark {
-	background: #ff0;
-	color: #000;
+  background: #ff0;
+  color: #000;
 }
 
 /**
@@ -309,7 +152,7 @@ mark {
  */
 
 small {
-	font-size: 80%;
+  font-size: 80%;
 }
 
 /**
@@ -318,18 +161,18 @@ small {
 
 sub,
 sup {
-	font-size: 75%;
-	line-height: 0;
-	position: relative;
-	vertical-align: baseline;
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
 }
 
 sup {
-	top: -0.5em;
+  top: -0.5em;
 }
 
 sub {
-	bottom: -0.25em;
+  bottom: -0.25em;
 }
 
 /* Embedded content
@@ -340,7 +183,7 @@ sub {
  */
 
 img {
-	border: 0;
+  border: 0;
 }
 
 /**
@@ -348,7 +191,7 @@ img {
  */
 
 svg:not(:root) {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 /* Grouping content
@@ -359,7 +202,7 @@ svg:not(:root) {
  */
 
 figure {
-	margin: 1em 40px;
+  margin: 1em 40px;
 }
 
 /**
@@ -367,8 +210,8 @@ figure {
  */
 
 hr {
-	box-sizing: content-box;
-	height: 0;
+  box-sizing: content-box;
+  height: 0;
 }
 
 /**
@@ -376,7 +219,7 @@ hr {
  */
 
 pre {
-	overflow: auto;
+  overflow: auto;
 }
 
 /**
@@ -387,8 +230,8 @@ code,
 kbd,
 pre,
 samp {
-	font-family: monospace, monospace;
-	font-size: 1em;
+  font-family: monospace, monospace;
+  font-size: 1em;
 }
 
 /* Forms
@@ -401,7 +244,7 @@ samp {
 
 /**
  * 1. Correct color not being inherited.
- *		Known issue: affects color of disabled elements.
+ *    Known issue: affects color of disabled elements.
  * 2. Correct font properties not being inherited.
  * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
  */
@@ -411,9 +254,9 @@ input,
 optgroup,
 select,
 textarea {
-	color: inherit; /* 1 */
-	font: inherit; /* 2 */
-	margin: 0; /* 3 */
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
 }
 
 /**
@@ -421,7 +264,7 @@ textarea {
  */
 
 button {
-	overflow: visible;
+  overflow: visible;
 }
 
 /**
@@ -433,23 +276,23 @@ button {
 
 button,
 select {
-	text-transform: none;
+  text-transform: none;
 }
 
 /**
  * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
- *		and `video` controls.
+ *    and `video` controls.
  * 2. Correct inability to style clickable `input` types in iOS.
  * 3. Improve usability and consistency of cursor style between image-type
- *		`input` and others.
+ *    `input` and others.
  */
 
 button,
 html input[type="button"], /* 1 */
 input[type="reset"],
 input[type="submit"] {
-	-webkit-appearance: button; /* 2 */
-	cursor: pointer; /* 3 */
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
 }
 
 /**
@@ -458,7 +301,7 @@ input[type="submit"] {
 
 button[disabled],
 html input[disabled] {
-	cursor: default;
+  cursor: default;
 }
 
 /**
@@ -467,8 +310,8 @@ html input[disabled] {
 
 button::-moz-focus-inner,
 input::-moz-focus-inner {
-	border: 0;
-	padding: 0;
+  border: 0;
+  padding: 0;
 }
 
 /**
@@ -477,7 +320,7 @@ input::-moz-focus-inner {
  */
 
 input {
-	line-height: normal;
+  line-height: normal;
 }
 
 /**
@@ -490,8 +333,8 @@ input {
 
 input[type="checkbox"],
 input[type="radio"] {
-	box-sizing: border-box; /* 1 */
-	padding: 0; /* 2 */
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -502,7 +345,7 @@ input[type="radio"] {
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-	height: auto;
+  height: auto;
 }
 
 /**
@@ -511,8 +354,8 @@ input[type="number"]::-webkit-outer-spin-button {
  */
 
 input[type="search"] {
-	-webkit-appearance: textfield; /* 1 */
-	box-sizing: content-box; /* 2 */
+  -webkit-appearance: textfield; /* 1 */
+  box-sizing: content-box; /* 2 */
 }
 
 /**
@@ -523,7 +366,7 @@ input[type="search"] {
 
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
-	-webkit-appearance: none;
+  -webkit-appearance: none;
 }
 
 /**
@@ -531,9 +374,9 @@ input[type="search"]::-webkit-search-decoration {
  */
 
 fieldset {
-	border: 1px solid #c0c0c0;
-	margin: 0 2px;
-	padding: 0.35em 0.625em 0.75em;
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
 }
 
 /**
@@ -542,8 +385,8 @@ fieldset {
  */
 
 legend {
-	border: 0; /* 1 */
-	padding: 0; /* 2 */
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
 }
 
 /**
@@ -551,7 +394,7 @@ legend {
  */
 
 textarea {
-	overflow: auto;
+  overflow: auto;
 }
 
 /**
@@ -560,7 +403,7 @@ textarea {
  */
 
 optgroup {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 /* Tables
@@ -571,11 +414,11 @@ optgroup {
  */
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 td,
 th {
-	padding: 0;
+  padding: 0;
 }

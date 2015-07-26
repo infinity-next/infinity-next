@@ -4,8 +4,8 @@
 	<title>@yield('title', 'Infinity')</title>
 	
 	@section('css')
-		{!! Minify::stylesheetDir('/css/vendor/') !!}
-		{!! Minify::stylesheet([ '/css/app/main.css', '/css/app/responsive.css' ]) !!}
+		{!! Minify::stylesheetDir('/vendor/')->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/css/')->withFullUrl() !!}
 	@show
 	
 	@section('js')
@@ -25,9 +25,8 @@
 			};
 		</script>
 		
-		{!! Minify::javascriptDir('/js/vendor/lib/') !!}
-		{!! Minify::javascriptDir('/js/vendor/plugins/') !!}
-		{!! Minify::javascriptDir('/js/app/') !!}
+		{!! Minify::javascriptDir('/vendor/')->withFullUrl() !!}
+		{!! Minify::javascriptDir('/js/')->withFullUrl() !!}
 	@show
 	
 	@section('meta')
