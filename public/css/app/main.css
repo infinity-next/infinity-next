@@ -1425,7 +1425,7 @@ blockquote.post {
 	
 	blockquote.post pre {
 		clear: both;
-		background-color: rgba(255, 255, 255, 0.75);
+		background-color: rgba(255, 255, 255, 0.6);
 		color: #111111;
 		
 		margin: 1em -0.75em;
@@ -1454,10 +1454,39 @@ blockquote.post {
 		margin: 0 1em;
 		padding: 0 0 0 2em;
 	}
-	blockquote.post ul {
-		list-style-type: disc;
-	}
+		blockquote.post ul {
+			list-style-type: disc;
+		}
 	
+	blockquote.post table {
+		border-spacing: 0.25em;
+		margin: 1em 0;
+		width: auto;
+	}
+		blockquote.post thead tr,
+		blockquote.post tbody tr:nth-of-type(even) {
+			background-color: rgba(0, 0, 100, 0.1);
+		}
+		
+		blockquote.post tbody {
+			
+		}
+			blockquote.post tr {
+				
+			}
+			blockquote.post td {
+				padding: 0.25em;
+			}
+		
+		blockquote.post thead {
+			
+		}
+			blockquote.post th {
+				padding: 0.25em;
+			}
+		blockquote.post tfoot {
+			
+		}
 
 section.auth-form {
 	max-width: 640px;

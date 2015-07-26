@@ -74,6 +74,11 @@ header nav.boardlist {
 						background-color: #34345C;
 					}
 
+	blockquote.post thead tr,
+	blockquote.post tbody tr:nth-of-type(even) {
+		background-color: rgba(100, 0, 0, 0.1);
+	}
+
 form.form-post {
 	background: #f0e0d6;
 	border-color: #D9BFB7;

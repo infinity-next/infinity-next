@@ -117,7 +117,7 @@ class ContentFormatter {
 		
 		return Markdown::setBreaksEnabled(true)
 			->setMarkupEscaped(true)
-			->setUrlsLinked(false)
+			//->setUrlsLinked(false)
 			->parse( (string) $post->body );
 		
 		
