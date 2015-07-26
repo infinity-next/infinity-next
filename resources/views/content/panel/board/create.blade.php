@@ -1,6 +1,6 @@
 @extends($user->isAnonymous() ? 'layouts.main.simplebox' : 'layouts.main.panel')
 
-@section('title', $user->isAnonymous() ? trans("config.title.board_create") : "")
+@section('title', $user->isAnonymous() ? trans("panel.title.board_create") : "")
 
 @section('body')
 {!! Form::open([

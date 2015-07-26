@@ -102,7 +102,8 @@
 </span>
 
 @if ($postActions)
-	@show
+	@overwrite
+	@yield('post-actions')
 @else
 	@stop
 @endif
