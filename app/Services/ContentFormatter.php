@@ -114,7 +114,11 @@ class ContentFormatter {
 	public function formatPost(Post $post)
 	{
 		$this->post = $post;
-		return Markdown::parse( (string) $post->body );
+		
+		return Markdown::setBreaksEnabled(true)
+			->setMarkupEscaped(true)
+			->setUrlsLinked(false)
+			->parse( (string) $post->body );
 		
 		
 		return $this->formatContent( (string) $post->body);

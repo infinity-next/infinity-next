@@ -1065,6 +1065,7 @@ section.index-threads {
 		position: relative;
 		
 		margin: 0;
+		max-width: 100%;
 		
 		/* background: #fff;
 		border-radius: 4px;
@@ -1285,10 +1286,6 @@ section.index-threads {
 								background: #34345C;
 							}
 	
-	blockquote.post {
-		
-	}
-	
 	/* Catalog View */
 	main.index-catalog {
 		text-align: left;
@@ -1415,6 +1412,52 @@ section.index-threads {
 			
 			margin: 0 -0.5em 0 -0.5em;
 		}
+
+/**
+ * MAIN POST STYLING
+ */
+blockquote.post {
+	
+}
+	blockquote.post hr {
+		border-top: 2px groove rgba(255, 255, 255, 1);
+	}
+	
+	blockquote.post pre {
+		clear: both;
+		background-color: rgba(255, 255, 255, 0.75);
+		color: #111111;
+		
+		margin: 1em -0.75em;
+		padding: 1em;
+		
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+	
+	blockquote.post blockquote {
+		margin-left: 0;
+		margin-right: 0;
+		
+		color: #789922;
+	}
+	
+	blockquote.post p {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	
+	blockquote.post ol,
+	blockquote.post ul {
+		display: block;
+		list-style-type: decimal;
+		margin: 0 1em;
+		padding: 0 0 0 2em;
+	}
+	blockquote.post ul {
+		list-style-type: disc;
+	}
+	
 
 section.auth-form {
 	max-width: 640px;

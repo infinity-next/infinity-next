@@ -163,7 +163,7 @@ return [
 		/*
 		 * Parsedown
 		 */
-		'AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider',
+		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
 		/*
 		 * Stripe
@@ -233,7 +233,7 @@ return [
 		/*
 		 * Parsedown
 		 */
-		'Markdown'  => 'AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra',
+		'Markdown'  => 'InfinityNext\Eightdown\Facades\EightdownFacade',
 		
 		/*
 		 * Captcha
