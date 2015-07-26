@@ -58,7 +58,7 @@ header nav.boardlist {
 	ul.post-metas {
 		border-color: #D9BFB7;
 	}
-		span.post-action-tab {
+		div.post-action-tab {
 			color: #800000;
 			border-color: #D9BFB7;
 		}

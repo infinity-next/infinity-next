@@ -1256,7 +1256,7 @@ section.index-threads {
 				
 				white-space: nowrap;
 			}
-				span.post-action-tab:hover ul.post-action-groups,
+				div.post-action-tab:hover ul.post-action-groups,
 				ul.post-action-groups.open {
 					display: block;
 				}
@@ -1407,7 +1407,7 @@ section.index-threads {
 			text-overflow: ellipsis;
 		}
 		
-		main.index-catalog span.post-action-tab {
+		main.index-catalog div.post-action-tab {
 			bottom: 0.25em;
 			top: auto;
 			
