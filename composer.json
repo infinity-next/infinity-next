@@ -5,6 +5,15 @@
 	"license": "AGPL 3.0",
 	"type": "project",
 	
+	"authors": [
+		{
+			"name": "Joshua Moon",
+			"email": "josh@jaw.sh",
+			"homepage": "http://jaw.sh",
+			"role": "Developer"
+		}
+	],
+	
 	"require": {
 		"php": ">=5.5.9",
 		"laravel/framework": "5.1.*",
@@ -14,13 +23,16 @@
 		"laravel/cashier": "~5.0",
 		"laravelcollective/html": "~5.0",
 		
-		"ext-gd": "*",
 		"illuminate/config": "~5.0",
+		"illuminate/hashing": "~5.0",
 		"illuminate/filesystem": "~5.0",
 		"illuminate/support": "~5.0",
-		"illuminate/hashing": "~5.0",
-		"intervention/image": "~2.1",
+		
+		"ext-gd": "*",
+		"intervention/imagecache": "~2.3",
+		"intervention/image": "~2.3",
 		"cviebrock/image-validator" : "2.0.*@beta",
+		
 		
 		"devfactory/minify" : "1.0.*",
 		"infinity-next/eightdown": "*@dev"
