@@ -161,6 +161,11 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		
 		/*
+		 * Parsedown
+		 */
+		'AlfredoRamos\ParsedownExtra\ParsedownExtraServiceProvider',
+		
+		/*
 		 * Stripe
 		 */
 		'Laravel\Cashier\CashierServiceProvider',
@@ -220,15 +225,20 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 		
 		/*
-		 * Captcha
-		 */
-		'Captcha'   => 'App\Support\Facades\Captcha',
-		
-		/*
 		 * Forms
 		 */
 		'Form'      => 'Collective\Html\FormFacade',
 		'Html'      => 'Collective\Html\HtmlFacade',
+		
+		/*
+		 * Parsedown
+		 */
+		'Markdown'  => 'AlfredoRamos\ParsedownExtra\Facades\ParsedownExtra',
+		
+		/*
+		 * Captcha
+		 */
+		'Captcha'   => 'App\Support\Facades\Captcha',
 		
 		/*
 		 * CSS+JS Minify

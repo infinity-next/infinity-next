@@ -7,6 +7,7 @@ use App\PostCite;
 use Illuminate\Database\Eloquent\Collection;
 
 use DB;
+use Markdown;
 
 class ContentFormatter {
 	
@@ -113,6 +114,8 @@ class ContentFormatter {
 	public function formatPost(Post $post)
 	{
 		$this->post = $post;
+		return Markdown::parse( (string) $post->body );
+		
 		
 		return $this->formatContent( (string) $post->body);
 	}

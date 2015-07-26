@@ -326,14 +326,7 @@ trait PermissionUser {
 	{
 		if (!is_null($board))
 		{
-			$board_uri = $board;
-			
-			if ($board instanceof Board)
-			{
-				$board_uri = $board->board_uri;
-			}
-			
-			return $this->can("board.config", $board_uri);
+			return $this->can("board.config", $board);
 		}
 		else
 		{

@@ -110,6 +110,11 @@ class Board extends Model {
 		return $user->canDeleteLocally($this);
 	}
 	
+	public function canEditConfig($user)
+	{
+		return $user->canEditConfig($this);
+	}
+	
 	public function canPostWithoutCaptcha($user)
 	{
 		return $user->canPostWithoutCaptcha($this);

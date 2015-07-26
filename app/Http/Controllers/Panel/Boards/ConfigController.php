@@ -68,6 +68,11 @@ class ConfigController extends PanelController {
 	 */
 	public function getAssets(Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		return $this->view(static::VIEW_CONFIG, [
 			'board'   => $board,
 			'banners' => $board->getBanners(),
@@ -83,6 +88,11 @@ class ConfigController extends PanelController {
 	 */
 	public function patchAssets(Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		$banners = $board->getBanners();
 		$input   = Input::all();
 		
@@ -114,6 +124,11 @@ class ConfigController extends PanelController {
 	 */
 	public function putAssets(Request $request, Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		$input     = Input::all();
 		$validator = Validator::make($input, [
 			'asset_type' => [
@@ -165,6 +180,11 @@ class ConfigController extends PanelController {
 	 */
 	public function getIndex(Request $request, Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		$optionGroups = OptionGroup::getBoardConfig($board);
 		
 		return $this->view(static::VIEW_CONFIG, [
@@ -182,6 +202,11 @@ class ConfigController extends PanelController {
 	 */
 	public function patchIndex(BoardConfigRequest $request, Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		$request->setBoard($board);
 		
 		$input        = $request->all();
@@ -234,6 +259,11 @@ class ConfigController extends PanelController {
 	 */
 	public function getStaff(Board $board)
 	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
 		$roles = $board->roles;
 		$staff = $board->getStaff();
 		

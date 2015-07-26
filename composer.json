@@ -22,7 +22,8 @@
 		"intervention/image": "~2.1",
 		"cviebrock/image-validator" : "2.0.*@beta",
 		
-		"devfactory/minify" : "1.0.*"
+		"devfactory/minify" : "1.0.*",
+		"alfredo-ramos/parsedown-extra-laravel": "~0.2"
 	},
 	
 	"require-dev": {
