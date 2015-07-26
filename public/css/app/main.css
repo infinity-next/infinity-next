@@ -1017,7 +1017,7 @@ section.index-threads {
 	
 	.reply {
 		margin: 0.5em 0 0.5em 0;
-		padding: 0 0 0 0.75em;
+		padding: 0;
 		white-space: nowrap;
 	}
 		.reply::before {
@@ -1430,11 +1430,15 @@ blockquote.post {
 		color: #111111;
 		
 		margin: 1em -0.75em;
-		padding: 1em;
 		
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
+		blockquote.post pre code {
+			display: block;
+			margin: 0;
+			padding: 1em;
+		}
 	
 	blockquote.post blockquote {
 		margin-left: 0;

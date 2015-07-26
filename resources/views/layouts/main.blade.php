@@ -26,6 +26,7 @@
 		</script>
 		
 		{!! Minify::javascriptDir('/vendor/')->withFullUrl() !!}
+		{!! Minify::javascriptDir('/js/plugins/')->withFullUrl() !!}
 		{!! Minify::javascriptDir('/js/app/')->withFullUrl() !!}
 	@show
 	

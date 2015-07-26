@@ -1,5 +1,6 @@
-// Enter into a closed namespace where we can freely
-// define variables without messing up the window.
+/**
+ * Widget Master
+ */
 (function(window, $, undefined) {
 	var ib = window.ib = function() {};
 	
@@ -36,8 +37,6 @@
 		
 		widget.options = $.extend(options, widget.defaults);
 		
-		console.log(widget.options);
-		
 		if (typeof target !== "string") {
 			target = widget.options.selector.widget;
 		}
@@ -67,7 +66,9 @@
 	return ib;
 })(window, jQuery);
 
-
+/**
+ * Message Widget
+ */
 (function(window, $, undefined) {
 	var widget = {
 		// Short-hand for this widget's main object.
@@ -139,7 +140,9 @@
 	window.ib.widget("notice", widget);
 })(window, jQuery);
 
-
+/**
+ * Stripe Cashier Form
+ */
 (function(window, $, undefined) {
 	var widget = {
 		// Short-hand for this widget's main object.
@@ -497,20 +500,58 @@
 	window.ib.widget("donate", widget);
 })(window, jQuery);
 
-
-
-/*
-
-$(document)
-	.on('change', "#ccn", function(event) {
-	.on('change', ".row-payment .field-control-inline")
-	.on('change', "#donate-details input", function(event) {
-	})
-	.on('submit', "#payment-form", function(event) {
-	})
-	.on('ready', function(event) {
-		$(".row-payment .field-control-inline").first().trigger('change');
-	});
+/**
+ * Post Widget
+ */
+ (function(window, $, undefined) {
+	var widget = {
+		// Short-hand for this widget's main object.
+		$widget  : $(),
+		
+		// The default values that are set behind init values.
+		defaults : {
+			// Selectors for finding and binding elements.
+			selector : {
+				'widget'        : ".post-container",
+				
+				'elementCode'  : "pre code",
+				'elementQuote' : "blockquote",
+			},
+		},
+		
+		// Compiled settings.
+		options  : false,
+		
+		// Events
+		events   : {
+			highlight : function() {
+				
+				if (typeof hljs === "object") {
+					$(widget.defaults.selector.elementCode, widget.$widget).each(function(index, element) {
+						hljs.highlightBlock(element);
+					});
+				}
+				
+			}
+		},
+		
+		// Event bindings
+		bind     : {
+			widget : function() {
+				
+				widget.events.highlight();
+				
+			}
+		},
+		
+		build    : {
+			
+		},
+		
+		init     : function(target, options) {
+			window.ib.widgetArguments.call(widget, arguments);
+		}
+	};
 	
-
-*/
+	window.ib.widget("post", widget);
+})(window, jQuery);

@@ -1,4 +1,4 @@
-<div class="post-container @if ($op === $thread) op-container @else reply-container @endif">
+<div class="post-container @if ($op === $thread) op-container @else reply-container @endif" data-widget="post">
 	@include( $c->template('board.post.single'), [
 		'board'   => $board,
 		'post'    => $thread,
