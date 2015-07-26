@@ -1082,6 +1082,7 @@ section.index-threads {
 		
 		.post-content {
 			padding: 0.75em;
+			padding-bottom: 0;
 		}
 		.post-content::after {
 			content: ' ';
@@ -1172,10 +1173,10 @@ section.index-threads {
 						display: inline-block;
 						margin: 0 1em 1em 0;
 						position: relative;
+						z-index: 5;
 					}
 						a.attachment-link {
 							display: inline;
-							z-index: 5;
 						}
 							img.attachment-img {
 								display: block;
@@ -1425,7 +1426,7 @@ blockquote.post {
 	
 	blockquote.post pre {
 		clear: both;
-		background-color: rgba(255, 255, 255, 0.6);
+		background-color: rgba(255, 255, 255, 0.35);
 		color: #111111;
 		
 		margin: 1em -0.75em;
@@ -1451,7 +1452,7 @@ blockquote.post {
 	blockquote.post ul {
 		display: block;
 		list-style-type: decimal;
-		margin: 0 1em;
+		margin: 1em;
 		padding: 0 0 0 2em;
 	}
 		blockquote.post ul {
