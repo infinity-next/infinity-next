@@ -5,7 +5,7 @@
 	
 	@section('css')
 		{!! Minify::stylesheetDir('/vendor/')->withFullUrl() !!}
-		{!! Minify::stylesheetDir('/css/')->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/css/app/')->withFullUrl() !!}
 	@show
 	
 	@section('js')
@@ -26,7 +26,7 @@
 		</script>
 		
 		{!! Minify::javascriptDir('/vendor/')->withFullUrl() !!}
-		{!! Minify::javascriptDir('/js/')->withFullUrl() !!}
+		{!! Minify::javascriptDir('/js/app/')->withFullUrl() !!}
 	@show
 	
 	@section('meta')
