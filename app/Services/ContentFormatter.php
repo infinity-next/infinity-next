@@ -19,6 +19,68 @@ class ContentFormatter {
 	protected $post;
 	
 	/**
+	 * Returns a formatted post.
+	 *
+	 * @param  \App\Post $post
+	 * @return String (HTML, Formatted)
+	 */
+	public function formatPost(Post $post)
+	{
+		$this->post = $post;
+		
+		return $this->formatContent( (string) $post->body);
+	}
+	
+	/**
+	 * Parses an entire block of text.
+	 *
+	 * @param  string $content
+	 * @return string
+	 */
+	protected function formatContent($content)
+	{
+		$html = "";
+		
+		$html = $this->formatMarkdown($content);
+		
+		return $html;
+	}
+	
+	/**
+	 * Santizes user input for a single line.
+	 *
+	 * @param  string $content
+	 * @return string
+	 */
+	protected function formatMarkdown($content)
+	{
+		$post = $this->post;
+		
+		return Markdown::config([
+			'general' => [
+				'keepLineBreaks' => true,
+				'parseHTML'      => false,
+				'parseURL'       => true,
+			],
+			
+			'disable' => [
+				"Image",
+				"Link",
+			],
+			
+			'markup' => [
+				'code' => [
+					'ascii'     => true,
+				],
+				
+				'quote'   => [
+					'keepSigns' => true,
+				],
+			],
+		])->parse( (string) $post->body );
+	}
+	
+	/**
 	 * Returns a collection of posts as cited in a post's text body.
 	 *
 	 * @param  \App\Post $post
@@ -30,8 +92,8 @@ class ContentFormatter {
 		$boardCites = [];
 		$lines = explode("\n", $post->body);
 		
-		$relative = "/\s?>>(?P<board_id>\d+)\s?/";
-		$global   = "/\s?>>>\/(?P<board_uri>" . Board::URI_PATTERN_INNER . ")\/(?P<board_id>\d+)?\s?/";
+		$relative = "/\s?&gt;(?P<board_id>\d+)\s?/";
+		$global   = "/\s?&gt;&gt;&gt;\/(?P<board_uri>" . Board::URI_PATTERN_INNER . ")\/(?P<board_id>\d+)?\s?/";
 		
 		foreach ($lines as $line)
 		{
@@ -106,88 +168,12 @@ class ContentFormatter {
 	}
 	
 	/**
-	 * Returns a formatted post.
-	 *
-	 * @param  \App\Post $post
-	 * @return String (HTML, Formatted)
-	 */
-	public function formatPost(Post $post)
-	{
-		$this->post = $post;
-		
-		return Markdown::setBreaksEnabled(true)
-			->setMarkupEscaped(true)
-			//->setUrlsLinked(false)
-			->parse( (string) $post->body );
-		
-		
-		return $this->formatContent( (string) $post->body);
-	}
-	
-	/**
-	 * Santizes user input for a single line.
-	 *
-	 * @param  string $content
-	 * @return string
-	 */
-	protected function encodeContent($content)
-	{
-		return htmlentities( (string) $content );
-	}
-	
-	/**
-	 * Parses an entire block of text.
-	 *
-	 * @param  string $content
-	 * @return string
-	 */
-	protected function formatContent($content)
-	{
-		$html    = "";
-		$content = $this->encodeContent($content);
-		
-		if ($content != "")
-		{
-			$lines   = explode("\n", $content);
-			
-			foreach ($lines as $line)
-			{
-				$html .= $this->formatLine($line);
-			}
-		}
-		
-		return $html;
-	}
-	
-	/**
-	 * Parses a single line.
-	 *
-	 * @param  string $content
-	 * @return string
-	 */
-	protected function formatLine($line)
-	{
-		$html       = "";
-		$cssClasses = ["line"];
-		
-		$this->parseQuotes($line, $cssClasses);
-		$this->parseCites($line, $cssClasses);
-		
-		$html .= "<p class=\"" . implode($cssClasses, " ") . "\">";
-		$html .= $line;
-		$html .= "</p>";
-		
-		return $html;
-	}
-	
-	/**
 	 * Takes parsed citations and converts cites to hyperlinks.
 	 *
 	 * @param  string &$line
-	 * @param  array &$cssClasses
 	 * @return void
 	 */
-	protected function parseCites(&$line, array &$cssClasses)
+	protected function parseCites(&$line)
 	{
 		$words = explode(" ", $line);
 		
@@ -276,21 +262,6 @@ class ContentFormatter {
 				">" .
 					"&gt;&gt;&gt;/{$cite->cite_board_uri}/" .
 				"</a>";
-		}
-	}
-	
-	/**
-	 * Parses quotes in a post.
-	 *
-	 * @param  string &$line
-	 * @param  array &$cssClasses
-	 * @return void
-	 */
-	protected function parseQuotes(&$line, array &$cssClasses)
-	{
-		if (strpos($line, $this->encodeContent(">")) === 0)
-		{
-			$cssClasses[] = "quote";
 		}
 	}
 	

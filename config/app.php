@@ -161,7 +161,7 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		
 		/*
-		 * Parsedown
+		 * Markdown
 		 */
 		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
@@ -231,7 +231,7 @@ return [
 		'Html'      => 'Collective\Html\HtmlFacade',
 		
 		/*
-		 * Parsedown
+		 * Markdown
 		 */
 		'Markdown'  => 'InfinityNext\Eightdown\Facades\EightdownFacade',
 		

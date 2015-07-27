@@ -1439,6 +1439,16 @@ blockquote.post {
 			margin: 0;
 			padding: 1em;
 		}
+		
+		blockquote.post pre code.language-aa,
+		blockquote.post pre code.language-AA,
+		blockquote.post pre code.language-ascii,
+		blockquote.post pre code.language-ASCII {
+			font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
+			display: block!important;
+			font-size: 12pt;
+			line-height: 1.1;
+		}
 	
 	blockquote.post blockquote {
 		margin-left: 0;

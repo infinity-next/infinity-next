@@ -819,12 +819,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/eightdown.git",
-                "reference": "0ac243aa6b1b6460dfef392b626fb90902ed4516"
+                "reference": "17fcb8efbc8a75dd610cc0879f727c9ad667f15e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/eightdown/zipball/0ac243aa6b1b6460dfef392b626fb90902ed4516",
-                "reference": "0ac243aa6b1b6460dfef392b626fb90902ed4516",
+                "url": "https://api.github.com/repos/infinity-next/eightdown/zipball/17fcb8efbc8a75dd610cc0879f727c9ad667f15e",
+                "reference": "17fcb8efbc8a75dd610cc0879f727c9ad667f15e",
                 "shasum": ""
             },
             "require": {
@@ -847,8 +847,8 @@
                     "email": "josh@jaw.sh"
                 }
             ],
-            "description": "A Parsedown implementation for Laravel that adds optional features imageboard users will be familiar with.",
-            "time": "2015-07-26 14:22:45"
+            "description": "Eightdown is a Markdown implementation for Laravel that adds optional features imageboard users will be familiar with.",
+            "time": "2015-07-27 12:03:52"
         },
         {
             "name": "intervention/image",
