@@ -54,30 +54,34 @@ class ContentFormatter {
 	 */
 	protected function formatMarkdown($content)
 	{
-		$post = $this->post;
+		$post   = $this->post;
 		
 		return Markdown::config([
-			'general' => [
-				'keepLineBreaks' => true,
-				'parseHTML'      => false,
-				'parseURL'       => true,
-			],
-			
-			'disable' => [
-				"Image",
-				"Link",
-			],
-			
-			'markup' => [
-				'code' => [
-					'ascii'     => true,
+				'general' => [
+					'keepLineBreaks' => true,
+					'parseHTML'	  => false,
+					'parseURL'	   => true,
 				],
 				
-				'quote'   => [
-					'keepSigns' => true,
+				'disable' => [
+					"Image",
+					"Link",
 				],
-			],
-		])->parse( (string) $post->body );
+				
+				'enable' => [
+					"Spoiler",
+				],
+				
+				'markup' => [
+					'quote'   => [
+						'keepSigns' => true,
+					],
+				],
+			])
+			
+			->extendBlockComplete('Quote', $this->getCiteParser())
+			
+			->parse( (string) $post->body );
 	}
 	
 	/**
@@ -92,11 +96,13 @@ class ContentFormatter {
 		$boardCites = [];
 		$lines = explode("\n", $post->body);
 		
-		$relative = "/\s?&gt;(?P<board_id>\d+)\s?/";
+		$relative = "/\s?&gt;&gt;(?P<board_id>\d+)\s?/";
 		$global   = "/\s?&gt;&gt;&gt;\/(?P<board_uri>" . Board::URI_PATTERN_INNER . ")\/(?P<board_id>\d+)?\s?/";
 		
 		foreach ($lines as $line)
 		{
+			$line = str_replace(">", "&gt;", $line);
+			
 			preg_match_all($relative, $line, $relativeMatch);
 			preg_match_all($global, $line, $globalMatch);
 			
@@ -144,7 +150,7 @@ class ContentFormatter {
 		
 		if (count($postCites))
 		{
-			$posts  = Post::where(function($query) use ($postCites)
+			$posts = Post::where(function($query) use ($postCites)
 			{
 				foreach ($postCites as $postCite)
 				{
@@ -165,6 +171,42 @@ class ContentFormatter {
 			'boards' => $boards,
 			'posts'  => $posts,
 		];
+	}
+	
+	/**
+	 * Provides a closure for the Eightdown API to add cites.
+	 *
+	 * @return Closure
+	 */
+	protected function getCiteParser()
+	{
+		$parser = $this;
+		
+		return function($Block) use ($parser)
+		{
+			$spoiler = null;
+			
+			foreach ($Block['element']['text'] as &$text)
+			{
+				$text = str_replace(">", "&gt;", $text);
+				$parser->parseCites($text);
+				
+				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
+				
+			}
+			
+			if ($spoiler === true)
+			{
+				$Block['element']['attributes']['class'] = "spoiler";
+				
+				foreach ($Block['element']['text'] as &$text)
+				{
+					$text = preg_replace('/^&gt;!/', "", $text, 1);
+				}
+			}
+			
+			return $Block;
+		};
 	}
 	
 	/**

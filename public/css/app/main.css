@@ -1456,6 +1456,22 @@ blockquote.post {
 		
 		color: #789922;
 	}
+		blockquote.post blockquote.spoiler {
+			box-sizing: border-box;
+			padding: 1px 0.5em;
+		}
+	
+	blockquote.post .spoiler {
+		box-sizing: border-box;
+		padding: 1px 0.5em;
+		
+		color: black;
+		background: black;
+	}
+		blockquote.post .spoiler:hover {
+			color: white;
+			background: black;
+		}
 	
 	blockquote.post p {
 		margin-left: 0;
