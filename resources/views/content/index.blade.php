@@ -26,7 +26,7 @@
 		<section id="site-highlights">
 			<div class="grid-100">
 				<div class="smooth-box">
-					<h3>Check our these boards</h3>
+					<h3>Check out these boards</h3>
 					
 					<ul class="index-highlights">
 						<li class="index-highlight">
