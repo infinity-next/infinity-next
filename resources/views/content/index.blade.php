@@ -5,12 +5,6 @@
 @endsection
 
 @section('content')
-<div class="grid-container">
-	<section class="grid-80 push-20">
-		@include($c->template('index.modules.warning'))
-	</section>
-</div>
-
 <main id="frontpage">
 	<div class="grid-container">
 		<section id="site-info">
