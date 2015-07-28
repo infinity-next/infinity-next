@@ -560,6 +560,21 @@ figure.error {
 				text-align: center;
 			}
 	
+	#site-highlights {
+		
+	}
+		#site-highlights .index-highlights {
+			display: block;
+			margin: 0;
+			padding: 0;
+			
+			font-size: 110%;
+		}
+			#site-highlights .index-highlight {
+				display: inline-block;
+				padding: 0.1em 1em 0.25em 0;
+			}
+	
 	#index-boardlist {
 		clear: both;
 		margin: 1em 0 0 0;
