@@ -1,7 +1,7 @@
 <nav class="cp-side">
 	<section class="cp-linklists">
 		<ul class="cp-linkgroups">
-			@if ($user)
+			@if (!$user->isAnonymous())
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name">@lang('panel.nav.secondary.home.account')</a>
 				

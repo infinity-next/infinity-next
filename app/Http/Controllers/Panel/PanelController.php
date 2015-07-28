@@ -31,9 +31,14 @@ abstract class PanelController extends Controller {
 	{
 		if (is_null(Cookie::get('XSRF-TOKEN')))
 		{
+			if (isset($options['messages']['xsrf-token-missing']))
+			{
+				unset($options['messages']['xsrf-token-missing']);
+			}
+			
 			$options = (array) array_merge_recursive([
 				'messages' => [
-					trans('panel.error.auth.csrf_token'),
+					'xsrf-token-missing' => trans('panel.error.auth.csrf_token'),
 				],
 			], $options);
 		}
