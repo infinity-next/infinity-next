@@ -166,9 +166,10 @@ return [
 		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
 		/*
-		 * Stripe
+		 * Money
 		 */
-		'Laravel\Cashier\CashierServiceProvider',
+		//'Laravel\Cashier\CashierServiceProvider',
+		'InfinityNext\Braintree\BraintreeServiceProvider',
 		
 		/*
 		 * CSS+JS Minify

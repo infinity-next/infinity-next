@@ -13,12 +13,29 @@
 		
 		<script type="text/javascript">
 			window.app = {
+				'merchant' : "{{ env('CASHIER_SERVICE') }}",
+				
 			@if (env('APP_DEBUG'))
-				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
 				'debug'      : true,
+				
+				@if (env('STRIPE_LIVE_PUBLIC') && env('CASHIER_SERVICE') == "stripe")
+				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
+				@endif
+				
+				@if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
+				'braintree_key' : "{!! $BraintreeClientKey !!}",
+				@endif
+				
 			@else
-				'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', '') !!}",
 				'debug'      : false,
+				
+				@if (env('STRIPE_LIVE_PUBLIC') && env('CASHIER_SERVICE') == "stripe")
+				'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', '') !!}",
+				@endif
+				
+				@if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
+				'braintree_key' : "{!! $BraintreeClientKey !!}",
+				@endif
 			@endif
 				
 				'url'        : "{!! env('APP_URL', 'false') !!}"

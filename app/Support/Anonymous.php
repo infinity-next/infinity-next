@@ -14,8 +14,11 @@ use App\Board;
 use App\Post;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
-use Laravel\Cashier\Billable;
-use Laravel\Cashier\Contracts\Billable as BillableContract;
+
+//use Laravel\Cashier\Billable;
+//use Laravel\Cashier\Contracts\Billable as BillableContract;
+use InfinityNext\Braintree\Billable;
+use InfinityNext\Braintree\Contracts\Billable as BillableContract;
 
 class Anonymous implements BillableContract, PermissionUserContract
 {
@@ -36,6 +39,8 @@ class Anonymous implements BillableContract, PermissionUserContract
 	 *
 	 * @var mixed
 	 */
+	public $braintree_active        = null;
+	public $braintree_id            = null;
 	public $stripe_active           = null;
 	public $stripe_id               = null;
 	public $stripe_subscription     = null;

@@ -33,4 +33,9 @@ return [
 		'desc'  => "This form deals in private information. Please use HTTPS.",
 		'title' => "SSL is Required",
 	],
+	
+	'account' => [
+		'desc'  => "Braintree's API requires us to handle an identifier for the duration of your session. To donate with a card, please register first.",
+		'title' => "Account required",
+	],
 ];

@@ -174,7 +174,7 @@ class ContentFormatter {
 	}
 	
 	/**
-	 * Provides a closure for the Eightdown API to add cites.
+	 * Provides a closure for the Eightdown API to add cites after a quote block is complete.
 	 *
 	 * @return Closure
 	 */

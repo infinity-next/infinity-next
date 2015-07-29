@@ -38,12 +38,15 @@ class DonateController extends PanelController {
 		if (!$this->user->isAnonymous())
 		{
 			$donated = $this->user->payments()->sum('amount');
+			$this->user->createBraintreeId();
 		}
 		
 		return $this->view(static::VIEW_DONATE, [
 			'donated' => $donated,
 			'cycles'  => DonationRequest::getCycles(),
 			'amounts' => DonationRequest::getOptions(),
+			
+			'BraintreeClientKey' => $this->user->getBraintreeId(),
 		]);
 	}
 	
@@ -77,25 +80,53 @@ class DonateController extends PanelController {
 		switch ($input['payment'])
 		{
 			case "once":
+				/* Stripe
 				$tx = [
 					'description'   => "Infinity Next Dev",
-					'source'        => $input['stripeToken'],
+					'source'        => $input['nonce'],
 					'receipt_email' => $input['email'],
 				];
+				*/
 				
-				$receipt = $user->charge($payment['amount'], $tx);
+				$tx = [
+					'amount' => ($payment['amount'] / 100),
+					
+					'paymentMethodNonce' => $input['nonce'],
+					
+					'options' => [
+						'submitForSettlement' => true,
+					],
+				];
+				
+				$receipt = $user->charge($payment['amount']);
 			break;
 			
 			case "monthly":
+				/* Stripe
 				$tx = [
 					'description'   => "Infinity Next Dev",
-					'source'        => $input['stripeToken'],
+					'source'        => $input['nonce'],
 					'email'         => $input['email'],
 				];
+				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['nonce'], $tx);
+				*/
 				
-				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['stripeToken'], $tx);
+				
+				$tx = [
+					'paymentMethodNonce' => $input['nonce'],
+					'email'              => $input['email'],
+				];
+				
+				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['nonce'], $tx);
 				$payment['subscription'] = "monthly-{$input['amount']}";
 			break;
+		}
+		
+		
+		if ($receipt instanceof \Braintree_Result_Error)
+		{
+			$errors[] = $receipt->message;
+			$receipt = false;
 		}
 		
 		if ($receipt !== false)

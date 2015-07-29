@@ -35,7 +35,9 @@
 		
 		
 		"devfactory/minify" : "1.0.*",
-		"infinity-next/eightdown": "*@dev"
+		
+		"infinity-next/eightdown": "*@dev",
+		"braintree/braintree_php": "2.x"
 	},
 	
 	"require-dev": {
@@ -52,7 +54,8 @@
 		],
 		
 		"psr-4": {
-			"App\\": "app/"
+			"App\\": "app/",
+			"InfinityNext\\Braintree\\": "packages/infinity-next/braintree/src"
 		}
 	},
 	

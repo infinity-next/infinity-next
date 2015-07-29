@@ -489,7 +489,7 @@ table {
 /* Partial */
 figure.error {
 	display: block;
-	margin: 0 auto 0 0;
+	margin: 0 auto 2em 0;
 	padding: 0;
 	width: 82.5%;
 	
@@ -2003,7 +2003,8 @@ nav.cp-inner {
 
 	#payment-btc {
 	}
-	html.no-js #payment-btc {
+	html.no-js #payment-btc,
+	figure.error + #payment-btc {
 		float: none;
 		margin: 1em auto 1em 0;
 		padding: 0 10%;

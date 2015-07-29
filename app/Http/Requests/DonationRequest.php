@@ -16,7 +16,7 @@ class DonationRequest extends Request {
 		$subscriptions = "monthly-" . implode(',monthly-', array_values($this->getOptions()));
 		
 		$rules = [
-			'stripeToken'  => 'required',
+			'nonce'        => 'required',
 			'email'        => 'required|email',
 			'payment'      => 'required|in:' . $cycles,
 			'amount'       => 'required|numeric|min:3',

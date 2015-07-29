@@ -152,7 +152,9 @@
 		defaults : {
 			// Config options for this widget.
 			config   : {
-				'stripe-key'    : window.ib.config('stripe_key', false)
+				'merchant'      : window.ib.config('merchant', false),
+				'stripe-key'    : window.ib.config('stripe_key', false),
+				'braintree-key' : window.ib.config('stripe_key', false)
 			},
 			
 			// Selectors for finding and binding elements.
@@ -180,8 +182,8 @@
 			
 			// HTML Templates for dynamic construction
 			template : {
-				'message-stripe'    : "<div id=\"payment-process\">Contacting Stripe</div>",
-				'message-server'    : "<div id=\"payment-process\">Processing</div>",
+				'message-sent'      : "<div id=\"payment-process\">Securely Contacting Merchant</div>",
+				'message-server'    : "<div id=\"payment-process\">Processing Transaction</div>",
 				'thank-you'         : "<div id=\"payment-received\">Thank you!</div>"
 			}
 		},
@@ -191,8 +193,26 @@
 		
 		// Event binding.
 		bind     : {
+			merchant : function() {
+				
+				switch (widget.options.config['merchant'])
+				{
+					case "braintree" :
+						window.braintree.setup(window.ib.config('braintree_key'), "custom", {
+							container: widget.options.selector['widget'],
+						});
+						break;
+					
+					case "stripe" :
+						window.Stripe.setPublishableKey(widget.options.config['stripe-key']);
+						break;
+				}
+				
+			},
+			
 			widget : function() {
-				Stripe.setPublishableKey(widget.options.config['stripe-key']);
+				
+				widget.bind.merchant();
 				
 				// $(widget.options.selector['input-pay-once']).insertBefore(widget.options.selector['input-pay-monthly']);
 				
@@ -275,6 +295,14 @@
 				{
 					$(this).addClass(result.card_type.name);
 					
+					var cvcMax = result.card_type.name === "amex" ? 4 : 3;
+					console.log(cvcMax, $(widget.options.selector['input-cvc'], widget.$widget));
+					$(widget.options.selector['input-cvc'], widget.$widget).attr({
+						'maxlength' : cvcMax,
+						'size'      : cvcMax,
+						'pattern'   : "[0-9]{"+cvcMax+"}"
+					});
+					
 					if (result.valid) {
 						return $(this).addClass('control-valid');
 					}
@@ -335,9 +363,9 @@
 				
 				// Check to see if CVC is valid.
 				var $cvc = $(sel['input-cvc']);
-				if (/^\d{3}$/.test($cvc.val()) === false)
+				if ((new RegExp("^"+$cvc.attr('pattern')+"$")).test($cvc.val()) === false)
 				{
-					window.ib.notice.push("Please enter a valid three-digit security code. It is usually found on the back of the card.", 'error');
+					window.ib.notice.push("Please enter a valid security code. It is three or four digits and found on the back of the card.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
 				}
@@ -385,15 +413,32 @@
 					var $form = $(this);
 					
 					$form.block({
-						message : widget.options.template['message-stripe'],
+						message : widget.options.template['message-sent'],
 						theme   : true
 					});
 					
 					// Disable the submit button to prevent repeated clicks
 					$form.find('button').prop('disabled', true);
 					
-					// Send the information to Stripe.
-					Stripe.card.createToken($form, widget.events.stripeResponse);
+					// Send the information to our merchant.
+					switch (widget.options.config['merchant'])
+					{
+						case "braintree" :
+							var client = new braintree.api.Client({clientToken: window.ib.config('braintree_key')});
+							
+							client.tokenizeCard({
+									number:          $ccn.val(),
+									expirationMonth: parseInt($month.val(), 10),
+									expirationYear:  parseInt($year.val(), 10),
+									cvv:             parseInt($cvc.val(), 10)
+								}, widget.events.braintreeResponse);
+							
+							break;
+						
+						case "stripe" :
+							Stripe.card.createToken($form, widget.events.stripeResponse);
+							break;
+					}
 					
 					// Clear personal information.
 					$(widget.options.selector['input-ccn'])
@@ -443,6 +488,38 @@
 				$(widget.options.selector['time']).html(text);
 			},
 			
+			
+			braintreeResponse : function(err, nonce) {
+				var $form = widget.$widget;
+				
+				if (err) {
+					// Show the errors on the form
+					window.ib.notice.push(err, "error");
+					
+					$form.unblock();
+					$form.find('button').prop('disabled', false);
+				}
+				else {
+					// Response contains id and card, which contains additional card details
+					var token = nonce;
+					
+					// Insert the token into the form so it gets submitted to the server
+					$form.append($('<input type="hidden" name="nonce" />').val(token));
+					
+					// Submit to server
+					var parameters = $form
+						.add("<input type=\"hidden\" name=\"ajax\" value=\"1\" />")
+						.serialize();
+					
+					if ($(widget.options.selector['input-amount']).val() == "Other")
+					{
+						parameters += "&amount=" + $(widget.options.selector['input-amount-other']).val();
+					}
+					
+					widget.submit(parameters);
+				}
+			},
+			
 			stripeResponse : function(status, response) {
 				var $form = widget.$widget;
 				
@@ -458,7 +535,7 @@
 					var token = response.id;
 					
 					// Insert the token into the form so it gets submitted to the server
-					$form.append($('<input type="hidden" name="stripeToken" />').val(token));
+					$form.append($('<input type="hidden" name="nonce" />').val(token));
 					
 					// Submit to server
 					var parameters = $form
