@@ -2,7 +2,7 @@
 
 @section('body')
 <main>
-	@if (Request::secure() || env('APP_DEBUG', false))
+	@if (true || Request::secure() || env('APP_DEBUG', false))
 		@if (env('CASHIER_SERVICE') === "stripe")
 			@section('required-js')
 			<script type="text/javascript" src="https://js.stripe.com/v2/"></script>

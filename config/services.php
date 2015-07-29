@@ -17,7 +17,7 @@ return [
 	'braintree' => [
 		'model'       => 'App\User',
 		'environment' => env('APP_DEBUG') ? env('BRAINTREE_ENVIRONMENT', "sandbox") : env('BRAINTREE_ENVIRONMENT', "production"),
-		'merchant'    => env('BRAINTREE_MERCHANT'),
+		'merchant'    => env('APP_DEBUG') ? env('BRAINTREE_TEST_MERCHANT', false) : env('BRAINTREE_LIVE_MERCHANT', true),
 		'public'      => env('APP_DEBUG') ? env('BRAINTREE_TEST_PUBLIC', false) : env('BRAINTREE_LIVE_PUBLIC', true),
 		'secret'      => env('APP_DEBUG') ? env('BRAINTREE_TEST_SECRET', false) : env('BRAINTREE_LIVE_SECRET', true),
 	],
