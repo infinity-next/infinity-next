@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a2aa7a5899711bcc3619906b905676e",
+    "hash": "ec2b3043522472df78a78d4d7cf6cf77",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -857,6 +857,45 @@
                 "uri"
             ],
             "time": "2015-06-24 19:55:15"
+        },
+        {
+            "name": "infinity-next/braintree",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/infinity-next/braintree.git",
+                "reference": "32fd117db4aba7f1ce5cfcde84ea06b89b74f814"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/infinity-next/braintree/zipball/32fd117db4aba7f1ce5cfcde84ea06b89b74f814",
+                "reference": "32fd117db4aba7f1ce5cfcde84ea06b89b74f814",
+                "shasum": ""
+            },
+            "require": {
+                "braintree/braintree_php": "2.x",
+                "php": ">=5.3.0"
+            },
+            "type": "project",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joshua Moon",
+                    "email": "josh@jaw.sh",
+                    "homepage": "http://jaw.sh",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Braintree integration with the Laravel framework.",
+            "keywords": [
+                "braintree",
+                "cashier",
+                "laravel"
+            ],
+            "time": "2015-07-29 16:47:47"
         },
         {
             "name": "infinity-next/eightdown",
@@ -4134,7 +4173,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "cviebrock/image-validator": 10,
-        "infinity-next/eightdown": 20
+        "infinity-next/eightdown": 20,
+        "infinity-next/braintree": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
