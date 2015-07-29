@@ -110,6 +110,7 @@ Route::group([], function () {
 	if (env('CONTRIB_ENABLED', false))
 	{
 		Route::get('contribute', 'PageController@getContribute');
+		Route::get('contribute.json', 'API\PageController@getContribute');
 	}
 	
 	
