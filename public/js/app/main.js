@@ -428,9 +428,9 @@
 							
 							client.tokenizeCard({
 									number:          $ccn.val(),
-									expirationMonth: parseInt($month.val(), 10),
-									expirationYear:  parseInt($year.val(), 10),
-									cvv:             parseInt($cvc.val(), 10)
+									expirationMonth: $month.val(),
+									expirationYear:  $year.val(),
+									cvv:             $cvc.val()
 								}, widget.events.braintreeResponse);
 							
 							break;
