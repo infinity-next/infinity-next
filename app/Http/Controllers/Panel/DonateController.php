@@ -32,14 +32,14 @@ class DonateController extends PanelController {
 	 * @return Response
 	 */
 	public function getIndex(Request $request)
-	{
-		$donated = 0;
+	{		$donated = 0;
 		
 		if (!$this->user->isAnonymous())
 		{
 			$donated = $this->user->payments()->sum('amount');
-			$this->user->createBraintreeId();
 		}
+		
+		$this->user->createBraintreeId();
 		
 		return $this->view(static::VIEW_DONATE, [
 			'donated' => $donated,
@@ -98,7 +98,7 @@ class DonateController extends PanelController {
 					],
 				];
 				
-				$receipt = $user->charge($payment['amount']);
+				$receipt = $user->charge($payment['amount'], $tx);
 			break;
 			
 			case "monthly":
@@ -131,10 +131,13 @@ class DonateController extends PanelController {
 		
 		if ($receipt !== false)
 		{
-			// Record our payment.
-			// This stores no identifying information,
-			// besides an optional user ID.
-			Payment::create($payment)->save();
+			if (env('APP_DEBUG') === false || env('APP_ENV', 'local') !== "production")
+			{
+				// Record our payment.
+				// This stores no identifying information,
+				// besides an optional user ID.
+				Payment::create($payment)->save();
+			}
 		}
 		else
 		{

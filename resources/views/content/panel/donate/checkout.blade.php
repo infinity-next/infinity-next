@@ -3,42 +3,36 @@
 	
 	@if (env('APP_DEBUG'))
 		@include('widgets.messages', [ 'messages' => [ "<tt>APP_DEBUG</tt> is set to <tt>TRUE</tt>. This form is only a test and will not charge." ] ])
-	@else
-		@include('widgets.messages')
 	@endif
 	
-	@if (env('CASHIER_SERVICE', false) != "braintree" || !$user->isAnonymous())
-		<fieldset id="card-details" class="form-fields require-js">
-			<legend class="form-legend">Donate to Infinity Development</legend>
-			
-				@include( $c->template('panel.donate.form') )
-		</fieldset>
+	<fieldset id="card-details" class="form-fields require-js">
+		<legend class="form-legend">Donate to Infinity Development</legend>
 		
-		<div id="payment-security" class="grid-50 require-js">
-			<span class="security-footer"><strong>At no point</strong> is your personal information stored on this webserver, even temporarily. We interact strictly through the merchant service.</span>
-			
-			<ul class="security-steps">
-				<li class="security-step">
-					<div class="security-icons"><i class="fa fa-user"></i><i class="fa fa-angle-right"></i><i class="fa fa-institution"></i></div>
-					<span class="security-item">When submitted, your details are encrypted and sent directly to our merchant from your browser.</span>
-				</li>
-				<li class="security-step">
-					<div class="security-icons"><i class="fa fa-institution"></i><i class="fa fa-angle-right"></i><i class="fa fa-user"></i></div>
-					<span class="security-item">If valid, our merchant responds with an encrypted, non-identifying token.</span>
-				</li>
-				<li class="security-step">
-					<div class="security-icons"><i class="fa fa-user"></i><i class="fa fa-angle-right"></i><i class="fa fa-server"></i></div>
-					<span class="security-item">Your client sends the token to us instead of credit card details.</span>
-				</li>
-				<li class="security-step">
-					<div class="security-icons"><i class="fa fa-server"></i><i class="fa fa-angle-right"></i><i class="fa fa-institution"></i></div>
-					<span class="security-item">We check this token against our merchant's records. If it is valid, we charge it and store only a receipt.</span>
-				</li>
-			</ul>
-		</div>
-	@else
-		@include( $c->template('errors.parts.anonymous') )
-	@endif
+			@include( $c->template('panel.donate.form') )
+	</fieldset>
+	
+	<div id="payment-security" class="grid-50 require-js">
+		<span class="security-footer"><strong>At no point</strong> is your personal information stored on this webserver, even temporarily. We interact strictly through the merchant service.</span>
+		
+		<ul class="security-steps">
+			<li class="security-step">
+				<div class="security-icons"><i class="fa fa-user"></i><i class="fa fa-angle-right"></i><i class="fa fa-institution"></i></div>
+				<span class="security-item">When submitted, your details are encrypted and sent directly to our merchant from your browser.</span>
+			</li>
+			<li class="security-step">
+				<div class="security-icons"><i class="fa fa-institution"></i><i class="fa fa-angle-right"></i><i class="fa fa-user"></i></div>
+				<span class="security-item">If valid, our merchant responds with an encrypted, non-identifying token.</span>
+			</li>
+			<li class="security-step">
+				<div class="security-icons"><i class="fa fa-user"></i><i class="fa fa-angle-right"></i><i class="fa fa-server"></i></div>
+				<span class="security-item">Your client sends the token to us instead of credit card details.</span>
+			</li>
+			<li class="security-step">
+				<div class="security-icons"><i class="fa fa-server"></i><i class="fa fa-angle-right"></i><i class="fa fa-institution"></i></div>
+				<span class="security-item">We check this token against our merchant's records. If it is valid, we charge it and store only a receipt.</span>
+			</li>
+		</ul>
+	</div>
 	
 	@include( $c->template('panel.donate.bitcoin') )
 	

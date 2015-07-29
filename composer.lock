@@ -864,12 +864,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/braintree.git",
-                "reference": "32fd117db4aba7f1ce5cfcde84ea06b89b74f814"
+                "reference": "5d52c263198d976dbf977cd7a654b27e624f466d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/braintree/zipball/32fd117db4aba7f1ce5cfcde84ea06b89b74f814",
-                "reference": "32fd117db4aba7f1ce5cfcde84ea06b89b74f814",
+                "url": "https://api.github.com/repos/infinity-next/braintree/zipball/5d52c263198d976dbf977cd7a654b27e624f466d",
+                "reference": "5d52c263198d976dbf977cd7a654b27e624f466d",
                 "shasum": ""
             },
             "require": {
@@ -877,6 +877,11 @@
                 "php": ">=5.3.0"
             },
             "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "InfinityNext\\Braintree\\": "src/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -895,7 +900,7 @@
                 "cashier",
                 "laravel"
             ],
-            "time": "2015-07-29 16:47:47"
+            "time": "2015-07-29 17:20:04"
         },
         {
             "name": "infinity-next/eightdown",
