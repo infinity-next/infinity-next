@@ -296,7 +296,7 @@
 					$(this).addClass(result.card_type.name);
 					
 					var cvcMax = result.card_type.name === "amex" ? 4 : 3;
-					console.log(cvcMax, $(widget.options.selector['input-cvc'], widget.$widget));
+					
 					$(widget.options.selector['input-cvc'], widget.$widget).attr({
 						'maxlength' : cvcMax,
 						'size'      : cvcMax,
