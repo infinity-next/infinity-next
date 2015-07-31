@@ -19,6 +19,14 @@ class ContentFormatter {
 	protected $post;
 	
 	/**
+	 * Markdown options
+	 *
+	 * @var array
+	 */
+	protected $optinos;
+	
+	
+	/**
 	 * Returns a formatted post.
 	 *
 	 * @param  \App\Post $post
@@ -26,9 +34,50 @@ class ContentFormatter {
 	 */
 	public function formatPost(Post $post)
 	{
-		$this->post = $post;
+		$this->post    = $post;
+		$this->options = [
+			'general' => [
+				'keepLineBreaks' => true,
+				'parseHTML'      => false,
+				'parseURL'       => true,
+			],
+			
+			'disable' => [
+				"Image",
+				"Link",
+			],
+			
+			'enable' => [
+				"Spoiler",
+			],
+			
+			'markup' => [
+				'quote'   => [
+					'keepSigns' => true,
+				],
+			],
+		];
 		
 		return $this->formatContent( (string) $post->body);
+	}
+	
+	/**
+	 * Returns a formatted sidebar.
+	 *
+	 * @param  \App\Post $post
+	 * @return String (HTML, Formatted)
+	 */
+	public function formatSidebar($text)
+	{
+		$this->options = [
+			'general' => [
+				'keepLineBreaks' => true,
+				'parseHTML'      => true,
+				'parseURL'       => true,
+			],
+		];
+		
+		return $this->formatContent($text);
 	}
 	
 	/**
@@ -56,34 +105,10 @@ class ContentFormatter {
 	{
 		$post   = $this->post;
 		
-		return Markdown::config([
-				'general' => [
-					'keepLineBreaks' => true,
-					'parseHTML'	  => false,
-					'parseURL'	   => true,
-				],
-				
-				'disable' => [
-					"Image",
-					"Link",
-				],
-				
-				'enable' => [
-					"Spoiler",
-				],
-				
-				'markup' => [
-					'quote'   => [
-						'keepSigns' => true,
-					],
-				],
-			])
-			
+		return Markdown::config($this->options)
 			->extendBlockComplete('Quote', $this->getCiteParser())
-			
-			->parse( (string) $post->body );
-	}
-	
+			->parse( $content);
+		}
 	/**
 	 * Returns a collection of posts as cited in a post's text body.
 	 *

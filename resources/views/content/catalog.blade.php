@@ -30,6 +30,8 @@
 		</ul>
 	</section>
 </main>
+
+@include( $c->template('board.sidebar') )
 @stop
 
 @section('footer-inner')

@@ -4,6 +4,8 @@
  * 1000 - Boardlist, top. Shold be highest element on boards and threads.
  *   10 - Post action links.
  *    5 - Post attachment.
+ *    1 - Global Footer
+ *    0 - Board Sidebar
  */
 
 /**
@@ -48,6 +50,25 @@ body {
 body {
 	display: flex;
 	flex-direction: column;
+}
+
+#page-container {
+	position: relative;
+	flex: 1;
+	
+	/* 
+		Microsoft is a piece of shit and I hope they all get ass cancer.
+		For whatever reason, flex items in MS11 do not have a height.
+		Instead, the main body gets a height of 0, and the footer appears
+		right below the header.
+		
+		I've tried many other alternatives to this but there doesn't seem
+		to be a way to have a flexible height sticky footer.
+		The only solution is to use the easy layout for all modern browsers
+		and let IE degrade gracefully, with the footer appearing where it
+		would be without Flexbox.
+	*/
+	-ms-flex: none;
 }
 
 a,
@@ -597,254 +618,253 @@ figure.error {
 header.contrib-header {
 	display: block;
 }
-
-main.contrib section {
-	margin: 0 auto;
-	font-size: 130%;
-}
-	main.contrib section:first-child {
-		margin-top: 0;
+	main.contrib section {
+		margin: 0 auto;
+		font-size: 130%;
 	}
-	main.contrib section:last-child {
-	}
-
-main.contrib section.contrib-howto {
-	margin: 0 auto 1em auto;
-}
-	section.contrib-howto ul.contrib-options {
-		text-align: center;
-	}
-		ul.contrib-options::after {
-			content: ' ';
-			clear: both;
-			display: block;
+		main.contrib section:first-child {
+			margin-top: 0;
 		}
-		li.contrib-option {
-			border-bottom: 1px solid #EEF2FF;
-			padding-bottom: 1em;
-			padding-right: 10px;
-			margin-bottom: 1em;
-		}
-		li.contrib-option:last-child {
-			border-bottom: none;
-		}
-			a.option-link {
-				display: block;
-				color: #34345C;
-				font-size: 300%;
-				font-weight: bold;
-				text-decoration: none;
-			}
-				a.option-link:link:hover,
-				a.option-link:visited:hover {
-					color: #ff0000;
-				}
-			a.option-link h3 {
-				margin: 0;
-			}
-			blockquote.option-desc {
-				margin: 0;
-			}
-
-main.contrib section.contrib-shekel {
-	display: block;
-	background: rgba(255,255,255,0.5);
-}
-	h3.shekel-title {
-		display: block;
-		margin-bottom: 0;
-	}
-	blockquote.shekel-timer {
-		display: block;
-		font-size: 400%;
-		text-align: center;
-		margin: 0;
-	}
-		blockquote.shekel-timer.timer-underfunded {
-			color: #cc0000;
-		}
-	p.shekel-oyvey {
-		display: block;
-		text-align: right;
-		margin-top: 0;
-	}
-	blockquote.shekel-explainer {
-		margin: 0;
-	}
-
-main.contrib section.contrib-goals {
-	margin: 1em auto;
-}
-	section.contrib-goals ul.goals {
-	}
-	section.contrib-goals li.goal {
-		margin: 0 0 1em 0;
-		padding: 0;
-	}
-		section.contrib-goals h4.goal-title {
-			margin: 0;
-			padding: 1.5em 0 0.75em 1.5em;
-			border-bottom: 0.25em solid #EEF2FF;
-		}
-		section.contrib-goals blockquote.goal-desc {
-			margin: 0.75em 0 1em 1.5em;
-		}
-		section.contrib-goals ul.goal-items {
-			margin: -1em 1em 1.5em 1em;
-		}
-		section.contrib-goals ul.goal-items::after {
-			content: ' ';
-			display: block;
-			clear: both;
-		}
-			section.contrib-goals li.goal-item {
-				margin: 1em 0 0 0;
-			}
-			section.contrib-goals span.goal-part {
-			}
-			section.contrib-goals blockquote.goal-helper {
-				border-top: 1px dashed rgba(0, 0, 0, 0.1);
-				margin: 0.5em 0 0 0;
-				padding: 0.5em 0 0 0;
-				
-				color: #666;
-				font-size: 0.9em;
-			}
-			
-			section.contrib-goals .goal-figure {
-				text-align: center;
-			}
-			section.contrib-goals #goal-newchan {
-				margin-bottom: 1em;
-				width: 200px;
-			}
-			section.contrib-goals figcaption.goal-helper {
-				display: block;
-				margin: 0 auto;
-				max-width: 600px;
-			}
-
-main.contrib section.contrib-donorlist {
-	margin: 0 0 -1em 0;
-}
-	section.contrib-donorlist div.donorsgroup {
-		clear: both;
-	}
-		section.contrib-donorlist div.donors-uber {
-			background: #e0f4eb;
-		}
-		section.contrib-donorlist div.donors-plat {
-			background: #ffffff;
-		}
-		section.contrib-donorlist div.donors-gold {
-			background: #fff4d5;
-		}
-		section.contrib-donorlist div.donors-silver {
-			background: #ebecef;
-		}
-		section.contrib-donorlist div.donors-bronze {
-			background: #d7ad9b;
+		main.contrib section:last-child {
 		}
 	
-	section.contrib-donorlist ul.donors {
-		padding-top: 0;
-		padding-bottom: 1em;
-		text-align: center;
+	main.contrib section.contrib-howto {
+		margin: 0 auto 1em auto;
 	}
-		
-	section.contrib-donorlist li.donor {
-		display: inline-block;
-		overflow: hidden;
-		position: relative;
-		float: none;
-		margin: 1em 0.8em -0.5em 0;
-		border-radius: 0.4em;
-		text-shadow: rgba(224, 224, 224, 1) -1px -1px 0px;
-	}
-		section.contrib-donorlist .donor-desc {
-			padding: 0.2em 0.1em;
+		section.contrib-howto ul.contrib-options {
 			text-align: center;
-			line-height: 1.25em;
-			vertical-align: middle;
 		}
-		section.contrib-donorlist .donor-amount,
-		section.contrib-donorlist .donor-name {
+			ul.contrib-options::after {
+				content: ' ';
+				clear: both;
+				display: block;
+			}
+			li.contrib-option {
+				border-bottom: 1px solid #EEF2FF;
+				padding-bottom: 1em;
+				padding-right: 10px;
+				margin-bottom: 1em;
+			}
+			li.contrib-option:last-child {
+				border-bottom: none;
+			}
+				a.option-link {
+					display: block;
+					color: #34345C;
+					font-size: 300%;
+					font-weight: bold;
+					text-decoration: none;
+				}
+					a.option-link:link:hover,
+					a.option-link:visited:hover {
+						color: #ff0000;
+					}
+				a.option-link h3 {
+					margin: 0;
+				}
+				blockquote.option-desc {
+					margin: 0;
+				}
+	
+	main.contrib section.contrib-shekel {
+		display: block;
+		background: rgba(255,255,255,0.5);
+	}
+		h3.shekel-title {
 			display: block;
-			overflow: hidden;
+			margin-bottom: 0;
 		}
-		section.contrib-donorlist .donor-name {
-			max-height: 2.6em;
-			font-weight: bold;
-			vertical-align: bottom;
+		blockquote.shekel-timer {
+			display: block;
+			font-size: 400%;
+			text-align: center;
+			margin: 0;
 		}
+			blockquote.shekel-timer.timer-underfunded {
+				color: #cc0000;
+			}
+		p.shekel-oyvey {
+			display: block;
+			text-align: right;
+			margin-top: 0;
+		}
+		blockquote.shekel-explainer {
+			margin: 0;
+		}
+	
+	main.contrib section.contrib-goals {
+		margin: 1em auto;
+	}
+		section.contrib-goals ul.goals {
+		}
+		section.contrib-goals li.goal {
+			margin: 0 0 1em 0;
+			padding: 0;
+		}
+			section.contrib-goals h4.goal-title {
+				margin: 0;
+				padding: 1.5em 0 0.75em 1.5em;
+				border-bottom: 0.25em solid #EEF2FF;
+			}
+			section.contrib-goals blockquote.goal-desc {
+				margin: 0.75em 0 1em 1.5em;
+			}
+			section.contrib-goals ul.goal-items {
+				margin: -1em 1em 1.5em 1em;
+			}
+			section.contrib-goals ul.goal-items::after {
+				content: ' ';
+				display: block;
+				clear: both;
+			}
+				section.contrib-goals li.goal-item {
+					margin: 1em 0 0 0;
+				}
+				section.contrib-goals span.goal-part {
+				}
+				section.contrib-goals blockquote.goal-helper {
+					border-top: 1px dashed rgba(0, 0, 0, 0.1);
+					margin: 0.5em 0 0 0;
+					padding: 0.5em 0 0 0;
+					
+					color: #666;
+					font-size: 0.9em;
+				}
+				
+				section.contrib-goals .goal-figure {
+					text-align: center;
+				}
+				section.contrib-goals #goal-newchan {
+					margin-bottom: 1em;
+					width: 200px;
+				}
+				section.contrib-goals figcaption.goal-helper {
+					display: block;
+					margin: 0 auto;
+					max-width: 600px;
+				}
+	
+	main.contrib section.contrib-donorlist {
+		margin: 0 0 -1em 0;
+	}
+		section.contrib-donorlist div.donorsgroup {
+			clear: both;
+		}
+			section.contrib-donorlist div.donors-uber {
+				background: #e0f4eb;
+			}
+			section.contrib-donorlist div.donors-plat {
+				background: #ffffff;
+			}
+			section.contrib-donorlist div.donors-gold {
+				background: #fff4d5;
+			}
+			section.contrib-donorlist div.donors-silver {
+				background: #ebecef;
+			}
+			section.contrib-donorlist div.donors-bronze {
+				background: #d7ad9b;
+			}
 		
-		section.contrib-donorlist ul.donors-uber li.donor {
-			background: #e0f4eb;
-			background-image: linear-gradient(to bottom, rgba(224,244,234,0.5), rgba(168,225,200,0.5));
-			box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #3db17e, 0 4px rgba(255, 255, 255, 0.1);
+		section.contrib-donorlist ul.donors {
+			padding-top: 0;
+			padding-bottom: 1em;
+			text-align: center;
 		}
-			section.contrib-donorlist .donors-uber .donor-desc {
-				font-size: 1.25em;
-			}
-		section.contrib-donorlist ul.donors-plat li.donor {
-			background: #ffffff;
-			background-image: linear-gradient(to bottom, #ffffff, #eeeeff);
-			box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #d6d8da, 0 4px rgba(255, 255, 255, 0.1);
+			
+		section.contrib-donorlist li.donor {
+			display: inline-block;
+			overflow: hidden;
+			position: relative;
+			float: none;
+			margin: 1em 0.8em -0.5em 0;
+			border-radius: 0.4em;
+			text-shadow: rgba(224, 224, 224, 1) -1px -1px 0px;
 		}
-			section.contrib-donorlist .donors-plat .donor-desc {
-				font-size: 1.1em;
+			section.contrib-donorlist .donor-desc {
+				padding: 0.2em 0.1em;
+				text-align: center;
+				line-height: 1.25em;
+				vertical-align: middle;
 			}
-		section.contrib-donorlist ul.donors-gold li.donor {
-			background: #fff4d5;
-			background-image: linear-gradient(to bottom, #fff4d5, #ffe089);
-			box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #ffc527, 0 4px rgba(255, 255, 255, 0.1);
-		}
-			section.contrib-donorlist .donors-gold .donor-desc {
-				font-size: 1em;
+			section.contrib-donorlist .donor-amount,
+			section.contrib-donorlist .donor-name {
+				display: block;
+				overflow: hidden;
 			}
-		section.contrib-donorlist ul.donors-silver li.donor {
-			background: #ebecef;
-			background-image: linear-gradient(to bottom, #ebecef, #bfc3c7);
-			box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #b6babe, 0 4px rgba(255, 255, 255, 0.1);
-		}
-			section.contrib-donorlist .donors-silver .donor-desc {
-				font-size: 0.8em;
+			section.contrib-donorlist .donor-name {
+				max-height: 2.6em;
+				font-weight: bold;
+				vertical-align: bottom;
 			}
-		section.contrib-donorlist ul.donors-bronze li.donor {
-			background: #d7ad9b;
-			background-image: linear-gradient(to bottom, #d7ad9b, #c68a71);
-			box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #864e36, 0 4px rgba(255, 255, 255, 0.1);
-			text-shadow: rgba(224, 224, 224, 0.5) 1px 1px 0px;
-		}
-			section.contrib-donorlist .donors-bronze .donor-desc {
-				font-size: 0.8em;
+			
+			section.contrib-donorlist ul.donors-uber li.donor {
+				background: #e0f4eb;
+				background-image: linear-gradient(to bottom, rgba(224,244,234,0.5), rgba(168,225,200,0.5));
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #3db17e, 0 4px rgba(255, 255, 255, 0.1);
 			}
-
-main.contrib section.section-me {
-	background: #333;
-	color: white;
-}
-	.me-skills {
-		clear: both;
+				section.contrib-donorlist .donors-uber .donor-desc {
+					font-size: 1.25em;
+				}
+			section.contrib-donorlist ul.donors-plat li.donor {
+				background: #ffffff;
+				background-image: linear-gradient(to bottom, #ffffff, #eeeeff);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #d6d8da, 0 4px rgba(255, 255, 255, 0.1);
+			}
+				section.contrib-donorlist .donors-plat .donor-desc {
+					font-size: 1.1em;
+				}
+			section.contrib-donorlist ul.donors-gold li.donor {
+				background: #fff4d5;
+				background-image: linear-gradient(to bottom, #fff4d5, #ffe089);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #ffc527, 0 4px rgba(255, 255, 255, 0.1);
+			}
+				section.contrib-donorlist .donors-gold .donor-desc {
+					font-size: 1em;
+				}
+			section.contrib-donorlist ul.donors-silver li.donor {
+				background: #ebecef;
+				background-image: linear-gradient(to bottom, #ebecef, #bfc3c7);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #b6babe, 0 4px rgba(255, 255, 255, 0.1);
+			}
+				section.contrib-donorlist .donors-silver .donor-desc {
+					font-size: 0.8em;
+				}
+			section.contrib-donorlist ul.donors-bronze li.donor {
+				background: #d7ad9b;
+				background-image: linear-gradient(to bottom, #d7ad9b, #c68a71);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 3px #864e36, 0 4px rgba(255, 255, 255, 0.1);
+				text-shadow: rgba(224, 224, 224, 0.5) 1px 1px 0px;
+			}
+				section.contrib-donorlist .donors-bronze .donor-desc {
+					font-size: 0.8em;
+				}
+	
+	main.contrib section.section-me {
+		background: #333;
+		color: white;
 	}
-	.me-skill {
-		position: relative;
-		padding: 0
-	}
-		.skill-name {
+		.me-skills {
+			clear: both;
 		}
-		.skill-desc {
+		.me-skill {
+			position: relative;
+			padding: 0
 		}
-
-main.contrib section.contrib-donate {
-	background: #EEFFF2;
-}
-	section.contrib-donate #payment-form {
-		padding: 1em;
-		margin: 1em 0;
-		background: #fff;
-		border-radius: 4px;
+			.skill-name {
+			}
+			.skill-desc {
+			}
+	
+	main.contrib section.contrib-donate {
+		background: #EEFFF2;
 	}
+		section.contrib-donate #payment-form {
+			padding: 1em;
+			margin: 1em 0;
+			background: #fff;
+			border-radius: 4px;
+		}
 
 /* Navigation */
 nav.boardlist {
@@ -934,22 +954,8 @@ nav.boardlist {
 
 /* Main Content */
 main {
+	padding: 0 0 1em 0;
 	position: relative;
-	flex: 1;
-	
-	/* 
-		Microsoft is a piece of shit and I hope they all get ass cancer.
-		For whatever reason, flex items in MS11 do not have a height.
-		Instead, the main body gets a height of 0, and the footer appears
-		right below the header.
-		
-		I've tried many other alternatives to this but there doesn't seem
-		to be a way to have a flexible height sticky footer.
-		The only solution is to use the easy layout for all modern browsers
-		and let IE degrade gracefully, with the footer appearing where it
-		would be without Flexbox.
-	*/
-	-ms-flex: none;
 }
 
 /* Board Index */
@@ -998,436 +1004,455 @@ section.moderate-post {
 		margin: 0 auto 1em auto;
 	}
 
-/* Thrad View */
-section.index-threads {
-	margin: -1em 0 0 0;
+
+/* Thread View */
+main.index-threaded {
+	margin: 0 0 -1em 0;
 }
-	/* Advertisements */
-	aside.advertiser.top-left {
-		box-sizing: border-box;
-		padding: 0.5em;
-		text-align: center;
+	section.index-threads {
+		margin: -1em 0 0 0;
 	}
-	aside.advertiser.bottom-right {
-		box-sizing: border-box;
-		text-align: center;
-	}
-		aside.advertiser.bottom-right figure.ad-field {
-			display: inline-block;
-			margin: 1em 5px;
-		}
-	
-	section.index-threads aside.advertiser.top-left {
-		display: none;
-	}
-	
-	/* Threads */
-	main.index-threaded .thread,
-	section.index-threads aside.advertiser.top-left {
-		padding: 1em;
-	}
-	main.index-threaded .thread-item:last-child{
-		border-bottom: none;
-	}
-	
-	.reply {
-		margin: 0.5em 0 0.5em 0;
-		padding: 0;
-		white-space: nowrap;
-	}
-		.reply::before {
-			display: inline-block;
-			content: '>>';
-			color: #D6DAF0;
-			font-weight: bold;
-			vertical-align: top;
-			width: 1.5em;
-			float: left;
-		}
-		.reply::after {
-			display: block;
-			clear: both;
-			content: ' ';
-		}
-	
-	.post {
-		position: relative;
-		font-size: 105%;
-		margin: 0 auto 0 0;
-		padding: 0;
-		min-width: 25vw;
-		white-space: normal;
-	}
-		.post p.line {
-			display: block;
-			margin: 0;
-			padding: 0;
-			min-height: 1.2em;
-			line-height: 1.2em;
-		}
-		.post p.line.quote {
-			color: #789922;
-		}
-	
-	.thread-replies-omitted {
-		color: #ccc;
-		font-size: 90%;
-		margin: 0.25em 0.5em;
-	}
-	
-	.post-container {
-		display: inline-block;
-		position: relative;
-		
-		margin: 0;
-		max-width: 100%;
-		
-		/* background: #fff;
-		border-radius: 4px;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); */
-		
-		background: #D6DAF0;
-		border-color: #B7C5D9;
-		border-width: 1px;
-		border-style: none solid solid none;
-		
-		border-left: none;
-		border-top: none;
-	}
-		
-		.post-content {
-			padding: 0.75em;
-			padding-bottom: 0;
-		}
-		.post-content::after {
-			content: ' ';
-			clear: both;
-			display: block;
-		}
-			.post-details {
-				margin-right: 5em;
-				margin-bottom: 0.60em;
-			}
-				.post-detail {
-					display: inline-block;
-				}
-					.post-detail-item {
-						box-sizing: border-box;
-						max-width: 100%;
-						
-						overflow: hidden;
-						text-overflow: ellipsis;
-						vertical-align: top;
-					}
-					
-					.post-select {
-						
-					}
-						.post-select-input {
-							vertical-align: text-bottom;
-						}
-					
-					.subject {
-						display: inline-block;
-						margin: 0;
-						font-size: 1em;
-					}
-					.author {
-						display: inline-block;
-						color: #117743;
-					}
-						.author .email {
-							text-decoration: underline;
-						}
-					.createdon {
-						display: inline-block;
-					}
-					.authorid {
-						display: inline-block;
-					}
-					.postid {
-						display: inline-block;
-					}
-					
-					.capcode {
-						display: inline-block;
-						vertical-align: top;
-					}
-						.capcode::before {
-							display: inline-block;
-							content: '##';
-							margin: 0 0.15em;
-						}
-						.capcode-admin .capcode {
-							color: red;
-						}
-			
-			ul.post-attachments {
-				display: block;
-			}
-				ul.post-attachments.attachments-multi {
-					background: rgba(0,0,0,0.2);
-					padding: 1em 1em 0 1em;
-					margin: 0 -0.75em 1em -0.75em;
-				}
-				ul.post-attachments.attachments-multi::after {
-					display: block;
-					content: ' ';
-					clear: both;
-				}
-				
-				li.post-attachment {
-					display: block;
-					float: left;
-				}
-					ul.attachments-multi li.post-attachment:last-child figure.attachment {
-						margin: 0 0 1em 0;
-					}
-					
-					figure.attachment {
-						display: inline-block;
-						margin: 0 1em 1em 0;
-						position: relative;
-						z-index: 5;
-					}
-						a.attachment-link {
-							display: inline;
-						}
-							img.attachment-img {
-								display: block;
-								max-height: 250px;
-								max-width: 250px;
-							}
-							
-							figcaption.attachment-details {
-								display: none;
-								background: rgba(0,0,0,0.60);
-								text-align: center;
-								
-								position: absolute;
-								top: 0;
-								left: 0;
-								bottom: 0;
-								right: 0;
-								z-index: 7;
-							}
-								a.attachment-link:hover figcaption.attachment-details {
-									display: block;
-								}
-								
-								p.attachment-detail {
-									display: block;
-									color: #ffffff;
-									text-align: center;
-									
-									height: 1em;
-									line-height: 1em;
-									margin: 1em auto 0 auto;
-									padding: 0.5em;
-								}
-		
-		
-		ul.post-metas {
-			border-top: 1px solid #B7C5D9;
-			margin: 0 0 -1px 0;
-		}
-			li.post-meta {
-				display: block;
-				color: #333;
-				font-size: 90%;
-				padding: 0.2em 0.6em;
-			}
-		
-		div.post-action-tab {
-			display: inline-block;
-			cursor: default;
-			
-			position: absolute;
-			right: 1em;
-			top: 1em;
-			
-			border: 1px solid #B7C5D9;
-			border-radius: 2px;
-			
-			line-height: 1em;
-			height: 1em;
-			padding: 0.25em;
-			margin: -0.5em -0.5em 0 0;
-		}
-			ul.post-action-groups {
-				display: none;
-				
-				position: absolute;
-				top: 1.5em;
-				left: 0;
-				z-index: 10;
-				
-				background-color: #D6DAF0;
-				border: 1px solid #B7C5D9;
-				
-				list-style: none;
-				padding: 0;
-				margin: 0 0 0 -1px;
-				
-				white-space: nowrap;
-			}
-				div.post-action-tab:hover ul.post-action-groups,
-				ul.post-action-groups.open {
-					display: block;
-				}
-				
-				li.post-action-group {
-					
-				}
-					ul.post-actions {
-						display: inline-block;
-						vertical-align: top;
-					}
-						li.post-action {
-							border-bottom: 1px solid #B7C5D9;
-						}
-						li.post-action:last-child {
-							margin-bottom: -1px;
-						}
-							a.post-action-link {
-								display: block;
-								
-								vertical-align: middle;
-								color: #34345C;
-								
-								padding: 0.25em 1em 0.25em;
-							}
-							a.post-action-link:hover{
-								color: #dee0df;
-								background: #34345C;
-							}
-	
-	/* Catalog View */
-	main.index-catalog {
-		text-align: left;
-	}
-		main.index-catalog .index-threads {
-			margin: 1em 0 0 0;
-		}
-		
-		main.index-catalog .thread-list {
+		/* Advertisements */
+		aside.advertiser.top-left {
+			box-sizing: border-box;
+			padding: 0.5em;
 			text-align: center;
 		}
-		
-		main.index-catalog .thread-item {
-			display: inline-block;
-			margin: 0 0.25em 0.25em 0;
-		}
-			main.index-catalog .thread {
-				position: relative;
-				
-				background: rgba(182, 182, 182, 0.12);
-				border: 2px solid rgba(111, 111, 111, 0.34);
-				
-				padding: 2px;
-				margin: 0;
-				
-				vertical-align: top;
-				text-align: center;
-				font-weight: normal;
-				font-size: 11px;
-				
-				height: 22.5em;
-				width: 15em;
-			}
-				main.index-catalog .post-container {
-					position: absolute;
-					top: 0;
-					left: 0;
-					right: 0;
-					bottom: 0;
-					
-					border: none;
-					padding-bottom: 2.25em;
-				}
-					main.index-catalog .post-content {
-						padding: 0;
-						height: 100%;
-					}
-						main.index-catalog a.post-open:hover {
-							background: #f0e0d6;
-							box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
-							min-height: 20em;
-							overflow: hidden;
-							bottom: auto;
-							z-index: 2;
-						}
-							
-							main.index-catalog .post-attachments {
-								background: rgba(255,255,255,0.6);
-							}
-								main.index-catalog .post-attachment {
-									float: none;
-									text-align: center;
-								}
-									main.index-catalog .attachment {
-										display: inline;
-										margin: 0;
-									}
-										main.index-catalog .attachment-img {
-											display: inline-block;
-											max-height: 100px;
-											max-width: 200px;
-										}
-							
-							main.index-catalog .post-details {
-								margin: 0;
-							}
-								main.index-catalog .post-detail {
-									display: block;
-									margin: 0.4em 0 0 0;
-									padding: 0 0.5em;
-								}
-									main.index-catalog .post-detail-item.author {
-										padding-right: 0;
-									}
-									main.index-catalog .post-detail-item.capcode {
-										padding-left: 0;
-									}
-							
-							main.index-catalog .post {
-								display: block;
-								width: 100%;
-								min-width: 0px;
-								max-width: none;
-								
-								text-align: left;
-								padding: 0 0.5em;
-							}
-		
-		main.index-catalog blockquote.post {
+		aside.advertiser.bottom-right {
 			box-sizing: border-box;
-			padding: 0 0.5em;
-			margin-top: 0.4em;
-		}
-			main.index-catalog p.line {
-				max-width: 100%;
-			}
-		
-		main.index-catalog a.post-open {
-			color: inherit;
+			text-align: center;
+			padding: 0;
 			
 			position: absolute;
-			top: 0;
-			right: 0;
-			left: 0;
-			bottom: 2.25em;
-			
-			overflow: hidden;
-			text-overflow: ellipsis;
+			bottom: 0;
+		}
+			aside.advertiser.bottom-right figure.ad-field {
+				display: inline-block;
+				margin: 1em 0;
+			}
+		
+		section.index-threads aside.advertiser.top-left {
+			display: none;
 		}
 		
-		main.index-catalog div.post-action-tab {
-			bottom: 0.25em;
-			top: auto;
-			
-			margin: 0 -0.5em 0 -0.5em;
+		/* Threads */
+		main.index-threaded .thread,
+		section.index-threads aside.advertiser.top-left {
+			padding: 1em;
 		}
+		main.index-threaded .thread-item:last-child{
+			border-bottom: none;
+		}
+		
+		.reply {
+			margin: 0.5em 0 0.5em 0;
+			padding: 0 0 0 1.5em;
+			white-space: nowrap;
+		}
+			.reply::before {
+				display: inline-block;
+				content: '>>';
+				color: #D6DAF0;
+				font-weight: bold;
+				vertical-align: top;
+				width: 1.5em;
+				float: left;
+				margin: 0 0 0 -1.5em;
+			}
+			.reply::after {
+				display: block;
+				clear: both;
+				content: ' ';
+			}
+		
+		.post {
+			position: relative;
+			font-size: 105%;
+			margin: 0 auto 0 0;
+			padding: 0;
+			min-width: 25vw;
+			white-space: normal;
+		}
+			.post p.line {
+				display: block;
+				margin: 0;
+				padding: 0;
+				min-height: 1.2em;
+				line-height: 1.2em;
+			}
+			.post p.line.quote {
+				color: #789922;
+			}
+		
+		.thread-replies-omitted {
+			color: #ccc;
+			font-size: 90%;
+			margin: 0.25em 0.5em;
+		}
+		
+		.post-container {
+			display: inline-block;
+			position: relative;
+			
+			margin: 0;
+			max-width: 100%;
+			
+			/* background: #fff;
+			border-radius: 4px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); */
+			
+			background: #D6DAF0;
+			border-color: #B7C5D9;
+			border-width: 1px;
+			border-style: none solid solid none;
+			
+			border-left: none;
+			border-top: none;
+		}
+			
+			.post-content {
+				padding: 0.75em;
+				padding-bottom: 0;
+			}
+			.post-content::after {
+				content: ' ';
+				clear: both;
+				display: block;
+			}
+				.post-details {
+					margin-right: 5em;
+					margin-bottom: 0.60em;
+				}
+					.post-detail {
+						display: inline-block;
+					}
+						.post-detail-item {
+							box-sizing: border-box;
+							max-width: 100%;
+							
+							overflow: hidden;
+							text-overflow: ellipsis;
+							vertical-align: top;
+						}
+						
+						.post-select {
+							
+						}
+							.post-select-input {
+								vertical-align: text-bottom;
+							}
+						
+						.subject {
+							display: inline-block;
+							margin: 0;
+							font-size: 1em;
+						}
+						.author {
+							display: inline-block;
+							color: #117743;
+						}
+							.author .email {
+								text-decoration: underline;
+							}
+						.createdon {
+							display: inline-block;
+						}
+						.authorid {
+							display: inline-block;
+						}
+						.postid {
+							display: inline-block;
+						}
+						
+						.capcode {
+							display: inline-block;
+							vertical-align: top;
+						}
+							.capcode::before {
+								display: inline-block;
+								content: '##';
+								margin: 0 0.15em;
+							}
+							.capcode-admin .capcode {
+								color: red;
+							}
+				
+				ul.post-attachments {
+					display: block;
+				}
+					ul.post-attachments.attachments-multi {
+						background: rgba(0,0,0,0.2);
+						padding: 1em 1em 0 1em;
+						margin: 0 -0.75em 1em -0.75em;
+					}
+					ul.post-attachments.attachments-multi::after {
+						display: block;
+						content: ' ';
+						clear: both;
+					}
+					
+					li.post-attachment {
+						display: block;
+						float: left;
+					}
+						ul.attachments-multi li.post-attachment:last-child figure.attachment {
+							margin: 0 0 1em 0;
+						}
+						
+						figure.attachment {
+							display: inline-block;
+							margin: 0 1em 1em 0;
+							position: relative;
+							z-index: 5;
+						}
+							a.attachment-link {
+								display: inline;
+							}
+								img.attachment-img {
+									display: block;
+									max-height: 250px;
+									max-width: 250px;
+								}
+								
+								figcaption.attachment-details {
+									display: none;
+									background: rgba(0,0,0,0.60);
+									text-align: center;
+									
+									position: absolute;
+									top: 0;
+									left: 0;
+									bottom: 0;
+									right: 0;
+									z-index: 7;
+								}
+									a.attachment-link:hover figcaption.attachment-details {
+										display: block;
+									}
+									
+									p.attachment-detail {
+										display: block;
+										color: #ffffff;
+										text-align: center;
+										
+										height: 1em;
+										line-height: 1em;
+										margin: 1em auto 0 auto;
+										padding: 0.5em;
+									}
+			
+			
+			ul.post-metas {
+				border-top: 1px solid #B7C5D9;
+				margin: 0 0 -1px 0;
+			}
+				li.post-meta {
+					display: block;
+					color: #333;
+					font-size: 90%;
+					padding: 0.2em 0.6em;
+				}
+			
+			div.post-action-tab {
+				display: inline-block;
+				cursor: default;
+				
+				position: absolute;
+				right: 1em;
+				top: 1em;
+				
+				border: 1px solid #B7C5D9;
+				border-radius: 2px;
+				
+				line-height: 1em;
+				height: 1em;
+				padding: 0.25em;
+				margin: -0.5em -0.5em 0 0;
+			}
+				ul.post-action-groups {
+					display: none;
+					
+					position: absolute;
+					top: 1.5em;
+					left: 0;
+					z-index: 10;
+					
+					background-color: #D6DAF0;
+					border: 1px solid #B7C5D9;
+					
+					list-style: none;
+					padding: 0;
+					margin: 0 0 0 -1px;
+					
+					white-space: nowrap;
+				}
+					div.post-action-tab:hover ul.post-action-groups,
+					ul.post-action-groups.open {
+						display: block;
+					}
+					
+					li.post-action-group {
+						
+					}
+						ul.post-actions {
+							display: inline-block;
+							vertical-align: top;
+						}
+							li.post-action {
+								border-bottom: 1px solid #B7C5D9;
+							}
+							li.post-action:last-child {
+								margin-bottom: -1px;
+							}
+								a.post-action-link {
+									display: block;
+									
+									vertical-align: middle;
+									color: #34345C;
+									
+									padding: 0.25em 1em 0.25em;
+								}
+								a.post-action-link:hover{
+									color: #dee0df;
+									background: #34345C;
+								}
+		
+		/* Catalog View */
+		main.index-catalog {
+			text-align: left;
+		}
+			main.index-catalog .index-threads {
+				margin: 1em 0 0 0;
+			}
+			
+			main.index-catalog .thread-list {
+				text-align: center;
+			}
+			
+			main.index-catalog .thread-item {
+				display: inline-block;
+				margin: 0 0.25em 0.25em 0;
+			}
+				main.index-catalog .thread {
+					position: relative;
+					
+					background: rgba(182, 182, 182, 0.12);
+					border: 2px solid rgba(111, 111, 111, 0.34);
+					
+					padding: 2px;
+					margin: 0;
+					
+					vertical-align: top;
+					text-align: center;
+					font-weight: normal;
+					font-size: 11px;
+					
+					height: 22.5em;
+					width: 15em;
+				}
+					main.index-catalog .post-container {
+						position: absolute;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						
+						border: none;
+						padding-bottom: 2.25em;
+					}
+						main.index-catalog .post-content {
+							padding: 0;
+							height: 100%;
+						}
+							main.index-catalog a.post-open:hover {
+								background: #f0e0d6;
+								box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
+								min-height: 20em;
+								overflow: hidden;
+								bottom: auto;
+								z-index: 2;
+							}
+								
+								main.index-catalog .post-attachments {
+									background: rgba(255,255,255,0.6);
+								}
+									main.index-catalog .post-attachment {
+										float: none;
+										text-align: center;
+									}
+										main.index-catalog .attachment {
+											display: inline;
+											margin: 0;
+										}
+											main.index-catalog .attachment-img {
+												display: inline-block;
+												max-height: 100px;
+												max-width: 200px;
+											}
+								
+								main.index-catalog .post-details {
+									margin: 0;
+								}
+									main.index-catalog .post-detail {
+										display: block;
+										margin: 0.4em 0 0 0;
+										padding: 0 0.5em;
+									}
+										main.index-catalog .post-detail-item.author {
+											padding-right: 0;
+										}
+										main.index-catalog .post-detail-item.capcode {
+											padding-left: 0;
+										}
+								
+								main.index-catalog .post {
+									display: block;
+									width: 100%;
+									min-width: 0px;
+									max-width: none;
+									
+									text-align: left;
+									padding: 0 0.5em;
+								}
+			
+			main.index-catalog blockquote.post {
+				box-sizing: border-box;
+				padding: 0 0.5em;
+				margin-top: 0.4em;
+			}
+				main.index-catalog p.line {
+					max-width: 100%;
+				}
+			
+			main.index-catalog a.post-open {
+				color: inherit;
+				
+				position: absolute;
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 2.25em;
+				
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			main.index-catalog div.post-action-tab {
+				bottom: 0.25em;
+				top: auto;
+				
+				margin: 0 -0.5em 0 -0.5em;
+			}
+
+
+/* Sidebar */
+aside.index-sidebar {
+	display: block;
+	z-index: 0;
+	
+	margin: 0;
+	padding-bottom: 1em;
+}
 
 /**
  * MAIN POST STYLING
@@ -1539,7 +1564,6 @@ section.auth-form {
 }
 
 nav.pagination {
-	background: #fff;
 	padding: 0.25em 0;
 	margin: 0;
 	color: #EEF2FF;
@@ -2117,7 +2141,7 @@ header {
 }
 	header.header-height-1 {
 		border-top: 2.5em solid rgba(0,0,0,0);
-	} 
+	}
 
 figure.page-head {
 	display: block;
@@ -2164,9 +2188,10 @@ figcaption.page-details {
 
 /* Page Footer */
 footer {
+	z-index: 1;
 	clear: both;
 	padding: 0;
-	margin: 1em 0 0 0;
+	margin: 0;
 }
 	#footnotes {
 		background: #333;

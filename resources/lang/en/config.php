@@ -31,41 +31,43 @@ return [
 		'board_ephemerality' => "Content Ephemerality",
 		'board_posts'   => "Post Options",
 		'board_threads' => "Thread Options",
+		'sidebar'       => "Sidebar",
 		'style'         => "Styling",
 		
 		'navigation'    => "Site Navigation",
 	],
 	
 	'option' => [
-		'board_uri'               => "URI",
-		'title'                   => "Title",
-		'description'             => "Subtitle",
+		'board_uri'                => "URI",
+		'title'                    => "Title",
+		'description'              => "Subtitle",
 		
-		'boardBasicUri'           => "URI",
-		'boardBasicTitle'         => "Title",
-		'boardBasicDesc'          => "Description",
-		'boardBasicOverboard'     => "Stream to Overboard",
-		'boardBasicIndexed'       => "Publicly Indexed",
-		'boardBasicWorksafe'      => "Safe for Work",
-		'boardCustomCSS'          => "Custom CSS",
-		'boardUriBanned'          => "Banned Board URIs",
+		'boardBasicUri'            => "URI",
+		'boardBasicTitle'          => "Title",
+		'boardBasicDesc'           => "Description",
+		'boardBasicOverboard'      => "Stream to Overboard",
+		'boardBasicIndexed'        => "Publicly Indexed",
+		'boardBasicWorksafe'       => "Safe for Work",
+		'boardCustomCSS'           => "Custom CSS",
+		'boardSidebarText'         => "Content",
+		'boardUriBanned'           => "Banned Board URIs",
 		
-		'boardAssetBannerUpload'  => "Upload new board banner",
+		'boardAssetBannerUpload'   => "Upload new board banner",
 		
-		'boardCreateMax'          => "Maximum boards per user",
-		'boardCreateTimer'        => "Cooldown between board creations (min)",
+		'boardCreateMax'           => "Maximum boards per user",
+		'boardCreateTimer'         => "Cooldown between board creations (min)",
 		
-		'boardListShow'           => "Show top boards in primary navigation",
+		'boardListShow'            => "Show top boards in primary navigation",
 		
-		'attachmentFilesize'      => "Maximum filesize (KiB)",
-		'attachmentThumbnailSize' => "Attachment preview size (px)",
-		'banMaxLength'            => "Maximum length for bans (days)",
-		'banSubnets'              => "Allow subnet bans",
+		'attachmentFilesize'       => "Maximum filesize (KiB)",
+		'attachmentThumbnailSize'  => "Attachment preview size (px)",
+		'banMaxLength'             => "Maximum length for bans (days)",
+		'banSubnets'               => "Allow subnet bans",
 		
-		'postAttachmentsMax'      => "Maximum attachments per post",
-		'postMaxLength'           => "Maximum characters per post",
-		'postMinLength'           => "Minimum characters per post",
-		'postFloodTime'           => "Minimum time between posts (sec)",
+		'postAttachmentsMax'       => "Maximum attachments per post",
+		'postMaxLength'            => "Maximum characters per post",
+		'postMinLength'            => "Minimum characters per post",
+		'postFloodTime'            => "Minimum time between posts (sec)",
 		
 		'epheSageThreadReply'      => "Autosage threads after this many replies",
 		'epheSageThreadDays'       => "Autosage threads after this many days",
@@ -77,10 +79,11 @@ return [
 		'epheDeleteThreadDays'     => "Delete threads after this many days",
 		'epheDeleteThreadPage'     => "Delete threads on this page",
 		
-		'postsPerPage'            => "Threads per page",
+		'postsPerPage'             => "Threads per page",
 		
 		'desc' => [
-			'board_uri' => "Part of the URL used to open your board. Cannot be changed.",
+			'board_uri'            => "Part of the URL used to open your board. Cannot be changed.",
+			'boardSidebarText'     => "Markup allowed.",
 		],
 	],
 	
@@ -145,6 +148,7 @@ return [
 				],
 				'role' => "Assign board roles to user",
 				'unban' => "Unban IP",
+				'raw_ip' => "View raw IPs",
 			],
 			
 		],

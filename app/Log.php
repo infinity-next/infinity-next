@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Contracts\PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model {
@@ -34,5 +35,33 @@ class Log extends Model {
 	public function user()
 	{
 		return $this->belongsTo('\App\User', 'user_id');
+	}
+	
+	
+	public function getDetails($user = null)
+	{
+		$details = json_decode($this->action_details, true);
+		
+		foreach ($details as $detailKey => &$detailValue)
+		{
+			$methodName = camel_case("get_log_visible_{$detailKey}");
+			
+			if (method_exists($this, $methodName))
+			{
+				$detailValue = $this->{$methodName}($detailValue, $user);
+			}
+		}
+		
+		return $details;
+	}
+	
+	public function getLogVisibleIp($ip, $user = null)
+	{
+		if ($user instanceof PermissionUser && $user->canViewRawIP())
+		{
+			return $ip;
+		}
+		
+		return ip_less($ip);
 	}
 }

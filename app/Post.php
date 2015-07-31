@@ -309,6 +309,7 @@ class Post extends Model {
 	public function getBodyFormatted()
 	{
 		$ContentFormatter = new ContentFormatter();
+		
 		return $ContentFormatter->formatPost($this);
 	}
 	

@@ -24,10 +24,18 @@ class BoardListRecache extends Listener
 	 */
 	public function handle($event)
 	{
-		$board = $event->board;
+		if ($event->board instanceof Board)
+		{
+			$board = $event->post->board;
+		}
+		else if ($event->post instanceof Post)
+		{
+			$board = $event->post->board;
+		}
 		
 		## TODO ##
 		// There will be board lists that need to be recached after a board is modified.
+		// This includes the overboard.
 	}
 	
 }

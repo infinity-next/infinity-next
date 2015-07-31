@@ -8,9 +8,6 @@ use Lang;
 use Input;
 use Validator;
 
-use Event;
-use App\Events\BoardWasCreated;
-
 class BoardsController extends PanelController {
 	
 	/*
@@ -208,8 +205,6 @@ class BoardsController extends PanelController {
 		$board->setOwner($this->user);
 		
 		$this->log("log.board.create", $board->board_uri);
-		
-		Event::fire(new BoardWasCreated($board, $this->user));
 		
 		return redirect("cp/board/{$board->board_uri}");
 	}

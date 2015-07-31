@@ -1,5 +1,6 @@
 <?php namespace App\Listeners;
 
+use App\Board;
 use App\Post;
 use App\Events\PostWasUpdated;
 use App\Events\ThreadWasUpdated;
@@ -25,9 +26,18 @@ class BoardRecachePages extends Listener
 	 */
 	public function handle($event)
 	{
-		if ($event->post instanceof Post)
+		if (isset($event->board) && $event->board instanceof Board)
 		{
-			$event->post->board->clearCachedPages();
+			$board = $event->board;
+		}
+		else if (isset($event->post) && $event->post instanceof Post)
+		{
+			$board = $event->post->board;
+		}
+		
+		if (isset($board))
+		{
+			$board->clearCachedPages();
 		}
 	}
 }

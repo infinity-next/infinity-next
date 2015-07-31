@@ -95,7 +95,7 @@
 	/**
 	 * Posts and Threads
 	 */
-	body.responsive form.form-post {
+	html.js body.responsive form.form-post {
 		position: fixed;
 		z-index: 1000;
 		top: 3.4em;
@@ -127,6 +127,24 @@
 			display: block;
 			width: 310px;
 		}
+	
+	/**
+	 * Sidebar
+	 */
+	aside.index-sidebar {
+		position: absolute;
+		right: 0;
+		top: -1em;
+		bottom: 1em;
+		
+		padding-top: 15em;
+		padding-left: 1em;
+		padding-right: 1em;
+		padding-bottom: 1em;
+		
+		box-sizing: border-box;
+		width: 320px;
+	}
 	
 	/**
 	 * Catalog

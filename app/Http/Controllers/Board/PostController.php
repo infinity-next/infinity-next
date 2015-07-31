@@ -229,9 +229,10 @@ class PostController extends Controller {
 		}
 		
 		$banLengthStr = implode($banLengthStr, " ");
+		$banIp        = $this->user->canViewRawIP() ? Input::get('ban_ip') : $post->author_ip;
 		
 		$ban = new Ban();
-		$ban->ban_ip        = Input::get('ban_ip');
+		$ban->ban_ip        = $banIp;
 		$ban->seen          = false;
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;

@@ -55,30 +55,32 @@
 </head>
 
 <body class="infinity-next responsive @yield('body-class')">
-	@section('header')
-	<header class="board-header header-height-1">
-		@section('boardlist')
-			@include('nav.boardlist')
+	<div id="page-container">
+		@section('header')
+		<header class="board-header header-height-1">
+			@section('boardlist')
+				@include('nav.boardlist')
+			@show
+			
+			@section('header-inner')
+				<figure class="page-head">
+					<img id="logo" src="@yield('header-logo', "/img/logo.png")" alt="Infinity" />
+					
+					<figcaption class="page-details">
+						<h1 class="page-title">@yield('title')</h1>
+						<h2 class="page-desc">@yield('description')</h2>
+						
+						@section('header-details')
+					</figcaption>
+				</figure>
+				
+				@include('widgets.announcement')
+			@show
+		</header>
 		@show
 		
-		@section('header-inner')
-			<figure class="page-head">
-				<img id="logo" src="@yield('header-logo', "/img/logo.png")" alt="Infinity" />
-				
-				<figcaption class="page-details">
-					<h1 class="page-title">@yield('title')</h1>
-					<h2 class="page-desc">@yield('description')</h2>
-					
-					@section('header-details')
-				</figcaption>
-			</figure>
-			
-			@include('widgets.announcement')
-		@show
-	</header>
-	@show
-	
-	@yield('content')
+		@yield('content')
+	</div>
 	
 	@section('footer')
 	<footer>

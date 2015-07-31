@@ -3,6 +3,7 @@
 use App\Role;
 use App\User;
 use App\UserRole;
+use App\Services\ContentFormatter;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use DB;
 use Cache;
 use Collection;
+
+use Event;
+use App\Events\BoardWasCreated;
 
 class Board extends Model {
 	
@@ -64,6 +68,25 @@ class Board extends Model {
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
 	
+	/**
+	 * Ties database triggers to the model.
+	 *
+	 * @return void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+		
+		// Setup event bindings...
+		
+		// Fire events on post created.
+		static::created(function(Board $board) {
+			Event::fire(new BoardWasCreated($board, $board->operator));
+		});
+		
+	}
+	
+	
 	public function assets()
 	{
 		return $this->hasMany('\App\BoardAsset', 'board_uri');
@@ -77,6 +100,16 @@ class Board extends Model {
 	public function logs()
 	{
 		return $this->hasMany('\App\Log', 'board_uri');
+	}
+	
+	public function operator()
+	{
+		return $this->belongsTo('\App\User', 'operated_by', 'user_id');
+	}
+	
+	public function owner()
+	{
+		return $this->belongsTo('\App\User', 'owned_by', 'user_id');
 	}
 	
 	public function threads()
@@ -314,6 +347,13 @@ class Board extends Model {
 		}
 		
 		return $fallback;
+	}
+	
+	public function getSidebarContent()
+	{
+		$ContentFormatter = new ContentFormatter();
+		
+		return $ContentFormatter->formatSidebar($this->getSetting('boardSidebarText'));
 	}
 	
 	public function getStaff()

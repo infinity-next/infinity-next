@@ -27,7 +27,7 @@
 						<td>{{ $log->user->username }}</td>
 						
 						@if ($log->action_details)
-						<td>@lang($log->action_name, json_decode($log->action_details, true))</td>
+						<td>@lang($log->action_name, $log->getDetails($c->user))</td>
 						@else
 						<td>@lang($log->action_name)</td>
 						@endif

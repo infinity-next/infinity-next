@@ -159,6 +159,7 @@ class PermissionSeeder extends Seeder {
 			
 			['base_value' => 0, 'permission_id' => "site.user.create",],
 			['base_value' => 0, 'permission_id' => "site.user.merge",],
+			['base_value' => 0, 'permission_id' => "site.user.raw_ip",],
 			['base_value' => 0, 'permission_id' => "site.pm",],
 			
 			['base_value' => 0, 'permission_id' => "sys.boards",],
@@ -297,6 +298,7 @@ class PermissionGroupSeeder extends Seeder
 					"site.pm",
 					"site.user.create",
 					"site.user.merge",
+					"site.user.raw_ip",
 				],
 			],
 			
@@ -676,6 +678,14 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
+					'option_name'           => "boardSidebarText",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+					'data_type'             => "string",
+					'validation_parameters' => 'min:$min|max:$max'
+				],
+				[
 					'option_name'           => "postAttachmentsMax",
 					'default_value'         => "5",
 					'format'                => "spinbox",
@@ -707,6 +717,7 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'min:$min|max:$max'
 				],
+				
 				
 				[
 					'option_name'           => "epheSageThreadReply",
@@ -927,6 +938,15 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"boardCustomCSS",
+				],
+			],
+			[
+				'group_name'    => "sidebar",
+				'debug_only'    => false,
+				'display_order' => 1100,
+				
+				'options'       => [
+					"boardSidebarText",
 				],
 			],
 		];

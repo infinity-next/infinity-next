@@ -401,6 +401,17 @@ trait PermissionUser {
 		return false;
 	}
 	
+	/**
+	 * Can this user see another's raw IP?
+	 *
+	 * @return boolean
+	 */
+	public function canViewRawIP()
+	{
+		return $this->can('site.user.raw_ip');
+	}
+	
+	
 	
 	/**
 	 * Gets the user's roles with capcodes for this board.

@@ -8,7 +8,7 @@
 	'id'     => "config-permissions",
 	'class'  => "form-config",
 ]) !!}
-	<h3 class="config-title">@lang("config.title.permissions", [ 'role' => $role->name ])</h3>
+	<h3 class="config-title">@lang("panel.title.permissions", [ 'role' => $role->name ])</h3>
 	
 	<dl class="option option-permission">
 		<dt class="option-term">@lang('config.permission.master.help.quickcheck')</dt>

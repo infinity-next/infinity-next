@@ -2,6 +2,9 @@
 
 @section('content')
 <main class="board-index index-threaded @if (isset($page)) page-{{ $page }} @endif">
+	
+	@include( $c->template('board.sidebar') )
+	
 	<section class="index-form">
 		@include( $c->template('board.post.form'), [
 			'board'   => $board,
@@ -31,8 +34,6 @@
 			</li>
 			@endforeach
 		</ul>
-		
-		@include('widgets.ads.board_bottom_right')
 	</section>
 </main>
 @stop

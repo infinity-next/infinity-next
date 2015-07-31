@@ -13,11 +13,12 @@
 		<div class="field row-ip label-inline">
 			{!! Form::text(
 				'ban_ip',
-				$post->author_ip,
+				$user->canViewRawIP() ? $post->author_ip : ip_less($post->author_ip),
 				[
 					'id'        => "ban_ip",
 					'class'     => "field-control",
 					'maxlength' => 255,
+					$user->canViewRawIP() ? 'data-disabled' : 'disabled' => "disabled",
 			]) !!}
 			{!! Form::label(
 				"ban_ip",
