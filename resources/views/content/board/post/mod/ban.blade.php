@@ -10,6 +10,11 @@
 	<fieldset class="form-fields">
 		<legend class="form-legend">{{ trans("board.legend." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
 		
+		{!! Form::hidden(
+			'raw_ip',
+			$user->canViewRawIP() ? 1 : 0
+		) !!}
+		
 		<div class="field row-ip label-inline">
 			{!! Form::text(
 				'ban_ip',

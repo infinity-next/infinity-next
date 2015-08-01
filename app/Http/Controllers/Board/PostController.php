@@ -64,6 +64,15 @@ class PostController extends Controller {
 		
 		if ($ban)
 		{
+			if ($global && !$this->user->canBanGlobally())
+			{
+				return abort(403);
+			}
+			else if (!$this->user->canBan($board))
+			{
+				return abort(403);
+			}
+			
 			return $this->view(static::VIEW_MOD, [
 				"actions"      => $modActions,
 				"form"         => "ban",
@@ -191,7 +200,8 @@ class PostController extends Controller {
 		
 		
 		$validator = Validator::make(Input::all(), [
-			'ban_ip'          => 'required|ip',
+			'raw_ip'          => 'required|boolean',
+			'ban_ip'          => 'required_if:raw_ip,true|ip',
 			'justification'   => 'max:255',
 			'expires_days'    => 'required|integer|min:0|max:' . $this->option('banMaxLength'),
 			'expires_hours'   => 'required|integer|min:0|max:23',
