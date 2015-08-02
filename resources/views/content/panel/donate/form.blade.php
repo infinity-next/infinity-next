@@ -95,10 +95,10 @@
 	<div class="field-row" id="payment-time"><strong>$12 USD</strong> will afford up to <strong>1.25 hours</strong> of development time</div>
 	
 	<div id="payment-submit">
-		<button type="submit" class="field-submit">Submit Donation</button>
+		<button type="submit" class="field-submit">Submit Contribution</button>
 	</div>
 </div>
 
 <div id="payment-email">
-	* Monthly support will be debited on the anniversary of the first donation, until such time as you notify us to discontinue them. Donations initiated on the 29, 30, or 31 of the month will recur on the last day of the month for shorter months, as close to the original date as possible. Please ensure you enter a valid email so that invoices are delivered correctly.
+	* Monthly support will be debited on the anniversary of the first payment, until such time as you notify us to discontinue them. Contributions initiated on the 29, 30, or 31 of the month will recur on the last day of the month for shorter months, as close to the original date as possible. Please ensure you enter a valid email so that invoices are delivered correctly.
 </div>

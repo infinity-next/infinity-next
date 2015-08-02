@@ -46,7 +46,7 @@ return [
 				'password_change' => "Change Password",
 				
 				'sponsorship'     => "Sponsorship",
-				'donate'          => "Donate",
+				'donate'          => "Send Cash Contribution",
 			],
 			
 			'site'   => [

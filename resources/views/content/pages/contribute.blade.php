@@ -256,7 +256,7 @@
 						<blockquote class="goal-helper">
 							Specific imageboard owners have been getting shafted by fundraising systems like Patreon and Grattipay.
 							The financial system is a bit of a monopoly, and this unfairness was what led me to build my own fundraising tools.
-							I can re-implement this contribution system as a stand alone donation form.
+							I can re-implement this contribution system as a stand alone payment form.
 							With that, imageboard owners will be able to raise funds without shelling out to and relying on the social justice bullies.
 						</blockquote>
 					</li>

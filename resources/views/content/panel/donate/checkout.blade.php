@@ -6,7 +6,7 @@
 	@endif
 	
 	<fieldset id="card-details" class="form-fields require-js">
-		<legend class="form-legend">Donate to Infinity Development</legend>
+		<legend class="form-legend">Contribute Funds to Infinity Next Development Group</legend>
 		
 			@include( $c->template('panel.donate.form') )
 	</fieldset>

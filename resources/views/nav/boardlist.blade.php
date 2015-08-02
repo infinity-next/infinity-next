@@ -19,7 +19,7 @@
 					<li class="boardlist-item"><a href="{!! url("contribute") !!}" class="boardlist-link">Contribute</a></li>
 					
 					<!-- Donation Page -->
-					<li class="boardlist-item"><a href="{!! secure_url("cp/donate") !!}" class="boardlist-link">Donate</a></li>
+					<li class="boardlist-item"><a href="{!! secure_url("cp/donate") !!}" class="boardlist-link">Fund us</a></li>
 					@endif
 				</ul>
 			</li>
