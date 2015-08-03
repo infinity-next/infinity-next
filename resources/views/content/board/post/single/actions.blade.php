@@ -1,6 +1,6 @@
 @section('post-actions')
 @set('postActions', false)
-<div class="post-action-tab">
+<div class="post-action-tab" data-no-instant>
 	<span class="post-action-label post-action-open">@lang('board.action.open')</span>
 	
 	<ul class="post-action-groups">
