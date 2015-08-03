@@ -30,16 +30,17 @@ class ContentFormatter {
 	 * Returns a formatted post.
 	 *
 	 * @param  \App\Post $post
+	 * @param  boolean $removeAllLinks
 	 * @return String (HTML, Formatted)
 	 */
-	public function formatPost(Post $post)
+	public function formatPost(Post $post, $removeAllLinks = false)
 	{
 		$this->post    = $post;
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
 				'parseHTML'      => false,
-				'parseURL'       => true,
+				'parseURL'       => !$removeAllLinks,
 			],
 			
 			'disable' => [

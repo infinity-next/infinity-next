@@ -58,6 +58,22 @@ class FileStorage extends Model {
 		return implode(str_split(substr($hash, 0, 4)), "/");
 	}
 	
+	/**
+	 * Converts the byte size to a human-readable filesize.
+	 *
+	 * @author Jeffrey Sambells
+	 * @param  int  $decimals
+	 * @return string
+	 */
+	public function getHumanFilesize($decimals = 2)
+	{
+		$bytes  = $this->filesize;
+		$size   = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+		$factor = floor((strlen($bytes) - 1) / 3);
+		
+		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . " " . @$size[$factor];
+	}
+	
 	public function getDirectory()
 	{
 		$prefix = $this->getHashPrefix($this->hash);
@@ -102,6 +118,7 @@ class FileStorage extends Model {
 		return $this->getDirectoryThumb() . "/" . $this->hash;
 	}
 	
+	
 	public function scopeHash($query, $hash)
 	{
 		return $query->where('hash', $hash);
@@ -138,6 +155,9 @@ class FileStorage extends Model {
 		
 		switch ($this->mime)
 		{
+			case "image/svg+xml" :
+				return "svg";
+			
 			case "image/jpeg" :
 			case "image/jpg" :
 				return "jpg";
@@ -154,6 +174,8 @@ class FileStorage extends Model {
 		
 		return $mimes[1];
 	}
+	
+	
 	
 	/**
 	 * Supplies a clean URL for downloading an attachment on a board.
@@ -181,13 +203,21 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailURL(Board $board)
 	{
+		$baseURL = "/{$board->board_uri}/file/thumb/{$this->hash}/";
+		
+		if ($this->guessExtension() === "svg")
+		{
+			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
+			$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
+		}
+		
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			return url("/{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . $this->pivot->filename;
+			return url($baseURL . $this->pivot->filename);
 		}
 		else
 		{
-			return url("/{$board->board_uri}/file/thumb/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+			return url($baseURL . strtotime($this->first_uploaded_at) . "." . $this->guessExtension());
 		}
 	}
 	
@@ -223,27 +253,7 @@ class FileStorage extends Model {
 		$storage->last_uploaded_at = $fileTime;
 		$storage->upload_count += 1;
 		$storage->save();
-		
-		if (!Storage::exists($storage->getPath()))
-		{
-			Storage::put($storage->getPath(), $fileContent);
-			Storage::makeDirectory($storage->getDirectoryThumb());
-			
-			$imageManager = new ImageManager;
-			$imageManager
-				->make($storage->getFullPath())
-				->resize(
-					## TODO ##
-					// Add a way for options to be recovered without a controller.
-					300,//$controller->option('attachmentThumbnailSize'),
-					300,//$controller->option('attachmentThumbnailSize'),
-					function($constraint) {
-						$constraint->aspectRatio();
-						$constraint->upsize();
-					}
-				)
-				->save($storage->getFullPathThumb());
-		}
+		$storage->processThumb();
 		
 		return $storage;
 	}

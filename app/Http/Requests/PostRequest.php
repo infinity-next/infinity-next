@@ -117,7 +117,7 @@ class PostRequest extends Request {
 				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
 					$rules["files.{$attachment}"] = [
-						"mimes:jpeg,gif,png",
+						"mimes:jpeg,gif,png,epub,svg",
 						
 						## TODO ##
 						// Make maximum filesize a config option.

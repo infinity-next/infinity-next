@@ -1,8 +1,4 @@
 <ul class="post-details">
-	@if(!$catalog || $post->canDelete($user))
-	<li class="post-detail post-select"><input class="post-select-input" type="checkbox" value="1" name="post[{{ $post->post_id }}]" /></li>
-	@endif
-	
 	<li class="post-detail post-subject">@if ($post->subject)<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>@endif</li>
 	
 	<li class="post-detail post-author">
@@ -19,9 +15,7 @@
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
 	
-	@if (!$catalog)
 	<li class="post-detail post-authorid"><span class="post-detail-item authorid"></span></li>
-	@endif
 	
 	@if (isset($op))
 	<li class="post-detail post-id">
@@ -29,7 +23,7 @@
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#{$post->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$post->board_id}") !!}" class="post-reply">{!! $post->board_id !!}</a>
 		@else
-		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
+		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}") !!}" class="post-no" data-instant>@lang('board.post_number')</a>
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$post->board_id}") !!}" class="post-reply">{!! $post->board_id !!}</a>
 		@endif
 	</li>

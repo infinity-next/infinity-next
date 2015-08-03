@@ -78,7 +78,8 @@ return [
 	
 	// Post Actions
 	'action'            => [
-		'open'              => "Actions",
+		'view'              => "Open", // Open a thread in the catalog
+		'open'              => "Actions", // List of actions
 		
 		'ban'               => "Ban",
 		'ban_delete'        => "Ban &amp; Delete",
@@ -94,6 +95,7 @@ return [
 		'edit'              => "Edit",
 		'sticky'            => "Sticky",
 		'unsticky'          => "Unsticky",
+		'report'            => "Report",
 	],
 	
 	'meta'              => [

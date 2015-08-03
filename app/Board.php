@@ -453,6 +453,8 @@ class Board extends Model {
 			return $threads;
 		};
 		
+		return $rememberClosure();
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -545,7 +547,7 @@ class Board extends Model {
 	public function scopeAndCreator($query)
 	{
 		return $query
-			->leftJoin('users as creator', function($join)
+			->join('users as creator', function($join)
 			{
 				$join->on('creator.user_id', '=', 'boards.created_by');
 			})
@@ -558,7 +560,7 @@ class Board extends Model {
 	public function scopeAndOperator($query)
 	{
 		return $query
-			->leftJoin('users as operator', function($join)
+			->join('users as operator', function($join)
 			{
 				$join->on('operator.user_id', '=', 'boards.operated_by');
 			})

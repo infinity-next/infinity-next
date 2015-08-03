@@ -133,7 +133,7 @@
 	 */
 	aside.index-sidebar {
 		position: absolute;
-		right: 0;
+		right: 0.5em;
 		top: -1em;
 		bottom: 1em;
 		

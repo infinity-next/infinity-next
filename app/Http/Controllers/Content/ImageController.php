@@ -24,8 +24,9 @@ class ImageController extends Controller {
 	/**
 	 * Delivers an image.
 	 *
-	 * @param \App\FileStorage->hash $hash
-	 * @param \App\FileAttachment->hash $filename
+	 * @param  string  $hash
+	 * @param  string  $filename
+	 * @param  boolean  $thumbnail
 	 * @return Response
 	 */
 	public function getImage($hash = false, $filename = false, $thumbnail = false)
@@ -68,8 +69,8 @@ class ImageController extends Controller {
 	/**
 	 * Delivers a file's thumbnail by rerouting the request to getFile with an optional parameter set.
 	 *
-	 * @param \App\FileStorage->hash $hash
-	 * @param \App\FileAttachment->hash $filename
+	 * @param  $string  $hash
+	 * @param  $string  $filename
 	 * @return Response
 	 */
 	public function getThumbnail($hash = false, $filename = false)

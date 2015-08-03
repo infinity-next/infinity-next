@@ -85,6 +85,11 @@ class Post extends Model {
 		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
 	}
 	
+	public function bans()
+	{
+		return $this->belongsTo('\App\Ban', 'post_id');
+	}
+	
 	public function board()
 	{
 		return $this->belongsTo('\App\Board', 'board_uri');
@@ -304,9 +309,10 @@ class Post extends Model {
 	/**
 	 * Returns the fully rendered HTML content of this post.
 	 *
+	 * @param  boolean  $catalog
 	 * @return string
 	 */
-	public function getBodyFormatted()
+	public function getBodyFormatted($catalog = false)
 	{
 		$ContentFormatter = new ContentFormatter();
 		
@@ -638,11 +644,12 @@ class Post extends Model {
 		return $query
 			->leftJoin('bans', function($join)
 			{
-				$join->on('bans.post_id', '=', 'posts.post_id');
+				$join->on('bans.post_id', '=', 'posts.post_id')
+					->where('bans.updated_at', '=', DB::raw('(select max(bans2.updated_at) from bans as bans2 where bans2.ban_id = bans.ban_id)'));
 			})
 			->addSelect(
 				'posts.*',
-				'bans.ban_id',
+				'bans.ban_id as ban_id',
 				'bans.justification as ban_reason'
 			);
 	}
@@ -818,13 +825,6 @@ class Post extends Model {
 			$this->reply_to_board_id = $thread->board_id;
 		}
 		
-		// Store attachments
-		$uploads = [];
-		
-		if (is_array($files = Input::file('files')))
-		{
-			$uploads = array_filter($files);
-		}
 		
 		// Store the post in the database.
 		DB::transaction(function() use ($thread)
@@ -869,6 +869,13 @@ class Post extends Model {
 		
 		
 		// Process uploads.
+		$uploads = [];
+		
+		if (is_array($files = Input::file('files')))
+		{
+			$uploads = array_filter($files);
+		}
+		
 		if (count($uploads) > 0)
 		{
 			foreach ($uploads as $uploadIndex => $upload)

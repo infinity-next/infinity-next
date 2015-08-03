@@ -1203,42 +1203,42 @@ main.index-threaded {
 							display: inline-block;
 							margin: 0 1em 1em 0;
 							position: relative;
-							z-index: 5;
+							z-index: 3;
+							max-width: 250px;
 						}
 							a.attachment-link {
 								display: inline;
 							}
 								img.attachment-img {
 									display: block;
+									margin: 0 auto;
+									max-width: 100%;
 									max-height: 250px;
-									max-width: 250px;
 								}
 								
 								figcaption.attachment-details {
-									display: none;
-									background: rgba(0,0,0,0.60);
+									display: block;
+									max-width: 100%;
+									
+									position: relative;
+									padding: 0 1em;
 									text-align: center;
-									
-									position: absolute;
-									top: 0;
-									left: 0;
-									bottom: 0;
-									right: 0;
-									z-index: 7;
+									white-space: nowrap;
 								}
-									a.attachment-link:hover figcaption.attachment-details {
-										display: block;
-									}
-									
 									p.attachment-detail {
 										display: block;
-										color: #ffffff;
+										color: rgba(0,0,0,0.75);
 										text-align: center;
+										font-size: 90%;
 										
 										height: 1em;
 										line-height: 1em;
-										margin: 1em auto 0 auto;
-										padding: 0.5em;
+										margin: 0.5em auto;
+										padding: 0;
+										
+										max-width: 100%;
+										overflow: hidden;
+										text-overflow: ellipsis;
 									}
 			
 			
@@ -1357,63 +1357,68 @@ main.index-threaded {
 						right: 0;
 						bottom: 0;
 						
+						overflow: hidden;
+						
 						border: none;
-						padding-bottom: 2.25em;
+						padding-top: 2.25em;
 					}
+						main.index-catalog .post-container:hover {
+							background: #f0e0d6;
+							box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
+							min-height: 225px;
+							overflow: visible;
+							
+							bottom: auto;
+							z-index: 5;
+						}
+						
 						main.index-catalog .post-content {
 							padding: 0;
 							height: 100%;
 						}
-							main.index-catalog a.post-open:hover {
-								background: #f0e0d6;
-								box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
-								min-height: 20em;
-								overflow: hidden;
-								bottom: auto;
-								z-index: 2;
+							
+							main.index-catalog .post-attachments {
+								background: rgba(255,255,255,0.6);
+								padding: 0.5em 0;
 							}
-								
-								main.index-catalog .post-attachments {
-									background: rgba(255,255,255,0.6);
+								main.index-catalog .post-attachment {
+									float: none;
+									text-align: center;
 								}
-									main.index-catalog .post-attachment {
-										float: none;
-										text-align: center;
+									main.index-catalog .attachment {
+										display: inline;
+										margin: 0;
 									}
-										main.index-catalog .attachment {
-											display: inline;
-											margin: 0;
+										main.index-catalog .attachment-img {
+											display: inline-block;
+											max-height: 100px;
+											max-width: 100%;
 										}
-											main.index-catalog .attachment-img {
-												display: inline-block;
-												max-height: 100px;
-												max-width: 200px;
-											}
-								
-								main.index-catalog .post-details {
-									margin: 0;
-								}
-									main.index-catalog .post-detail {
-										display: block;
-										margin: 0.4em 0 0 0;
-										padding: 0 0.5em;
-									}
-										main.index-catalog .post-detail-item.author {
-											padding-right: 0;
-										}
-										main.index-catalog .post-detail-item.capcode {
-											padding-left: 0;
-										}
-								
-								main.index-catalog .post {
+							
+							main.index-catalog .post-details {
+								margin: 0;
+							}
+								main.index-catalog .post-detail {
 									display: block;
-									width: 100%;
-									min-width: 0px;
-									max-width: none;
-									
-									text-align: left;
+									margin: 0.4em 0 0 0;
 									padding: 0 0.5em;
 								}
+									main.index-catalog .post-detail-item.author {
+										padding-right: 0;
+									}
+									main.index-catalog .post-detail-item.capcode {
+										padding-left: 0;
+									}
+							
+							main.index-catalog .post {
+								display: block;
+								width: 100%;
+								min-width: 0px;
+								max-width: none;
+								
+								text-align: left;
+								padding: 0 0.5em;
+							}
 			
 			main.index-catalog blockquote.post {
 				box-sizing: border-box;
@@ -1424,24 +1429,17 @@ main.index-threaded {
 					max-width: 100%;
 				}
 			
-			main.index-catalog a.post-open {
-				color: inherit;
-				
-				position: absolute;
-				top: 0;
-				right: 0;
-				left: 0;
-				bottom: 2.25em;
-				
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-			
-			main.index-catalog div.post-action-tab {
-				bottom: 0.25em;
-				top: auto;
+			main.index-catalog div.post-action-tab,
+			main.index-catalog div.post-action-tab.tab-view-thread {
+				top: 0.25em;
+				bottom: auto;
 				
 				margin: 0 -0.5em 0 -0.5em;
+				text-align: left;
+			}
+			main.index-catalog div.post-action-tab.tab-view-thread {
+				left: 1em;
+				right: auto;
 			}
 
 
@@ -1460,6 +1458,14 @@ aside.index-sidebar {
 blockquote.post {
 	
 }
+	blockquote.post a {
+		text-decoration: underline;
+	}
+		blockquote.post a:hover,
+		blockquote.post a.cite {
+			color: #D00;
+		}
+	
 	blockquote.post hr {
 		border-top: 2px groove rgba(255, 255, 255, 1);
 	}
