@@ -155,6 +155,9 @@ class FileStorage extends Model {
 		
 		switch ($this->mime)
 		{
+			##
+			# IMAGES
+			##
 			case "image/svg+xml" :
 				return "svg";
 			
@@ -168,8 +171,20 @@ class FileStorage extends Model {
 			case "image/png" :
 				return "png";
 			
+			##
+			# TEXT DOCUMENTS
+			##
 			case "text/plain" :
 				return "txt";
+			
+			##
+			# MULTIMEDIA
+			##
+			case "application/epub+zip" :
+				return "epub";
+			
+			case "application/pdf" :
+				return "pdf";
 		}
 		
 		return $mimes[1];
@@ -193,6 +208,29 @@ class FileStorage extends Model {
 		{
 			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
 		}
+	}
+	
+	/**
+	 * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
+	 *
+	 * @return string as HTML
+	 */
+	public function getThumbnailHTML(Board $board)
+	{
+		$ext = $this->guessExtension();
+		$url = "/img/filetypes/{$ext}.svg";
+		
+		switch ($ext)
+		{
+			case "svg" :
+			case "jpg" :
+			case "png" :
+			case "gif" :
+				$url = $this->getThumbnailURL($board);
+				break;
+		}
+		
+		return "<img class=\"attachment-img\" src=\"{$url}\" />";
 	}
 	
 	/**
@@ -233,7 +271,6 @@ class FileStorage extends Model {
 			case "jpg" :
 			case "gif" :
 			case "png" :
-			case "txt" :
 				if (!Storage::exists($this->getFullPathThumb()))
 				{
 					Storage::makeDirectory($this->getDirectoryThumb());

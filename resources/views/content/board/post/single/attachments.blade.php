@@ -10,7 +10,7 @@
 				data-download-url="{!! $attachment->getDownloadURL($board) !!}"
 				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
 			>
-				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
+				{!! $attachment->getThumbnailHTML($board) !!}
 				
 				<figcaption class="attachment-details">
 					<p class="attachment-detail">
@@ -24,7 +24,7 @@
 			</a>
 			@else
 			<a href="{!! $post->getURL() !!}" data-instant>
-				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
+				{!! $attachment->getThumbnailHTML($board) !!}
 			</a>
 			@endif
 		</figure>
