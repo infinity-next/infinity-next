@@ -230,7 +230,7 @@ class FileStorage extends Model {
 				break;
 		}
 		
-		return "<img class=\"attachment-img\" src=\"{$url}\" />";
+		return "<img class=\"attachment-img attachent-ext-{$ext}\" src=\"{$url}\" />";
 	}
 	
 	/**
