@@ -390,11 +390,18 @@ class Board extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.thread.{$post}";
 		$rememberClosure = function() use ($post) {
-			return $this->posts()
+			$replies = $this->posts()
 				->where('board_id', $post)
 				->withEverythingAndReplies()
 				->orderBy('bumped_last', 'desc')
 				->get();
+			
+			foreach ($replies as $reply)
+			{
+				$reply->body_parsed = $reply->getBodyFormatted();
+			}
+			
+			return $replies;
 		};
 		
 		switch (env('CACHE_DRIVER'))
