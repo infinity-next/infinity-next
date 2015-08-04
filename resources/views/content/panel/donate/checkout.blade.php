@@ -7,8 +7,7 @@
 	
 	<fieldset id="card-details" class="form-fields require-js">
 		<legend class="form-legend">Contribute Funds to Infinity Next Development Group</legend>
-		
-			@include( $c->template('panel.donate.form') )
+		@include( $c->template('panel.donate.form') )
 	</fieldset>
 	
 	<div id="payment-security" class="grid-50 require-js">
@@ -35,5 +34,15 @@
 	</div>
 	
 	@include( $c->template('panel.donate.bitcoin') )
+	
+	<div id="payment-contact" class="grid-50">
+		<h3>Refunds</h3>
+		<p>If for some reason you'd like to cancel your cash contribution, I'll be happy to provide a refund or to void the transaction if you contact me within 3 days after the payment is placed.</p>
+		<p>This money goes to funding me and my living expenses, so after these three days when the payment has settled, I cannot promise that I will still be able to issue a refund.</p>
+		
+		<h3>Contact</h3>
+		<p>I can be reached at <a href="mailto:josh@infinitydev.org">josh@infinitydev.org</a>.<br />
+			You can also <a href="tel:63-927-982-5923">call</a> or <a href="sms:63-927-982-5923">text</a> me at <a href="tel:63-927-982-5923">+63 927 982 5923</a>.</p>
+	</div>
 	
 </form>

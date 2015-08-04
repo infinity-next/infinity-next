@@ -404,10 +404,14 @@ class PostController extends Controller {
 		
 		if ($post->canEdit($this->user))
 		{
-			$post->subject    = Input::get('subject');
-			$post->email      = Input::get('email');
-			$post->body       = Input::get('body');
-			$post->updated_by = $this->user->user_id;
+			$post->subject        = Input::get('subject');
+			$post->email          = Input::get('email');
+			$post->body           = Input::get('body');
+			$post->body_parsed    = NULL;
+			$post->body_parsed_at = NULL;
+			$post->body_html      = NULL;
+			$post->updated_by     = $this->user->user_id;
+			
 			$post->save();
 			
 			$this->log('log.post.edit', $post, [

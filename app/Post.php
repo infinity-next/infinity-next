@@ -883,6 +883,27 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Fetches a URL for this post, with the reply-to hash.
+	 *
+	 * @return string
+	 */
+	public function urlReply()
+	{
+		$url = "";
+		
+		if ($this->reply_to_board_id)
+		{
+			$url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}#reply-{$this->board_id}";
+		}
+		else
+		{
+			$url = "/{$this->board_uri}/thread/{$this->board_id}#reply-{$this->board_id}";
+		}
+		
+		return url($url);
+	}
+	
+	/**
 	 * Sends a redirect to the post's page.
 	 *
 	 * @param  string  $action
