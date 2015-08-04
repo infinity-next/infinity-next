@@ -21,6 +21,7 @@
 	</li>
 	@endif
 	
+	@if (!isset($catalog) || !$catalog)
 	<li class="post-detail post-id">
 		@if ($post->reply_to)
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#{$post->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
@@ -30,6 +31,7 @@
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$post->board_id}") !!}" class="post-reply">{!! $post->board_id !!}</a>
 		@endif
 	</li>
+	@endif
 	
 	@if ($post->isStickied())
 	<li class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></li>
