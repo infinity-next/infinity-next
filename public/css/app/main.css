@@ -1157,9 +1157,23 @@ main.index-threaded {
 						.createdon {
 							display: inline-block;
 						}
+						
 						.authorid {
 							display: inline-block;
 						}
+							.authorid::before {
+								content: 'ID: ';
+								display: inline;
+							}
+							.authorid.authorid-colorized {
+								border-radius: 6px;
+								margin: -2px 0.25em 0 0.25em;
+								padding: 1px 0.25em;
+							}
+							.authorid.authorid-colorized::before {
+								display: none;
+							}
+						
 						.postid {
 							display: inline-block;
 						}
@@ -1253,69 +1267,73 @@ main.index-threaded {
 					padding: 0.2em 0.6em;
 				}
 			
-			div.post-action-tab {
-				display: inline-block;
-				cursor: default;
-				
+			div.post-action-bar {
 				position: absolute;
 				right: 1em;
 				top: 1em;
 				
-				border: 1px solid #B7C5D9;
-				border-radius: 2px;
-				
-				line-height: 1em;
-				height: 1em;
-				padding: 0.25em;
 				margin: -0.5em -0.5em 0 0;
 			}
-				ul.post-action-groups {
-					display: none;
+				div.post-action-tab {
+					display: inline-block;
+					cursor: default;
 					
-					position: absolute;
-					top: 1.5em;
-					left: 0;
-					z-index: 10;
-					
-					background-color: #D6DAF0;
 					border: 1px solid #B7C5D9;
+					border-radius: 2px;
 					
-					list-style: none;
-					padding: 0;
-					margin: 0 0 0 -1px;
+					line-height: 1em;
+					height: 1em;
 					
-					white-space: nowrap;
+					padding: 0.25em;
+					margin-left: 0.25em;
 				}
-					div.post-action-tab:hover ul.post-action-groups,
-					ul.post-action-groups.open {
-						display: block;
-					}
-					
-					li.post-action-group {
+					ul.post-action-groups {
+						display: none;
 						
+						position: absolute;
+						top: 1.5em;
+						left: 0;
+						z-index: 10;
+						
+						background-color: #D6DAF0;
+						border: 1px solid #B7C5D9;
+						
+						list-style: none;
+						padding: 0;
+						margin: 0 0 0 -1px;
+						
+						white-space: nowrap;
 					}
-						ul.post-actions {
-							display: inline-block;
-							vertical-align: top;
+						div.post-action-tab:hover ul.post-action-groups,
+						ul.post-action-groups.open {
+							display: block;
 						}
-							li.post-action {
-								border-bottom: 1px solid #B7C5D9;
+						
+						li.post-action-group {
+							
+						}
+							ul.post-actions {
+								display: inline-block;
+								vertical-align: top;
 							}
-							li.post-action:last-child {
-								margin-bottom: -1px;
-							}
-								a.post-action-link {
-									display: block;
-									
-									vertical-align: middle;
-									color: #34345C;
-									
-									padding: 0.25em 1em 0.25em;
+								li.post-action {
+									border-bottom: 1px solid #B7C5D9;
 								}
-								a.post-action-link:hover{
-									color: #dee0df;
-									background: #34345C;
+								li.post-action:last-child {
+									margin-bottom: -1px;
 								}
+									a.post-action-link {
+										display: block;
+										
+										vertical-align: middle;
+										color: #34345C;
+										
+										padding: 0.25em 1em 0.25em;
+									}
+									a.post-action-link:hover{
+										color: #dee0df;
+										background: #34345C;
+									}
 		
 		/* Catalog View */
 		main.index-catalog {
@@ -1428,18 +1446,27 @@ main.index-threaded {
 					max-width: 100%;
 				}
 			
-			main.index-catalog div.post-action-tab,
-			main.index-catalog div.post-action-tab.tab-view-thread {
-				top: 0.25em;
-				bottom: auto;
+			main.index-catalog div.post-action-bar {
+				top: 0;
+				left: 0;
+				right: 0;
 				
-				margin: 0 -0.5em 0 -0.5em;
-				text-align: left;
+				margin: 0;
 			}
-			main.index-catalog div.post-action-tab.tab-view-thread {
-				left: 1em;
-				right: auto;
-			}
+				main.index-catalog div.post-action-tab,
+				main.index-catalog div.post-action-tab.action-tab-actions {
+					position: absolute;
+					top: 0.25em;
+					right: 0.25em;
+					
+					margin: 0;
+					text-align: left;
+				}
+				main.index-catalog div.post-action-tab.action-tab-reply {
+					position: absolute;
+					left: 0.25em;
+					right: auto;
+				}
 
 
 /* Sidebar */
@@ -1504,6 +1531,9 @@ blockquote.post {
 		blockquote.post blockquote.spoiler {
 			box-sizing: border-box;
 			padding: 1px 0.5em;
+		}
+		blockquote.post blockquote + p {
+			margin-top: -1em;
 		}
 	
 	blockquote.post .spoiler {
@@ -2210,3 +2240,10 @@ footer {
 			color: #ffffff;
 			text-decoration: underline;
 		}
+
+/**
+ * Third party styling / Vendor styling
+ */
+#instantclick-bar {
+	background: #239623;
+}

@@ -1,11 +1,12 @@
 <?php
 
+use App\Post;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PostTableUpgrade extends Migration
+class PostAuthorTweaks extends Migration
 {
-	
 	/**
 	 * Run the migrations.
 	 *
@@ -16,7 +17,17 @@ class PostTableUpgrade extends Migration
 		Schema::table('posts', function(Blueprint $table)
 		{
 			$table->string('author_ip', 46)->nullable()->change();
-			$table->timestamp('author_ip_nulled_at')->nullable()->after('author_ip');
+			$table->string('author_id', 6)->nullable()->after('author_ip');
+			$table->timestamp('author_ip_nulled_at')->nullable()->after('author_id');
+		});
+		
+		Post::withTrashed()->chunk(100, function($posts)
+		{
+			foreach ($posts as $post)
+			{
+				$post->author_id = $post->makeAuthorId();
+				$post->save();
+			}
 		});
 	}
 	
@@ -30,7 +41,7 @@ class PostTableUpgrade extends Migration
 		Schema::table('posts', function(Blueprint $table)
 		{
 			$table->string('author_ip', 46)->change();
-			$table->dropColumn('author_ip_nulled_at');
+			$table->dropColumn('author_id', 'author_ip_nulled_at');
 		});
 	}
 	

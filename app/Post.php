@@ -307,6 +307,73 @@ class Post extends Model {
 	
 	
 	/**
+	 * Returns a small, unique code to identify an author in one thread.
+	 *
+	 * @return string
+	 */
+	public function makeAuthorId()
+	{
+		$hashParts = [];
+		$hashParts[] = env('APP_KEY');
+		$hashParts[] = $this->board_uri;
+		$hashParts[] = $this->reply_to_board_id ?: $this->board_id;
+		$hashParts[] = $this->author_ip;
+		
+		$hash = implode($hashParts, "-");
+		$hash = md5($hash);
+		$hash = substr($hash, 12, 6);
+		
+		return $hash;
+	}
+	
+	/**
+	 * Turns the author id into a consistent color.
+	 *
+	 * @param  boolean  $asArray
+	 * @return string  In the format of rgb(xxx,xxx,xxx) or as an array.
+	 */
+	public function getAuthorIdBackgroundColor($asArray = false)
+	{
+		$authorId = $this->author_id;
+		$colors   = [];
+		$colors[] = crc32(substr($authorId, 0, 2)) % 254 + 1;
+		$colors[] = crc32(substr($authorId, 2, 2)) % 254 + 1;
+		$colors[] = crc32(substr($authorId, 4, 2)) % 254 + 1;
+		
+		if ($asArray)
+		{
+			return $colors;
+		}
+		
+		return "rgba(" . implode(",", $colors) . ",0.75)";
+	}
+	
+	/**
+	 * Takess the author id background color and determines if we need a white or black text color.
+	 *
+	 * @return string  In the format of rgba(xxx,xxx,xxx,x)
+	 */
+	public function getAuthorIdForegroundColor()
+	{
+		$colors = $this->getAuthorIdBackgroundColor(true);
+		
+		if (array_sum($colors) < 382)
+		{
+			return "rgb(255,255,255)";
+		}
+		
+		foreach ($colors as $color)
+		{
+			if ($color > 200)
+			{
+				return "rgb(0,0,0)";
+			}
+		}
+		
+		return "rgb(0,0,0)";
+	}
+	
+	/**
 	 * Returns the fully rendered HTML content of this post.
 	 *
 	 * @param  boolean  $catalog
@@ -861,7 +928,8 @@ class Post extends Model {
 			}
 			
 			// Finally, we set our board_id and save.
-			$this->board_id = $posts_total;
+			$this->board_id  = $posts_total;
+			$this->author_id = $this->makeAuthorId();
 			$this->save();
 			
 			// Queries and locks are handled automatically after this closure ends.

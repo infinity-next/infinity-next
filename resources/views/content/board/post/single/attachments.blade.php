@@ -4,7 +4,12 @@
 	<li class="post-attachment">
 		<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
 			@if (!isset($catalog) || !$catalog)
-			<a class="attachment-link" target="_blank" href="{!! $attachment->getDownloadURL($board) !!}">
+			<a class="attachment-link"
+				target="_blank"
+				href="{!! $attachment->getDownloadURL($board) !!}"
+				data-download-url="{!! $attachment->getDownloadURL($board) !!}"
+				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
+			>
 				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
 				
 				<figcaption class="attachment-details">
@@ -18,7 +23,7 @@
 				</figcaption>
 			</a>
 			@else
-			<a href="{!! $post->getURL() !!}">
+			<a href="{!! $post->getURL() !!}" data-instant>
 				<img class="attachment-img" src="{!! $attachment->getThumbnailURL($board) !!}" />
 			</a>
 			@endif

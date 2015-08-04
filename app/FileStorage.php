@@ -222,6 +222,42 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Turns an image into a thumbnail if possible, overwriting previous versions.
+	 *
+	 * @return void
+	 */
+	protected function processThumb()
+	{
+		switch ($this->guessExtension())
+		{
+			case "jpg" :
+			case "gif" :
+			case "png" :
+			case "txt" :
+				if (!Storage::exists($this->getFullPathThumb()))
+				{
+					Storage::makeDirectory($this->getDirectoryThumb());
+					
+					$imageManager = new ImageManager;
+					$imageManager
+						->make($this->getFullPath())
+						->resize(
+							## TODO ##
+							// Add a way for options to be recovered without a controller.
+							300,//$controller->option('attachmentThumbnailSize'),
+							300,//$controller->option('attachmentThumbnailSize'),
+							function($constraint) {
+								$constraint->aspectRatio();
+								$constraint->upsize();
+							}
+						)
+						->save($this->getFullPathThumb());
+				}
+			break;
+		}
+	}
+	
+	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
 	 * @param UploadedFile $upload
@@ -253,6 +289,13 @@ class FileStorage extends Model {
 		$storage->last_uploaded_at = $fileTime;
 		$storage->upload_count += 1;
 		$storage->save();
+		
+		if (!Storage::exists($storage->getPath()))
+		{
+			Storage::put($storage->getPath(), $fileContent);
+			Storage::makeDirectory($storage->getDirectoryThumb());
+		}
+		
 		$storage->processThumb();
 		
 		return $storage;

@@ -23,7 +23,7 @@ class ContentFormatter {
 	 *
 	 * @var array
 	 */
-	protected $optinos;
+	protected $options;
 	
 	
 	/**
@@ -108,7 +108,7 @@ class ContentFormatter {
 		
 		return Markdown::config($this->options)
 			->extendBlockComplete('Quote', $this->getCiteParser())
-			->parse( $content);
+			->parse($content);
 		}
 	/**
 	 * Returns a collection of posts as cited in a post's text body.
@@ -314,6 +314,7 @@ class ContentFormatter {
 						"class=\"cite cite-post cite-local\" " .
 						"data-board_uri=\"{$cite->cite_board_uri}\" " .
 						"data-board_id=\"{$cite->cite_board_id}\" " .
+						"data-instant " .
 						">" .
 							"&gt;&gt;{$cite->cite_board_id}" .
 						"</a>";

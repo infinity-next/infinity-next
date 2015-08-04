@@ -15,9 +15,12 @@
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
 	
-	<li class="post-detail post-authorid"><span class="post-detail-item authorid"></span></li>
+	@if (!isset($catalog) || !$catalog)
+	<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
+		style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
+	</li>
+	@endif
 	
-	@if (isset($op))
 	<li class="post-detail post-id">
 		@if ($post->reply_to)
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#{$post->board_id}") !!}" class="post-no">@lang('board.post_number')</a>
@@ -27,19 +30,18 @@
 		<a href="{!! url("{$board->board_uri}/thread/{$op->board_id}#reply-{$post->board_id}") !!}" class="post-reply">{!! $post->board_id !!}</a>
 		@endif
 	</li>
-	@endif
 	
 	@if ($post->isStickied())
-	<li class="post-detail post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></li>
+	<li class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></li>
 	@elseif ($post->isBumplocked())
-	<li class="post-detail post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-hand-o-down"></i></li>
+	<li class="post-detail detail-icon post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-hand-o-down"></i></li>
 	@endif
 	
 	@if ($post->isLocked())
-	<li class="post-detail post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
+	<li class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
 	@endif
 	
 	@if ($post->isDeleted())
-	<li class="post-detail post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
+	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
 	@endif
 </ul>
