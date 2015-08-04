@@ -42,7 +42,7 @@
 		
 		<h3>Contact</h3>
 		<p>I can be reached at <a href="mailto:josh@infinitydev.org">josh@infinitydev.org</a>.<br />
-			You can also <a href="tel:63-927-982-5923">call</a> or <a href="sms:63-927-982-5923">text</a> me at <a href="tel:63-927-982-5923">+63 927 982 5923</a>.</p>
+			You can also <a href="tel:1-434-207-8985">call</a> or <a href="sms:1-434-207-8985">text</a> me at <a href="tel:1-434-207-8985">+1 (434) 207-8985</a>.</p>
 	</div>
 	
 </form>
