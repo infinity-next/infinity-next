@@ -61,7 +61,11 @@ class Post extends Model {
 		'subject',
 		'author',
 		'email',
+		
 		'body',
+		'body_parsed',
+		'body_parsed_at',
+		'body_html',
 	];
 	
 	/**
@@ -76,7 +80,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at'];
+	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at'];
 	
 	
 	
@@ -376,14 +380,37 @@ class Post extends Model {
 	/**
 	 * Returns the fully rendered HTML content of this post.
 	 *
-	 * @param  boolean  $catalog
+	 * @param  boolean  $skipCache
 	 * @return string
 	 */
-	public function getBodyFormatted($catalog = false)
+	public function getBodyFormatted($skipCache = false)
 	{
-		$ContentFormatter = new ContentFormatter();
+		if (!$skipCache)
+		{
+			if (!is_null($this->body_html))
+			{
+				return $this->body_html;
+			}
+			
+			if (!is_null($this->body_parsed))
+			{
+				return $this->body_parsed;
+			}
+		}
 		
-		return $ContentFormatter->formatPost($this);
+		$ContentFormatter     = new ContentFormatter();
+		$this->body_parsed    = $ContentFormatter->formatPost($this);
+		$this->body_parsed_at = $this->freshTimestamp();
+		
+		// We use an update here instead of just saving $post because, in this method
+		// there will frequently be additional properties on this object that cannot
+		// be saved. To make life easier, we just touch the object.
+		static::where(['post_id' => $this->post_id])->update([
+			'body_parsed'    => $this->body_parsed,
+			'body_parsed_at' => $this->body_parsed_at,
+		]);
+		
+		return $this->body_parsed;
 	}
 	
 	/**

@@ -1,5 +1,8 @@
 <?php namespace App\Listeners;
 
+use App\Board;
+use App\Post;
+
 use App\Listeners\Listener;
 use Cache;
 
@@ -26,7 +29,7 @@ class BoardListRecache extends Listener
 	{
 		if ($event->board instanceof Board)
 		{
-			$board = $event->post->board;
+			$board = $event->board;
 		}
 		else if ($event->post instanceof Post)
 		{

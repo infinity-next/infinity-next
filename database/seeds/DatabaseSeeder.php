@@ -717,6 +717,13 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'min:$min|max:$max'
 				],
+				[
+					'option_name'           => "postsThreadId",
+					'default_value'         => false,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				
 				
 				[
@@ -920,6 +927,7 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"postsPerPage",
+					"postsThreadId",
 				],
 			],
 			[

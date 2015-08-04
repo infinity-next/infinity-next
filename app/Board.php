@@ -445,15 +445,14 @@ class Board extends Model {
 			{
 				$replyTake = $thread->stickied_at ? 1 : 5;
 				
-				$thread->replies = $thread->replies
+				$thread->body_parsed = $thread->getBodyFormatted();
+				$thread->replies     = $thread->replies
 					->reverse()
 					->splice(-$replyTake, $replyTake);
 			}
 			
 			return $threads;
 		};
-		
-		return $rememberClosure();
 		
 		switch (env('CACHE_DRIVER'))
 		{
@@ -492,6 +491,7 @@ class Board extends Model {
 			// Limit the number of attachments to one.
 			foreach ($threads as $thread)
 			{
+				$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->attachments = $thread->attachments->splice(0, 1);
 			}
 			

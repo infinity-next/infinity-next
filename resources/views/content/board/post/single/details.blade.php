@@ -15,7 +15,7 @@
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
 	
-	@if (!isset($catalog) || !$catalog)
+	@if ($board->getSetting('postsThreadId', false) && (!isset($catalog) || !$catalog))
 	<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
 		style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
 	</li>
