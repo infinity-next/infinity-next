@@ -174,13 +174,13 @@ class ContentFormatter {
 			
 			$remainder = $Excerpt['text'];
 			
-			if (preg_match('/((?:(&gt;)|>)>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+))/si', $Excerpt['context'], $matches))
+			if (preg_match('/^((?:(&gt;)|>)>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi', $Excerpt['text'], $matches))
 			{
 				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
 				
 				$extent += strlen($matches[0]);
 			}
-			else if (preg_match('/((?:(&gt;)|>)>(?P<board_id>\d+))/s', $Excerpt['context'], $matches))
+			else if (preg_match('/((?:(&gt;)|>)>(?P<board_id>\d+))(?!>)/us', $Excerpt['text'], $matches))
 			{
 				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
 				
@@ -190,6 +190,8 @@ class ContentFormatter {
 			{
 				return;
 			}
+			
+			$replaced = false;
 			
 			foreach ($parser->post->cites as $cite)
 			{
@@ -209,17 +211,22 @@ class ContentFormatter {
 				{
 					if (preg_match($pattern, $Element['text']))
 					{
-						$Element['text']       = str_replace(">", "&gt;", $Element['text']); 
 						$Element['attributes'] = $replacement;
+						$replaced = true;
 						break 2;
 					}
 				}
 			}
 			
-			return [
-				'extent'   => $extent,
-				'element'  => $Element,
-			];
+			if ($replaced)
+			{
+				$Element['text']       = str_replace(">", "&gt;", $Element['text']); 
+				
+				return [
+					'extent'   => $extent,
+					'element'  => $Element,
+				];
+			}
 		};
 	}
 	

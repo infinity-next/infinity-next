@@ -5,6 +5,22 @@
  */
 @media (min-width: 360px) {
 	
+	/**
+	 * Sidebar
+	 */
+	aside.index-sidebar {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+	
+	/**
+	 * Catalog
+	 */
+	body.responsive main.index-catalog .thread-item {
+		max-width: 45vw;
+		min-width: 180px;
+		width: 30%;
+	}
 }
 
 /**
@@ -144,12 +160,19 @@
 		
 		box-sizing: border-box;
 		width: 320px;
+		height: auto;
 	}
+		aside.index-sidebar aside.advertiser.bottom-right {
+			position: absolute;
+		}
 	
 	/**
 	 * Catalog
 	 */
-	body.responsive main.index-catalog .index-threads {
-		max-width: 70vw;
+	html.js body.responsive main.index-catalog .index-threads {
+		padding-right: 320px;
 	}
+		body.responsive main.index-catalog .thread-item {
+			max-width: 180px;
+		}
 }

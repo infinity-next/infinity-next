@@ -1,9 +1,7 @@
 @extends('layouts.main.board')
 
 @section('content')
-<main class="board-index index-threaded @if (isset($page)) page-{{ $page }} @endif">
-	
-	@include( $c->template('board.sidebar') )
+<main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} @if (isset($page)) page-{{ $page }} @endif">
 	
 	<section class="index-form">
 		@include( $c->template('board.post.form'), [
@@ -35,6 +33,9 @@
 			@endforeach
 		</ul>
 	</section>
+	
+	@include( $c->template('board.sidebar') )
+	
 </main>
 @stop
 

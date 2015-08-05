@@ -1,3 +1,3 @@
 <blockquote class="post ugc">
-	{!! $post->getBodyFormatted( $catalog === true ) !!}
+	{!! $post->getBodyFormatted() !!}
 </blockquote>

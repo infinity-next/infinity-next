@@ -600,6 +600,9 @@ ib.widget("post", function(window, $, undefined) {
 			selector : {
 				'widget'         : ".post-container",
 				
+				'mode-reply'     : "main.mode-reply",
+				'mode-index'     : "main.mode-index",
+				
 				'post-reply'     : ".post-reply",
 				
 				'elementCode'    : "pre code",
@@ -625,16 +628,21 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			postClick : function(event) {
-				event.preventDefault();
+				if ($(widget.options.selector['mode-reply']).length !== 0)
+				{
+					event.preventDefault();
+					
+					var $this = $(this);
+					var $body = $(widget.options.selector['post-form-body']);
+					
+					$body
+						.val($body.val() + ">>" + $this.data('board_id') + "\n")
+						.focus();
+					
+					return false;
+				}
 				
-				var $this = $(this);
-				var $body = $(widget.options.selector['post-form-body']);
-				
-				$body
-					.val($body.val() + ">>" + $this.data('board_id') + "\n")
-					.focus();
-				
-				return false;
+				return true;
 			}
 		},
 		

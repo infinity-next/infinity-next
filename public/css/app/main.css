@@ -1021,9 +1021,11 @@ main.index-threaded {
 		aside.advertiser.bottom-right {
 			box-sizing: border-box;
 			text-align: center;
+			width: 100%;
+			
 			padding: 0;
 			
-			position: absolute;
+			/* position: absolute; */
 			bottom: 0;
 		}
 			aside.advertiser.bottom-right figure.ad-field {
@@ -1350,6 +1352,8 @@ main.index-threaded {
 			main.index-catalog .thread-item {
 				display: inline-block;
 				margin: 0 0.25em 0.25em 0;
+				
+				width: 180px;
 			}
 				main.index-catalog .thread {
 					position: relative;
@@ -1366,7 +1370,6 @@ main.index-threaded {
 					font-size: 11px;
 					
 					height: 22.5em;
-					width: 15em;
 				}
 					main.index-catalog .post-container {
 						position: absolute;
@@ -1513,9 +1516,7 @@ blockquote.post {
 		}
 		
 		blockquote.post pre code.language-aa,
-		blockquote.post pre code.language-AA,
-		blockquote.post pre code.language-ascii,
-		blockquote.post pre code.language-ASCII {
+		blockquote.post pre code.language-AA {
 			font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
 			display: block!important;
 			font-size: 12pt;
@@ -1532,9 +1533,9 @@ blockquote.post {
 			box-sizing: border-box;
 			padding: 1px 0.5em;
 		}
-		blockquote.post blockquote + p {
+		/* blockquote.post blockquote + p {
 			margin-top: -1em;
-		}
+		} */
 	
 	blockquote.post .spoiler {
 		box-sizing: border-box;
