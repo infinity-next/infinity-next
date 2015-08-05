@@ -258,7 +258,7 @@ class Board extends Model {
 		{
 			return $banners->random()->getURL();
 		}
-		else if (!$this->isWorksafe() && !$this->getStylesheet())
+		else if (!$this->isWorksafe() && !$this->hasStylesheet())
 		{
 			return "/img/logo_yotsuba.png";
 		}
@@ -374,11 +374,21 @@ class Board extends Model {
 		return $staff;
 	}
 	
+	public function hasStylesheet()
+	{
+		return $this->getSetting('boardCustomCSS') != "";
+	}
+	
 	public function getStylesheet()
 	{
 		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
 		{
 			$style = $this->getSetting('boardCustomCSS');
+			
+			if ($style == "" && !$this->isWorksafe())
+			{
+				$style = file_get_contents(public_path() . "/css/skins/yotsuba.css");
+			}
 			
 			return $style;
 		});

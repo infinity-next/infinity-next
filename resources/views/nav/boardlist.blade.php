@@ -27,7 +27,7 @@
 	</div>
 	
 	@if(isset($boardbar))
-	<div class="boardlist-row row-boards">
+	<div class="boardlist-row row-boards" {{isset($board) ? "data-instant" : ""}}>
 		<ul class="boardlist-categories">
 		@foreach ($boardbar as $boards)
 			<li class="boardlist-category">

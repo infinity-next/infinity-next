@@ -6,11 +6,8 @@
 @section('css')
 	@parent
 	
-	@if ($board->getStylesheet())
-	<link href="/{{ $board->board_uri }}/style.css" rel="stylesheet" />
-	@elseif (!$board->is_worksafe)
-	<link href="/css/skins/yotsuba.css" rel="stylesheet" />
-	@endif
+	<link href="/{{ $board->board_uri }}/style.css" rel="stylesheet" data-instant-track />
+	
 @stop
 
 @section('header-logo', $board->getBannerURL())

@@ -1,6 +1,6 @@
 /**
  * z-index list of importance
- * 9999 - Stripe overlay. NEVER SURPASS.
+ * 9999 - Donation overlay. NEVER SURPASS.
  * 1000 - Boardlist, top. Shold be highest element on boards and threads.
  *   10 - Post action links.
  *    5 - Post attachment.
@@ -973,22 +973,67 @@ section.index-form {
 		max-width: 728px;
 		box-sizing: border-box;
 	}
-	form.form-post .field {
-		margin: 0.5em 0;
-	}
-	form.form-post .row-post .field-control {
-		height: 6.25em;
-		font-size: 90%;
-		max-height: 50vh;
-	}
+		html.no-js form.form-post .post-menu {
+			display: none;
+		}
+		html.js form.form-post .post-menu {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 10px 10px 0 0;
+			margin: -1px -1px 0 0;
+		}
+			form.form-post .menu-icon {
+				display: inline-block;
+				cursor: pointer;
+				height: 17px;
+				min-width:  17px;
+				border: 1px solid rgba(0,0,0,0.1);
+				background-color: rgba(255,255,255,0.1);
+			}
+				form.form-post .menu-icon:hover {
+					background-color: rgba(255,255,255,0.4);
+					border-color: rgba(0,0,0,0.25);
+				}
+				
+				form.form-post .menu-icon .menu-icon-text {
+					display: inline-block;
+					display: none;
+					padding: 0 3px;
+				}
+				form.form-post .menu-icon .menu-icon-button {
+					display: none;
+					display: inline-block;
+					background-image: url('/img/backgrounds/ui-icons_888888_256x240.png');
+					height: 16px;
+					width: 16px;
+				}
+				form.form-post .menu-icon.menu-icon-minimize .menu-icon-button {
+					background-position: -64px -128px;
+				}
+				form.form-post .menu-icon.menu-icon-maximize .menu-icon-button {
+					background-position: -32px -128px;
+				}
+				form.form-post .menu-icon.menu-icon-close .menu-icon-button {
+					background-position: -96px -128px;
+				}
 		
-		form.form-post button.field-submit {
-			width: 118px;
-			margin: 0 5px 0 0;
+		form.form-post .field {
+			margin: 0.5em 0;
 		}
-		form.form-post select.field-capcode {
-			width: 140 	px;
+		form.form-post .row-post .field-control {
+			height: 6.25em;
+			font-size: 90%;
+			max-height: 50vh;
 		}
+			
+			form.form-post button.field-submit {
+				width: 118px;
+				margin: 0 5px 0 0;
+			}
+			form.form-post select.field-capcode {
+				width: 140 	px;
+			}
 
 /* BoardLogs */
 section.board-logs-table {
@@ -1122,8 +1167,9 @@ main.index-threaded {
 				display: block;
 			}
 				.post-details {
-					margin-right: 10em;
+					margin-right: 9em;
 					margin-bottom: 0.60em;
+					white-space: normal;
 				}
 					.post-detail {
 						display: inline-block;

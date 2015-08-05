@@ -24,7 +24,7 @@
 	@if (!isset($catalog) || !$catalog)
 	<li class="post-detail post-id">
 		<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
-		<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}">{!! $post->board_id !!}</a>
+		<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{!$reply_to ? "data-instant" : ""}}>{!! $post->board_id !!}</a>
 	</li>
 	@endif
 	

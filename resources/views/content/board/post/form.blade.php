@@ -16,6 +16,21 @@
 	'class'  => "form-post",
 ]) !!}
 @endif
+	<ul class="post-menu">
+		<li class="menu-icon menu-icon-minimize">
+			<span class="menu-icon-button"></span>
+			<span class="menu-icon-text">Minimize</span>
+		</li>
+		<li class="menu-icon menu-icon-maximize">
+			<span class="menu-icon-button"></span>
+			<span class="menu-icon-text">Expand</span>
+		</li>
+		<li class="menu-icon menu-icon-close">
+			<span class="menu-icon-button"></span>
+			<span class="menu-icon-text">Close</span>
+		</li>
+	</ul>
+	
 	@include('widgets.messages')
 	
 	<fieldset class="form-fields">

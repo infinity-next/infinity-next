@@ -3,7 +3,7 @@
  * 360px Width
  * Vertical phones
  */
-@media (min-width: 360px) {
+@media (min-width: 320px) {
 	
 	/**
 	 * Sidebar
@@ -17,7 +17,7 @@
 	 * Catalog
 	 */
 	body.responsive main.index-catalog .thread-item {
-		max-width: 160px;
+		max-width: 150px;
 		min-width: 100px;
 	}
 }
