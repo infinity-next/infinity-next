@@ -1,3 +1,4 @@
+
 /**
  * Widget Master
  */
@@ -35,12 +36,11 @@
 			options = {};
 		}
 		
-		widget.options = $.extend(options, widget.defaults);
+		widget.options = $.extend(true, options, widget.defaults);
 		
-		if (typeof target !== "string") {
+		if (typeof target !== "string" && $(target).length === 0) {
 			target = widget.options.selector.widget;
 		}
-		
 		var $widget = widget.$widget = $(target).first();
 		
 		if ($widget.length) {
@@ -54,8 +54,10 @@
 	$(document).on('ready', function() {
 		$("[data-widget]").each(function() {
 			var requestedWidget = this.getAttribute('data-widget');
+			
 			if (ib[requestedWidget]) {
-				ib[requestedWidget].init.call(this);
+				var newWidget = (new ib[requestedWidget](window, jQuery));
+				newWidget.init(this);
 			}
 			else {
 				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
@@ -580,7 +582,7 @@
 /**
  * Post Widget
  */
- (function(window, $, undefined) {
+ib.widget("post", function(window, $, undefined) {
 	var widget = {
 		// Short-hand for this widget's main object.
 		$widget  : $(),
@@ -597,7 +599,7 @@
 				'elementQuote'   : "blockquote",
 				
 				'post-form'      : "#post-form",
-				'post-form-body' : "#body",
+				'post-form-body' : "#body"
 			},
 		},
 		
@@ -621,16 +623,9 @@
 				var $this = $(this);
 				var $body = $(widget.options.selector['post-form-body']);
 				
-				if ($body.val() == "")
-				{
-					$body.text(">>" + $this.data('board_id') + "\n");
-				}
-				else
-				{
-					$body.text($body.val() + "\n>>" + $this.data('board_id') + "\n");
-				}
-				
-				$body.focus();
+				$body
+					.val($body.val() + ">>" + $this.data('board_id') + "\n")
+					.focus();
 				
 				return false;
 			}
@@ -643,8 +638,9 @@
 				widget.events.codeHighlight();
 				
 				widget.$widget
-					.on('click',  widget.options.selector['post-reply'], widget.events.postClick)
+					.on('click', widget.options.selector['post-reply'], widget.events.postClick)
 				;
+				
 			}
 		},
 		
@@ -653,9 +649,9 @@
 		},
 		
 		init     : function(target, options) {
-			window.ib.widgetArguments.call(widget, arguments);
+			return window.ib.widgetArguments.call(widget, arguments);
 		}
 	};
 	
-	window.ib.widget("post", widget);
-})(window, jQuery);
+	return widget;
+});
