@@ -30,17 +30,15 @@ class ContentFormatter {
 	 * Returns a formatted post.
 	 *
 	 * @param  \App\Post $post
-	 * @param  boolean $removeAllLinks
 	 * @return String (HTML, Formatted)
 	 */
-	public function formatPost(Post $post, $removeAllLinks = false)
+	public function formatPost(Post $post)
 	{
-		$this->post    = $post;
+		$this->post	= $post;
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
-				'parseHTML'      => false,
-				'parseURL'       => !$removeAllLinks,
+				'parseHTML'	  => false,
 			],
 			
 			'disable' => [
@@ -73,8 +71,8 @@ class ContentFormatter {
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
-				'parseHTML'      => true,
-				'parseURL'       => true,
+				'parseHTML'	  => true,
+				'parseURL'	   => true,
 			],
 		];
 		
@@ -106,10 +104,125 @@ class ContentFormatter {
 	{
 		$post   = $this->post;
 		
-		return Markdown::config($this->options)
-			->extendBlockComplete('Quote', $this->getCiteParser())
+		$content = Markdown::config($this->options)
+			->extendBlockComplete('Quote', $this->getQuoteParser())
+			->addInlineType('>', 'Cite')
+			->addInlineType('&', 'Cite')
+			->extendInline('Cite', $this->getCiteParser())
 			->parse($content);
-		}
+		
+		return $content;
+	}
+	
+	/**
+	 * Provides a closure for the Eightdown API to deal with spoilers after a quote block is complete.
+	 *
+	 * @return Closure
+	 */
+	protected function getQuoteParser()
+	{
+		$parser = $this;
+		
+		return function($Block) use ($parser)
+		{
+			$spoiler = null;
+			
+			foreach ($Block['element']['text'] as &$text)
+			{
+				// $text = str_replace(">", "&gt;", $text);
+				
+				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
+				
+			}
+			
+			if ($spoiler === true)
+			{
+				$Block['element']['attributes']['class'] = "spoiler";
+				
+				foreach ($Block['element']['text'] as &$text)
+				{
+					$text = preg_replace('/^&gt;!/', "", $text, 1);
+				}
+			}
+			
+			return $Block;
+		};
+	}
+	
+	/**
+	 * Provides a closure for the Eightdown API that adds citations inline.
+	 *
+	 * @return Closure
+	 */
+	protected function getCiteParser()
+	{
+		$parser = $this;
+		
+		return function($Excerpt) use ($parser)
+		{
+			$Element = [
+				'name'       => 'a',
+				'handler'    => 'line',
+				'text'       => null,
+				'attributes' => [
+					'href'      => null,
+					'title'     => null,
+				],
+			];
+			
+			$extent = 0;
+			
+			$remainder = $Excerpt['text'];
+			
+			if (preg_match('/((?:(&gt;)|>)>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+))/si', $Excerpt['context'], $matches))
+			{
+				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
+				
+				$extent += strlen($matches[0]);
+			}
+			else if (preg_match('/((?:(&gt;)|>)>(?P<board_id>\d+))/s', $Excerpt['context'], $matches))
+			{
+				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
+				
+				$extent += strlen($matches[0]);
+			}
+			else
+			{
+				return;
+			}
+			
+			foreach ($parser->post->cites as $cite)
+			{
+				$replacements = [];
+				
+				if ($cite->cite_board_id)
+				{
+					$replacements["/^>>>\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
+					$replacements["/^>>{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
+				}
+				else
+				{
+					$replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
+				}
+				
+				foreach ($replacements as $pattern => $replacement)
+				{
+					if (preg_match($pattern, $Element['text']))
+					{
+						$Element['text']       = str_replace(">", "&gt;", $Element['text']); 
+						$Element['attributes'] = $replacement;
+						break 2;
+					}
+				}
+			}
+			
+			return [
+				'extent'   => $extent,
+				'element'  => $Element,
+			];
+		};
+	}
+	
 	/**
 	 * Returns a collection of posts as cited in a post's text body.
 	 *
@@ -200,90 +313,14 @@ class ContentFormatter {
 	}
 	
 	/**
-	 * Provides a closure for the Eightdown API to add cites after a quote block is complete.
-	 *
-	 * @return Closure
-	 */
-	protected function getCiteParser()
-	{
-		$parser = $this;
-		
-		return function($Block) use ($parser)
-		{
-			$spoiler = null;
-			
-			foreach ($Block['element']['text'] as &$text)
-			{
-				$text = str_replace(">", "&gt;", $text);
-				$parser->parseCites($text);
-				
-				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
-				
-			}
-			
-			if ($spoiler === true)
-			{
-				$Block['element']['attributes']['class'] = "spoiler";
-				
-				foreach ($Block['element']['text'] as &$text)
-				{
-					$text = preg_replace('/^&gt;!/', "", $text, 1);
-				}
-			}
-			
-			return $Block;
-		};
-	}
-	
-	/**
-	 * Takes parsed citations and converts cites to hyperlinks.
-	 *
-	 * @param  string &$line
-	 * @return void
-	 */
-	protected function parseCites(&$line)
-	{
-		$words = explode(" ", $line);
-		
-		foreach ($this->post->cites as $cite)
-		{
-			$replacements = [];
-			
-			if ($cite->cite_board_id)
-			{
-				$replacements["/^&gt;&gt;&gt;\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?$/"] = $this->buildCiteLink($cite, true,  true);
-				$replacements["/^&gt;&gt;{$cite->cite_board_id}\r?$/"] = $this->buildCiteLink($cite, false, true);
-			}
-			else
-			{
-				$replacements["/^&gt;&gt;&gt;\/{$cite->cite_board_uri}\/\r?$/"] = $this->buildCiteLink($cite, false, false);
-			}
-			
-			foreach ($words as &$word)
-			{
-				foreach ($replacements as $pattern => $replacement)
-				{
-					if (preg_match($pattern, $word))
-					{
-						$word = $replacement;
-						break;
-					}
-				}
-			}
-		}
-		
-		$line = implode(" ", $words);
-	}
-	
-	/**
-	 * Builds an anchor tag with supplied models.
+	 * Builds an array of attributes for the Parsedown engine.
 	 *
 	 * @param  \App\PostCite $cite
 	 * @param  boolean $remote
 	 * @param  boolean $post
 	 * @return string
 	 */
-	protected function buildCiteLink(PostCite $cite, $remote = false, $post = false)
+	protected function buildCiteAttributes(PostCite $cite, $remote = false, $post = false)
 	{
 		if ($post)
 		{
@@ -291,46 +328,43 @@ class ContentFormatter {
 			{
 				if ($cite->cite->reply_to)
 				{
-					$url = "/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}";
+					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}");
 				}
 				else
 				{
-					$url = "/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}";
+					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}");
 				}
 				
 				if ($remote)
 				{
-					return "<a href=\"{$url}\" " .
-						"class=\"cite cite-post cite-remote\" " .
-						"data-board_uri=\"{$cite->cite_board_uri}\" " .
-						"data-board_id=\"{$cite->cite_board_id}\" " .
-						">" .
-							"&gt;&gt;&gt;/{$cite->cite_board_uri}/{$cite->cite_board_id}" .
-						"</a>";
+					return [
+						'href'           => $url,
+						'class'          => "cite cite-post cite-remote",
+						'data-board_uri' => $cite->cite_board_uri,
+						'data-board_id'  => $cite->cite_board_id,
+					];
 				}
 				else
 				{
-					return "<a href=\"{$url}\" " .
-						"class=\"cite cite-post cite-local\" " .
-						"data-board_uri=\"{$cite->cite_board_uri}\" " .
-						"data-board_id=\"{$cite->cite_board_id}\" " .
-						"data-instant " .
-						">" .
-							"&gt;&gt;{$cite->cite_board_id}" .
-						"</a>";
+					return [
+						'href'           => $url,
+						'class'          => "cite cite-post cite-local",
+						'data-board_uri' => $cite->cite_board_uri,
+						'data-board_id'  => $cite->cite_board_id,
+						'data-instant',
+					];
 				}
 			}
 		}
 		else
 		{
-			$url = "/{$cite->cite_board_uri}/";
+			$url = url("/{$cite->cite_board_uri}/");
 			
-			return "<a href=\"{$url}\" " .
-				"class=\"cite cite-board cite-remote\" " .
-				"data-board_uri=\"{$cite->cite_board_uri}\" " .
-				">" .
-					"&gt;&gt;&gt;/{$cite->cite_board_uri}/" .
-				"</a>";
+			return [
+				'href'           => $url,
+				'class'          => "cite cite-board cite-remote",
+				'data-board-uri' => $cite->cite_board_uri,
+			];
 		}
 	}
 	

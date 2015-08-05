@@ -12,6 +12,7 @@
 	'url'    => url($board->board_uri . '/thread/' . ($reply_to ? $reply_to->board_id: "")),
 	'files'  => true,
 	'method' => "PUT",
+	'id'     => "post-form",
 	'class'  => "form-post",
 ]) !!}
 @endif

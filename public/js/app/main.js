@@ -589,10 +589,15 @@
 		defaults : {
 			// Selectors for finding and binding elements.
 			selector : {
-				'widget'        : ".post-container",
+				'widget'         : ".post-container",
 				
-				'elementCode'  : "pre code",
-				'elementQuote' : "blockquote",
+				'post-reply'     : ".post-reply",
+				
+				'elementCode'    : "pre code",
+				'elementQuote'   : "blockquote",
+				
+				'post-form'      : "#post-form",
+				'post-form-body' : "#body",
 			},
 		},
 		
@@ -601,14 +606,33 @@
 		
 		// Events
 		events   : {
-			highlight : function() {
-				
+			codeHighlight : function() {
+				// Activate code highlighting if the JS module is enabled.
 				if (typeof hljs === "object") {
 					$(widget.defaults.selector.elementCode, widget.$widget).each(function(index, element) {
 						hljs.highlightBlock(element);
 					});
 				}
+			},
+			
+			postClick : function(event) {
+				event.preventDefault();
 				
+				var $this = $(this);
+				var $body = $(widget.options.selector['post-form-body']);
+				
+				if ($body.val() == "")
+				{
+					$body.text(">>" + $this.data('board_id') + "\n");
+				}
+				else
+				{
+					$body.text($body.val() + "\n>>" + $this.data('board_id') + "\n");
+				}
+				
+				$body.focus();
+				
+				return false;
 			}
 		},
 		
@@ -616,8 +640,11 @@
 		bind     : {
 			widget : function() {
 				
-				widget.events.highlight();
+				widget.events.codeHighlight();
 				
+				widget.$widget
+					.on('click',  widget.options.selector['post-reply'], widget.events.postClick)
+				;
 			}
 		},
 		

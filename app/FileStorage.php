@@ -217,8 +217,9 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailHTML(Board $board)
 	{
-		$ext = $this->guessExtension();
-		$url = "/img/filetypes/{$ext}.svg";
+		$ext        = $this->guessExtension();
+		$url        = "/img/filetypes/{$ext}.svg";
+		$expandable = "";
 		
 		switch ($ext)
 		{
@@ -227,10 +228,11 @@ class FileStorage extends Model {
 			case "png" :
 			case "gif" :
 				$url = $this->getThumbnailURL($board);
+				
 				break;
 		}
 		
-		return "<img class=\"attachment-img attachent-ext-{$ext}\" src=\"{$url}\" />";
+		return "<img class=\"attachment-img attachent-ext-{$ext}\" src=\"{$url}\" {$expandable}/>";
 	}
 	
 	/**
@@ -281,8 +283,8 @@ class FileStorage extends Model {
 						->resize(
 							## TODO ##
 							// Add a way for options to be recovered without a controller.
-							300,//$controller->option('attachmentThumbnailSize'),
-							300,//$controller->option('attachmentThumbnailSize'),
+							250,//$controller->option('attachmentThumbnailSize'),
+							250,//$controller->option('attachmentThumbnailSize'),
 							function($constraint) {
 								$constraint->aspectRatio();
 								$constraint->upsize();
