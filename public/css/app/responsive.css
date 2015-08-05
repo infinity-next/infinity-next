@@ -17,9 +17,8 @@
 	 * Catalog
 	 */
 	body.responsive main.index-catalog .thread-item {
-		max-width: 45vw;
-		min-width: 180px;
-		width: 30%;
+		max-width: 160px;
+		min-width: 100px;
 	}
 }
 
