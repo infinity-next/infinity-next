@@ -58,6 +58,7 @@
 			if (ib[requestedWidget]) {
 				var newWidget = (new ib[requestedWidget](window, jQuery));
 				newWidget.init(this);
+				this.widget = newWidget;
 			}
 			else {
 				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
@@ -71,7 +72,7 @@
 /**
  * Message Widget
  */
-(function(window, $, undefined) {
+ib.widget("notice", function(window, $, undefined) {
 	var widget = {
 		// Short-hand for this widget's main object.
 		$widget  : $(),
@@ -139,16 +140,18 @@
 		}
 	};
 	
-	window.ib.widget("notice", widget);
-})(window, jQuery);
+	return widget;
+});
 
 /**
  * Stripe Cashier Form
  */
-(function(window, $, undefined) {
+ib.widget("donate", function(window, $, undefined) {
 	var widget = {
 		// Short-hand for this widget's main object.
 		$widget  : $(),
+		
+		notices  : null,
 		
 		// The default values that are set behind init values.
 		defaults : {
@@ -162,6 +165,7 @@
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'             : "#payment-form",
+				'notices'            : "[data-widget=notice]:first",
 				
 				'time'               : "#payment-time",
 				
@@ -228,6 +232,9 @@
 				
 				widget.events.cycleChange();
 				widget.events.paymentChange();
+				
+				widget.notices = $(widget.options.selector['notices'])[0].widget;
+				console.log(widget.notices);
 			}
 		},
 		
@@ -251,7 +258,7 @@
 					$ty.hide().fadeIn(500);
 					setTimeout(function() { widget.$widget.unblock(); }, 1500);
 					
-					window.ib.notice.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
+					widget.notices.push("You were successfully charged for <strong>" + data.amount + "</strong>. Thank you for your support!", "success");
 				}
 				else
 				{
@@ -259,7 +266,7 @@
 				}
 				
 				$.each(data.errors, function(index, error) {
-					window.ib.notice.push(error, "error");
+					widget.notices.push(error, "error");
 				});
 			},
 			
@@ -267,7 +274,7 @@
 				console.log(data);
 				
 				widget.$widget.unblock();
-				window.ib.notice.push("The server responded with an unknown error. You were not charged. Please report this issue.", "error");
+				widget.notices.push("The server responded with an unknown error. You were not charged. Please report this issue.", "error");
 			},
 			
 			ccnChange      : function(event) {
@@ -349,7 +356,7 @@
 			},
 			
 			formSubmit     : function(event) {
-				window.ib.notice.clear();
+				widget.notices.clear();
 				
 				var valid = true;
 				var sel   = widget.options.selector;
@@ -358,7 +365,7 @@
 				var $ccn  = $(sel['input-ccn']);
 				if (!$ccn.is(".control-valid"))
 				{
-					window.ib.notice.push("Please enter a valid credit card number.", 'error');
+					widget.notices.push("Please enter a valid credit card number.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
 				}
@@ -367,7 +374,7 @@
 				var $cvc = $(sel['input-cvc']);
 				if ((new RegExp("^"+$cvc.attr('pattern')+"$")).test($cvc.val()) === false)
 				{
-					window.ib.notice.push("Please enter a valid security code. It is three or four digits and found on the back of the card.", 'error');
+					widget.notices.push("Please enter a valid security code. It is three or four digits and found on the back of the card.", 'error');
 					$ccn.focus().trigger('focus');
 					valid = false;
 				}
@@ -379,7 +386,7 @@
 				var expiredBy  = new Date().getMonth() + (new Date().getFullYear() * 12);
 				if (expiration < expiredBy)
 				{
-					window.ib.notice.push("Double-check your expiration date. This card is invalid.", 'error');
+					widget.notices.push("Double-check your expiration date. This card is invalid.", 'error');
 					valid = false;
 				}
 				
@@ -389,7 +396,7 @@
 				var amount     = 0;
 				if (!$amountSel.length)
 				{
-					window.ib.notice.push("Please enter an amount.", 'error');
+					widget.notices.push("Please enter an amount.", 'error');
 					valid = false;
 				}
 				else if ($amountSel.val() == "Other")
@@ -398,13 +405,13 @@
 					
 					if (isNaN(amount) || amount <= 3)
 					{
-						window.ib.notice.push("Please enter a real amount that is greater than $3.", 'error');
+						widget.notices.push("Please enter a real amount that is greater than $3.", 'error');
 						$amountInp.focus();
 						valid = false;
 					}
 					else if (amount.toString() !== $amountInp.val())
 					{
-						window.ib.notice.push("Please enter a real, whole number as a donation amount.", 'error');
+						widget.notices.push("Please enter a real, whole number as a donation amount.", 'error');
 						$amountInp.focus();
 						valid = false;
 					}
@@ -496,7 +503,7 @@
 				
 				if (err) {
 					// Show the errors on the form
-					window.ib.notice.push(err, "error");
+					widget.notices.push(err, "error");
 					
 					$form.unblock();
 					$form.find('button').prop('disabled', false);
@@ -527,7 +534,7 @@
 				
 				if (response.error) {
 					// Show the errors on the form
-					window.ib.notice.push(response.error.message, "error");
+					widget.notices.push(response.error.message, "error");
 					
 					$form.unblock();
 					$form.find('button').prop('disabled', false);
@@ -572,12 +579,12 @@
 		
 		// Widget building.
 		init     : function(target, options) {
-			window.ib.widgetArguments.call(widget, arguments);
+			return window.ib.widgetArguments.call(widget, arguments);
 		}
 	};
 	
-	window.ib.widget("donate", widget);
-})(window, jQuery);
+	return widget;
+});
 
 /**
  * Post Widget
