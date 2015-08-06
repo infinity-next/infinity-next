@@ -238,7 +238,13 @@ trait PermissionUser {
 	 */
 	public function canBumplock(Post $post)
 	{
-		return $this->can("board.post.bumplock", $post->board_uri);
+		// We can only ever sticky a thread, for now.
+		if (is_null($post->reply_to))
+		{
+			return $this->can("board.post.bumplock", $post->board_uri);
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -351,7 +357,13 @@ trait PermissionUser {
 	 */
 	public function canLock(Post $post)
 	{
-		return $this->can("board.post.lock", $post->board_uri);
+		// We can only ever sticky a thread, for now.
+		if (is_null($post->reply_to))
+		{
+			return $this->can("board.post.lock", $post->board_uri);
+		}
+		
+		return false;
 	}
 	
 	/**

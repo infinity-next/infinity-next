@@ -7,6 +7,26 @@
 	
 	ib.widgets = {};
 	
+	ib.bindAll = function() {
+		$("[data-widget]").each(function() {
+			var requestedWidget = this.getAttribute('data-widget');
+			
+			if (ib[requestedWidget]) {
+				ib.bindWidget(this, ib[requestedWidget]);
+			}
+			else {
+				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
+			}
+		});
+	};
+	
+	ib.bindWidget = function(dom, widget)
+	{
+		var newWidget = new widget(window, jQuery);
+		newWidget.init(dom);
+		dom.widget = newWidget;
+	};
+	
 	ib.config = function(name, configDefault) {
 		if (typeof window.app !== "undefined" && typeof window.app[name] !== "undefined")
 		{
@@ -51,20 +71,12 @@
 		return false;
 	};
 	
-	$(document).on('ready', function() {
-		$("[data-widget]").each(function() {
-			var requestedWidget = this.getAttribute('data-widget');
-			
-			if (ib[requestedWidget]) {
-				var newWidget = (new ib[requestedWidget](window, jQuery));
-				newWidget.init(this);
-				this.widget = newWidget;
-			}
-			else {
-				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
-			}
-		});
-	});
+	$(document).on('ready', ib.bindAll);
+	
+	if (typeof InstantClick === "object")
+	{
+		InstantClick.on('change', ib.bindAll);
+	}
 	
 	return ib;
 })(window, jQuery);
@@ -609,7 +621,12 @@ ib.widget("post", function(window, $, undefined) {
 				'elementQuote'   : "blockquote",
 				
 				'post-form'      : "#post-form",
-				'post-form-body' : "#body"
+				'post-form-body' : "#body",
+				
+				'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
+				'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
+				'attachment-image'   : "img.attachment-img",
+				'attachment-image-expandable' : "img.attachment-type-img"
 			},
 		},
 		
@@ -618,6 +635,52 @@ ib.widget("post", function(window, $, undefined) {
 		
 		// Events
 		events   : {
+			attachmentCollapseClick : function(event) {
+				var $link = $(this);
+				var $item = $link.parent();
+				var $img  = $(widget.options.selector['attachment-image'], $link);
+				
+				$item.removeClass('attachment-expanded');
+				$img.attr('src', $link.attr('data-thumb-url'));
+				
+				event.preventDefault();
+				return false;
+			},
+			
+			attachmentExpandClick : function(event) {
+				// We don't do anything if the user is CTRL+Clicking.
+				if (event.ctrlKey)
+				{
+					return true;
+				}
+				
+				var $link = $(this);
+				var $item = $link.parent();
+				var $img  = $(widget.options.selector['attachment-image'], $link);
+				
+				// If the attachment type is not an image, we can't expand inline.
+				if (!$img.is(widget.options.selector['attachment-image-expandable']))
+				{
+					return true;
+				}
+				
+				$item.addClass('attachment-expanded');
+				
+				$img
+					// Blur the image while it loads so the user understands there is a loading action.
+					.css('opacity', 0.5)
+					// Bind an event to handle the image loading.
+					.one("load", function() {
+						// Remove our opacity change.
+						$(this).css('opacity', "");
+					})
+					// Finally change the source of our thumb to the full image.
+					.attr('src', $link.attr('data-download-url'));
+				
+				event.preventDefault();
+				return false;
+			},
+			
 			codeHighlight : function() {
 				// Activate code highlighting if the JS module is enabled.
 				if (typeof hljs === "object") {
@@ -653,7 +716,9 @@ ib.widget("post", function(window, $, undefined) {
 				widget.events.codeHighlight();
 				
 				widget.$widget
-					.on('click', widget.options.selector['post-reply'], widget.events.postClick)
+					.on('click', widget.options.selector['post-reply'],         widget.events.postClick)
+					.on('click', widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
+					.on('click', widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
 				;
 				
 			}

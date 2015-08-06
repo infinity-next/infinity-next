@@ -2,14 +2,14 @@
 <ul class="post-attachments attachment-count-{{ count($post->attachments) }} @if(count($post->attachments) > 1) attachments-multi @else attachments-single @endif">
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">
-		<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
-			@if (!isset($catalog) || !$catalog)
-			<a class="attachment-link"
-				target="_blank"
-				href="{!! $attachment->getDownloadURL($board) !!}"
-				data-download-url="{!! $attachment->getDownloadURL($board) !!}"
-				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
-			>
+		@if (!isset($catalog) || !$catalog)
+		<a class="attachment-link"
+			target="_blank"
+			href="{!! $attachment->getDownloadURL($board) !!}"
+			data-download-url="{!! $attachment->getDownloadURL($board) !!}"
+			data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
+		>
+			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
 				{!! $attachment->getThumbnailHTML($board) !!}
 				
 				<figcaption class="attachment-details">
@@ -21,13 +21,15 @@
 						<span class="detail-item detail-filetime">{{ $attachment->first_uploaded_at }}</span>
 					</p>
 				</figcaption>
-			</a>
-			@else
-			<a href="{!! $post->getURL() !!}" data-instant>
+			</figure>
+		</a>
+		@else
+		<a href="{!! $post->getURL() !!}" data-instant>
+			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
 				{!! $attachment->getThumbnailHTML($board) !!}
-			</a>
-			@endif
-		</figure>
+			</figure>
+		</a>
+		@endif
 	</li>
 	@endforeach
 </ul>

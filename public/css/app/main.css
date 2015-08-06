@@ -1257,26 +1257,45 @@ main.index-threaded {
 						display: block;
 						float: left;
 					}
-						ul.attachments-multi li.post-attachment:last-child figure.attachment {
-							margin: 0 0 1em 0;
+						li.post-attachment.attachment-expanded {
+							float: none;
+							clear: both;
 						}
 						
-						figure.attachment {
-							display: inline-block;
-							margin: 0 1em 1em 0;
-							position: relative;
-							z-index: 3;
-							max-width: 250px;
+						a.attachment-link {
+							display: inline;
 						}
-							a.attachment-link {
-								display: inline;
+							html.js a.attachment-link.attachment-type-img {
+								cursor: zoom-out;
 							}
+							html.js li.attachment-expanded a.attachment-link.attachment-type-img {
+								cursor: zoom-out;
+							}
+							
+							figure.attachment {
+								display: inline-block;
+								margin: 0 1em 1em 0;
+								position: relative;
+								z-index: 3;
+								max-width: 250px;
+							}
+								ul.attachments-multi li.post-attachment:last-child figure.attachment {
+									margin: 0 0 1em 0;
+								}
+								
+								li.post-attachment.attachment-expanded figure.attachment {
+									max-width: none;
+								}
+								
 								img.attachment-img {
 									display: block;
 									margin: 0 auto;
 									max-width: 100%;
 									max-height: 250px;
 								}
+									li.post-attachment.attachment-expanded img.attachment-img {
+										max-height: none;
+									}
 								
 								figcaption.attachment-details {
 									display: block;
@@ -1325,6 +1344,7 @@ main.index-threaded {
 				div.post-action-tab {
 					display: inline-block;
 					cursor: default;
+					position: relative;
 					
 					border: 1px solid #B7C5D9;
 					border-radius: 2px;
@@ -1603,9 +1623,11 @@ blockquote.post {
 	blockquote.post ol,
 	blockquote.post ul {
 		display: block;
-		list-style-type: decimal;
 		margin: 1em;
 		padding: 0 0 0 2em;
+		
+		list-style-type: decimal;
+		list-style-position: inside;
 	}
 		blockquote.post ul {
 			list-style-type: disc;
@@ -2171,10 +2193,12 @@ body.error::before {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: -1;
+	z-index: 1;
 	
 	display: block;
 	content: ' ';
+	pointer-events: none;
+	opacity: 0.2;
 	
 	background-image: url('/img/errors/whitenoise.gif');
 }

@@ -217,9 +217,9 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailHTML(Board $board)
 	{
-		$ext        = $this->guessExtension();
-		$url        = "/img/filetypes/{$ext}.svg";
-		$expandable = "";
+		$ext  = $this->guessExtension();
+		$url  = "/img/filetypes/{$ext}.svg";
+		$type = "other";
 		
 		switch ($ext)
 		{
@@ -227,12 +227,12 @@ class FileStorage extends Model {
 			case "jpg" :
 			case "png" :
 			case "gif" :
-				$url = $this->getThumbnailURL($board);
-				
+				$url  = $this->getThumbnailURL($board);
+				$type = "img";
 				break;
 		}
 		
-		return "<img class=\"attachment-img attachent-ext-{$ext}\" src=\"{$url}\" {$expandable}/>";
+		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}\" src=\"{$url}\" />";
 	}
 	
 	/**

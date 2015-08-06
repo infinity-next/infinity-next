@@ -46,6 +46,7 @@ class ImageController extends Controller {
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
 				$responseSize    = Storage::size($storagePath);
+				
 				$responseHeaders = [
 					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
 					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
@@ -55,6 +56,7 @@ class ImageController extends Controller {
 					'Content-Type'        => $FileStorage->mime,
 					'Filename'            => $filename,
 				];
+				
 				$response = Response::stream(function() use ($storagePathFull) {
 					readfile($storagePathFull);
 				}, 200, $responseHeaders);

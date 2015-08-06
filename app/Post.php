@@ -301,12 +301,7 @@ class Post extends Model {
 	 */
 	public function canSticky($user)
 	{
-		if (!$this->stickied_at)
-		{
-			return $user->canSticky($this);
-		}
-		
-		return false;
+		return $user->canSticky($this);
 	}
 	
 	
@@ -879,7 +874,7 @@ class Post extends Model {
 			$url = "/{$this->board_uri}/post/{$this->board_id}/{$action}";
 		}
 		
-		return url($url);
+		return $url;
 	}
 	
 	/**
@@ -900,7 +895,7 @@ class Post extends Model {
 			$url = "/{$this->board_uri}/thread/{$this->board_id}#reply-{$this->board_id}";
 		}
 		
-		return url($url);
+		return $url;
 	}
 	
 	/**
@@ -911,7 +906,7 @@ class Post extends Model {
 	 */
 	public function redirect($action = null)
 	{
-		return response($this->url($action));
+		return redirect($this->url($action));
 	}
 	
 	/**
