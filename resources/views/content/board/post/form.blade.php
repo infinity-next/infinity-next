@@ -16,6 +16,7 @@
 	'class'  => "form-post",
 ]) !!}
 @endif
+	@if (!isset($post))
 	<ul class="post-menu">
 		<li class="menu-icon menu-icon-minimize">
 			<span class="menu-icon-button"></span>
@@ -30,6 +31,7 @@
 			<span class="menu-icon-text">Close</span>
 		</li>
 	</ul>
+	@endif
 	
 	@include('widgets.messages')
 	

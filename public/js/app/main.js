@@ -22,9 +22,12 @@
 	
 	ib.bindWidget = function(dom, widget)
 	{
-		var newWidget = new widget(window, jQuery);
-		newWidget.init(dom);
-		dom.widget = newWidget;
+		if (typeof dom.widget === "undefined")
+		{
+			var newWidget = new widget(window, jQuery);
+			newWidget.init(dom);
+			dom.widget = newWidget;
+		}
 	};
 	
 	ib.config = function(name, configDefault) {
@@ -137,8 +140,7 @@ ib.widget("notice", function(window, $, undefined) {
 			$message.append(message).appendTo(widget.$widget);
 			
 			// Scroll our window up to meet the notification if required.
-			$('html, body').animate(
-				{
+			$('html, body').animate( {
 					scrollTop : $message.offset().top - $(".board-header").height() - 10
 				},
 				250
@@ -716,9 +718,9 @@ ib.widget("post", function(window, $, undefined) {
 				widget.events.codeHighlight();
 				
 				widget.$widget
-					.on('click', widget.options.selector['post-reply'],         widget.events.postClick)
-					.on('click', widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
-					.on('click', widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
+					.on('click.ib-post', widget.options.selector['post-reply'],         widget.events.postClick)
+					.on('click.ib-post', widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
+					.on('click.ib-post', widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
 				;
 				
 			}

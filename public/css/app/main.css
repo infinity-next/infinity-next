@@ -1,11 +1,12 @@
 /**
  * z-index list of importance
- * 9999 - Donation overlay. NEVER SURPASS.
- * 1000 - Boardlist, top. Shold be highest element on boards and threads.
- *   10 - Post action links.
- *    5 - Post attachment.
- *    1 - Global Footer
- *    0 - Board Sidebar
+ * 10000 - Laravel Debug Bar. NEVER SURPASS.
+ *  9999 - Donation overlay.
+ *  1000 - Boardlist, top. Shold be highest element on boards and threads.
+ *    10 - Post action links.
+ *     5 - Post attachment.
+ *     1 - Global Footer
+ *     0 - Board Sidebar
  */
 
 /**
@@ -1090,6 +1091,20 @@ main.index-threaded {
 		main.index-threaded .thread-item:last-child{
 			border-bottom: none;
 		}
+		
+		#autoupdater {
+			margin: 1em 0;
+			padding: 0 0 0 1.5em;
+			white-space: nowrap;
+		}
+			#autoupdater .autoupdater-items {
+				margin: 0 0 0 -0.5em;
+			}
+				#autoupdater .autoupdater-item {
+					display: inline-block;
+					list-style: none;
+					margin: 0 0.5em;
+				}
 		
 		.reply {
 			margin: 0.5em 0 0.5em 0;

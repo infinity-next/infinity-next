@@ -46,5 +46,9 @@
 		</article>
 	</li>
 	@endforeach
+	
+	@if ($reply_to)
+	@include('widgets.thread-autoupdater')
+	@endif
 </ul>
 @endif

@@ -142,31 +142,16 @@ Route::group([], function () {
 				]);
 		});
 		
+		
+		/*
+		| Board Routes (Standard Requests)
+		*/
 		Route::group([
 			'namespace' => 'Board',
 		], function()
 		{
-			
 			/*
-			| Board Stylesheet Request
-			*/
-			Route::get('style.css', 'BoardController@getStylesheet');
-			
-			/*
-			| Board Post Routes (Modding)
-			*/
-			Route::group([
-				'prefix' => 'post/{post}',
-				'where'  => ['{post}' => '[1-9]\d*'],
-			], function()
-			{
-				Route::controller('', 'PostController');
-			});
-			
-			
-			
-			/*
-			| Legacy Routes
+			| Legacy Redirects
 			*/
 			if (env('LEGACY_ROUTES', false))
 			{
@@ -189,23 +174,78 @@ Route::group([], function () {
 			
 			
 			/*
+			| Board Post Routes (Modding)
+			*/
+			Route::group([
+				'prefix' => 'post/{post}',
+				'where'  => ['{post}' => '[1-9]\d*'],
+			], function()
+			{
+				Route::controller('', 'PostController');
+			});
+			
+			
+			/*
 			| Board Controller Routes
 			| These are greedy and will redirect before others, so make sure they stay last.
 			*/
 			// Pushes simple /board/ requests to their index page.
 			Route::any('/', 'BoardController@getIndex');
 			
-			// Loads the catalog.
-			Route::get('catalog', 'BoardController@getCatalog');
-			
 			// Routes /board/1 to an index page for a specific pagination point.
 			Route::get('{id}', 'BoardController@getIndex')
 				->where(['id' => '[0-9]+']);
 			
-			// More complicated /board/view requests.
-			Route::controller('', 'BoardController');
+			
+			// Get the catalog.
+			Route::get('catalog', 'BoardController@getCatalog');
+			
+			// Get moderator logs
+			Route::get('logs', 'BoardController@getLogs');
+			
+			// Get stylesheet
+			Route::get('style.css', 'BoardController@getStylesheet');
+			
+			
+			// Get single thread.
+			Route::get('thread/{id}', 'BoardController@getThread')
+				->where(['id' => '[1-9]\d*']);
+			
+			// Put new thread
+			Route::put('thread', 'BoardController@putThread');
+			
+			// Put eply to thread.
+			Route::put('thread/{id}', 'BoardController@putThread')
+				->where(['id' => '[1-9]\d*']);
+			
+			// Redirect to a post.
+			Route::get('post/{id}', 'BoardController@getPost')
+				->where(['id' => '[1-9]\d*']);
 		});
 		
+		
+		/*
+		| Board API Routes (JSON)
+		*/
+		Route::group([
+			'namespace' => "API\Board",
+		], function()
+		{
+			// Gets the first page of a board.
+			Route::any('index.json', 'BoardController@getIndex');
+			
+			// Gets index pages for the board.
+			Route::get('{id}.json', 'BoardController@getIndex')
+				->where(['id' => '[0-9]+']);
+			
+			// Gets all visible OPs on a board.
+			Route::any('catalog.json', 'BoardController@getCatalog');
+			
+			// Get single thread.
+			Route::get('thread/{id}.json', 'BoardController@getThread')
+				->where(['id' => '[1-9]\d*']);
+			
+		});
 	});
 	
 });

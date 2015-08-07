@@ -53,7 +53,7 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'remember_token'];
+	protected $hidden = ['email', 'password', 'remember_token'];
 	
 	/**
 	 * Ties database triggers to the model.

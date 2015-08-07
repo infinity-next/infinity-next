@@ -37,12 +37,11 @@ class BoardController extends Controller {
 	 * This is usually the last few threads, depending on the optional page
 	 * parameter, which determines the thread offset.
 	 *
-	 * @var \App\Http\Requests\Request $request
 	 * @var Board $board
 	 * @var integer $page
 	 * @return Response
 	 */
-	public function getIndex(Request $request, Board $board, $page = 1)
+	public function getIndex(Board $board, $page = 1)
 	{
 		// Determine what page we are on.
 		$pages = $board->getPageCount();
@@ -79,11 +78,10 @@ class BoardController extends Controller {
 	/**
 	 * Show the catalog (gridded) board view.
 	 *
-	 * @var \App\Http\Requests\Request $request
 	 * @var Board $board
 	 * @return Response
 	 */
-	public function getCatalog(Request $request, Board $board)
+	public function getCatalog(Board $board)
 	{
 		// Load our list of threads and their latest replies.
 		$posts = $board->getThreadsForCatalog();
@@ -98,11 +96,10 @@ class BoardController extends Controller {
 	/**
 	 * Renders a thread.
 	 *
-	 * @var \App\Http\Requests\Request $request
 	 * @var Board $board
 	 * @return Response
 	 */
-	public function getLogs(Request $request, Board $board)
+	public function getLogs(Board $board)
 	{
 		return $this->view(static::VIEW_LOGS, [
 			'board' => $board,

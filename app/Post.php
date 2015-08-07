@@ -73,7 +73,14 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['author_ip'];
+	protected $hidden = ['author_ip', 'body', 'body_parsed', 'body_parsed_at', 'body_html'];
+	
+	/**
+	 * Attributes which do not exist but should be appended to the JSON output.
+	 *
+	 * @var array
+	 */
+	protected $appends = ['content_raw', 'content_html'];
 	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
@@ -406,6 +413,26 @@ class Post extends Model {
 		]);
 		
 		return $this->body_parsed;
+	}
+	
+	/**
+	 * Returns the raw input for a post for the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getContentRawAttribute()
+	{
+		return $this->attributes['body'];
+	}
+	
+	/**
+	 * Returns the raw input for a post for the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getContentHtmlAttribute()
+	{
+		return $this->getBodyFormatted();
 	}
 	
 	/**

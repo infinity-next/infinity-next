@@ -3,11 +3,9 @@
 use App\Payment;
 
 use App\Contracts\ApiController;
-use App\Http\Controllers\PageController as ParentController;
+use App\Http\Controllers\Board\BoardController as ParentController;
 
-use Carbon\Carbon;
-
-class PageController extends ParentController implements ApiController {
+class BoardController extends ParentController implements ApiController {
 	
 	/**
 	 * Show the board index for the user.
