@@ -245,6 +245,10 @@ Route::group([], function () {
 			Route::get('thread/{id}.json', 'BoardController@getThread')
 				->where(['id' => '[1-9]\d*']);
 			
+			// Get single post.
+			Route::get('post/{id}.json', 'BoardController@getPost')
+				->where(['id' => '[1-9]\d*']);
+			
 		});
 	});
 	

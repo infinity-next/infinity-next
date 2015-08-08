@@ -43,6 +43,46 @@ class BoardController extends ParentController implements ApiController {
 	}
 	
 	/**
+	 * Show the catalog (gridded) board view.
+	 *
+	 * @var Board $board
+	 * @return Response
+	 */
+	public function getCatalog(Board $board)
+	{
+		// Load our list of threads and their latest replies.
+		return $board->getThreadsForCatalog();
+	}
+	
+	/**
+	 * Returns a post to the client. 
+	 *
+	 * @var Board $board
+	 * @var integer|null $post
+	 * @return Response
+	 */
+	public function getPost(Board $board, $post)
+	{
+		if (is_null($post))
+		{
+			return abort(404);
+		}
+		
+		// Pull the post.
+		$post = $board->posts()
+			->where('board_id', $post)
+			->withEverything()
+			->firstOrFail();
+		
+		if (!$post)
+		{
+			return abort(404);
+		}
+		
+		return $post;
+	}
+	
+	/**
 	 * Returns a thread and its replies to the client. 
 	 *
 	 * @var Board $board
@@ -53,7 +93,7 @@ class BoardController extends ParentController implements ApiController {
 	{
 		if (is_null($thread))
 		{
-			return redirect($board->board_uri);
+			return abort(404);
 		}
 		
 		// Pull the thread.
@@ -65,18 +105,6 @@ class BoardController extends ParentController implements ApiController {
 		}
 		
 		return $thread;
-	}
-	
-	/**
-	 * Show the catalog (gridded) board view.
-	 *
-	 * @var Board $board
-	 * @return Response
-	 */
-	public function getCatalog(Board $board)
-	{
-		// Load our list of threads and their latest replies.
-		return $board->getThreadsForCatalog();
 	}
 	
 }

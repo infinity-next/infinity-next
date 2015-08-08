@@ -80,7 +80,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['content_raw', 'content_html'];
+	protected $appends = ['content_raw', 'content_html', 'html'];
 	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
@@ -420,9 +420,12 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
-	public function getContentRawAttribute()
+	public function getAuthorIdAttribute()
 	{
+		if ($this->board->getSetting('postTHreadId'))
 		return $this->attributes['body'];
+		
+		return null;
 	}
 	
 	/**
@@ -430,9 +433,33 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
+	public function getContentRawAttribute()
+	{
+		return $this->attributes['body'];
+	}
+	
+	/**
+	 * Returns the rendered interior HTML for a post for the JSON output.
+	 *
+	 * @return string
+	 */
 	public function getContentHtmlAttribute()
 	{
 		return $this->getBodyFormatted();
+	}
+	
+	/**
+	 * Returns the fully rendered HTML of a post in the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getHtmlAttribute()
+	{
+		return \View::make('content.board.thread', [
+				'board'   => $this->board,
+				'thread'  => $this,
+				'op'      => $this,
+		])->render();
 	}
 	
 	/**
