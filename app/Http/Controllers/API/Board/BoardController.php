@@ -6,6 +6,9 @@ use App\Post;
 use App\Contracts\ApiController;
 use App\Http\Controllers\PageController as ParentController;
 
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 class BoardController extends ParentController implements ApiController {
 	
 	/**
@@ -89,19 +92,42 @@ class BoardController extends ParentController implements ApiController {
 	 * @var integer|null $thread
 	 * @return Response
 	 */
-	public function getThread(Board $board, $thread)
+	public function getThread(Request $request, Board $board, $thread)
 	{
 		if (is_null($thread))
 		{
 			return abort(404);
 		}
 		
-		// Pull the thread.
-		$thread = $board->getThread($thread);
+		$input = $request->only('updatesOnly', 'updatedSince');
 		
-		if (!$thread)
+		if (isset($input['updatesOnly']))
 		{
-			return abort(404);
+			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
+			
+			return Post::where('posts.board_uri', $board->board_uri)
+				->withEverything()
+				->where(function($query) use ($thread) {
+					$query->where('posts.reply_to_board_id', $thread);
+					$query->orWhere('posts.board_id', $thread);
+				})
+				->where(function($query) use ($updatedSince) {
+					$query->where('posts.updated_at', '>=', $updatedSince);
+					$query->orWhere('posts.deleted_at', '>=', $updatedSince);
+				})
+				->withTrashed()
+				->orderBy('posts.created_at', 'asc')
+				->get();
+		}
+		else
+		{
+			// Pull the thread.
+			$thread = $board->getThread($thread);
+			
+			if (!$thread)
+			{
+				return abort(404);
+			}
 		}
 		
 		return $thread;

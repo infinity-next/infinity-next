@@ -9,15 +9,19 @@
 	
 	ib.bindAll = function() {
 		$("[data-widget]").each(function() {
-			var requestedWidget = this.getAttribute('data-widget');
-			
-			if (ib[requestedWidget]) {
-				ib.bindWidget(this, ib[requestedWidget]);
-			}
-			else {
-				console.log("Requested widget \""+requestedWidget+"\" does not exist.");
-			}
+			ib.bindElement(this);
 		});
+	},
+	
+	ib.bindElement = function(element) {
+		var requestedWidget = element.getAttribute('data-widget');
+		
+		if (ib[requestedWidget]) {
+			ib.bindWidget(element, ib[requestedWidget]);
+		}
+		else {
+			console.log("Requested widget \""+requestedWidget+"\" does not exist.");
+		}
 	};
 	
 	ib.bindWidget = function(dom, widget)
@@ -737,3 +741,188 @@ ib.widget("post", function(window, $, undefined) {
 	
 	return widget;
 });
+
+/**
+ * Autoupdater widget
+ */
+ib.widget("autoupdater", function(window, $, undefined) {
+	
+	var widget = {
+		// Short-hand for this widget's main object.
+		$widget  : $(),
+		
+		// The default values that are set behind init values.
+		defaults : {
+			// Selectors for finding and binding elements.
+			selector : {
+				'widget'         : "#autoupdater",
+				
+				'enabled'        : "#autoupdater-enabled",
+				'timer'          : "#autoupdater-timer",
+				'force-update'   : "#autoupdater-update",
+				'updating'       : "#autoupdater-updating",
+			},
+		},
+		
+		// Compiled settings.
+		options  : false,
+		
+		updating    : false,
+		updateTimer : false,
+		updateURL   : false,
+		updateAsked : false,
+		updateLast  : parseInt(parseInt(Date.now(), 10) / 1000, 10),
+		
+		// Events
+		events   : {
+			
+			update : function() {
+				if (!widget.updating)
+				{
+					$(widget.options.selector['force-update'])
+						.hide();
+					$(widget.options.selector['updating'])
+						.show();
+					
+					clearInterval(widget.updateTimer);
+					
+					$.ajax(widget.updateURL, {
+						data : {
+							'updatesOnly'  : 1,
+							'updatedSince' : widget.updateLast,
+						}
+					})
+						.done(widget.events.updateSuccess)
+						.always(widget.events.updateComplete);
+					
+					widget.updating    = true;
+					widget.updateTimer = false;
+					widget.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
+				}
+			},
+			
+			updateSuccess : function(data, textStatus, jqXHR) {
+				if (data instanceof Array)
+				{
+					widget.updateLast = widget.updateAsked;
+					
+					$.each(data, function(index, reply)
+					{
+						var $existingPost = $(".post-" + reply.post_id);
+						
+						if ($existingPost.length > 0)
+						{
+							if (reply.html !== null)
+							{
+								$newPost      = $(reply.html);
+								$existingPost.replaceWith($newPost);
+								ib.bindElement($newPost[0]);
+							}
+							else
+							{
+								$existingPost.addClass('post-deleted');
+							}
+						}
+						else if(reply.html !== null)
+						{
+							$("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>")
+								.insertBefore(widget.$widget);
+						}
+					});
+				}
+			},
+			
+			updateComplete : function() {
+				widget.updating = false;
+				
+				$(widget.options.selector['force-update'])
+					.show();
+				$(widget.options.selector['updating'])
+					.hide();
+				
+				clearInterval(widget.updateTimer);
+				widget.updateTimer = setInterval(widget.events.updateInterval, 1000);
+			},
+			
+			updateInterval : function() {
+				if ($(widget.options.selector['enabled']).is(":checked"))
+				{
+					var $timer = $(widget.options.selector['timer'], widget.$widget);
+					var time   = parseInt($timer.attr('data-time'), 10);
+					
+					if (isNaN(time))
+					{
+						time = 10;
+					}
+					else
+					{
+						--time;
+						
+						if (time <= 0)
+						{
+							time = 10;
+							
+							widget.$widget.trigger('au-update');
+						}
+					}
+					
+					$timer
+						.text(time+'s')
+						.attr('data-time', time);
+				}
+				
+				clearInterval(widget.updateTimer);
+				widget.updateTimer = setInterval(widget.events.updateInterval, 1000);
+			},
+			
+			updaterUpdateClick : function() {
+				var $timer = $(widget.options.selector['timer'], widget.$widget);
+				
+				$timer.attr('data-time', 10);
+				widget.events.update();
+			}
+			
+		},
+		
+		// Event bindings
+		bind     : {
+			timer  : function() {
+				var url   = widget.$widget.data('url');
+				
+				if (url)
+				{
+					widget.updateURL = url;
+					widget.$widget.show();
+					
+					clearInterval(widget.updateTimer);
+					widget.updateTimer = setInterval(widget.events.updateInterval, 1000);
+				}
+			},
+			
+			widget : function() {
+				
+				$(widget.options.selector['force-update'])
+					.show();
+				$(widget.options.selector['updating'])
+					.hide();
+				
+				widget.$widget
+					.on('au-update',   widget.events.update)
+					.on('click.ib-au', widget.options.selector['force-update'], widget.events.updaterUpdateClick)
+				;
+				
+				widget.bind.timer();
+			}
+		},
+		
+		build    : {
+			
+		},
+		
+		init     : function(target, options) {
+			return window.ib.widgetArguments.call(widget, arguments);
+		}
+	};
+	
+	return widget;
+})

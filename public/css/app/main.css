@@ -1189,6 +1189,14 @@ main.index-threaded {
 					.post-detail {
 						display: inline-block;
 					}
+						.post-detail.post-deleted {
+							display: none;
+							color: #CC0000;
+						}
+						.post-container.post-deleted .post-detail.post-deleted {
+							display: inline-block;
+						}
+						
 						.post-detail-item {
 							box-sizing: border-box;
 							max-width: 100%;

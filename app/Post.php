@@ -435,7 +435,14 @@ class Post extends Model {
 	 */
 	public function getContentRawAttribute()
 	{
-		return $this->attributes['body'];
+		if (!$this->trashed())
+		{
+			return $this->attributes['body'];
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -445,7 +452,14 @@ class Post extends Model {
 	 */
 	public function getContentHtmlAttribute()
 	{
-		return $this->getBodyFormatted();
+		if (!$this->trashed())
+		{
+			return $this->getBodyFormatted();
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -455,11 +469,16 @@ class Post extends Model {
 	 */
 	public function getHtmlAttribute()
 	{
-		return \View::make('content.board.thread', [
-				'board'   => $this->board,
-				'thread'  => $this,
-				'op'      => $this,
-		])->render();
+		if (!$this->trashed())
+		{
+			return \View::make('content.board.thread', [
+					'board'   => $this->board,
+					'thread'  => $this,
+					'op'      => false,
+			])->render();
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -884,7 +903,8 @@ class Post extends Model {
 	
 	public function scopeWithEverything($query)
 	{
-		return $query->visible()
+		return $query
+			//->visible()
 			->andAttachments()
 			->andBan()
 			->andCapcode()
@@ -926,6 +946,35 @@ class Post extends Model {
 		else
 		{
 			$url = "/{$this->board_uri}/post/{$this->board_id}/{$action}";
+		}
+		
+		return $url;
+	}
+	
+	/**
+	 * Fetches a URL for JSON requests that will update this thread or post.
+	 *
+	 * @param  boolean  $thread  If set to FALSE, will only provide a URl for single post (no reply) updates.
+	 * @return string
+	 */
+	public function urlJson($thread = true)
+	{
+		$url = "";
+		
+		if ($thread)
+		{
+			if ($this->reply_to_board_id)
+			{
+				$url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}.json";
+			}
+			else
+			{
+				$url = "/{$this->board_uri}/thread/{$this->board_id}.json";
+			}
+		}
+		else
+		{
+			$url = "/{$this->board_uri}/post/{$this->board_id}.json";
 		}
 		
 		return $url;

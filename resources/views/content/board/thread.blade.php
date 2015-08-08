@@ -1,5 +1,5 @@
-<div class="post-container @if ($op === $thread) op-container @else reply-container @endif" data-widget="post">
-	@include( $c->template('board.post.single'), [
+<div class="post-container @if ($op === $thread) op-container @else reply-container @endif post-{{$thread->post_id}} post-{{$thread->board_uri}}-{{$thread->board_id}}" data-widget="post">
+	@include( 'content.board.post.single', [
 		'board'   => $board,
 		'post'    => $thread,
 		'catalog' => false,
@@ -29,15 +29,15 @@
 	Lets not do that until a reply-to-reply feature is added
 --}}
 @if ($op === $thread)
-@if ($thread->reply_count > count($thread->replies))
-<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
-@endif
-
 <ul class="thread-replies">
+	@if ($thread->reply_count > count($thread->replies))
+	<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
+	@endif
+	
 	@foreach ($thread->getReplies() as $reply)
 	<li class="thread-reply">
 		<article class="reply">
-			@include( $c->template('board.thread'), [
+			@include( 'content.board.thread', [
 				'board'    => $board,
 				'thread'   => $reply,
 				'op'       => $op,

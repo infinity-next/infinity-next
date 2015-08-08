@@ -15,8 +15,9 @@ return [
 	 * Auto-updater
 	 */
 	'autoupdater' => [
-		'enable' => "Stream new replies",
-		'update' => "Update"
+		'enable'   => "Stream new replies",
+		'update'   => "Update",
+		'updating' => "Updating ...",
 	],
 	
 ];

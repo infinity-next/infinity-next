@@ -8,14 +8,19 @@
 	<section class="moderate-post grid-container">
 		
 		@if (isset($actions))
-			@include( $c->template("board.post.mod.{$form}"), [ 'actions' => $actions, 'board' => $board, 'post' => $post, 'reply_to' => false ])
+			@include( "content.board.post.mod.{$form}", [
+				'actions'  => $actions,
+				'board'    => $board,
+				'post'     => $post,
+				'reply_to' => false,
+			])
 		@endif
 		
 		<article class="moderated-content">
 			<div class="post-container">
-				@include( $c->template('board.post.single'), [
-					'board' => $board,
-					'post' => $post,
+				@include( 'content.board.post.single', [
+					'board'   => $board,
+					'post'    => $post,
 					
 					'catalog' => false,
 				])
