@@ -422,8 +422,10 @@ class Post extends Model {
 	 */
 	public function getAuthorIdAttribute()
 	{
-		if ($this->board->getSetting('postTHreadId'))
-		return $this->attributes['body'];
+		if ($this->board->getSetting('postsThreadId'))
+		{
+			return $this->attributes['author_id'];
+		}
 		
 		return null;
 	}
