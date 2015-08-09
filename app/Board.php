@@ -130,7 +130,12 @@ class Board extends Model {
 	
 	public function canAttach($user)
 	{
-		return $user->canAttach($this);
+		if ($this->getSetting('postAttachmentsMax', 1) > 0)
+		{
+			return $user->canAttach($this);
+		}
+		
+		return false;
 	}
 	
 	public function canBan($user)
