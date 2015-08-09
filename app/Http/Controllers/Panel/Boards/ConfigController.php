@@ -208,6 +208,7 @@ class ConfigController extends PanelController {
 		}
 		
 		$request->setBoard($board);
+		$request->validate();
 		
 		$input        = $request->all();
 		$optionGroups = $request->getBoardOptions();

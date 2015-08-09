@@ -38,7 +38,8 @@ class ContentFormatter {
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
-				'parseHTML'	  => false,
+				'parseHTML'      => false,
+				'parseURL'       => true,
 			],
 			
 			'disable' => [

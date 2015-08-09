@@ -474,9 +474,10 @@ class Post extends Model {
 		if (!$this->trashed())
 		{
 			return \View::make('content.board.thread', [
-					'board'   => $this->board,
-					'thread'  => $this,
-					'op'      => false,
+					'board'    => $this->board,
+					'thread'   => $this,
+					'op'       => false,
+					'reply_to' => $this->reply_to ?: $this->board_id,
 			])->render();
 		}
 		
