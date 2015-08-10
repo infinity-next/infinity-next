@@ -136,6 +136,7 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.create",],
 			['base_value' => 0, 'permission_id' => "board.delete",],
 			['base_value' => 0, 'permission_id' => "board.reassign",],
+			['base_value' => 0, 'permission_id' => "board.reports",],
 			['base_value' => 1, 'permission_id' => "board.post.create",],
 			['base_value' => 1, 'permission_id' => "board.post.delete.self",],
 			['base_value' => 0, 'permission_id' => "board.post.delete.other",],
@@ -146,6 +147,7 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "board.post.lock",],
 			['base_value' => 0, 'permission_id' => "board.post.bumplock",],
 			['base_value' => 0, 'permission_id' => "board.post.lock_bypass",],
+			['base_value' => 1, 'permission_id' => "board.post.report",],
 			['base_value' => 0, 'permission_id' => "board.user.role",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.reason",],
 			['base_value' => 0, 'permission_id' => "board.user.ban.free",],
@@ -160,7 +162,9 @@ class PermissionSeeder extends Seeder {
 			['base_value' => 0, 'permission_id' => "site.user.create",],
 			['base_value' => 0, 'permission_id' => "site.user.merge",],
 			['base_value' => 0, 'permission_id' => "site.user.raw_ip",],
+			['base_value' => 0, 'permission_id' => "site.post.report",],
 			['base_value' => 0, 'permission_id' => "site.pm",],
+			['base_value' => 0, 'permission_id' => "site.reports",],
 			
 			['base_value' => 0, 'permission_id' => "sys.boards",],
 			['base_value' => 0, 'permission_id' => "sys.cache",],
@@ -275,6 +279,8 @@ class PermissionGroupSeeder extends Seeder
 					"board.post.sticky",
 					"board.post.nocaptcha",
 					"board.post.lock_bypass",
+					"board.post.report",
+					"site.post.report",
 				],
 			],
 			[
@@ -505,6 +511,8 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.delete.self"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.image.spoiler.upload"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.post.delete.self"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "board.post.report"],
+			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "site.post.report"],
 			['role_id' => Role::$ROLE_ANONYMOUS, 'value' => 1, 'permission_id' => "site.user.create"],
 			
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.post.create",],
@@ -525,6 +533,8 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.unban",],
 			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.user.role",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "board.reports",],
+			['role_id' => Role::$ROLE_MODERATOR, 'value' => 1, 'permission_id' => "site.reports",],
 			
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.config",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.post.delete.other",],
@@ -543,6 +553,7 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.reason",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.user.unban",],
+			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "board.reports",],
 			['role_id' => Role::$ROLE_OWNER,     'value' => 1, 'permission_id' => "site.user.create"],
 			
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.post.delete.other",],
@@ -561,6 +572,7 @@ class RolePermissionSeeder extends Seeder {
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.ban.reason",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.ban.free",],
 			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.user.unban",],
+			['role_id' => Role::$ROLE_VOLUTNEER, 'value' => 1, 'permission_id' => "board.reports",],
 		];
 	}
 }
