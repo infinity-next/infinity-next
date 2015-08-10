@@ -270,17 +270,26 @@ class PermissionGroupSeeder extends Seeder
 				
 				'permissions'   => [
 					"board.post.create",
-					"board.post.delete.other",
 					"board.post.delete.self",
 					"board.post.edit.other",
-					"board.post.edit.self",
 					"board.post.lock",
 					"board.post.bumplock",
 					"board.post.sticky",
-					"board.post.nocaptcha",
 					"board.post.lock_bypass",
 					"board.post.report",
 					"site.post.report",
+				],
+			],
+			[
+				'group_name'    => "board_moderation",
+				'display_order' => 350,
+				'permissions'   => [
+					"board.post.delete.other",
+					"board.post.edit.self",
+					"board.post.report",
+					"board.reports",
+					"site.post.report",
+					"site.reports",
 				],
 			],
 			[

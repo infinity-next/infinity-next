@@ -393,8 +393,17 @@ trait PermissionUser {
 	 */
 	public function canReport(Post $post)
 	{
-		// We can always report a thread, for now.
-		return true;
+		return $this->can('board.post.report', $post->board_uri);
+	}
+	
+	/**
+	 * Can this user report this post?
+	 *
+	 * @return boolean
+	 */
+	public function canReportGlobally(Post $post)
+	{
+		return $this->can('site.post.report');
 	}
 	
 	/**

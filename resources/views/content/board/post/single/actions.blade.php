@@ -15,13 +15,27 @@
 				
 				<!-- Board specific content management actions -->
 				<ul class="post-actions">
+					@if ($post->canReport($user))
+					@set('postActions', true)
+					<li class="post-action">
+						<a class="post-action-link action-link-report" href="{!! $post->url("report") !!}">@lang('board.action.report')</a>
+					</li>
+					@endif
+					
+					@if ($post->canReportGlobally($user))
+					@set('postActions', true)
+					<li class="post-action">
+						<a class="post-action-link action-link-report-global" href="{!! $post->url("report/global") !!}">@lang('board.action.report_global')</a>
+					</li>
+					@endif
+					
 					@if ($post->canEdit($user))
 					@set('postActions', true)
 					<li class="post-action">
 						<a class="post-action-link action-link-edit" href="{!! $post->url("edit") !!}">@lang('board.action.edit')</a>
 					</li>
 					@endif
-						
+					
 					@if ($post->canSticky($user))
 					@set('postActions', true)
 					<li class="post-action">

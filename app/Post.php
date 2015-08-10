@@ -3,6 +3,7 @@
 use App\FileStorage;
 use App\FileAttachment;
 use App\PostCite;
+use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -243,7 +244,7 @@ class Post extends Model {
 	/**
 	 * Determines if the user can bumplock this post
 	 *
-	 * @param  App\User|App\Support\Anonymous  $user
+	 * @param  App\Contracts\PermissionUser  $user
 	 * @return boolean
 	 */
 	public function canBumplock($user)
@@ -254,7 +255,7 @@ class Post extends Model {
 	/**
 	 * Determines if the user can delete this post.
 	 *
-	 * @param  App\User|App\Support\Anonymous  $user
+	 * @param  App\Contracts\PermissionUser  $user
 	 * @return boolean
 	 */
 	public function canDelete($user)
@@ -265,7 +266,7 @@ class Post extends Model {
 	/**
 	 * Determines if the user can edit this post.
 	 *
-	 * @param  App\User|App\Support\Anonymous  $user
+	 * @param  App\Contracts\PermissionUser  $user
 	 * @return boolean
 	 */
 	public function canEdit($user)
@@ -276,7 +277,7 @@ class Post extends Model {
 	/**
 	 * Determines if the user can lock this post
 	 *
-	 * @param  App\User|App\Support\Anonymous  $user
+	 * @param  App\Contracts\PermissionUser  $user
 	 * @return boolean
 	 */
 	public function canLock($user)
@@ -285,9 +286,9 @@ class Post extends Model {
 	}
 	
 	/**
-	 * Determines if the user can edit this post, or if this thread is open to replies in general.
+	 * Determines if the user can reply to post, or if this thread is open to replies in general.
 	 *
-	 * @param  App\User|App\Support\Anonymous|null  $user
+	 * @param  App\Contracts\PermissionUser|null  $user
 	 * @return boolean
 	 */
 	public function canReply($user = null)
@@ -301,9 +302,31 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Determines if the user can report this post to board owners.
+	 *
+	 * @param  App\Contracts\PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canReport($user)
+	{
+		return $user->canReport($this);
+	}
+	
+	/**
+	 * Determines if the user can report this post to site owners.
+	 *
+	 * @param  App\Contracts\PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canReportGlobally($user)
+	{
+		return $user->canReportGlobally($this);
+	}
+	
+	/**
 	 * Determines if the user can sticky or unsticky this post.
 	 *
-	 * @param  App\User|App\Support\Anonymous  $user
+	 * @param  App\Contracts\PermissionUser  $user
 	 * @return boolean
 	 */
 	public function canSticky($user)
