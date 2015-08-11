@@ -27,6 +27,9 @@ return [
 		"ban+delete"        => "Ban user and delete post",
 		"all+ban+delete"    => "Ban user and delete all their posts on :board",
 		"ban+delete+global" => "Ban user and wipe all their posts from entire site",
+		
+		'report'            => "Report post",
+		'report+global'     => "Report post to global staff",
 	],
 	
 	// Form Fields
@@ -55,8 +58,26 @@ return [
 		"ban+delete"        => "Submit :board ban and delete post",
 		"all+ban+delete"    => "Submit :board ban and delete user's posts",
 		"ban+delete+global" => "Submit global ban and wipe user posts",
+		
+		'report'            => "Report post",
+		'report+global'     => "Report post to global staff",
 	],
 	
+	/**
+	 * Mod Tools
+	 */
+	'report'            => [
+		'desc-local'  => "Board staff guidelines for reports ...",
+		'local'       => "You are reporting a post to the local board management. " .
+		                 "This usually means that the post is in violation of board-specific rules, " .
+		                 "disparages the spirit of the board, or disrupts conversation.",
+		
+		
+		'desc-global' => "Guidelines for global reports ...",
+		'global'      => "You are reporting this post to <strong>global management</strong>. " .
+		                 "If a post is in violation of a rule applied to all boards on a site, this is the appropriate action. " .
+		                 "More frivilous or borad-specific rule violations should be handled by board staff.",
+	],
 	
 	/**
 	 * Post View
@@ -96,6 +117,7 @@ return [
 		'sticky'            => "Sticky",
 		'unsticky'          => "Unsticky",
 		'report'            => "Report",
+		'report_global'     => "Report Globally",
 	],
 	
 	'meta'              => [

@@ -64,8 +64,8 @@ class ContentFormatter {
 	/**
 	 * Returns a formatted sidebar.
 	 *
-	 * @param  \App\Post $post
-	 * @return String (HTML, Formatted)
+	 * @param  string  $text
+	 * @return string (HTML, Formatted)
 	 */
 	public function formatSidebar($text)
 	{
@@ -74,6 +74,25 @@ class ContentFormatter {
 				'keepLineBreaks' => true,
 				'parseHTML'	  => true,
 				'parseURL'	   => true,
+			],
+		];
+		
+		return $this->formatContent($text);
+	}
+	
+	/**
+	 * Returns a formatted report rule text.
+	 *
+	 * @param  string  $text
+	 * @return string (HTML, Formatted)
+	 */
+	public function formatReportText($text)
+	{
+		$this->options = [
+			'general' => [
+				'keepLineBreaks' => true,
+				'parseHTML'      => true,
+				'parseURL'       => true,
 			],
 		];
 		

@@ -5,10 +5,10 @@
 			{!! Form::radio(
 				$permission->permission_id,
 				"unset",
-				!is_bool($value),
+				!($value === true || $value === false),
 				[
-					'id'    => "{$permission->permission_id}-no",
-					'class' => "field-control",
+					'id'        => "{$permission->permission_id}-no",
+					'class'     => "field-control",
 			]) !!}
 		</label>
 		<label class="option-permission option-permission-allow" for="{{ $permission->permission_id }}-allow">

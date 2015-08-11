@@ -4,6 +4,8 @@ use App\Ban;
 use App\Board;
 use App\Post;
 use App\Http\Controllers\Controller;
+use App\Services\ContentFormatter;
+
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Input;
@@ -422,6 +424,86 @@ class PostController extends Controller {
 			return $this->view(static::VIEW_EDIT, [
 				"actions" => ["edit"],
 				"form"    => "edit",
+				"board"   => $board,
+				"post"    => $post,
+			]);
+		}
+		
+		return abort(403);
+	}
+	
+	/**
+	 * Renders the post edit form.
+	 */
+	public function getReport(Request $request, Board $board, $post, $global = false)
+	{
+		// Validate the request parameters.
+		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		{
+			// If the response isn't a Post, it's a redirect or error.
+			// Return the message.
+			return $post;
+		}
+		
+		$actions = ["report"];
+		
+		$ContentFormatter = new ContentFormatter;
+		$reportText = "";
+		
+		if ($global === "global")
+		{
+			$actions[] = "global";
+			$reportText = $ContentFormatter->formatReportText($this->option('globalReportText'));
+		}
+		else
+		{
+			$reportText = $ContentFormatter->formatReportText($board->getSetting('boardReportText'));
+		}
+		
+		return $this->view(static::VIEW_MOD, [
+			"actions"    => $actions,
+			"form"       => "report",
+			"board"      => $board,
+			"post"       => $post,
+			"reportText" => $reportText,
+		]);
+		
+		return abort(403);
+	}
+	
+	/**
+	 * Updates a post with the edit.
+	 */
+	public function postReport(Request $request, Board $board, $post, $global = false)
+	{
+		// Validate the request parameters.
+		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		{
+			// If the response isn't a Post, it's a redirect or error.
+			// Return the message.
+			return $post;
+		}
+		
+		if ($post->canEdit($this->user))
+		{
+			$post->subject        = Input::get('subject');
+			$post->email          = Input::get('email');
+			$post->body           = Input::get('body');
+			$post->body_parsed    = NULL;
+			$post->body_parsed_at = NULL;
+			$post->body_html      = NULL;
+			$post->updated_by     = $this->user->user_id;
+			
+			$post->save();
+			
+			$this->log('log.post.edit', $post, [
+				"board_id"  => $post->board_id,
+				"board_uri" => $post->board_uri,
+			]);
+			
+			return $this->view(static::VIEW_EDIT, [
+				"actions" => ["report", "global"],
+				"form"    => "report",
 				"board"   => $board,
 				"post"    => $post,
 			]);

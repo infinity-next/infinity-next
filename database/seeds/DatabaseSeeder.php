@@ -687,11 +687,27 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min'
 				],
+				[
+					'option_name'           => "globalReportText",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+					'data_type'             => "string",
+					'validation_parameters' => 'min:$min|max:$max'
+				],
 			],
 			
 			'board' => [
 				[
 					'option_name'           => "boardCustomCSS",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+					'data_type'             => "string",
+					'validation_parameters' => 'min:$min|max:$max'
+				],
+				[
+					'option_name'           => "boardReportText",
 					'default_value'         => "",
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
@@ -977,6 +993,16 @@ class OptionGroupSeeder extends Seeder
 				'options'       => [
 					"boardSidebarText",
 				],
+			],
+			[
+				'group_name'    => "reports",
+				'debug_only'    => false,
+				'display_order' => 1200,
+				
+				'options'       => [
+					"boardReportText",
+					"globalReportText",
+				]
 			],
 		];
 	}

@@ -13,12 +13,13 @@ return [
 	
 	'legend' => [
 		'permissions'   => [
-			'board_controls' => "Board Controls",
-			'board_images'   => "Images",
-			'board_posts'    => "Posting",
-			'board_users'    => "User Tools",
-			'site_tools'     => "Site Tools",
-			'system_tools'   => "System Tools",
+			'board_controls'   => "Board Controls",
+			'board_images'     => "Images",
+			'board_moderation' => "Board Moderation",
+			'board_posts'      => "Posting",
+			'board_users'      => "User Tools",
+			'site_tools'       => "Site Tools",
+			'system_tools'     => "System Tools",
 		],
 		
 		'account_basic' => "Account Details",
@@ -137,6 +138,8 @@ return [
 				
 				'lock_bypass' => "Post in locked threads",
 				'nocaptcha' => "Post without CAPTCHAs",
+				
+				'report' => "Report post to board managers",
 			],
 			
 			'reassign' => "Reassign board",
@@ -155,6 +158,11 @@ return [
 		
 		'site' => [
 			'pm' => "PM users",
+			
+			'post' => [
+				'report' => "Report post to global managers",
+			],
+			
 			'user' => [
 				'create' => "Create user",
 				'merge' => "Merge user into own account",
