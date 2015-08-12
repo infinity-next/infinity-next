@@ -3,6 +3,7 @@
 use App\Ban;
 use App\Board;
 use App\Post;
+use App\Report;
 use App\Http\Controllers\Controller;
 use App\Services\ContentFormatter;
 
@@ -452,11 +453,21 @@ class PostController extends Controller {
 		
 		if ($global === "global")
 		{
+			if (!$post->canReportGlobally($this->user))
+			{
+				abort(403);
+			}
+			
 			$actions[] = "global";
 			$reportText = $ContentFormatter->formatReportText($this->option('globalReportText'));
 		}
 		else
 		{
+			if (!$post->canReport($this->user))
+			{
+				abort(403);
+			}
+			
 			$reportText = $ContentFormatter->formatReportText($board->getSetting('boardReportText'));
 		}
 		
@@ -467,8 +478,6 @@ class PostController extends Controller {
 			"post"       => $post,
 			"reportText" => $reportText,
 		]);
-		
-		return abort(403);
 	}
 	
 	/**
@@ -484,32 +493,53 @@ class PostController extends Controller {
 			return $post;
 		}
 		
-		if ($post->canEdit($this->user))
+		if ($global === "global")
 		{
-			$post->subject        = Input::get('subject');
-			$post->email          = Input::get('email');
-			$post->body           = Input::get('body');
-			$post->body_parsed    = NULL;
-			$post->body_parsed_at = NULL;
-			$post->body_html      = NULL;
-			$post->updated_by     = $this->user->user_id;
+			if (!$post->canReportGlobally($this->user))
+			{
+				abort(403);
+			}
 			
-			$post->save();
-			
-			$this->log('log.post.edit', $post, [
-				"board_id"  => $post->board_id,
-				"board_uri" => $post->board_uri,
-			]);
-			
-			return $this->view(static::VIEW_EDIT, [
-				"actions" => ["report", "global"],
-				"form"    => "report",
-				"board"   => $board,
-				"post"    => $post,
-			]);
+			$actions[] = "global";
+		}
+		else if (!$post->canReport($this->user))
+		{
+			abort(403);
 		}
 		
-		return abort(403);
+		$input     = Input::all();
+		$validator = Validator::make($input, [
+			'captcha' => [
+				"required",
+				"captcha",
+			],
+			
+			'reason' => [
+				"string",
+				"between:0,512",
+			],
+		]);
+		
+		if (!$validator->passes())
+		{
+			return redirect()
+				->back()
+				->withErrors($validator->errors());
+		}
+		
+		$report =  new Report;
+		$report->board_uri     = $board->board_uri;
+		$report->post_id       = $post->post_id;
+		$report->reason        = $input['reason'];
+		$report->ip            = Request::ip();
+		$report->user_id       = NULL;
+		$report->is_dismissed  = false;
+		$report->is_successful = false;
+		$report->save();
+		
+		return redirect()
+			->back()
+			->withSuccess("Success");
 	}
 	
 	/**

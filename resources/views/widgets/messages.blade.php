@@ -9,6 +9,10 @@
 	<li class="form-message message-success">{!! $status !!}</li>
 	@endif
 	
+	@if(isset($success))
+	<li class="form-message message-success">{!! $success !!}</li>
+	@endif
+	
 	@if(isset($errors))
 	@foreach($errors->all() as $error)
 	<li class="form-message message-error">{!! $error !!}</li>

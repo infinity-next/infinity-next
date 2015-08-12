@@ -19,6 +19,23 @@
 		</blockquote>
 		@endif
 		
+		<div class="field row-reason">
+			{!! Form::label(
+				"reason",
+				trans('board.report.reason'),
+				[
+					'class' => "field-label",
+			]) !!}
+			{!! Form::textarea(
+				'reason',
+				old('reason'),
+				[
+					'id'          => "reason",
+					'class'       => "field-control",
+					'maxlength'   => 1024,
+			]) !!}
+		</div>
+		
 		<div class="field row-captcha">
 			<label class="field-label" for="captcha">
 				{!! Captcha::img() !!}
