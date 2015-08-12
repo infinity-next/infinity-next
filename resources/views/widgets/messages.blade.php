@@ -1,4 +1,12 @@
 <ul class="form-messages" data-widget="notice">
+	@if(Session::has('success'))
+		@set('success', Session::get('success'))
+	@endif
+	
+	@if(Session::has('status'))
+		@set('status', Session::get('status'))
+	@endif
+	
 	@if(isset($messages))
 	@foreach($messages as $message)
 	<li class="form-message message-info">{!! $message !!}</li>

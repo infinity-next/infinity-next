@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Registrar;
 use Input;
 use Request;
 use Validator;
+use Session;
 
 use Event;
 use App\Events\PostWasBanned;
@@ -537,9 +538,9 @@ class PostController extends Controller {
 		$report->is_successful = false;
 		$report->save();
 		
-		return redirect()
-			->back()
-			->withSuccess("Success");
+		Session::flash('success', trans('board.report.success'));
+		
+		return back();
 	}
 	
 	/**
