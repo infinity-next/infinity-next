@@ -472,12 +472,40 @@ class PostController extends Controller {
 			$reportText = $ContentFormatter->formatReportText($board->getSetting('boardReportText'));
 		}
 		
+		if (!isset($report))
+		{
+			$user   = $this->user;
+			$report = Report::where('post_id', '=', $post->post_id)
+				->where(function($query) use ($board, $global) {
+					if ($global === "global")
+					{
+						$query->whereNull('board_uri');
+					}
+					else
+					{
+						$query->where('board_uri', $board->board_uri);
+					}
+				})
+				->where(function($query) use ($user)
+				{
+					$query->where('ip', Request::ip());
+					
+					if (!$user->isAnonymous())
+					{
+						$query->orWhere('user_id', $user->user_id);
+					}
+				})
+				->first();
+		}
+		
 		return $this->view(static::VIEW_MOD, [
-			"actions"    => $actions,
-			"form"       => "report",
-			"board"      => $board,
-			"post"       => $post,
-			"reportText" => $reportText,
+			'actions'      => $actions,
+			'form'         => "report",
+			'board'        => $board,
+			'post'         => $post,
+			'report'       => $report ?: false,
+			'reportText'   => $reportText,
+			'reportGlobal' => $global === "global",
 		]);
 	}
 	
@@ -529,7 +557,7 @@ class PostController extends Controller {
 		}
 		
 		$report =  new Report;
-		$report->board_uri     = $board->board_uri;
+		$report->board_uri     = $global === "global" ? NULL : $board->board_uri;
 		$report->post_id       = $post->post_id;
 		$report->reason        = $input['reason'];
 		$report->ip            = Request::ip();
@@ -540,7 +568,7 @@ class PostController extends Controller {
 		
 		Session::flash('success', trans('board.report.success'));
 		
-		return back();
+		return back()->with('report', $report);
 	}
 	
 	/**

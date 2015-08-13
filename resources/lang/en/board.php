@@ -77,6 +77,21 @@ return [
 		'global'      => "You are reporting this post to <strong>global management</strong>. " .
 		                 "If a post is in violation of a rule applied to all boards on a site, this is the appropriate action. " .
 		                 "More frivilous or borad-specific rule violations should be handled by board staff.",
+		
+		'associate'            => "Associate report with your account",
+		'associate-no-acct'    => "Register an account to take credit for your reports",
+		'associate-disclaimer' => "<p>Any reports associated with your account will follow you. " .
+		                          "Whether the report results in action will become available information to board owners or administrators if you apply for staff positions. " .
+		                          "This success ratio may increase (or decrease) the likelihood of you being accepted into that role.</p>" .
+		                          "<p>Your reports are not public information. Your identity will not be shown alongside your report. " .
+		                          "Your report history will not become available unless you apply for a staff position and opt in to have it displayed.</p>" .
+		                          "<p>If you do not want to have this report associated with your account, do not check the checkbox.</p>",
+		
+		'pending'     => "Your report has been received and is awaiting review.",
+		'dismissing'  => "The report has been dismissed without action.",
+		'successful'  => "The reported post has been dealt with.",
+		
+		'reason'      => "Reason",
 	],
 	
 	/**
