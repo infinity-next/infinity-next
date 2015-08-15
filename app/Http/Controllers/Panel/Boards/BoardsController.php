@@ -12,12 +12,10 @@ class BoardsController extends PanelController {
 	
 	/*
 	|--------------------------------------------------------------------------
-	| Home Controller
+	| Boards Controller
 	|--------------------------------------------------------------------------
 	|
-	| This controller renders your application's "dashboard" for users that
-	| are authenticated. Of course, you are free to change or remove the
-	| controller as you wish. It is just here to get your app started!
+	| The boards controller handles the creation of new boards.
 	|
 	*/
 	

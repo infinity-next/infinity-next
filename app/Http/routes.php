@@ -62,6 +62,8 @@ Route::group([
 			Route::get('/', 'BoardsController@getIndex');
 			Route::get('create', 'BoardsController@getCreate');
 			Route::put('create', 'BoardsController@putCreate');
+			
+			Route::controller('reports', 'ReportsController');
 		});
 		
 		Route::group([
