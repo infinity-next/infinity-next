@@ -107,6 +107,30 @@ trait PermissionUser {
 		return false;
 	}
 	
+	/**
+	 * Returns a list of Board URIs where this permission exists.
+	 *
+	 * @return array (of board_uri)
+	 */
+	public function canInBoards($permission)
+	{
+		$boards = [];
+		
+		if ($permission instanceof Permission)
+		{
+			$permission = $permission->permission_id;
+		}
+		
+		foreach ($this->getPermissions() as $board_uri => $board_permissions)
+		{
+			if ($this->getPermission($permission, $board_uri))
+			{
+				return $boards[] = $board_uri;
+			}
+		}
+		
+		return $boards;
+	}
 	
 	/**
 	 * Can this user administrate ANY board?
@@ -407,6 +431,31 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user view a board's reports?
+	 *
+	 * @return boolean
+	 */
+	public function canViewReports($board = null)
+	{
+		if ($board instanceof Board)
+		{
+			return $this->canAny('board.reports', $board->board_uri);
+		}
+		
+		return $this->canAny('board.reports');
+	}
+	
+	/**
+	 * Can this user report this post?
+	 *
+	 * @return boolean
+	 */
+	public function canViewReportsGlobally()
+	{
+		return $this->can('site.reports');
+	}
+	
+	/**
 	 * Can this user sticky a thread?
 	 *
 	 * @return boolean
@@ -461,6 +510,16 @@ trait PermissionUser {
 		}
 		
 		return [];
+	}
+	
+	public function getTextForIP($ip)
+	{
+		if ($this->canViewRawIP())
+		{
+			return $ip;
+		}
+		
+		return ip_less($ip);
 	}
 	
 	/**

@@ -41,4 +41,12 @@ class Report extends Model {
 		return $this->belongsTo('\App\User', 'user_id');
 	}
 	
+	
+	public function scopeWhereOpen($query)
+	{
+		return $query->where(function($query) {
+			$query->where('is_dismissed', false);
+			$query->where('is_successful', false);
+		});
+	}
 }

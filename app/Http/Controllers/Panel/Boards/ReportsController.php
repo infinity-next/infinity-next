@@ -16,8 +16,26 @@ class ReportsController extends PanelController {
 	|
 	*/
 	
+	const VIEW_REPORTS = "panel.board.reports";
+	
+	/**
+	 * View path for the secondary (sidebar) navigation.
+	 *
+	 * @var string
+	 */
+	public static $navSecondary = "nav.panel.board";
+	
 	public function getIndex()
 	{
-		return "You can't hide from the wolf, growl.";
+		if (!$this->user->canViewReports())
+		{
+			abort(403);
+		}
+		
+		$reports = $this->user->getReportedPostsViewable();
+		
+		return $this->view(static::VIEW_REPORTS, [
+			'reportedPosts' => $reports,
+		]);
 	}
 }

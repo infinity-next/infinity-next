@@ -6,7 +6,7 @@
 	@if(Session::has('status'))
 		@set('status', Session::get('status'))
 	@endif
-	
+		
 	@if(isset($messages))
 	@foreach($messages as $message)
 	<li class="form-message message-info">{!! $message !!}</li>

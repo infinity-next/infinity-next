@@ -67,6 +67,8 @@ return [
 	 * Mod Tools
 	 */
 	'report'            => [
+		'success'     => "Report submitted successfully.",
+		
 		'desc-local'  => "Board staff guidelines for reports ...",
 		'local'       => "You are reporting a post to the local board management. " .
 		                 "This usually means that the post is in violation of board-specific rules, " .
@@ -86,6 +88,9 @@ return [
 		                          "<p>Your reports are not public information. Your identity will not be shown alongside your report. " .
 		                          "Your report history will not become available unless you apply for a staff position and opt in to have it displayed.</p>" .
 		                          "<p>If you do not want to have this report associated with your account, do not check the checkbox.</p>",
+		
+		'is_not_associated'    => "Anonymous report",
+		'is_associated'        => "User associated report",
 		
 		'pending'     => "Your report has been received and is awaiting review.",
 		'dismissing'  => "The report has been dismissed without action.",
@@ -160,4 +165,10 @@ return [
 	'previous' => 'Previous',
 	'next'     => 'Next',
 	'last'     => 'Last',
+	
+	/**
+	 * SFW
+	 */
+	'sfw'      => "Safe for work only",
+	'nsfw'     => "Not safe for work allowed",
 ];

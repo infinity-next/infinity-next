@@ -1369,7 +1369,7 @@ main.index-threaded {
 					cursor: default;
 					position: relative;
 					
-					border: 1px solid #B7C5D9;
+					border: 1px solid rgba(0,0,0,0.25);
 					border-radius: 2px;
 					
 					line-height: 1em;
@@ -1383,7 +1383,7 @@ main.index-threaded {
 						
 						position: absolute;
 						top: 1.5em;
-						left: 0;
+						right: 0;
 						z-index: 10;
 						
 						background-color: #D6DAF0;
@@ -1923,6 +1923,53 @@ nav.cp-inner {
 					nav.cp-inner a.linkitem-name.linkitem-active {
 						border-bottom: 1px solid white;
 					}
+
+/* Reports */
+.reports .post-container,
+.reports .report-container {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	border-color: rgba(0, 0, 0, 0.2);
+	border-width: 1px;
+	border-style: solid;
+}
+	.reports .report-board {
+		margin: 0 0 0.4em 0;
+	}
+	.reports .report-board-desc {
+		margin: 0.5em 0;
+	}
+	
+	.reports .reported-post {
+		clear: both;
+		padding: 1em 0;
+		margin: 1em 0;
+		border-bottom: 1px solid #e0e0e0;
+	}
+		.reports .reported-post::after {
+			clear: both;
+			content: ' ';
+			display: block;
+		}
+		.reports .post-container {
+			/* Colors courtesty of the /ebola/ board on 8ch. I miss you, Ebolachan. ;~; */
+			background: #FFC4C4;
+			border-color: #F88;
+		}
+	
+	.reports .post-report {
+		float: left;
+		margin: 1em 1em 0 0;
+	}
+		.reports .report-container {
+			padding: 1em;
+		}
+			.reports .report-reason {
+				margin: 0 0 0.5em 0;
+				padding: 0 0 0.5em 0;
+				border-bottom: 1px solid rgba(0,0,0,0.2);
+			}
 
 #payment-form {
 	margin: 0 0 1em 0;

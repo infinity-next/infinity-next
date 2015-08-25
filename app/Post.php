@@ -132,6 +132,11 @@ class Post extends Model {
 		return $this->belongsToMany("\App\Post", 'post_cites', 'cite_id', 'post_id');
 	}
 	
+	public function editor()
+	{
+		return $this->hasOne('\App\User', 'user_id', 'updated_by');
+	}
+	
 	public function op()
 	{
 		return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
@@ -142,9 +147,9 @@ class Post extends Model {
 		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
 	}
 	
-	public function editor()
+	public function reports()
 	{
-		return $this->hasOne('\App\User', 'user_id', 'updated_by');
+		return $this->hasMany('\App\Report', 'post_id');
 	}
 	
 	

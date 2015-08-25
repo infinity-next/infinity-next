@@ -28,6 +28,9 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\ThreadRecache',
 		],
+		'App\Events\PostWasModerated' => [
+			'App\Listeners\ReportMarkSuccessful',
+		],
 		
 		// Thread (OP) specific Events
 		'App\Events\ThreadWasStickied' => [

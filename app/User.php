@@ -2,6 +2,7 @@
 
 use App\Board;
 use App\Post;
+use App\Report;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
 use Illuminate\Auth\Authenticatable;
@@ -140,5 +141,26 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 		}
 		
 		return $hasher;
+	}
+	
+	/**
+	 * Fetches all reports that this user can view (not submitted reports).
+	 *
+	 * @return Collection
+	 */
+	public function getReportedPostsViewable($onlyDirect = false)
+	{
+		return Post::whereHas('reports', function($query) use ($onlyDirect)
+			{
+				$query->whereOpen();
+				
+				if ($onlyDirect)
+				{
+					$query->whereIn('board_uri', $this->canInBoards('board.reports'));
+				}
+				
+			})
+			->withEverything()
+			->get();
 	}
 }

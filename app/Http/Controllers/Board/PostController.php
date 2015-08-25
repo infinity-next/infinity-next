@@ -16,6 +16,7 @@ use Session;
 
 use Event;
 use App\Events\PostWasBanned;
+use App\Events\PostWasModerated;
 
 class PostController extends Controller {
 	
@@ -96,7 +97,9 @@ class PostController extends Controller {
 				}
 				
 				
-				$posts = Post::where('author_ip', $post->author_ip);
+				$posts = Post::where('author_ip', $post->author_ip)
+					->with('reports')
+					->get();
 				
 				$this->log('log.post.delete.global', $post, [
 					"board_id"  => $post->board_id,
@@ -106,6 +109,11 @@ class PostController extends Controller {
 				]);
 				
 				$posts->delete();
+				
+				foreach ($posts as $post)
+				{
+					Event::fire(new PostWasModerated($post, $this->user));
+				}
 				
 				return redirect($board->board_uri);
 			}
@@ -119,7 +127,9 @@ class PostController extends Controller {
 				if ($all)
 				{
 					$posts = Post::where('author_ip', $post->author_ip)
-						->where('board_uri', $board->board_uri);
+						->where('board_uri', $board->board_uri)
+						->with('reports')
+						->get();
 					
 					$this->log('log.post.delete.local', $post, [
 						"board_id"  => $post->board_id,
@@ -129,6 +139,11 @@ class PostController extends Controller {
 					]);
 					
 					$posts->delete();
+					
+					foreach ($posts as $post)
+					{
+						Event::fire(new PostWasModerated($post, $this->user));
+					}
 					
 					return redirect($board->board_uri);
 				}
@@ -155,6 +170,11 @@ class PostController extends Controller {
 					}
 					
 					$post->delete();
+					
+					foreach ($posts as $post)
+					{
+						Event::fire(new PostWasModerated($post, $this->user));
+					}
 					
 					if ($post->reply_to)
 					{
@@ -356,6 +376,7 @@ class PostController extends Controller {
 		}
 		
 		Event::fire(new PostWasBanned($post));
+		Event::fire(new PostWasModerated($post, $this->user));
 		
 		if ($post->reply_to)
 		{
@@ -538,6 +559,10 @@ class PostController extends Controller {
 		
 		$input     = Input::all();
 		$validator = Validator::make($input, [
+			'associate' => [
+				"boolean",
+			],
+			
 			'captcha' => [
 				"required",
 				"captcha",
@@ -561,7 +586,7 @@ class PostController extends Controller {
 		$report->post_id       = $post->post_id;
 		$report->reason        = $input['reason'];
 		$report->ip            = Request::ip();
-		$report->user_id       = NULL;
+		$report->user_id       = !!Input::get('associate', false) ? $this->user->user_id : false;
 		$report->is_dismissed  = false;
 		$report->is_successful = false;
 		$report->save();
