@@ -97,6 +97,10 @@ return [
 		'successful'  => "The reported post has been dealt with.",
 		
 		'reason'      => "Reason",
+		
+		'dismiss_all' => "Dismission all reports on post",
+		'dismiss_ip'  => "Dismiss IP",
+		'dismiss_single' => "Dismiss",
 	],
 	
 	/**
@@ -114,6 +118,7 @@ return [
 		'bumplocked' => "Bumplocked",
 		'locked'     => "Locked",
 		'deleted'    => "Deleted",
+		'logged'     => "IP on record"
 	],
 	
 	

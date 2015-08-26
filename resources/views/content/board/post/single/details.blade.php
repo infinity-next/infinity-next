@@ -38,5 +38,9 @@
 	<li class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
 	@endif
 	
+	@if (!is_null($post->author_ip))
+	<li class="post-detail detail-icon post-logged" title="@lang('board.detail.logged')"><i class="fa fa-server"></i></li>
+	@endif
+	
 	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
 </ul>
