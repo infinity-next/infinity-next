@@ -32,10 +32,28 @@ class ReportsController extends PanelController {
 			abort(403);
 		}
 		
-		$reports = $this->user->getReportedPostsViewable();
+		return $this->viewReports();
+	}
+	
+	public function dismiss(Report $report)
+	{
+		if (!$report->canView($this->user))
+		{
+			abort(403);
+		}
 		
+		$report->is_dismissed = true;
+		$report->is_successful = false;
+		$report->save();
+		
+		return $this->viewReports();
+	}
+	
+	
+	public function viewReports()
+	{
 		return $this->view(static::VIEW_REPORTS, [
-			'reportedPosts' => $reports,
+			'reportedPosts' => $this->user->getReportedPostsViewable(),
 		]);
 	}
 }

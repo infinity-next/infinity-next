@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Contracts\PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model {
@@ -41,6 +42,40 @@ class Report extends Model {
 		return $this->belongsTo('\App\User', 'user_id');
 	}
 	
+	
+	/**
+	 * Determines if a user can view this report in any context.
+	 * This does not determine if a report is useful in a management view.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canView(PermissionUser $user)
+	{
+		if (is_null($this->board_uri) && $user->canViewReportsGlobally())
+		{
+			return true;
+		}
+		
+		if (!is_null($this->board_uri) && $user->canViewReports($this->board_uri))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Determines if the user can dismiss the report.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canDismiss(PermissionUser $user)
+	{
+		// At the moment, anyone who can view can dismiss.
+		return $this->canView($user);
+	}
 	
 	public function scopeWhereOpen($query)
 	{

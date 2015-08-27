@@ -64,6 +64,15 @@ Route::group([
 			Route::put('create', 'BoardsController@putCreate');
 			
 			Route::controller('reports', 'ReportsController');
+			
+			Route::group([
+				'prefix'    => 'report',
+			], function()
+			{
+				Route::get('{report}/dismiss',     'ReportsController@dismiss');
+				Route::get('{report}/dismiss-ip',  'ReportsController@dismissIp');
+				Route::get('{report}/dismiss-all', 'ReportsController@dismissAll');
+			});
 		});
 		
 		Route::group([
