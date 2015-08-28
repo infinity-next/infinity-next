@@ -40,6 +40,7 @@ return [
 		'email'       => "Email",
 		
 		'ip'              => "IP",
+		'ip_range'        => "Range",
 		'justification'   => "Reason",
 		'expires'         => "Ban Expiry",
 		'expires-days'    => "Days",
@@ -143,6 +144,14 @@ return [
 		'unsticky'          => "Unsticky",
 		'report'            => "Report",
 		'report_global'     => "Report Globally",
+	],
+	
+	'ban'               => [
+		'no_ip'        => "There is no IP associated with this post which you can ban.",
+		
+		// The number of IP addresses affected by a range ban.
+		'ip_range_32'  => "{0}All IPv4 Addresses|[1,31]/:mask (:ips IPs)|{32}/:mask (:ips IP)",
+		'ip_range_128' => "{0}All IPv6 Addresses|[1,127]/:mask (:ips IPs)|{128}/:mask (:ips IP)",
 	],
 	
 	'meta'              => [

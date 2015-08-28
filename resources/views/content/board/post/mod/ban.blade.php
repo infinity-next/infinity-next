@@ -7,6 +7,7 @@
 ]) !!}
 	@include('widgets.messages')
 	
+	@if ($post->hasAuthorIp())
 	<fieldset class="form-fields">
 		<legend class="form-legend">{{ trans("board.legend." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
 		
@@ -15,10 +16,11 @@
 			$user->canViewRawIP() ? 1 : 0
 		) !!}
 		
-		<div class="field row-ip label-inline">
+		@if ($user->canViewRawIP())
+		<div class="field row-ip label-inline row-inline">
 			{!! Form::text(
 				'ban_ip',
-				$user->canViewRawIP() ? $post->author_ip : ip_less($post->author_ip),
+				$post->getAuthorIpAsString(),
 				[
 					'id'        => "ban_ip",
 					'class'     => "field-control",
@@ -28,6 +30,42 @@
 			{!! Form::label(
 				"ban_ip",
 				trans('board.field.ip'),
+				[
+					'class' => "field-label",
+			]) !!}
+		</div>
+		@else
+		<div class="field row-ipless label-inline row-inline">
+			{!! Form::text(
+				'ban_ip',
+				ip_less($post->author_ip),
+				[
+					'id'        => "ban_ip",
+					'class'     => "field-control",
+					'maxlength' => 255,
+					$user->canViewRawIP() ? 'data-disabled' : 'disabled' => "disabled",
+			]) !!}
+			{!! Form::label(
+				"ban_ip",
+				trans('board.field.ip'),
+				[
+					'class' => "field-label",
+			]) !!}
+		</div>
+		@endif
+		
+		<div class="field row-iplessrange label-inline row-inline">
+			{!! Form::select(
+				'ban_ip_range',
+				$post->getAuthorIpRangeOptions(),
+				$post->getAuthorIpBitSize(),
+				[
+					'id'        => "ban_ip_range",
+					'class'     => "field-control",
+			]) !!}
+			{!! Form::label(
+				"ban_ip_range",
+				trans('board.field.ip_range'),
 				[
 					'class' => "field-label",
 			]) !!}
@@ -103,5 +141,8 @@
 			]) !!}
 		</div>
 	</fieldset>
+	@else
+		<p>@lang('board.ban.no_ip')</p>
+	@endif
 	
 {!! Form::close() !!}

@@ -84,4 +84,16 @@ class Report extends Model {
 			$query->where('is_successful', false);
 		});
 	}
+	
+	
+	/**
+	 * Returns the reporter's IP in a human-readable format.
+	 *
+	 * @return string
+	 */
+	public function getReporterIpAsString()
+	{
+		return inet_ntop($this->reporter_ip);
+	}
+	
 }

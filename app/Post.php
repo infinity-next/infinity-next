@@ -560,6 +560,16 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Determines if the post is made from the client's remote address.
+	 *
+	 * @return boolean
+	 */
+	public function isAuthoredByClient()
+	{
+		return inet_ntop($post->author_ip) === \Request::ip();
+	}
+	
+	/**
 	 * Determines if this is deleted.
 	 *
 	 * @return boolean
@@ -599,6 +609,58 @@ class Post extends Model {
 		return !is_null($this->stickied_at);
 	}
 	
+	/**
+	 * Returns the author IP in a human-readable format.
+	 *
+	 * @return string
+	 */
+	public function getAuthorIpAsString()
+	{
+		if ($this->hasAuthorIp())
+		{
+			return inet_ntop($this->author_ip);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns the bit size of the IP.
+	 *
+	 * @return int  (32 or 128)
+	 */
+	public function getAuthorIpBitSize()
+	{
+		if ($this->hasAuthorIp())
+		{
+			return strpos($this->getAuthorIpAsString(), ":") === false ? 32 : 128;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns a user-friendly list of ranges available for this IP.
+	 *
+	 * @return array
+	 */
+	public function getAuthorIpRangeOptions()
+	{
+		$bitsize = $this->getAuthorIpBitSize();
+		$range   = range(0, $bitsize);
+		$masks   = [];
+		
+		foreach ($range as $mask)
+		{
+			$affectedIps  = number_format(pow(2, $bitsize - $mask), 0);
+			$masks[$mask] = trans_choice("board.ban.ip_range_{$bitsize}", $mask, [
+				'mask' => $mask,
+				'ips'  => $affectedIps
+			]);
+		}
+		
+		return $masks;
+	}
 	
 	/**
 	 * Returns the board model for this post.
@@ -734,6 +796,16 @@ class Post extends Model {
 			->forIndex()
 			->get()
 			->reverse();
+	}
+	
+	/**
+	 * Returns if this post has an attached IP address.
+	 *
+	 * @return boolean
+	 */
+	public function hasAuthorIp()
+	{
+		return !is_null($this->author_ip);
 	}
 	
 	/**
@@ -885,6 +957,19 @@ class Post extends Model {
 		return $query->with(['replies' => function($query) {
 			$query->withEverything();
 		}]);
+	}
+	
+	public function scopeIpString($query, $ip)
+	{
+		return $query->ipBinary(inet_pton($ip));
+	}
+	
+	public function scopeIpBinary($query, $ip)
+	{
+		return $query->where(function($query) use ($ip) {
+				$query->where('ban_ip_start', '<=', $ip);
+				$query->where('ban_ip_end',   '>=', $ip);
+			});
 	}
 	
 	public function scopeOp($query)

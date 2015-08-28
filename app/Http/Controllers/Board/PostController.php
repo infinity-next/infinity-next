@@ -97,14 +97,14 @@ class PostController extends Controller {
 				}
 				
 				
-				$posts = Post::where('author_ip', $post->author_ip)
+				$posts = Post::ipString($post->author_ip)
 					->with('reports')
 					->get();
 				
 				$this->log('log.post.delete.global', $post, [
 					"board_id"  => $post->board_id,
 					"board_uri" => $post->board_uri,
-					"ip"        => $post->author_ip,
+					"ip"        => $post->getAuthorIpAsString(),
 					"posts"     => $posts->count(),
 				]);
 				
@@ -126,7 +126,7 @@ class PostController extends Controller {
 				
 				if ($all)
 				{
-					$posts = Post::where('author_ip', $post->author_ip)
+					$posts = Post::ipString($post->author_ip)
 						->where('board_uri', $board->board_uri)
 						->with('reports')
 						->get();
@@ -134,7 +134,7 @@ class PostController extends Controller {
 					$this->log('log.post.delete.local', $post, [
 						"board_id"  => $post->board_id,
 						"board_uri" => $post->board_uri,
-						"ip"        => $post->author_ip,
+						"ip"        => $post->getAuthorIpAsString(),
 						"posts"     => $posts->count(),
 					]);
 					
@@ -149,7 +149,7 @@ class PostController extends Controller {
 				}
 				else
 				{
-					if ($post->author_ip != Request::ip())
+					if (!$post->isAuthoredByClient())
 					{
 						if ($post->reply_to)
 						{
@@ -263,10 +263,11 @@ class PostController extends Controller {
 		}
 		
 		$banLengthStr = implode($banLengthStr, " ");
-		$banIp        = $this->user->canViewRawIP() ? Input::get('ban_ip') : $post->author_ip;
+		$banIp        = inet_pton($this->user->canViewRawIP() ? Input::get('ban_ip') : $post->author_ip);
 		
 		$ban = new Ban();
-		$ban->ban_ip        = $banIp;
+		$ban->ban_ip_start  = $banIp;
+		$ban->ban_ip_end    = $banIp;
 		$ban->seen          = false;
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;
@@ -288,21 +289,21 @@ class PostController extends Controller {
 			
 			if ($ban)
 			{
-				$ban->board_uri = null;
+				$ban->global = true;
 				$ban->save();
 			}
 			
 			$this->log('log.post.ban.global', $post, [
 				"board_id"      => $post->board_id,
 				"board_uri"     => $post->board_uri,
-				"ip"            => $post->author_ip,
+				"ip"            => $post->getAuthorIpAsString(),
 				"justification" => $ban->justification,
 				"time"          => $banLengthStr,
 			]);
 			
 			if ($delete)
 			{
-				$posts = Post::where('author_ip', $post->author_ip);
+				$posts = Post::ipBinary($banIp);
 				
 				$this->log('log.post.ban.delete', $post, [
 					"board_id"  => $post->board_id,
@@ -331,7 +332,7 @@ class PostController extends Controller {
 			$this->log('log.post.ban.local', $post, [
 				"board_id"      => $post->board_id,
 				"board_uri"     => $post->board_uri,
-				"ip"            => $post->author_ip,
+				"ip"            => $post->getAuthorIpAsString(),
 				"justification" => $ban->justification,
 				"time"          => $banLengthStr,
 			]);
@@ -340,7 +341,7 @@ class PostController extends Controller {
 			{
 				if ($all)
 				{
-					$posts = Post::where('author_ip', $post->author_ip)
+					$posts = Post::ipBinary($banIp)
 						->where('board_uri', $board->board_uri);
 					
 					$this->log('log.post.ban.delete', $post, [
@@ -582,10 +583,11 @@ class PostController extends Controller {
 		}
 		
 		$report =  new Report;
-		$report->board_uri     = $global === "global" ? NULL : $board->board_uri;
+		$report->board_uri     = $board->board_uri;
+		$report->global        = $global === "global";
 		$report->post_id       = $post->post_id;
 		$report->reason        = $input['reason'];
-		$report->ip            = Request::ip();
+		$report->reporter_ip   = inet_pton(Request::ip());
 		$report->user_id       = !!Input::get('associate', false) ? $this->user->user_id : false;
 		$report->is_dismissed  = false;
 		$report->is_successful = false;

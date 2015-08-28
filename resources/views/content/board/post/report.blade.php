@@ -8,7 +8,7 @@
 	<ul class="report-details">
 		<li class="report-detail detail-dismiss"><a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('board.report.dismiss_single')</a></li>
 		
-		<li class="report-detail detail-ip">{{ $user->getTextForIP($report->ip) }} [<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss-all") }}" class="report-dismiss-ip">@lang('board.report.dismiss_ip')</a>]</li>
+		<li class="report-detail detail-ip">{{ $user->getTextForIP($report->getReporterIpAsString()) }} [<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss-all") }}" class="report-dismiss-ip">@lang('board.report.dismiss_ip')</a>]</li>
 		
 		<li class="report-detail detail-association">
 		@if ($report->user_id)

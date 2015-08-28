@@ -54,7 +54,7 @@ class Ban extends Model {
 	
 	public static function getBan($ip, $board_uri = null)
 	{
-		return Ban::where('ban_ip', 'like', $ip)
+		return Ban::ip($ip)
 			->board($board_uri)
 			->current()
 			->get()
@@ -83,6 +83,19 @@ class Ban extends Model {
 				$query
 					->where('expires_at', '>', $this->freshTimestamp())
 					->orWhere('seen', 0);
+			});
+	}
+	
+	public function scopeIpString($query, $ip)
+	{
+		return $query->ipBinary(inet_pton($ip));
+	}
+	
+	public function scopeIpBinary($query, $ip)
+	{
+		return $query->where(function($query) use ($ip) {
+				$query->where('ban_ip_start', '<=', $ip);
+				$query->where('ban_ip_end',   '>=', $ip);
 			});
 	}
 }
