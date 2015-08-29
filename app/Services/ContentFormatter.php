@@ -91,8 +91,23 @@ class ContentFormatter {
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
-				'parseHTML'      => true,
+				'parseHTML'      => false,
 				'parseURL'       => true,
+			],
+			
+			'disable' => [
+				"Image",
+				"Link",
+			],
+			
+			'enable' => [
+				"Spoiler",
+			],
+			
+			'markup' => [
+				'quote'   => [
+					'keepSigns' => true,
+				],
 			],
 		];
 		

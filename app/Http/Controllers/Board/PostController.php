@@ -521,7 +521,7 @@ class PostController extends Controller {
 				})
 				->where(function($query) use ($user)
 				{
-					$query->where('ip', Request::ip());
+					$query->where('reporter_ip', inet_pton(Request::ip()));
 					
 					if (!$user->isAnonymous())
 					{

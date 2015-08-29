@@ -345,18 +345,26 @@ form {
 			color: #B74B47;
 		}
 	
+	.row-associate {
+		padding-top: 0.75em;
+		border-top: 1px dashed rgba(0,0,0,0.2);
+	}
+		.row-associate .field-label {
+			display: inline-block;
+			vertical-align: top;
+			line-height: 1.2;
+		}
+	
 	.row-captcha {
-		/*
-		border: 1px solid #dee0df;
-		width: 300px;
-		*/
+		border: 1px solid rgb(169, 169, 169);
+		width: 280px;
 		
 		margin-left: 0;
 		margin-right: auto;
 	}
 		.row-captcha .field-control {
 			border: none;
-			border-top: 1px solid #dee0df;
+			border-top: 1px solid rgb(169, 169, 169);
 		}
 
 main.cp form.form-config {
@@ -1574,22 +1582,22 @@ aside.index-sidebar {
 /**
  * MAIN POST STYLING
  */
-blockquote.post {
+blockquote.ugc {
 	
 }
-	blockquote.post a {
+	blockquote.ugc a {
 		text-decoration: underline;
 	}
-		blockquote.post a:hover,
-		blockquote.post a.cite {
+		blockquote.ugc a:hover,
+		blockquote.ugc a.cite {
 			color: #D00;
 		}
 	
-	blockquote.post hr {
+	blockquote.ugc hr {
 		border-top: 2px groove rgba(255, 255, 255, 1);
 	}
 	
-	blockquote.post pre {
+	blockquote.ugc pre {
 		clear: both;
 		background-color: rgba(255, 255, 255, 0.35);
 		color: #111111;
@@ -1599,53 +1607,53 @@ blockquote.post {
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
-		blockquote.post pre code {
+		blockquote.ugc pre code {
 			display: block;
 			margin: 0;
 			padding: 1em;
 		}
 		
-		blockquote.post pre code.language-aa,
-		blockquote.post pre code.language-AA {
+		blockquote.ugc pre code.language-aa,
+		blockquote.ugc pre code.language-AA {
 			font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
 			display: block!important;
 			font-size: 12pt;
 			line-height: 1.1;
 		}
 	
-	blockquote.post blockquote {
+	blockquote.ugc blockquote {
 		margin-left: 0;
 		margin-right: 0;
 		
 		color: #789922;
 	}
-		blockquote.post blockquote.spoiler {
+		blockquote.ugc blockquote.spoiler {
 			box-sizing: border-box;
 			padding: 1px 0.5em;
 		}
-		/* blockquote.post blockquote + p {
+		/* blockquote.ugc blockquote + p {
 			margin-top: -1em;
 		} */
 	
-	blockquote.post .spoiler {
+	blockquote.ugc .spoiler {
 		box-sizing: border-box;
 		padding: 1px 0.5em;
 		
 		color: black;
 		background: black;
 	}
-		blockquote.post .spoiler:hover {
+		blockquote.ugc .spoiler:hover {
 			color: white;
 			background: black;
 		}
 	
-	blockquote.post p {
+	blockquote.ugc p {
 		margin-left: 0;
 		margin-right: 0;
 	}
 	
-	blockquote.post ol,
-	blockquote.post ul {
+	blockquote.ugc ol,
+	blockquote.ugc ul {
 		display: block;
 		margin: 1em;
 		padding: 0 0 0 2em;
@@ -1653,37 +1661,37 @@ blockquote.post {
 		list-style-type: decimal;
 		list-style-position: inside;
 	}
-		blockquote.post ul {
+		blockquote.ugc ul {
 			list-style-type: disc;
 		}
 	
-	blockquote.post table {
+	blockquote.ugc table {
 		border-spacing: 0.25em;
 		margin: 1em 0;
 		width: auto;
 	}
-		blockquote.post thead tr,
-		blockquote.post tbody tr:nth-of-type(even) {
+		blockquote.ugc thead tr,
+		blockquote.ugc tbody tr:nth-of-type(even) {
 			background-color: rgba(0, 0, 100, 0.1);
 		}
 		
-		blockquote.post tbody {
+		blockquote.ugc tbody {
 			
 		}
-			blockquote.post tr {
+			blockquote.ugc tr {
 				
 			}
-			blockquote.post td {
+			blockquote.ugc td {
 				padding: 0.25em;
 			}
 		
-		blockquote.post thead {
+		blockquote.ugc thead {
 			
 		}
-			blockquote.post th {
+			blockquote.ugc th {
 				padding: 0.25em;
 			}
-		blockquote.post tfoot {
+		blockquote.ugc tfoot {
 			
 		}
 

@@ -13,7 +13,7 @@
 			<blockquote>@lang("board.report." . ($reportGlobal ? "global" : "local"))</blockquote>
 			
 			@if ($reportText)
-			<blockquote class="report-rules">
+			<blockquote class="report-rules ugc">
 				<p>@lang("board.report.desc-" . ($reportGlobal ? "global" : "local"))</p>
 				
 				{!! $reportText !!}
@@ -68,7 +68,7 @@
 		@endif
 		
 		@if (!$user->isAnonymous())
-		<div class="field row-reason field-inline">
+		<div class="field row-associate field-inline">
 			{!! Form::checkbox(
 				'associate',
 				1,
@@ -85,7 +85,7 @@
 					'class' => "field-label",
 			]) !!}
 			
-			<p class="row-reason-desc">@lang('board.report.associate-disclaimer')</p>
+			<p class="row-associate-desc">@lang('board.report.associate-disclaimer')</p>
 		</div>
 		@endif
 		
