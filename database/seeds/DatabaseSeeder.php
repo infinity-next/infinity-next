@@ -286,9 +286,8 @@ class PermissionGroupSeeder extends Seeder
 				'permissions'   => [
 					"board.post.delete.other",
 					"board.post.edit.self",
-					"board.post.report",
+					"board.post.nocaptcha",
 					"board.reports",
-					"site.post.report",
 					"site.reports",
 				],
 			],

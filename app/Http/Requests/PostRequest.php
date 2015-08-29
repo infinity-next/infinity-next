@@ -4,6 +4,7 @@ use App\Ban;
 use App\Board;
 use App\Post;
 use App\Services\UserManager;
+use App\Support\IP\CIDR;
 
 use Auth;
 use View;
@@ -20,13 +21,35 @@ class PostRequest extends Request {
 	protected $dontFlash = ['password', 'password_confirmation', 'captcha'];
 	
 	/**
+	 * The board pertinent to the request.
+	 *
+	 * @var App\Board
+	 */
+	protected $board;
+	
+	/**
+	 * A ban pulled during validation checks.
+	 *
+	 * @var App\Ban
+	 */
+	protected $ban;
+	
+	/**
+	 * The user.
+	 *
+	 * @var App\Trait\PermissionUser
+	 */
+	protected $user;
+	
+	/**
 	 * Fetches the user and our board config.
 	 *
 	 * @return void
 	 */
-	public function __construct(UserManager $manager)
+	public function __construct(Board $board, UserManager $manager)
 	{
-		$this->user = $manager->user;
+		$this->board = $board;
+		$this->user  = $manager->user;
 	}
 	
 	/**
@@ -74,7 +97,7 @@ class PostRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return !Ban::isBanned($this->ip(), $this->board);
+		return true;
 	}
 	
 	/**
@@ -133,12 +156,17 @@ class PostRequest extends Request {
 	/**
 	 * Get the response for a forbidden operation.
 	 *
-	 * @param array $errors
+	 * @param  array $errors
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function response(array $errors)
 	{
 		$redirectURL = $this->getRedirectUrl();
+		
+		if ($this->ban)
+		{
+			return redirect($this->ban->getRedirectUrl());
+		}
 		
 		return redirect($redirectURL)
 			->withInput($this->except($this->dontFlash))
@@ -156,13 +184,27 @@ class PostRequest extends Request {
 		$board = $this->board;
 		$user  = $this->user;
 		
-		if (!$board || !$user)
+		if (is_null($board) || is_null($user))
 		{
 			return parent::validate();
 		}
 		
+		
 		$validator = $this->getValidatorInstance();
 		
+		// Ban check.
+		$ban = Ban::getBan($this->ip(), $board->board_uri);
+		
+		if ($ban)
+		{
+			$messages = $validator->errors();
+			$messages->add("body", trans("validation.custom.banned"));
+			$this->ban = $ban;
+			$this->failedValidation($validator);
+			return;
+		}
+		
+		// Board-level setting validaiton.
 		$validator->sometimes('captcha', "required|captcha", function($input) use ($board) {
 			return !$board->canPostWithoutCaptcha($this->user);
 		});

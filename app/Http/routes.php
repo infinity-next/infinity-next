@@ -55,6 +55,17 @@ Route::group([
 		}
 		
 		Route::group([
+			'prefix'    => 'banned',
+		], function()
+		{
+			Route::get('/',                    'BannedController@getIndex');
+			Route::get('/global',              'BannedController@getGlobalIndex');
+			Route::get('/global/{ban}',        'BannedController@getBan');
+			Route::get('/board/{board}',       'BannedController@getBoardIndex');
+			Route::get('/board/{board}/{ban}', 'BannedController@getBan');
+		});
+		
+		Route::group([
 			'namespace' => 'Boards',
 			'prefix'    => 'boards',
 		], function()

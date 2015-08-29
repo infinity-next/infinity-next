@@ -24,12 +24,14 @@ return [
 	],
 	
 	'title' => [
-		'board'             => "/:board_uri/ Board Configuration",
-		'site'              => "Site Configuration",
-		'board_create'      => "Create a Board",
-		'board_create_your' => "Create your Board",
-		'board_staff_list'  => "/:board_uri/ Staff List",
-		'permissions'       => ":role Role Permissions",
+		'board'              => "/:board_uri/ Board Configuration",
+		'site'               => "Site Configuration",
+		'board_create'       => "Create a Board",
+		'board_create_your'  => "Create your Board",
+		'board_staff_list'   => "/:board_uri/ Staff List",
+		'permissions'        => ":role Role Permissions",
+		'you_are_banned'     => "You are BANNED!",
+		'you_are_not_banned' => "You are not banned.",
 	],
 	
 	'nav'       => [
@@ -99,6 +101,27 @@ return [
 		'desc'                 => [
 			'email' => "This field is optional, but is required to reset your password.",
 		],
+	],
+	
+	'bans'      => [
+		'ban_list_desc' => "<p>This is a list of bans applied to your IP address. " .
+						"You may be affected by a ban not intended for you, especially if on a public computer, network, or using a VPN, Proxy, or Tor. " .
+						"Some bans are applied to entire ranges and will be denoted with a <a href=\"https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing\">CIDR integer</a>.</p>" .
+						"<p>Sometimes, you may appeal a ban to the staff responsible for it. " .
+						"If you can, a link will be visible in the ban row that goes to the appeals page.</p>",
+		
+		'table' => [
+			'board'      => "Banned In",
+			'ban_ip'     => "Banned IP",
+			'ban_appeal' => "Appeal Status",
+			'ban_user'   => "Moderator",
+			'ban_placed' => "Placed On",
+			'ban_expire' => "Expires At",
+		],
+		
+		'ban_global' => "All Boards",
+		
+		'appeal_open' => "Appeals Open",
 	],
 	
 	'password'  => [

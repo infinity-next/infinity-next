@@ -664,6 +664,31 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Returns a human-readable username HTML string with a profile link.
+	 *
+	 * @return string  HTML
+	 */
+	public function getUsernameHTML()
+	{
+		if ($this->isAnonymous())
+		{
+			return "<span class=\"username\">Anonymous</span>";
+		}
+		
+		return "<a href=\"{$this->getUserURL()}\" class=\"username\">{$this->username}</a>";
+	}
+	
+	/**
+	 * Returns a link to the user's public profile page.
+	 *
+	 * @return string  URL
+	 */
+	public function getUserURL()
+	{
+		return "/cp/user/{$this->username}.{$this->user_id}/";
+	}
+	
+	/**
 	 * Drops the user's permission cache.
 	 *
 	 * @return void.

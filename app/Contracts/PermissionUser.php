@@ -30,4 +30,8 @@ interface PermissionUser {
 	public function canReport(\App\Post $post);
 	
 	public function canSticky(\App\Post $post);
+	
+	public function getUsernameHTML();
+	
+	public function getUserURL();
 }

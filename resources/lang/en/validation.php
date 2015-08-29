@@ -90,6 +90,9 @@ return [
 		'file_corrupt' => "<tt>:filename</tt> is corrupt or has an invalid file name.",
 		'post_flood'   => "You you must wait <strong>:time_left</strong> second(s) before posting again.",
 		
+		'banned'       => "You are banned!",
+		'banned_for'   => "Reason: <em>:reason</em>",
+		
 		'validate' => [
 			
 		],

@@ -6,6 +6,7 @@ use App\Post;
 use App\Report;
 use App\Http\Controllers\Controller;
 use App\Services\ContentFormatter;
+use App\Support\IP\CIDR;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -226,6 +227,7 @@ class PostController extends Controller {
 		$validator = Validator::make(Input::all(), [
 			'raw_ip'          => 'required|boolean',
 			'ban_ip'          => 'required_if:raw_ip,true|ip',
+			'ban_ip_range'    => 'required|between:0,128',
 			'justification'   => 'max:255',
 			'expires_days'    => 'required|integer|min:0|max:' . $this->option('banMaxLength'),
 			'expires_hours'   => 'required|integer|min:0|max:23',
@@ -263,11 +265,20 @@ class PostController extends Controller {
 		}
 		
 		$banLengthStr = implode($banLengthStr, " ");
-		$banIp        = inet_pton($this->user->canViewRawIP() ? Input::get('ban_ip') : $post->author_ip);
+		
+		// If we're banning without the ability to view IP addresses, we will get our address directly from the post in human-readable format.
+		$banIpAddr    = $this->user->canViewRawIP() ? Input::get('ban_ip') : $post->getAuthorIpAsString();
+		// The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
+		$banCidr      = Input::get('ban_ip_range');
+		// This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
+		// If we just pass the CDIR into the construct, we get 192.168.1.3-129.168.3.255 for some reason.
+		$banCidrRange = CIDR::cidr_to_range("{$banIpAddr}/{$banCidr}");
+		// We then pass this range into the construct method.
+		$banIp        = new CIDR($banCidrRange[0], $banCidrRange[1]);
 		
 		$ban = new Ban();
-		$ban->ban_ip_start  = $banIp;
-		$ban->ban_ip_end    = $banIp;
+		$ban->ban_ip_start  = inet_pton($banIp->getStart());
+		$ban->ban_ip_end    = inet_pton($banIp->getEnd());
 		$ban->seen          = false;
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;
@@ -289,7 +300,7 @@ class PostController extends Controller {
 			
 			if ($ban)
 			{
-				$ban->global = true;
+				$ban->board_uri = null;
 				$ban->save();
 			}
 			

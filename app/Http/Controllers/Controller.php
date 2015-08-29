@@ -7,6 +7,7 @@ use App\Services\UserManager;
 
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Router as Router;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Cache;
@@ -27,7 +28,7 @@ abstract class Controller extends BaseController {
 	/**
 	 * @return void
 	 */
-	public function __construct(UserManager $manager)
+	public function __construct(UserManager $manager, Router $router)
 	{
 		$this->userManager = $manager;
 		$this->auth        = $manager->auth;

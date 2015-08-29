@@ -2307,6 +2307,17 @@ body.error::before {
 					text-shadow: 1px black;
 					text-align: right;
 				}
+	main#banned {
+	}
+			main#banned figure.error-figure {
+				margin-left: 1em;
+				margin-right: 1em;
+				float: right;
+			}
+			figure.error-figure img.error-image {
+				max-height: 250px;
+				max-widht: 250px;
+			}
 
 /* Page Header */
 header {

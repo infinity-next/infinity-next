@@ -1141,7 +1141,7 @@ class Post extends Model {
 	public function submitTo(Board &$board, &$thread = null)
 	{
 		$this->board_uri   = $board->board_uri;
-		$this->author_ip   = Request::getClientIp();
+		$this->author_ip   = inet_pton(Request::getClientIp());
 		$this->reply_last  = $this->freshTimestamp();
 		$this->bumped_last = $this->reply_last;
 		$this->setCreatedAt($this->reply_last);

@@ -23,10 +23,28 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
+		// Sets up our routing tokens.
 		$router->pattern('board', Board::URI_PATTERN);
 		$router->model('board',  'App\Board');
 		$router->model('report', 'App\Report');
 		$router->model('role',   'App\Role');
+		
+		
+		// Binds a matched instance of a {board} as a singleton instance.
+		$app = $this->app;
+		
+		$router->matched(function($route, $request) use ($app) {
+			// Binds the board to the application if it exists.
+			$board = $route->getParameter('board');
+			
+			if ($board instanceof Board && $board->exists)
+			{
+				$app->singleton("\App\Board", function($app) use ($board) {
+					return $board;
+				});
+			}
+		});
+		
 		
 		parent::boot($router);
 	}

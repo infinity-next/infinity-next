@@ -33,10 +33,10 @@
 	</ul>
 	@endif
 	
-	@include('widgets.messages')
-	
 	<fieldset class="form-fields">
 		<legend class="form-legend">{{ trans("board.legend." . implode($actions, "+")) }}</legend>
+		
+		@include('widgets.messages')
 		
 		<div class="field row-subject label-inline">
 			{!! Form::text(

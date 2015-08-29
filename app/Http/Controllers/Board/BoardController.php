@@ -37,8 +37,8 @@ class BoardController extends Controller {
 	 * This is usually the last few threads, depending on the optional page
 	 * parameter, which determines the thread offset.
 	 *
-	 * @var Board $board
-	 * @var integer $page
+	 * @param  Board  $board
+	 * @param  integer  $page
 	 * @return Response
 	 */
 	public function getIndex(Board $board, $page = 1)
@@ -78,7 +78,7 @@ class BoardController extends Controller {
 	/**
 	 * Show the catalog (gridded) board view.
 	 *
-	 * @var Board $board
+	 * @param  Board  $board
 	 * @return Response
 	 */
 	public function getCatalog(Board $board)
@@ -110,8 +110,8 @@ class BoardController extends Controller {
 	/**
 	 * Renders a thread.
 	 *
-	 * @var Board $board
-	 * @var integer|null $thread
+	 * @param  Board  $board
+	 * @param  integer|null  $thread
 	 * @return Response
 	 */
 	public function getThread(Board $board, $thread = null)
@@ -172,9 +172,9 @@ class BoardController extends Controller {
 	/**
 	 * Handles the creation of a new thread or reply.
 	 *
-	 * @var \App\Http\Requests\PostRequest $request
-	 * @var Board $board
-	 * @var integer|null $thread
+	 * @param  \App\Http\Requests\PostRequest  $request
+	 * @param  Board  $board
+	 * @param  integer|null  $thread
 	 * @return Response (redirects to the thread view)
 	 */
 	public function putThread(PostRequest $request, Board $board, $thread = null)
@@ -210,7 +210,7 @@ class BoardController extends Controller {
 	/**
 	 * Supplies a user generated stylesheet based on board options.
 	 *
-	 * @var  Board  $board
+	 * @param  Board  $board
 	 * @return Response
 	 */
 	public function getStylesheet(Board $board)
