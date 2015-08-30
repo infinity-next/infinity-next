@@ -25,6 +25,12 @@ class ReportsController extends PanelController {
 	 */
 	public static $navSecondary = "nav.panel.board";
 	
+	/**
+	 * Displays a full list of reports.
+	 * Handles /reports/
+	 *
+	 * @return Response
+	 */
 	public function getIndex()
 	{
 		if (!$this->user->canViewReports())
@@ -35,7 +41,14 @@ class ReportsController extends PanelController {
 		return $this->viewReports();
 	}
 	
-	public function dismiss(Report $report)
+	
+	/**
+	 * Dismisses a single report and returns the user back to the reports page.
+	 * Handles /report/{report}/dismiss
+	 *
+	 * @return Response
+	 */
+	public function getDismiss(Report $report)
 	{
 		if (!$report->canView($this->user))
 		{
@@ -46,18 +59,24 @@ class ReportsController extends PanelController {
 		$report->is_successful = false;
 		$report->save();
 		
-		return $this->viewReports();
+		return redirect()->back()
+			->withSuccess(trans_choice("panel.reports.dismisssed", 1, [ 'reports' => 1 ]));
 	}
 	
-	
-	public function dismissAll(Report $report)
+	/**
+	 * Dismisses all reports for an IP and returns the user back to the reports page.
+	 * Handles /report/{report}/dismiss-ip
+	 *
+	 * @return Response
+	 */
+	public function getDismissIp(Report $report)
 	{
 		if (!$report->canView($this->user))
 		{
 			abort(403);
 		}
 		
-		Report::whereOpen()
+		$reports = Report::whereOpen()
 			->whereResponsibleFor($this->user)
 			->where('reporter_ip', $report->reporter_ip)
 			->update([
@@ -65,10 +84,28 @@ class ReportsController extends PanelController {
 				'is_successful' => false,
 			]);
 		
-		return redirect()->back();
+		return redirect()->back()
+			->withSuccess(trans_choice("panel.reports.dismisssed", count($reports), [ 'reports' => count($reports) ]));
 	}
 	
-	
+	/**
+	 * Dismisses all reports for an IP and returns the user back to the reports page.
+	 * Handles /report/{post}/dismiss-all
+	 *
+	 * @return Response
+	 */
+	public function getDismissAll(Post $post)
+	{
+		$reports = $post->reports()
+			->whereResponsibleFor($this->user)
+			->update([
+				'is_dismissed'  => true,
+				'is_successful' => false,
+			]);
+		
+		return redirect()->back()
+			->withSuccess(trans_choice("panel.reports.dismisssed", count($reports), [ 'reports' => count($reports) ]));
+	}
 	
 	
 	public function viewReports()

@@ -26,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider {
 		// Sets up our routing tokens.
 		$router->pattern('board', Board::URI_PATTERN);
 		$router->model('board',  'App\Board');
+		$router->model('post',   'App\Post');
 		$router->model('report', 'App\Report');
 		$router->model('role',   'App\Role');
 		

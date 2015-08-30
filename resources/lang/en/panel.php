@@ -129,7 +129,14 @@ return [
 	],
 	
 	'reports'   => [
-		'empty' => "You have no pending reports to revew."
+		'empty'          => "You have no pending reports to review.",
+		'dismisssed'     => "{1}Report dismissed.|[2,Inf]Dismissed :reports reports.",
+		
+		'dismiss_post'   => "Dismiss Post",
+		'dismiss_ip'     => "Dismiss IP",
+		'dismiss_single' => "Dismiss",
+		
+		'promote_post'   => "Promote Post",
 	],
 	
 	'password'  => [

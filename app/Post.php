@@ -1037,6 +1037,23 @@ class Post extends Model {
 			}]);
 	}
 	
+	public function scopeWhereHasReports($query)
+	{
+		return $query->whereHas('reports', function($query)
+			{
+				$query->whereOpen();
+			});
+	}
+	
+	public function scopeWhereHasReportsFor($query, PermissionUser $user)
+	{
+		return $query->whereHas('reports', function($query) use ($user)
+			{
+				$query->whereOpen();
+				$query->whereResponsibleFor($user);
+			});
+	}
+	
 	
 	/**
 	 * Fetches a URL for either this thread or an action.

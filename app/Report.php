@@ -94,7 +94,7 @@ class Report extends Model {
 	 *
 	 * @param  PermissionUser  $user
 	 */
-	public function scopeResponsibleFor($query, PermissionUser $user)
+	public function scopeWhereResponsibleFor($query, PermissionUser $user)
 	{
 		return $query->where(function($query) use ($user) {
 			$query->whereIn('board_uri', $user->canInBoards('board.reports'));

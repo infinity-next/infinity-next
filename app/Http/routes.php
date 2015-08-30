@@ -59,7 +59,7 @@ Route::group([
 		], function()
 		{
 			Route::get('/',                    'BannedController@getIndex');
-			Route::get('/global',              'BannedController@getGlobalIndex');
+			Route::get('/global',              'BannedController@getGlobalIndex');	
 			Route::get('/global/{ban}',        'BannedController@getBan');
 			Route::get('/board/{board}',       'BannedController@getBoardIndex');
 			Route::get('/board/{board}/{ban}', 'BannedController@getBan');
@@ -80,9 +80,9 @@ Route::group([
 				'prefix'    => 'report',
 			], function()
 			{
-				Route::get('{report}/dismiss',     'ReportsController@dismiss');
-				Route::get('{report}/dismiss-ip',  'ReportsController@dismissIp');
-				Route::get('{report}/dismiss-all', 'ReportsController@dismissAll');
+				Route::get('{report}/dismiss',     'ReportsController@getDismiss');
+				Route::get('{report}/dismiss-ip',  'ReportsController@getDismissIp');
+				Route::get('{post}/dismiss-all', 'ReportsController@getDismissAll');
 			});
 		});
 		

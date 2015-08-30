@@ -148,18 +148,9 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 * @return Collection
 	 */
-	public function getReportedPostsViewable($onlyDirect = false)
+	public function getReportedPostsViewable()
 	{
-		return Post::whereHas('reports', function($query) use ($onlyDirect)
-			{
-				$query->whereOpen();
-				
-				if ($onlyDirect)
-				{
-					$query->whereIn('board_uri', $this->canInBoards('board.reports'));
-				}
-				
-			})
+		return Post::whereHasReportsFor($this)
 			->withEverything()
 			->get();
 	}

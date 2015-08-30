@@ -11,5 +11,17 @@
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    
+    <IfModule !mod_env.c>
+        RewriteRule ^ index.php [L]
+    </IfModule>
+    
+    <IfModule mod_env.c>
+        <IfDefine !LARAVEL_TOR>
+            RewriteRule ^ index.php [L]
+        </IfDefine>
+        <IfDefine LARAVEL_TOR>
+            RewriteRule ^ index-tor.php [L]
+        </IfDefine>
+    </IfModule>
 </IfModule>

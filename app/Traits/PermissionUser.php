@@ -38,9 +38,14 @@ trait PermissionUser {
 	 */
 	public function isAccountable()
 	{
+		if (config('tor.request'))
+		{
+			dd("Tor.");
+		}
+		
 		if (!is_bool($this->accountable))
 		{
-			$this->accountable = true;
+			$this->accountable = !config('tor.request');
 		}
 		
 		return $this->accountable;
