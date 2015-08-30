@@ -599,7 +599,7 @@ class PostController extends Controller {
 		$report->post_id       = $post->post_id;
 		$report->reason        = $input['reason'];
 		$report->reporter_ip   = inet_pton(Request::ip());
-		$report->user_id       = !!Input::get('associate', false) ? $this->user->user_id : false;
+		$report->user_id       = !!Input::get('associate', false) ? $this->user->user_id : NULL;
 		$report->is_dismissed  = false;
 		$report->is_successful = false;
 		$report->save();
