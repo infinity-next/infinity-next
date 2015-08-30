@@ -1,6 +1,6 @@
 @extends('layouts.main.panel')
 
-@section('title', "Reports")
+@section('title', trans('panel.title.reports'))
 
 @section('body')
 	<section class="reports">

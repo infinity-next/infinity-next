@@ -32,6 +32,7 @@ return [
 		'permissions'        => ":role Role Permissions",
 		'you_are_banned'     => "You are BANNED!",
 		'you_are_not_banned' => "You are not banned.",
+		'reports'            => "Open Reports",
 	],
 	
 	'nav'       => [
@@ -61,6 +62,9 @@ return [
 				'boards'          => "Boards",
 				'config'          => "Config",
 				'create'          => "Create a Board",
+				
+				'discipline'      => "Discipline",
+				'reports'         => "Reports",
 			],
 			
 			'users'  => [
@@ -122,6 +126,10 @@ return [
 		'ban_global' => "All Boards",
 		
 		'appeal_open' => "Appeals Open",
+	],
+	
+	'reports'   => [
+		'empty' => "You have no pending reports to revew."
 	],
 	
 	'password'  => [

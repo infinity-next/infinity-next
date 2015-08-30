@@ -165,7 +165,8 @@ return [
 			
 			'user' => [
 				'create' => "Create user",
-				'merge' => "Merge user into own account",
+				'merge'  => "Merge user into own account",
+				'raw_ip' => "View real IPs",
 			],
 		],
 		

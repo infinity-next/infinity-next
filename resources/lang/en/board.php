@@ -94,7 +94,7 @@ return [
 		'is_associated'        => "User associated report",
 		
 		'pending'     => "Your report has been received and is awaiting review.",
-		'dismissing'  => "The report has been dismissed without action.",
+		'dismissed'   => "The report has been dismissed without action.",
 		'successful'  => "The reported post has been dealt with.",
 		
 		'reason'      => "Reason",

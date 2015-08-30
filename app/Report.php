@@ -77,6 +77,9 @@ class Report extends Model {
 		return $this->canView($user);
 	}
 	
+	/**
+	 * Reduces query to only reports that require action.
+	 */
 	public function scopeWhereOpen($query)
 	{
 		return $query->where(function($query) {
@@ -85,6 +88,23 @@ class Report extends Model {
 		});
 	}
 	
+	/**
+	 * Reduced query to only reports that the user is directly responsible for.
+	 * This means 'site.reports' open `global` ONLY and 'board.reports' only matter in direct assignment.
+	 *
+	 * @param  PermissionUser  $user
+	 */
+	public function scopeResponsibleFor($query, PermissionUser $user)
+	{
+		return $query->where(function($query) use ($user) {
+			$query->whereIn('board_uri', $user->canInBoards('board.reports'));
+			
+			if (!$user->can('site.reports'))
+			{
+				$query->where('global', false);
+			}
+		});
+	}
 	
 	/**
 	 * Returns the reporter's IP in a human-readable format.

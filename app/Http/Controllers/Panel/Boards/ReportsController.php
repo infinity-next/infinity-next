@@ -50,6 +50,27 @@ class ReportsController extends PanelController {
 	}
 	
 	
+	public function dismissAll(Report $report)
+	{
+		if (!$report->canView($this->user))
+		{
+			abort(403);
+		}
+		
+		Report::whereOpen()
+			->whereResponsibleFor($this->user)
+			->where('reporter_ip', $report->reporter_ip)
+			->update([
+				'is_dismissed'  => true,
+				'is_successful' => false,
+			]);
+		
+		return redirect()->back();
+	}
+	
+	
+	
+	
 	public function viewReports()
 	{
 		return $this->view(static::VIEW_REPORTS, [

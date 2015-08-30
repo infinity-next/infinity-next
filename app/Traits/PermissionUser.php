@@ -108,7 +108,8 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Returns a list of Board URIs where this permission exists.
+	 * Returns a list of direct, extant Board URIs where this permission exists.
+	 * The goal of this is to weed out loose permissions provided by global permissions.
 	 *
 	 * @return array (of board_uri)
 	 */
@@ -123,9 +124,14 @@ trait PermissionUser {
 		
 		foreach ($this->getPermissions() as $board_uri => $board_permissions)
 		{
+			if (strlen($board_uri) === 0)
+			{
+				continue;
+			}
+			
 			if ($this->getPermission($permission, $board_uri))
 			{
-				return $boards[] = $board_uri;
+				$boards[] = $board_uri;
 			}
 		}
 		
