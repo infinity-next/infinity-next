@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
+use App\Post;
 use App\Report;
 use App\Http\Controllers\Panel\PanelController;
 
@@ -85,16 +86,16 @@ class ReportsController extends PanelController {
 			]);
 		
 		return redirect()->back()
-			->withSuccess(trans_choice("panel.reports.dismisssed", count($reports), [ 'reports' => count($reports) ]));
+			->withSuccess(trans_choice("panel.reports.dismisssed", $reports, [ 'reports' => $reports ]));
 	}
 	
 	/**
-	 * Dismisses all reports for an IP and returns the user back to the reports page.
-	 * Handles /report/{post}/dismiss-all
+	 * Dismisses all reports for a post and returns the user back to the reports page.
+	 * Handles /report/{post}/dismiss-post
 	 *
 	 * @return Response
 	 */
-	public function getDismissAll(Post $post)
+	public function getDismissPost(Post $post)
 	{
 		$reports = $post->reports()
 			->whereResponsibleFor($this->user)
@@ -104,7 +105,7 @@ class ReportsController extends PanelController {
 			]);
 		
 		return redirect()->back()
-			->withSuccess(trans_choice("panel.reports.dismisssed", count($reports), [ 'reports' => count($reports) ]));
+			->withSuccess(trans_choice("panel.reports.dismisssed", $reports, [ 'reports' => $reports ]));
 	}
 	
 	

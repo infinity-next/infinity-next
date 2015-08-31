@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\BoardAdventure;
 use App\FileStorage;
 use App\FileAttachment;
 use App\PostCite;
@@ -1157,10 +1158,10 @@ class Post extends Model {
 	 */
 	public function submitTo(Board &$board, &$thread = null)
 	{
-		$this->board_uri   = $board->board_uri;
-		$this->author_ip   = inet_pton(Request::getClientIp());
-		$this->reply_last  = $this->freshTimestamp();
-		$this->bumped_last = $this->reply_last;
+		$this->board_uri    = $board->board_uri;
+		$this->author_ip    = inet_pton(Request::ip());
+		$this->reply_last   = $this->freshTimestamp();
+		$this->bumped_last  = $this->reply_last;
 		$this->setCreatedAt($this->reply_last);
 		$this->setUpdatedAt($this->reply_last);
 		
@@ -1173,16 +1174,22 @@ class Post extends Model {
 		
 		
 		// Store the post in the database.
-		DB::transaction(function() use ($thread)
+		DB::transaction(function() use ($board, $thread)
 		{
 			// The objective of this transaction is to prevent concurrency issues in the database
 			// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
 			// alongside the primary autoincrement column `post_id`.
 			
-			// First instruction is to add +1 to posts_total.
+			// First instruction is to add +1 to posts_total and set the last_post_time.
 			DB::table('boards')
 				->where('board_uri', $this->board_uri)
 				->increment('posts_total');
+			
+			DB::table('boards')
+				->where('board_uri', $this->board_uri)
+				->update([
+					'last_post_at' => $this->created_at,
+				]);
 			
 			// Second, we record this value and lock the table.
 			$boards = DB::table('boards')
@@ -1205,6 +1212,17 @@ class Post extends Model {
 				$thread->reply_count += 1;
 				$thread->save();
 			}
+			
+			// Optionally, we also expend the adventure.
+			$adventure = BoardAdventure::getAdventure($board);
+			
+			if ($adventure)
+			{
+				$this->adventure_id = $adventure->adventure_id;
+				$adventure->expended_at = $this->created_at;
+				$adventure->save();
+			}
+			
 			
 			// Finally, we set our board_id and save.
 			$this->board_id  = $posts_total;

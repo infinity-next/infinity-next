@@ -509,16 +509,8 @@ class PostController extends Controller {
 		{
 			$user   = $this->user;
 			$report = Report::where('post_id', '=', $post->post_id)
-				->where(function($query) use ($board, $global) {
-					if ($global === "global")
-					{
-						$query->whereNull('board_uri');
-					}
-					else
-					{
-						$query->where('board_uri', $board->board_uri);
-					}
-				})
+				->where('global', $global === "global")
+				->where('board_uri', $board->board_uri)
 				->where(function($query) use ($user)
 				{
 					$query->where('reporter_ip', inet_pton(Request::ip()));
@@ -590,15 +582,21 @@ class PostController extends Controller {
 		{
 			return redirect()
 				->back()
+				->withInput(Input::except('captcha'))
 				->withErrors($validator->errors());
 		}
 		
-		$report =  new Report;
+		
+		// We only want to update a report if it already exists.
+		// The unique key here is (global, post, ip).
+		$report =  Report::firstOrNew([
+			'global'      => $global === "global",
+			'post_id'     => $post->post_id,
+			'reporter_ip' => inet_pton(Request::ip()),
+		]);
+		
 		$report->board_uri     = $board->board_uri;
-		$report->global        = $global === "global";
-		$report->post_id       = $post->post_id;
 		$report->reason        = $input['reason'];
-		$report->reporter_ip   = inet_pton(Request::ip());
 		$report->user_id       = !!Input::get('associate', false) ? $this->user->user_id : NULL;
 		$report->is_dismissed  = false;
 		$report->is_successful = false;

@@ -67,6 +67,13 @@ class Board extends Model {
 	 */
 	protected $hidden = ['created_at', 'created_by', 'operated_by'];
 	
+	/**
+	 * Attributes which are automatically sent through a Carbon instance on load.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['created_at', 'updated_at', 'last_post_at'];
+	
 	
 	/**
 	 * Ties database triggers to the model.
@@ -379,6 +386,11 @@ class Board extends Model {
 		return $staff;
 	}
 	
+	public function getUrl()
+	{
+		return url($this->board_uri);
+	}
+	
 	public function hasStylesheet()
 	{
 		return $this->getSetting('boardCustomCSS') != "";
@@ -592,8 +604,33 @@ class Board extends Model {
 			);
 	}
 	
-	public function scopeIndexed($query)
+	public function scopeWhereIndexed($query)
+	{
+		return $query->where('is_indexed', true);
+	}
+	
+	public function scopeWhereLastPost($query, $hours = 48)
+	{
+		return $query->where('last_post_at', '>=', $this->freshTimestamp()->subHours($hours));
+	}
+	
+	public function scopeWhereNSFW($query)
+	{
+		return $query->where('is_worksafe', false);
+	}
+	
+	public function scopeWhereOverboard($query)
+	{
+		return $query->where('is_overboard', true);
+	}
+	
+	public function scopeWherePublic($query)
 	{
 		return $query;
+	}
+	
+	public function scopeWhereSFW($query)
+	{
+		return $query->where('is_worksafe', true);
 	}
 }

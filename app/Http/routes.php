@@ -54,12 +54,20 @@ Route::group([
 			Route::controller('donate', 'DonateController');
 		}
 		
+		
+		// /cp/adventure forwards you to a random board.
+		if (true)
+		{
+			Route::controller('adventure', 'AdventureController');
+		}
+		
+		
 		Route::group([
 			'prefix'    => 'banned',
 		], function()
 		{
 			Route::get('/',                    'BannedController@getIndex');
-			Route::get('/global',              'BannedController@getGlobalIndex');	
+			Route::get('/global',              'BannedController@getGlobalIndex');
 			Route::get('/global/{ban}',        'BannedController@getBan');
 			Route::get('/board/{board}',       'BannedController@getBoardIndex');
 			Route::get('/board/{board}/{ban}', 'BannedController@getBan');
@@ -82,7 +90,7 @@ Route::group([
 			{
 				Route::get('{report}/dismiss',     'ReportsController@getDismiss');
 				Route::get('{report}/dismiss-ip',  'ReportsController@getDismissIp');
-				Route::get('{post}/dismiss-all', 'ReportsController@getDismissAll');
+				Route::get('{post}/dismiss-post',  'ReportsController@getDismissPost');
 			});
 		});
 		

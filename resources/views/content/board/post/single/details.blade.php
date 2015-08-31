@@ -38,6 +38,10 @@
 	<li class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
 	@endif
 	
+	@if (!is_null($post->adventure_id))
+	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
+	@endif
+	
 	@if (!is_null($post->author_ip))
 	<li class="post-detail detail-icon post-logged" title="@lang('board.detail.logged')"><i class="fa fa-server"></i></li>
 	@endif

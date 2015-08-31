@@ -617,6 +617,21 @@ class OptionSeeder extends Seeder {
 		return [
 			'site' => [
 				[
+					'option_name'           => "adventureEnabled",
+					'default_value'         => 1,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => 'boolean'
+				],
+				[
+					'option_name'           => "adventureIcons",
+					'default_value'         => 1,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => 'boolean'
+				],
+				
+				[
 					'option_name'           => "attachmentFilesize",
 					'default_value'         => "1024",
 					'format'                => "spinbox",
@@ -925,6 +940,16 @@ class OptionGroupSeeder extends Seeder
 					"boardCreateMax",
 					"boardCreateTimer",
 					"boardUriBanned",
+				],
+			],
+			[
+				'group_name'    => "adventures",
+				'debug_only'    => false,
+				'display_order' => 350,
+				
+				'options'       => [
+					"adventureEnabled",
+					"adventureIcons",
 				],
 			],
 			[

@@ -111,6 +111,7 @@ return [
 	
 	// Details
 	'detail'            => [
+		'adventurer' => "They came from outer space!",
 		'sticky'     => "Stickied",
 		'bumplocked' => "Bumplocked",
 		'locked'     => "Locked",

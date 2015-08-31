@@ -25,8 +25,10 @@ return [
 		'account_basic' => "Account Details",
 		'attachments'   => "Attachment Options",
 		'bans'          => "Ban Options",
+		'reports'       => "Report Options",
 		
 		'boards'        => "Board Options",
+		'adventures'    => "Adventure Options",
 		'board_banners' => "Board Banners",
 		'board_basic'   => "Basic Details",
 		'board_ephemerality' => "Content Ephemerality",
@@ -53,6 +55,9 @@ return [
 		'boardSidebarText'         => "Content",
 		'boardUriBanned'           => "Banned Board URIs",
 		
+		'adventureEnabled'         => "Enable adventures",
+		'adventureIcons'           => "Show icons for adventure posts",
+		
 		'boardAssetBannerUpload'   => "Upload new board banner",
 		
 		'boardCreateMax'           => "Maximum boards per user",
@@ -64,6 +69,9 @@ return [
 		'attachmentThumbnailSize'  => "Attachment preview size (px)",
 		'banMaxLength'             => "Maximum length for bans (days)",
 		'banSubnets'               => "Allow subnet bans",
+		
+		'boardReportText'          => "Message to users creating a local report",
+		'globalReportText'         => "Message to users creating a global report",
 		
 		'postAttachmentsMax'       => "Maximum attachments per post",
 		'postMaxLength'            => "Maximum characters per post",

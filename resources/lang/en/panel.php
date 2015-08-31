@@ -139,6 +139,11 @@ return [
 		'promote_post'   => "Promote Post",
 	],
 	
+	'adventure' => [
+		'go'  => "ADVENTURE!",
+		'sad' => "There's no where to go for an adventure. :(",
+	],
+	
 	'password'  => [
 		'reset' => "Reset Password",
 		

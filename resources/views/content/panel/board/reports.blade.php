@@ -13,8 +13,8 @@
 					<p class="report-board-desc">{{ $reportedPost->board->is_worksafe ? trans('board.sfw') : trans('board.nsfw') }}</p>
 					
 					<aside class="report-actions">
-						<a class="report-action" {{ url("/cp/boards/reports/{$reportedPost->post_id}/dismiss-post") }}>@lang('panel.reports.dismiss_post')</a>
-						<a class="report-action" {{ url("/cp/boards/reports/{$reportedPost->post_id}/promote-post") }}>@lang('panel.reports.promote_post')</a>
+						<a class="report-action" href="{{ url("/cp/boards/report/{$reportedPost->post_id}/dismiss-post") }}"">@lang('panel.reports.dismiss_post')</a>
+						<a class="report-action" href="{{ url("/cp/boards/report/{$reportedPost->post_id}/promote-post") }}"">@lang('panel.reports.promote_post')</a>
 					</aside>
 					
 					<div class="post-container">

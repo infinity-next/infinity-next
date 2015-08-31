@@ -21,6 +21,11 @@
 					<!-- Donation Page -->
 					<li class="boardlist-item"><a href="{!! secure_url("cp/donate") !!}" class="boardlist-link">Fund us</a></li>
 					@endif
+					
+					@if ($c->option('adventureEnabled'))
+					<!-- Adventure! -->
+					<li class="boardlist-item"><a href="{!! url("cp/adventure") !!}" class="boardlist-link">Adventure</a></li>
+					@endif
 				</ul>
 			</li>
 		</ul>

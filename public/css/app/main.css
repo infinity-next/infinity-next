@@ -2315,17 +2315,68 @@ body.error::before {
 					text-shadow: 1px black;
 					text-align: right;
 				}
-	main#banned {
+	
+	main#adventure {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		height: 320px;
+		width: 320px;
+		margin-top: -160px;
+		margin-left: -160px;
 	}
-			main#banned figure.error-figure {
-				margin-left: 1em;
-				margin-right: 1em;
-				float: right;
+		section.adventure-flair {
+			padding: 0;
+			margin-left: auto;
+			margin-right: auto;
+			
+			overflow: hidden;
+			max-width: 320px;
+			max-height: 320px;
+		}
+			figure.adventure-figure {
+				margin: 0;
+				padding: 0;
+				position: relative;
+				text-align: center;
 			}
-			figure.error-figure img.error-image {
-				max-height: 250px;
-				max-widht: 250px;
+			figure.adventure-figure i.fa {
+				font-size: 240px;
 			}
+			figure.adventure-figure figcaption.adventure-caption {
+				display: block;
+				height: 2em;
+				line-height: 2em;
+				
+				font-size: 2em;
+				font-weight: bold;
+				text-align: center;
+				text-indent: 1em;
+			}
+				a.adventure-link {
+					color: #34345C;
+					text-shadow:
+						-1px -1px 0 rgba(255,255,255,0.9),
+						1px -1px 0 rgba(255,255,255,0.9),
+						-1px 1px 0 rgba(255,255,255,0.9),
+						1px 1px 0 rgba(255,255,255,0.9);
+				}
+				a.adventure-link:hover {
+					color: #f00;
+				}
+	
+	main#banned {
+		
+	}
+		main#banned figure.error-figure {
+			margin-left: 1em;
+			margin-right: 1em;
+			float: right;
+		}
+		main#banned figure.error-figure img.error-image {
+			max-height: 250px;
+			max-widht: 250px;
+		}
 
 /* Page Header */
 header {

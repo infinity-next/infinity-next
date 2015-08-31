@@ -95,12 +95,7 @@ class Ban extends Model {
 	
 	public function getRedirectUrl()
 	{
-		if (!is_null($this->board_uri))
-		{
-			return "/cp/banned/board/{$this->board_uri}";
-		}
-		
-		return "/cp/banned/global";
+		return "/cp/banned";
 	}
 	
 	public function getAppealUrl()
