@@ -642,6 +642,11 @@ ib.widget("post", function(window, $, undefined) {
 		// Events
 		events   : {
 			attachmentCollapseClick : function(event) {
+				if(event.altKey || event.shiftKey || event.ctrlKey)
+				{
+					return true;
+				}
+				
 				var $link = $(this);
 				var $item = $link.parent();
 				var $img  = $(widget.options.selector['attachment-image'], $link);
@@ -654,6 +659,12 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			attachmentExpandClick : function(event) {
+				if(event.altKey || event.shiftKey || event.ctrlKey)
+				{
+					console.log(event);
+					return true;
+				}
+				
 				// We don't do anything if the user is CTRL+Clicking.
 				if (event.ctrlKey)
 				{

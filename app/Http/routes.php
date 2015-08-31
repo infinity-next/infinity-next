@@ -195,13 +195,13 @@ Route::group([
 				});
 				Route::any('/{id}.html', function(App\Board $board, $id) {
 					return redirect("{$board->board_uri}/{$id}");
-				})->where(['id' => '[0-9]+']);
+				});
 				Route::any('/res/{id}.html', function(App\Board $board, $id) {
 					return redirect("{$board->board_uri}/thread/{$id}");
-				})->where(['id' => '[0-9]+']);
+				});
 				Route::any('/res/{id}+{last}.html', function(App\Board $board, $id, $last) {
 					return redirect("{$board->board_uri}/thread/{$id}/{$last}");
-				})->where(['id' => '[0-9]+', 'last' => '[0-9]+']);
+				})->where(['last' => '[0-9]+']);
 			}
 			
 			
@@ -209,8 +209,7 @@ Route::group([
 			| Board Post Routes (Modding)
 			*/
 			Route::group([
-				'prefix' => 'post/{post}',
-				'where'  => ['{post}' => '[1-9]\d*'],
+				'prefix' => 'post/{id}',
 			], function()
 			{
 				Route::controller('', 'PostController');
@@ -225,8 +224,7 @@ Route::group([
 			Route::any('/', 'BoardController@getIndex');
 			
 			// Routes /board/1 to an index page for a specific pagination point.
-			Route::get('{id}', 'BoardController@getIndex')
-				->where(['id' => '[0-9]+']);
+			Route::get('{id}', 'BoardController@getIndex');
 			
 			
 			// Get the catalog.
@@ -240,19 +238,16 @@ Route::group([
 			
 			
 			// Get single thread.
-			Route::get('thread/{id}', 'BoardController@getThread')
-				->where(['id' => '[1-9]\d*']);
+			Route::get('thread/{id}', 'BoardController@getThread');
 			
 			// Put new thread
 			Route::put('thread', 'BoardController@putThread');
 			
 			// Put eply to thread.
-			Route::put('thread/{id}', 'BoardController@putThread')
-				->where(['id' => '[1-9]\d*']);
+			Route::put('thread/{id}', 'BoardController@putThread');
 			
 			// Redirect to a post.
-			Route::get('post/{id}', 'BoardController@getPost')
-				->where(['id' => '[1-9]\d*']);
+			Route::get('post/{id}', 'BoardController@getPost');
 		});
 		
 		
@@ -267,19 +262,16 @@ Route::group([
 			Route::any('index.json', 'BoardController@getIndex');
 			
 			// Gets index pages for the board.
-			Route::get('{id}.json', 'BoardController@getIndex')
-				->where(['id' => '[0-9]+']);
+			Route::get('{id}.json', 'BoardController@getIndex');
 			
 			// Gets all visible OPs on a board.
 			Route::any('catalog.json', 'BoardController@getCatalog');
 			
 			// Get single thread.
-			Route::get('thread/{id}.json', 'BoardController@getThread')
-				->where(['id' => '[1-9]\d*']);
+			Route::get('thread/{id}.json', 'BoardController@getThread');
 			
 			// Get single post.
-			Route::get('post/{id}.json', 'BoardController@getPost')
-				->where(['id' => '[1-9]\d*']);
+			Route::get('post/{id}.json', 'BoardController@getPost');
 			
 		});
 	});

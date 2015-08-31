@@ -24,7 +24,7 @@ class Report extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['reason', 'board_uri', 'post_id', 'ip', 'user_id', 'is_dismissed', 'is_successful'];
+	protected $fillable = ['reason', 'board_uri', 'post_id', 'reporter_ip', 'user_id', 'is_dismissed', 'is_successful', 'global'];
 	
 	
 	public function board()

@@ -586,7 +586,6 @@ class PostController extends Controller {
 				->withErrors($validator->errors());
 		}
 		
-		
 		// We only want to update a report if it already exists.
 		// The unique key here is (global, post, ip).
 		$report =  Report::firstOrNew([
@@ -594,6 +593,8 @@ class PostController extends Controller {
 			'post_id'     => $post->post_id,
 			'reporter_ip' => inet_pton(Request::ip()),
 		]);
+		
+		dd($report);
 		
 		$report->board_uri     = $board->board_uri;
 		$report->reason        = $input['reason'];
