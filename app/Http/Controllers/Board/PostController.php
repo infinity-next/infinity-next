@@ -172,10 +172,7 @@ class PostController extends Controller {
 					
 					$post->delete();
 					
-					foreach ($posts as $post)
-					{
-						Event::fire(new PostWasModerated($post, $this->user));
-					}
+					Event::fire(new PostWasModerated($post, $this->user));
 					
 					if ($post->reply_to)
 					{
@@ -593,8 +590,6 @@ class PostController extends Controller {
 			'post_id'     => $post->post_id,
 			'reporter_ip' => inet_pton(Request::ip()),
 		]);
-		
-		dd($report);
 		
 		$report->board_uri     = $board->board_uri;
 		$report->reason        = $input['reason'];

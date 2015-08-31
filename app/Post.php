@@ -567,7 +567,7 @@ class Post extends Model {
 	 */
 	public function isAuthoredByClient()
 	{
-		return inet_ntop($post->author_ip) === \Request::ip();
+		return inet_ntop($this->author_ip) === \Request::ip();
 	}
 	
 	/**
