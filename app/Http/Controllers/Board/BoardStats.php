@@ -47,7 +47,7 @@ trait BoardStats {
 				switch ($boardStat)
 				{
 					case "boardCount" :
-						$stats[$boardStat] = Board::indexed()->count();
+						$stats[$boardStat] = Board::whereIndexed()->count();
 						break;
 					
 					case "boardIndexedCount" :
