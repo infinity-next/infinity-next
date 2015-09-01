@@ -566,7 +566,8 @@ class Board extends Model {
 			// Limit the number of attachments to one.
 			foreach ($threads as $thread)
 			{
-				$thread->body_parsed = $thread->getBodyFormatted();
+				//$thread->body_parsed = $thread->getBodyFormatted();
+				$thread->setRelation('board', $this);
 				$thread->attachments = $thread->attachments->splice(0, 1);
 			}
 			

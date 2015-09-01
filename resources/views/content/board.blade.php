@@ -5,7 +5,7 @@
 	
 	<section class="index-form">
 		@include('content.board.post.form', [
-			'board'   => &$app['app.board'],
+			'board'   => &$board,
 			'actions' => [ $reply_to ? "reply" : "thread" ],
 		])
 	</section>
@@ -24,9 +24,9 @@
 			<li class="thread-item">
 				<article class="thread">
 					@include('content.board.thread', [
-						'board'   => &$app['app.board'],
-						'thread'  => $thread,
-						'op'      => $thread,
+						'board'   => &$board,
+						'thread'  => &$thread,
+						'op'      => &$thread,
 					])
 				</article>
 			</li>
