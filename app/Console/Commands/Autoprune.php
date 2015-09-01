@@ -48,7 +48,7 @@ class Autoprune extends Command {
 			foreach ($boards as $board)
 			{
 				// Get important settings.
-				$threadsPerPage = (int) $board->getSetting('postsPerPage', 10);
+				$threadsPerPage = (int) $board->getConfig('postsPerPage', 10);
 				
 				// Collect a list of threads which have been modified.
 				$threadsToSave  = [];
@@ -56,14 +56,14 @@ class Autoprune extends Command {
 				
 				// There are two groups of autoprune settings.
 				// x on day since last reply
-				$sageOnDay    = (int) $board->getSetting('epheSageThreadDays');
-				$lockOnDay    = (int) $board->getSetting('epheLockThreadDays');
-				$deleteOnDay  = (int) $board->getSetting('epheDeleteThreadDays');
+				$sageOnDay    = (int) $board->getConfig('epheSageThreadDays', false);
+				$lockOnDay    = (int) $board->getConfig('epheLockThreadDays', false);
+				$deleteOnDay  = (int) $board->getConfig('epheDeleteThreadDays', false);
 				
 				// x on page (meaning the thread has fallen to this page)
-				$sageOnPage   = (int) $board->getSetting('epheSageThreadPage');
-				$lockOnPage   = (int) $board->getSetting('epheLockThreadPage');
-				$deleteOnPage = (int) $board->getSetting('epheDeleteThreadPage');
+				$sageOnPage   = (int) $board->getConfig('epheSageThreadPage', false);
+				$lockOnPage   = (int) $board->getConfig('epheLockThreadPage', false);
+				$deleteOnPage = (int) $board->getConfig('epheDeleteThreadPage', false);
 				
 				
 				// Don't do anything unless we have to.

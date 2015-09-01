@@ -64,7 +64,7 @@ class BoardController extends Controller {
 		$posts = $board->getThreadsForIndex($page);
 		
 		return $this->view(static::VIEW_BOARD, [
-			'board'    => $board,
+			'board'    => &$board,
 			'posts'    => $posts,
 			'reply_to' => false,
 			
@@ -114,15 +114,15 @@ class BoardController extends Controller {
 	 * @param  integer|null  $thread
 	 * @return Response
 	 */
-	public function getThread(Board $board, $thread = null)
+	public function getThread(Board $board, $thread_id = null)
 	{
-		if (is_null($thread))
+		if (is_null($thread_id))
 		{
 			return redirect($board->board_uri);
 		}
 		
 		// Pull the thread.
-		$thread = $board->getThread($thread);
+		$thread = $board->getThreadByBoardId($thread_id);
 		
 		if (!$thread)
 		{
@@ -130,7 +130,7 @@ class BoardController extends Controller {
 		}
 		
 		return $this->view(static::VIEW_THREAD, [
-			'board'    => $board,
+			'board'    => &$board,
 			'posts'    => [ $thread ],
 			'reply_to' => $thread,
 		]);

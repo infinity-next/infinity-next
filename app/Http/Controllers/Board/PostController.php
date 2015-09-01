@@ -499,7 +499,7 @@ class PostController extends Controller {
 				abort(403);
 			}
 			
-			$reportText = $ContentFormatter->formatReportText($board->getSetting('boardReportText'));
+			$reportText = $ContentFormatter->formatReportText($board->getConfig('boardReportText'));
 		}
 		
 		if (!isset($report))

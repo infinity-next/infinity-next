@@ -6,6 +6,10 @@
 	@section('css')
 		{!! Minify::stylesheetDir('/vendor/')->withFullUrl() !!}
 		{!! Minify::stylesheetDir('/css/app/')->withFullUrl() !!}
+		
+		@section('page-css')
+			<link id="page-stylesheet" rel="stylesheet" data-instant-track />
+		@show
 	@show
 	
 	@section('js')

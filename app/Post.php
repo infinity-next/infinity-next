@@ -82,7 +82,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['content_raw', 'content_html', 'html'];
+	protected $appends = ['content_raw', 'content_html'];
 	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
@@ -100,7 +100,7 @@ class Post extends Model {
 	
 	public function bans()
 	{
-		return $this->belongsTo('\App\Ban', 'post_id');
+		return $this->hasMany('\App\Ban', 'post_id');
 	}
 	
 	public function board()
@@ -451,7 +451,7 @@ class Post extends Model {
 	 */
 	public function getAuthorIdAttribute()
 	{
-		if ($this->board->getSetting('postsThreadId'))
+		if ($this->board->getConfig('postsThreadId'))
 		{
 			return $this->attributes['author_id'];
 		}
@@ -464,7 +464,7 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
-	public function getContentRawAttribute()
+	public function getContentRawAttribute($value)
 	{
 		if (!$this->trashed())
 		{
@@ -481,7 +481,7 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
-	public function getContentHtmlAttribute()
+	public function getContentHtmlAttribute($value)
 	{
 		if (!$this->trashed())
 		{
@@ -733,7 +733,7 @@ class Post extends Model {
 		{
 			$board          = $this->board()->with('settings')->get()->first();
 			$visibleThreads = $board->threads()->op()->visible()->where('bumped_last', '>=', $this->bumped_last)->count();
-			$threadsPerPage = (int) $board->getSetting('postsPerPage', 10);
+			$threadsPerPage = (int) $board->getConfig('postsPerPage', 10);
 			
 			return floor(($visibleThreads - 1) / $threadsPerPage) + 1;
 		}
@@ -905,19 +905,12 @@ class Post extends Model {
 		}]);
 	}
 	
-	public function scopeAndBan($query)
+	public function scopeAndBans($query)
 	{
-		return $query
-			->leftJoin('bans', function($join)
-			{
-				$join->on('bans.post_id', '=', 'posts.post_id')
-					->where('bans.updated_at', '=', DB::raw('(select max(bans2.updated_at) from bans as bans2 where bans2.ban_id = bans.ban_id)'));
-			})
-			->addSelect(
-				'posts.*',
-				'bans.ban_id as ban_id',
-				'bans.justification as ban_reason'
-			);
+		return $query->with(['bans' => function($query)
+		{
+			$query->orderBy('created_at', 'asc');
+		}]);
 	}
 	
 	public function scopeAndCapcode($query)
@@ -957,6 +950,14 @@ class Post extends Model {
 	{
 		return $query->with(['replies' => function($query) {
 			$query->withEverything();
+		}]);
+	}
+	
+	public function scopeAndReports($query)
+	{
+		return $query->with(['reports' => function($query) {
+			$query->whereOpen();
+			$query->wherePromoted();
 		}]);
 	}
 	
@@ -1023,10 +1024,11 @@ class Post extends Model {
 		return $query
 			//->visible()
 			->andAttachments()
-			->andBan()
+			->andBans()
 			->andCapcode()
 			->andCites()
-			->andEditor();
+			->andEditor()
+			->andReports();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)

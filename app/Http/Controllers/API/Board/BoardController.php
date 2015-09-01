@@ -105,7 +105,7 @@ class BoardController extends ParentController implements ApiController {
 		{
 			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
 			
-			return Post::where('posts.board_uri', $board->board_uri)
+			$posts = Post::where('posts.board_uri', $board->board_uri)
 				->withEverything()
 				->where(function($query) use ($thread) {
 					$query->where('posts.reply_to_board_id', $thread);
@@ -118,6 +118,18 @@ class BoardController extends ParentController implements ApiController {
 				->withTrashed()
 				->orderBy('posts.created_at', 'asc')
 				->get();
+			
+			if (isset($input['updateHtml']))
+			{
+				foreach ($posts as $post)
+				{
+					$appends   = $post->getAppends();
+					$appends[] = "html";
+					$post->setAppends($appends);
+				}
+			}
+			
+			return $posts;
 		}
 		else
 		{

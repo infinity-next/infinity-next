@@ -22,28 +22,6 @@
 		</section>
 	</div>
 	
-	<div class="grid-container">
-		<section id="site-highlights">
-			<div class="grid-100">
-				<div class="smooth-box">
-					<h3>Check out these boards</h3>
-					
-					<ul class="index-highlights">
-						<li class="index-highlight">
-							<a href="/infinity/">/infinity/ - Infinity Next Development</a>
-						</li>
-						<li class="index-highlight">
-							<a href="/update/">/update/ - Updates</a>
-						</li>
-						<li class="index-highlight">
-							<a href="/space/">/space/ - Space</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</section>
-	
 	@include($c->template('index.project_introduction'))
 </main>
 @endsection

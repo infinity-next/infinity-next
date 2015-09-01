@@ -41,8 +41,10 @@ class RouteServiceProvider extends ServiceProvider {
 			
 			if ($board instanceof Board && $board->exists)
 			{
-				$app->singleton("\App\Board", function($app) use ($board) {
-					return $board;
+				$board->applicationSingleton = true;
+				$app->instance("app.board", $board);
+				$app->singleton("app.board", function($app) use ($board) {
+					return $board->load('settings');
 				});
 			}
 		});

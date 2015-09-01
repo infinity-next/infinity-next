@@ -1,5 +1,7 @@
 <?php namespace App;
 
+use App\BoardSetting;
+use App\Option;
 use App\Role;
 use App\User;
 use App\UserRole;
@@ -40,7 +42,7 @@ class Board extends Model {
 	protected $primaryKey = 'board_uri';
 	
 	/**
-	 * Denotes our primary key is not an AA.
+	 * Denotes our primary key is not an autoincrementing integer.
 	 *
 	 * @var string
 	 */
@@ -52,13 +54,6 @@ class Board extends Model {
 	 * @var array
 	 */
 	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by', 'is_overboard', 'is_worksafe', 'is_indexed'];
-	
-	/**
-	 * Cached settings for this board.
-	 *
-	 * @var array
-	 */
-	protected $settings;
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -74,6 +69,12 @@ class Board extends Model {
 	 */
 	protected $dates = ['created_at', 'updated_at', 'last_post_at'];
 	
+	/**
+	 * A cache of compiled board settings.
+	 *
+	 * @var array  of arrays which contain Options with BoardSetting.option_value pivot keys
+	 */
+	protected static $config = [];
 	
 	/**
 	 * Ties database triggers to the model.
@@ -137,7 +138,7 @@ class Board extends Model {
 	
 	public function canAttach($user)
 	{
-		if ($this->getSetting('postAttachmentsMax', 1) > 0)
+		if ($this->getConfig('postAttachmentsMax', 1) > 0)
 		{
 			return $user->canAttach($this);
 		}
@@ -227,6 +228,7 @@ class Board extends Model {
 		];
 	}
 	
+	
 	/**
 	 * Returns all board_banner type BoardAsset items.
 	 *
@@ -282,6 +284,68 @@ class Board extends Model {
 		return false;
 	}
 	
+	/**
+	 * This very important method determines the compiled configuration for a board.
+	 * It does this by taking extant board Options and then laying on top Board Settings.
+	 * Anything null defaults, anything with a value takes that place.
+	 * 
+	 * @param  string  $option_name  If null, returns compiled config.
+	 * @param  mixed  $fallback  If not null, returns itself if there is nothing defined.
+	 * @return mixed
+	 */
+	public function getConfig($option_name = null, $fallback = null)
+	{
+		$config =& static::$config[$this->board_uri];
+		
+		if (!is_array($config))
+		{
+			$config = [];
+			// Available options + defaults
+			$options  = Option::where('option_type', "board")->get();
+			// Defined settings
+			$settings = $this->settings;
+			
+			foreach ($options as $option)
+			{
+				$option->option_value = $option->default_value;
+				$config[$option->option_name] = $option;
+				
+				foreach ($settings as $setting)
+				{
+					if ($setting->option_name === $option->option_name)
+					{
+						$option->option_value = $setting->option_value;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (!is_null($option_name))
+		{
+			foreach ($config as $setting)
+			{
+				if ($setting->option_name == $option_name)
+				{
+					$option_value = $setting->option_value;
+					
+					if (is_null($option_value) || $option_value === "")
+					{
+						return $fallback;
+					}
+					
+					return $option_value;
+				}
+			}
+		}
+		else
+		{
+			return $config;
+		}
+		
+		return $fallback;
+	}
+	
 	public function getLocalThread($local_id)
 	{
 		return $this->threads()
@@ -313,7 +377,7 @@ class Board extends Model {
 		return Cache::remember("board.{$this->board_uri}.pages", 60, function()
 		{
 			$visibleThreads = $this->threads()->op()->visible()->count();
-			$threadsPerPage = (int) $this->getSetting('postsPerPage', 10);
+			$threadsPerPage = (int) $this->getConfig('postsPerPage', 10);
 			$pageCount      = ceil( $visibleThreads / $threadsPerPage );
 			
 			return $pageCount > 0 ? $pageCount : 1;
@@ -329,43 +393,11 @@ class Board extends Model {
 			->first();
 	}
 	
-	public function getSettings()
-	{
-		if (!isset($this->settings))
-		{
-			$this->settings = $this->settings()->get();
-		}
-		
-		return $this->settings;
-	}
-	
-	public function getSetting($option_name, $fallback = null)
-	{
-		$settings = $this->getSettings();
-		
-		foreach ($settings as $setting)
-		{
-			if ($setting->option_name == $option_name)
-			{
-				$option_value = $setting->option_value;
-				
-				if (is_null($option_value) || $option_value === "")
-				{
-					return $fallback;
-				}
-				
-				return $option_value;
-			}
-		}
-		
-		return $fallback;
-	}
-	
 	public function getSidebarContent()
 	{
 		$ContentFormatter = new ContentFormatter();
 		
-		return $ContentFormatter->formatSidebar($this->getSetting('boardSidebarText'));
+		return $ContentFormatter->formatSidebar($this->getConfig('boardSidebarText'));
 	}
 	
 	public function getStaff()
@@ -393,14 +425,14 @@ class Board extends Model {
 	
 	public function hasStylesheet()
 	{
-		return $this->getSetting('boardCustomCSS') != "";
+		return $this->getConfig('boardCustomCSS', "") != "";
 	}
 	
 	public function getStylesheet()
 	{
 		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
 		{
-			$style = $this->getSetting('boardCustomCSS');
+			$style = $this->getConfig('boardCustomCSS', "");
 			
 			if ($style == "" && !$this->isWorksafe())
 			{
@@ -411,24 +443,27 @@ class Board extends Model {
 		});
 	}
 	
-	public function getThread($post)
+	public function getThreadByBoardId($board_id)
 	{
 		$rememberTags    = ["board.{$this->board_uri}", "threads"];
 		$rememberTimer   = 30;
-		$rememberKey     = "board.{$this->board_uri}.thread.{$post}";
-		$rememberClosure = function() use ($post) {
-			$replies = $this->posts()
-				->where('board_id', $post)
+		$rememberKey     = "board.{$this->board_uri}.thread.{$board_id}";
+		$rememberClosure = function() use ($board_id) {
+			$thread = $this->posts()
+				->where('board_id', $board_id)
 				->withEverythingAndReplies()
 				->orderBy('bumped_last', 'desc')
-				->get();
+				->get()
+				->first();
 			
-			foreach ($replies as $reply)
+			$thread->setRelation('board', $this);
+			
+			foreach ($thread->replies as $reply)
 			{
-				$reply->body_parsed = $reply->getBodyFormatted();
+				$reply->setRelation('board', $this);
 			}
 			
-			return $replies;
+			return $thread;
 		};
 		
 		switch (env('CACHE_DRIVER'))
@@ -443,7 +478,7 @@ class Board extends Model {
 				break;
 		}
 		
-		return $thread->first();
+		return $thread;
 	}
 	
 	public function getThreads()
@@ -455,7 +490,7 @@ class Board extends Model {
 	
 	public function getThreadsForIndex($page = 0)
 	{
-		$postsPerPage = $this->getSetting('postsPerPage', 10);
+		$postsPerPage = $this->getConfig('postsPerPage', 10);
 		
 		$rememberTags    = ["board.{$this->board_uri}.pages"];
 		$rememberTimer   = 30;
@@ -477,12 +512,18 @@ class Board extends Model {
 			// Fix that.
 			foreach ($threads as $thread)
 			{
+				$thread->setRelation('board', $this);
 				$replyTake = $thread->stickied_at ? 1 : 5;
 				
 				$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->replies     = $thread->replies
 					->reverse()
 					->splice(-$replyTake, $replyTake);
+				
+				foreach($thread->replies as $reply)
+				{
+					$reply->setRelation('board', $this);
+				}
 			}
 			
 			return $threads;

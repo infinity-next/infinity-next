@@ -2,6 +2,6 @@
 
 @section('body')
 <main>
-	NO NIGGERS
+	## TODO ##
 </main>
 @endsection

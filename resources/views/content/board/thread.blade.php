@@ -1,19 +1,22 @@
 <div class="post-container @if ($op === $thread) op-container @else reply-container @endif post-{{$thread->post_id}} post-{{$thread->board_uri}}-{{$thread->board_id}}" data-widget="post">
-	@include( 'content.board.post.single', [
-		'board'   => $board,
-		'post'    => $thread,
+	@if ($thread->reports)
+	@include('content.board.post.single', [
+		'board'   => &$board,
+		'post'    => &$thread,
 		'catalog' => false,
 	])
 	
 	<ul class="post-metas">
-		@if ($thread->ban_id)
+		@if ($thread->bans)
+		@foreach ($thread->bans as $ban)
 		<li class="post-meta meta-ban_reason">
-			@if ($thread->ban_reason != "")
-			<i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $thread->ban_reason ])
+			@if ($ban->justification != "")
+			<i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
 			@else
 			<i class="fa fa-ban"></i> @lang('board.meta.banned')
 			@endif
 		</li>
+		@endforeach
 		@endif
 		
 		@if ($thread->updated_by)
@@ -22,6 +25,9 @@
 		</li>
 		@endif
 	</ul>
+	@else
+	Post was hidden from view.
+	@endif
 </div>
 
 {{--
@@ -37,11 +43,11 @@
 	@foreach ($thread->getReplies() as $reply)
 	<li class="thread-reply">
 		<article class="reply">
-			@include( 'content.board.thread', [
-				'board'    => $board,
-				'thread'   => $reply,
-				'op'       => $op,
-				'reply_to' => $reply_to,
+			@include('content.board.thread', [
+				'board'    => &$board,
+				'thread'   => &$reply,
+				'op'       => &$op,
+				'reply_to' => &$reply_to,
 			])
 		</article>
 	</li>

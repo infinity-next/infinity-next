@@ -4,7 +4,7 @@
 	<li class="post-detail post-author">
 		<strong class="post-detail-item author ugc">
 		@if ($post->email && !$catalog)<a href="mailto:{{ $post->email }}" class="post-detail-item email">@endif
-			{{ $post->author ?: $board->getSetting('defaultName', trans('board.anonymous')) }}
+			{{ $post->author ?: $board->getConfig('defaultName', trans('board.anonymous')) }}
 		@if ($post->email && !$catalog)</a>@endif
 		</strong>
 		
@@ -15,7 +15,7 @@
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
 	
-	@if ($board->getSetting('postsThreadId', false) && (!isset($catalog) || !$catalog))
+	@if ($board->getConfig('postsThreadId', false) && (!isset($catalog) || !$catalog))
 	<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
 		style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
 	</li>

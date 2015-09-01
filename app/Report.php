@@ -89,6 +89,14 @@ class Report extends Model {
 	}
 	
 	/**
+	 * Reduces query to only reports which have been elevated by local staff.
+	 */
+	public function scopeWherePromoted($query)
+	{
+		return $query->where('promoted_at', '>', 0);
+	}
+	
+	/**
 	 * Reduced query to only reports that the user is directly responsible for.
 	 * This means 'site.reports' open `global` ONLY and 'board.reports' only matter in direct assignment.
 	 *

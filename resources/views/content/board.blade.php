@@ -4,8 +4,8 @@
 <main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} @if (isset($page)) page-{{ $page }} @endif">
 	
 	<section class="index-form">
-		@include( $c->template('board.post.form'), [
-			'board'   => $board,
+		@include('content.board.post.form', [
+			'board'   => &$app['app.board'],
 			'actions' => [ $reply_to ? "reply" : "thread" ],
 		])
 	</section>
@@ -23,8 +23,8 @@
 			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include($c->template('board.thread'), [
-						'board'   => $board,
+					@include('content.board.thread', [
+						'board'   => &$app['app.board'],
 						'thread'  => $thread,
 						'op'      => $thread,
 					])
@@ -34,7 +34,7 @@
 		</ul>
 	</section>
 	
-	@include( $c->template('board.sidebar') )
+	@include('content.board.sidebar')
 	
 </main>
 @stop

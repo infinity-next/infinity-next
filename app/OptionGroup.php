@@ -34,6 +34,13 @@ class OptionGroup extends Model {
 	 */
 	public $timestamps = false;
 	
+	/**
+	 * A pseudo-attribute which is assigned during compilation of board and site configs.
+	 *
+	 * @var mixed
+	 */
+	public $option_value;
+	
 	
 	public function options()
 	{

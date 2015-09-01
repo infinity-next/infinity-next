@@ -118,7 +118,7 @@ class PostRequest extends Request {
 		if ($board && $user)
 		{
 			$rules['body'] = [
-				"max:" . $board->getSetting('postMaxLength', 65534),
+				"max:" . $board->getConfig('postMaxLength', 65534),
 			];
 			
 			if (!$board->canAttach($user))
@@ -129,7 +129,7 @@ class PostRequest extends Request {
 			}
 			else
 			{
-				$attachmentsMax = $board->getSetting('postAttachmentsMax', 1);
+				$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
 				
 				$rules['body'][]  = "required_without:files";
 				$rules['files'][] = "array";

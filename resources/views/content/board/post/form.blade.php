@@ -63,7 +63,7 @@
 					'id'          => "author",
 					'class'       => "field-control",
 					'maxlength'   => 255,
-					'placeholder' => $board->getSetting('defaultName'),
+					'placeholder' => $board->getConfig('defaultName'),
 					
 					isset($post) && $post->capcode_id ? "disabled" : "data-enabled",
 			]) !!}

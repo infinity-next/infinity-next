@@ -1198,12 +1198,12 @@ main.index-threaded {
 					.post-detail {
 						display: inline-block;
 					}
-						.post-detail.post-deleted {
+						.post-container .post-details .post-detail.post-deleted {
 							display: none;
 							color: #CC0000;
 						}
 						.post-container.post-deleted .post-detail.post-deleted {
-							display: inline-block;
+							display: inherit;
 						}
 						
 						.post-detail-item {

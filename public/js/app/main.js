@@ -800,6 +800,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					$.ajax(widget.updateURL, {
 						data : {
 							'updatesOnly'  : 1,
+							'updateHtml'   : 1,
 							'updatedSince' : widget.updateLast,
 						}
 					})

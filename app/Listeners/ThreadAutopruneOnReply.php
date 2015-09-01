@@ -32,7 +32,7 @@ class ThreadAutopruneOnReply extends Listener
 			
 			
 			// Bumplock the thread after the nth reply
-			$sageOnReply     = $board->getSetting('epheSageThreadReply');
+			$sageOnReply     = $board->getConfig('epheSageThreadReply');
 			
 			if ($sageOnReply > 0 && $replyCount >= $sageOnReply && is_null($post->bumplocked_at))
 			{
@@ -41,7 +41,7 @@ class ThreadAutopruneOnReply extends Listener
 			}
 			
 			// Lock the thread after the nth reply
-			$lockOnReply     = $board->getSetting('epheLockThreadReply');
+			$lockOnReply     = $board->getConfig('epheLockThreadReply');
 			
 			if ($lockOnReply > 0 && $replyCount >= $lockOnReply && is_null($post->locked_at))
 			{
@@ -50,7 +50,7 @@ class ThreadAutopruneOnReply extends Listener
 			}
 			
 			// Delete thread after the nth reply
-			$deleteOnReply   = $board->getSetting('epheDeleteThreadReply');
+			$deleteOnReply   = $board->getConfig('epheDeleteThreadReply');
 			
 			if ($deleteOnReply > 0 && $replyCount >= $deleteOnReply && is_null($post->deleted_at))
 			{
