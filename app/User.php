@@ -150,8 +150,18 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 */
 	public function getReportedPostsViewable()
 	{
-		return Post::whereHasReportsFor($this)
+		$posts = Post::whereHasReportsFor($this)
 			->withEverything()
 			->get();
+		
+		foreach ($posts as $post)
+		{
+			foreach ($post->reports as $report)
+			{
+				$report->setRelation('post', $post);
+			}
+		}
+		
+		return $posts;
 	}
 }

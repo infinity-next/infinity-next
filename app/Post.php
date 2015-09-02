@@ -342,6 +342,49 @@ class Post extends Model {
 	
 	
 	/**
+	 * Counts the number of currently related reports that can be promoted.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return int
+	 */
+	public function countReportsCanPromote(PermissionUser $user)
+	{
+		$count = 0;
+		
+		foreach ($this->reports as $report)
+		{
+			if ($report->canPromote($user))
+			{
+				++$count;
+			}
+		}
+		
+		return $count;
+	}
+	
+	/**
+	 * Counts the number of currently related reports that can be demoted.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return int
+	 */
+	public function countReportsCanDemote(PermissionUser $user)
+	{
+		$count = 0;
+		
+		foreach ($this->reports as $report)
+		{
+			if ($report->canDemote($user))
+			{
+				++$count;
+			}
+		}
+		
+		return $count;
+	}
+	
+	
+	/**
 	 * Returns a small, unique code to identify an author in one thread.
 	 *
 	 * @return string
@@ -1014,21 +1057,14 @@ class Post extends Model {
 		}
 	}
 	
-	public function scopeVisible($query)
-	{
-		return $query->where('deleted_at', null);
-	}
-	
 	public function scopeWithEverything($query)
 	{
 		return $query
-			//->visible()
 			->andAttachments()
 			->andBans()
 			->andCapcode()
 			->andCites()
-			->andEditor()
-			->andReports();
+			->andEditor();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)
@@ -1054,7 +1090,11 @@ class Post extends Model {
 			{
 				$query->whereOpen();
 				$query->whereResponsibleFor($user);
-			});
+			})
+			->with(['reports' => function($query) use ($user) {
+				$query->whereOpen();
+				$query->whereResponsibleFor($user);
+			}]);
 	}
 	
 	

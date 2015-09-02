@@ -9,6 +9,22 @@
 		<li class="report-detail detail-actions">
 			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_single')</a>
 		</li>
+		@if ($report->canPromote($user))
+		<li class="report-detail detail-actions">
+			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.promote_single')</a>
+		</li>
+		@endif
+		@if ($report->canDemote($user))
+		<li class="report-detail detail-actions">
+			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.demote_single')</a>
+		</li>
+		@endif
+		
+		@if ($report->global)
+		<li class="report-detail detail-global">@lang('pane.reports.global_single')</li>
+		@else
+		<li class="report-detail detail-local">@lang('pane.reports.local_single')</li>
+		@endif
 		
 		<li class="report-detail detail-ip">{{ $user->getTextForIP($report->getReporterIpAsString()) }} [<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss-ip") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_ip')</a>]</li>
 		

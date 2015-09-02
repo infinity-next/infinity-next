@@ -65,6 +65,18 @@ class Report extends Model {
 		return false;
 	}
 	
+	
+	/**
+	 * Determines if the user can Demote the post.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canDemote(PermissionUser $user)
+	{
+		return !$this->isDemoted();
+	}
+	
 	/**
 	 * Determines if the user can dismiss the report.
 	 *
@@ -76,6 +88,46 @@ class Report extends Model {
 		// At the moment, anyone who can view can dismiss.
 		return $this->canView($user);
 	}
+	/**
+	 * Determines if the user can promote the post.
+	 *
+	 * @param  PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canPromote(PermissionUser $user)
+	{
+		return $user->canReportGlobally($this->post) && !$this->isPromoted();
+	}
+	
+	/**
+	 * Determines if the post has been Demoted.
+	 *
+	 * @return boolean
+	 */
+	public function isDemoted()
+	{
+		return !$this->global && !is_null($this->promoted_at);
+	}
+	
+	/**
+	 * Determines if the post has been promoted.
+	 *
+	 * @return boolean
+	 */
+	public function isPromoted()
+	{
+		return $this->global && !is_null($this->promoted_at);
+	}
+	
+	/**
+	 * Returns the reporter's IP in a human-readable format.
+	 *
+	 * @return string
+	 */
+	public function getReporterIpAsString()
+	{
+		return inet_ntop($this->reporter_ip);
+	}
 	
 	/**
 	 * Reduces query to only reports that require action.
@@ -83,9 +135,9 @@ class Report extends Model {
 	public function scopeWhereOpen($query)
 	{
 		return $query->where(function($query) {
-			$query->where('is_dismissed', false);
-			$query->where('is_successful', false);
-		});
+				$query->where('is_dismissed', false);
+				$query->where('is_successful', false);
+			});
 	}
 	
 	/**
@@ -105,23 +157,13 @@ class Report extends Model {
 	public function scopeWhereResponsibleFor($query, PermissionUser $user)
 	{
 		return $query->where(function($query) use ($user) {
-			$query->whereIn('board_uri', $user->canInBoards('board.reports'));
-			
-			if (!$user->can('site.reports'))
-			{
-				$query->where('global', false);
-			}
-		});
-	}
-	
-	/**
-	 * Returns the reporter's IP in a human-readable format.
-	 *
-	 * @return string
-	 */
-	public function getReporterIpAsString()
-	{
-		return inet_ntop($this->reporter_ip);
+				$query->whereIn('board_uri', $user->canInBoards('board.reports'));
+				
+				if (!$user->can('site.reports'))
+				{
+					$query->where('global', false);
+				}
+			});
 	}
 	
 }
