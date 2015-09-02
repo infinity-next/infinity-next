@@ -376,7 +376,7 @@ class Board extends Model {
 	{
 		return Cache::remember("board.{$this->board_uri}.pages", 60, function()
 		{
-			$visibleThreads = $this->threads()->op()->visible()->count();
+			$visibleThreads = $this->threads()->op()->count();
 			$threadsPerPage = (int) $this->getConfig('postsPerPage', 10);
 			$pageCount      = ceil( $visibleThreads / $threadsPerPage );
 			
@@ -554,7 +554,6 @@ class Board extends Model {
 		$rememberClosure = function() use ($page, $postsPerPage) {
 			$threads = $this->threads()
 				->op()
-				->visible()
 				->andAttachments()
 				->andCapcode()
 				->orderBy('stickied', 'desc')

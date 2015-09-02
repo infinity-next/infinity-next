@@ -21,9 +21,9 @@
 		@endif
 		
 		@if ($report->global)
-		<li class="report-detail detail-global">@lang('pane.reports.global_single')</li>
+		<li class="report-detail detail-global">@lang('panel.reports.global_single')</li>
 		@else
-		<li class="report-detail detail-local">@lang('pane.reports.local_single')</li>
+		<li class="report-detail detail-local">@lang('panel.reports.local_single')</li>
 		@endif
 		
 		<li class="report-detail detail-ip">{{ $user->getTextForIP($report->getReporterIpAsString()) }} [<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss-ip") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_ip')</a>]</li>

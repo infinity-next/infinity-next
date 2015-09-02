@@ -131,12 +131,24 @@ return [
 	'reports'   => [
 		'empty'          => "You have no pending reports to review.",
 		'dismisssed'     => "{1}Report dismissed.|[2,Inf]Dismissed :reports reports.",
+		'demoted'       => "{1}Report demoted.|[2,Inf]Demoted :reports reports.",
+		'promoted'       => "{1}Report promoted.|[2,Inf]Promoted :reports reports.",
+		
+		'is_not_associated' => "Anonymous Report",
+		'is_associated'  => "Authored Report",
 		
 		'dismiss_post'   => "Dismiss Post",
 		'dismiss_ip'     => "Dismiss IP",
 		'dismiss_single' => "Dismiss",
 		
 		'promote_post'   => "Promote Post",
+		'promote_single' => "Promote",
+		
+		'demote_post'    => "Demote Post",
+		'demote_single'  => "Demote",
+		
+		'local_single'   => "Local Report",
+		'global_single'  => "Global Report",
 	],
 	
 	'adventure' => [

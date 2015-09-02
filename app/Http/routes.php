@@ -91,6 +91,10 @@ Route::group([
 				Route::get('{report}/dismiss',     'ReportsController@getDismiss');
 				Route::get('{report}/dismiss-ip',  'ReportsController@getDismissIp');
 				Route::get('{post}/dismiss-post',  'ReportsController@getDismissPost');
+				Route::get('{report}/promote',     'ReportsController@getPromote');
+				Route::get('{post}/promote-post',  'ReportsController@getPromotePost');
+				Route::get('{report}/demote',     'ReportsController@getDemote');
+				Route::get('{post}/demote-post',  'ReportsController@getDemotePost');
 			});
 		});
 		
