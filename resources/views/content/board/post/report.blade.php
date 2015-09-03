@@ -1,4 +1,22 @@
 <div class="report-content">
+	<ul class="report-actions actions-report">
+		<li class="report-action action-dismiss">
+			[<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_single')</a>]
+		</li>
+		
+		@if ($report->canPromote($user))
+		<li class="report-action action-promote">
+			[<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.promote_single')</a>]
+		</li>
+		@endif
+		
+		@if ($report->canDemote($user))
+		<li class="report-action action-demote">
+			[<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.demote_single')</a>]
+		</li>
+		@endif
+	</ul>
+	
 	@if ($report->reason)
 	<blockquote class="report-reason">{{$report->reason}}</blockquote>
 	@else
@@ -6,20 +24,6 @@
 	@endif
 	
 	<ul class="report-details">
-		<li class="report-detail detail-actions">
-			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_single')</a>
-		</li>
-		@if ($report->canPromote($user))
-		<li class="report-detail detail-actions">
-			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.promote_single')</a>
-		</li>
-		@endif
-		@if ($report->canDemote($user))
-		<li class="report-detail detail-actions">
-			<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.demote_single')</a>
-		</li>
-		@endif
-		
 		@if ($report->global)
 		<li class="report-detail detail-global">@lang('panel.reports.global_single')</li>
 		@else

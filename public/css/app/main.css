@@ -1967,6 +1967,18 @@ nav.cp-inner {
 			border-color: #F88;
 		}
 	
+	.reports .report-actions.actions-post li.report-action {
+		display: inline-block;
+		position: relative;
+		border: 1px solid rgba(0,0,0,0.25);
+		border-radius: 2px;
+		line-height: 1em;
+		height: 1em;
+		padding: 0.25em;
+		margin-right: 0.25em;
+		margin-bottom: 0.5em;
+	}
+	
 	.reports .post-report {
 		float: left;
 		margin: 1em 1em 0 0;
@@ -1974,6 +1986,14 @@ nav.cp-inner {
 		.reports .report-container {
 			padding: 1em;
 		}
+			.reports .report-actions.actions-report {
+				margin-bottom: 0.5em;
+			}
+				.reports .report-actions.actions-report .report-action {
+					display: inline-block;
+					margin-right: 0.25em;
+				}
+			
 			.reports .report-reason {
 				margin: 0 0 0.5em 0;
 				padding: 0 0 0.5em 0;
