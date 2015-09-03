@@ -74,7 +74,7 @@ class Report extends Model {
 	 */
 	public function canDemote(PermissionUser $user)
 	{
-		return !$this->isDemoted();
+		return !$this->isDemoted() && $this->global;
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class Report extends Model {
 	 */
 	public function canPromote(PermissionUser $user)
 	{
-		return $user->canReportGlobally($this->post) && !$this->isPromoted();
+		return $user->canReportGlobally($this->post) && !$this->isPromoted() && !$this->global;
 	}
 	
 	/**
@@ -162,6 +162,10 @@ class Report extends Model {
 				if (!$user->can('site.reports'))
 				{
 					$query->where('global', false);
+				}
+				else
+				{
+					$query->orWhere('global', true);
 				}
 			});
 	}

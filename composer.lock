@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "braintree/braintree_php",
-            "version": "3.3.0",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "09f87f78283838610d38af1a2a52b3dcd3267ca2"
+                "reference": "2f6c4df000f8442ff3730c3c71f8ae40419c6e44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/09f87f78283838610d38af1a2a52b3dcd3267ca2",
-                "reference": "09f87f78283838610d38af1a2a52b3dcd3267ca2",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/2f6c4df000f8442ff3730c3c71f8ae40419c6e44",
+                "reference": "2f6c4df000f8442ff3730c3c71f8ae40419c6e44",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 }
             ],
             "description": "Braintree PHP Client Library",
-            "time": "2015-08-19 18:52:46"
+            "time": "2015-09-01 17:40:16"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -1258,16 +1258,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.12",
+            "version": "v5.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "76a9816f37a58383f6ba093ccf08f253e5488555"
+                "reference": "2226a0abfe3776c5023601e59d496784d1de21fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/76a9816f37a58383f6ba093ccf08f253e5488555",
-                "reference": "76a9816f37a58383f6ba093ccf08f253e5488555",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2226a0abfe3776c5023601e59d496784d1de21fd",
+                "reference": "2226a0abfe3776c5023601e59d496784d1de21fd",
                 "shasum": ""
             },
             "require": {
@@ -1382,7 +1382,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-08-30 23:25:48"
+            "time": "2015-09-02 16:18:46"
         },
         {
             "name": "laravelcollective/html",
