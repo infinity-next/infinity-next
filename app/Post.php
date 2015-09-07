@@ -775,7 +775,7 @@ class Post extends Model {
 		if ($this->isOp())
 		{
 			$board          = $this->board()->with('settings')->get()->first();
-			$visibleThreads = $board->threads()->op()->visible()->where('bumped_last', '>=', $this->bumped_last)->count();
+			$visibleThreads = $board->threads()->op()->where('bumped_last', '>=', $this->bumped_last)->count();
 			$threadsPerPage = (int) $board->getConfig('postsPerPage', 10);
 			
 			return floor(($visibleThreads - 1) / $threadsPerPage) + 1;
@@ -805,7 +805,6 @@ class Post extends Model {
 	public function getReplyLast()
 	{
 		return $this->replies()
-			->visible()
 			->orderBy('post_id', 'desc')
 			->take(1)
 			->get()

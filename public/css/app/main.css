@@ -1298,10 +1298,10 @@ main.index-threaded {
 							display: inline;
 						}
 							html.js a.attachment-link img.attachment-type-img {
-								cursor: zoom-out;
+								cursor: zoom-in;
 							}
 							html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
-								cursor: zoom-in;
+								cursor: zoom-out;
 							}
 							
 							html a.attachment-link img.attachment-type-vid {
