@@ -118,6 +118,11 @@ class FileStorage extends Model {
 		return $this->getDirectoryThumb() . "/" . $this->hash;
 	}
 	
+	public function hasThumb()
+	{
+		return file_exists($this->getFullPathThumb());
+	}
+	
 	
 	public function scopeHash($query, $hash)
 	{
@@ -180,6 +185,12 @@ class FileStorage extends Model {
 			##
 			# MULTIMEDIA
 			##
+			case "video/webm" :
+				return "webm";
+			
+			case "video/mp4" :
+				return "mp4";
+			
 			case "application/epub+zip" :
 				return "epub";
 			
@@ -217,18 +228,34 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailHTML(Board $board)
 	{
-		$ext  = $this->guessExtension();
-		$url  = "/img/filetypes/{$ext}.svg";
-		$type = "other";
+		$ext   = $this->guessExtension();
+		$url   = "/img/filetypes/{$ext}.svg";
+		$type  = "other";
+		$html  = "";
+		$stock = true;
 		
 		switch ($ext)
 		{
-			case "svg" :
-			case "jpg" :
-			case "png" :
-			case "gif" :
-				$url  = $this->getThumbnailURL($board);
-				$type = "img";
+			case "mp4"  :
+			case "webm" :
+				if ($this->hasThumb())
+				{
+					$stock = false;
+					$url   = $this->getThumbnailURL($board);
+					$type  = "vid";
+				}
+				break;
+			
+			case "svg"  :
+			case "jpg"  :
+			case "png"  :
+			case "gif"  :
+				if ($this->hasThumb())
+				{
+					$stock = false;
+					$url   = $this->getThumbnailURL($board);
+					$type  = "img";
+				}
 				break;
 		}
 		
@@ -244,21 +271,23 @@ class FileStorage extends Model {
 	public function getThumbnailURL(Board $board)
 	{
 		$baseURL = "/{$board->board_uri}/file/thumb/{$this->hash}/";
+		$ext     = $this->guessExtension();
 		
-		if ($this->guessExtension() === "svg")
+		switch ($ext)
 		{
-			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-			$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
+			case "svg" :
+				// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
+				$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
+				break;
 		}
 		
+		// Sometimes we supply a filename when fetching the filestorage as an attachment.
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
 			return url($baseURL . $this->pivot->filename);
 		}
-		else
-		{
-			return url($baseURL . strtotime($this->first_uploaded_at) . "." . $this->guessExtension());
-		}
+		
+		return url($baseURL . strtotime($this->first_uploaded_at) . "." . $this->guessExtension());
 	}
 	
 	/**
@@ -270,9 +299,45 @@ class FileStorage extends Model {
 	{
 		switch ($this->guessExtension())
 		{
-			case "jpg" :
-			case "gif" :
-			case "png" :
+			case "mp4"  :
+			case "webm" :
+				if (!Storage::exists($this->getFullPathThumb()))
+				{
+					Storage::makeDirectory($this->getDirectoryThumb());
+					
+					$video    = $this->getFullPath();
+					$image    = $this->getFullPathThumb();
+					$interval = 0;
+					$frames   = 1;
+					
+					$cmd = env('LIB_VIDEO', "ffmpeg") . " -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y $image 2>&1";
+					
+					exec($cmd, $output, $returnvalue);
+					
+					// Constrain thumbnail to proper dimensions.
+					if (Storage::exists($image))
+					{
+						$imageManager = new ImageManager;
+						$imageManager
+							->make($this->getFullPath())
+							->resize(
+								## TODO ##
+								// Add a way for options to be recovered without a controller.
+								250,//$controller->option('attachmentThumbnailSize'),
+								250,//$controller->option('attachmentThumbnailSize'),
+								function($constraint) {
+									$constraint->aspectRatio();
+									$constraint->upsize();
+								}
+							)
+							->save($this->getFullPathThumb());
+					}
+				}
+				break;
+			
+			case "jpg"  :
+			case "gif"  :
+			case "png"  :
 				if (!Storage::exists($this->getFullPathThumb()))
 				{
 					Storage::makeDirectory($this->getDirectoryThumb());
@@ -292,7 +357,7 @@ class FileStorage extends Model {
 						)
 						->save($this->getFullPathThumb());
 				}
-			break;
+				break;
 		}
 	}
 	

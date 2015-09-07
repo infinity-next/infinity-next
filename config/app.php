@@ -148,11 +148,11 @@ return [
 		'App\Providers\AuthServiceProvider',
 		'App\Providers\BladeServiceProvider',
 		'App\Providers\BusServiceProvider',
-		'App\Providers\CaptchaServiceProvider',
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
 		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		
 		/*
@@ -239,7 +239,8 @@ return [
 		/*
 		 * Captcha
 		 */
-		'Captcha'   => 'App\Support\Facades\Captcha',
+		//'Captcha'   => 'App\Support\Facades\Captcha',
+		'Captcha'   => 'InfinityNext\BrennanCaptcha\Facades\Captcha',
 		
 		/*
 		 * CSS+JS Minify

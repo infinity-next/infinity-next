@@ -1297,11 +1297,21 @@ main.index-threaded {
 						a.attachment-link {
 							display: inline;
 						}
-							html.js a.attachment-link.attachment-type-img {
+							html.js a.attachment-link img.attachment-type-img {
 								cursor: zoom-out;
 							}
-							html.js li.attachment-expanded a.attachment-link.attachment-type-img {
-								cursor: zoom-out;
+							html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
+								cursor: zoom-in;
+							}
+							
+							html a.attachment-link img.attachment-type-vid {
+								border-style: solid;
+								border-width: 17px;
+								
+								-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
+								-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
+								-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
+								border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
 							}
 							
 							figure.attachment {

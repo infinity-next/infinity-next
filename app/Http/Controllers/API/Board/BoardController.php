@@ -99,7 +99,7 @@ class BoardController extends ParentController implements ApiController {
 			return abort(404);
 		}
 		
-		$input = $request->only('updatesOnly', 'updatedSince');
+		$input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 		
 		if (isset($input['updatesOnly']))
 		{

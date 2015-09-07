@@ -853,6 +853,18 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Sets the value of $this->appends to the input.
+	 * Not normally available to models, but required for API responses.
+	 *
+	 * @param  array $appends
+	 * @return array
+	 */
+	public function setAppends(array $appends)
+	{
+		return $this->appends = $appends;
+	}
+	
+	/**
 	 * Sets the bumplock property timestamp.
 	 *
 	 * @param  boolean  $bumplock
@@ -1064,7 +1076,8 @@ class Post extends Model {
 			->andBans()
 			->andCapcode()
 			->andCites()
-			->andEditor();
+			->andEditor()
+			->andReports();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)

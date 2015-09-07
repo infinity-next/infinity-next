@@ -140,7 +140,7 @@ class PostRequest extends Request {
 				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
 					$rules["files.{$attachment}"] = [
-						"mimes:jpeg,gif,png,svg,pdf,epub",
+						"mimes:jpeg,gif,png,svg,pdf,epub,webm,mp4,ogg",
 						
 						## TODO ##
 						// Make maximum filesize a config option.
@@ -248,7 +248,7 @@ class PostRequest extends Request {
 			$input = $this->all();
 			
 			// Process uploads.
-			if (isset($inpput['files']))
+			if (isset($input['files']))
 			{
 				$uploads = $input['files'];
 				

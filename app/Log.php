@@ -1,6 +1,5 @@
 <?php namespace App;
 
-use App\Contracts\PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model {
