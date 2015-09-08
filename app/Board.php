@@ -456,11 +456,14 @@ class Board extends Model {
 				->get()
 				->first();
 			
-			$thread->setRelation('board', $this);
-			
-			foreach ($thread->replies as $reply)
+			if ($thread instanceof Post)
 			{
-				$reply->setRelation('board', $this);
+				$thread->setRelation('board', $this);
+				
+				foreach ($thread->replies as $reply)
+				{
+					$reply->setRelation('board', $this);
+				}
 			}
 			
 			return $thread;
