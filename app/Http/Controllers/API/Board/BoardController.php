@@ -134,7 +134,7 @@ class BoardController extends ParentController implements ApiController {
 		else
 		{
 			// Pull the thread.
-			$thread = $board->getThread($thread);
+			$thread = $board->getThreadByBoardId($thread);
 			
 			if (!$thread)
 			{
