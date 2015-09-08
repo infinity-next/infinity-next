@@ -46,7 +46,7 @@ class ImageController extends Controller {
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
 				$responseSize    = Storage::size($storagePath);
-				
+				$responseCode    = 200;
 				$responseHeaders = [
 					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
 					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
@@ -96,6 +96,7 @@ class ImageController extends Controller {
 							]);
 						}
 						
+						$responseCode = 206;
 						$responseHeaders['Content-Range'] = "bytes {$responseStart}-{$responseEnd}/{$responseSize}";
 					}
 				}
@@ -119,7 +120,7 @@ class ImageController extends Controller {
 					}
 					
 					fclose($responseStream);
-				}, 200, $responseHeaders);
+				}, $responseCode, $responseHeaders);
 			}
 		}
 		
