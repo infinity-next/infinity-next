@@ -46,23 +46,19 @@ class ImageController extends Controller {
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
 				$responseSize    = Storage::size($storagePath);
-				$responseCode    = 400;
+				
 				$responseHeaders = [
 					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
 					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
 					'Last-Modified'       => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
 					'Content-Disposition' => "inline",
 					'Content-Length'      => $responseSize,
-					//'Content-Type'        => $FileStorage->mime,
+					'Content-Type'        => $FileStorage->mime,
 					'Filename'            => $filename,
 				];
 				
 				$responseStart = 0;
 				$responseEnd   = $responseSize - 1;
-				
-				//if (!($responseStream = fopen($storagePathFull, 'rb'))) {
-				//	abort(500, "Could not open requested file.");
-				//}
 				
 				if ($FileStorage->isVideo())
 				{
@@ -93,26 +89,37 @@ class ImageController extends Controller {
 						
 						$responseEnd = ($responseEnd > $responseEnd) ? $responseEnd : $responseEnd;
 						
-						if ($responseStart > $responseEnd || $responseStart > $responseSize - 1 || $responseEnd >= $this->size)
+						if ($responseStart > $responseEnd || $responseStart > $responseSize - 1 || $responseEnd >= $responseSize)
 						{
 							return Response::make("Requested Range Not Satisfiable", 416, [
 								'Content-Range' => "bytes {$responseStart}-{$responseEnd}/{$responseSize}",
 							]);
 						}
 						
-						$length = $responseEnd - $responseStart + 1;
-						
-						//fseek($responseStream, $responseStart);
-						
 						$responseHeaders['Content-Range'] = "bytes {$responseStart}-{$responseEnd}/{$responseSize}";
 					}
 				}
 				
-				$response = Response::download($storagePathFull, $filename, $responseHeaders, 'inline');
-				
-				//fclose($responseStream);
-				
-				return $response;
+				return Response::stream(function() use ($storagePathFull, $responseStart, $responseEnd) {
+					if (!($responseStream = fopen($storagePathFull, 'rb'))) {
+						abort(500, "Could not open requested file.");
+					}
+					
+					if ($responseStart > 0)
+					{
+						fseek($responseStream, $responseStart);
+					}
+					
+					$streamCurrent = 0;
+					
+					while (!feof($responseStream) && $streamCurrent < $responseEnd && connection_status() == 0)
+					{
+						echo fread($responseStream, min(1024 * 16, $responseEnd - $responseStart + 1));
+						$streamCurrent += 1024 * 16;
+					}
+					
+					fclose($responseStream);
+				}, 200, $responseHeaders);
 			}
 		}
 		
