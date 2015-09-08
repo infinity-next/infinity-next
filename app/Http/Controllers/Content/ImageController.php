@@ -97,7 +97,8 @@ class ImageController extends Controller {
 						}
 						
 						$responseCode = 206;
-						$responseHeaders['Content-Range'] = "bytes {$responseStart}-{$responseEnd}/{$responseSize}";
+						$responseHeaders['Content-Length'] = $responseSize - $responseStart;
+						$responseHeaders['Content-Range']  = "bytes {$responseStart}-{$responseEnd}/{$responseSize}";
 						
 						unset($responseHeaders['Accept-Ranges']);
 						unset($responseHeaders['Cache-Control']);
