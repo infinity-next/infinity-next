@@ -46,20 +46,71 @@ class ImageController extends Controller {
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
 				$responseSize    = Storage::size($storagePath);
-				
+				$responseCode    = 400;
 				$responseHeaders = [
 					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
 					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
 					'Last-Modified'       => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
 					'Content-Disposition' => "inline",
 					'Content-Length'      => $responseSize,
-					'Content-Type'        => $FileStorage->mime,
+					//'Content-Type'        => $FileStorage->mime,
 					'Filename'            => $filename,
 				];
 				
-				$response = Response::stream(function() use ($storagePathFull) {
-					readfile($storagePathFull);
-				}, 200, $responseHeaders);
+				$responseStart = 0;
+				$responseEnd   = $responseSize - 1;
+				
+				//if (!($responseStream = fopen($storagePathFull, 'rb'))) {
+				//	abort(500, "Could not open requested file.");
+				//}
+				
+				if ($FileStorage->isVideo())
+				{
+					$responseHeaders['Accept-Ranges'] = "0-" . ($responseSize - 1);
+					
+					if (isset($_SERVER['HTTP_RANGE']))
+					{
+						list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+						
+						if (strpos($range, ',') !== false)
+						{
+							return Response::make("Requested Range Not Satisfiable", 416, [
+								'Content-Range' => "bytes {$responseStart}-{$responseEnd}/{$responseSize}",
+							]);
+						}
+						
+						if ($range == '-')
+						{
+							$responseStart = $this->size - substr($range, 1);
+						}
+						else
+						{
+							$range = explode('-', $range);
+							$responseStart = $range[0];
+							
+							$responseEnd = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $responseEnd;
+						}
+						
+						$responseEnd = ($responseEnd > $responseEnd) ? $responseEnd : $responseEnd;
+						
+						if ($responseStart > $responseEnd || $responseStart > $responseSize - 1 || $responseEnd >= $this->size)
+						{
+							return Response::make("Requested Range Not Satisfiable", 416, [
+								'Content-Range' => "bytes {$responseStart}-{$responseEnd}/{$responseSize}",
+							]);
+						}
+						
+						$length = $responseEnd - $responseStart + 1;
+						
+						//fseek($responseStream, $responseStart);
+						
+						$responseHeaders['Content-Range'] = "bytes {$responseStart}-{$responseEnd}/{$responseSize}";
+					}
+				}
+				
+				$response = Response::download($storagePathFull, $filename, $responseHeaders, 'inline');
+				
+				//fclose($responseStream);
 				
 				return $response;
 			}

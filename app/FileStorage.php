@@ -291,6 +291,42 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Is this attachment an image?
+	 *
+	 * @return boolean
+	 */
+	public function isImage()
+	{
+		switch ($this->guessExtension())
+		{
+			case "jpg"  :
+			case "gif"  :
+			case "png"  :
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Is this attachment a video?
+	 * Primarily used to split files on HTTP range requests.
+	 *
+	 * @return boolean
+	 */
+	public function isVideo()
+	{
+		switch ($this->guessExtension())
+		{
+			case "mp4"  :
+			case "webm" :
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Turns an image into a thumbnail if possible, overwriting previous versions.
 	 *
 	 * @return void
