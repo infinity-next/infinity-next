@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use App\Services\SettingManager;
 use Illuminate\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider {
@@ -15,6 +16,11 @@ class ConfigServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		$this->app->singleton('settings', function($app)
+		{
+			return new SettingManager($app);
+		});
+		
 		config([
 			//
 		]);

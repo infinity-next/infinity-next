@@ -118,20 +118,8 @@ abstract class Controller extends BaseController {
 	 */
 	public function option($option_name)
 	{
-		if (!isset($this->options))
-		{
-			$this->options = SiteSetting::getAll();
-		}
-		
-		foreach ($this->options as $option)
-		{
-			if ($option->option_name == $option_name)
-			{
-				return $option->option_value;
-			}
-		}
-		
-		return null;
+		global $app;
+		return $app['settings']($option_name);
 	}
 	
 	/**

@@ -477,7 +477,7 @@ class Board extends Model {
 				break;
 			
 			default :
-				$thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
 		
