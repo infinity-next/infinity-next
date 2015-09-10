@@ -4,9 +4,10 @@ use App\Ban;
 use App\Board;
 use App\Post;
 use App\Services\UserManager;
-use App\Support\IP\CIDR;
+use App\Validators\FileValidator;
 
 use Auth;
+use Validator;
 use View;
 
 class PostRequest extends Request {
@@ -48,6 +49,11 @@ class PostRequest extends Request {
 	 */
 	public function __construct(Board $board, UserManager $manager)
 	{
+		Validator::resolver(function($translator, $data, $rules, $messages)
+		{
+			return new FileValidator($translator, $data, $rules, $messages);
+		});
+		
 		$this->board = $board;
 		$this->user  = $manager->user;
 	}
@@ -107,6 +113,8 @@ class PostRequest extends Request {
 	 */
 	public function rules()
 	{
+		global $app;
+		
 		$board = $this->board;
 		$user  = $this->user;
 		$rules = [
@@ -140,11 +148,9 @@ class PostRequest extends Request {
 				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
 					$rules["files.{$attachment}"] = [
-						"mimes:jpeg,gif,png,svg,pdf,epub,webm,mp4,ogg",
-						
-						## TODO ##
-						// Make maximum filesize a config option.
-						"between:0,8000",// . $controller->option('attachmentFilesize'),
+						"mimes:jpeg,gif,png,bmp,svg,swf,webm,mp4,ogg,mp3,mpga,mpeg,wav,pdf,epub",
+						"between:0," . $app['settings']('attachmentFilesize'),
+						"FileIntegrity",
 					];
 				}
 			}
@@ -191,6 +197,7 @@ class PostRequest extends Request {
 		
 		
 		$validator = $this->getValidatorInstance();
+		$messages  = $validator->errors();
 		
 		// Ban check.
 		$ban = Ban::getBan($this->ip(), $board->board_uri);
@@ -231,19 +238,16 @@ class PostRequest extends Request {
 						
 						if ($floodTimer->isFuture())
 						{
-							$messages = $validator->errors();
 							$messages->add("body", trans("validation.custom.post_flood", [
 								'time_left' => $floodTimer->diffInSeconds(),
 							]));
-							$this->failedValidation($validator);
 						}
 					}
 				}
 			}
 			
 			
-			// This is a hack, but ...
-			// If a file is uploaded that has a specific filename, it breaks the process.
+			// Validate individual files.
 			
 			$input = $this->all();
 			
@@ -256,18 +260,21 @@ class PostRequest extends Request {
 				{
 					foreach ($uploads as $uploadIndex => $upload)
 					{
+						// If a file is uploaded that has a specific filename, it breaks the process.
 						if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
 						{
-							$messages = $validator->errors();
 							$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
 								"filename" => $upload->getClientOriginalName(),
 							]));
-							$this->failedValidation($validator);
-							break;
 						}
 					}
 				}
 			}
+		}
+		
+		if (count($validator->errors()))
+		{
+			$this->failedValidation($validator);
 		}
 	}
 }

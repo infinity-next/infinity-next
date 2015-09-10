@@ -247,6 +247,13 @@ class FileStorage extends Model {
 				break;
 			
 			case "svg"  :
+				$stock = false;
+				$url   = $this->getDownloadURL($board);
+				$type  = "img";
+				break;
+			
+			case "mp3"  :
+			case "mpga" :
 			case "jpg"  :
 			case "png"  :
 			case "gif"  :
@@ -299,6 +306,8 @@ class FileStorage extends Model {
 	{
 		switch ($this->guessExtension())
 		{
+			case "bmp"  :
+			case "jpeg" :
 			case "jpg"  :
 			case "gif"  :
 			case "png"  :
@@ -333,8 +342,49 @@ class FileStorage extends Model {
 	 */
 	protected function processThumb()
 	{
+		global $app;
+		
 		switch ($this->guessExtension())
 		{
+			case "mp3"  :
+			case "mpga" :
+			case "wav"  :
+				if (!Storage::exists($this->getFullPathThumb()))
+				{
+					$ID3  = new \getID3();
+					$meta = $ID3->analyze($this->getFullPath());
+					
+					if (count($meta['comments']['picture']))
+					{
+						foreach ($meta['comments']['picture'] as $albumArt)
+						{
+							try
+							{
+								$imageManager = new ImageManager;
+								$imageManager
+									->make($albumArt['data'])
+									->resize(
+										$app['settings']('attachmentThumbnailSize'),
+										$app['settings']('attachmentThumbnailSize'),
+										function($constraint) {
+											$constraint->aspectRatio();
+											$constraint->upsize();
+										}
+									)
+									->save($this->getFullPathThumb());
+							}
+							catch (\Exception $error)
+							{
+								// Nothing.
+							}
+							
+							break;
+						}
+					}
+				}
+				break;
+			
+			case "flv"  :
 			case "mp4"  :
 			case "webm" :
 				if (!Storage::exists($this->getFullPathThumb()))
@@ -357,10 +407,8 @@ class FileStorage extends Model {
 						$imageManager
 							->make($this->getFullPath())
 							->resize(
-								## TODO ##
-								// Add a way for options to be recovered without a controller.
-								250,//$controller->option('attachmentThumbnailSize'),
-								250,//$controller->option('attachmentThumbnailSize'),
+								$app['settings']('attachmentThumbnailSize'),
+								$app['settings']('attachmentThumbnailSize'),
 								function($constraint) {
 									$constraint->aspectRatio();
 									$constraint->upsize();
@@ -382,10 +430,8 @@ class FileStorage extends Model {
 					$imageManager
 						->make($this->getFullPath())
 						->resize(
-							## TODO ##
-							// Add a way for options to be recovered without a controller.
-							250,//$controller->option('attachmentThumbnailSize'),
-							250,//$controller->option('attachmentThumbnailSize'),
+							$app['settings']('attachmentThumbnailSize'),
+							$app['settings']('attachmentThumbnailSize'),
 							function($constraint) {
 								$constraint->aspectRatio();
 								$constraint->upsize();

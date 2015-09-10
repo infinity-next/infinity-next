@@ -3,10 +3,14 @@
 use App\OptionGroup;
 use App\SiteSetting;
 use App\Http\Controllers\Panel\PanelController;
+
 use DB;
 use Input;
 use Request;
 use Validator;
+
+use Event;
+use App\Events\SiteSettingsWereModified;
 
 class ConfigController extends PanelController {
 	
@@ -104,6 +108,8 @@ class ConfigController extends PanelController {
 				$setting->save();
 			}
 		}
+		
+		Event::fire(new SiteSettingsWereModified());
 		
 		return $this->view(static::VIEW_CONFIG, [
 			'groups' => $optionGroups,

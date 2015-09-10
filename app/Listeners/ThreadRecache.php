@@ -39,10 +39,11 @@ class ThreadRecache extends Listener
 		
 		// Side-note:
 		// We use the "board.b.thread.board_id" syntax instead of
-		// "thread.id" because we will often want to clear threads
+		// "thread.board_id" because we will often want to clear threads
 		// for an entire board. Without that prefix, we can't easily
 		// accomplish that.
 		Cache::forget("board.{$post->board_uri}.thread.{$thread_id}");
+		Cache::tags(["board.{$post->board_uri}", "threads"])->forget("board.{$post->board_uri}.thread.{$thread_id}");
 	}
 	
 }

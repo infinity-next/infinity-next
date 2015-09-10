@@ -14,14 +14,15 @@
 		</thead>
 		<tbody>
 			@foreach ($boards as $board)
+			{{ dd($board->staffAssignments) }}
 			<tr>
 				<td><a href="{{{ url("/cp/board/{$board->board_uri}") }}}">/{{{ $board->board_uri }}}/</a></td>
 				<td><a href="{{{ url("/cp/board/{$board->board_uri}/staff") }}}">{{{
 					Lang::choice(
 						'panel.field.staff_count',
-						count($board->getStaff()),
+						count($board->staffAssignments),
 						[
-							"staff_count" => count($board->getStaff())
+							"staff_count" => count($board->staffAssignments),
 						]
 					)
 				}}}</a></td>

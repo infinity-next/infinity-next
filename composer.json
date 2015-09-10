@@ -33,6 +33,7 @@
 		"intervention/image": "~2.3",
 		"cviebrock/image-validator" : "2.0.*@beta",
 		
+		"james-heinrich/getid3" : "1.9.*",
 		
 		"devfactory/minify" : "1.0.*",
 		

@@ -120,6 +120,11 @@ class Board extends Model {
 		return $this->belongsTo('\App\User', 'owned_by', 'user_id');
 	}
 	
+	public function staffAssignments()
+	{
+		return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'user_id');
+	}
+	
 	public function threads()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');
@@ -646,6 +651,16 @@ class Board extends Model {
 				'boards.*',
 				'operator.username as operated_by_username'
 			);
+	}
+	
+	public function scopeAndStaff($query)
+	{
+		return $query->with('staffAssignments.user');
+	}
+	
+	public function scopeAndStaffAssignments($query)
+	{
+		return $query->with('staffAssignments');
 	}
 	
 	public function scopeWhereIndexed($query)

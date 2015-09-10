@@ -549,6 +549,7 @@ trait PermissionUser {
 				{
 					return Board::andCreator()
 						->andOperator()
+						->andStaffAssignments()
 						->get();
 				}
 				else
@@ -561,6 +562,7 @@ trait PermissionUser {
 		return Board::whereIn('board_uri', $boards)
 			->andCreator()
 			->andOperator()
+			->andStaffAssignments()
 			->get();
 	}
 	
