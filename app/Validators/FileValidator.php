@@ -14,7 +14,6 @@ class FileValidator extends Validator
 	{
 		if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile)
 		{
-			dd($file->getMimeType());
 			switch ($file->getMimeType())
 			{
 				case "audio/mpeg" :
@@ -35,6 +34,7 @@ class FileValidator extends Validator
 						}
 					}
 					
+					dd($returnvalue);
 					return $returnvalue !== 1;
 				
 				case "application/x-shockwave-flash" :
