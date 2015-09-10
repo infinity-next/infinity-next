@@ -28,7 +28,9 @@ class FileValidator extends Validator
 					
 					foreach ($output as $line)
 					{
-						if (strpos('invalid', $line) !== false || strpos('error', $line) !== false)
+						$line = (string) $line;
+						
+						if (($line != "") && (strpos('invalid', $line) !== false || strpos('error', $line) !== false))
 						{
 							return false;
 						}

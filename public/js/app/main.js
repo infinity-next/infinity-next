@@ -632,6 +632,7 @@ ib.widget("post", function(window, $, undefined) {
 				'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
 				'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
 				'attachment-image'   : "img.attachment-img",
+				'attachment-image-download'   : "img.attachment-type-file",
 				'attachment-image-expandable' : "img.attachment-type-img",
 				'attachment-image-audio'      : "img.attachment-type-audio",
 				'attachment-image-video'      : "img.attachment-type-video",
@@ -651,13 +652,14 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				
 				var $link   = $(this);
-				var $item   = $link.parent();
+				var $item   = $link.parents("li.post-attachment");
 				var $img    = $(widget.options.selector['attachment-image'], $link);
-				var $inline = $(widget.options.selector['attachment-inline'], $link);
+				var $inline = $(widget.options.selector['attachment-inline'], $item);
 				
 				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
 				$inline.remove();
+				$img.toggle(true);
 				
 				event.preventDefault();
 				return false;
@@ -671,12 +673,14 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				
 				var $link = $(this);
-				var $item = $link.parent();
+				var $item = $link.parents("li.post-attachment");
 				var $img  = $(widget.options.selector['attachment-image'], $link);
 				
 				// If the attachment type is not an image, we can't expand inline.
 				if ($img.is(widget.options.selector['attachment-image-expandable']))
 				{
+					$item.addClass('attachment-expanded');
+					
 					$img
 						// Blur the image while it loads so the user understands there is a loading action.
 						.css('opacity', 0.5)
@@ -691,18 +695,69 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				else if ($img.is(widget.options.selector['attachment-image-audio']))
 				{
-					$item.addClass('attachment-expanded');
-					
 					var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
 					var $source = $("<source />");
 					
-					$source
-						.attr('src',  $link.attr('href'))
-						.attr('type', $img.attr('data-mime'))
-						.appendTo($audio);
+					if ($audio[0].canPlayType($img.attr('data-mime')))
+					{
+						$item.addClass('attachment-expanded');
+						
+						$source
+							.attr('src',  $link.attr('href'))
+							.attr('type', $img.attr('data-mime'))
+							.one('error', function(event) {
+								// Our source has failed to load!
+								// Trigger a download.
+								$img
+									.trigger('click')
+									.removeClass('attachment-type-audio')
+									.addClass('attachment-type-download');
+							})
+							.appendTo($audio);
+						
+						$audio.insertBefore($link);
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else if ($img.is(widget.options.selector['attachment-image-video']))
+				{
+					var $video  = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
+					var $source = $("<source />");
 					
-					$audio
-						.insertAfter($img);
+					if ($video[0].canPlayType($img.attr('data-mime')))
+					{
+						$item.addClass('attachment-expanded');
+						
+						$source
+							.attr('src',  $link.attr('href'))
+							.attr('type', $img.attr('data-mime'))
+							.one('error', function(event) {
+								console.log(1);
+								// Our source has failed to load!
+								// Trigger a download.
+								$img
+									.trigger('click')
+									.removeClass('attachment-type-video')
+									.addClass('attachment-type-download');
+							})
+							.appendTo($video);
+						
+						$img.toggle(false);
+						
+						$video
+							.insertBefore($link);
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else
+				{
+					return true;
 				}
 				
 				event.preventDefault();
