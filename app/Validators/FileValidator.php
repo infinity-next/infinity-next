@@ -14,7 +14,7 @@ class FileValidator extends Validator
 	{
 		if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile)
 		{
-//			dd($file->guessExtension());
+			dd($file->getMimeType());
 			switch ($file->getMimeType())
 			{
 				case "audio/mpeg" :

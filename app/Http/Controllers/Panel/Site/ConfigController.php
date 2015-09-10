@@ -95,9 +95,9 @@ class ConfigController extends PanelController {
 				->withInput();
 		}
 		
-		foreach ($optionGroups as &$optionGroup)
+		foreach ($optionGroups as $optionGroup)
 		{
-			foreach ($optionGroup->options as &$option)
+			foreach ($optionGroup->options as $option)
 			{
 				$setting = SiteSetting::firstOrNew([
 					'option_name'  => $option->option_name,

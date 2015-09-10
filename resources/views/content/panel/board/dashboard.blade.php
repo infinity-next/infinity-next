@@ -14,7 +14,6 @@
 		</thead>
 		<tbody>
 			@foreach ($boards as $board)
-			{{ dd($board->staffAssignments) }}
 			<tr>
 				<td><a href="{{{ url("/cp/board/{$board->board_uri}") }}}">/{{{ $board->board_uri }}}/</a></td>
 				<td><a href="{{{ url("/cp/board/{$board->board_uri}/staff") }}}">{{{
