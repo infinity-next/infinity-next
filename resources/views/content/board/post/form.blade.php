@@ -14,6 +14,7 @@
 	'method' => "PUT",
 	'id'     => "post-form",
 	'class'  => "form-post",
+	'data-widget' => "postbox",
 ]) !!}
 @endif
 	@if (!isset($post))

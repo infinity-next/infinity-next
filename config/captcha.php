@@ -21,6 +21,15 @@ return [
 	'route'    => "cp/captcha",
 	
 	/**
+	 * Expiry time (in minutes) for a captcha.
+	 * It's imporatnt to have a short expiry time for your images.
+	 * If it's very long, it makes it easier for human captcha crackers to store answers.
+	 *
+	 * @var int  in minutes
+	 */
+	'expires_in' => 5,
+	
+	/**
 	 * Font file locations.
 	 *
 	 * @var array  of file paths relative to application base

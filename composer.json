@@ -38,7 +38,7 @@
 		"devfactory/minify" : "1.0.*",
 		
 		"infinity-next/braintree": "*@dev",
-		"infinity-next/brennan-captcha": "1.*",
+		"infinity-next/brennan-captcha": "1.*@dev",
 		"infinity-next/eightdown": "*@dev"
 	},
 	

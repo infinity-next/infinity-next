@@ -605,7 +605,7 @@ ib.widget("donate", function(window, $, undefined) {
 });
 
 /**
- * Post Widget
+ * Single post widget
  */
 ib.widget("post", function(window, $, undefined) {
 	var widget = {
@@ -802,6 +802,88 @@ ib.widget("post", function(window, $, undefined) {
 					.on('click.ib-post', widget.options.selector['post-reply'],         widget.events.postClick)
 					.on('click.ib-post', widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
 					.on('click.ib-post', widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
+				;
+				
+			}
+		},
+		
+		build    : {
+			
+		},
+		
+		init     : function(target, options) {
+			return window.ib.widgetArguments.call(widget, arguments);
+		}
+	};
+	
+	return widget;
+});
+
+/**
+ * Post form widget
+ */
+ib.widget("postbox", function(window, $, undefined) {
+	var widget = {
+		// Short-hand for this widget's main object.
+		$widget  : $(),
+		
+		// The default values that are set behind init values.
+		defaults : {
+			
+			captchaUrl : "/cp/captcha",
+			
+			// Selectors for finding and binding elements.
+			selector : {
+				'widget'          : "#post-form",
+				
+				'captcha'         : ".captcha"
+			},
+		},
+		
+		// Compiled settings.
+		options  : false,
+		
+		// Events
+		events   : {
+			
+			captchaClick : function(event) {
+				var $captcha = $(this),
+					$parent  = $captcha.parent(),
+					$hidden  = $captcha.next();
+				
+				$parent.addClass("captcha-loading");
+				
+				jQuery.getJSON(widget.options.captchaUrl + ".json", function(data) {
+					$captcha.attr('src', widget.options.captchaUrl + "/" + data['hash_string'] + ".png");
+					$hidden.val(data['hash_string']);
+				});
+				
+				event.preventDefault();
+				return false;
+			},
+			
+			captchaLoad : function(event) {
+				var $captcha = $(this),
+					$parent  = $captcha.parent();
+				
+				$parent.removeClass("captcha-loading");
+			}
+			
+		},
+		
+		// Event bindings
+		bind     : {
+			widget : function() {
+				
+				$(widget.options.selector['captcha'])
+					// Load events cannot be tied on parents.
+					// Watch for source changes on the captcha.
+					.on('load.ip-postbox', widget.events.captchaLoad);
+				
+				
+				widget.$widget
+					// Watch for captcha clicks.
+					.on('click.ib-postbox', widget.options.selector['captcha'], widget.events.captchaClick)
 				;
 				
 			}
