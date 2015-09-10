@@ -34,7 +34,6 @@ class FileValidator extends Validator
 						}
 					}
 					
-					dd($returnvalue);
 					return $returnvalue !== 1;
 				
 				case "application/x-shockwave-flash" :
