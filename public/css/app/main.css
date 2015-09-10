@@ -1339,6 +1339,13 @@ main.index-threaded {
 										max-height: none;
 									}
 								
+								figure.attachment audio.attachment-inline {
+									display: block;
+									min-width: 250px;
+									max-width: 250px;
+									margin: 0.5em auto 0 auto;
+								}
+								
 								figcaption.attachment-details {
 									display: block;
 									max-width: 100%;

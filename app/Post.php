@@ -852,6 +852,18 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Get the appends attribute.
+	 * Not normally available to models, but required for API responses.
+	 *
+	 * @param  array $appends
+	 * @return array
+	 */
+	public function getAppends()
+	{
+		return $this->appends;
+	}
+	
+	/**
 	 * Sets the value of $this->appends to the input.
 	 * Not normally available to models, but required for API responses.
 	 *

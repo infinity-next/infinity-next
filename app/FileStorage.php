@@ -229,6 +229,7 @@ class FileStorage extends Model {
 	public function getThumbnailHTML(Board $board)
 	{
 		$ext   = $this->guessExtension();
+		$mime  = $this->mime;
 		$url   = "/img/filetypes/{$ext}.svg";
 		$type  = "other";
 		$html  = "";
@@ -236,13 +237,23 @@ class FileStorage extends Model {
 		
 		switch ($ext)
 		{
+			case "mp3"  :
+			case "mpga" :
+				if ($this->hasThumb())
+				{
+					$stock = false;
+					$url   = $this->getThumbnailURL($board);
+					$type  = "audio";
+				}
+				break;
+			
 			case "mp4"  :
 			case "webm" :
 				if ($this->hasThumb())
 				{
 					$stock = false;
 					$url   = $this->getThumbnailURL($board);
-					$type  = "vid";
+					$type  = "video";
 				}
 				break;
 			
@@ -252,8 +263,6 @@ class FileStorage extends Model {
 				$type  = "img";
 				break;
 			
-			case "mp3"  :
-			case "mpga" :
 			case "jpg"  :
 			case "png"  :
 			case "gif"  :
@@ -266,7 +275,7 @@ class FileStorage extends Model {
 				break;
 		}
 		
-		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}\" src=\"{$url}\" />";
+		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}\" src=\"{$url}\" data-mime=\"{$mime}\" />";
 	}
 	
 	/**

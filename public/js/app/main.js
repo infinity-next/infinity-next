@@ -632,7 +632,10 @@ ib.widget("post", function(window, $, undefined) {
 				'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
 				'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
 				'attachment-image'   : "img.attachment-img",
-				'attachment-image-expandable' : "img.attachment-type-img"
+				'attachment-image-expandable' : "img.attachment-type-img",
+				'attachment-image-audio'      : "img.attachment-type-audio",
+				'attachment-image-video'      : "img.attachment-type-video",
+				'attachment-inline'  : "audio.attachment-inline, video.attachment-inline"
 			},
 		},
 		
@@ -647,24 +650,20 @@ ib.widget("post", function(window, $, undefined) {
 					return true;
 				}
 				
-				var $link = $(this);
-				var $item = $link.parent();
-				var $img  = $(widget.options.selector['attachment-image'], $link);
+				var $link   = $(this);
+				var $item   = $link.parent();
+				var $img    = $(widget.options.selector['attachment-image'], $link);
+				var $inline = $(widget.options.selector['attachment-inline'], $link);
 				
 				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
+				$inline.remove();
 				
 				event.preventDefault();
 				return false;
 			},
 			
 			attachmentExpandClick : function(event) {
-				if(event.altKey || event.shiftKey || event.ctrlKey)
-				{
-					console.log(event);
-					return true;
-				}
-				
 				// We don't do anything if the user is CTRL+Clicking.
 				if (event.ctrlKey)
 				{
@@ -676,23 +675,35 @@ ib.widget("post", function(window, $, undefined) {
 				var $img  = $(widget.options.selector['attachment-image'], $link);
 				
 				// If the attachment type is not an image, we can't expand inline.
-				if (!$img.is(widget.options.selector['attachment-image-expandable']))
+				if ($img.is(widget.options.selector['attachment-image-expandable']))
 				{
-					return true;
+					$img
+						// Blur the image while it loads so the user understands there is a loading action.
+						.css('opacity', 0.5)
+						// Bind an event to handle the image loading.
+						.one("load", function() {
+							// Remove our opacity change.
+							$(this).css('opacity', "");
+						})
+						// Finally change the source of our thumb to the full image.
+						.attr('src', $link.attr('data-download-url'));
+					
 				}
-				
-				$item.addClass('attachment-expanded');
-				
-				$img
-					// Blur the image while it loads so the user understands there is a loading action.
-					.css('opacity', 0.5)
-					// Bind an event to handle the image loading.
-					.one("load", function() {
-						// Remove our opacity change.
-						$(this).css('opacity', "");
-					})
-					// Finally change the source of our thumb to the full image.
-					.attr('src', $link.attr('data-download-url'));
+				else if ($img.is(widget.options.selector['attachment-image-audio']))
+				{
+					$item.addClass('attachment-expanded');
+					
+					var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
+					var $source = $("<source />");
+					
+					$source
+						.attr('src',  $link.attr('href'))
+						.attr('type', $img.attr('data-mime'))
+						.appendTo($audio);
+					
+					$audio
+						.insertAfter($img);
+				}
 				
 				event.preventDefault();
 				return false;
