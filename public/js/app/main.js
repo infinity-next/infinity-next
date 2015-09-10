@@ -836,7 +836,9 @@ ib.widget("postbox", function(window, $, undefined) {
 			selector : {
 				'widget'          : "#post-form",
 				
-				'captcha'         : ".captcha"
+				'captcha'         : ".captcha",
+				'captcha-row'     : ".row-captcha",
+				'captcha-field'   : ".field-control"
 			},
 		},
 		
@@ -849,9 +851,11 @@ ib.widget("postbox", function(window, $, undefined) {
 			captchaClick : function(event) {
 				var $captcha = $(this),
 					$parent  = $captcha.parent(),
-					$hidden  = $captcha.next();
+					$hidden  = $captcha.next(),
+					$field   = $captcha.parents(widget.options.selector['captcha-row']).children(widget.options.selector['captcha-field']);
 				
 				$parent.addClass("captcha-loading");
+				$field.val("").focus();
 				
 				jQuery.getJSON(widget.options.captchaUrl + ".json", function(data) {
 					$captcha.attr('src', widget.options.captchaUrl + "/" + data['hash_string'] + ".png");
