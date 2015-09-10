@@ -363,7 +363,7 @@ class FileStorage extends Model {
 					$ID3  = new \getID3();
 					$meta = $ID3->analyze($this->getFullPath());
 					
-					if (count($meta['comments']['picture']))
+					if (isset($meta['comments']['picture']) && count($meta['comments']['picture']))
 					{
 						foreach ($meta['comments']['picture'] as $albumArt)
 						{
