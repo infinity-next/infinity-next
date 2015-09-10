@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e4c79d28d620a6992938302d26a9d167",
+    "hash": "036f7c5634d1087861fff372cea3e2e8",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -904,16 +904,16 @@
         },
         {
             "name": "infinity-next/brennan-captcha",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/brennan-captcha.git",
-                "reference": "b3faed4485bc86766048921bcff35beac178e5bd"
+                "reference": "cb180d6a72ffb5f42eda343a3af703a48c627f36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/b3faed4485bc86766048921bcff35beac178e5bd",
-                "reference": "b3faed4485bc86766048921bcff35beac178e5bd",
+                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/cb180d6a72ffb5f42eda343a3af703a48c627f36",
+                "reference": "cb180d6a72ffb5f42eda343a3af703a48c627f36",
                 "shasum": ""
             },
             "require": {
@@ -941,7 +941,7 @@
                 }
             ],
             "description": "An anti-bot image captcha system written by Frederick Brennan and ported to Laravel for Infinity Next by Joshua Moon.",
-            "time": "2015-09-07 11:25:26"
+            "time": "2015-09-10 18:34:22"
         },
         {
             "name": "infinity-next/eightdown",
@@ -4250,7 +4250,6 @@
     "stability-flags": {
         "cviebrock/image-validator": 10,
         "infinity-next/braintree": 20,
-        "infinity-next/brennan-captcha": 20,
         "infinity-next/eightdown": 20
     },
     "prefer-stable": false,

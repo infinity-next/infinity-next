@@ -14,27 +14,37 @@ return [
 	 * If "captcha", image URL will be:
 	 * //base.url/captcha/profile/sha1.png
 	 *
-	 * @var string  /route/to/captcha/
+	 * This needs to be an actual path because we concatenate.
+	 *
+	 * @var string  route/to/captcha
 	 */
 	'route'    => "cp/captcha",
 	
 	/**
-	 * Font data.
+	 * Font file locations.
 	 *
-	 * @var array
+	 * @var array  of file paths relative to application base
 	 */
-	'font'     => [
-		/**
-		 * Font file locations.
-		 *
-		 * @var array  of file paths relative to application base
-		 */
-		'files' => [
-			'vendor/infinity-next/brennan-captcha/fonts/Cedarville_Cursive/Cedarville-Cursive.ttf',
-			'vendor/infinity-next/brennan-captcha/fonts/Gochi_Hand/GochiHand-Regular.ttf',
-			'vendor/infinity-next/brennan-captcha/fonts/Just_Another_Hand/JustAnotherHand.ttf',
-			'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand/PatrickHand-Regular.ttf',
-			'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand_SC/PatrickHandSC-Regular.ttf',
+	'fonts'    => [
+		[
+			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Cedarville_Cursive/Cedarville-Cursive.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Gochi_Hand/GochiHand-Regular.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Just_Another_Hand/JustAnotherHand.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand/PatrickHand-Regular.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand_SC/PatrickHandSC-Regular.ttf',
+			'stroke' => 5,
 		],
 	],
 	
@@ -60,7 +70,26 @@ return [
 			 *
 			 * @var string  of individual characters
 			 */
-			'charset'    => 'AaBbCcDdEeFGHhIiJjKkLlMmNnOoPpQRrSsTtUuVvWwXxYyZ',
+			'charset'    => 'AaBbCcDdEeFGHhIJKkLMmNnOoPpQRrSsTtUuVvWwXxYyZ1234567890',
+			
+			/**
+			 * Valid colors for the character sets.
+			 *
+			 * @var array  of R,G,B colors.
+			 */
+			'colors'      => [
+				[132, 129, 255],
+				[ 92,  88, 255],
+				[244, 100,  95],
+				[183,  75,  71],
+			],
+			
+			/**
+			 * Color of the backdrop.
+			 *
+			 * @var array  R,G,B color
+			 */
+			'canvas'      => [255,255,255],
 			
 			/**
 			 * Minimum characters per captcha.
@@ -76,28 +105,35 @@ return [
 			 */
 			'length_max'  => 8,
 			
+			/**
+			 * Applies a sine wave effect through the captcha.
+			 *
+			 * @var boolean
+			 */
+			'sine'        => true,
+			
 			
 			/**
-			 * CAPTCHA sizes can vary a bit depending on font sizes and font metrics, but these are minimums.
-			 * Minimum image width.
+			 * Captcha image width.
 			 *
 			 * @var int
 			 */
-			'width_min'   => 280,
+			'width'       => 280,
 			
 			/**
 			 * Maximum image width.
 			 *
 			 * @var int
 			 */
-			'height_min'  => 70,
+			'height'      => 80,
 			
 			/**
 			 * Maximum font size in pixels.
 			 *
 			 * @var int
 			 */
-			'font_size'   => 40,
+			'font_size'   => 48,
+			
 		],
 		
 	],
