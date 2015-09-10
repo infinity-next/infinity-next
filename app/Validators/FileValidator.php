@@ -30,7 +30,7 @@ class FileValidator extends Validator
 					{
 						$line = (string) $line;
 						
-						if (($line != "") && (strpos('invalid', $line) !== false || strpos('error', $line) !== false))
+						if (strlen($line) > 0 && (strpos('invalid', $line) !== false || strpos('error', $line) !== false))
 						{
 							return false;
 						}
