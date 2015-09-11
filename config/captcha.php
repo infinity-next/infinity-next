@@ -18,7 +18,7 @@ return [
 	 *
 	 * @var string  /route/to/captcha/
 	 */
-	'route'      => "captcha",
+	'route'      => "cp/captcha",
 	
 	/**
 	 * Expiry time (in minutes) for a captcha.
