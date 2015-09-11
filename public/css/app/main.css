@@ -1394,7 +1394,7 @@ main.index-threaded {
 										bottom: 0;
 										z-index: 1;
 										
-										background-position: 2em center;
+										background-position: 0.5em center;
 										background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/37/Vinyl_disc_icon.svg');
 										background-repeat: no-repeat;
 										background-size: 100% 100%;

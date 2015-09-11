@@ -1,5 +1,6 @@
 <?php namespace App\Validators;
 
+use App\FileStorage;
 use Illuminate\Validation\Validator;
 
 class FileValidator extends Validator
@@ -16,27 +17,15 @@ class FileValidator extends Validator
 		{
 			switch ($file->getClientMimeType())
 			{
+				// For some reason, MP3 files routinely get scanned as octet-streams.
+				// Attempt to evaluate it as music or a video.
+				case "application/octet-stream" :
 				case "audio/mpeg" :
 				case "audio/mp3"  :
 				case "video/mp4"  :
 				case "video/flv"  :
 				case "video/webm" :
-					$video = $file->getPathname();
-					$cmd   = env('LIB_VIDEO', "ffmpeg") . " -v error -i {$video} -f null - 2>&1";
-					
-					exec($cmd, $output, $returnvalue);
-					
-					foreach ($output as $line)
-					{
-						$line = (string) $line;
-						
-						if (strlen($line) > 0 && (strpos('invalid', $line) !== false || strpos('error', $line) !== false))
-						{
-							return false;
-						}
-					}
-					
-					return $returnvalue !== 1;
+					return FileStorage::probe($file);
 				
 				case "application/x-shockwave-flash" :
 					// This is much slower than exif_imagetype but much more reliable with flash files.

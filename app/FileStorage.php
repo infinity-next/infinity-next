@@ -28,7 +28,7 @@ class FileStorage extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['hash', 'banned', 'filesize', 'first_uploaded_at', 'last_uploaded_at', 'upload_count'];
+	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count'];
 	
 	public $timestamps = false;
 	
@@ -183,6 +183,21 @@ class FileStorage extends Model {
 				return "txt";
 			
 			##
+			# AUDIO
+			##
+			case "audio/mp3" :
+				return "mp3";
+			
+			case "audio/ogg" :
+				return "ogg";
+			
+			case "audio/wav" :
+				return "wav";
+			
+			case "audio/mpeg" :
+				return "mpga";
+			
+			##
 			# MULTIMEDIA
 			##
 			case "video/webm" :
@@ -190,6 +205,9 @@ class FileStorage extends Model {
 			
 			case "video/mp4" :
 				return "mp4";
+			
+			case "video/ogg" :
+				return "ogg";
 			
 			case "application/epub+zip" :
 				return "epub";
@@ -351,6 +369,38 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Collects data from an UploadFile type and stores it.
+	 *
+	 * @return int
+	 */
+	public static function probe(UploadedFile &$file)
+	{
+		$video = $file->getPathname();
+		$cmd   = env('LIB_VIDEO_PROBE', "ffprobe") . " -v error -show_format -show_streams {$video} 2>&1";
+		
+		exec($cmd, $output, $returnvalue);
+		
+		if (count($output) <= 3)
+		{
+			foreach ($output as $line)
+			{
+				$line = (string) $line;
+				
+				if (strlen($line) > 0 && (stripos($line, 'invalid') !== false || stripos($line, 'error') !== false))
+				{
+					return false;
+				}
+			}
+		}
+		
+		// Hack.
+		// Appends this output so we don't need to run twice.
+		$file->ffmpegData = $output;
+		
+		return $returnvalue !== 1;
+	}
+	
+	/**
 	 * Turns an image into a thumbnail if possible, overwriting previous versions.
 	 *
 	 * @return void
@@ -481,6 +531,56 @@ class FileStorage extends Model {
 			$storage->mime     = $upload->getClientMimeType();
 			$storage->first_uploaded_at = $fileTime;
 			$storage->upload_count = 0;
+			
+			if (isset($upload->ffmpegData))
+			{
+				$meta = [];
+				$codecType = null;
+				$codecName = null;
+				
+				foreach ($upload->ffmpegData as $datum)
+				{
+					$datumItems = explode("=", $datum, 2);
+					
+					if (count($datumItems) == 2)
+					{
+						$datumValue = $datumItems[1];
+						
+						switch ($datumItems[0])
+						{
+							case "codec_name" :
+								$codecName = $datumItems[1];
+								break;
+							
+							case "codec_type" :
+								$codecType = $datumItems[1];
+								break;
+							
+							default :
+								$datumKeys  = explode(":", $datumItems[0], 2);
+								
+								if (count($datumKeys) == 2)
+								{
+									if($datumKeys[0] === "TAG")
+									{
+										$meta[$datumKeys[1]] = $datumItems[1];
+									}
+								}
+								break;
+						}
+					}
+				}
+				
+				if (!is_null($codecType) && !is_null($codecName))
+				{
+					$storage->mime = "{$codecType}/{$codecName}";
+				}
+				
+				if (count($meta))
+				{
+					$storage->meta = json_encode($meta);
+				}
+			}
 		}
 		else
 		{
