@@ -141,7 +141,7 @@ return [
 			 *
 			 * @var int
 			 */
-			'font_size'   => 48,
+			'font_size'   => 96,
 			
 		],
 		

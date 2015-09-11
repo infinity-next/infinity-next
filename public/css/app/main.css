@@ -367,16 +367,18 @@ form {
 			border: none;
 			border-top: 1px solid rgb(169, 169, 169);
 		}
+			.row-captcha img.captcha {
+				width: 280px;
+				height: 80px;
+			}
 		
 		.row-captcha .captcha-loading {
 			padding-top: 80px;
 			background: center 4px url('/img/assets/infinity.gif') no-repeat;
 		}
-		.row-captcha .captcha-loading img.captcha {
-			display: none;
-			width: 280px;
-			height: 80px;
-		}
+			.row-captcha .captcha-loading img.captcha {
+				display: none;
+			}
 
 main.cp form.form-config {
 	min-width: 760px;
