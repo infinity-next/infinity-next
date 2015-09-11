@@ -37,23 +37,23 @@ return [
 	'fonts'    => [
 		[
 			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Cedarville_Cursive/Cedarville-Cursive.ttf',
-			'stroke' => 3,
+			'stroke' => 8,
 		],
 		[
 			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Gochi_Hand/GochiHand-Regular.ttf',
-			'stroke' => 3,
+			'stroke' => 8,
 		],
 		[
 			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Just_Another_Hand/JustAnotherHand.ttf',
-			'stroke' => 3,
+			'stroke' => 8,
 		],
 		[
 			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand/PatrickHand-Regular.ttf',
-			'stroke' => 3,
+			'stroke' => 8,
 		],
 		[
 			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand_SC/PatrickHandSC-Regular.ttf',
-			'stroke' => 5,
+			'stroke' => 12,
 		],
 	],
 	
