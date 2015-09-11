@@ -14,11 +14,8 @@ class FileValidator extends Validator
 	{
 		if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile)
 		{
-			switch ($file->getMimeType())
+			switch ($file->getClientMimeType())
 			{
-				// For some reason, MP3 files routinely get scanned as octet-streams.
-				// Attempt to evaluate it as music or a video.
-				case "application/octet-stream" :
 				case "audio/mpeg" :
 				case "audio/mp3"  :
 				case "video/mp4"  :
