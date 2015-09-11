@@ -1394,45 +1394,53 @@ main.index-threaded {
 										bottom: 0;
 										z-index: 1;
 										
-										background-position: 0.5em center;
+										background-position: 3em center;
 										background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/37/Vinyl_disc_icon.svg');
 										background-repeat: no-repeat;
-										background-size: 100% 100%;
+										background-size: contain;
 									}
 									
-									img.attachment-img {
-										display: block;
-										margin: 0 auto;
-										max-width: 100%;
-										max-height: 250px;
-										
-										position: relative;
-										z-index: 2;
+									li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio {
+										padding: 0;
 									}
-										html.js a.attachment-link img.attachment-type-img {
-											cursor: zoom-in;
-										}
-										html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
-											cursor: zoom-out;
-										}
-										
-										html a.attachment-link img.attachment-type-video {
-											border-style: solid;
-											border-width: 17px;
-											
-											-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
-											-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
-											-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
-											border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
-										}
-										
-											li.post-attachment.attachment-expanded img.attachment-img {
-												max-height: none;
-											}
-											.thumbnail-stock img.attachment-img {
-												min-height: 150px;
-												min-width: 150px;
-											}
+									li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
+										display: none;
+									}
+								
+								img.attachment-img {
+									display: block;
+									margin: 0 auto;
+									max-width: 100%;
+									max-height: 250px;
+									
+									position: relative;
+									z-index: 2;
+								}
+								
+								html.js a.attachment-link img.attachment-type-img {
+									cursor: zoom-in;
+								}
+								html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
+									cursor: zoom-out;
+								}
+								
+								html a.attachment-link img.attachment-type-video {
+									border-style: solid;
+									border-width: 17px;
+									
+									-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
+								}
+								
+									li.post-attachment.attachment-expanded img.attachment-img {
+										max-height: none;
+									}
+									.thumbnail-stock img.attachment-img {
+										min-height: 150px;
+										min-width: 150px;
+									}
 								
 								li.post-attachment audio.attachment-inline {
 									display: block;
