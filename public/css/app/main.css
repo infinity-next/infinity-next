@@ -1323,23 +1323,6 @@ main.index-threaded {
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
-						
-							html.js a.attachment-link img.attachment-type-img {
-								cursor: zoom-in;
-							}
-							html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
-								cursor: zoom-out;
-							}
-							
-							html a.attachment-link img.attachment-type-vid {
-								border-style: solid;
-								border-width: 17px;
-								
-								-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
-								-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
-								-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
-								border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
-							}
 							
 							figure.attachment {
 								display: inline-block;
@@ -1358,19 +1341,63 @@ main.index-threaded {
 									max-width: 100%;
 								}
 								
-								img.attachment-img {
-									display: block;
-									margin: 0 auto;
-									max-width: 100%;
-									max-height: 250px;
+								div.attachment-wrapper.thumbnail-content.attachment-type-audio {
+									position: relative;
+									padding: 0 3em 0 0;
 								}
-									li.post-attachment.attachment-expanded img.attachment-img {
-										max-height: none;
+									div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
+										content: ' ';
+										display: block;
+										height: 100%;
+										width: 100%;
+										padding: 0 0 0 0;
+										
+										position: absolute;
+										top: 0;
+										left: 0;
+										right: 0;
+										bottom: 0;
+										z-index: 1;
+										
+										background-position: 2em center;
+										background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/37/Vinyl_disc_icon.svg');
+										background-repeat: no-repeat;
+										background-size: 100% 100%;
 									}
-									img.attachment-img.thumbnail-stock {
-										min-height: 150px;
-										min-width: 150px;
+									
+									img.attachment-img {
+										display: block;
+										margin: 0 auto;
+										max-width: 100%;
+										max-height: 250px;
+										
+										position: relative;
+										z-index: 2;
 									}
+										html.js a.attachment-link img.attachment-type-img {
+											cursor: zoom-in;
+										}
+										html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
+											cursor: zoom-out;
+										}
+										
+										html a.attachment-link img.attachment-type-video {
+											border-style: solid;
+											border-width: 17px;
+											
+											-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
+											-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
+											-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
+											border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
+										}
+										
+											li.post-attachment.attachment-expanded img.attachment-img {
+												max-height: none;
+											}
+											.thumbnail-stock img.attachment-img {
+												min-height: 150px;
+												min-width: 150px;
+											}
 								
 								li.post-attachment audio.attachment-inline {
 									display: block;

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0b1f1a9c7d0a25b6a35673eea6e82625",
+    "hash": "e4c79d28d620a6992938302d26a9d167",
     "packages": [
         {
             "name": "braintree/braintree_php",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "2f6c4df000f8442ff3730c3c71f8ae40419c6e44"
+                "reference": "96e45a8587cac1995b1de4ea428d7ea1a6982115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/2f6c4df000f8442ff3730c3c71f8ae40419c6e44",
-                "reference": "2f6c4df000f8442ff3730c3c71f8ae40419c6e44",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/96e45a8587cac1995b1de4ea428d7ea1a6982115",
+                "reference": "96e45a8587cac1995b1de4ea428d7ea1a6982115",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 }
             ],
             "description": "Braintree PHP Client Library",
-            "time": "2015-09-01 17:40:16"
+            "time": "2015-09-10 21:05:42"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -904,16 +904,16 @@
         },
         {
             "name": "infinity-next/brennan-captcha",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/brennan-captcha.git",
-                "reference": "cb180d6a72ffb5f42eda343a3af703a48c627f36"
+                "reference": "eaf3dad3165adc7d6668e10355d60340c7b1bd52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/cb180d6a72ffb5f42eda343a3af703a48c627f36",
-                "reference": "cb180d6a72ffb5f42eda343a3af703a48c627f36",
+                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/eaf3dad3165adc7d6668e10355d60340c7b1bd52",
+                "reference": "eaf3dad3165adc7d6668e10355d60340c7b1bd52",
                 "shasum": ""
             },
             "require": {
@@ -941,7 +941,7 @@
                 }
             ],
             "description": "An anti-bot image captcha system written by Frederick Brennan and ported to Laravel for Infinity Next by Joshua Moon.",
-            "time": "2015-09-10 18:34:22"
+            "time": "2015-09-11 08:27:52"
         },
         {
             "name": "infinity-next/eightdown",

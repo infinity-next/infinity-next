@@ -275,7 +275,13 @@ class FileStorage extends Model {
 				break;
 		}
 		
-		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}" . ($stock ? " thumbnail-stock" : "") . "\" src=\"{$url}\" data-mime=\"{$mime}\" />";
+		$classes = [];
+		$classes['type']  = "attachment-type-{$type}";
+		$classes['ext']   = "attachent-ext-{$ext}";
+		$classes['stock'] = $stock ? "thumbnail-stock" : "thumbnail-content";
+		$classHTML = implode(" ", $classes);
+		
+		return "<div class=\"attachment-wrapper {$classHTML}\"><img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" /></div>";
 	}
 	
 	/**
