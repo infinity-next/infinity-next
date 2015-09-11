@@ -838,7 +838,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				'captcha'         : ".captcha",
 				'captcha-row'     : ".row-captcha",
-				'captcha-field'   : ".field-control"
+				'captcha-field'   : ".field-control",
+				
+				'button-close'    : ".menu-icon-close",
+				'button-maximize' : ".menu-icon-maximize",
+				'button-minimize' : ".menu-icon-minimize"
 			},
 		},
 		
@@ -847,6 +851,37 @@ ib.widget("postbox", function(window, $, undefined) {
 		
 		// Events
 		events   : {
+			
+			closeClick : function(event) {
+				widget.$widget
+					.removeClass("postbox-maximized postbox-minimized")
+					.addClass("postbox-closed");
+				
+				// Prevents formClick from immediately firing.
+				event.stopPropagation();
+			},
+			
+			formClick     : function(event) {
+				if (widget.$widget.is(".postbox-closed"))
+				{
+					widget.$widget
+						.removeClass("postbox-minimized postbox-closed postbox-maximized");
+				}
+			},
+			
+			maximizeClick : function(event) {
+				widget.$widget
+					.removeClass("postbox-minimized postbox-closed")
+					.addClass("postbox-maximized");
+			},
+			
+			minimizeClick : function(event) {
+				
+				widget.$widget
+					.removeClass("postbox-maximized postbox-closed")
+					.addClass("postbox-minimized");
+				
+			},
 			
 			captchaClick : function(event) {
 				var $captcha = $(this),
@@ -888,6 +923,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				widget.$widget
 					// Watch for captcha clicks.
 					.on('click.ib-postbox', widget.options.selector['captcha'], widget.events.captchaClick)
+					
+					.on('click.ib-postbox',                                             widget.events.formClick)
+					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
+					.on('click.ib-postbox', widget.options.selector['button-maximize'], widget.events.maximizeClick)
+					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
 				;
 				
 			}

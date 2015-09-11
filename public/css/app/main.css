@@ -1005,6 +1005,41 @@ section.index-form {
 			padding: 10px 10px 0 0;
 			margin: -1px -1px 0 0;
 		}
+			html.js li.menu-icon-minimize {
+				visibility: hidden;
+			}
+			
+			html.js form.postbox-maximized li.menu-icon-minimize {
+				visibility: visible;
+			}
+			html.js form.postbox-maximized li.menu-icon-maximize {
+				visibility: hidden;
+			}
+			
+			html.js form.postbox-closed {
+				cursor: pointer;
+			}
+			html.js form.postbox-closed li.menu-icon-close,
+			html.js form.postbox-closed li.menu-icon-minimize,
+			html.js form.postbox-closed li.menu-icon-maximize {
+				visibility: hidden;
+			}
+			html.js form.postbox-closed div.field {
+				display: none;
+			}
+			
+			html.js body.responsive  form.form-post.postbox-maximized {
+				box-sizing: border-box;
+				max-width: none;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				width: 100%;
+				position: fixed;
+				height: 100vh;
+			}
+			
 			form.form-post .menu-icon {
 				display: inline-block;
 				cursor: pointer;
