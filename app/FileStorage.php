@@ -368,6 +368,33 @@ class FileStorage extends Model {
 		return false;
 	}
 	
+	
+	/**
+	 * Creates a new FileAttachment for a post.
+	 *
+	 * @param  UploadedFile  $file
+	 * @param  Post  $post
+	 * @return FileAttachment
+	 */
+	public static function createAttachment(UploadedFile $file, Post $post)
+	{
+		$storage     = static::storeUpload($file);
+		
+		$uploadName  = urlencode($file->getClientOriginalName());
+		$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
+		
+		$fileName    = basename($uploadName, "." . $uploadExt);
+		$fileExt     = $storage->guessExtension();
+		
+		$attachment  = new FileAttachment();
+		$attachment->post_id  = $post->post_id;
+		$attachment->file_id  = $storage->file_id;
+		$attachment->filename = urlencode("{$fileName}.{$fileExt}");
+		$attachment->save();
+		
+		return $attachment;
+	}
+	
 	/**
 	 * Collects data from an UploadFile type and stores it.
 	 *
@@ -388,6 +415,7 @@ class FileStorage extends Model {
 				
 				if (strlen($line) > 0 && (stripos($line, 'invalid') !== false || stripos($line, 'error') !== false))
 				{
+					dd($output);
 					return false;
 				}
 			}

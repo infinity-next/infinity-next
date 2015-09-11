@@ -1313,19 +1313,7 @@ class Post extends Model {
 			{
 				if(file_exists($upload->getPathname()))
 				{
-					$uploadName  = urlencode($upload->getClientOriginalName());
-					$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
-					
-					$fileName    = basename($uploadName, "." . $uploadExt);
-					$fileExt     = $upload->guessExtension();
-					
-					$storage     = FileStorage::storeUpload($upload);
-					
-					$attachment  = new FileAttachment();
-					$attachment->post_id  = $this->post_id;
-					$attachment->file_id  = $storage->file_id;
-					$attachment->filename = urlencode("{$fileName}.{$fileExt}");
-					$attachment->save();
+					FileStorage::createAttachment($upload, $this);
 				}
 			}
 		}
