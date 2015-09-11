@@ -18,9 +18,6 @@
 							<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
 							<span class="detail-item detail-filename">{{ $attachment->pivot->filename }}</span>
 						</p>
-						<p class="attachment-detail">
-							<span class="detail-item detail-filetime">{{ $attachment->first_uploaded_at }}</span>
-						</p>
 					</figcaption>
 				</figure>
 			</a>

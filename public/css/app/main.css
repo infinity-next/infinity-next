@@ -374,6 +374,8 @@ form {
 		}
 		.row-captcha .captcha-loading img.captcha {
 			display: none;
+			width: 280px;
+			height: 80px;
 		}
 
 main.cp form.form-config {
@@ -1362,6 +1364,10 @@ main.index-threaded {
 								}
 									li.post-attachment.attachment-expanded img.attachment-img {
 										max-height: none;
+									}
+									img.attachment-img.thumbnail-stock {
+										min-height: 150px;
+										min-width: 150px;
 									}
 								
 								li.post-attachment audio.attachment-inline {

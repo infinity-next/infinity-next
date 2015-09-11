@@ -127,14 +127,14 @@ return [
 			 *
 			 * @var int
 			 */
-			'width'       => 280,
+			'width'       => 560,
 			
 			/**
 			 * Maximum image width.
 			 *
 			 * @var int
 			 */
-			'height'      => 80,
+			'height'      => 160,
 			
 			/**
 			 * Maximum font size in pixels.

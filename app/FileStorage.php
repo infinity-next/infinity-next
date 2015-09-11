@@ -275,7 +275,7 @@ class FileStorage extends Model {
 				break;
 		}
 		
-		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}\" src=\"{$url}\" data-mime=\"{$mime}\" />";
+		return "<img class=\"attachment-img attachment-type-{$type} attachent-ext-{$ext}" . ($stock ? " thumbnail-stock" : "") . "\" src=\"{$url}\" data-mime=\"{$mime}\" />";
 	}
 	
 	/**
