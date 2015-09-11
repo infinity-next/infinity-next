@@ -7,7 +7,7 @@ return [
 	 * 
 	 * @var string  table_name
 	 */
-	'table'    => "captcha",
+	'table'      => "captcha",
 	
 	/**
 	 * Route hooked by the captcha service.
@@ -16,9 +16,9 @@ return [
 	 *
 	 * This needs to be an actual path because we concatenate.
 	 *
-	 * @var string  route/to/captcha
+	 * @var string  /route/to/captcha/
 	 */
-	'route'    => "cp/captcha",
+	'route'      => "captcha",
 	
 	/**
 	 * Expiry time (in minutes) for a captcha.
@@ -34,27 +34,75 @@ return [
 	 *
 	 * @var array  of file paths relative to application base
 	 */
-	'fonts'    => [
+	'fonts'      => [
 		[
-			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Cedarville_Cursive/Cedarville-Cursive.ttf',
-			'stroke' => 8,
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Deutsch.ttf',
+			'stroke' => 3,
 		],
 		[
-			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Gochi_Hand/GochiHand-Regular.ttf',
-			'stroke' => 8,
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/FFF_Tusj.ttf',
+			'stroke' => 3,
 		],
 		[
-			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Just_Another_Hand/JustAnotherHand.ttf',
-			'stroke' => 8,
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Kingthings_Calligraphica_2.ttf',
+			'stroke' => 3,
 		],
 		[
-			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand/PatrickHand-Regular.ttf',
-			'stroke' => 8,
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Kingthings_Calligraphica_Italic.ttf',
+			'stroke' => 3,
 		],
 		[
-			'file'   => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand_SC/PatrickHandSC-Regular.ttf',
-			'stroke' => 12,
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Kingthings_Calligraphica_Light.ttf',
+			'stroke' => 3,
 		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Komika_Hand_Bold_Italic.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Komika_Hand_Bold.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Komika_Hand_Italic.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Komika_Hand.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Komika_Parch.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/Lilly__.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/SF_Cartoonist_Hand_Bold_Italic.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/SF_Cartoonist_Hand_Bold.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/SF_Cartoonist_Hand_Italic.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/cfonts/SF_Cartoonist_Hand.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/Gochi_Hand/GochiHand-Regular.ttf',
+			'stroke' => 3,
+		],
+		[
+			'file' => 'vendor/infinity-next/brennan-captcha/fonts/Patrick_Hand/PatrickHand-Regular.ttf',
+			'stroke' => 3,
+		]
 	],
 	
 	/**
