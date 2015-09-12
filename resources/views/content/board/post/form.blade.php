@@ -105,7 +105,12 @@
 		
 		@if ($board->canAttach($user) && !isset($post))
 		<div class="field row-file">
-			<input class="field-control" id="file" name="files[]" type="file" multiple />
+			<div class="dz-container">
+				<span class="dz-instructions">@lang('board.field.file-dz')</span>
+				<div class="fallback">
+					<input class="field-control" id="file" name="files[]" type="file" multiple />
+				</div>
+			</div>
 		</div>
 		@endif
 		

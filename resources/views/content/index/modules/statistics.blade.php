@@ -4,7 +4,7 @@
 		<p>There is currently
 			<strong>{{{ $stats['boardCount'] }}}</strong> public board{{{ $stats['boardCount'] != 1 ? "s" : "" }}},
 			<strong>{{{ $stats['boardIndexedCount'] }}}</strong> total.
-			Side-wide, <strong>{{{ $stats['postRecentCount'] }}}</strong> post{{{ $stats['postRecentCount'] != 1 ? "s" : "" }}} have been made in the last hour,
-			with <strong>{{{ $stats['postCount'] }}}</strong> being made on all active boards since October 23, 2013.</p>
+			Site-wide, <strong>{{{ $stats['postRecentCount'] }}}</strong> post{{{ $stats['postRecentCount'] != 1 ? "s" : "" }}} have been made in the last hour,
+			with <strong>{{{ $stats['postCount'] }}}</strong> being made on all active boards since March 1st, 2015.</p>
 	</div>
 </div>

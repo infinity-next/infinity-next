@@ -3,10 +3,10 @@
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
  *  9999 - Donation overlay.
  *  1000 - Boardlist, top. Shold be highest element on boards and threads.
- *    10 - Post action links.
- *     5 - Post attachment.
- *     1 - Global Footer
- *     0 - Board Sidebar
+ *	10 - Post action links.
+ *	 5 - Post attachment.
+ *	 1 - Global Footer
+ *	 0 - Board Sidebar
  */
 
 /**
@@ -183,11 +183,11 @@ select:focus {
 	}
 
 html.no-js .no-js,
-html.js    .require-js {
+html.js	.require-js {
 	display: block;
 }
 html.no-js .require-js,
-html.js    .no-js {
+html.js	.no-js {
 	display: none;
 }
 
@@ -1077,6 +1077,7 @@ section.index-form {
 		
 		form.form-post .field {
 			margin: 0.5em 0;
+			
 		}
 		form.form-post .row-post .field-control {
 			height: 6.25em;
@@ -1091,6 +1092,258 @@ section.index-form {
 			form.form-post select.field-capcode {
 				width: 140 	px;
 			}
+			
+			/* Dropzone */
+			html.js form.form-post div.row-file {
+				margin: 0 -0.75em;
+				width: 299px;
+				overflow: hidden;
+			}
+				html.js form.form-post div.dz-container {
+				}
+				html.js form.form-post div.dz-container input {
+					display: none;
+				}
+		/*
+		 * The MIT License
+		 * Copyright (c) 2012 Matias Meno <m@tias.me>
+		 */
+		.dz-container,
+		.dz-container * {
+			box-sizing: border-box;
+		}
+		
+		.dz-container {
+			background: rgba(0,0,0,0.2);
+			border: 1px solid rgb(169, 169, 169);
+			border-left: none;
+			border-right: none;
+			
+			min-height: 2em;
+			line-height: 2em;
+			
+			margin: 0 -2px 0 -1px;
+			padding: 0;
+			
+			white-space: nowrap;
+			overflow-x: visible;
+			overflow-y: hidden;
+		}
+			.dz-container.dz-clickable {
+				cursor: pointer;
+			}
+			.dz-container.dz-clickable * {
+				cursor: default;
+			}
+			.dz-container.dz-clickable .dz-message {
+				cursor: pointer;
+			}
+			.dz-container.dz-started .dz-message {
+				display: none;
+			}
+			.dz-container.dz-drag-hover {
+				border-style: solid;
+			}
+			.dz-container.dz-drag-hover .dz-message {
+				opacity: 0.5;
+			}
+			.dz-container .dz-message {
+				text-align: center;
+				margin: 2em 0;
+			}
+			
+			.dz-container .dz-instructions {
+				display: block;
+				min-width: 100%;
+				padding: 0.25em 0.75em;
+				pointer-events: none;
+			}
+				.dz-container.dz-started .dz-instructions {
+					display: none;
+				}
+			
+			.dz-container .dz-preview {
+				position: relative;
+				display: inline-block;
+				vertical-align: top;
+				margin: 0;
+				min-height: 100px;
+			}
+				
+				.dz-container .dz-preview:hover {
+					z-index: 1000;
+				}
+				.dz-container .dz-preview:hover .dz-details {
+					opacity: 1;
+				}
+				.dz-container .dz-preview.dz-file-preview .dz-image {
+					border-radius: 0;
+					background: #999;
+					background: linear-gradient(to bottom, #eee, #ddd);
+				}
+				.dz-container .dz-preview.dz-file-preview .dz-details {
+					opacity: 1;
+				}
+				.dz-container .dz-preview.dz-image-preview {
+					background: white;
+				}
+				.dz-container .dz-preview.dz-image-preview .dz-details {
+				}
+				.dz-container .dz-preview .dz-remove {
+					font-size: 14px;
+					text-align: center;
+					display: block;
+					cursor: pointer;
+					border: none;
+				}
+					.dz-container .dz-preview .dz-remove:hover {
+						text-decoration: underline;
+					}
+					.dz-container .dz-preview:hover .dz-details {
+						opacity: 1;
+					}
+					
+					.dz-container .dz-preview .dz-details {
+						z-index: 20;
+						position: absolute;
+						top: 0;
+						left: 0;
+						opacity: 0;
+						font-size: 13px;
+						min-width: 100%;
+						max-width: 100%;
+						padding: 2em 1em;
+						text-align: center;
+						color: rgba(0, 0, 0, 0.9);
+						line-height: 150%;
+					}
+					.dz-container .dz-preview .dz-details .dz-size {
+						margin-bottom: 1em;
+						font-size: 16px;
+					}
+						.dz-container .dz-preview .dz-details .dz-filename {
+						white-space: nowrap;
+					}
+						.dz-container .dz-preview .dz-details .dz-filename:hover span {
+							border: 1px solid rgba(200, 200, 200, 0.8);
+							background-color: rgba(255, 255, 255, 0.8);
+						}
+						.dz-container .dz-preview .dz-details .dz-filename:not(:hover) {
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+							.dz-container .dz-preview .dz-details .dz-filename:not(:hover) span {
+								border: 1px solid transparent;
+							}
+						.dz-container .dz-preview .dz-details .dz-filename span, .dz-container .dz-preview .dz-details .dz-size span {
+							background-color: rgba(255, 255, 255, 0.4);
+							padding: 0 0.4em;
+							border-radius: 3px;
+						}
+					.dz-container .dz-preview:hover .dz-image img {
+					}
+					.dz-container .dz-preview .dz-image {
+						border-radius: 0;
+						overflow: hidden;
+						width: 120px;
+						height: 120px;
+						position: relative;
+						display: block;
+						z-index: 10;
+					}
+						.dz-container .dz-preview .dz-image img {
+							display: block;
+						}
+					.dz-container .dz-preview.dz-success .dz-success-mark {
+					}
+					.dz-container .dz-preview.dz-error .dz-error-mark {
+						opacity: 1;
+					}
+					.dz-container .dz-preview .dz-success-mark, .dz-container .dz-preview .dz-error-mark {
+						pointer-events: none;
+						opacity: 0;
+						z-index: 500;
+						position: absolute;
+						display: block;
+						top: 50%;
+						left: 50%;
+						margin-left: -27px;
+						margin-top: -27px;
+					}
+						.dz-container .dz-preview .dz-success-mark svg,
+						.dz-container .dz-preview .dz-error-mark svg {
+							display: block;
+							width: 54px;
+							height: 54px;
+						}
+					.dz-container .dz-preview.dz-processing .dz-progress {
+						opacity: 1;
+					}
+					.dz-container .dz-preview.dz-complete .dz-progress {
+						opacity: 0;
+					}
+					.dz-container .dz-preview:not(.dz-processing) .dz-progress 
+					}
+					.dz-container .dz-preview .dz-progress {
+						opacity: 1;
+						z-index: 1000;
+						pointer-events: none;
+						position: absolute;
+						height: 16px;
+						left: 50%;
+						top: 50%;
+						margin-top: -8px;
+						width: 80px;
+						margin-left: -40px;
+						background: rgba(255, 255, 255, 0.9);
+						-webkit-transform: scale(1);
+						border-radius: 8px;
+						overflow: hidden;
+					}
+						.dz-container .dz-preview .dz-progress .dz-upload {
+							background: #333;
+							background: linear-gradient(to bottom, #666, #444);
+							position: absolute;
+							top: 0;
+							left: 0;
+							bottom: 0;
+							width: 0;
+						}
+					.dz-container .dz-preview.dz-error .dz-error-message {
+						display: block;
+					}
+					.dz-container .dz-preview.dz-error:hover .dz-error-message {
+						opacity: 1;
+						pointer-events: auto;
+					}
+					.dz-container .dz-preview .dz-error-message {
+						pointer-events: none;
+						z-index: 1000;
+						position: absolute;
+						display: block;
+						display: none;
+						opacity: 0;
+						border-radius: 8px;
+						font-size: 13px;
+						top: 130px;
+						left: -10px;
+						width: 140px;
+						background: #be2626;
+						background: linear-gradient(to bottom, #be2626, #a92222);
+						padding: 0.5em 1.2em;
+						color: white;
+					}
+						.dz-container .dz-preview .dz-error-message:after {
+							content: '';
+							position: absolute;
+							top: -6px;
+							left: 64px;
+							width: 0;
+							height: 0;
+							border-left: 6px solid transparent;
+							border-right: 6px solid transparent;
+							border-bottom: 6px solid #be2626;
+						}
 
 /* BoardLogs */
 section.board-logs-table {
@@ -1251,7 +1504,7 @@ main.index-threaded {
 							color: #CC0000;
 						}
 						.post-container.post-deleted .post-detail.post-deleted {
-							display: inherit;
+							display: inline-block;
 						}
 						
 						.post-detail-item {
@@ -1426,10 +1679,10 @@ main.index-threaded {
 									border-style: solid;
 									border-width: 17px;
 									
-									-moz-border-image:    url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									-moz-border-image:	url('/img/backgrounds/film.png') 27 fill stretch repeat;
 									-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
-									-o-border-image:      url('/img/backgrounds/film.png') 27 fill stretch repeat;
-									border-image:         url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									-o-border-image:		url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									border-image:		 url('/img/backgrounds/film.png') 27 fill stretch repeat;
 								}
 								
 									li.post-attachment.attachment-expanded img.attachment-img {

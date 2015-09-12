@@ -1246,7 +1246,7 @@ class Post extends Model {
 			// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
 			// alongside the primary autoincrement column `post_id`.
 			
-			// First instruction is to add +1 to posts_total and set the last_post_time.
+			// First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
 			DB::table('boards')
 				->where('board_uri', $this->board_uri)
 				->increment('posts_total');
@@ -1272,6 +1272,11 @@ class Post extends Model {
 				if (!$this->isBumpless() && !$thread->isBumplocked())
 				{
 					$thread->bumped_last = $this->created_at;
+					// We explicitly set the updated_at to what it is now.
+					// If we didn't, this would change.
+					// We don't want that because it screws up the API and
+					// makes it think the OP post has had its content edited.
+					$thread->updated_at  = $thread->updated_at;
 				}
 				
 				$thread->reply_last  = $this->created_at;

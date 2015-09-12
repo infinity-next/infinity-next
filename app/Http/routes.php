@@ -252,6 +252,9 @@ Route::group([
 			
 			// Redirect to a post.
 			Route::get('post/{id}', 'BoardController@getPost');
+			
+			// Generate post preview.
+			Route::any('post/preview', 'PostController@anyPreview');
 		});
 		
 		

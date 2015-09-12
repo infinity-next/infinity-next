@@ -836,6 +836,8 @@ ib.widget("postbox", function(window, $, undefined) {
 			selector : {
 				'widget'          : "#post-form",
 				
+				'dropzone'        : ".dz-container",
+				
 				'captcha'         : ".captcha",
 				'captcha-row'     : ".row-captcha",
 				'captcha-field'   : ".field-control",
@@ -844,6 +846,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				'button-maximize' : ".menu-icon-maximize",
 				'button-minimize' : ".menu-icon-minimize"
 			},
+			
+			dropzone : {
+				paramName      : "files",
+				uploadMultiple : true
+			}
 		},
 		
 		// Compiled settings.
@@ -919,6 +926,13 @@ ib.widget("postbox", function(window, $, undefined) {
 					// Watch for source changes on the captcha.
 					.on('load.ip-postbox', widget.events.captchaLoad);
 				
+				if (typeof window.Dropzone !== 'undefined')
+				{
+					var dropzoneOptions = jQuery.extend(widget.options.dropzone);
+					dropzoneOptions['url'] = widget.$widget.attr('action') + "/upload-file";
+					
+					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
+				}
 				
 				widget.$widget
 					// Watch for captcha clicks.
@@ -1019,8 +1033,15 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							if (reply.html !== null)
 							{
 								$newPost      = $(reply.html);
-								$existingPost.replaceWith($newPost);
-								ib.bindElement($newPost[0]);
+								
+								var existingUpdated = parseInt($existingPost.attr('data-updated-at'), 10),
+									newUpdated      = parseInt($newPost.attr('data-updated-at'), 10);
+								
+								if (isNaN(existingUpdated) || isNaN(newUpdated) || (newUpdated > existingUpdated))
+								{
+									$existingPost.replaceWith($newPost);
+									ib.bindElement($newPost[0]);
+								}
 							}
 							else
 							{

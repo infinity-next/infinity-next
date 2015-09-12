@@ -714,6 +714,17 @@ class PostController extends Controller {
 		return $this->anySticky($request, $board, $post, false);
 	}
 	
+	/**
+	 * Generates HTML content with post input.
+	 */
+	public function anyPreview(Request $request, Board $board)
+	{
+		$body = $request->input('body');
+		
+		return json_encode([
+			'html' => $ContentFormatter->formatPost($this),
+		]);
+	}
 	
 	/**
 	 * Check the request for all post controller methods.

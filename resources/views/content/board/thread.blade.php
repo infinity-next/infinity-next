@@ -1,4 +1,4 @@
-<div class="post-container @if ($op === $thread) op-container @else reply-container @endif post-{{$thread->post_id}} post-{{$thread->board_uri}}-{{$thread->board_id}}" data-widget="post">
+<div class="post-container @if ($op === $thread) op-container @else reply-container @endif post-{{$thread->post_id}} post-{{$thread->board_uri}}-{{$thread->board_id}}" data-widget="post" data-updated-at="{{ $thread->updated_at->timestamp }}">
 	@if ($thread->reports)
 	@include('content.board.post.single', [
 		'board'   => &$board,

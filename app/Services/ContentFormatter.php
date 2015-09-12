@@ -29,12 +29,21 @@ class ContentFormatter {
 	/**
 	 * Returns a formatted post.
 	 *
-	 * @param  \App\Post $post
+	 * @param  \App\Post|string  $post
 	 * @return String (HTML, Formatted)
 	 */
-	public function formatPost(Post $post)
+	public function formatPost($post)
 	{
-		$this->post	= $post;
+		if ($post instanceof Post)
+		{
+			$this->post	= $post;
+			$body = (string) $post->body;
+		}
+		else
+		{
+			$body = (string) $post;
+		}
+		
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
@@ -58,7 +67,7 @@ class ContentFormatter {
 			],
 		];
 		
-		return $this->formatContent( (string) $post->body);
+		return $this->formatContent($body);
 	}
 	
 	/**
@@ -137,8 +146,6 @@ class ContentFormatter {
 	 */
 	protected function formatMarkdown($content)
 	{
-		$post   = $this->post;
-		
 		$content = Markdown::config($this->options)
 			->extendBlockComplete('Quote', $this->getQuoteParser())
 			->addInlineType('>', 'Cite')
@@ -228,27 +235,30 @@ class ContentFormatter {
 			
 			$replaced = false;
 			
-			foreach ($parser->post->cites as $cite)
+			if (isset($parser->post) && $parser->post instanceof Post)
 			{
-				$replacements = [];
-				
-				if ($cite->cite_board_id)
+				foreach ($parser->post->cites as $cite)
 				{
-					$replacements["/^>>>\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
-					$replacements["/^>>{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
-				}
-				else
-				{
-					$replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
-				}
-				
-				foreach ($replacements as $pattern => $replacement)
-				{
-					if (preg_match($pattern, $Element['text']))
+					$replacements = [];
+					
+					if ($cite->cite_board_id)
 					{
-						$Element['attributes'] = $replacement;
-						$replaced = true;
-						break 2;
+						$replacements["/^>>>\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
+						$replacements["/^>>{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
+					}
+					else
+					{
+						$replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
+					}
+					
+					foreach ($replacements as $pattern => $replacement)
+					{
+						if (preg_match($pattern, $Element['text']))
+						{
+							$Element['attributes'] = $replacement;
+							$replaced = true;
+							break 2;
+						}
 					}
 				}
 			}

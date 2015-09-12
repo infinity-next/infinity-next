@@ -39,6 +39,8 @@ return [
 		'author'      => "Author",
 		'email'       => "Email",
 		
+		'file-dz'     => "Click or drag files here to upload",
+		
 		'ip'              => "IP",
 		'ip_range'        => "Range",
 		'justification'   => "Reason",
