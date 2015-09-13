@@ -25,7 +25,7 @@
 	
 	<div class="field row-captcha">
 		<label class="field-label" for="captcha">
-			{!! Captcha::img() !!}
+			{!! captcha() !!}
 			<span class="field-validation"></span>
 		</label>
 		<input class="field-control" id="captcha" name="captcha" type="text" />
