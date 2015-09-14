@@ -848,8 +848,33 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			dropzone : {
+				// The input field name.
 				paramName      : "files",
-				uploadMultiple : true
+				
+				// Allow multiple uploads.
+				uploadMultiple : true,
+				
+				// Handles the acceptance of files.
+				accept : function(file, done) {
+					var reader = new FileReader();
+					
+					reader.onload = function (event) {
+						var Hasher = new SparkMD5;
+						Hasher.appendBinary(this.result);
+						
+						var hash = Hasher.end();
+						
+						jQuery.get(widget.$widget.attr('action') + "/check-file", {
+							'md5' : hash
+						})
+							.done(function(data) {
+								done();
+							});
+					};
+					
+					reader.readAsBinaryString(file);
+				}
+				
 			}
 		},
 		
@@ -928,7 +953,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				if (typeof window.Dropzone !== 'undefined')
 				{
-					var dropzoneOptions = jQuery.extend(widget.options.dropzone);
+					var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
 					dropzoneOptions['url'] = widget.$widget.attr('action') + "/upload-file";
 					
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);

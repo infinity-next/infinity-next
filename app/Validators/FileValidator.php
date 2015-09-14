@@ -74,7 +74,6 @@ class FileValidator extends Validator
 		}
 		
 		return false;
-		dd($value);
 	}
 	
 }

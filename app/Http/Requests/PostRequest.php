@@ -4,7 +4,6 @@ use App\Ban;
 use App\Board;
 use App\Post;
 use App\Services\UserManager;
-use App\Validators\FileValidator;
 
 use Auth;
 use Validator;
@@ -49,11 +48,6 @@ class PostRequest extends Request {
 	 */
 	public function __construct(Board $board, UserManager $manager)
 	{
-		Validator::resolver(function($translator, $data, $rules, $messages)
-		{
-			return new FileValidator($translator, $data, $rules, $messages);
-		});
-		
 		$this->board = $board;
 		$this->user  = $manager->user;
 	}
@@ -113,8 +107,6 @@ class PostRequest extends Request {
 	 */
 	public function rules()
 	{
-		global $app;
-		
 		$board = $this->board;
 		$user  = $this->user;
 		$rules = [
@@ -140,23 +132,41 @@ class PostRequest extends Request {
 				$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
 				
 				$rules['body'][]  = "required_without:files";
-				$rules['files'][] = "array";
-				$rules['files'][] = "min:1";
-				$rules['files'][] = "max:{$attachmentsMax}";
 				
-				// Create an additional rule for each possible file.
-				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
-				{
-					$rules["files.{$attachment}"] = [
-						//"mimes:jpeg,gif,png,bmp,svg,swf,webm,mp4,ogg,mp3,mpga,mpeg,wav,pdf,epub",
-						"between:0," . $app['settings']('attachmentFilesize'),
-						"FileIntegrity",
-					];
-				}
+				// Add the rules for file uploads.
+				static::rulesForFiles($board, $rules);
 			}
 		}
 		
 		return $rules;
+	}
+	
+	/**
+	 * Returns rules specifically for files for a board.
+	 *
+	 * @param  Board  $board
+	 * @param  array  $rules (POINTER, MODIFIED)
+	 * @return array  Validation rules.
+	 */
+	public static function rulesForFiles(Board $board, array &$rules)
+	{
+		global $app;
+		
+		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
+		
+		$rules['files'][] = "array";
+		$rules['files'][] = "min:1";
+		$rules['files'][] = "max:{$attachmentsMax}";
+		
+		// Create an additional rule for each possible file.
+		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
+		{
+			$rules["files.{$attachment}"] = [
+				//"mimes:jpeg,gif,png,bmp,svg,swf,webm,mp4,ogg,mp3,mpga,mpeg,wav,pdf,epub",
+				"between:0," . $app['settings']('attachmentFilesize'),
+				"FileIntegrity",
+			];
+		}
 	}
 	
 	/**

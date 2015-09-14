@@ -2,11 +2,13 @@
 
 use App\Board;
 use App\Post;
+use App\FileStorage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
-
-use Illuminate\Http\Request;
 use App\Validators\FileValidator;
+
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 use Input;
 use File;
@@ -31,6 +33,14 @@ class BoardController extends Controller {
 	const VIEW_CATALOG = "catalog";
 	const VIEW_THREAD  = "board";
 	const VIEW_LOGS    = "board.logs";
+	
+	public function boot()
+	{
+		Validator::resolver(function($translator, $data, $rules, $messages)
+		{
+			return new FileValidator($translator, $data, $rules, $messages);
+		});
+	}
 	
 	/**
 	 * Show the board index for the user.
@@ -226,5 +236,55 @@ class BoardController extends Controller {
 		
 		return response($stylesheet, $statusCode)
 			->header('Content-Type', $contentType);
+	}
+	
+	/**
+	 * Checks if a file exists.
+	 *
+	 * @param  Request  $request
+	 * @param  Board  $board
+	 * @return json
+	 */
+	public function getFile(Request $request, Board $board)
+	{
+		$hash    = $request->get('md5');
+		$storage = FileStorage::getHash($hash);
+		
+		return $storage;
+	}
+	
+	/**
+	 * Uploads a single file.
+	 *
+	 * @param  Request  $request
+	 * @param  Board  $board
+	 * @return json
+	 */
+	public function putFile(Request $request, Board $board)
+	{
+		$input = Input::all();
+		$rules = [];
+		
+		PostRequest::rulesForFiles($board, $rules);
+		$rules['files'][] = "required";
+		
+		$validator = Validator::make($input, $rules);
+		
+		if (!$validator->passes())
+		{
+			return json_encode([
+				'errors' => $validator->errors(),
+			]);
+		}
+		
+		
+		$storage = new Collection;
+		
+		foreach ($input['files'] as $file)
+		{
+			$storage[] = FileStorage::storeUpload($file);
+		}
+		
+		return $storage;
 	}
 }

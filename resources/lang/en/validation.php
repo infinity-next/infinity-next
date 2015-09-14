@@ -37,7 +37,7 @@ return [
 	"digits_between"       => "The :attribute must be between :min and :max digits.",
 	"email"                => "The :attribute must be a valid email address.",
 	"filled"               => "The :attribute field is required.",
-	"file_integrity"       => "The :attribute: attachment fails integrity checks and may be corrupt or invalid.",
+	"file_integrity"       => "The :attribute attachment fails integrity checks and may be corrupt or invalid.",
 	"exists"               => "The selected :attribute is invalid.",
 	"image"                => "The :attribute must be an image.",
 	"in"                   => "The selected :attribute is invalid.",

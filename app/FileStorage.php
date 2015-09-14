@@ -123,6 +123,17 @@ class FileStorage extends Model {
 		return file_exists($this->getFullPathThumb());
 	}
 	
+	public function scopeWhereCanDelete($query)
+	{
+		return $query->where('banned', false);
+	}
+	
+	public function scopeWhereOprhan($query)
+	{
+		return $query->whereCanDelete()
+			->has('assets',      '=', 0)
+			->has('attachments', '=', 0);
+	}
 	
 	public function scopeHash($query, $hash)
 	{
@@ -324,7 +335,7 @@ class FileStorage extends Model {
 		// Sometimes we supply a filename when fetching the filestorage as an attachment.
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			return url($baseURL . $this->pivot->filename);
+			return url($baseURL . urlencode($this->pivot->filename));
 		}
 		
 		return url($baseURL . strtotime($this->first_uploaded_at) . "." . $this->guessExtension());
@@ -406,6 +417,8 @@ class FileStorage extends Model {
 		$cmd   = env('LIB_VIDEO_PROBE', "ffprobe") . " -v error -show_format -show_streams {$video} 2>&1";
 		
 		exec($cmd, $output, $returnvalue);
+		
+		dd($output);
 		
 		if (count($output) <= 3)
 		{
@@ -539,13 +552,13 @@ class FileStorage extends Model {
 	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
-	 * @param UploadedFile $upload
+	 * @param  UploadedFile  $upload
 	 * @return FileStorage
 	 */
 	public static function storeUpload(UploadedFile $upload)
 	{
 		$fileContent  = File::get($upload);
-		$fileMD5      = md5(File::get($upload));
+		$fileMD5      = md5((string) File::get($upload));
 		$storage      = static::getHash($fileMD5);
 		
 		if (!($storage instanceof static))
