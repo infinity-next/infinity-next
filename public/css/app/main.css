@@ -1158,9 +1158,6 @@ section.index-form {
 				padding: 0.25em 0.75em;
 				pointer-events: none;
 			}
-				.dz-container.dz-started .dz-instructions {
-					display: none;
-				}
 			
 			.dz-container .dz-preview {
 				position: relative;
@@ -1245,14 +1242,17 @@ section.index-form {
 					.dz-container .dz-preview .dz-image {
 						border-radius: 0;
 						overflow: hidden;
-						width: 120px;
-						height: 120px;
+						width: 100px;
+						height: 100px;
 						position: relative;
 						display: block;
 						z-index: 10;
 					}
 						.dz-container .dz-preview .dz-image img {
 							display: block;
+							max-width: 100%;
+							max-height: 100%;
+							margin: 0 auto;
 						}
 					.dz-container .dz-preview.dz-success .dz-success-mark {
 					}

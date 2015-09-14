@@ -250,7 +250,12 @@ class BoardController extends Controller {
 		$hash    = $request->get('md5');
 		$storage = FileStorage::getHash($hash);
 		
-		return $storage;
+		if (is_null($storage))
+		{
+			return [ $hash => null ];
+		}
+		
+		return [ $hash => $storage ];
 	}
 	
 	/**
@@ -282,7 +287,8 @@ class BoardController extends Controller {
 		
 		foreach ($input['files'] as $file)
 		{
-			$storage[] = FileStorage::storeUpload($file);
+			$newStorage = FileStorage::storeUpload($file);
+			$storage[$newStorage->hash] = $newStorage;
 		}
 		
 		return $storage;

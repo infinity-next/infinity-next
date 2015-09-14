@@ -17,7 +17,7 @@
 		var requestedWidget = element.getAttribute('data-widget');
 		
 		if (ib[requestedWidget]) {
-			ib.bindWidget(element, ib[requestedWidget]);
+			return ib.bindWidget(element, ib[requestedWidget]);
 		}
 		else {
 			console.log("Requested widget \""+requestedWidget+"\" does not exist.");
@@ -32,6 +32,8 @@
 			newWidget.init(dom);
 			dom.widget = newWidget;
 		}
+		
+		return dom.widget;
 	};
 	
 	ib.config = function(name, configDefault) {
@@ -252,7 +254,6 @@ ib.widget("donate", function(window, $, undefined) {
 				widget.events.paymentChange();
 				
 				widget.notices = $(widget.options.selector['notices'])[0].widget;
-				console.log(widget.notices);
 			}
 		},
 		
@@ -827,6 +828,12 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Short-hand for this widget's main object.
 		$widget  : $(),
 		
+		// Dropzone instance.
+		dropzone : null,
+		
+		// Widgets instance.
+		notices : null,
+		
 		// The default values that are set behind init values.
 		defaults : {
 			
@@ -835,6 +842,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'          : "#post-form",
+				'notices'         : "[data-widget=notice]:first",
 				
 				'dropzone'        : ".dz-container",
 				
@@ -854,6 +862,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				// Allow multiple uploads.
 				uploadMultiple : true,
 				
+				// Binds the instance to our widget.
+				init: function() {
+					widget.dropzone = this;
+				},
+				
 				// Handles the acceptance of files.
 				accept : function(file, done) {
 					var reader = new FileReader();
@@ -867,12 +880,69 @@ ib.widget("postbox", function(window, $, undefined) {
 						jQuery.get(widget.$widget.attr('action') + "/check-file", {
 							'md5' : hash
 						})
-							.done(function(data) {
-								done();
+							.done(function(data, textStatus, jqXHR) {
+								if (typeof data === "object")
+								{
+									var response = data;
+									
+									jQuery.each(response, function(index, datum) {
+										// Make sure this datum is for our file.
+										if (index !== hash)
+										{
+											return true;
+										}
+										
+										// Does this file exist?
+										if (datum !== null)
+										{
+											// Is the file banned?
+											if (datum.banned == 1)
+											{
+												// Language
+												console.log("File "+file.name+" is banned from being uploaded.");
+												
+												file.status = Dropzone.ERROR;
+												widget.dropzone.emit("error", file, "File <tt>"+file.name+"</tt> is banned from being uploaded", jqXHR);
+												widget.dropzone.emit("complete", file);
+											}
+											else
+											{
+												console.log("File "+file.name+" already exists.");
+												
+												file.status = window.Dropzone.SUCCESS;
+												widget.dropzone.emit("success", file, datum, jqXHR);
+												widget.dropzone.emit("complete", file);
+											}
+										}
+										// If no presence, upload anew.
+										else
+										{
+											console.log("Uploading file "+file.name+".");
+											
+											done();
+										}
+									});
+								}
+								else
+								{
+									console.log("postbox.dropzone.accept.hasher.onload.ajax.get received weird response:", data);
+								}
 							});
 					};
 					
 					reader.readAsBinaryString(file);
+				},
+				
+				error : function(file, message, xhr) {
+					widget.notices.push(message, 'error');
+					
+					$(file.previewElement).remove();
+				},
+				
+				success : function(file, responseText, xhr) {
+					var $preview = $(file.previewElement);
+					console.log(responseText);
+					//$preview.append()
 				}
 				
 			}
@@ -945,6 +1015,11 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Event bindings
 		bind     : {
 			widget : function() {
+				
+				// Force the notices widget to be bound, and then record it.
+				// We have to do this because the notices widget is a child within this widget.
+				// The parent is bound first.
+				widget.notices = window.ib.bindElement($(widget.options.selector['notices'])[0]);
 				
 				$(widget.options.selector['captcha'])
 					// Load events cannot be tied on parents.
