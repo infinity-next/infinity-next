@@ -257,10 +257,10 @@ Route::group([
 			Route::any('post/preview', 'PostController@anyPreview');
 			
 			// Check if a file exists.
-			Route::get('{destination}/check-file', 'BoardController@getFile');
+			Route::get('check-file', 'BoardController@getFile');
 			
 			// Handle a file upload.
-			Route::post('{destination}/upload-file', 'BoardController@putFile');
+			Route::post('upload-file', 'BoardController@putFile');
 		});
 		
 		

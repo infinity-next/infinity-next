@@ -837,7 +837,8 @@ ib.widget("postbox", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			
-			captchaUrl : "/cp/captcha",
+			checkFileUrl  : window.app.board_url + "/check-file",
+			captchaUrl    : "/cp/captcha",
 			
 			// Selectors for finding and binding elements.
 			selector : {
@@ -859,12 +860,17 @@ ib.widget("postbox", function(window, $, undefined) {
 				// The input field name.
 				paramName      : "files",
 				
+				// File upload URL
+				url            : window.app.board_url + "/upload-file",
+				
 				// Allow multiple uploads.
 				uploadMultiple : true,
 				
 				// Binds the instance to our widget.
 				init: function() {
 					widget.dropzone = this;
+					
+					$(this.element).append("<input type=\"hidden\" name=\"dropzone\" value=\"1\" />");
 				},
 				
 				// Handles the acceptance of files.
@@ -876,8 +882,9 @@ ib.widget("postbox", function(window, $, undefined) {
 						Hasher.appendBinary(this.result);
 						
 						var hash = Hasher.end();
+						file.hash = hash;
 						
-						jQuery.get(widget.$widget.attr('action') + "/check-file", {
+						jQuery.get( window.app.board_url + "/check-file", {
 							'md5' : hash
 						})
 							.done(function(data, textStatus, jqXHR) {
@@ -925,7 +932,7 @@ ib.widget("postbox", function(window, $, undefined) {
 								}
 								else
 								{
-									console.log("postbox.dropzone.accept.hasher.onload.ajax.get received weird response:", data);
+									console.log("Received weird response:", data);
 								}
 							});
 					};
@@ -941,8 +948,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				success : function(file, responseText, xhr) {
 					var $preview = $(file.previewElement);
-					console.log(responseText);
-					//$preview.append()
+					
+					$preview
+						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[hash][]\" value=\""+file.hash+"\" />")
+						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[name][]\" value=\""+file.name+"\" />")
+					;
 				}
 				
 			}
@@ -1029,8 +1039,6 @@ ib.widget("postbox", function(window, $, undefined) {
 				if (typeof window.Dropzone !== 'undefined')
 				{
 					var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
-					dropzoneOptions['url'] = widget.$widget.attr('action') + "/upload-file";
-					
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
 				}
 				

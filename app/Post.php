@@ -98,6 +98,11 @@ class Post extends Model {
 		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
 	}
 	
+	public function attachmentLinks()
+	{
+		return $this->hasMany("\App\FileAttachment");
+	}
+	
 	public function bans()
 	{
 		return $this->hasMany('\App\Ban', 'post_id');
@@ -1238,7 +1243,6 @@ class Post extends Model {
 			$this->reply_to_board_id = $thread->board_id;
 		}
 		
-		
 		// Store the post in the database.
 		DB::transaction(function() use ($board, $thread)
 		{
@@ -1303,24 +1307,47 @@ class Post extends Model {
 			// Queries and locks are handled automatically after this closure ends.
 		});
 		
-		
 		// Process uploads.
 		$uploads = [];
 		
+		// Check file uploads.
 		if (is_array($files = Input::file('files')))
 		{
 			$uploads = array_filter($files);
-		}
-		
-		if (count($uploads) > 0)
-		{
-			foreach ($uploads as $uploadIndex => $upload)
+			
+			if (count($uploads) > 0)
 			{
-				if(file_exists($upload->getPathname()))
+				foreach ($uploads as $uploadIndex => $upload)
 				{
-					FileStorage::createAttachment($upload, $this);
+					if(file_exists($upload->getPathname()))
+					{
+						FileStorage::createAttachment($upload, $this);
+					}
 				}
 			}
+		}
+		else if(is_array($files = Input::get('files')))
+		{
+			$hashes  = $files['hash'];
+			$names   = $files['name'];
+			
+			$storage = FileStorage::whereIn('hash', $hashes)->get();
+			
+			foreach ($hashes as $index => $hash)
+			{
+				$file = $storage->where('hash', $hash)->first();
+				
+				if ($file)
+				{
+					$uploads[] = new FileAttachment([
+						'post_id'  => $this->post_id,
+						'file_id'  => $file->file_id,
+						'filename' => $names[$index],
+					]);
+				}
+			}
+			
+			$this->attachmentLinks()->saveMany($uploads);
 		}
 		
 		

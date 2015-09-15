@@ -134,7 +134,16 @@ class PostRequest extends Request {
 				$rules['body'][]  = "required_without:files";
 				
 				// Add the rules for file uploads.
-				static::rulesForFiles($board, $rules);
+				if (isset($this->all()['dropzone']))
+				{
+					// JavaScript enabled hash posting
+					static::rulesForFileHashes($board, $rules);
+				}
+				else
+				{
+					// Vanilla HTML upload
+					static::rulesForFiles($board, $rules);
+				}
 			}
 		}
 		
@@ -164,7 +173,42 @@ class PostRequest extends Request {
 			$rules["files.{$attachment}"] = [
 				//"mimes:jpeg,gif,png,bmp,svg,swf,webm,mp4,ogg,mp3,mpga,mpeg,wav,pdf,epub",
 				"between:0," . $app['settings']('attachmentFilesize'),
-				"FileIntegrity",
+				"file_integrity",
+			];
+		}
+	}
+	
+	/**
+	 * Returns rules specifically for dropzone files for a board.
+	 *
+	 * @param  Board  $board
+	 * @param  array  $rules (POINTER, MODIFIED)
+	 * @return array  Validation rules.
+	 */
+	public static function rulesForFileHashes(Board $board, array &$rules)
+	{
+		global $app;
+		
+		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
+		
+		$rules['files'][] = "array";
+		$rules['files'][] = "min:1";
+		$rules['files'][] = "max:{$attachmentsMax}";
+		
+		// Create an additional rule for each possible file.
+		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
+		{
+			$rules["files.name.{$attachment}"] = [
+				"string",
+				"required_with:files.hash.{$attachment}",
+				"between:1,254",
+				"file_name",
+			];
+			
+			$rules["files.hash.{$attachment}"] = [
+				"string",
+				"required_with:files.name.{$attachment}",
+				"md5",
 			];
 		}
 	}

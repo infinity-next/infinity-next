@@ -42,7 +42,11 @@
 				@endif
 			@endif
 				
-				'url'        : "{!! env('APP_URL', 'false') !!}"
+				'url'        : "{!! env('APP_URL', 'false') !!}",
+				
+				@yield('app-js')
+				
+				'version'    : 0
 			};
 		</script>
 		
