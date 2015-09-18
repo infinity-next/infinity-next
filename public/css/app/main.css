@@ -1309,6 +1309,7 @@ section.index-form {
 						position: relative;
 						display: block;
 						z-index: 10;
+						padding: 0 0 2px 0;
 					}
 						.dz-container .dz-preview .dz-image img {
 							display: block;
@@ -1316,12 +1317,9 @@ section.index-form {
 							max-height: 100%;
 							margin: 0 auto;
 						}
-					.dz-container .dz-preview.dz-success .dz-success-mark {
-					}
-					.dz-container .dz-preview.dz-error .dz-error-mark {
-						opacity: 1;
-					}
-					.dz-container .dz-preview .dz-success-mark, .dz-container .dz-preview .dz-error-mark {
+					
+					.dz-container .dz-preview .dz-success-mark,
+					.dz-container .dz-preview .dz-error-mark {
 						pointer-events: none;
 						opacity: 0;
 						z-index: 500;
@@ -1332,20 +1330,22 @@ section.index-form {
 						margin-left: -27px;
 						margin-top: -27px;
 					}
+						.dz-container .dz-preview.dz-success .dz-success-mark {
+							opacity: 1;
+						}
+							.dz-container .dz-preview.dz-success:hover .dz-success-mark {
+								display: none;
+							}
+						.dz-container .dz-preview.dz-error .dz-error-mark {
+							opacity: 1;
+						}
 						.dz-container .dz-preview .dz-success-mark svg,
 						.dz-container .dz-preview .dz-error-mark svg {
 							display: block;
 							width: 54px;
 							height: 54px;
 						}
-					.dz-container .dz-preview.dz-processing .dz-progress {
-						opacity: 1;
-					}
-					.dz-container .dz-preview.dz-complete .dz-progress {
-						opacity: 0;
-					}
-					.dz-container .dz-preview:not(.dz-processing) .dz-progress 
-					}
+					
 					.dz-container .dz-preview .dz-progress {
 						opacity: 1;
 						z-index: 1000;
@@ -1371,9 +1371,18 @@ section.index-form {
 							bottom: 0;
 							width: 0;
 						}
-					.dz-container .dz-preview.dz-error .dz-error-message {
-						display: block;
-					}
+						.dz-container .dz-preview.dz-processing .dz-progress {
+							opacity: 1;
+						}
+						.dz-container .dz-preview.dz-complete .dz-progress {
+							opacity: 0;
+						}
+						.dz-container .dz-preview:not(.dz-processing) .dz-progress 
+						}
+						.dz-container .dz-preview.dz-error .dz-error-message {
+							display: block;
+						}
+					
 					.dz-container .dz-preview.dz-error:hover .dz-error-message {
 						opacity: 1;
 						pointer-events: auto;
