@@ -870,6 +870,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			selector : {
 				'widget'          : "#post-form",
 				'notices'         : "[data-widget=notice]:first",
+				'autoupdater'     : "#autoupdater", // [data-widget=autoupdater]:first
 				
 				'dropzone'        : ".dz-container",
 				
@@ -1091,6 +1092,69 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 			},
 			
+			formSubmit    : function(event) {
+				var $form      = $(this);
+				var $updater   = $(widget.options.selector['autoupdater']);
+				var data       = $form.serialize();
+				var willUpdate = false;
+				
+				if ($updater[0].widget)
+				{
+					willUpdate = true;
+					data += "&updatesOnly=1&updateHtml=1&updatedSince=" + $updater[0].widget.updateLast;
+				}
+				
+				jQuery.post(
+					// Destination URL
+					$form.attr('action'),
+					// Post data
+					data
+				)
+					.done(function(response, textStatus, jqXHR) {
+						console.log(response, textStatus);
+						if (typeof response !== "object")
+						{
+							try
+							{
+								response = jQuery.parseJSON(response);
+							}
+							catch (exception)
+							{
+								console.log("Post submission returned unpredictable response. Refreshing.");
+								window.location.reload();
+								return;
+							}
+						}
+						
+						if (typeof response.errors !== "undefined")
+						{
+							console.log("Post rejected.");
+							
+							jQuery.each(response.errors, function(field, errors)
+							{
+								jQuery.each(errors, function(index, error)
+								{
+									widget.dropzone.emit("error", file, error, xhr);
+									widget.dropzone.emit("complete", file);
+								});
+							});
+						}
+						else if(willUpdate)
+						{
+							console.log("Post submitted. Inline updating.");
+							$updater[0].widget.events.updateSuccess(response, textStatus, jqXHR);
+						}
+						else
+						{
+							console.log("Post submitted. Refreshing.");
+							window.location.reload();
+						}
+					});
+				
+				event.preventDefault();
+				return false;
+			},
+			
 			maximizeClick : function(event) {
 				widget.$widget
 					.removeClass("postbox-minimized postbox-closed")
@@ -1161,6 +1225,9 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
 					.on('click.ib-postbox', widget.options.selector['button-maximize'], widget.events.maximizeClick)
 					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
+					
+					// Watch form submission.
+					.on('submit.ib-postbox',        widget.events.formSubmit)
 					
 					// Watch for file statuses.
 					.on('fileFailed.ib-postbox',    widget.events.fileFailed)
@@ -1324,11 +1391,14 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				widget.updateTimer = setInterval(widget.events.updateInterval, 1000);
 			},
 			
-			updaterUpdateClick : function() {
+			updaterUpdateClick : function(event) {
 				var $timer = $(widget.options.selector['timer'], widget.$widget);
 				
 				$timer.attr('data-time', 10);
 				widget.events.update();
+				
+				event.preventDefault();
+				return false;
 			}
 			
 		},

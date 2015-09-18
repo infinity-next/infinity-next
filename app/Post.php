@@ -847,6 +847,30 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns a set of posts for an update request.
+	 *
+	 * @param  Carbon  $sinceTime
+	 * @param  Board  $board
+	 * @param  int  $thread  Board ID
+	 * @param  boolean  $includeHTML  If the posts should also have very large 'content_html' values.
+	 * @return Collection  of Posts
+	 */
+	public static function getUpdates($sinceTime, Board $board, $thread = null, $includeHTML = false)
+	{
+		$posts = static::whereInUpdate($sinceTime, $board, $thread)->get();
+		
+		if ($includeHTML)
+		{
+			foreach ($posts as $post)
+			{
+				$post->setAppendHTML(true);
+			}
+		};
+		
+		return $posts;
+	}
+	
+	/**
 	 * Returns if this post has an attached IP address.
 	 *
 	 * @return boolean
@@ -878,6 +902,29 @@ class Post extends Model {
 	public function setAppends(array $appends)
 	{
 		return $this->appends = $appends;
+	}
+	
+	/**
+	 * Quickly add html to the append list for this model.
+	 *
+	 * @param  boolean  $add  defaults true
+	 * @return Post
+	 */
+	public function setAppendHTML($add = true)
+	{
+		$appends   = $this->getAppends();
+		
+		if ($add)
+		{
+			$appends[] = "html";
+		}
+		else if (($key = array_search("html", $appends)) !== false)
+		{
+			unset($appends[$key]);
+		}
+		
+		$this->setAppends($appends);
+		return $this;
 	}
 	
 	/**
@@ -1124,6 +1171,37 @@ class Post extends Model {
 				$query->whereOpen();
 				$query->whereResponsibleFor($user);
 			}]);
+	}
+	
+	/**
+	 * Logic for pulling posts for API updates.
+	 *
+	 * @param  DbQuery  $query  Provided by Laravel.
+	 * @param  Board  $board
+	 * @param  Carbon  $sinceTime
+	 * @param  int  $thread  Board ID.
+	 * @return $query
+	 */
+	public function scopeWhereInUpdate($query, $sinceTime, Board $board, $thread)
+	{
+			// Find posts in this board.
+		return $query->where('posts.board_uri', $board->board_uri)
+			// Fetch accessory tables too.
+			->withEverything()
+			// Only pull posts in this thread, or that is this thread.
+			->where(function($query) use ($thread) {
+				$query->where('posts.reply_to_board_id', $thread);
+				$query->orWhere('posts.board_id', $thread);
+			})
+			// Nab posts that've been updated since our sinceTime.
+			->where(function($query) use ($sinceTime) {
+				$query->where('posts.updated_at', '>=', $sinceTime);
+				$query->orWhere('posts.deleted_at', '>=', $sinceTime);
+			})
+			// Include deleted posts.
+			->withTrashed()
+			// Order by board id in reverse order (so they appear in the thread right).
+			->orderBy('posts.board_id', 'asc');
 	}
 	
 	

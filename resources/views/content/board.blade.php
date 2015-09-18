@@ -34,8 +34,6 @@
 		</ul>
 	</section>
 	
-	@include('content.board.sidebar')
-	
 </main>
 @stop
 

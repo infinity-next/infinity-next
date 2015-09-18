@@ -104,32 +104,9 @@ class BoardController extends ParentController implements ApiController {
 		if (isset($input['updatesOnly']))
 		{
 			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
+			$includeHTML  = isset($input['updateHtml']);
 			
-			$posts = Post::where('posts.board_uri', $board->board_uri)
-				->withEverything()
-				->where(function($query) use ($thread) {
-					$query->where('posts.reply_to_board_id', $thread);
-					$query->orWhere('posts.board_id', $thread);
-				})
-				->where(function($query) use ($updatedSince) {
-					$query->where('posts.updated_at', '>=', $updatedSince);
-					$query->orWhere('posts.deleted_at', '>=', $updatedSince);
-				})
-				->withTrashed()
-				->orderBy('posts.created_at', 'asc')
-				->get();
-			
-			if (isset($input['updateHtml']))
-			{
-				foreach ($posts as $post)
-				{
-					$appends   = $post->getAppends();
-					$appends[] = "html";
-					$post->setAppends($appends);
-				}
-			}
-			
-			return $posts;
+			return Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
 		}
 		else
 		{

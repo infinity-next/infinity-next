@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Validators\FileValidator;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -205,6 +206,20 @@ class BoardController extends Controller {
 			]);
 		}
 		
+		$input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
+		
+		if ($input['updatesOnly'])
+		{
+			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
+			$includeHTML  = isset($input['updateHtml']);
+			
+			$posts = Post::getUpdates($updatedSince, $board, $thread->board_id, $includeHTML);
+			$post->setAppendHTML($includeHTML);
+			$posts->push($post);
+			$posts->sortBy('board_id');
+			
+			return $posts;
+		}
 		
 		// Redirect to the new post or thread.
 		if (is_null($thread))
