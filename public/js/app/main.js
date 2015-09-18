@@ -873,7 +873,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				'dropzone'        : ".dz-container",
 				
-				'submit'          : "#submit-post",
+				'submit-post'     : "#submit-post",
 				
 				'captcha'         : ".captcha",
 				'captcha-row'     : ".row-captcha",
@@ -1060,6 +1060,8 @@ ib.widget("postbox", function(window, $, undefined) {
 			fileUploading : function(event, file) {
 				++widget.activeUploads;
 				console.log(widget.activeUploads + " concurrent uploads.");
+				
+				console.log($(widget.options.selector['submit-post'], widget.$widget));
 				
 				$(widget.options.selector['submit-post'], widget.$widget)
 					.prop('disabled', widget.activeUploads > 0);
