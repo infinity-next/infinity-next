@@ -49,6 +49,13 @@ class Board extends Model {
 	public $incrementing = false;
 	
 	/**
+	 * Denotes this instance is the currently "opened" board.
+	 *
+	 * @var boolean
+	 */
+	public $applicationSingleton = false;
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array

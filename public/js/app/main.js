@@ -632,12 +632,14 @@ ib.widget("post", function(window, $, undefined) {
 				
 				'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
 				'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
+				'attachment-media'   : "audio.attachment-inline, video.attachment-inline",
 				'attachment-image'   : "img.attachment-img",
 				'attachment-image-download'   : "img.attachment-type-file",
 				'attachment-image-expandable' : "img.attachment-type-img",
 				'attachment-image-audio'      : "img.attachment-type-audio",
 				'attachment-image-video'      : "img.attachment-type-video",
-				'attachment-inline'  : "audio.attachment-inline, video.attachment-inline"
+				'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
+				'attachment-link'    : "a.attachment-link"
 			},
 		},
 		
@@ -654,7 +656,7 @@ ib.widget("post", function(window, $, undefined) {
 				
 				var $link   = $(this);
 				var $item   = $link.parents("li.post-attachment");
-				var $img    = $(widget.options.selector['attachment-image'], $link);
+				var $img    = $(widget.options.selector['attachment-image'], $item);
 				var $inline = $(widget.options.selector['attachment-inline'], $item);
 				
 				$item.removeClass('attachment-expanded');
@@ -664,6 +666,19 @@ ib.widget("post", function(window, $, undefined) {
 				
 				event.preventDefault();
 				return false;
+			},
+			
+			attachmentMediaEnded : function(event) {
+				var $media  = $(this);
+				var $item   = $media.parents("li.post-attachment");
+				var $link   = $(widget.options.selector['attachment-link'], $item);
+				var $img    = $(widget.options.selector['attachment-image'], $item);
+				var $inline = $(widget.options.selector['attachment-inline'], $item);
+				
+				$item.removeClass('attachment-expanded');
+				$img.attr('src', $link.attr('data-thumb-url'));
+				$inline.remove();
+				$img.toggle(true);
 			},
 			
 			attachmentExpandClick : function(event) {
@@ -717,6 +732,7 @@ ib.widget("post", function(window, $, undefined) {
 							.appendTo($audio);
 						
 						$audio.insertBefore($link);
+						widget.bind.mediaEvents($audio);
 					}
 					else
 					{
@@ -748,8 +764,8 @@ ib.widget("post", function(window, $, undefined) {
 						
 						$img.toggle(false);
 						
-						$video
-							.insertBefore($link);
+						widget.bind.mediaEvents($video);
+						$video.insertBefore($link);
 					}
 					else
 					{
@@ -795,6 +811,12 @@ ib.widget("post", function(window, $, undefined) {
 		
 		// Event bindings
 		bind     : {
+			mediaEvents : function($element) {
+				$element
+					.on('ended.ib-post', widget.events.attachmentMediaEnded)
+				;
+			},
+			
 			widget : function() {
 				
 				widget.events.codeHighlight();

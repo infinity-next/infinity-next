@@ -127,7 +127,7 @@ return [
 			 *
 			 * @var string  of individual characters
 			 */
-			'charset'    => 'AaBbCcDdEeFGHhIJKkLMmNnOoPpQRrSsTtUuVvWwXxYyZ1234567890',
+			'charset'    => 'AaBbCcDdEeFGHhIJKkLMmNnOoPpQRrSsTtUuVvWwXxYyZ2345789',
 			
 			/**
 			 * Valid colors for the character sets.
@@ -147,6 +147,14 @@ return [
 			 * @var array  R,G,B color
 			 */
 			'canvas'      => [255,255,255],
+			
+			/**
+			 * This setting overrides, not supplements, the global font array.
+			 * It's configuration is the same.
+			 *
+			 * @var array  of fonts, see: captcha.fonts
+			 */
+			// 'fonts'    => [],
 			
 			/**
 			 * Minimum characters per captcha.
@@ -190,6 +198,46 @@ return [
 			 * @var int
 			 */
 			'font_size'   => 96,
+			
+			/**
+			 * Maximum number of lines or circles to draw per letter blocking.
+			 *
+			 * @var int
+			 */
+			'flourishes'  => 2,
+			
+		],
+		
+		/**
+		 * The dark captcha profile.
+		 *
+		 * @var array  of settings
+		 */
+		'dank' => [
+			'charset'    => 'AaBbCcDdEeFGHhIJKkLMmNnOoPpQRrSsTtUuVvWwXxYyZ2345789',
+			
+			'colors'      => [
+				[ 92,  89, 225],
+				[ 52,  48, 225],
+				[204,  60,  60],
+				[143,  45,  40],
+			],
+			
+			'canvas'      => [15,15,15],
+			
+			'length_min'  => 6,
+			
+			'length_max'  => 8,
+			
+			'sine'        => true,
+			
+			'width'       => 560,
+			
+			'height'      => 160,
+			
+			'font_size'   => 96,
+			
+			'flourishes'  => 2,
 			
 		],
 		
