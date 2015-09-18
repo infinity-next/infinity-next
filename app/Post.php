@@ -95,7 +95,7 @@ class Post extends Model {
 	
 	public function attachments()
 	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename', 'is_spoiler');
 	}
 	
 	public function attachmentLinks()
@@ -1328,8 +1328,9 @@ class Post extends Model {
 		}
 		else if(is_array($files = Input::get('files')))
 		{
-			$hashes  = $files['hash'];
-			$names   = $files['name'];
+			$hashes   = $files['hash'];
+			$names    = $files['name'];
+			$spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
 			
 			$storage = FileStorage::whereIn('hash', $hashes)->get();
 			
@@ -1337,12 +1338,13 @@ class Post extends Model {
 			{
 				$file = $storage->where('hash', $hash)->first();
 				
-				if ($file)
+				if ($file && !$file->banned)
 				{
 					$uploads[] = new FileAttachment([
-						'post_id'  => $this->post_id,
-						'file_id'  => $file->file_id,
-						'filename' => $names[$index],
+						'post_id'    => $this->post_id,
+						'file_id'    => $file->file_id,
+						'filename'   => $names[$index],
+						'is_spoiler' => isset($spoilers[$index]) ? $spoilers[$index] == 1 : false,
 					]);
 				}
 			}

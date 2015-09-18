@@ -1094,16 +1094,18 @@ section.index-form {
 			}
 			
 			/* Dropzone */
-			html.js form.form-post div.row-file {
+			form.form-post div.row-file {
+				box-sizing: content-box;
+				padding: 0 1px 0 0;
 				margin: 0 -0.75em;
-				width: 299px;
+				width: auto;
 				overflow: hidden;
 			}
 				html.js form.form-post div.dz-container {
 				}
-				html.js form.form-post div.dz-container input {
-					display: none;
-				}
+					html.js form.form-post div.dz-container input {
+						display: none;
+					}
 		/*
 		 * The MIT License
 		 * Copyright (c) 2012 Matias Meno <m@tias.me>
@@ -1114,20 +1116,26 @@ section.index-form {
 		}
 		
 		.dz-container {
-			background: rgba(0,0,0,0.2);
-			border: 1px solid rgb(169, 169, 169);
-			border-left: none;
-			border-right: none;
-			
 			min-height: 2em;
 			line-height: 2em;
 			
 			margin: 0 -2px 0 -1px;
 			padding: 0;
 			
+			min-width: 100%;
+			max-width: 100%;
+			width: 300px;
+			
 			white-space: nowrap;
-			overflow-x: visible;
+			
+			overflow: auto;
 			overflow-y: hidden;
+			overflow-x: auto;
+			
+			background: rgba(0,0,0,0.2);
+			border: 1px solid rgb(169, 169, 169);
+			border-left: none;
+			border-right: none;
 		}
 			.dz-container.dz-clickable {
 				cursor: pointer;
@@ -1152,11 +1160,14 @@ section.index-form {
 				margin: 2em 0;
 			}
 			
-			.dz-container .dz-instructions {
+			html.js .dz-container .dz-instructions {
 				display: block;
 				min-width: 100%;
 				padding: 0.25em 0.75em;
 				pointer-events: none;
+			}
+			html.no-js .dz-container .dz-instructions {
+				display: none;
 			}
 			
 			.dz-container .dz-preview {
@@ -1164,7 +1175,11 @@ section.index-form {
 				display: inline-block;
 				vertical-align: top;
 				margin: 0;
+				height: auto;
 				min-height: 100px;
+				max-height: 100px;
+				width: 33%;
+				max-width: 100px;
 			}
 				
 				.dz-container .dz-preview:hover {
@@ -1186,64 +1201,111 @@ section.index-form {
 				}
 				.dz-container .dz-preview.dz-image-preview .dz-details {
 				}
-				.dz-container .dz-preview .dz-remove {
-					font-size: 14px;
-					text-align: center;
-					display: block;
-					cursor: pointer;
-					border: none;
-				}
-					.dz-container .dz-preview .dz-remove:hover {
-						text-decoration: underline;
+					.dz-container .dz-preview .dz-actions {
+						position: absolute;
+						top: 0.25em;
+						left: 0.5em;
+						z-index: 20;
 					}
-					.dz-container .dz-preview:hover .dz-details {
-						opacity: 1;
-					}
+						.dz-container .dz-preview .dz-actions .dz-remove,
+						.dz-container .dz-preview .dz-actions .dz-spoiler {
+							display: block;
+							zoom: 1;
+							
+							height: 18px;
+							min-width: 18px;
+							
+							border-radius: 5px;
+							font-size: 12px;
+							line-height: 30px;
+							margin: 0.25em 0;
+							padding: 0 0 1px 0;
+							outline: none;
+							
+							border-radius: 9px;
+							background-image: linear-gradient(#FFFFFF 0%, #E1E1E1 100%);
+							
+							border: 1px solid #AEBDC4;
+							
+							color: #C40000;
+							font-size: 11px;
+							line-height: 11px;
+							text-align: center;
+							vertical-align: text-bottom;
+							
+							-moz-box-sizing: border-box;
+							box-sizing: border-box;
+						}
+						.dz-container .dz-preview .dz-actions .dz-spoiler {
+							text-align: left;
+						}
+							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
+								display: inline-block;
+								vertical-align: text-bottom;
+								margin: 2px 0 -1px 2px;
+								width: 13px;
+								height: 13px;
+							}
+							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-desc {
+								display: none;
+								padding-right: 0.5em;
+								margin-left: 0.25em;
+								vertical-align: text-bottom;
+								color: black;
+							}
+								.dz-container .dz-preview:hover .dz-actions .dz-spoiler .dz-spoiler-desc {
+									display: inline-block;
+								}
 					
 					.dz-container .dz-preview .dz-details {
 						z-index: 20;
 						position: absolute;
-						top: 0;
+						bottom: 0;
 						left: 0;
 						opacity: 0;
-						font-size: 13px;
 						min-width: 100%;
 						max-width: 100%;
-						padding: 2em 1em;
+						padding: 0.50em;
 						text-align: center;
 						color: rgba(0, 0, 0, 0.9);
-						line-height: 150%;
+						line-height: 125%;
+						pointer-events: none;
 					}
-					.dz-container .dz-preview .dz-details .dz-size {
-						margin-bottom: 1em;
-						font-size: 16px;
-					}
-						.dz-container .dz-preview .dz-details .dz-filename {
-						white-space: nowrap;
-					}
-						.dz-container .dz-preview .dz-details .dz-filename:hover span {
-							border: 1px solid rgba(200, 200, 200, 0.8);
-							background-color: rgba(255, 255, 255, 0.8);
+						.dz-container .dz-preview:hover .dz-details {
+							opacity: 1;
 						}
-						.dz-container .dz-preview .dz-details .dz-filename:not(:hover) {
-							overflow: hidden;
-							text-overflow: ellipsis;
+						
+						.dz-container .dz-preview .dz-details .dz-size {
+							margin-bottom: 0.25em;
+							font-size: 16px;
 						}
-							.dz-container .dz-preview .dz-details .dz-filename:not(:hover) span {
-								border: 1px solid transparent;
+							.dz-container .dz-preview .dz-details .dz-filename {
+							white-space: nowrap;
+						}
+							.dz-container .dz-preview .dz-details .dz-filename:hover span {
+								border: 1px solid rgba(200, 200, 200, 0.8);
+								background-color: rgba(255, 255, 255, 0.8);
 							}
-						.dz-container .dz-preview .dz-details .dz-filename span, .dz-container .dz-preview .dz-details .dz-size span {
-							background-color: rgba(255, 255, 255, 0.4);
-							padding: 0 0.4em;
-							border-radius: 3px;
-						}
+							.dz-container .dz-preview .dz-details .dz-filename:not(:hover) {
+								overflow: hidden;
+								text-overflow: ellipsis;
+							}
+								.dz-container .dz-preview .dz-details .dz-filename:not(:hover) span {
+									border: 1px solid transparent;
+								}
+							.dz-container .dz-preview .dz-details .dz-filename span, .dz-container .dz-preview .dz-details .dz-size span {
+								background-color: rgba(255, 255, 255, 0.6);
+								padding: 0 0.4em;
+								border-radius: 3px;
+							}
+					
 					.dz-container .dz-preview:hover .dz-image img {
 					}
 					.dz-container .dz-preview .dz-image {
 						border-radius: 0;
 						overflow: hidden;
-						width: 100px;
-						height: 100px;
+						width: 100%;
+						height: 100%;
 						position: relative;
 						display: block;
 						z-index: 10;
@@ -1632,6 +1694,8 @@ main.index-threaded {
 								div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
 									padding: 0 3em 0 0;
+									max-height: 250px;
+									max-width: 250px;
 								}
 									div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
 										content: ' ';

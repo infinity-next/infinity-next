@@ -248,6 +248,16 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Gets the default album art for an audio file.
+	 *
+	 * @return string  url
+	 */
+	public function getAudioArtURL()
+	{
+		return url("/img/assets/audio.gif");
+	}
+	
+	/**
 	 * Returns a single board_banner BoardAsset.
 	 *
 	 * @return BoardAsset
@@ -403,6 +413,11 @@ class Board extends Model {
 		$ContentFormatter = new ContentFormatter();
 		
 		return $ContentFormatter->formatSidebar($this->getConfig('boardSidebarText'));
+	}
+	
+	public function getSpoilerUrl()
+	{
+		return url("/img/assets/spoiler.png");
 	}
 	
 	public function getStaff()

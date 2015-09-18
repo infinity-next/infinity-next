@@ -118,6 +118,11 @@ class FileStorage extends Model {
 		return $this->getDirectoryThumb() . "/" . $this->hash;
 	}
 	
+	public function isSpoiler()
+	{
+		return isset($this->pivot) && isset($this->pivot->is_spoiler) && !!$this->pivot->is_spoiler;
+	}
+	
 	public function hasThumb()
 	{
 		return file_exists($this->getFullPathThumb());
@@ -263,17 +268,15 @@ class FileStorage extends Model {
 		$type  = "other";
 		$html  = "";
 		$stock = true;
+		$spoil = $this->isSpoiler();
 		
 		switch ($ext)
 		{
 			case "mp3"  :
 			case "mpga" :
-				if ($this->hasThumb())
-				{
-					$stock = false;
-					$url   = $this->getThumbnailURL($board);
-					$type  = "audio";
-				}
+				$stock = false;
+				$type  = "audio";
+				$url   = $this->getThumbnailURL($board);
 				break;
 			
 			case "mp4"  :
@@ -308,6 +311,7 @@ class FileStorage extends Model {
 		$classes['type']  = "attachment-type-{$type}";
 		$classes['ext']   = "attachent-ext-{$ext}";
 		$classes['stock'] = $stock ? "thumbnail-stock" : "thumbnail-content";
+		$classes['spoil'] = $spoil ? "thumbnail-spoiler" : "thumbnail-not-spoiler";
 		$classHTML = implode(" ", $classes);
 		
 		return "<div class=\"attachment-wrapper {$classHTML}\"><img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" /></div>";
@@ -324,8 +328,21 @@ class FileStorage extends Model {
 		$baseURL = "/{$board->board_uri}/file/thumb/{$this->hash}/";
 		$ext     = $this->guessExtension();
 		
+		if ($this->isSpoiler())
+		{
+			return $board->getSpoilerUrl();
+		}
+		
 		switch ($ext)
 		{
+			case "mp3"  :
+			case "mpga" :
+				if (!$this->hasThumb())
+				{
+					return $board->getAudioArtURL();
+				}
+				break;
+			
 			case "svg" :
 				// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
 				$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
@@ -417,8 +434,6 @@ class FileStorage extends Model {
 		$cmd   = env('LIB_VIDEO_PROBE', "ffprobe") . " -v error -show_format -show_streams {$video} 2>&1";
 		
 		exec($cmd, $output, $returnvalue);
-		
-		dd($output);
 		
 		if (count($output) <= 3)
 		{

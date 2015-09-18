@@ -17,6 +17,8 @@
 		
 		<script type="text/javascript">
 			window.app = {
+				'lang'     : {!! json_encode( Lang::parseKey('board') ) !!},
+				
 				'merchant' : "{{ env('CASHIER_SERVICE') }}",
 				
 			@if (env('APP_DEBUG'))

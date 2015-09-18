@@ -8,8 +8,8 @@
 @stop
 
 @section('app-js')
-	'board'     : "{{ $board->board_uri }}",
-	'board_url' : "{{ $board->getUrl() }}",
+	'board'          : "{{ $board->board_uri }}",
+	'board_url'      : "{{ $board->getUrl() }}",
 @stop
 
 @section('header-logo', $board->getBannerURL())

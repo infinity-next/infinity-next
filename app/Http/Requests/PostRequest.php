@@ -209,6 +209,11 @@ class PostRequest extends Request {
 				"string",
 				"required_with:files.name.{$attachment}",
 				"md5",
+				"exists:files,hash",
+			];
+			
+			$rules["files.spoiler.{$attachment}"] = [
+				"boolean",
 			];
 		}
 	}

@@ -946,15 +946,58 @@ ib.widget("postbox", function(window, $, undefined) {
 					$(file.previewElement).remove();
 				},
 				
-				success : function(file, responseText, xhr) {
-					var $preview = $(file.previewElement);
+				success : function(file, response, xhr) {
+					if (typeof response !== "object")
+					{
+						var response = jQuery.parseJSON(response);
+					}
 					
-					$preview
-						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[hash][]\" value=\""+file.hash+"\" />")
-						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[name][]\" value=\""+file.name+"\" />")
-					;
-				}
+					if (typeof response.errors !== "undefined")
+					{
+						jQuery.each(response.errors, function(field, errors)
+						{
+							jQuery.each(errors, function(index, error)
+							{
+								widget.dropzone.emit("error", file, error, xhr);
+								widget.dropzone.emit("complete", file);
+							});
+						});
+					}
+					else
+					{
+						var $preview = $(file.previewElement);
+						
+						$preview
+							.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[hash][]\" value=\""+file.hash+"\" />")
+							.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[name][]\" value=\""+file.name+"\" />")
+						;
+						
+						$("[data-dz-spoiler]", $preview)
+							.attr('name', widget.options.dropzone.paramName+"[spoiler][]");
+					}
+				},
 				
+				previewTemplate : 
+					"<div class=\"dz-preview dz-file-preview\">" +
+						"<div class=\"dz-image\">" +
+							"<img data-dz-thumbnail />" +
+						"</div>" +
+						"<div class=\"dz-actions\">" +
+							"<button class=\"dz-remove\" data-dz-remove>x</button>" +
+							"<label class=\"dz-spoiler\">" +
+								"<input type=\"checkbox\" class=\"dz-spoiler-check\" value=\"1\" data-dz-spoiler />" +
+								"<span class=\"dz-spoiler-desc\">Spoiler</span>" +
+							"</label>" +
+						"</div>" +
+						"<div class=\"dz-details\">" +
+							"<div class=\"dz-size\"><span data-dz-size></span></div>" +
+							"<div class=\"dz-filename\"><span data-dz-name></span></div>" +
+						"</div>" +
+						"<div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>" +
+						"<div class=\"dz-success-mark\"><span>✔</span></div>" +
+						"<div class=\"dz-error-mark\"><span>✘</span></div>" +
+						"<div class=\"dz-error-message\"><span data-dz-errormessage></span></div>" +
+					"</div>"
 			}
 		},
 		
