@@ -75,7 +75,20 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['author_ip', 'body', 'body_parsed', 'body_parsed_at', 'body_html'];
+	protected $hidden = [
+		// Post Items
+		'author_ip',
+		'body',
+		'body_parsed',
+		'body_parsed_at',
+		'body_html',
+		
+		// Relationships
+		'bans',
+		'board',
+		'cites',
+		'reports',
+	];
 	
 	/**
 	 * Attributes which do not exist but should be appended to the JSON output.

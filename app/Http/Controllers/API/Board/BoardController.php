@@ -106,7 +106,10 @@ class BoardController extends ParentController implements ApiController {
 			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
 			$includeHTML  = isset($input['updateHtml']);
 			
-			return Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
+			$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
+			$posts->sortBy('board_id');
+			
+			return $posts;
 		}
 		else
 		{

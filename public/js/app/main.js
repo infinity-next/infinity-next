@@ -103,7 +103,7 @@ ib.widget("notice", function(window, $, undefined) {
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'        : ".form-messages",
-				'message'       : ".form-messsage",
+				'message'       : ".form-message",
 			},
 			
 			// HTML Templates for dynamic construction
@@ -120,7 +120,6 @@ ib.widget("notice", function(window, $, undefined) {
 		
 		bind     : {
 			widget : function() {
-				
 				widget.$widget
 					.on('click.ib-notice', widget.options.selector['message'], widget.events.noticeClick)
 				;
@@ -154,7 +153,8 @@ ib.widget("notice", function(window, $, undefined) {
 			var $message;
 			var className = "message";
 			
-			if (widget.options.template['message-'+messageType] !== undefined) {
+			if (widget.options.template['message-'+messageType] !== undefined)
+			{
 				className = 'message-'+messageType;
 			}
 			
@@ -162,11 +162,14 @@ ib.widget("notice", function(window, $, undefined) {
 			$message.append(message).appendTo(widget.$widget);
 			
 			// Scroll our window up to meet the notification if required.
-			$('html, body').animate( {
-					scrollTop : $message.offset().top - $(".board-header").height() - 10
-				},
-				250
-			);
+			if ($message.offsetParent().css('position') !== "fixed")
+			{
+				$('html, body').animate({
+						scrollTop : $message.offset().top - $(".board-header").height() - 10
+					},
+					250
+				);
+			}
 			
 			return $message;
 		},
@@ -892,6 +895,8 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				'submit-post'     : "#submit-post",
 				
+				'form-clear'      : "#subject, #body, #captcha",
+				
 				'captcha'         : ".captcha",
 				'captcha-row'     : ".row-captcha",
 				'captcha-field'   : ".field-control",
@@ -1100,6 +1105,17 @@ ib.widget("postbox", function(window, $, undefined) {
 					.prop('disabled', widget.activeUploads > 0);
 			},
 			
+			formClear     : function() {
+				var $form = widget.$widget;
+				
+				widget.events.captchaReload();
+				
+				$(widget.options.selector['form-clear'], $form)
+					.val("")
+					.html("");
+				
+			},
+			
 			formClick     : function(event) {
 				if (widget.$widget.is(".postbox-closed"))
 				{
@@ -1109,6 +1125,8 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			formSubmit    : function(event) {
+				widget.notices.clear();
+				
 				var $form       = $(this);
 				var $updater    = $(widget.options.selector['autoupdater']);
 				var autoupdater = false;
@@ -1188,6 +1206,8 @@ ib.widget("postbox", function(window, $, undefined) {
 							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
 							autoupdater.events.updateSuccess(response, textStatus, jqXHR);
 							autoupdater.events.updateComplete(response, textStatus, jqXHR);
+							
+							widget.events.formClear();
 						}
 						else
 						{
@@ -1215,7 +1235,22 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			captchaClick : function(event) {
+				widget.events.captchaReload();
+				
+				event.preventDefault();
+				return false;
+			},
+			
+			captchaLoad : function(event) {
 				var $captcha = $(this),
+					$parent  = $captcha.parent();
+				
+				$parent.removeClass("captcha-loading");
+			},
+			
+			captchaReload : function()
+			{
+				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
 					$parent  = $captcha.parent(),
 					$hidden  = $captcha.next(),
 					$field   = $captcha.parents(widget.options.selector['captcha-row']).children(widget.options.selector['captcha-field']);
@@ -1227,16 +1262,6 @@ ib.widget("postbox", function(window, $, undefined) {
 					$captcha.attr('src', widget.options.captchaUrl + "/" + data['hash_string'] + ".png");
 					$hidden.val(data['hash_string']);
 				});
-				
-				event.preventDefault();
-				return false;
-			},
-			
-			captchaLoad : function(event) {
-				var $captcha = $(this),
-					$parent  = $captcha.parent();
-				
-				$parent.removeClass("captcha-loading");
 			}
 			
 		},

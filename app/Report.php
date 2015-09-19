@@ -26,6 +26,12 @@ class Report extends Model {
 	 */
 	protected $fillable = ['reason', 'board_uri', 'post_id', 'reporter_ip', 'user_id', 'is_dismissed', 'is_successful', 'global'];
 	
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['reporter_ip', 'user_id'];
 	
 	public function board()
 	{

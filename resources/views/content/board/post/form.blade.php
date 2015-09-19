@@ -98,8 +98,9 @@
 				'body',
 				old('body'),
 				[
-					'id'        => "body",
-					'class'     => "field-control",
+					'id'           => "body",
+					'class'        => "field-control",
+					'autocomplete' => "off",
 			]) !!}
 		</div>
 		
@@ -125,9 +126,10 @@
 				'captcha',
 				"",
 				[
-					'id'          => "captcha",
-					'class'       => "field-control",
-					'placeholder' => "Security Code",
+					'id'           => "captcha",
+					'class'        => "field-control",
+					'placeholder'  => "Security Code",
+					'autocomplete' => "off",
 			]) !!}
 		</div>
 		@endif
