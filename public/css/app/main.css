@@ -746,6 +746,8 @@ figure.error {
 						}
 					
 					#site-recent-posts .recent-post .post {
+						pointer-events: none;
+						
 						min-width: 0px;
 						height: 100%;
 						box-sizing: border-box;
@@ -756,6 +758,9 @@ figure.error {
 					}
 						#site-recent-posts .recent-post:hover .post {
 							border-bottom: 2px dashed #d6daf0;
+						}
+						#site-recent-posts .recent-post .post blockquote {
+							margin: 0;
 						}
 
 /* Contributory Block */
