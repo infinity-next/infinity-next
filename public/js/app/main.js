@@ -103,6 +103,7 @@ ib.widget("notice", function(window, $, undefined) {
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'        : ".form-messages",
+				'message'       : ".form-messsage",
 			},
 			
 			// HTML Templates for dynamic construction
@@ -119,7 +120,22 @@ ib.widget("notice", function(window, $, undefined) {
 		
 		bind     : {
 			widget : function() {
+				
+				widget.$widget
+					.on('click.ib-notice', widget.options.selector['message'], widget.events.noticeClick)
+				;
 			}
+		},
+		
+		events   : {
+			
+			noticeClick : function(event) {
+				// Fade out and remove the notice very quickly after clicking it.
+				$(this).fadeOut(250, function() {
+					$(this).remove();
+				});
+			}
+			
 		},
 		
 		build    : {
@@ -1093,25 +1109,48 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			formSubmit    : function(event) {
-				var $form      = $(this);
-				var $updater   = $(widget.options.selector['autoupdater']);
-				var data       = $form.serialize();
-				var willUpdate = false;
+				var $form       = $(this);
+				var $updater    = $(widget.options.selector['autoupdater']);
+				var autoupdater = false;
 				
 				if ($updater[0].widget)
 				{
-					willUpdate = true;
-					data += "&updatesOnly=1&updateHtml=1&updatedSince=" + $updater[0].widget.updateLast;
+					var data = $form.serialize();
+					
+					autoupdater = $updater[0].widget;
+					data = $form
+						.add("<input name=\"updatesOnly\" value=\"1\" />")
+						.add("<input name=\"updateHtml\" value=\"1\" />")
+						.add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
+						.serializeArray();
+				}
+				else
+				{
+					var data = $form.serializeArray();
 				}
 				
-				jQuery.post(
-					// Destination URL
-					$form.attr('action'),
-					// Post data
-					data
-				)
+				// There is a caveat in this post.
+				// Because we need to tell Laravel we want a JSON response,
+				// we must specify out contentType to be application/json.
+				// However, in doing that, we break jQuery's automatic `data` field.
+				// So, we must encode and JSON stringify it ourself.
+				var dataObj = {};
+				
+				jQuery.each(data, function(index, datum)
+				{
+					dataObj[datum['name']] = datum['value'];
+				});
+				
+				
+				jQuery.ajax({
+					type:        "POST",
+					method:      "PUT",
+					url:         $form.attr('action'),
+					data:        JSON.stringify(dataObj),
+					dataType:    "json",
+					contentType: "application/json; charset=utf-8"
+				})
 					.done(function(response, textStatus, jqXHR) {
-						console.log(response, textStatus);
 						if (typeof response !== "object")
 						{
 							try
@@ -1134,15 +1173,21 @@ ib.widget("postbox", function(window, $, undefined) {
 							{
 								jQuery.each(errors, function(index, error)
 								{
-									widget.dropzone.emit("error", file, error, xhr);
-									widget.dropzone.emit("complete", file);
+									widget.notices.push(error, 'error');
 								});
 							});
 						}
-						else if(willUpdate)
+						else if(autoupdater !== false)
 						{
 							console.log("Post submitted. Inline updating.");
-							$updater[0].widget.events.updateSuccess(response, textStatus, jqXHR);
+							
+							clearInterval(autoupdater.updateTimer);
+							
+							autoupdater.updating    = true;
+							autoupdater.updateTimer = false;
+							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
+							autoupdater.events.updateSuccess(response, textStatus, jqXHR);
+							autoupdater.events.updateComplete(response, textStatus, jqXHR);
 						}
 						else
 						{

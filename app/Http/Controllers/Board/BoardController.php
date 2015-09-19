@@ -208,7 +208,7 @@ class BoardController extends Controller {
 		
 		$input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 		
-		if ($input['updatesOnly'])
+		if ($request->wantsJson())
 		{
 			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
 			$includeHTML  = isset($input['updateHtml']);

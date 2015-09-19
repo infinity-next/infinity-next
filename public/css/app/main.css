@@ -210,6 +210,9 @@ form {
 			background: #d5d5d5;
 			color: #7f7f7f;
 		}
+		html.js .form-message {
+			cursor: pointer;
+		}
 			.form-message::before {
 				display: inline-block;
 				font: normal normal normal 18px/1 FontAwesome;

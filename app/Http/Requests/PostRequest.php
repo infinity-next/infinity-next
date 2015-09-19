@@ -233,6 +233,11 @@ class PostRequest extends Request {
 			return redirect($this->ban->getRedirectUrl());
 		}
 		
+		if ($this->wantsJson())
+		{
+			return response(['errors' => $errors]);
+		}
+		
 		return redirect($redirectURL)
 			->withInput($this->except($this->dontFlash))
 			->withErrors($errors, $this->errorBag);
