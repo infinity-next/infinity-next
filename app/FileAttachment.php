@@ -30,4 +30,20 @@ class FileAttachment extends Model {
 	{
 		return $this->belongsTo('\App\FileStorage', 'file_id');
 	}
+	
+	
+	public static function fetchRecentImages()
+	{
+		return static::orderBy('attachment_id', 'desc')
+			->whereHas('storage', function($query) {
+				$query->where('has_thumbnail', '=', true);
+			})
+			->has('post.board')
+			->with('storage')
+			->with('post.board')
+			->groupBy('file_id')
+			->limit(20)
+			->get();
+	}
+	
 }

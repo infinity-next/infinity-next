@@ -22,6 +22,9 @@
 		</section>
 	</div>
 	
-	@include($c->template('index.project_introduction'))
+	{{-- @include($c->template('index.project_introduction')) --}}
+	
+	@include($c->template('index.activity'))
+	
 </main>
 @endsection

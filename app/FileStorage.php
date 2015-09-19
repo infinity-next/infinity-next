@@ -28,7 +28,7 @@ class FileStorage extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count'];
+	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count', 'has_thumbnail'];
 	
 	public $timestamps = false;
 	
@@ -493,6 +493,8 @@ class FileStorage extends Model {
 										}
 									)
 									->save($this->getFullPathThumb());
+								
+								$this->has_thumbnail = true;
 							}
 							catch (\Exception $error)
 							{
@@ -536,6 +538,8 @@ class FileStorage extends Model {
 								}
 							)
 							->save($this->getFullPathThumb());
+						
+						$this->has_thumbnail = true;
 					}
 				}
 				break;
@@ -559,6 +563,8 @@ class FileStorage extends Model {
 							}
 						)
 						->save($this->getFullPathThumb());
+					
+					$this->has_thumbnail = true;
 				}
 				break;
 		}
@@ -645,7 +651,6 @@ class FileStorage extends Model {
 		
 		$storage->last_uploaded_at = $fileTime;
 		$storage->upload_count += 1;
-		$storage->save();
 		
 		if (!Storage::exists($storage->getPath()))
 		{
@@ -654,6 +659,7 @@ class FileStorage extends Model {
 		}
 		
 		$storage->processThumb();
+		$storage->save();
 		
 		return $storage;
 	}

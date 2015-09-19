@@ -638,6 +638,66 @@ figure.error {
 	#frontpage p {
 		margin: 0 0 1em 0;
 	}
+	
+	/* Activity */
+	#site-recent-images {
+		
+	}
+		#site-recent-images h2 {
+			margin: 0;
+			padding: 1em;
+			padding-bottom: 0.5em;
+			border-bottom: 1px solid #d6daf0;
+		}
+		#site-recent-images .smooth-box {
+			padding: 0;
+		}
+		
+		#site-recent-images .recent-images {
+			
+		}
+			#site-recent-images .recent-image {
+				position: relative;
+				float: left;
+				display: inline-block;
+				
+				background: #d6daf0;
+				
+				width: 10%;
+				min-width: 120px;
+			}
+			#site-recent-images .recent-image::before {
+				content: '';
+				display: block;
+				padding-top: 100%;
+			}
+				#site-recent-images .recent-image-link {
+					position: absolute;
+					top: 0;
+					left: 0;
+					bottom: 0;
+					right: 0;
+				}
+					#site-recent-images .attachment-wrapper {
+						height: 100%;
+						width: 100%;
+						vertical-align: center;
+						text-align: center;
+					}
+						#site-recent-images img.attachment-img {
+							max-width: 100%;
+							max-height: 100%;
+							width: auto;
+							height: auto;
+							
+							display: block;
+							position: absolute;
+							margin: auto;
+							top: 0;
+							bottom: 0;
+							right: 0;
+							left: 0;
+						}
 
 /* Contributory Block */
 header.contrib-header {
@@ -1703,13 +1763,13 @@ main.index-threaded {
 									max-width: 100%;
 								}
 								
-								div.attachment-wrapper.thumbnail-content.attachment-type-audio {
+								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
 									padding: 0 3em 0 0;
 									max-height: 250px;
 									max-width: 250px;
 								}
-									div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
+									.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
 										content: ' ';
 										display: block;
 										height: 100%;
@@ -1729,7 +1789,7 @@ main.index-threaded {
 										background-size: contain;
 									}
 									
-									li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
+									.post-content li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
 										right: -110px;
 										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
 									}
