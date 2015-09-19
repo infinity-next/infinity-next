@@ -3,6 +3,7 @@
 	
 	UNDER CONSTRUCTION :---DDDDD
 	
-	<!-- Intro -->
 	@include('content.index.sections.recent_images')
+	
+	@include('content.index.sections.recent_posts')
 </div>

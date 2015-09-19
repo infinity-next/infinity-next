@@ -654,14 +654,13 @@ figure.error {
 		}
 		
 		#site-recent-images .recent-images {
-			
+			text-align: center;
+			font-size: 0;
+			background: #d6daf0;
 		}
 			#site-recent-images .recent-image {
 				position: relative;
-				float: left;
 				display: inline-block;
-				
-				background: #d6daf0;
 				
 				width: 10%;
 				min-width: 120px;
@@ -697,6 +696,66 @@ figure.error {
 							bottom: 0;
 							right: 0;
 							left: 0;
+						}
+	
+	#site-recent-posts {
+		
+	}
+		#site-recent-posts h2 {
+			margin: 0 0 -2px 0;
+			padding: 1em;
+			padding-bottom: 0.5em;
+			border-bottom: 1px solid #d6daf0;
+		}
+		
+		#site-recent-posts .grid-container {
+			padding: 0;
+		}
+		
+		#site-recent-posts .smooth-box {
+			padding: 0;
+		}
+			#site-recent-posts .recent-posts {
+			}
+				#site-recent-posts .recent-post {
+					position: relative;
+					
+					box-sizing: border-box;
+					padding: 1em;
+					margin: 2px 0 -2px 0;
+					
+					overflow: hidden;
+					height: 120px;
+				}
+					#site-recent-posts .recent-post:hover {
+						background-color: #FFFFCC;
+					}
+					
+					#site-recent-posts .recent-post-link {
+						z-index: 2;
+						background-image: linear-gradient( to bottom, transparent 0%, transparent 75%, white 100% );
+						
+						position: absolute;
+						top: 0;
+						right: 0;
+						left: 0;
+						bottom: 1.2em;
+					}
+						#site-recent-posts .recent-post:hover .recent-post-link {
+							background-image: linear-gradient( to bottom, transparent 0%, transparent 75%, #FFFFCC 100% );
+						}
+					
+					#site-recent-posts .recent-post .post {
+						min-width: 0px;
+						height: 100%;
+						box-sizing: border-box;
+						overflow: hidden;
+						
+						padding-bottom: 1px;
+						border-bottom: 1px solid #d6daf0;
+					}
+						#site-recent-posts .recent-post:hover .post {
+							border-bottom: 2px dashed #d6daf0;
 						}
 
 /* Contributory Block */

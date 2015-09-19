@@ -814,6 +814,24 @@ class Post extends Model {
 			->first();
 	}
 	
+	/**
+	 * Returns a few posts for the front page.
+	 *
+	 * @param  int  $number
+	 * @return Collection  of static
+	 */
+	public static function getRecentPosts($number = 8, $sfwOnly = true)
+	{
+		return static::where('body', '<>', "")
+			->whereHas('board', function($query) {
+				$query->where('is_indexed', '=', true);
+				$query->where('is_overboard', '=', true);
+			})
+			->with('board')
+			->limit($number)
+			->orderBy('post_id', 'desc')
+			->get();
+	}
 	
 	/**
 	 * Returns the latest reply to a post.
