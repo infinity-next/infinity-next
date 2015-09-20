@@ -725,24 +725,27 @@ figure.error {
 					margin: 2px 0 -2px 0;
 					
 					overflow: hidden;
-					height: 120px;
+					height: 60px;
 				}
 					#site-recent-posts .recent-post:hover {
 						background-color: #FFFFCC;
 					}
 					
 					#site-recent-posts .recent-post-link {
-						z-index: 2;
-						background-image: linear-gradient( to bottom, transparent 0%, transparent 75%, white 100% );
+						background-image: linear-gradient( to bottom, transparent 0%, white 100% );
+						background-size: 100% 2em;
+						background-repeat: no-repeat;
+						background-position: center bottom;
 						
 						position: absolute;
 						top: 0;
 						right: 0;
 						left: 0;
 						bottom: 1.2em;
+						z-index: 2;
 					}
 						#site-recent-posts .recent-post:hover .recent-post-link {
-							background-image: linear-gradient( to bottom, transparent 0%, transparent 75%, #FFFFCC 100% );
+							background-image: linear-gradient( to bottom, transparent 0%, #FFFFCC 100% );
 						}
 					
 					#site-recent-posts .recent-post .post {
@@ -761,6 +764,9 @@ figure.error {
 						}
 						#site-recent-posts .recent-post .post blockquote {
 							margin: 0;
+						}
+						#site-recent-posts .recent-post .post .cite {
+							display: none;
 						}
 
 /* Contributory Block */
@@ -1897,7 +1903,7 @@ main.index-threaded {
 									display: block;
 									min-width: 250px;
 									max-width: 250px;
-									margin: 0 auto 0.5em auto;
+									margin: 0 3em 0.5em 0;
 								}
 								li.post-attachment video.attachment-inline {
 									display: inline-block;

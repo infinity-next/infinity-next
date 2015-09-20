@@ -817,15 +817,21 @@ class Post extends Model {
 	/**
 	 * Returns a few posts for the front page.
 	 *
-	 * @param  int  $number
+	 * @param  int  $number  How many to pull.
+	 * @param  boolean $sfwOnly  If we only want SFW boards.
 	 * @return Collection  of static
 	 */
-	public static function getRecentPosts($number = 8, $sfwOnly = true)
+	public static function getRecentPosts($number = 16, $sfwOnly = true)
 	{
 		return static::where('body', '<>', "")
-			->whereHas('board', function($query) {
+			->whereHas('board', function($query) use ($sfwOnly) {
 				$query->where('is_indexed', '=', true);
 				$query->where('is_overboard', '=', true);
+				
+				if ($sfwOnly)
+				{
+					$query->where('is_worksafe', '=', true);
+				}
 			})
 			->with('board')
 			->limit($number)

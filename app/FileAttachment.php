@@ -32,13 +32,28 @@ class FileAttachment extends Model {
 	}
 	
 	
-	public static function fetchRecentImages()
+	/**
+	 * Returns a few posts for the front page.
+	 *
+	 * @param  int  $number  How many to pull.
+	 * @param  boolean $sfwOnly  If we only want SFW boards.
+	 * @return Collection  of static
+	 */
+	public static function getRecentImages($number = 16, $sfwOnly = true)
 	{
 		return static::orderBy('attachment_id', 'desc')
 			->whereHas('storage', function($query) {
 				$query->where('has_thumbnail', '=', true);
 			})
-			->has('post.board')
+			->whereHas('post.board', function($query) use ($sfwOnly) {
+				$query->where('is_indexed', '=', true);
+				$query->where('is_overboard', '=', true);
+				
+				if ($sfwOnly)
+				{
+					$query->where('is_worksafe', '=', true);
+				}
+			})
 			->with('storage')
 			->with('post.board')
 			->groupBy('file_id')

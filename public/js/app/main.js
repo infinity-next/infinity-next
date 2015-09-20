@@ -1156,7 +1156,14 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				jQuery.each(data, function(index, datum)
 				{
-					dataObj[datum['name']] = datum['value'];
+					// Big thank-you to David Lin of StackOverflow for this script.
+					match = datum['name'].match(/\[(\d+)\]\[(\d+)\]/);
+					
+					if (!dataObj[match[1]]) {
+						dataObj[match[1]] = {};
+					}
+					
+					dataObj[match[1]][match[2]]= datum['value'].value;
 				});
 				
 				

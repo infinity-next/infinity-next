@@ -32,6 +32,7 @@
 		"intervention/imagecache": "~2.3",
 		"intervention/image": "~2.3",
 		"cviebrock/image-validator" : "2.0.*@beta",
+		"jenssegers/imagehash" : "0.2.*",
 		
 		"james-heinrich/getid3" : "1.9.*",
 		

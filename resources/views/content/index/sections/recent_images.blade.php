@@ -2,7 +2,7 @@
 	<div class="smooth-box">
 		<h2>Recent Uploads</h2>
 		<ul class="recent-images">
-			@foreach (App\FileAttachment::fetchRecentImages() as $file)
+			@foreach (App\FileAttachment::getRecentImages() as $file)
 				@if ($file->storage->hasThumb())
 				<li class="recent-image">
 					<a class="recent-image-link" href="{{ $file->post->getURL() }}">
