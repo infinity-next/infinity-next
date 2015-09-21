@@ -14,7 +14,7 @@
 	</li>
 	
 	@if ($board->getConfig('postsAuthorCountry', false) && $post->getCountryCode() && (!isset($catalog) || !$catalog))
-		<li class="post-detail post-country"><span class="flag flag-{{ $post->getCountryCode() }}"></span></li>
+		<li class="post-detail post-country" title="{{ trans('country.' . $post->getCountryCode()) }}"><span class="flag flag-{{ $post->getCountryCode() }}"></span></li>
 	@endif
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
