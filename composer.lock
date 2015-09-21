@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "3045433a8abe3afcde1881e15f6d455d",
+    "content-hash": "ad6e1bcaca2d0b8c2cfe24c8bbd666cb",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -908,12 +909,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/brennan-captcha.git",
-                "reference": "eaf3dad3165adc7d6668e10355d60340c7b1bd52"
+                "reference": "092c124541476e604524bc4f91d987920880a3d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/eaf3dad3165adc7d6668e10355d60340c7b1bd52",
-                "reference": "eaf3dad3165adc7d6668e10355d60340c7b1bd52",
+                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/092c124541476e604524bc4f91d987920880a3d9",
+                "reference": "092c124541476e604524bc4f91d987920880a3d9",
                 "shasum": ""
             },
             "require": {
@@ -941,7 +942,7 @@
                 }
             ],
             "description": "An anti-bot image captcha system written by Frederick Brennan and ported to Laravel for Infinity Next by Joshua Moon.",
-            "time": "2015-09-11 08:27:52"
+            "time": "2015-09-21 14:23:08"
         },
         {
             "name": "infinity-next/eightdown",
@@ -1566,20 +1567,23 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.12",
+            "version": "1.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "7323424a9d39c24e597ed3f2144419dfbb52e086"
+                "reference": "76caed01a57527599b55919f0746104f288b3d56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/7323424a9d39c24e597ed3f2144419dfbb52e086",
-                "reference": "7323424a9d39c24e597ed3f2144419dfbb52e086",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/76caed01a57527599b55919f0746104f288b3d56",
+                "reference": "76caed01a57527599b55919f0746104f288b3d56",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
+            },
+            "conflict": {
+                "league/flysystem-sftp": "<1.0.6"
             },
             "require-dev": {
                 "ext-fileinfo": "*",
@@ -1643,7 +1647,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-09-05 12:06:41"
+            "time": "2015-09-20 13:05:34"
         },
         {
             "name": "monolog/monolog",
