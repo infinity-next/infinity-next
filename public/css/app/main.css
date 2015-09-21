@@ -663,7 +663,7 @@ figure.error {
 				display: inline-block;
 				
 				width: 10%;
-				min-width: 120px;
+				min-width: 116px;
 			}
 			#site-recent-images .recent-image::before {
 				content: '';
@@ -725,7 +725,7 @@ figure.error {
 					margin: 2px 0 -2px 0;
 					
 					overflow: hidden;
-					height: 60px;
+					height: 116px;
 				}
 					#site-recent-posts .recent-post:hover {
 						background-color: #FFFFCC;

@@ -1131,6 +1131,9 @@ ib.widget("postbox", function(window, $, undefined) {
 				var $updater    = $(widget.options.selector['autoupdater']);
 				var autoupdater = false;
 				
+				// Note: serializeJSON is a plugin we use to convert form data into
+				// a multidimensional array for application/json posts.
+				
 				if ($updater[0].widget)
 				{
 					var data = $form.serialize();
@@ -1140,38 +1143,18 @@ ib.widget("postbox", function(window, $, undefined) {
 						.add("<input name=\"updatesOnly\" value=\"1\" />")
 						.add("<input name=\"updateHtml\" value=\"1\" />")
 						.add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
-						.serializeArray();
+						.serializeJSON();
 				}
 				else
 				{
-					var data = $form.serializeArray();
+					var data = $form.serializeJSON();
 				}
-				
-				// There is a caveat in this post.
-				// Because we need to tell Laravel we want a JSON response,
-				// we must specify out contentType to be application/json.
-				// However, in doing that, we break jQuery's automatic `data` field.
-				// So, we must encode and JSON stringify it ourself.
-				var dataObj = {};
-				
-				jQuery.each(data, function(index, datum)
-				{
-					// Big thank-you to David Lin of StackOverflow for this script.
-					match = datum['name'].match(/\[(\d+)\]\[(\d+)\]/);
-					
-					if (!dataObj[match[1]]) {
-						dataObj[match[1]] = {};
-					}
-					
-					dataObj[match[1]][match[2]]= datum['value'].value;
-				});
-				
 				
 				jQuery.ajax({
 					type:        "POST",
 					method:      "PUT",
 					url:         $form.attr('action'),
-					data:        JSON.stringify(dataObj),
+					data:        data,
 					dataType:    "json",
 					contentType: "application/json; charset=utf-8"
 				})

@@ -6,6 +6,7 @@ use App\FileAttachment;
 use App\PostCite;
 use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
+use App\Support\Geolocation;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +60,9 @@ class Post extends Model {
 		'locked_at',
 		
 		'author_ip',
+		'author_ip_nulled_at',
+		'author_id',
+		'author_country',
 		'capcode_id',
 		'subject',
 		'author',
@@ -87,6 +91,11 @@ class Post extends Model {
 		'bans',
 		'board',
 		'cites',
+		'citedBy',
+		'citedPosts',
+		'editor',
+		'op',
+		'replies',
 		'reports',
 	];
 	
@@ -102,7 +111,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at'];
+	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip_nulled_at'];
 	
 	
 	
@@ -1344,10 +1353,11 @@ class Post extends Model {
 	 */
 	public function submitTo(Board &$board, &$thread = null)
 	{
-		$this->board_uri    = $board->board_uri;
-		$this->author_ip    = inet_pton(Request::ip());
-		$this->reply_last   = $this->freshTimestamp();
-		$this->bumped_last  = $this->reply_last;
+		$this->board_uri      = $board->board_uri;
+		$this->author_ip      = inet_pton(Request::ip());
+		$this->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation() : null;
+		$this->reply_last     = $this->freshTimestamp();
+		$this->bumped_last    = $this->reply_last;
 		$this->setCreatedAt($this->reply_last);
 		$this->setUpdatedAt($this->reply_last);
 		
