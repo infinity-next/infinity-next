@@ -479,6 +479,21 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns the raw input for a post for the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getAuthorIdAttribute()
+	{
+		if ($this->board->getConfig('postsThreadId'))
+		{
+			return $this->attributes['author_id'];
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Returns the fully rendered HTML content of this post.
 	 *
 	 * @param  boolean  $skipCache
@@ -519,21 +534,6 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
-	public function getAuthorIdAttribute()
-	{
-		if ($this->board->getConfig('postsThreadId'))
-		{
-			return $this->attributes['author_id'];
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Returns the raw input for a post for the JSON output.
-	 *
-	 * @return string
-	 */
 	public function getContentRawAttribute($value)
 	{
 		if (!$this->trashed())
@@ -561,6 +561,26 @@ class Post extends Model {
 		{
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns a name for the country. This is usually the ISO 3166-1 alpha-2 code.
+	 *
+	 * @return  string|null
+	 */
+	public function getCountryCode()
+	{
+		if (!is_null($this->author_country))
+		{
+			if ($this->author_country == "")
+			{
+				return "unknown";
+			}
+			
+			return $this->author_country;
+		}
+		
+		return null;
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 .flag {
 	background-image: url(/img/backgrounds/flags.png);
 	background-repeat: no-repeat;
+	font-size: 0;
 	display: block;
 }
 

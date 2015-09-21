@@ -775,6 +775,13 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
 				],
+				[
+					'option_name'           => "postsAuthorCountry",
+					'default_value'         => false,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				
 				
 				[
@@ -988,6 +995,7 @@ class OptionGroupSeeder extends Seeder
 				
 				'options'       => [
 					"postsPerPage",
+					"postsAuthorCountry",
 					"postsThreadId",
 				],
 			],

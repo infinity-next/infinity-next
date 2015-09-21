@@ -13,19 +13,23 @@
 		@endif
 	</li>
 	
-	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
-	
-	@if ($board->getConfig('postsThreadId', false) && (!isset($catalog) || !$catalog))
-	<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
-		style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
-	</li>
+	@if ($board->getConfig('postsAuthorCountry', false) && $post->getCountryCode() && (!isset($catalog) || !$catalog))
+		<li class="post-detail post-country"><span class="flag flag-{{ $post->getCountryCode() }}"></span></li>
 	@endif
 	
+	<li class="post-detail post-postedon"><time class="post-detail-item postedon">{{ $post->created_at }}</time></li>
+	
 	@if (!isset($catalog) || !$catalog)
-	<li class="post-detail post-id">
-		<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
-		<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{(!isset($reply_to) || !$reply_to) ? "data-instant" : ""}}>{!! $post->board_id !!}</a>
-	</li>
+		@if ($board->getConfig('postsThreadId', false))
+		<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
+			style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
+		</li>
+		@endif
+		
+		<li class="post-detail post-id">
+			<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
+			<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{(!isset($reply_to) || !$reply_to) ? "data-instant" : ""}}>{!! $post->board_id !!}</a>
+		</li>
 	@endif
 	
 	@if ($post->isStickied())

@@ -1711,6 +1711,11 @@ main.index-threaded {
 							display: inline-block;
 						}
 						
+						.post-detail.post-country {
+							line-height: 1em;
+							vertical-align: middle;
+						}
+						
 						.post-detail-item {
 							box-sizing: border-box;
 							max-width: 100%;
@@ -1720,9 +1725,6 @@ main.index-threaded {
 							vertical-align: top;
 						}
 						
-						.post-select {
-							
-						}
 							.post-select-input {
 								vertical-align: text-bottom;
 							}
