@@ -163,6 +163,8 @@ class PostRequest extends Request {
 		
 		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
 		
+		$rules['spoilers'] = "boolean";
+		
 		$rules['files'][] = "array";
 		$rules['files'][] = "min:1";
 		$rules['files'][] = "max:{$attachmentsMax}";

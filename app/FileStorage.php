@@ -5,6 +5,7 @@ use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use File;
+use Input;
 use Storage;
 
 class FileStorage extends Model {
@@ -415,9 +416,10 @@ class FileStorage extends Model {
 		$fileExt     = $storage->guessExtension();
 		
 		$attachment  = new FileAttachment();
-		$attachment->post_id  = $post->post_id;
-		$attachment->file_id  = $storage->file_id;
-		$attachment->filename = urlencode("{$fileName}.{$fileExt}");
+		$attachment->post_id    = $post->post_id;
+		$attachment->file_id    = $storage->file_id;
+		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
+		$attachment->is_spoiler = !!Input::get('spoilers');
 		$attachment->save();
 		
 		return $attachment;

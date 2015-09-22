@@ -110,6 +110,9 @@
 				<span class="dz-instructions"><span class="dz-instructions-text">@lang('board.field.file-dz')</span></span>
 				<div class="fallback">
 					<input class="field-control" id="file" name="files[]" type="file" multiple />
+					<div class="field-control">
+						<label class="dz-spoiler"><input name="spoilers" type="checkbox" value="1" />&nbsp;@lang('board.field.spoilers')</label>
+					</div>
 				</div>
 			</div>
 		</div>

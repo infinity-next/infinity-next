@@ -40,6 +40,7 @@ return [
 		'email'       => "Email",
 		
 		'file-dz'     => "Click or drag files here to upload",
+		'spoilers'    => "Spoilers",
 		
 		'ip'              => "IP",
 		'ip_range'        => "Range",

@@ -1485,11 +1485,13 @@ class Post extends Model {
 				
 				if ($file && !$file->banned)
 				{
+					$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+					
 					$uploads[] = new FileAttachment([
 						'post_id'    => $this->post_id,
 						'file_id'    => $file->file_id,
 						'filename'   => $names[$index],
-						'is_spoiler' => isset($spoilers[$index]) ? $spoilers[$index] == 1 : false,
+						'is_spoiler' => $spoiler,
 					]);
 				}
 			}

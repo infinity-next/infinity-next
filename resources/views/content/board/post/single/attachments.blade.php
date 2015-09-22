@@ -16,7 +16,12 @@
 					<figcaption class="attachment-details">
 						<p class="attachment-detail">
 							<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
-							<span class="detail-item detail-filename">{{ $attachment->pivot->filename }}</span>
+							
+							@if ($attachment->pivot->is_spoiler)
+							<span class="detail-item detail-filename filename-spoilers">@lang('board.field.spoilers')</span>
+							@else
+							<span class="detail-item detail-filename filename-cleartext">{{ $attachment->pivot->filename }}</span>
+							@endif
 						</p>
 					</figcaption>
 				</figure>
