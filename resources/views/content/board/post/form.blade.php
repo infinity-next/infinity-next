@@ -119,7 +119,6 @@
 		<div class="field row-captcha">
 			<label class="field-label" for="captcha">
 				{!! captcha() !!}
-				<span class="field-validation"></span>
 			</label>
 			
 			{!! Form::text(

@@ -1,10 +1,13 @@
 <?php namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Panel\PanelController;
+use App\Services\UserManager;
+
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Validation\Validator;
 
 class PasswordController extends PanelController {
@@ -51,22 +54,16 @@ class PasswordController extends PanelController {
 	/**
 	 * Create a new password controller instance.
 	 *
+	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Services\UserManager  $auth
 	 * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
 	 * @return void
 	 */
-	public function __construct(\App\Services\UserManager $manager, PasswordBroker $passwords)
+	public function __construct(UserManager $manager, Router $router, PasswordBroker $passwords)
 	{
 		$this->passwords = $passwords;
 		
-		/*
-		$this->middleware('auth', [
-				'except' => ['getEmail', 'postEmail'],
-			]);
-		)
-		*/
-		
-		return parent::__construct($manager);
+		return parent::__construct($manager, $router);
 	}
 	
 	/**
@@ -104,11 +101,11 @@ class PasswordController extends PanelController {
 			$this->auth->login($user);
 			
 			return $this->view(static::VIEW_CHANGE)
-				->withStatus(trans('custom.success.password_new'));
+				->withStatus(trans('panel.password.reset_success'));
 		}
 		
 		return $this->view(static::VIEW_CHANGE)
-			->withErrors(['username' => trans('custom.validate.password_old')]);
+			->withErrors(['username' => trans('panel.password.password_old')]);
 	}
 	
 	
@@ -166,7 +163,7 @@ class PasswordController extends PanelController {
 			default:
 				return redirect()->back()
 					->withInput($request->only('email'))
-					->withErrors(['email' => trans($response)]);
+					->withErrors(['email' => trans("validation.{$response}")]);
 		}
 	}
 	
@@ -203,10 +200,10 @@ class PasswordController extends PanelController {
 		switch ($response)
 		{
 			case PasswordBroker::RESET_LINK_SENT:
-				return redirect()->back()->with('status', trans($response));
+				return redirect()->back()->with('status', trans("panel.{$response}"));
 			
 			case PasswordBroker::INVALID_USER:
-				return redirect()->back()->withErrors(['email' => trans($response)]);
+				return redirect()->back()->withErrors(['email' => trans("panel.{$response}")]);
 		}
 	}
 	

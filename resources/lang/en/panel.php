@@ -96,6 +96,7 @@ return [
 		'uid'                  => "Username or Email",
 		'username'             => "Username",
 		'staff_count'          => "{0}No staff|{1}1 staff member|[2,Inf]:staff_count staff members",
+		'register'             => "Register",
 		
 		'login_link'           => [
 			'password_forgot'      => "Forgot Password",
@@ -158,6 +159,8 @@ return [
 	
 	'password'  => [
 		'reset' => "Reset Password",
-		
+		'user'  => "No user can be found with that email address.",
+		'password_old' => "You entered an incorrect current password.",
+		'reset_success' => "Your password has been reset.",
 	],
 ];
