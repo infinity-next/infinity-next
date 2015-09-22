@@ -160,6 +160,7 @@ return [
 	'password'  => [
 		'reset' => "Reset Password",
 		'user'  => "No user can be found with that email address.",
+		'sent' => "Your password reset reqest has been sent to your email.",
 		'password_old' => "You entered an incorrect current password.",
 		'reset_success' => "Your password has been reset.",
 	],

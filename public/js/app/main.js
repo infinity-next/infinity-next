@@ -7,8 +7,34 @@
 	
 	ib.widgets = {};
 	
-	ib.bindAll = function() {
-		$("[data-widget]").each(function() {
+	ib.bindAll = function(eventOrScope) {
+		var $scope;
+		
+		if (typeof eventOrScope !== "undefined")
+		{
+			if (typeof eventOrScope.target !== "undefined")
+			{
+				$scope = $(eventOrScope.target);
+			}
+			else if (eventOrScope instanceof jQuery)
+			{
+				$scope = eventOrScope;
+			}
+			else if (eventOrScope instanceof HTMLElement)
+			{
+				$scope = eventOrScope;
+			}
+			else
+			{
+				$scope = $(document);
+			}
+		}
+		else
+		{
+			$scope = $(document);
+		}
+		
+		$("[data-widget]", $scope).each(function() {
 			ib.bindElement(this);
 		});
 	},
@@ -771,7 +797,6 @@ ib.widget("post", function(window, $, undefined) {
 							.attr('src',  $link.attr('href'))
 							.attr('type', $img.attr('data-mime'))
 							.one('error', function(event) {
-								console.log(1);
 								// Our source has failed to load!
 								// Trigger a download.
 								$img
@@ -1401,8 +1426,9 @@ ib.widget("autoupdater", function(window, $, undefined) {
 						}
 						else if(reply.html !== null)
 						{
-							$("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>")
-								.insertBefore(widget.$widget);
+							var $newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
+							$newPost.insertBefore(widget.$widget);
+							ib.bindAll($newPost);
 						}
 					});
 				}
