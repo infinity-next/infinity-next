@@ -178,7 +178,7 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Request $request, Board $board)
+	public function getConfig(Request $request, Board $board)
 	{
 		if (!$board->canEditConfig($this->user))
 		{
@@ -200,7 +200,7 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function patchIndex(BoardConfigRequest $request, Board $board)
+	public function patchConfig(BoardConfigRequest $request, Board $board)
 	{
 		if (!$board->canEditConfig($this->user))
 		{
@@ -252,6 +252,15 @@ class ConfigController extends PanelController {
 		]);
 	}
 	
+	public function getIndex(Request $request, Board $board)
+	{
+		return $this->getConfig($request, $board);
+	}
+	
+	public function patchIndex(BoardConfigRequest $request, Board $board)
+	{
+		return $this->patchConfig($request, $board);
+	}
 	
 	/**
 	 * List all staff members to the user.

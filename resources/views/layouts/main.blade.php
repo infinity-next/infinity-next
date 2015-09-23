@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-	<title>@yield('title', 'Infinity')</title>
+	<title data-original="@yield('title', 'Infinity')">@yield('title', 'Infinity')</title>
 	
 	@section('css')
 		{!! Minify::stylesheetDir('/vendor/')->withFullUrl() !!}

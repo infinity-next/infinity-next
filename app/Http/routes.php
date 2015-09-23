@@ -79,6 +79,11 @@ Route::group([
 		], function()
 		{
 			Route::get('/', 'BoardsController@getIndex');
+			
+			Route::get('assets', 'BoardsController@getAssets');
+			Route::get('config', 'BoardsController@getConfig');
+			Route::get('staff',  'BoardsController@getStaff');
+			
 			Route::get('create', 'BoardsController@getCreate');
 			Route::put('create', 'BoardsController@putCreate');
 			

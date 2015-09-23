@@ -59,9 +59,12 @@ return [
 			
 			
 			'board'  => [
-				'boards'          => "Boards",
-				'config'          => "Config",
 				'create'          => "Create a Board",
+				
+				'boards'          => "Boards",
+				'assets'          => "Assets",
+				'config'          => "Config",
+				'staff'           => "Staff",
 				
 				'discipline'      => "Discipline",
 				'reports'         => "Reports",
@@ -95,8 +98,10 @@ return [
 		'remember'             => "Remember Me",
 		'uid'                  => "Username or Email",
 		'username'             => "Username",
-		'staff_count'          => "{0}No staff|{1}1 staff member|[2,Inf]:staff_count staff members",
 		'register'             => "Register",
+		
+		'assets_count'         => "{0}No assets|{1}1 custom asset|[2,Inf]:count custom assets",
+		'staff_count'          => "{0}No staff|{1}1 staff member|[2,Inf]:count staff members",
 		
 		'login_link'           => [
 			'password_forgot'      => "Forgot Password",

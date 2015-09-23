@@ -536,8 +536,76 @@ trait PermissionUser {
 	/**
 	 * Returns a list of board_uris where the canEditConfig permission is given.
 	 *
+	 * @return Collection  of Board
+	 */
+	public function getBoardsWithAssetRights()
+	{
+		$boards = [];
+		
+		foreach ($this->getPermissions() as $board_uri => $permissions)
+		{
+			if ($this->canEditConfig($board_uri))
+			{
+				if ($board_uri == "")
+				{
+					return Board::andCreator()
+						->andOperator()
+						->andStaffAssignments()
+						->get();
+				}
+				else
+				{
+					$boards[] = $board_uri;
+				}
+			}
+		}
+		
+		return Board::whereIn('board_uri', $boards)
+			->andCreator()
+			->andOperator()
+			->andStaffAssignments()
+			->get();
+	}
+	/**
+	 * Returns a list of board_uris where the canEditConfig permission is given.
+	 *
+	 * @return Collection  of Board
 	 */
 	public function getBoardsWithConfigRights()
+	{
+		$boards = [];
+		
+		foreach ($this->getPermissions() as $board_uri => $permissions)
+		{
+			if ($this->canEditConfig($board_uri))
+			{
+				if ($board_uri == "")
+				{
+					return Board::andCreator()
+						->andOperator()
+						->andStaffAssignments()
+						->get();
+				}
+				else
+				{
+					$boards[] = $board_uri;
+				}
+			}
+		}
+		
+		return Board::whereIn('board_uri', $boards)
+			->andCreator()
+			->andOperator()
+			->andStaffAssignments()
+			->get();
+	}
+	
+	/**
+	 * Returns a list of board_uris where the canEditConfig permission is given.
+	 *
+	 * @return Collection  of Board
+	 */
+	public function getBoardsWithStaffRights()
 	{
 		$boards = [];
 		

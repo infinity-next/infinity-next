@@ -1603,7 +1603,15 @@ main.index-threaded {
 		section.index-threads aside.advertiser.top-left {
 			padding: 1em;
 		}
-		main.index-threaded .thread-item:last-child{
+		
+		main.index-threaded .thread-item {
+			border-top:    1px solid rgba(255, 255, 255, 0.2);
+			border-bottom: 1px solid rgba(  0,   0,   0, 0.2);
+		}
+		main.index-threaded .thread-item:first-child {
+			border-top: none;
+		}
+		main.index-threaded .thread-item:last-child {
 			border-bottom: none;
 		}
 		
@@ -2448,7 +2456,6 @@ nav.cp-side {
 			}
 			nav.cp-side ul.cp-linkitems {
 				display: block;
-				border-top: 1px dashed #e0e0e0;
 				margin: 0.2em 0 0.6em 0;
 				padding: 0.2em 0 0 0;
 			}
@@ -2456,6 +2463,9 @@ nav.cp-side {
 					display: block;
 					margin: 0.2em 0 0 0;
 				}
+					nav.cp-side a.linkgroup-name {
+						border-bottom: 1px dashed #e0e0e0;
+					}
 					nav.cp-side a.linkgroup-name,
 					nav.cp-side a.linkitem-name {
 						display: block;
@@ -2463,6 +2473,12 @@ nav.cp-side {
 					}
 					nav.cp-side a.linkitem-name {
 						line-height: 1.6;
+					}
+					
+					nav.cp-side a.linkitem-name-createboard {
+						color: #525252;
+						font-size: 18px;
+						padding: 0.2em 0;
 					}
 
 nav.cp-inner {

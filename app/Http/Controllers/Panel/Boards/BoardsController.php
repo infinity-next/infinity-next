@@ -32,15 +32,57 @@ class BoardsController extends PanelController {
 	
 	/**
 	 * Show the application dashboard to the user.
+	 * This is the config list.
 	 *
 	 * @return Response
 	 */
 	public function getIndex()
 	{
+		return $this->getConfig();
+	}
+	
+	/**
+	 * List boards with asset management rights.
+	 *
+	 * @return Response
+	 */
+	public function getAssets()
+	{
+		$boards = $this->user->getBoardsWithAssetRights();
+		
+		return $this->view(static::VIEW_DASHBOARD, [
+			'boards' => $boards,
+			'suffix' => 'assets',
+		]);
+	}
+	
+	/**
+	 * List boards with config management rights.
+	 *
+	 * @return Response
+	 */
+	public function getConfig()
+	{
 		$boards = $this->user->getBoardsWithConfigRights();
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
+			'suffix' => 'config',
+		]);
+	}
+	
+	/**
+	 * List boards with staff management rights.
+	 *
+	 * @return Response
+	 */
+	public function getStaff()
+	{
+		$boards = $this->user->getBoardsWithStaffRights();
+		
+		return $this->view(static::VIEW_DASHBOARD, [
+			'boards' => $boards,
+			'suffix' => 'staff',
 		]);
 	}
 	
@@ -170,7 +212,8 @@ class BoardsController extends PanelController {
 				"regex:(" . Board::URI_PATTERN . ")",
 			],
 			'title'       => "required|string|between:1,255",
-			'description' => "string|between:0,255"
+			'description' => "string|between:0,255",
+			'captcha'     => "required|captcha"
 		];
 		
 		$validator = Validator::make($input, $requirements);

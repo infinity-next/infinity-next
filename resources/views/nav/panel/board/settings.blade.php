@@ -5,8 +5,8 @@
 				<ul class="cp-linkitems">
 					<li class="cp-linkitem">
 						@foreach ([
-							''       => "basic",
 							'assets' => "assets",
+							'config' => "basic",
 							'staff'  => "staff",
 						] as $url => $name)
 							<a class="linkitem-name @if ($tab == $name) linkitem-active @endif" href="{{ url("/cp/board/$board->board_uri/$url") }}">
