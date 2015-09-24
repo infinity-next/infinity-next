@@ -1134,6 +1134,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				var $form = widget.$widget;
 				
 				widget.events.captchaReload();
+				widget.dropzone.removeAllFiles();
 				
 				$(widget.options.selector['form-clear'], $form)
 					.val("")
@@ -1221,8 +1222,6 @@ ib.widget("postbox", function(window, $, undefined) {
 							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
 							autoupdater.events.updateSuccess(response, textStatus, jqXHR);
 							autoupdater.events.updateComplete(response, textStatus, jqXHR);
-							
-							widget.events.formClear();
 						}
 						else
 						{
@@ -1396,6 +1395,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			},
 			
 			updateSuccess : function(data, textStatus, jqXHR) {
+				var $newPost = $();
+				
 				if (data instanceof Array)
 				{
 					widget.updateLast = widget.updateAsked;
@@ -1422,16 +1423,19 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							else
 							{
 								$existingPost.addClass('post-deleted');
+								return $existingPost;
 							}
 						}
 						else if(reply.html !== null)
 						{
-							var $newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
+							$newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
 							$newPost.insertBefore(widget.$widget);
 							ib.bindAll($newPost);
 						}
 					});
 				}
+				
+				return $newPost;
 			},
 			
 			updateComplete : function() {
