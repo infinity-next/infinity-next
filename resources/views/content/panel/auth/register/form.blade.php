@@ -23,10 +23,12 @@
 		<input class="field-control" id="password_confirmation" name="password_confirmation" type="password" />
 	</div>
 	
+	@if (!isset($captchaless) || !$captchaless)
 	<div class="field row-captcha">
 		<label class="field-label" for="captcha">
 			{!! captcha() !!}
 		</label>
 		<input class="field-control" id="captcha" name="captcha" type="text" />
 	</div>
+	@endif
 </fieldset>

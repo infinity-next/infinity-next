@@ -87,6 +87,7 @@ Route::group([
 			Route::get('create', 'BoardsController@getCreate');
 			Route::put('create', 'BoardsController@putCreate');
 			
+			
 			Route::controller('reports', 'ReportsController');
 			
 			Route::group([
@@ -108,7 +109,10 @@ Route::group([
 			'prefix'    => 'board',
 		], function()
 		{
-			Route::controller('{board}', 'ConfigController');
+			Route::controllers([
+				'{board}/staff' => 'StaffController',
+				'{board}'       => 'ConfigController',
+			]);
 		});
 		
 		Route::group([

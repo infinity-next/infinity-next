@@ -261,28 +261,4 @@ class ConfigController extends PanelController {
 	{
 		return $this->patchConfig($request, $board);
 	}
-	
-	/**
-	 * List all staff members to the user.
-	 *
-	 * @return Response
-	 */
-	public function getStaff(Board $board)
-	{
-		if (!$board->canEditConfig($this->user))
-		{
-			return abort(403);
-		}
-		
-		$roles = $board->roles;
-		$staff = $board->getStaff();
-		
-		return $this->view(static::VIEW_STAFF, [
-			'board'  => $board,
-			'roles'  => $roles,
-			'staff'  => $staff,
-			
-			'tab'    => "staff",
-		]);
-	}
 }

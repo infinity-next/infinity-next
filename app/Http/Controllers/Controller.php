@@ -11,6 +11,7 @@ use Illuminate\Routing\Router as Router;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Cache;
+use Input;
 use Request;
 use View;
 
@@ -160,5 +161,24 @@ abstract class Controller extends BaseController {
 			'c'          => &$this,
 			'controller' => &$this,
 		], $options);
+	}
+	
+	/**
+	 * Returns a validator that can be used to check registration details.
+	 *
+	 * @return Validator
+	 */
+	public function registrationValidator()
+	{
+		$validator = $this->registrar->validator(Input::all());
+		$rules     = $validator->getRules();
+		
+		$rules['username'][] = "alpha_num";
+		$rules['username'][] = "unique:users,username";
+		$rules['username'][] = "unique:users,email";
+		
+		$validator->setRules($rules);
+		
+		return $validator;
 	}
 }

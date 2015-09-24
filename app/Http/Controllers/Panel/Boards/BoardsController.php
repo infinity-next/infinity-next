@@ -113,6 +113,10 @@ class BoardsController extends PanelController {
 				}
 			}
 		}
+		else if (!$this->user->canCreateUser())
+		{
+			return abort(403);
+		}
 		
 		return $this->view(static::VIEW_CREATE, [
 			'boardLastCreated'  => $boardLastCreated,
@@ -156,6 +160,10 @@ class BoardsController extends PanelController {
 						$boardLastCreated = $board->created_at;
 					}
 				}
+			}
+			else if (!$this->user->canCreateUser())
+			{
+				return abort(403);
 			}
 			
 			if ($boardsCreateMax > 0 && $boardsOwned >= $boardsCreateMax)

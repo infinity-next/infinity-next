@@ -445,9 +445,14 @@ class Board extends Model {
 		return $staff;
 	}
 	
-	public function getUrl()
+	public function getURL()
 	{
 		return url($this->board_uri);
+	}
+	
+	public function getURLForStaff()
+	{
+		return url("/cp/board/{$this->board_uri}/staff/add");
 	}
 	
 	public function hasStylesheet()

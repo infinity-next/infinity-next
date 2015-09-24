@@ -15,6 +15,7 @@
 			</div>
 			
 			<div class="cp-frame grid-85">
+				<div class="panel-actions">@yield('actions')</div>
 				<h3 class="panel-title">@yield('title')</h3>
 				
 				@if (isset($c::$navTertiary))

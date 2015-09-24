@@ -293,6 +293,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user create a user?
+	 *
+	 * @return boolean
+	 */
+	public function canCreateUser()
+	{
+		return $this->can("site.user.create");
+	}
+	
+	/**
 	 * Can this user delete this post?
 	 *
 	 * @return boolean
@@ -540,32 +550,9 @@ trait PermissionUser {
 	 */
 	public function getBoardsWithAssetRights()
 	{
-		$boards = [];
-		
-		foreach ($this->getPermissions() as $board_uri => $permissions)
-		{
-			if ($this->canEditConfig($board_uri))
-			{
-				if ($board_uri == "")
-				{
-					return Board::andCreator()
-						->andOperator()
-						->andStaffAssignments()
-						->get();
-				}
-				else
-				{
-					$boards[] = $board_uri;
-				}
-			}
-		}
-		
-		return Board::whereIn('board_uri', $boards)
-			->andCreator()
-			->andOperator()
-			->andStaffAssignments()
-			->get();
+		return $this->getBoardsWithConfigRights();
 	}
+	
 	/**
 	 * Returns a list of board_uris where the canEditConfig permission is given.
 	 *
@@ -607,31 +594,7 @@ trait PermissionUser {
 	 */
 	public function getBoardsWithStaffRights()
 	{
-		$boards = [];
-		
-		foreach ($this->getPermissions() as $board_uri => $permissions)
-		{
-			if ($this->canEditConfig($board_uri))
-			{
-				if ($board_uri == "")
-				{
-					return Board::andCreator()
-						->andOperator()
-						->andStaffAssignments()
-						->get();
-				}
-				else
-				{
-					$boards[] = $board_uri;
-				}
-			}
-		}
-		
-		return Board::whereIn('board_uri', $boards)
-			->andCreator()
-			->andOperator()
-			->andStaffAssignments()
-			->get();
+		return $this->getBoardsWithConfigRights();
 	}
 	
 	/**

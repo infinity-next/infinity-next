@@ -144,6 +144,16 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	}
 	
 	/**
+	 * Returns the name of the user that should be displayed in public.
+	 *
+	 * @return string
+	 */
+	public function getDisplayName()
+	{
+		return $this->username;
+	}
+	
+	/**
 	 * Fetches all reports that this user can view (not submitted reports).
 	 *
 	 * @return Collection
@@ -164,4 +174,38 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 		
 		return $posts;
 	}
+	
+	/**
+	 * Returns the full URL for a user profile.
+	 *
+	 * @return string
+	 */
+	public function getURL()
+	{
+		return url("/cp/user/{$this->getURLSlug()}");
+	}
+	
+	/**
+	 * Returns the fill URL for a staff profile regarding a single board.
+	 *
+	 * @param  \App\Board  $board
+	 * @param  string  $action
+	 * @return string
+	 */
+	public function getURLForBoardStaff(Board $board, $action = "")
+	{
+		return url("/cp/board/{$board->board_uri}/staff/{$this->getURLSlug()}/{$action}");
+	}
+	
+	
+	/**
+	 * Returns part of the URL that would be used to identify this user.
+	 *
+	 * @return string
+	 */
+	public function getURLSlug()
+	{
+		return "{$this->username}.{$this->user_id}";
+	}
+	
 }

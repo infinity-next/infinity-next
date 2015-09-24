@@ -29,6 +29,7 @@ return [
 		'board_create'       => "Create a Board",
 		'board_create_your'  => "Create your Board",
 		'board_staff_list'   => "/:board_uri/ Staff List",
+		'board_staff_add'    => "Creating /:board_uri/ Staff",
 		'permissions'        => ":role Role Permissions",
 		'you_are_banned'     => "You are BANNED!",
 		'you_are_not_banned' => "You are not banned.",
@@ -86,7 +87,12 @@ return [
 		],
 	],
 	
-	'field'    => [
+	'action'    => [
+		'add_staff'          => "Create New Staff",
+	],
+	
+	'field'     => [
+		'add_staff'            => "Add to Staff",
 		'email'                => "E-Mail Address",
 		'login'                => "Login",
 		'logout'               => "Logout",
@@ -111,6 +117,24 @@ return [
 		'desc'                 => [
 			'email' => "This field is optional, but is required to reset your password.",
 		],
+	],
+	
+	'list'      => [
+		
+		'head'      => [
+			'staff'         => "Staff",
+		],
+		
+		'field'     => [
+			'userinfo'      => "User Info",
+		],
+		
+		
+	],
+	
+	'staff'     => [
+		'select_existing_form' => "Add existing user as staff",
+		'select_register_form' => "Register new staff account",
 	],
 	
 	'bans'      => [

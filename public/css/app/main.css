@@ -383,6 +383,58 @@ form {
 				display: none;
 			}
 
+main.cp .filterlist {
+	padding: 0 0 1em 0;
+	margin: 0 -12px 1em -10px;
+}
+	main.cp .filterlist-heading {
+		color: #6d3f03;
+		background: #f9d9b0;
+		padding: 0.5em 0.75em;
+		margin: 1em 0 0 0;
+		border-top: 1px solid #f9bc6d;
+		border-bottom: 1px solid #f9bc6d;
+	}
+	main.cp .filterlist-list {
+		margin: 0;
+		padding: 0;
+	}
+		main.cp .filterlist-item {
+			margin: 0;
+			line-height: 2em;
+			vertical-align: middle;
+			border-bottom: 1px solid #f0f0f0;
+		}
+			main.cp .filterlist-primary,
+			main.cp .filterlist-secondary {
+				display: block;
+				padding-top: 0.5em;
+				padding-bottom: 0.5em;
+				vertical-align: middle;
+			}
+			main.cp .filterlist-primary {
+				padding-left: 1em;
+			}
+				main.cp .filterlist-item:hover .filterlist-primary {
+					background-color: #fff4e5;
+				}
+			main.cp .filterlist-secondary {
+				float: right;
+				padding-right: 0.5em;
+				padding-left: 0.5em;
+				
+				background: #f0f7fc;
+				border-left: 1px solid #d7edfc;
+				color: #176093;
+			}
+				main.cp .filterlist-secondary:hover {
+					background-color: #d7edfc;
+				}
+				main.cp .filterlist-secondary .fa-remove {
+					font-size: 150%;
+					color: #ff0000;
+				}
+
 main.cp form.form-config {
 	min-width: 760px;
 	margin: 0 auto 0 0;
@@ -391,7 +443,24 @@ main.cp form.form-config {
 		max-width: none;
 	}
 	
+	div.panel-actions {
+		float: right;
+	}
+		div.panel-actions .panel-action {
+			display: inline-block;
+			
+			background: #e0e0e0;
+			border-radius: 4px;
+			padding: 0.5em;
+			color: #222;
+			font-weight: bold;
+			line-height: 1.17em;
+			min-width: 4em;
+			text-align: center;
+		}
+	
 	h3.panel-title {
+		font-size: 1.17em;
 		margin: 0 0 0.5em 0;
 	}
 	
@@ -401,6 +470,48 @@ main.cp form.form-config {
 		form.form-config fieldset.form-fields:last-child {
 			border-bottom: none;
 		}
+	
+	label.form-selector {
+		display: block;
+		color: #2b485c;
+		font-weight: bold;
+		font-size: 1.17em;
+		border-bottom: 1px solid #e0e0e0;
+		padding: 0.5em 1em;
+		margin: 0 -12px 0 -10px;
+	}
+		label.form-selector:hover {
+			text-decoration: underline;
+		}
+		input.form-selection {
+			display: none;
+		}
+		input.form-selection:checked ~ .form-selector {
+			margin-top: 1em;
+			margin-bottom: 1em;
+		}
+		input.form-selection:checked ~ .form-selector::before {
+			display: inline-block;
+			content: '➤';
+			margin-right: 0.25em;
+		}
+		input.form-selection:checked ~ .form-selector:hover {
+			text-decoration: none;
+		}
+		input.form-selection:checked ~ .form-selectable {
+			display: block;
+		}
+	
+	.form-selectable {
+		display: none;
+	}
+	
+	main.cp fieldset {
+		width: 40%;
+		min-width: 300px;
+		max-width: 100%;
+		margin-right: auto;
+	}
 	
 	main.cp form.form-config legend.form-legend {
 		display: block;
@@ -507,6 +618,7 @@ main.cp form.form-config {
 			margin-left: 32%;
 			padding-left: 2em;
 		}
+
 
 /* Tables */
 table {
@@ -1856,6 +1968,7 @@ main.index-threaded {
 										height: 100%;
 										width: 100%;
 										padding: 0 0 0 0;
+										pointer-events: none;
 										
 										position: absolute;
 										top: 0;
@@ -2374,7 +2487,7 @@ div.cp-box {
 	div.cp-frame {
 		margin-top: -1px;
 		border-right: 1px solid #e0e0e0;
-		overflow: hidden;
+		/* overflow: hidden; */
 	}
 	div.cp-frame:last-child {
 		border-left: 1px solid #e0e0e0;
@@ -2484,12 +2597,13 @@ nav.cp-side {
 nav.cp-inner {
 	display: block;
 	padding: 0;
-	margin: -0.25em -1em 0 -1em;
+	margin: -0.25em -12px 0 -10px
 }
 	nav.cp-tabs section.cp-linklists {
 	}
 	
 	nav.cp-inner ul.cp-linkgroups {
+		margin-bottom: 1em;
 	}
 		nav.cp-inner li.cp-linkgroup {
 		}
