@@ -758,8 +758,10 @@ ib.widget("post", function(window, $, undefined) {
 				{
 					var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
 					var $source = $("<source />");
+					var mimetype = $img.attr('data-mime');
+					var fileext  = $link.attr('href').split('.').pop();
 					
-					if ($audio[0].canPlayType($img.attr('data-mime')))
+					if ($audio[0].canPlayType(mimetype) || $audio[0].canPlayType("audio/"+fileext))
 					{
 						$item.addClass('attachment-expanded');
 						
@@ -786,10 +788,12 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				else if ($img.is(widget.options.selector['attachment-image-video']))
 				{
-					var $video  = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
-					var $source = $("<source />");
+					var $video   = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
+					var $source  = $("<source />");
+					var mimetype = $img.attr('data-mime');
+					var fileext  = $link.attr('href').split('.').pop();
 					
-					if ($video[0].canPlayType($img.attr('data-mime')))
+					if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
 					{
 						$item.addClass('attachment-expanded');
 						
@@ -802,7 +806,7 @@ ib.widget("post", function(window, $, undefined) {
 								$img
 									.trigger('click')
 									.removeClass('attachment-type-video')
-									.addClass('attachment-type-download');
+									.addClass('attachment-type-download attachment-type-failed');
 							})
 							.appendTo($video);
 						
