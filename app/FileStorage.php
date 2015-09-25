@@ -440,7 +440,7 @@ class FileStorage extends Model {
 	 */
 	public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
 	{
-		$fileName    = basename($filename);
+		$fileName    = pathinfo($filename, PATHINFO_FILENAME);
 		$fileExt     = $this->guessExtension();
 		
 		$attachment  = new FileAttachment();
