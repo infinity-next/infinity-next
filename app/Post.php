@@ -1466,7 +1466,7 @@ class Post extends Model {
 				{
 					if(file_exists($upload->getPathname()))
 					{
-						FileStorage::createAttachment($upload, $this);
+						FileStorage::createAttachmentFromUpload($upload, $this);
 					}
 				}
 			}
@@ -1477,22 +1477,17 @@ class Post extends Model {
 			$names    = $files['name'];
 			$spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
 			
-			$storage = FileStorage::whereIn('hash', $hashes)->get();
+			$storages = FileStorage::whereIn('hash', $hashes)->get();
 			
 			foreach ($hashes as $index => $hash)
 			{
-				$file = $storage->where('hash', $hash)->first();
+				$storage = $storages->where('hash', $hash)->first();
 				
-				if ($file && !$file->banned)
+				if ($storage && !$storage->banned)
 				{
 					$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
 					
-					$uploads[] = new FileAttachment([
-						'post_id'    => $this->post_id,
-						'file_id'    => $file->file_id,
-						'filename'   => $names[$index],
-						'is_spoiler' => $spoiler,
-					]);
+					$uploads[] = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
 				}
 			}
 			

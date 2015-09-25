@@ -33,6 +33,23 @@ class FileAttachment extends Model {
 	
 	
 	/**
+	 * Ties database triggers to the model.
+	 *
+	 * @return void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+		
+		// Setup event bindings...
+		
+		// Fire events on post created.
+		static::created(function(FileAttachment $attachment) {
+			$attachment->storage->processAttachment($attachment);
+		});
+	}
+	
+	/**
 	 * Returns a few posts for the front page.
 	 *
 	 * @param  int  $number  How many to pull.

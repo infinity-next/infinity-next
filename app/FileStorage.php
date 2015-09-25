@@ -217,6 +217,7 @@ class FileStorage extends Model {
 			##
 			# MULTIMEDIA
 			##
+			case "video/vp8" :
 			case "video/webm" :
 				return "webm";
 			
@@ -399,13 +400,13 @@ class FileStorage extends Model {
 	
 	
 	/**
-	 * Creates a new FileAttachment for a post.
+	 * Creates a new FileAttachment for a post using a direct upload.
 	 *
 	 * @param  UploadedFile  $file
 	 * @param  Post  $post
 	 * @return FileAttachment
 	 */
-	public static function createAttachment(UploadedFile $file, Post $post)
+	public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
 	{
 		$storage     = static::storeUpload($file);
 		
@@ -420,7 +421,38 @@ class FileStorage extends Model {
 		$attachment->file_id    = $storage->file_id;
 		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
 		$attachment->is_spoiler = !!Input::get('spoilers');
-		$attachment->save();
+		
+		if ($autosave)
+		{
+			$attachment->save();
+		}
+		
+		return $attachment;
+	}
+	
+	/**
+	 * Creates a new FileAttachment for a post using a hash.
+	 *
+	 * @param  Post  $post
+	 * @param  string  $filename
+	 * @param  boolean  $spoiler
+	 * @return FileAttachment
+	 */
+	public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
+	{
+		$fileName    = basename($filename);
+		$fileExt     = $this->guessExtension();
+		
+		$attachment  = new FileAttachment();
+		$attachment->post_id    = $post->post_id;
+		$attachment->file_id    = $this->file_id;
+		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
+		$attachment->is_spoiler = !!$spoiler;
+		
+		if ($autosave)
+		{
+			$attachment->save();
+		}
 		
 		return $attachment;
 	}
@@ -459,11 +491,28 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Work to be done upon creating an attachment using this storage.
+	 *
+	 * @param  FileAttachment  $attachment  Defaults to null.
+	 * @return FileStorage
+	 */
+	public function processAttachment(FileAttachment $attachment = null)
+	{
+		$this->last_uploaded_at = $this->freshTimestamp();
+		$this->upload_count    += 1;
+		
+		$this->processThumb();
+		$this->save();
+		
+		return $this;
+	}
+	
+	/**
 	 * Turns an image into a thumbnail if possible, overwriting previous versions.
 	 *
 	 * @return void
 	 */
-	protected function processThumb()
+	public function processThumb()
 	{
 		global $app;
 		
@@ -651,17 +700,13 @@ class FileStorage extends Model {
 			$fileTime = $storage->freshTimestamp();
 		}
 		
-		$storage->last_uploaded_at = $fileTime;
-		$storage->upload_count += 1;
-		
 		if (!Storage::exists($storage->getPath()))
 		{
 			Storage::put($storage->getPath(), $fileContent);
 			Storage::makeDirectory($storage->getDirectoryThumb());
 		}
 		
-		$storage->processThumb();
-		$storage->save();
+		$storage->processAttachment();
 		
 		return $storage;
 	}
