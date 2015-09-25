@@ -512,6 +512,9 @@ main.cp form.form-config {
 		max-width: 100%;
 		margin-right: auto;
 	}
+		#config-board .form-fields {
+			width: auto;
+		}
 	
 	main.cp form.form-config legend.form-legend {
 		display: block;
@@ -1717,8 +1720,10 @@ main.index-threaded {
 		}
 		
 		main.index-threaded .thread-item {
+			/*
 			border-top:    1px solid rgba(255, 255, 255, 0.2);
 			border-bottom: 1px solid rgba(  0,   0,   0, 0.2);
+			*/
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;
