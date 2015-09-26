@@ -512,7 +512,7 @@ main.cp form.form-config {
 		max-width: 100%;
 		margin-right: auto;
 	}
-		#config-board .form-fields {
+		.form-config .form-fields {
 			width: auto;
 		}
 	

@@ -30,6 +30,7 @@ return [
 		'board_create_your'  => "Create your Board",
 		'board_staff_list'   => "/:board_uri/ Staff List",
 		'board_staff_add'    => "Creating /:board_uri/ Staff",
+		'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
 		'permissions'        => ":role Role Permissions",
 		'you_are_banned'     => "You are BANNED!",
 		'you_are_not_banned' => "You are not banned.",
@@ -88,11 +89,11 @@ return [
 	],
 	
 	'action'    => [
-		'add_staff'          => "Create New Staff",
+		'add_staff'            => "Add to Staff",
+		'edit_staff'           => "Save Changes"
 	],
 	
 	'field'     => [
-		'add_staff'            => "Add to Staff",
 		'email'                => "E-Mail Address",
 		'login'                => "Login",
 		'logout'               => "Logout",
@@ -133,8 +134,8 @@ return [
 	],
 	
 	'staff'     => [
-		'select_existing_form' => "Add existing user as staff",
-		'select_register_form' => "Register new staff account",
+		'select_existing_form' => "Add existing account as staff",
+		'select_register_form' => "Register new account for staff member",
 	],
 	
 	'bans'      => [

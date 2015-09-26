@@ -77,8 +77,10 @@
 					<img id="logo" src="@yield('header-logo', "/img/logo.png")" alt="Infinity" />
 					
 					<figcaption class="page-details">
+						@if (!isset($hideTitles))
 						<h1 class="page-title">@yield('title')</h1>
 						<h2 class="page-desc">@yield('description')</h2>
+						@endif
 						
 						@section('header-details')
 					</figcaption>

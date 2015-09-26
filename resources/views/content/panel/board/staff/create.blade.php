@@ -13,24 +13,6 @@
 		'class'  => "form-staff",
 	]) !!}
 		
-		
-		<div class="form-select-group">
-			{!! Form::radio(
-				"staff-source",
-				"register",
-				old("staff-source") != "existing",
-				[
-					'id'        => "register-new",
-					'class'     => "field-control form-selection",
-			]) !!}
-			
-			<label class="form-selector" for="register-new">@lang('panel.staff.select_register_form')</label>
-			
-			<div class="form-selectable">
-				@include('content.panel.auth.register.form', [ 'captchaless' => true ])
-			</div>
-		</div>
-		
 		<div class="form-select-group">
 			{!! Form::radio(
 				"staff-source",
@@ -54,6 +36,25 @@
 			</fieldset>
 		</div>
 		
+		<div class="form-select-group">
+			{!! Form::radio(
+				"staff-source",
+				"register",
+				old("staff-source") != "existing",
+				[
+					'id'        => "register-new",
+					'class'     => "field-control form-selection",
+			]) !!}
+			
+			<label class="form-selector" for="register-new">@lang('panel.staff.select_register_form')</label>
+			
+			<div class="form-selectable">
+				@include('content.panel.auth.register.form', [ 'captchaless' => true ])
+			</div>
+		</div>
+		
+		@include('content.panel.board.staff.castes')
+		
 		<div class="field row-captcha">
 			<label class="field-label" for="captcha">
 				{!! captcha() !!}
@@ -62,7 +63,7 @@
 		</div>
 		
 		<div class="field row-submit">
-			<button type="submit" class="field-submit">@lang('panel.field.add_staff')</button>
+			<button type="submit" class="field-submit">@lang('panel.action.add_staff')</button>
 		</div>
 	{!! Form::close() !!}
 @endsection

@@ -8,12 +8,12 @@ class Role extends Model {
 	/**
 	 * These static variables represent the hard ID top-level roles.
 	 */
-	public static $ROLE_ANONYMOUS     = 1;
-	public static $ROLE_ADMIN         = 2;
-	public static $ROLE_MODERATOR     = 3;
-	public static $ROLE_OWNER         = 4;
-	public static $ROLE_VOLUTNEER     = 5;
-	public static $ROLE_UNACCOUNTABLE = 6;
+	const ID_ANONYMOUS     = 1;
+	const ID_ADMIN         = 2;
+	const ID_MODERATOR     = 3;
+	const ID_OWNER         = 4;
+	const ID_JANITOR       = 5;
+	const ID_UNACCOUNTABLE = 6;
 	
 	/**
 	 * The database table used by the model.
@@ -64,8 +64,17 @@ class Role extends Model {
 		return $this->belongsToMany('\App\User', 'user_roles', 'role_id', 'user_id');
 	}
 	
+	/**
+	 * Returns a human-readable name for this role.
+	 *
+	 * @return string 
+	 */
+	public function getDisplayName()
+	{
+		return trans($this->name);
+	}
 	
-	/*
+	/**
 	 * Returns the individual value for a requested permission.
 	 *
 	 * @return boolean|null
@@ -92,7 +101,7 @@ class Role extends Model {
 	public static function getRoleMaskByName($roleMasks)
 	{
 		$roles = static::whereIn('role', (array) $roleMasks)
-			->orWhere('role_id', static::$ROLE_ANONYMOUS)
+			->orWhere('role_id', static::ID_ANONYMOUS)
 			->with('permissions')
 			->get();
 		
@@ -107,7 +116,7 @@ class Role extends Model {
 	public static function getRoleMaskByID($roleIDs)
 	{
 		$roles = static::whereIn('role_id', (array) $roleIDs)
-			->orWhere('role_id', static::$ROLE_ANONYMOUS)
+			->orWhere('role_id', static::ID_ANONYMOUS)
 			->with('permissions')
 			->get();
 		
@@ -185,4 +194,12 @@ class Role extends Model {
 		return $permissions;
 	}
 	
+	
+	public function scopeWhereLevel($query, $role_id)
+	{
+		return $query->where(function($query) use ($role_id) {
+			$query->where('inherit_id', '=', $role_id);
+			$query->orWhere('role_id', '=', $role_id);
+		});
+	}
 }

@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@set('hideTitles', true)
+
 @section('content')
 <main class="cp">
 	<div class="cp-container grid-container">

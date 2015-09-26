@@ -99,8 +99,8 @@ Route::group([
 				Route::get('{post}/dismiss-post',  'ReportsController@getDismissPost');
 				Route::get('{report}/promote',     'ReportsController@getPromote');
 				Route::get('{post}/promote-post',  'ReportsController@getPromotePost');
-				Route::get('{report}/demote',     'ReportsController@getDemote');
-				Route::get('{post}/demote-post',  'ReportsController@getDemotePost');
+				Route::get('{report}/demote',      'ReportsController@getDemote');
+				Route::get('{post}/demote-post',   'ReportsController@getDemotePost');
 			});
 		});
 		
@@ -110,8 +110,9 @@ Route::group([
 		], function()
 		{
 			Route::controllers([
-				'{board}/staff' => 'StaffController',
-				'{board}'       => 'ConfigController',
+				'{board}/staff/{user}' => 'StaffController',
+				'{board}/staff'        => 'StaffController',
+				'{board}'              => 'ConfigController',
 			]);
 		});
 		

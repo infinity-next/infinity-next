@@ -18,7 +18,7 @@
 			<li class="filterlist-item">
 				<a class="filterlist-secondary" href="{{ $member->getURLForBoardStaff($board, 'delete') }}"><i class="fa fa-remove"></i></a>
 				<a class="filterlist-secondary" href="{{ $member->getURL() }}">@lang('panel.list.field.userinfo')</a>
-				<a class="filterlist-primary" href="{{ $member->getURLForBoardStaff($board) }}">{{ $member->getDisplayName() }}</a>
+				<a class="filterlist-primary" href="{{ $member->getURLForBoardStaff($board, 'edit') }}">{{ $member->getDisplayName() }}</a>
 			</li>
 			@endforeach
 		</ol>

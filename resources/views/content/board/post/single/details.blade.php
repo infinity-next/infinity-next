@@ -9,7 +9,7 @@
 		</strong>
 		
 		@if ($post->capcode_id > 0)
-		<strong class="post-detail-item capcode">{{ $post->capcode_name }}</strong>
+		<strong class="post-detail-item capcode">{{ $post->getCapcodeName() }}</strong>
 		@endif
 	</li>
 	

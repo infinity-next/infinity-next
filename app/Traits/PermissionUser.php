@@ -6,6 +6,9 @@ use App\Permission;
 use App\Post;
 use App\Role;
 use App\RolePermission;
+
+use App\Contracts\PermissionUser as PermissionUserContract;
+
 use Request;
 use Cache;
 
@@ -386,7 +389,27 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Can this user edit a board's URI?
+	 * Can this user edit this staff member on this board?
+	 *
+	 * @return boolean
+	 */
+	public function canEditBoardStaffMember(PermissionUserContract $user, Board $board)
+	{
+		if ($this->canAdminConfig())
+		{
+			return true;
+		}
+		
+		if ($user->user_id == $this->user_id)
+		{
+			return false;
+		}
+		
+		return $this->can("board.config", $board);
+	}
+	
+	/**
+	 * Can this user edit a board's URI?s
 	 *
 	 * @return boolean
 	 */
@@ -503,44 +526,24 @@ trait PermissionUser {
 	}
 	
 	
-	
 	/**
-	 * Gets the user's roles with capcodes for this board.
-	 * A capcode is a text colum associated with a role.
+	 * Returns a complete list of roles that this user may delegate to others.
 	 *
-	 * @param  \App\Board  $board
-	 * @return array|Collection
+	 * @param  Board  $board
+	 * @return Collection|array
 	 */
-	public function getCapcodes(Board $board)
+	public function getAssignableRolesForBoard(Board $board)
 	{
-		if (!$this->isAnonymous())
+		$roles = [];
+		
+		if ($this->can('board.user.role', $board))
 		{
-			// Only return roles 
-			return $this->roles->filter(function($role) use ($board) {
-				
-				if (!$role->capcode)
-				{
-					return false;
-				}
-				
-				if (is_null($role->board_uri) || $role->board_uri == $board->board_uri)
-				{
-					return true;
-				}
-			});
+			return $board->roles()
+				->whereLevel(Role::ID_JANITOR)
+				->get();
 		}
 		
-		return [];
-	}
-	
-	public function getTextForIP($ip)
-	{
-		if ($this->canViewRawIP())
-		{
-			return $ip;
-		}
-		
-		return ip_less($ip);
+		return $roles;
 	}
 	
 	/**
@@ -595,6 +598,45 @@ trait PermissionUser {
 	public function getBoardsWithStaffRights()
 	{
 		return $this->getBoardsWithConfigRights();
+	}
+	
+	/**
+	 * Gets the user's roles with capcodes for this board.
+	 * A capcode is a text colum associated with a role.
+	 *
+	 * @param  \App\Board  $board
+	 * @return array|Collection
+	 */
+	public function getCapcodes(Board $board)
+	{
+		if (!$this->isAnonymous())
+		{
+			// Only return roles 
+			return $this->roles->filter(function($role) use ($board) {
+				
+				if (!$role->capcode)
+				{
+					return false;
+				}
+				
+				if (is_null($role->board_uri) || $role->board_uri == $board->board_uri)
+				{
+					return true;
+				}
+			});
+		}
+		
+		return [];
+	}
+	
+	/**
+	 * Returns the name of the user that should be displayed in public.
+	 *
+	 * @return string
+	 */
+	public function getDisplayName()
+	{
+		return $this->isAnonymous() ? trans('board.anonymous') : $this->username;
 	}
 	
 	/**
@@ -733,6 +775,23 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Returns a human-readable IP address based on user permissions.
+	 * This will obfuscate it if we do not have permission to view raw IPs.
+	 *
+	 * @param  string  $ip  Normal IP string.
+	 * @return string  Either $ip or an ip_less version.
+	 */
+	public function getTextForIP($ip)
+	{
+		if ($this->canViewRawIP())
+		{
+			return $ip;
+		}
+		
+		return ip_less($ip);
+	}
+	
+	/**
 	 * Drops the user's permission cache.
 	 *
 	 * @return void.
@@ -741,4 +800,5 @@ trait PermissionUser {
 	{
 		Cache::forget("user.{$this->user_id}.permissions");
 	}
+	
 }

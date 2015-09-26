@@ -766,6 +766,21 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns a human-readable capcode string.
+	 *
+	 * @return string
+	 */
+	public function getCapcodeName()
+	{
+		if ($this->capcode_id)
+		{
+			return trans($this->capcode_name);
+		}
+		
+		return "";
+	}
+	
+	/**
 	 * Parses the post text for citations.
 	 *
 	 * @return Collection

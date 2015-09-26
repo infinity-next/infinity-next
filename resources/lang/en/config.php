@@ -27,6 +27,7 @@ return [
 		'attachments'        => "Attachment Options",
 		'bans'               => "Ban Options",
 		'reports'            => "Report Options",
+		'staff_castes'       => "Castes",
 		
 		'boards'             => "Board Options",
 		'adventures'         => "Adventure Options",
@@ -90,6 +91,8 @@ return [
 		'epheDeleteThreadPage'     => "Delete threads on this page",
 		
 		'postsPerPage'             => "Threads per page",
+		'postsAuthorCountry'       => "Show author country flags",
+		'postsThreadId'            => "Show thread author IDs",
 		
 		'desc' => [
 			'board_uri'            => "Part of the URL used to open your board. Cannot be changed.",

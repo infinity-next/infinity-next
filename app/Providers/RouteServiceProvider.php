@@ -1,6 +1,7 @@
 <?php namespace App\Providers;
 
 use App\Board;
+
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -30,6 +31,17 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->model('post',   'App\Post');
 		$router->model('report', 'App\Report');
 		$router->model('role',   'App\Role');
+		
+		$router->bind('user', function($value) {
+			if (is_integer($value))
+			{
+				return \App\User::find($value);
+			}
+			else if (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches))
+			{
+				return \App\User::find($matches['id']);
+			}
+		});
 		
 		
 		// Binds a matched instance of a {board} as a singleton instance.

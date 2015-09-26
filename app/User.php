@@ -144,16 +144,6 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	}
 	
 	/**
-	 * Returns the name of the user that should be displayed in public.
-	 *
-	 * @return string
-	 */
-	public function getDisplayName()
-	{
-		return $this->username;
-	}
-	
-	/**
 	 * Fetches all reports that this user can view (not submitted reports).
 	 *
 	 * @return Collection
@@ -206,6 +196,17 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	public function getURLSlug()
 	{
 		return "{$this->username}.{$this->user_id}";
+	}
+	
+	/**
+	 * Query by username.
+	 *
+	 * @param  string  $username
+	 * @return Query
+	 */
+	public function scopeWhereUsername($query, $username)
+	{
+		return $query->where('username', '=', $username)->limit(1);
 	}
 	
 }

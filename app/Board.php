@@ -229,31 +229,6 @@ class Board extends Model {
 	}
 	
 	
-	public static function getBoardListBar()
-	{
-		return [
-			static::where('posts_total', '>', '-1')
-				->where('is_indexed', 1)
-				->orderBy('posts_total', 'desc')
-				->take(20)
-				->get()
-		];
-	}
-	
-	
-	/**
-	 * Returns all board_banner type BoardAsset items.
-	 *
-	 * @return Collection
-	 */
-	public function getBanners()
-	{
-		$this->load('assets', 'assets.storage');
-		
-		return $this->assets
-			->where('asset_type', "board_banner");
-	}
-	
 	/**
 	 * Gets the default album art for an audio file.
 	 *
@@ -304,6 +279,42 @@ class Board extends Model {
 		}
 		
 		return false;
+	}
+	
+	public static function getBoardListBar()
+	{
+		return [
+			static::where('posts_total', '>', '-1')
+				->where('is_indexed', 1)
+				->orderBy('posts_total', 'desc')
+				->take(20)
+				->get()
+		];
+	}
+	
+	/**
+	 * Returns all board_banner type BoardAsset items.
+	 *
+	 * @return Collection
+	 */
+	public function getBanners()
+	{
+		$this->load('assets', 'assets.storage');
+		
+		return $this->assets
+			->where('asset_type', "board_banner");
+	}
+	
+	/**
+	 * Returns assignable castes.
+	 *
+	 * @return collection
+	 */
+	public function getCastes()
+	{
+		return $this->roles()
+			->whereLevel(Role::ID_JANITOR)
+			->get();
 	}
 	
 	/**

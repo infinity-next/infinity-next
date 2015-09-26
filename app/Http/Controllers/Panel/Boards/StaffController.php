@@ -1,7 +1,11 @@
 <?php namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
+use App\Role;
+use App\UserRole;
+use App\User;
 
+use App\Contracts\PermissionUser;
 use App\Http\Controllers\Panel\PanelController;
 
 use Input;
@@ -22,6 +26,7 @@ class StaffController extends PanelController {
 	
 	const VIEW_LIST  = "panel.board.staff";
 	const VIEW_ADD   = "panel.board.staff.create";
+	const VIEW_EDIT  = "panel.board.staff.edit";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -43,8 +48,13 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Board $board)
+	public function getIndex(Board $board, $user = null)
 	{
+		if (!is_null($user))
+		{
+			return abort(404);
+		}
+		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
@@ -67,8 +77,13 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getAdd(Board $board)
+	public function getAdd(Board $board, $user = null)
 	{
+		if (!is_null($user))
+		{
+			return abort(404);
+		}
+		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
@@ -91,19 +106,25 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function putAdd(Board $board)
+	public function putAdd(Board $board, $user = null)
 	{
+		if (!is_null($user))
+		{
+			return abort(404);
+		}
+		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
 		}
 		
-		$rules     = [];
-		$existing  = Input::get('staff-source') == "existing";
+		$createUser = false;
+		$rules      = [];
+		$existing   = Input::get('staff-source') == "existing";
 		
 		if ($existing)
 		{
-			$rules = [
+			$rules  = [
 				'existinguser' => [
 					"required",
 					"string",
@@ -115,12 +136,13 @@ class StaffController extends PanelController {
 				]
 			];
 			
-			$input     = Input::only('existinguser');
-			$validator = Validator::make($input, $rules);
+			$input      = Input::only('existinguser', 'captcha');
+			$validator  = Validator::make($input, $rules);
 		}
 		else
 		{
-			$validator = $this->registrationValidator();
+			$createUser = true;
+			$validator  = $this->registrationValidator();
 		}
 		
 		if ($validator->fails())
@@ -130,8 +152,55 @@ class StaffController extends PanelController {
 				->withInput()
 				->withErrors($validator->errors());
 		}
+		else if ($createUser)
+		{
+			$user = $this->registrar->create(Input::all());
+		}
+		else
+		{
+			$user = User::whereUsername(Input::only('existinguser'))->firstOrFail();
+		}
 		
-		return ":)";
+		$role = Role::firstOrCreate([
+			'role'       => "janitor",
+			'board_uri'  => $board->board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::ID_JANITOR,
+			'name'       => "board.role.janitor",
+			'capcode'    => "board.role.janitor",
+			'system'     => false,
+		]);
+		
+		$userRole = new UserRole;
+		$userRole->user_id = $user->user_id;
+		$userRole->role_id = $role->role_id;
+		$userRole->save();
+		
+		return redirect("/cp/board/{$board->board_uri}/staff");
+	}
+	
+	/**
+	 * Opens staff management form.
+	 *
+	 * @return Response
+	 */
+	public function getEdit(Board $board, PermissionUser $user)
+	{
+		if (!$this->user->canEditBoardStaffMember($user, $board))
+		{
+			return abort(403);
+		}
+		
+		$roles  = $this->user->getAssignableRolesForBoard($board);
+		$staff  = $board->getStaff();
+		
+		return $this->view(static::VIEW_EDIT, [
+			'board'  => $board,
+			'roles'  => $roles,
+			'staff'  => $user,
+			
+			'tab'    => "staff",
+		]);
 	}
 	
 }
