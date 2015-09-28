@@ -22,7 +22,7 @@ While not binding, I do ask that users link back to this git repository or to ht
 Larachan runs on Laravel 5 and has the same requirements.
 
 * `PHP 5.5.9` or greater.
-  * `php5-mycrypt` for bcrypt functions.
+  * `php5-mcrypt` for bcrypt functions.
   * `php5-curl` for Stripe.
   * `php5-gd` for captcha codes and other image manipulation.
 
