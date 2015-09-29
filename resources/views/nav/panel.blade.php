@@ -6,7 +6,7 @@
 				<a class="linkgroup-name linkgroup-home" href="{!! url('cp') !!}">Home</a>
 			</li>
 			
-			@if ($user->canAny('board.config'))
+			@if ($user->canCreateBoard() || $user->canEditAnyConfig())
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name linkgroup-home" href="{!! url('cp/boards') !!}">Boards</a>
 			</li>

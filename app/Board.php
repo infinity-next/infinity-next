@@ -17,6 +17,7 @@ use Collection;
 
 use Event;
 use App\Events\BoardWasCreated;
+use App\Events\BoardWasReassigned;
 
 class Board extends Model {
 	
@@ -95,9 +96,21 @@ class Board extends Model {
 		
 		// Setup event bindings...
 		
-		// Fire events on post created.
+		// Fire event on board created.
 		static::created(function(Board $board) {
 			Event::fire(new BoardWasCreated($board, $board->operator));
+		});
+		
+		// Handle board reassignment
+		static::saved(function(Board $board) {
+			foreach( $board->getDirty() as $attribute => $value)
+			{
+				if ($attribute === "operated_by")
+				{
+					Event::fire(new BoardWasReassigned($board, $board->operator));
+					break;
+				}
+			}
 		});
 		
 	}
