@@ -120,6 +120,12 @@ abstract class Controller extends BaseController {
 	public function option($option_name)
 	{
 		global $app;
+		
+		if (is_null($app['settings']))
+		{
+			return null;
+		}
+		
 		return $app['settings']($option_name);
 	}
 	
@@ -170,12 +176,14 @@ abstract class Controller extends BaseController {
 	 */
 	public function registrationValidator()
 	{
-		$validator = $this->registrar->validator(Input::all());
+		$validator = $this->registrar->validator(Request::all());
 		$rules     = $validator->getRules();
 		
 		$rules['username'][] = "alpha_num";
 		$rules['username'][] = "unique:users,username";
 		$rules['username'][] = "unique:users,email";
+		
+		$rules['captcha'] = "required|captcha";
 		
 		$validator->setRules($rules);
 		

@@ -1,8 +1,10 @@
-<?php namespace Tests;
+<?php
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Board;
-use Controller;
-use TestCase;
 
 class BoardTest extends TestCase {
 	
@@ -16,7 +18,7 @@ class BoardTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testModel()
+	public function testModelAndViews()
 	{
 		// Get a board.
 		$boards   = Board::take(1)->get();
@@ -41,18 +43,18 @@ class BoardTest extends TestCase {
 			$this->assertInstanceOf("Illuminate\Database\Eloquent\Relations\HasMany", $board->roles());
 			
 			// Test modern routes
-			$response = $this->call('GET', "{$board->board_uri}");
+			$response = $this->call('GET', url("{$board->board_uri}"));
 			$this->assertEquals(200, $response->getStatusCode());
 			$this->doBoardIndexAssertions();
 			
-			$response = $this->call('GET', "{$board->board_uri}/1");
+			$response = $this->call('GET', url("{$board->board_uri}/1"));
 			$this->assertEquals(200, $response->getStatusCode());
 			$this->doBoardIndexAssertions();
 			
-			$response = $this->call('GET', "{$board->board_uri}/catalog");
-			$this->assertEquals(404, $response->getStatusCode());
+			$response = $this->call('GET', url("{$board->board_uri}/catalog"));
+			$this->assertEquals(200, $response->getStatusCode());
 			
-			$response = $this->call('GET', "{$board->board_uri}/logs");
+			$response = $this->call('GET', url("{$board->board_uri}/logs"));
 			$this->assertEquals(200, $response->getStatusCode());
 			$this->assertViewHas('board');
 			$this->assertViewHas('logs');
@@ -61,13 +63,13 @@ class BoardTest extends TestCase {
 			// Test legacy routes
 			$legacyCode = env('LEGACY_ROUTES', false) ? 302 : 404;
 			
-			$response = $this->call('GET', "{$board->board_uri}/index.html");
+			$response = $this->call('GET', url("{$board->board_uri}/index.html"));
 			$this->assertEquals($legacyCode, $response->getStatusCode());
 			
-			$response = $this->call('GET', "{$board->board_uri}/1.html");
+			$response = $this->call('GET', url("{$board->board_uri}/1.html"));
 			$this->assertEquals($legacyCode, $response->getStatusCode());
 			
-			$response = $this->call('GET', "{$board->board_uri}/catalog.html");
+			$response = $this->call('GET', url("{$board->board_uri}/catalog.html"));
 			$this->assertEquals($legacyCode, $response->getStatusCode());
 		}
 		else

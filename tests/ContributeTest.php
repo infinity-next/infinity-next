@@ -1,6 +1,8 @@
-<?php namespace Tests;
+<?php
 
-use TestCase;
+// use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ContributeTest extends TestCase {
 	

@@ -239,7 +239,6 @@ return [
 		/*
 		 * Captcha
 		 */
-		//'Captcha'   => 'App\Support\Facades\Captcha',
 		'Captcha'   => 'InfinityNext\BrennanCaptcha\Facades\Captcha',
 		
 		/*

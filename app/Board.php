@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use App\UserRole;
 use App\Services\ContentFormatter;
+use App\Contracts\PermissionUser;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -158,27 +159,37 @@ class Board extends Model {
 		return false;
 	}
 	
-	public function canBan($user)
+	public function canBan(PermissionUser $user)
 	{
 		return $user->canBan($this);
 	}
 	
-	public function canDelete($user)
+	public function canDelete(PermissionUser $user)
 	{
 		return $user->canDeleteLocally($this);
 	}
 	
-	public function canEditConfig($user)
+	public function canEditConfig(PermissionUser $user)
 	{
 		return $user->canEditConfig($this);
 	}
 	
-	public function canPostWithoutCaptcha($user)
+	public function canPostReply(PermissionUser $user)
+	{
+		return $user->canPostReply($this);
+	}
+	
+	public function canPostThread(PermissionUser $user)
+	{
+		return $user->canPostThread($this);
+	}
+	
+	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
 		return $user->canPostWithoutCaptcha($this);
 	}
 	
-	public function canPostInLockedThreads($user)
+	public function canPostInLockedThreads(PermissionUser $user)
 	{
 		return $user->canPostInLockedThreads($this);
 	}

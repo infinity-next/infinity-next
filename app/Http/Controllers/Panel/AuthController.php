@@ -74,7 +74,7 @@ class AuthController extends PanelController {
 			abort(403);
 		}
 		
-		$validator = $this->getRegistrationValidator();
+		$validator = $this->registrationValidator();
 		
 		if ($validator->fails())
 		{

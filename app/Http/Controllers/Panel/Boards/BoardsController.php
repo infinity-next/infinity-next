@@ -193,7 +193,7 @@ class BoardsController extends PanelController {
 		
 		if ($this->user->isAnonymous())
 		{
-			$validator = $this->registrar->validator($input);
+			$validator = $this->registrationValidator();
 			
 			if ($validator->fails())
 			{

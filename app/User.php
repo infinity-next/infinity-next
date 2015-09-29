@@ -199,6 +199,39 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	}
 	
 	/**
+	 * Query where has admin role.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereAdmin($query)
+	{
+		return $query->whereHas('roles', function($query)
+		{
+			$tempInstance = with(new Role);
+			$directSelect = $tempInstance->getTable();
+			$directKey    = $tempInstance->getKeyName();
+			
+			$query->where(\DB::raw("`{$directSelect}`.`{$directKey}`"), '=', Role::ID_ADMIN);
+		});
+	}
+	/**
+	 * Query where has admin role.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereOwner($query)
+	{
+		return $query->whereHas('roles', function($query)
+		{
+			$tempInstance = with(new Role);
+			$directSelect = $tempInstance->getTable();
+			$directKey    = $tempInstance->getKeyName();
+			
+			$query->where('role', "owner");
+		});
+	}
+	
+	/**
 	 * Query by username.
 	 *
 	 * @param  string  $username

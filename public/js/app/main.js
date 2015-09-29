@@ -1138,7 +1138,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				var $form = widget.$widget;
 				
 				widget.events.captchaReload();
-				widget.dropzone.removeAllFiles();
+				
+				if (widget.dropzone)
+				{
+					widget.dropzone.removeAllFiles();
+				}
 				
 				$(widget.options.selector['form-clear'], $form)
 					.val("")

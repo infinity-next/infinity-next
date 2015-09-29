@@ -97,7 +97,9 @@ class PostRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return true;
+		## TODO ##
+		// Separate these permsisions.
+		return $this->canPostThread() || $this->canPostReply();
 	}
 	
 	/**

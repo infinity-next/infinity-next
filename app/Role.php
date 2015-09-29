@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model {
 	
 	/**
-	 * These static variables represent the hard ID top-level roles.
+	 * These constants represent the hard ID top-level system roles.
 	 */
 	const ID_ANONYMOUS     = 1;
+	const ID_UNACCOUNTABLE = 6;
+	const ID_REGISTERED    = 7;
 	const ID_ADMIN         = 2;
 	const ID_MODERATOR     = 3;
 	const ID_OWNER         = 4;
 	const ID_JANITOR       = 5;
-	const ID_UNACCOUNTABLE = 6;
 	
 	/**
 	 * The database table used by the model.
@@ -23,7 +24,7 @@ class Role extends Model {
 	protected $table = 'roles';
 	
 	/**
-	 * The primary key that is used by ::get()
+	 * The table's primary key.
 	 *
 	 * @var string
 	 */
@@ -34,7 +35,19 @@ class Role extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['role', 'board_uri', 'caste', 'inherit_id', 'name', 'capcode', 'system'];
+	protected $fillable = [
+		// These three together must be unique. (role,board_uri,caste)
+		'role',       // The group name. Very loosely ties masks together.
+		'board_uri',  // The board URI. Can be NULL to affect all boards.
+		'caste',      // An internal name to separate roles into smaller groups.
+		
+		'name',       // Internal nickname. Passes through translator, so language tokens work.
+		'capcode',    // Same as above, but can be null. If null, it provides no capcode when posting.
+		
+		'inherit_id', // PK for another Role that this directly inherits permissions from.
+		'system',     // Boolean. If TRUE, it indicates the mask is a very important system role that should not be deleted.
+		'weight',     // Determines the order of permissions when compiled into a mask.
+	];
 	
 	/**
 	 * Indicates their is no autoupdated timetsamps.
@@ -111,6 +124,7 @@ class Role extends Model {
 	/**
 	 * Builds a single role mask for all boards, called by id.
 	 *
+	 * @param  array|integer  $roleIDs  Role primary keys to compile together.
 	 * @return array
 	 */
 	public static function getRoleMaskByID($roleIDs)
@@ -126,6 +140,7 @@ class Role extends Model {
 	/**
 	 * Compiles a set of roles into a permission mask.
 	 *
+	 * @param  Collection  $roles  A Laravel collection of Role models.
 	 * @return array
 	 */
 	protected static function getRolePermissions($roles)

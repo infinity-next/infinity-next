@@ -6,8 +6,9 @@ use App\Permission;
 use App\Post;
 use App\Role;
 use App\RolePermission;
-
 use App\Contracts\PermissionUser as PermissionUserContract;
+
+use Illuminate\Database\Eloquent\Collection;
 
 use Request;
 use Cache;
@@ -237,14 +238,25 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Can this user reply with attachments for this board?
+	 * Can this user reply with newly uploaded attachments for this board?
 	 *
 	 * @return boolean
 	 */
-	public function canAttach(Board $board)
+	public function canAttachNew(Board $board)
 	{
 		// The only thing we care about for this setting is the permission mask.
-		return $this->can("board.image.upload", $board);
+		return $this->can("board.image.upload.new", $board);
+	}
+	
+	/**
+	 * Can this user reply with previously uploaded attachments for this board?
+	 *
+	 * @return boolean
+	 */
+	public function canAttachOld(Board $board)
+	{
+		// The only thing we care about for this setting is the permission mask.
+		return $this->can("board.image.upload.old", $board);
 	}
 	
 	/**
@@ -428,7 +440,7 @@ trait PermissionUser {
 		// We can only ever sticky a thread, for now.
 		if (is_null($post->reply_to))
 		{
-			return $this->can("board.post.lock", $post->board_uri);
+			return $this->can("board.post.lock", $post);
 		}
 		
 		return false;
@@ -439,9 +451,9 @@ trait PermissionUser {
 	 *
 	 * @return boolean
 	 */
-	public function canPostInLockedThreads(Board $board)
+	public function canPostInLockedThreads(Board $board = null)
 	{
-		return $this->can('board.post.lock_bypass', $board->board_uri);
+		return $this->can('board.post.lock_bypass', $board);
 	}
 	
 	/**
@@ -449,9 +461,29 @@ trait PermissionUser {
 	 *
 	 * @return boolean
 	 */
-	public function canPostWithoutCaptcha(Board $board)
+	public function canPostWithoutCaptcha(Board $board = null)
 	{
-		return $this->can('board.post.nocaptcha', $board->board_uri);
+		return $this->can('sys.nocaptcha', $board);
+	}
+	
+	/**
+	 * Can this user post a new reply to an existing thread
+	 *
+	 * @return boolean
+	 */
+	public function canPostReply(Board $board = null)
+	{
+		return $this->can('board.post.create.reply', $board);
+	}
+	
+	/**
+	 * Can this user post a new thread
+	 *
+	 * @return boolean
+	 */
+	public function canPostThread(Board $board = null)
+	{
+		return $this->can('board.post.create.thread', $board);
 	}
 	
 	/**
@@ -642,31 +674,23 @@ trait PermissionUser {
 	/**
 	 * Determine the user's permission for a specific item.
 	 *
+	 * @param  string  $permission  The permission ID we are checking.
+	 * @param  string|null  $board_uri  The board URI we're checking against. NULL means global only.
 	 * @return boolean
 	 */
 	protected function getPermission($permission, $board = null)
 	{
 		$permissions = $this->getPermissions();
 		
-		// Determine the branch for this permission mask.
-		if ($this->isAnonymous())
+		// If the user is anonymous (no account),
+		// then the permission mask is under anonymous.
+		$permissionMask = &$permissions['normal'];
+		
+		// If the user is unaccountable (Tor),
+		// then the permission mask is instead under unaccountable.
+		if (!$this->isAccountable())
 		{
-			// If the user is anonymous (no account),
-			// then the permission mask is under anonymous.
-			$permissionMask = &$permissions['anonymous'];
-			
-			// If the user is unaccountable (Tor),
-			// then the permission mask is instead under unaccountable.
-			if (!$this->isAccountable())
-			{
-				$permissionMask = &$permissions['unaccountable'];
-			}
-		}
-		else
-		{
-			// Users with accounts are always accountable.
-			// Their permission masks do not have branches.
-			$permissionMask = &$permissions;
+			$permissionMask = &$permissions['unaccountable'];
 		}
 		
 		// Check for a localized permisison.
@@ -699,38 +723,7 @@ trait PermissionUser {
 			$rememberKey     = "user.{$this->user_id}.permissions";
 			$rememberClosure = function()
 			{
-				$permissions = [];
-				
-				// Fetch our permission mask.
-				if ($this->isAnonymous())
-				{
-					$permissions["anonymous"] = Role::getRoleMaskByName("anonymous");
-					
-					if (!$this->isAccountable())
-					{
-						$permissions["unaccountable"] = Role::getRoleMaskByName("unaccountable");
-					}
-				}
-				else
-				{
-					$userRoles = [];
-					
-					foreach ($this->roles as $role)
-					{
-						$userRoles[] = $role->role_id;
-					}
-					
-					if (!count($userRoles))
-					{
-						$permissions = Role::getRoleMaskByName("anonymous");
-					}
-					else
-					{
-						$permissions = Role::getRoleMaskByID($userRoles);
-					}
-				}
-				
-				return $permissions;
+				return $this->getPermissionMasks();
 			};
 			
 			switch (env('CACHE_DRIVER'))
@@ -747,6 +740,173 @@ trait PermissionUser {
 		}
 		
 		return $this->permissions;
+	}
+	
+	protected function getPermissionMasks()
+	{
+		$permissions = [];
+		$routes      = $this->getPermissionRoutes();
+		
+		// There are two kinds of permission assignments.
+		// 1. Permissions that belong to the route.
+		// 2. Permissions directly assigned to the user.
+		// 
+		// When a permission is a part of a major mask branch (identified in getPermissionRoutes),
+		// then any role with that role name becomes a part of the mask.
+		// 
+		// When a permission is directly assigned to the user, then only that mask and its
+		// inherited mask are incorporated. Inheritance only goes up one step for right now.
+		
+		$allGroups = [];
+		
+		// Pull each route and add its groups to the master collection.
+		foreach ($routes as $branch => $roleGroups)
+		{
+			$allGroups = array_merge($allGroups, $roleGroups);
+		}
+		
+		// We only want uniques.
+		$allGroups = array_unique($allGroups);
+		
+		
+		// Write out a monster query to pull precisely what we need to build our permission masks.
+		$allRoles = Role::where(function($query) use ($allGroups)
+			{
+				// Pull any role that belongs to our masks's route.
+				$query->whereIn('role', $allGroups);
+				
+				// If we're not anonymous, we also need directly assigned roles.
+				if (!$this->isAnonymous())
+				{
+					$query->orWhereHas('users', function($query) {
+						$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
+					});
+				}
+			})
+			// Gather our inherited roles, their permissions, and our permissions.
+			->with('inherits')
+			->with('permissions')
+			->with('inherits.permissions')
+			// Execute query
+			->get()
+			// Remove redundant roles, in case they exist.
+			->unique(function($role) {
+				return $role->{$role->getKeyName()};
+			})
+			// Finally, sort by weight, ascending.
+			->sortBy(function($role) {
+				return $role->weight;
+			});
+		
+		// In order to determine if we want to include a role in a specific mask,
+		// we must also pull a user's roles to see what is directly applied to them.
+		$userRoles = $this->getRoles()->modelKeys();
+		
+		// Okay!
+		// With our roles fresh off out the db, we can now begin to assemble the masks.
+		// Loop through each route again.
+		foreach ($routes as $branch => $roleGroups)
+		{
+			$permissions[$branch] = [];
+			
+			// Loop through each role.
+			foreach ($allRoles as $role)
+			{
+				// Check to see if it's either directly assigned to us or in the mask's route.
+				if (in_array($role->role, $roleGroups) || in_array($role->role_id, $userRoles))
+				{
+					// This role IS applicable to this branch.
+					
+					// Create a new array for this board if required.
+					if (!isset($permissions[$branch][$role->board_uri]))
+					{
+						$permissions[$branch][$role->board_uri] = [];
+					}
+					
+					// Loop through each role's permission and set them on the respective jurisdiction.
+					foreach ($role->permissions as $permission)
+					{
+						$permissions[$branch][$role->board_uri][$permission->permission_id] = $permission->pivot->value == 1;
+					}
+					
+					// Additionally, if our permission is set on the global level, we must also go into each
+					// lesser jurisdiction and unset their rule because it no longer matters.
+					if (is_null($role->board_uri))
+					{
+						foreach ($permissions[$branch] as $board_uri => $boardPermissions)
+						{
+							if ((string) $board_uri != "")
+							{
+								unset($boardPermissions[$permission->permission_id]);
+							}
+						}
+					}
+				}
+			}
+			
+			// Clean up the permission mask and remove empty rulesets.
+			foreach ($permissions[$branch] as $board_uri => $boardPermissions)
+			{
+				if (!count($boardPermissions))
+				{
+					unset($permissions[$branch][$board_uri]);
+				}
+			}
+		}
+		
+		return $permissions;
+	}
+	
+	protected function getPermissionRoutes()
+	{
+		// When building a permission mask, there are two main branches we can take.
+		// "Normal", and "Unaccountable".
+		// 
+		// When the permission mask is finalized, it will still have these two branches.
+		// But, depending on the user's conditions, it may have alternate routes within.
+		// 
+		// This is set up with the hope that we will be easily able to change how permission
+		// masks are build in the future. Keep in mind that the masks's individual weights
+		// still matter when determining what the user can actually do.
+		
+		$routes = [
+			'normal'        => [],
+			'unaccountable' => [],
+		];
+		
+		// Both branches base off anonymous.
+		$routes['normal'][]        = "anonymous";
+		$routes['unaccountable'][] = "anonymous";
+		
+		// The unaccountable branch uses a special mask.
+		// This would generally be for Tor users.
+		$routes['unaccountable'][] = "unaccountable";
+		
+		// Finally, if the user is registered, we add another mask.
+		// This is a bit of a placeholder. There are no permissions
+		// by default that only affect registered users.
+		if (!$this->isAnonymous())
+		{
+			$routes['normal'][]        = "registered";
+			$routes['unaccountable'][] = "registered";
+		}
+		
+		return $routes;
+	}
+	
+	/**
+	 * Returns a collection of roles directly assigned to this user.
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
+	public function getRoles()
+	{
+		if ($this->isAnonymous())
+		{
+			return new Collection();
+		}
+		
+		return $this->roles()->get();
 	}
 	
 	/**

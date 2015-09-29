@@ -15,23 +15,4 @@ interface PermissionUser {
 	 * @return boolean
 	 */
 	public function isAnonymous();
-	
-	
-	public function can($permission, $board = null);
-	
-	public function canAny($permission);
-	
-	public function canAttach(\App\Board $board);
-	
-	public function canDelete(\App\Post $post);
-	
-	public function canEdit(\App\Post $post);
-	
-	public function canReport(\App\Post $post);
-	
-	public function canSticky(\App\Post $post);
-	
-	public function getUsernameHTML();
-	
-	public function getUserURL();
 }
