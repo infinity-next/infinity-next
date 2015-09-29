@@ -19,9 +19,6 @@ class RoleSeeder extends Seeder {
 		{
 			Role::updateOrCreate([
 				'role_id'   => $slug['role_id'],
-				'role'      => $slug['role'],
-				'board_uri' => $slug['board_uri'],
-				'caste'     => $slug['caste'],
 			], $slug);
 		}
 		
