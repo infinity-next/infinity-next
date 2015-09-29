@@ -48,7 +48,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getAssets()
 	{
-		$boards = $this->user->getBoardsWithAssetRights();
+		$boards = $this->user->getBoardsWithAssetRights()->load('assets');
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
@@ -63,7 +63,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getConfig()
 	{
-		$boards = $this->user->getBoardsWithConfigRights();
+		$boards = $this->user->getBoardsWithConfigRights()->load('assets');
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
@@ -78,7 +78,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getStaff()
 	{
-		$boards = $this->user->getBoardsWithStaffRights();
+		$boards = $this->user->getBoardsWithStaffRights()->load('assets');
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
@@ -221,10 +221,13 @@ class BoardsController extends PanelController {
 			],
 			'title'       => "required|string|between:1,255",
 			'description' => "string|between:0,255",
-			'captcha'     => "required|captcha"
 		];
 		
 		$validator = Validator::make($input, $requirements);
+		
+		$validator->sometimes('captcha', "required|captcha", function($input) {
+			return !$this->user->isAnonymous();
+		});
 		
 		if ($validator->fails())
 		{

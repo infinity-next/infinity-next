@@ -425,6 +425,9 @@ class FileStorage extends Model {
 		if ($autosave)
 		{
 			$attachment->save();
+			
+			$storage->upload_count++;
+			$storage->save();
 		}
 		
 		return $attachment;
@@ -452,6 +455,9 @@ class FileStorage extends Model {
 		if ($autosave)
 		{
 			$attachment->save();
+			
+			$this->upload_count++;
+			$this->save();
 		}
 		
 		return $attachment;
@@ -499,7 +505,9 @@ class FileStorage extends Model {
 	public function processAttachment(FileAttachment $attachment = null)
 	{
 		$this->last_uploaded_at = $this->freshTimestamp();
-		$this->upload_count    += 1;
+		// Not counting uploads unless it ends up on a post.
+		// $this->upload_count    += 1;
+		
 		
 		$this->processThumb();
 		$this->save();

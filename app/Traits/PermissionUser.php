@@ -390,14 +390,17 @@ trait PermissionUser {
 	 */
 	public function canEditConfig($board = null)
 	{
-		if (!is_null($board))
-		{
-			return $this->can("board.config", $board);
-		}
-		else
-		{
-			return $this->canAny("board.config");
-		}
+		return $this->can("board.config", $board);
+	}
+	
+	/**
+	 * Can this user edit any board's config?
+	 *
+	 * @return boolean
+	 */
+	public function canEditAnyConfig()
+	{
+		return $this->canAny("board.config");
 	}
 	
 	/**
@@ -557,6 +560,15 @@ trait PermissionUser {
 		return $this->can('site.user.raw_ip');
 	}
 	
+	/**
+	 * Drops the user's permission cache.
+	 *
+	 * @return void.
+	 */
+	public function forgetPermissions()
+	{
+		Cache::forget("user.{$this->user_id}.permissions");
+	}
 	
 	/**
 	 * Returns a complete list of roles that this user may delegate to others.
@@ -595,27 +607,34 @@ trait PermissionUser {
 	 */
 	public function getBoardsWithConfigRights()
 	{
-		$boards = [];
+		$whitelist = true;
+		$boardlist = [];
 		
-		foreach ($this->getPermissions() as $board_uri => $permissions)
+		if ($this->canEditConfig(null))
 		{
-			if ($this->canEditConfig($board_uri))
+			$whitelist = false;
+		}
+		
+		foreach ($this->getPermissions() as $board_uri => $permission)
+		{
+			if ($this->canEditConfig($board_uri) === $whitelist)
 			{
-				if ($board_uri == "")
-				{
-					return Board::andCreator()
-						->andOperator()
-						->andStaffAssignments()
-						->get();
-				}
-				else
-				{
-					$boards[] = $board_uri;
-				}
+				$boardlist[] = $board_uri;
 			}
 		}
 		
-		return Board::whereIn('board_uri', $boards)
+		$boardlist = array_unique($boardlist);
+		
+		return Board::where(function($query) use ($whitelist, $boardlist) {
+				if ($whitelist)
+				{
+					$query->whereIn('board_uri', $boardlist);
+				}
+				else
+				{
+					$query->whereNotIn('board_uri', $boardlist);
+				}
+			})
 			->andCreator()
 			->andOperator()
 			->andStaffAssignments()
@@ -678,30 +697,19 @@ trait PermissionUser {
 	 * @param  string|null  $board_uri  The board URI we're checking against. NULL means global only.
 	 * @return boolean
 	 */
-	protected function getPermission($permission, $board = null)
+	protected function getPermission($permission, $board_uri = null)
 	{
 		$permissions = $this->getPermissions();
 		
-		// If the user is anonymous (no account),
-		// then the permission mask is under anonymous.
-		$permissionMask = &$permissions['normal'];
-		
-		// If the user is unaccountable (Tor),
-		// then the permission mask is instead under unaccountable.
-		if (!$this->isAccountable())
-		{
-			$permissionMask = &$permissions['unaccountable'];
-		}
-		
 		// Check for a localized permisison.
-		if (isset($permissionMask[$board][$permission]))
+		if (isset($permissions[$board_uri][$permission]))
 		{
-			return $permissionMask[$board][$permission];
+			return $permissions[$board_uri][$permission];
 		}
 		// Check for a global permission.
-		else if (isset($permissionMask[null][$permission]))
+		else if (isset($permissions[null][$permission]))
 		{
-			return $permissionMask[null][$permission];
+			return $permissions[null][$permission];
 		}
 		
 		// Assume false if not explicitly set.
@@ -709,39 +717,30 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Return the user's entire permission object,
-	 * build it if nessecary.
+	 * Returns permissions for all boards belonging to our current route.
 	 *
 	 * @return array
 	 */
 	protected function getPermissions()
 	{
-		if (!isset($this->permissions))
+		// Default permission mask is normal.
+		$mask = "normal";
+		
+		// If the user is from Tor, they are instead unaccountable.
+		if (!$this->isAccountable())
 		{
-			$rememberTags    = ["user.{$this->user_id}", "permissions"];
-			$rememberTimer   = 3600;
-			$rememberKey     = "user.{$this->user_id}.permissions";
-			$rememberClosure = function()
-			{
-				return $this->getPermissionMasks();
-			};
-			
-			switch (env('CACHE_DRIVER'))
-			{
-				case "file" :
-				case "database" :
-					$this->permissions = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-					break;
-				
-				default :
-					$this->permissions = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-					break;
-			}
+			$mask = "unaccountable";
 		}
 		
-		return $this->permissions;
+		return $this->getPermissionsWithRoutes($mask);
 	}
 	
+	/**
+	 * Returns permission masks for each route.
+	 * This is where permissions are interpreted.
+	 *
+	 * @return array
+	 */
 	protected function getPermissionMasks()
 	{
 		$permissions = [];
@@ -829,6 +828,15 @@ trait PermissionUser {
 						$permissions[$branch][$role->board_uri][$permission->permission_id] = $permission->pivot->value == 1;
 					}
 					
+					// Loop through each inherited permission as well.
+					if ($role->inherit_id)
+					{
+						foreach ($role->inherits->permissions as $permission)
+						{
+							$permissions[$branch][$role->board_uri][$permission->permission_id] = $permission->pivot->value == 1;
+						}
+					}
+					
 					// Additionally, if our permission is set on the global level, we must also go into each
 					// lesser jurisdiction and unset their rule because it no longer matters.
 					if (is_null($role->board_uri))
@@ -857,6 +865,11 @@ trait PermissionUser {
 		return $permissions;
 	}
 	
+	/**
+	 * Returns a complete array of all possible routes and what roles belong to them.
+	 *
+	 * @return array
+	 */
 	protected function getPermissionRoutes()
 	{
 		// When building a permission mask, there are two main branches we can take.
@@ -892,6 +905,48 @@ trait PermissionUser {
 		}
 		
 		return $routes;
+	}
+	
+	/**
+	 * Return the user's entire permission object,
+	 * build it if nessecary.
+	 *
+	 * @param  string  $route
+	 * @return array
+	 */
+	protected function getPermissionsWithRoutes($route = null)
+	{
+		if (!isset($this->permissions))
+		{
+			$rememberTags    = ["user.{$this->user_id}", "permissions"];
+			$rememberTimer   = 3600;
+			$rememberKey     = "user.{$this->user_id}.permissions";
+			$rememberClosure = function()
+			{
+				return $this->getPermissionMasks();
+			};
+			
+			// return $rememberClosure();
+			
+			switch (env('CACHE_DRIVER'))
+			{
+				case "file" :
+				case "database" :
+					$this->permissions = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+					break;
+				
+				default :
+					$this->permissions = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+					break;
+			}
+		}
+		
+		if (!is_null($route))
+		{
+			return $this->permissions[$route];
+		}
+		
+		return $this->permissions;
 	}
 	
 	/**
@@ -950,15 +1005,4 @@ trait PermissionUser {
 		
 		return ip_less($ip);
 	}
-	
-	/**
-	 * Drops the user's permission cache.
-	 *
-	 * @return void.
-	 */
-	public function forgetPermissions()
-	{
-		Cache::forget("user.{$this->user_id}.permissions");
-	}
-	
 }

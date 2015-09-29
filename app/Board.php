@@ -149,11 +149,11 @@ class Board extends Model {
 	}
 	
 	
-	public function canAttach($user)
+	public function canAttach(PermissionUser $user)
 	{
 		if ($this->getConfig('postAttachmentsMax', 1) > 0)
 		{
-			return $user->canAttach($this);
+			return $user->canAttachNew($this) || $user->canAttachOld($this);
 		}
 		
 		return false;
@@ -659,15 +659,7 @@ class Board extends Model {
 	{
 		$user->forgetPermissions();
 		
-		$role = Role::firstOrCreate([
-			'role'       => "owner",
-			'board_uri'  => $this->board_uri,
-			'caste'      => NULL,
-			'inherit_id' => Role::$ROLE_OWNER,
-			'name'       => "Board Owner",
-			'capcode'    => "Board Owner",
-			'system'     => false,
-		]);
+		$role = Role::getOwnerRoleForBoard($this);
 		
 		return UserRole::create([
 			'user_id' => $user->user_id,

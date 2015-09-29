@@ -131,20 +131,39 @@ class PostRequest extends Request {
 			}
 			else
 			{
-				$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
-				
 				$rules['body'][]  = "required_without:files";
 				
 				// Add the rules for file uploads.
 				if (isset($this->all()['dropzone']))
 				{
+					$fileToken = "files.hash";
+					
 					// JavaScript enabled hash posting
 					static::rulesForFileHashes($board, $rules);
 				}
 				else
 				{
+					$fileToken = "files";
+					
 					// Vanilla HTML upload
 					static::rulesForFiles($board, $rules);
+				}
+				
+				
+				$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
+				
+				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
+				{
+					// Can only attach existing files.
+					if (!$user->canAttachNew($board) && $user->canAttachOld($board))
+					{
+						$rules["{$fileToken}.{$attachment}"][] = "file_old";
+					}
+					// Can only attach new files.
+					else if ($user->canAttachNew($board) && !$user->canAttachOld($board))
+					{
+						$rules["{$fileToken}.{$attachment}"][] = "file_new";
+					}
 				}
 			}
 		}
@@ -213,7 +232,7 @@ class PostRequest extends Request {
 				"string",
 				"required_with:files.name.{$attachment}",
 				"md5",
-				"exists:files,hash",
+				"exists:files,hash,banned,0",
 			];
 			
 			$rules["files.spoiler.{$attachment}"] = [

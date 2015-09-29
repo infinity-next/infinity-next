@@ -39,6 +39,8 @@ return [
 	"filled"               => "The :attribute field is required.",
 	"file_name"            => "The :attribute is not a valid file name.",
 	"file_integrity"       => "The :attribute attachment fails integrity checks and may be corrupt or invalid.",
+	"file_new"             => "The :attribute must be an unrecognized file.",
+	"file_old"             => "The :attribute must have been uploaded before.",
 	"exists"               => "The selected :attribute is invalid.",
 	"image"                => "The :attribute must be an image.",
 	"in"                   => "The selected :attribute is invalid.",

@@ -49,6 +49,9 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\BoardListRecache',
 			'App\Listeners\BoardStyleRecache',
 		],
+		'App\Events\BoardWasReassigned' => [
+			'App\Listeners\UserRecachePermissions',
+		],
 		
 		
 		// Site events

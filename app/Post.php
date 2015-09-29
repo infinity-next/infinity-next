@@ -1488,6 +1488,7 @@ class Post extends Model {
 		}
 		else if(is_array($files = Input::get('files')))
 		{
+			$uniques  = [];
 			$hashes   = $files['hash'];
 			$names    = $files['name'];
 			$spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
@@ -1496,17 +1497,22 @@ class Post extends Model {
 			
 			foreach ($hashes as $index => $hash)
 			{
-				$storage = $storages->where('hash', $hash)->first();
-				
-				if ($storage && !$storage->banned)
+				if (!isset($uniques[$hash]))
 				{
-					$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+					$uniques[$hash] = true;
+					$storage = $storages->where('hash', $hash)->first();
 					
-					$uploads[] = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
+					if ($storage && !$storage->banned)
+					{
+						$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+						
+						$uploads[] = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
+					}
 				}
 			}
 			
 			$this->attachmentLinks()->saveMany($uploads);
+			FileStorage::whereIn('hash', $hashes)->increment('upload_count');
 		}
 		
 		

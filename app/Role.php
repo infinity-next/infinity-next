@@ -9,12 +9,23 @@ class Role extends Model {
 	 * These constants represent the hard ID top-level system roles.
 	 */
 	const ID_ANONYMOUS     = 1;
-	const ID_UNACCOUNTABLE = 6;
-	const ID_REGISTERED    = 7;
 	const ID_ADMIN         = 2;
 	const ID_MODERATOR     = 3;
 	const ID_OWNER         = 4;
 	const ID_JANITOR       = 5;
+	const ID_UNACCOUNTABLE = 6;
+	const ID_REGISTERED    = 7;
+	
+	/**
+	 * These constants represent the weights of hard ID top-level system roles.
+	 */
+	const WEIGHT_ANONYMOUS     = 0;
+	const WEIGHT_ADMIN         = 100;
+	const WEIGHT_MODERATOR     = 80;
+	const WEIGHT_OWNER         = 60;
+	const WEIGHT_JANITOR       = 40;
+	const WEIGHT_UNACCOUNTABLE = 20;
+	const WEIGHT_REGISTERED    = 30;
 	
 	/**
 	 * The database table used by the model.
@@ -88,8 +99,29 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Returns owner role (found or created) for a specific board.
+	 *
+	 * @param  \App\Board  $board
+	 * @return \App\Role
+	 */
+	public static function getOwnerRoleForBoard(Board $board)
+	{
+		return static::firstOrCreate([
+			'role'       => "owner",
+			'board_uri'  => $board->board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::ID_OWNER,
+			'name'       => "user.role.owner",
+			'capcode'    => "user.role.owner",
+			'system'     => false,
+			'weight'     => Role::WEIGHT_OWNER + 5,
+		]);
+	}
+	
+	/**
 	 * Returns the individual value for a requested permission.
 	 *
+	 * @param  \App\Permission  $permission
 	 * @return boolean|null
 	 */
 	public function getPermission(Permission $permission)
@@ -109,6 +141,7 @@ class Role extends Model {
 	/**
 	 * Builds a single role mask for all boards, called by name.
 	 *
+	 * @param  array|Collection  $roleMasks
 	 * @return array
 	 */
 	public static function getRoleMaskByName($roleMasks)
