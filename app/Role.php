@@ -92,6 +92,24 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Determines if this user can edit this role's permissions.
+	 *
+	 * @param  \App\Contracts\PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canSetPermissions(PermissionUser $user)
+	{
+		if (!is_null($this->board_uri))
+		{
+			return $user->canEditConfig($this->board_uri);
+		}
+		else
+		{
+			return $user->canAdminConfig();
+		}
+	}
+	
+	/**
 	 * Returns a human-readable name for this role.
 	 *
 	 * @return string 
@@ -155,12 +173,23 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Returns a URL for opening this role on the site level.
 	 *
-	 *
+	 * @return string
 	 */
-	public function getPermissionsURL()
+	public function getPermissionsURL($route = "")
 	{
-		return url("/cp/roles/permissions/{$this->role_id}");
+		return url("/cp/roles/permissions/{$this->role_id}/{$route}");
+	}
+	
+	/**
+	 * Returns a URL for opening this role in the context of the board.
+	 *
+	 * @return string
+	 */
+	public function getPermissionsURLForBoard($route = "")
+	{
+		return url("/cp/board/{$this->board_uri}/role/{$this->role_id}/{$route}");
 	}
 	
 	/**

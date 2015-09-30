@@ -110,8 +110,9 @@ Route::group([
 		], function()
 		{
 			Route::controllers([
-				'{board}/staff/{user}' => 'StaffController',
+				'{board}/staff/{user}' => 'StaffingController',
 				'{board}/staff'        => 'StaffController',
+				'{board}/role/{role}'  => 'RoleController',
 				'{board}/roles'        => 'RolesController',
 				'{board}'              => 'ConfigController',
 			]);

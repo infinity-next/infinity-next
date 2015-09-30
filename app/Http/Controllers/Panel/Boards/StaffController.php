@@ -48,13 +48,8 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getIndex(Board $board, $user = null)
+	public function getIndex(Board $board)
 	{
-		if (!is_null($user))
-		{
-			return abort(404);
-		}
-		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
@@ -77,13 +72,8 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getAdd(Board $board, $user = null)
+	public function getAdd(Board $board)
 	{
-		if (!is_null($user))
-		{
-			return abort(404);
-		}
-		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
@@ -106,13 +96,8 @@ class StaffController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function putAdd(Board $board, $user = null)
+	public function putAdd(Board $board)
 	{
-		if (!is_null($user))
-		{
-			return abort(404);
-		}
-		
 		if (!$board->canEditConfig($this->user))
 		{
 			return abort(403);
@@ -177,30 +162,6 @@ class StaffController extends PanelController {
 		$userRole->save();
 		
 		return redirect("/cp/board/{$board->board_uri}/staff");
-	}
-	
-	/**
-	 * Opens staff management form.
-	 *
-	 * @return Response
-	 */
-	public function getEdit(Board $board, PermissionUser $user)
-	{
-		if (!$this->user->canEditBoardStaffMember($user, $board))
-		{
-			return abort(403);
-		}
-		
-		$roles  = $this->user->getAssignableRolesForBoard($board);
-		$staff  = $board->getStaff();
-		
-		return $this->view(static::VIEW_EDIT, [
-			'board'  => $board,
-			'roles'  => $roles,
-			'staff'  => $user,
-			
-			'tab'    => "staff",
-		]);
 	}
 	
 }

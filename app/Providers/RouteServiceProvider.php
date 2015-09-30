@@ -33,13 +33,24 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->model('role',   'App\Role');
 		
 		$router->bind('user', function($value) {
-			if (is_integer($value))
+			if (is_numeric($value))
 			{
 				return \App\User::find($value);
 			}
 			else if (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches))
 			{
 				return \App\User::find($matches['id']);
+			}
+		});
+		
+		$router->bind('role', function($value) {
+			if (is_numeric($value))
+			{
+				return \App\Role::find($value);
+			}
+			else if (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches))
+			{
+				return \App\Role::find($matches['id']);
 			}
 		});
 		

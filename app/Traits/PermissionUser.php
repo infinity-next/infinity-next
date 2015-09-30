@@ -736,7 +736,7 @@ trait PermissionUser {
 	 *
 	 * @return array
 	 */
-	protected function getPermissions()
+	public function getPermissions()
 	{
 		// Default permission mask is normal.
 		$mask = "normal";
@@ -837,19 +837,19 @@ trait PermissionUser {
 						$permissions[$branch][$role->board_uri] = [];
 					}
 					
-					// Loop through each role's permission and set them on the respective jurisdiction.
-					foreach ($role->permissions as $permission)
-					{
-						$permissions[$branch][$role->board_uri][$permission->permission_id] = $permission->pivot->value == 1;
-					}
-					
 					// Loop through each inherited permission as well.
 					if ($role->inherit_id)
 					{
 						foreach ($role->inherits->permissions as $permission)
 						{
-							$permissions[$branch][$role->board_uri][$permission->permission_id] = $permission->pivot->value == 1;
+							$permissions[$branch][$role->board_uri][$permission->permission_id] = !!$permission->pivot->value;
 						}
+					}
+					
+					// Loop through each role's permission and set them on the respective jurisdiction.
+					foreach ($role->permissions as $permission)
+					{
+						$permissions[$branch][$role->board_uri][$permission->permission_id] = !!$permission->pivot->value;
 					}
 					
 					// Additionally, if our permission is set on the global level, we must also go into each

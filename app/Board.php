@@ -485,9 +485,14 @@ class Board extends Model {
 		return url($this->board_uri);
 	}
 	
-	public function getURLForStaff()
+	public function getURLForRole($route = "add")
 	{
-		return url("/cp/board/{$this->board_uri}/staff/add");
+		return url("/cp/board/{$this->board_uri}/roles/{$route}");
+	}
+	
+	public function getURLForStaff($route = "add")
+	{
+		return url("/cp/board/{$this->board_uri}/staff/{$route}");
 	}
 	
 	public function hasStylesheet()

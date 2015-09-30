@@ -24,11 +24,12 @@ return [
 	],
 	
 	'title' => [
-		'board'              => "/:board_uri/ Board Configuration",
+		'board'              => "Configuration for /:board_uri/",
 		'site'               => "Site Configuration",
 		'board_create'       => "Create a Board",
 		'board_create_your'  => "Create your Board",
-		'board_staff_list'   => "/:board_uri/ Staff List",
+		'board_role_list'    => "Roles for /:board_uri/",
+		'board_staff_list'   => "Staff of /:board_uri/",
 		'board_staff_add'    => "Creating /:board_uri/ Staff",
 		'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
 		'permissions'        => ":role Role Permissions",
@@ -82,6 +83,7 @@ return [
 			'board_settings' => [
 				'assets'  => "Assets",
 				'basic'   => "Basic Details",
+				'roles'   => "Roles",
 				'staff'   => "Staff",
 				'style'   => "Styling",
 			],
@@ -89,8 +91,11 @@ return [
 	],
 	
 	'action'    => [
-		'add_staff'            => "Add to Staff",
-		'edit_staff'           => "Save Changes"
+		'add_staff'            => "Add Staff",
+		'edit_staff'           => "Save Staff",
+		
+		'add_role'             => "Create Role",
+		'edit_staff'           => "Save Role",
 	],
 	
 	'field'     => [

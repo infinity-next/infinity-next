@@ -7,6 +7,7 @@
 						@foreach ([
 							'assets' => "assets",
 							'config' => "basic",
+							'roles'  => "roles",
 							'staff'  => "staff",
 						] as $url => $name)
 							<a class="linkitem-name @if ($tab == $name) linkitem-active @endif" href="{{ url("/cp/board/$board->board_uri/$url") }}">

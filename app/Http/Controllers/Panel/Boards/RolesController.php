@@ -15,7 +15,7 @@ class RolesController extends PanelController {
 	|
 	*/
 	
-	const VIEW_ROLES = "panel.roles.dashboard";
+	const VIEW_ROLES = "panel.board..roles";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.

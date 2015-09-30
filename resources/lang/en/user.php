@@ -21,7 +21,7 @@ return [
 		'global_mod'    => "Global Volunteer",
 		'unaccountable' => "Proxy User",
 		'registered'    => "Registered User",
-		'absolute'      => "Absolute Permissions",
+		'absolute'      => "Global Absolute",
 		
 		// This is a bit of a hack using the pluralization system.
 		// If we have 1 or more, we are identifying the role as "## /b/ Volunteer".

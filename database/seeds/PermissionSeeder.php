@@ -166,7 +166,6 @@ class PermissionGroupSeeder extends Seeder {
 					"board.create",
 					"board.delete",
 					"board.reassign",
-					"board.reports",
 				],
 			],
 			[
@@ -206,7 +205,6 @@ class PermissionGroupSeeder extends Seeder {
 					"board.post.bumplock",
 					"board.post.lock_bypass",
 					"board.reports",
-					"site.reports",
 				],
 			],
 			[

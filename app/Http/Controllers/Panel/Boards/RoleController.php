@@ -1,5 +1,6 @@
-<?php namespace App\Http\Controllers\Panel\Roles;
+<?php namespace App\Http\Controllers\Panel\Boards;
 
+use App\Board;
 use App\Permission;
 use App\PermissionGroup;
 use App\Role;
@@ -11,15 +12,14 @@ use Input;
 use Event;
 use App\Events\RoleWasModified;
 
-class PermissionsController extends PanelController {
+class RoleController extends PanelController {
 	
 	/*
 	|--------------------------------------------------------------------------
-	| Config Controller
+	| Roles Controller
 	|--------------------------------------------------------------------------
 	|
-	| This is the site config controller, available only to admins.
-	| Its only job is to load config panels and to validate and save the changes.
+	| This controller handles an index request for all roles in the system.
 	|
 	*/
 	
@@ -30,16 +30,25 @@ class PermissionsController extends PanelController {
 	 *
 	 * @var string
 	 */
-	public static $navSecondary = "nav.panel.users";
+	public static $navSecondary = "nav.panel.board";
+	
+	/**
+	 * View path for the tertiary (inner) navigation.
+	 *
+	 * @var string
+	 */
+	public static $navTertiary = "nav.panel.board.settings";
 	
 	/**
 	 * Show the application dashboard to the user.
 	 *
+	 * @param  \App\Board  The board we're working with.
+	 * @param  \App\Role  The role being modified.
 	 * @return Response
 	 */
-	public function getIndex(Role $role)
+	public function getPermissions(Board $board, Role $role)
 	{
-		if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions())
+		if (!$role->canSetPermissions($this->user))
 		{
 			return abort(403);
 		}
@@ -47,14 +56,24 @@ class PermissionsController extends PanelController {
 		$permission_groups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
+			'board'  => $board,
 			'role'   => $role,
 			'groups' => $permission_groups,
+			
+			'tab'    => "roles",
 		]);
 	}
 	
-	public function patchIndex(Role $role)
+	/**
+	 * Commit updates to the role permissions.
+	 *
+	 * @param  \App\Board  The board we're working with.
+	 * @param  \App\Role  The role being modified.
+	 * @return Response
+	 */
+	public function patchPermissions(Board $board, Role $role)
 	{
-		if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions())
+		if (!$role->canSetPermissions($this->user))
 		{
 			return abort(403);
 		}
@@ -79,8 +98,9 @@ class PermissionsController extends PanelController {
 						switch ($permission_value)
 						{
 							case "allow" :
+							case "revoke"  :
 							case "deny"  :
-								$rolePermissions[] = [
+								$rolePermissions[$permission_id] = [
 									'role_id'       => $role->role_id,
 									'permission_id' => $permission_id,
 									'value'         => $permission_value == "allow",
@@ -94,18 +114,19 @@ class PermissionsController extends PanelController {
 			}
 		}
 		
-		RolePermission::where(['role_id' => $role->role_id])->whereIn('permission_id', $nullPermissions)->delete();
-		
-		RolePermission::insert($rolePermissions);
+		$role->permissions()->detach($nullPermissions);
+		$role->permissions()->attach($rolePermissions);
 		
 		$permission_groups = PermissionGroup::withPermissions()->get();
-		
 		
 		Event::fire(new RoleWasModified($role));
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
+			'board'  => $board,
 			'role'   => $role,
 			'groups' => $permission_groups,
+			
+			'tab'    => "roles",
 		]);
 	}
 }

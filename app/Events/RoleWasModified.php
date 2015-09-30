@@ -16,11 +16,11 @@ class RoleWasModified extends Event
 	public $role;
 	
 	/**
-	 * The board page which must be cleared as a result of this event.
+	 * Users which are affected by this change.
 	 *
-	 * @var integer|true
+	 * @var Collection
 	 */
-	public $page;
+	public $users;
 	
 	/**
 	 * Create a new event instance.
@@ -30,6 +30,7 @@ class RoleWasModified extends Event
 	 */
 	public function __construct(Role $role)
 	{
-		$this->role = $role;
+		$this->role  = $role;
+		$this->users = $role->users;
 	}
 }

@@ -31,6 +31,13 @@ class UserRecachePermissions extends Listener
 		{
 			$event->user->forgetPermissions();
 		}
+		else if (isset($event->users))
+		{
+			foreach ($event->users as $user)
+			{
+				$user->forgetPermissions();
+			}
+		}
 		else
 		{
 			switch (env('CACHE_DRIVER'))
