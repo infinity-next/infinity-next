@@ -27,6 +27,7 @@ return [
 		'attachments'        => "Attachment Options",
 		'bans'               => "Ban Options",
 		'reports'            => "Report Options",
+		'role_basic'         => "Role Details",
 		'staff_castes'       => "Castes",
 		
 		'boards'             => "Board Options",
@@ -89,6 +90,11 @@ return [
 		'epheDeleteThreadReply'    => "Delete threads after this many replies",
 		'epheDeleteThreadDays'     => "Delete threads after this many days",
 		'epheDeleteThreadPage'     => "Delete threads on this page",
+		
+		'roleType'                 => "Role",
+		'roleName'                 => "Internal Name",
+		'roleCapcode'              => "Capcode",
+		'roleCaste'                => "Caste",
 		
 		'postsPerPage'             => "Threads per page",
 		'postsAuthorCountry'       => "Show author country flags",

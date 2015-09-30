@@ -318,7 +318,8 @@ form {
 		span.field-control {
 			border-color: rgba(0,0,0,0);
 		}
-		.field-control[type="checkbox"] {
+		.field-control[type="checkbox"],
+		.field-control[type="radio"] {
 			display: inline-block;
 			margin: 0 0.5em 0 0;
 			width: auto;
@@ -607,9 +608,10 @@ main.cp form.form-config {
 					}
 					
 					label.option-permission .field-control {
-						vertical-align: text-top;
 						height: 2em;
 						width: auto;
+						display: inline-block;
+						margin: 0;
 					}
 					label.option-permission-unset {
 						background-color: #CCC;
@@ -2738,7 +2740,7 @@ nav.cp-inner {
 	margin: 0 0 1em 0;
 }
 	#card-details {
-		width: 354px;
+		
 	}
 	#payment-form::after {
 		clear: both;

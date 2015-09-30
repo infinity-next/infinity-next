@@ -837,7 +837,8 @@ trait PermissionUser {
 						$permissions[$branch][$role->board_uri] = [];
 					}
 					
-					// Loop through each inherited permission as well.
+					// Loop through each inherited permission and add them to the pot.
+					// Note: It may be a good idea to instead fetch this and inline it by weight.
 					if ($role->inherit_id)
 					{
 						foreach ($role->inherits->permissions as $permission)

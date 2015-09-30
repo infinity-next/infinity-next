@@ -4,6 +4,9 @@ use App\Board;
 use App\Role;
 use App\Http\Controllers\Panel\PanelController;
 
+use Input;
+use Validator;
+
 class RolesController extends PanelController {
 	
 	/*
@@ -15,7 +18,8 @@ class RolesController extends PanelController {
 	|
 	*/
 	
-	const VIEW_ROLES = "panel.board..roles";
+	const VIEW_ROLES  = "panel.board.roles";
+	const VIEW_CREATE = "panel.board.roles.create";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -51,4 +55,91 @@ class RolesController extends PanelController {
 			'tab'     => "roles",
 		]);
 	}
+	
+	
+	/**
+	 * Show the role creation form.
+	 *
+	 * @param  \App\Board  $board
+	 * @return Response
+	 */
+	public function getAdd(Board $board)
+	{
+		if (!$this->user->canEditConfig($board))
+		{
+			return abort(403);
+		}
+		
+		$roles   = Role::whereCanParentForBoard($board, $this->user)->get();
+		$choices = [];
+		
+		foreach ($roles as $role)
+		{
+			$choices[$role->getDisplayName()] = $role->role;
+		}
+		
+		return $this->view(static::VIEW_CREATE, [
+			'board'   => $board,
+			'choices' => $choices,
+			'tab'     => "roles",
+		]);
+	}
+	
+	/**
+	 * Add a new role.
+	 *
+	 * @param  \App\Board  $board
+	 * @return Response
+	 */
+	public function putAdd(Board $board)
+	{
+		if (!$this->user->canEditConfig($board))
+		{
+			return abort(403);
+		}
+		
+		$roles = Role::whereCanParentForBoard($board, $this->user)->get()->lists('role');
+		
+		$rules = [
+			'roleType'    => [
+				"required",
+				"string",
+				"in:" . $roles->implode(","),
+			],
+			'roleCaste'   => [
+				"string",
+				"alpha_num",
+				"unique:roles,role,{$board->board_uri},board_uri",
+			],
+			'roleName'    => [
+				"required",
+				"string",
+			],
+			'roleCapcode' => [
+				"string",
+			],
+		];
+		
+		$validator = Validator::make(Input::all(), $rules);
+		
+		if ($validator->fails())
+		{
+			return redirect()
+				->back()
+				->withInput()
+				->withErrors($validator->errors());
+		}
+		
+		$role = new Role();
+		$role->board_uri = $board->board_uri;
+		$role->role      = strtolower(Input::get('roleType'));
+		$role->caste     = strtolower(Input::get('roleCaste'));
+		$role->name      = Input::get('roleName');
+		$role->capcode   = Input::get('capcode');
+		$role->weight    = constant(Role::class . "::WEIGHT_" . strtoupper(Input::get('roleType')));
+		$role->save();
+		
+		return redirect( $role->getPermissionsURLForBoard() );
+	}
+	
 }

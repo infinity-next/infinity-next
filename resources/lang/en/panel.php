@@ -28,6 +28,7 @@ return [
 		'site'               => "Site Configuration",
 		'board_create'       => "Create a Board",
 		'board_create_your'  => "Create your Board",
+		'board_role_add'     => "New Role for /:board_uri/",
 		'board_role_list'    => "Roles for /:board_uri/",
 		'board_staff_list'   => "Staff of /:board_uri/",
 		'board_staff_add'    => "Creating /:board_uri/ Staff",
@@ -133,6 +134,7 @@ return [
 		],
 		
 		'field'     => [
+			'permissions'   => "Permissions",
 			'userinfo'      => "User Info",
 		],
 		

@@ -81,6 +81,11 @@ class Role extends Model {
 		return $this->hasOne('\App\Role', 'role_id', 'inherit_id');
 	}
 	
+	public function inheritors()
+	{
+		return $this->hasMany('\App\Role', 'inherit_id', 'role_id');
+	}
+	
 	public function permissions()
 	{
 		return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
@@ -172,14 +177,24 @@ class Role extends Model {
 		return null;
 	}
 	
+	public function getURL($route = "")
+	{
+		return url("/cp/roles/permissions/{$this->role_id}/{$route}");
+	}
+	
+	public function getURLForBoard($route = "")
+	{
+		return url("/cp/board/{$this->board_uri}/role/{$this->role_id}/{$route}");
+	}
+	
 	/**
 	 * Returns a URL for opening this role on the site level.
 	 *
 	 * @return string
 	 */
-	public function getPermissionsURL($route = "")
+	public function getPermissionsURL()
 	{
-		return url("/cp/roles/permissions/{$this->role_id}/{$route}");
+		return $this->getURL('permissions');
 	}
 	
 	/**
@@ -187,9 +202,9 @@ class Role extends Model {
 	 *
 	 * @return string
 	 */
-	public function getPermissionsURLForBoard($route = "")
+	public function getPermissionsURLForBoard()
 	{
-		return url("/cp/board/{$this->board_uri}/role/{$this->role_id}/{$route}");
+		return $this->getURLForBoard('permissions');
 	}
 	
 	/**
@@ -229,27 +244,49 @@ class Role extends Model {
 	 *
 	 * @param  \App\Board  $board
 	 * @param  \App\Contracts\PermissionUser $user
-	 * @return  Query
+	 * @return Query
 	 */
 	public function scopeWhereBoardRole($query, Board $board, PermissionUser $user)
 	{
-		return $query->where(function($query) use ($board, $user) {
-			$weight = -1;
-			
-			if ($user->canEditConfig(null))
-			{
-				$weight = Role::WEIGHT_ADMIN;
-			}
-			else if ($user->canEditConfig($board))
-			{
-				$weight = Role::WEIGHT_OWNER;
-			}
-			
-			
-			$query->where('board_uri', $board->board_uri);
-			$query->where('weight', '<', $weight);
-		})
-		->orderBy('weight', 'desc');
+		return $query->where('board_uri', $board->board_uri)
+			->whereLighterThanUser($user, $board)
+			->orderBy('weight', 'desc');
+	}
+	
+	/**
+	 * Selects top-level roles that a user can instantiate a new caste of.
+	 *
+	 * @param  \App\Board  $board
+	 * @param  \App\Contracts\PermissionUser $user
+	 * @return Query
+	 */
+	public function scopeWhereCanParentForBoard($query, Board $board, PermissionUser $user)
+	{
+			// Only select top-level roles.
+		return $query->whereStatic()
+			// Only select roles that are lighter than this user.
+			->whereLighterThanUser($user, $board)
+			// Only select roles that can put on a single board.
+			->whereLocal()
+			// Do not select roles which are already being inherited,
+			// unless they are a Board or Global moderator role.
+			->where(function($query) use ($board, $user) {
+				$query->whereDoesntHave('inheritors');
+				$query->orWhereIn('role_id', [
+					Role::ID_MODERATOR,
+					Role::ID_JANITOR,
+				]);
+			});
+	}
+	
+	/**
+	 * Narrows query to only localizable roles.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereLocal($query)
+	{
+		return $query->where('weight', '<', static::WEIGHT_MODERATOR);
 	}
 	
 	/**
@@ -264,5 +301,40 @@ class Role extends Model {
 			$query->where('inherit_id', '=', $role_id);
 			$query->orWhere('role_id', '=', $role_id);
 		});
+	}
+	
+	/**
+	 * Narrows query to only roles which can be manipulated by this user.
+	 *
+	 * @param  \App\Contracts\PermissionUser $user
+	 * @param  \App\Board  $board
+	 * @return Query
+	 */
+	public function scopeWhereLighterThanUser($query, PermissionUser $user, Board $board = null)
+	{
+		return $query->where(function($query) use ($user, $board) {
+				$weight = -1;
+				
+				if ($user->canEditConfig(null))
+				{
+					$weight = Role::WEIGHT_ADMIN;
+				}
+				else if (!is_null($board) && $user->canEditConfig($board))
+				{
+					$weight = Role::WEIGHT_OWNER;
+				}
+				
+				$query->where('weight', '<', $weight);
+			});
+	}
+	
+	/**
+	 * Narrows query to only roles which are top-level.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereStatic($query)
+	{
+		return $query->where('system', true);
 	}
 }

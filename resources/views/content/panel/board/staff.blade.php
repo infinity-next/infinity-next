@@ -9,7 +9,6 @@
 @endsection
 
 @section('body')
-	@if (count($staff))
 	<div class="filterlist">
 		<h4 class="filterlist-heading">@lang('panel.list.head.staff')</h4>
 		
@@ -23,5 +22,4 @@
 			@endforeach
 		</ol>
 	</div>
-	@endif
 @endsection

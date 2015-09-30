@@ -28,7 +28,7 @@ return [
 		// If we have 0, we're simply identifying the role as a "# Board Volunteer".
 		// Show posessive.
 		'board_owner'   => "{0}Board Owner|[1,Inf]/:board_uri/ Owner",
-		'board_mod'     => "{0}Board Owner|[1,Inf]/:board_uri/ Volunteer",
+		'board_mod'     => "{0}Board Volunteer|[1,Inf]/:board_uri/ Volunteer",
 	],
 	
 ];
