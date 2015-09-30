@@ -1,15 +1,18 @@
 @extends('layouts.main.panel')
 
 @section('body')
-	@if (count($roles))
-	<table>
-		<tbody>
+	<div class="filterlist">
+		<h4 class="filterlist-heading">@lang('panel.list.head.roles')</h4>
+		
+		<ol class="filterlist-list">
 			@foreach ($roles as $role)
-			<tr>
-				<td><a href="{{{ url("/cp/roles/permissions/{$role->role_id}") }}}">{{{ $role->name }}}</a></td>
-			</tr>
+			<li class="filterlist-item">
+				<a class="filterlist-primary" href="{{ $role->getPermissionsURL() }}">
+					<em>{{ $role->getDisplayName() }}</em>
+					<dfn>{{ $role->getDisplayWeight() }}</dfn>
+				</a>
+			</li>
 			@endforeach
-		</tbody>
-	</table>
-	@endif
+		</ol>
+	</div>
 @endsection

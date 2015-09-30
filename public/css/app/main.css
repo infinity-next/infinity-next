@@ -418,6 +418,17 @@ main.cp .filterlist {
 				main.cp .filterlist-item:hover .filterlist-primary {
 					background-color: #fff4e5;
 				}
+				main.cp .filterlist-primary em {
+					text-decoration: none;
+					font-style: normal;
+				}
+				main.cp .filterlist-primary dfn {
+					text-decoration: none;
+					font-style: normal;
+					font-size: 90%;
+					color: #ccc;
+				}
+			
 			main.cp .filterlist-secondary {
 				float: right;
 				padding-right: 0.5em;
@@ -605,6 +616,9 @@ main.cp form.form-config {
 					}
 					label.option-permission-allow {
 						background-color: #44BB44;
+					}
+					label.option-permission-revoke {
+						background-color: #EA5  ;
 					}
 					label.option-permission-deny {
 						background-color: #C11 ;

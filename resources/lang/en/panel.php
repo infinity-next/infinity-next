@@ -124,6 +124,7 @@ return [
 		
 		'head'      => [
 			'staff'         => "Staff",
+			'roles'         => "Roles",
 		],
 		
 		'field'     => [

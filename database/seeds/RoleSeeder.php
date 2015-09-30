@@ -52,7 +52,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => NULL,
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 0,
+				'weight'     => Role::WEIGHT_ANONYMOUS,
 			],
 			Role::ID_UNACCOUNTABLE => [
 				'role_id'    => Role::ID_UNACCOUNTABLE,
@@ -63,7 +63,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => NULL,
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 20,
+				'weight'     => Role::WEIGHT_UNACCOUNTABLE,
 			],
 			Role::ID_REGISTERED => [
 				'role_id'    => Role::ID_REGISTERED,
@@ -74,7 +74,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => NULL,
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 30,
+				'weight'     => Role::WEIGHT_REGISTERED,
 			],
 			Role::ID_JANITOR => [
 				'role_id'    => Role::ID_JANITOR,
@@ -85,7 +85,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => "user.role.board_mod",
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 40,
+				'weight'     => Role::WEIGHT_JANITOR,
 			],
 			Role::ID_OWNER => [
 				'role_id'    => Role::ID_OWNER,
@@ -96,7 +96,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => "user.role.board_owner",
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 60,
+				'weight'     => Role::WEIGHT_OWNER,
 			],
 			Role::ID_MODERATOR => [
 				'role_id'    => Role::ID_MODERATOR,
@@ -107,7 +107,7 @@ class RoleSeeder extends Seeder {
 				'capcode'    => "user.role.global_mod",
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 80,
+				'weight'     => Role::WEIGHT_MODERATOR,
 			],
 			Role::ID_ADMIN => [
 				'role_id'    => Role::ID_ADMIN,
@@ -118,7 +118,18 @@ class RoleSeeder extends Seeder {
 				'capcode'    => "user.role.admin",
 				'inherit_id' => NULL,
 				'system'     => true,
-				'weight'     => 100,
+				'weight'     => Role::WEIGHT_ADMIN,
+			],
+			Role::ID_ABSOLUTE => [
+				'role_id'    => Role::ID_ABSOLUTE,
+				'role'       => "absolute",
+				'board_uri'  => NULL,
+				'caste'      => NULL,
+				'name'       => "user.role.absolute",
+				'capcode'    => NULL,
+				'inherit_id' => NULL,
+				'system'     => true,
+				'weight'     => ROLE::WEIGHT_ABSOLUTE,
 			],
 		];
 	}

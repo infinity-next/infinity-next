@@ -1,5 +1,6 @@
-<?php namespace App\Http\Controllers\Panel\Roles;
+<?php namespace App\Http\Controllers\Panel\Boards;
 
+use App\Board;
 use App\Role;
 use App\Http\Controllers\Panel\PanelController;
 
@@ -21,24 +22,33 @@ class RolesController extends PanelController {
 	 *
 	 * @var string
 	 */
-	public static $navSecondary = "nav.panel.users";
+	public static $navSecondary = "nav.panel.board";
+	
+	/**
+	 * View path for the tertiary (inner) navigation.
+	 *
+	 * @var string
+	 */
+	public static $navTertiary = "nav.panel.board.settings";
 	
 	/**
 	 * Show the application dashboard to the user.
 	 *
 	 * @return Response
 	 */
-	public function getPermissions()
+	public function getIndex(Board $board)
 	{
-		if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions())
+		if (!$this->user->canEditConfig($board))
 		{
 			return abort(403);
 		}
 		
-		$roles = Role::where('system', true)->orderBy('weight', 'desc')->get();
+		$roles = Role::whereBoardRole($board, $this->user)->get();
 		
 		return $this->view(static::VIEW_ROLES, [
-			'roles' => $roles,
+			'board'   => $board,
+			'roles'   => $roles,
+			'tab'     => "roles",
 		]);
 	}
 }

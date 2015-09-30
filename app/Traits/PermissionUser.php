@@ -906,11 +906,11 @@ trait PermissionUser {
 		$routes['normal'][]        = "anonymous";
 		$routes['unaccountable'][] = "anonymous";
 		
-		// The unaccountable branch uses a special mask.
+		// The unaccountable branch uses a special role.
 		// This would generally be for Tor users.
 		$routes['unaccountable'][] = "unaccountable";
 		
-		// Finally, if the user is registered, we add another mask.
+		// Finally, if the user is registered, we add another role.
 		// This is a bit of a placeholder. There are no permissions
 		// by default that only affect registered users.
 		if (!$this->isAnonymous())
@@ -918,6 +918,10 @@ trait PermissionUser {
 			$routes['normal'][]        = "registered";
 			$routes['unaccountable'][] = "registered";
 		}
+		
+		// All users are beholden to the absolute role.
+		$routes['normal'][]        = "absolute";
+		$routes['unaccountable'][] = "absolute";
 		
 		return $routes;
 	}
@@ -958,6 +962,13 @@ trait PermissionUser {
 		
 		if (!is_null($route))
 		{
+			if (!isset($this->permissions[$route]))
+			{
+				echo "Something wrong with this permission mask. Debug information.";
+				var_dump($route);
+				dd($this->permissions);
+			}
+			
 			return $this->permissions[$route];
 		}
 		

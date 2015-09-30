@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Permission;
+use App\Contracts\PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model {
@@ -15,6 +16,7 @@ class Role extends Model {
 	const ID_JANITOR       = 5;
 	const ID_UNACCOUNTABLE = 6;
 	const ID_REGISTERED    = 7;
+	const ID_ABSOLUTE      = 8;
 	
 	/**
 	 * These constants represent the weights of hard ID top-level system roles.
@@ -26,6 +28,7 @@ class Role extends Model {
 	const WEIGHT_JANITOR       = 40;
 	const WEIGHT_UNACCOUNTABLE = 20;
 	const WEIGHT_REGISTERED    = 30;
+	const WEIGHT_ABSOLUTE      = 1000;
 	
 	/**
 	 * The database table used by the model.
@@ -95,7 +98,21 @@ class Role extends Model {
 	 */
 	public function getDisplayName()
 	{
-		return trans($this->name);
+		return trans_choice($this->name, is_null($this->board_uri) ? 0 : 1, [
+			'role'      => $this->role,
+			'board_uri' => $this->board_uri,
+			'caste'     => $this->caste,
+		]);
+	}
+	
+	/**
+	 * Returns a human-readable name for this role.
+	 *
+	 * @return string 
+	 */
+	public function getDisplayWeight()
+	{
+		return "{$this->weight} kg";
 	}
 	
 	/**
@@ -137,6 +154,14 @@ class Role extends Model {
 		return null;
 	}
 	
+	/**
+	 *
+	 *
+	 */
+	public function getPermissionsURL()
+	{
+		return url("/cp/roles/permissions/{$this->role_id}");
+	}
 	
 	/**
 	 * Builds a single role mask for all boards, called by name.
@@ -171,78 +196,39 @@ class Role extends Model {
 	}
 	
 	/**
-	 * Compiles a set of roles into a permission mask.
+	 * Narrows query to only roles which are for a board and can be manipulated by this user.
 	 *
-	 * @param  Collection  $roles  A Laravel collection of Role models.
-	 * @return array
+	 * @param  \App\Board  $board
+	 * @param  \App\Contracts\PermissionUser $user
+	 * @return  Query
 	 */
-	protected static function getRolePermissions($roles)
+	public function scopeWhereBoardRole($query, Board $board, PermissionUser $user)
 	{
-		$permissions = [];
-		
-		foreach ($roles as $role)
-		{
-			$inherited = [];
+		return $query->where(function($query) use ($board, $user) {
+			$weight = -1;
 			
-			if (is_numeric($role->inherit_id))
+			if ($user->canEditConfig(null))
 			{
-				$inherited = static::getRolePermissions([$role->inherits]);
-				
-				foreach ($inherited as $board_uri => $inherited_permissions)
-				{
-					if ($board_uri == $role->board_uri || $board_uri == "")
-					{
-						foreach ($inherited_permissions as $permission_id => $value)
-						{
-							$permission = &$permissions[$role->board_uri][$permission_id];
-							
-							if (!isset($permission) || $permission !== 0)
-							{
-								$permission = (int) $value;
-							}
-						}
-					}
-				}
+				$weight = Role::WEIGHT_ADMIN;
+			}
+			else if ($user->canEditConfig($board))
+			{
+				$weight = Role::WEIGHT_OWNER;
 			}
 			
-			if (!isset($permissions[$role->board_uri]))
-			{
-				$permissions[$role->board_uri] = [];
-			}
 			
-			foreach ($role->permissions as $permission)
-			{
-				$value = null;
-				
-				if (isset($inherited[null][$permission->permission_id]))
-				{
-					$value = (int) $inherited[null][$permission->permission_id];
-				}
-				
-				if ($value !== 0)
-				{
-					if (isset($inherited[$role->board_uri][$permission->permission_id]))
-					{
-						$value = (int) $inherited[$role->board_uri][$permission->permission_id];
-					}
-					
-					if ($value !== 0)
-					{
-						$value = !!$permission->pivot->value;
-					}
-				}
-				
-				if ($value)
-				{
-					$permissions[$role->board_uri][$permission->permission_id] = true;
-				}
-			}
-		}
-		
-		return $permissions;
+			$query->where('board_uri', $board->board_uri);
+			$query->where('weight', '<', $weight);
+		})
+		->orderBy('weight', 'desc');
 	}
 	
-	
+	/**
+	 * Narrows query to only roles which are, or inherit, a specific role_id.
+	 *
+	 * @param  int  $role_id
+	 * @return Query
+	 */
 	public function scopeWhereLevel($query, $role_id)
 	{
 		return $query->where(function($query) use ($role_id) {

@@ -112,6 +112,7 @@ Route::group([
 			Route::controllers([
 				'{board}/staff/{user}' => 'StaffController',
 				'{board}/staff'        => 'StaffController',
+				'{board}/roles'        => 'RolesController',
 				'{board}'              => 'ConfigController',
 			]);
 		});

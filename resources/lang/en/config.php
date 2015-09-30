@@ -112,6 +112,7 @@ return [
 			
 			'inherit' => "Inherit",
 			'allow'   => "Allow",
+			'revoke'  => "Revoke",
 			'deny'    => "Never",
 		],
 		
