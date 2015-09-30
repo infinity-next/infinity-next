@@ -5,7 +5,7 @@
 ]))
 
 @section('actions')
-	<a class="panel-action" href="{{ $board->getURLForRole('add') }}">+ @lang('panel.action.add_role')</a>
+	<a class="panel-action" href="{{ $board->getURLForRoles('add') }}">+ @lang('panel.action.add_role')</a>
 @endsection
 
 @section('body')
@@ -15,7 +15,7 @@
 		<ol class="filterlist-list">
 			@foreach ($roles as $role)
 			<li class="filterlist-item">
-				<a class="filterlist-secondary" href="{{ $role->getURL('remove') }}"><i class="fa fa-remove"></i></a>
+				<a class="filterlist-secondary" href="{{ $role->getURLForBoard('delete') }}"><i class="fa fa-remove"></i></a>
 				<a class="filterlist-secondary" href="{{ $role->getPermissionsURLForBoard() }}">@lang('panel.list.field.permissions')</a>
 				<a class="filterlist-primary" href="{{ $role->getURLForBoard() }}">
 					<em>{{ $role->getDisplayName() }}</em>

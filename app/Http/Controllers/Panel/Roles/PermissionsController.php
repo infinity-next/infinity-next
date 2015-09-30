@@ -44,11 +44,21 @@ class PermissionsController extends PanelController {
 			return abort(403);
 		}
 		
-		$permission_groups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
+		$permissionGroups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
+		$permissionGroups = $permissionGroups->filter(function($group)
+		{
+			$permissions = $group->permissions->filter(function($permission)
+			{
+				return $this->user->can($permission);
+			});
+			
+			$group->setRelation('permissions', $permissions);
+			return $permissions->count();
+		});
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
 			'role'   => $role,
-			'groups' => $permission_groups,
+			'groups' => $permissionGroups,
 		]);
 	}
 	

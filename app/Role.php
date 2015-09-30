@@ -2,7 +2,11 @@
 
 use App\Permission;
 use App\Contracts\PermissionUser;
+
 use Illuminate\Database\Eloquent\Model;
+
+use Event;
+use App\Events\RoleWasDeleted;
 
 class Role extends Model {
 	
@@ -97,6 +101,32 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Ties database triggers to the model.
+	 *
+	 * @return void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+		
+		// Setup event bindings...
+		
+		// Fire event on role being deleted.
+		static::deleting(function(Role $role) {
+			// Fetch our users before we detatch things.
+			$users = $role->users();
+			
+			$role->permissions()->detach();
+			$role->users()->detach();
+			
+			Event::fire(new RoleWasDeleted($role, $users));
+			
+			return true;
+		});
+		
+	}
+	
+	/**
 	 * Determines if this user can edit this role's permissions.
 	 *
 	 * @param  \App\Contracts\PermissionUser  $user
@@ -179,7 +209,7 @@ class Role extends Model {
 	
 	public function getURL($route = "")
 	{
-		return url("/cp/roles/permissions/{$this->role_id}/{$route}");
+		return url("/cp/roles/{$this->role_id}/{$route}");
 	}
 	
 	public function getURLForBoard($route = "")

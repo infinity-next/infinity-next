@@ -163,7 +163,6 @@ class PermissionGroupSeeder extends Seeder {
 				'permissions'   => [
 					"board.config",
 					"board.logs",
-					"board.create",
 					"board.delete",
 					"board.reassign",
 				],
@@ -225,6 +224,7 @@ class PermissionGroupSeeder extends Seeder {
 				'display_order' => 500,
 				
 				'permissions'   => [
+					"board.create",
 					"site.image.ban",
 					"site.pm",
 					"site.post.report",
@@ -234,7 +234,6 @@ class PermissionGroupSeeder extends Seeder {
 					"site.reports",
 				],
 			],
-			
 			[
 				'group_name'    => "system_tools",
 				'is_system_only'=> true,

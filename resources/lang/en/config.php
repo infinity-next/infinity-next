@@ -11,6 +11,11 @@ return [
 	|
 	*/
 	
+	'confirm' => "Please confirm your action.",
+	'create'  => "Create",
+	'upload'  => "Upload",
+	'submit'  => "Save Changes",
+	
 	'legend' => [
 		'permissions'   => [
 			'board_controls'   => "Board Controls",
@@ -201,8 +206,4 @@ return [
 			'users' => "Manage users",
 		],
 	],
-	
-	'create' => "Create",
-	'upload' => "Upload",
-	'submit' => "Save Changes",
 ];

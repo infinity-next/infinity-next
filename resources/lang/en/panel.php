@@ -30,6 +30,7 @@ return [
 		'board_create_your'  => "Create your Board",
 		'board_role_add'     => "New Role for /:board_uri/",
 		'board_role_list'    => "Roles for /:board_uri/",
+		'board_role_delete'  => "Delete Role",
 		'board_staff_list'   => "Staff of /:board_uri/",
 		'board_staff_add'    => "Creating /:board_uri/ Staff",
 		'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
@@ -96,7 +97,8 @@ return [
 		'edit_staff'           => "Save Staff",
 		
 		'add_role'             => "Create Role",
-		'edit_staff'           => "Save Role",
+		'edit_role'            => "Save Role",
+		'delete_role'          => "Delete Role",
 	],
 	
 	'field'     => [

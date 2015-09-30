@@ -17,7 +17,9 @@
 </dl>
 
 @foreach ($groups as $group)
+	@if (count($group->permissions))
 	@include('widgets.config.permissions',[
 		'permissions' => $group->permissions,
 	])
+	@endif
 @endforeach

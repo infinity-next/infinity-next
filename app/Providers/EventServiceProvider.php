@@ -62,9 +62,7 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\RoleWasModified' => [
 			'App\Listeners\UserRecachePermissions',
 		],
-		
-		// User specific events
-		'App\Events\RoleWasModified' => [
+		'App\Events\RoleWasDeleted' => [
 			'App\Listeners\UserRecachePermissions',
 		],
 	];

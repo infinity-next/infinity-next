@@ -25,6 +25,7 @@ class RoleController extends PanelController {
 	
 	const VIEW_PERMISSIONS = "panel.roles.permissions.edit";
 	const VIEW_EDIT        = "panel.board.roles.edit";
+	const VIEW_DELETE      = "panel.board.roles.delete";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -61,7 +62,7 @@ class RoleController extends PanelController {
 			$choices[$role->getDisplayName()] = $role->role;
 		}
 		
-		return $this->view(static::VIEW_CREATE, [
+		return $this->view(static::VIEW_EDIT, [
 			'board'   => $board,
 			'choices' => $choices,
 			'tab'     => "roles",
@@ -116,6 +117,42 @@ class RoleController extends PanelController {
 	}
 	
 	/**
+	 *
+	 *
+	 *
+	 */
+	public function getDelete(Board $board, Role $role)
+	{
+		if (!$this->user->canEditConfig($board))
+		{
+			return abort(403);
+		}
+		
+		return $this->view(static::VIEW_DELETE, [
+			'board'   => $board,
+			'role'    => $role,
+			'tab'     => "roles",
+		]);
+	}
+	
+	/**
+	 *
+	 *
+	 *
+	 */
+	public function deleteDelete(Board $board, Role $role)
+	{
+		if (!$this->user->canEditConfig($board))
+		{
+			return abort(403);
+		}
+		
+		$role->delete();
+		
+		return redirect( $board->getURLForRoles('index') );
+	}
+	
+	/**
 	 * Show the application dashboard to the user.
 	 *
 	 * @param  \App\Board  $board  The board we're working with.
@@ -129,12 +166,22 @@ class RoleController extends PanelController {
 			return abort(403);
 		}
 		
-		$permission_groups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
+		$permissionGroups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
+		$permissionGroups = $permissionGroups->filter(function($group)
+		{
+			$permissions = $group->permissions->filter(function($permission)
+			{
+				return $this->user->can($permission);
+			});
+			
+			$group->setRelation('permissions', $permissions);
+			return $permissions->count();
+		});
 		
 		return $this->view(static::VIEW_PERMISSIONS, [
 			'board'  => $board,
 			'role'   => $role,
-			'groups' => $permission_groups,
+			'groups' => $permissionGroups,
 			
 			'tab'    => "roles",
 		]);

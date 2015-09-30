@@ -633,10 +633,23 @@ main.cp form.form-config {
 						width: 6.25em;
 					}
 		
-		form.form-config .row-submit {
+		form.form-config .row-submit,
+		form.form-config .row-delete {
 			margin-left: 32%;
 			padding-left: 2em;
 		}
+			form.form-config .field-confirm {
+				display: block;
+				margin: 0 0 0.5em 0;
+			}
+			form.form-config .row-delete button.field-delete {
+				border-color: #5C3434;
+				color: #5C3434;
+			}
+			form.form-config .row-delete button.field-delete:hover {
+				background: #5C3434;
+				color: #FFF;
+			}
 
 
 /* Tables */
