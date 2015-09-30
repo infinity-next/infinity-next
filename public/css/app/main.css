@@ -1825,6 +1825,8 @@ main.index-threaded {
 			display: inline-block;
 			position: relative;
 			
+			overflow: hidden;
+			
 			margin: 0;
 			max-width: 100%;
 			
