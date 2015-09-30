@@ -962,13 +962,6 @@ trait PermissionUser {
 		
 		if (!is_null($route))
 		{
-			if (!isset($this->permissions[$route]))
-			{
-				echo "Something wrong with this permission mask. Debug information.";
-				var_dump($route);
-				dd($this->permissions);
-			}
-			
 			return $this->permissions[$route];
 		}
 		
