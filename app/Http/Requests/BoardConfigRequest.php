@@ -42,9 +42,10 @@ class BoardConfigRequest extends Request {
 	 *
 	 * @return void
 	 */
-	public function __construct(UserManager $manager)
+	public function __construct(Board $board, UserManager $manager)
 	{
 		$this->user = $manager->user;
+		$this->board = $board;
 	}
 	
 	/**
@@ -56,16 +57,13 @@ class BoardConfigRequest extends Request {
 	{
 		$input = parent::all();
 		
-		if ($this->board)
+		foreach ($this->getBoardOptions() as $optionGroup)
 		{
-			foreach ($this->getBoardOptions() as $optionGroup)
+			foreach ($optionGroup->options as $option)
 			{
-				foreach ($optionGroup->options as $option)
+				if (isset($input[$option->option_name]))
 				{
-					if (isset($input[$option->option_name]))
-					{
-						$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
-					}
+					$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
 				}
 			}
 		}
@@ -105,7 +103,7 @@ class BoardConfigRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return $this->user->canEditConfig($this->board);
+		return $this->board->canEditConfig($this->user);
 	}
 	
 	/**
@@ -115,22 +113,11 @@ class BoardConfigRequest extends Request {
 	 */
 	public function getBoardOptions()
 	{
-		if (isset($this->board))
+		if (!isset($this->boardOptionGroups))
 		{
-			if (!isset($this->boardOptionGroups))
-			{
-				$this->boardOptionGroups = OptionGroup::getBoardConfig($this->board);
-			}
-			
-			return $this->boardOptionGroups;
+			$this->boardOptionGroups = OptionGroup::getBoardConfig($this->board);
 		}
 		
-		return [];
-	}
-	
-	
-	public function setBoard(Board $board)
-	{
-		return $this->board = $board;
+		return $this->boardOptionGroups;
 	}
 }
