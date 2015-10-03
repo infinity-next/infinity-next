@@ -1160,6 +1160,16 @@ class Post extends Model {
 		}]);
 	}
 	
+	public function scopeIp($query, $ip)
+	{
+		if (ctype_print($ip))
+		{
+			return $query->ipString($ip);
+		}
+		
+		return $query->ipBinary($ip);
+	}
+	
 	public function scopeIpString($query, $ip)
 	{
 		return $query->ipBinary(inet_pton($ip));
