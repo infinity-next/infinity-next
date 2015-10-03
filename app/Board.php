@@ -450,6 +450,26 @@ class Board extends Model {
 			->first();
 	}
 	
+	/**
+	 * Returns an array of castes currently assigned to ths board under the specified role.
+	 *
+	 * @param  string  $role  Role group.
+	 * @param  int|null  $ignoreID  Optional ID to exclude from results.
+	 * @return array
+	 */
+	public function getRoleCastes($role, $ignoreID = null)
+	{
+		return $this->roles()->where(function($query) use ($role, $ignoreID)
+		{
+			$query->where('role', $role);
+			
+			if (!is_null($ignoreID))
+			{
+				$query->where('role_id', '!=', $ignoreID);
+			}
+		});
+	}
+	
 	public function getSidebarContent()
 	{
 		$ContentFormatter = new ContentFormatter();

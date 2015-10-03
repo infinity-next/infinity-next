@@ -99,7 +99,8 @@ class RolesController extends PanelController {
 			return abort(403);
 		}
 		
-		$roles = Role::whereCanParentForBoard($board, $this->user)->get();
+		$roles  = Role::whereCanParentForBoard($board, $this->user)->get();
+		$castes = $board->getRoleCastes(Input::get('roleType'))->get()->pluck('caste');
 		
 		$rules = [
 			'roleType'    => [
@@ -122,6 +123,11 @@ class RolesController extends PanelController {
 		
 		$validator = Validator::make(Input::all(), $rules);
 		
+		$validator->sometimes('roleCaste', "not_in:" . $castes->implode(","), function($input) use ($castes)
+		{
+			return $castes->count();
+		});
+		
 		if ($validator->fails())
 		{
 			return redirect()
@@ -136,7 +142,7 @@ class RolesController extends PanelController {
 		$role->role       = strtolower(Input::get('roleType'));
 		$role->caste      = strtolower(Input::get('roleCaste'));
 		$role->name       = Input::get('roleName') ?: "user.role.{$role->role}";
-		$role->capcode    = Input::get('capcode');
+		$role->capcode    = Input::get('roleCapcode');
 		$role->weight     = 5 + constant(Role::class . "::WEIGHT_" . strtoupper(Input::get('roleType')))  ;
 		$role->save();
 		

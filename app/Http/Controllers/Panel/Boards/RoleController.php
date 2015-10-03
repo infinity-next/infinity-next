@@ -88,11 +88,12 @@ class RoleController extends PanelController {
 			return abort(403);
 		}
 		
+		$castes = $board->getRoleCastes($role->role, $role->role_id)->get()->pluck('caste');
+		
 		$rules = [
 			'roleCaste'   => [
 				"string",
 				"alpha_num",
-				"unique:roles,role,board_uri,{$board->board_uri}",
 			],
 			'roleName'    => [
 				"string",
@@ -104,6 +105,11 @@ class RoleController extends PanelController {
 		
 		$validator = Validator::make(Input::all(), $rules);
 		
+		$validator->sometimes('roleCaste', "not_in:" . $castes->implode(","), function($input) use ($castes)
+		{
+			return $castes->count();
+		});
+		
 		if ($validator->fails())
 		{
 			return redirect()
@@ -114,7 +120,7 @@ class RoleController extends PanelController {
 		
 		$role->caste     = strtolower(Input::get('roleCaste'));
 		$role->name      = Input::get('roleName');
-		$role->capcode   = Input::get('capcode');
+		$role->capcode   = Input::get('roleCapcode');
 		$role->save();
 		
 		return $this->getIndex($board, $role);
