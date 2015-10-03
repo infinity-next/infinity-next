@@ -311,7 +311,7 @@ class PostController extends Controller {
 			
 			if ($delete)
 			{
-				$posts = Post::ipBinary($banIp);
+				$posts = Post::ipString($banIp);
 				
 				$this->log('log.post.ban.delete', $post, [
 					"board_id"  => $post->board_id,

@@ -1167,10 +1167,7 @@ class Post extends Model {
 	
 	public function scopeIpBinary($query, $ip)
 	{
-		return $query->where(function($query) use ($ip) {
-				$query->where('ban_ip_start', '<=', $ip);
-				$query->where('ban_ip_end',   '>=', $ip);
-			});
+		return $query->where('author_ip', $ip);
 	}
 	
 	public function scopeOp($query)

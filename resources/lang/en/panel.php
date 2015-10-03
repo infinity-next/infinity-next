@@ -20,7 +20,10 @@ return [
 		'board' => [
 			'create_more_than_max' => "{0,1}You may not create more than 1 board.|[2,Inf]You may not create more than :boardCreateMax boards.",
 			'create_so_soon'       => "{0,1}You must wait 1 minute before creating another board.|[2,Inf]You must wait :boardCreateTimer minutes before creating another board.",
-		]
+		],
+		'staff' => [
+			'no_roles' => "You must create an assignable role before you can add staff.",
+		],
 	],
 	
 	'title' => [
@@ -29,6 +32,7 @@ return [
 		'board_create'       => "Create a Board",
 		'board_create_your'  => "Create your Board",
 		'board_role_add'     => "New Role for /:board_uri/",
+		'board_role_edit'    => "Edit :role for /:board_uri/",
 		'board_role_list'    => "Roles for /:board_uri/",
 		'board_role_delete'  => "Delete Role",
 		'board_staff_list'   => "Staff of /:board_uri/",

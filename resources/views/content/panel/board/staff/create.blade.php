@@ -4,6 +4,12 @@
 	'board_uri' => $board->board_uri,
 ]))
 
+@section('actions')
+	@if (!$roles->count())
+	<a class="panel-action" href="{{ $board->getURLForRoles('add') }}">+ @lang('panel.action.add_role')</a>
+	@endif
+@endsection
+
 @section('body')
 	{!! Form::open([
 		'url'    => Request::url(),
@@ -13,6 +19,7 @@
 		'class'  => "form-staff",
 	]) !!}
 		
+		@if ($roles->count())
 		<div class="form-select-group">
 			{!! Form::radio(
 				"staff-source",
@@ -65,5 +72,8 @@
 		<div class="field row-submit">
 			<button type="submit" class="field-submit">@lang('panel.action.add_staff')</button>
 		</div>
+		@else
+			<p>@lang('panel.error.staff.no_roles')</p>
+		@endif
 	{!! Form::close() !!}
 @endsection

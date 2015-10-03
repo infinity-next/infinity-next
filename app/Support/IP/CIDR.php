@@ -23,20 +23,20 @@ use App\Support\IP\IP as IP;
  */
 class CIDR
 {
-	const INTERSECT_NO			  = 0;
-	const INTERSECT_YES			 = 1;
-	const INTERSECT_LOW			 = 2;
-	const INTERSECT_HIGH			= 3;
-
+	const INTERSECT_NO   = 0;
+	const INTERSECT_YES  = 1;
+	const INTERSECT_LOW  = 2;
+	const INTERSECT_HIGH = 3;
+	
 	protected $start;
 	protected $end;
 	protected $prefix;
 	protected $version;
 	protected $istart;
 	protected $iend;
-
+	
 	private $cache;
-
+	
 	/**
 	 * Create a new CIDR object.
 	 *

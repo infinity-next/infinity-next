@@ -12,6 +12,9 @@ use Input;
 use Request;
 use Validator;
 
+use Event;
+use App\Events\UserRolesModified;
+
 class StaffController extends PanelController {
 	
 	/*
@@ -79,7 +82,7 @@ class StaffController extends PanelController {
 			return abort(403);
 		}
 		
-		$roles = $board->roles;
+		$roles = $this->user->getAssignableRoles($board);
 		$staff = $board->getStaff();
 		
 		return $this->view(static::VIEW_ADD, [
@@ -104,6 +107,7 @@ class StaffController extends PanelController {
 		}
 		
 		$createUser = false;
+		$roles      = $this->user->getAssignableRoles($board);
 		$rules      = [];
 		$existing   = Input::get('staff-source') == "existing";
 		
@@ -118,7 +122,7 @@ class StaffController extends PanelController {
 				'captcha'     => [
 					"required",
 					"captcha"
-				]
+				],
 			];
 			
 			$input      = Input::only('existinguser', 'captcha');
@@ -130,12 +134,34 @@ class StaffController extends PanelController {
 			$validator  = $this->registrationValidator();
 		}
 		
+		$castes     = $roles->pluck('role_id');
+		$casteRules = [
+			'castes' => [
+				"required",
+				"array",
+			],
+		];
+		$casteInput = Input::only('castes');
+		$casteValidator = Validator::make($casteInput, $casteRules);
+		
+		$casteValidator->each('castes', [
+			"in:" . $castes->implode(","),
+		]);
+		
+		
 		if ($validator->fails())
 		{
 			return redirect()
 				->back()
 				->withInput()
 				->withErrors($validator->errors());
+		}
+		else if ($casteValidator->fails())
+		{
+			return redirect()
+				->back()
+				->withInput()
+				->withErrors($casteValidator->errors());
 		}
 		else if ($createUser)
 		{
@@ -146,20 +172,11 @@ class StaffController extends PanelController {
 			$user = User::whereUsername(Input::only('existinguser'))->firstOrFail();
 		}
 		
-		$role = Role::firstOrCreate([
-			'role'       => "janitor",
-			'board_uri'  => $board->board_uri,
-			'caste'      => NULL,
-			'inherit_id' => Role::ID_JANITOR,
-			'name'       => "board.role.janitor",
-			'capcode'    => "board.role.janitor",
-			'system'     => false,
-		]);
 		
-		$userRole = new UserRole;
-		$userRole->user_id = $user->user_id;
-		$userRole->role_id = $role->role_id;
-		$userRole->save();
+		$user->roles()->detach($roles->pluck('role_id')->toArray());
+		$user->roles()->attach($casteInput['castes']);
+		
+		Event::fire(new UserRolesModified($user));
 		
 		return redirect("/cp/board/{$board->board_uri}/staff");
 	}

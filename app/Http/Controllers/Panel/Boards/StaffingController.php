@@ -12,6 +12,9 @@ use Input;
 use Request;
 use Validator;
 
+use Event;
+use App\Events\UserRolesModified;
+
 class StaffingController extends PanelController {
 	
 	/*
@@ -54,8 +57,10 @@ class StaffingController extends PanelController {
 			return abort(403);
 		}
 		
-		$roles  = $this->user->getAssignableRolesForBoard($board);
+		$roles  = $this->user->getAssignableRoles($board);
 		$staff  = $board->getStaff();
+		
+		$user->load('roles');
 		
 		return $this->view(static::VIEW_EDIT, [
 			'board'  => $board,
@@ -66,4 +71,60 @@ class StaffingController extends PanelController {
 		]);
 	}
 	
+	/**
+	 * Saves new castes to staff member.
+	 *
+	 * @return Response
+	 */
+	public function patchEdit(Board $board, PermissionUser $user)
+	{
+		if (!$this->user->canEditBoardStaffMember($user, $board))
+		{
+			return abort(403);
+		}
+		
+		$user->load('roles');
+		
+		$roles     = $this->user->getAssignableRoles($board);
+		$castes    = $roles->pluck('role_id');
+		$rules     = [
+			'castes' => [
+				"array",
+			],
+		];
+		$input     = Input::only('castes');
+		$validator = Validator::make($input, $rules);
+		
+		$validator->each('castes', [
+			"in:" . $castes->implode(","),
+		]);
+		
+		
+		if ($validator->fails())
+		{
+			return redirect()
+				->back()
+				->withInput()
+				->withErrors($validator->errors());
+		}
+		
+		
+		$user->roles()->detach($roles->pluck('role_id')->toArray());
+		
+		if (is_array($input['castes']))
+		{
+			$user->roles()->attach($input['castes']);
+		}
+		
+		Event::fire(new UserRolesModified($user));
+		
+		if (count($input['castes']))
+		{
+			return redirect()->back();
+		}
+		else
+		{
+			return redirect("/cp/board/{$board->board_uri}/staff");
+		}
+	}
 }

@@ -3,8 +3,9 @@
 	
 	@foreach ($roles as $role)
 	<div class="field row-castes">
-		<input class="field-control" name="castes[{{ $role->caste }}]" value="1" type="checkbox" id="caste-{{ $role->caste ?: 'default' }}" />
-		<label class="field-label" for="caste-{{ $role->caste ?: 'default' }}">{{ $role->getDisplayName() }}</label>
+		<input class="field-control" name="castes[{{ $role->role_id }}]" value="{{ $role->role_id }}" type="checkbox" id="caste-{{ $role->role }}-{{ $role->caste ?: '' }}"
+			{{ old("castes.{$role->role_id}") || (isset($staff) && isset($staff->roles) && $staff->roles->contains($role)) ? "checked" : "" }} />
+		<label class="field-label" for="caste-{{ $role->role }}-{{ $role->caste ?: '' }}">{{ $role->getDisplayName() }}</label>
 	</div>
 	@endforeach
 	

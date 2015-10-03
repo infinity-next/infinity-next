@@ -159,6 +159,20 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Returns a human-readable name for this role's group.
+	 *
+	 * @return string
+	 */
+	public function getDisplayNameForGroup()
+	{
+		return trans_choice("user.role.{$this->role}", is_null($this->board_uri) ? 0 : 1, [
+			'role'      => $this->role,
+			'board_uri' => $this->board_uri,
+			'caste'     => $this->caste,
+		]);
+	}
+	
+	/**
 	 * Returns a human-readable name for this role.
 	 *
 	 * @return string 
@@ -320,17 +334,47 @@ class Role extends Model {
 	}
 	
 	/**
-	 * Narrows query to only roles which are, or inherit, a specific role_id.
+	 * Narrows query to only system admins.
 	 *
-	 * @param  int  $role_id
 	 * @return Query
 	 */
-	public function scopeWhereLevel($query, $role_id)
+	public function scopeWhereAdmin($query)
 	{
-		return $query->where(function($query) use ($role_id) {
-			$query->where('inherit_id', '=', $role_id);
-			$query->orWhere('role_id', '=', $role_id);
-		});
+		return $query->where('role', "admin");
+	}
+	
+	/**
+	 * Narrows query to only board volunteers.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereJanitor($query)
+	{
+		return $query->where('role', "janitor");
+	}
+	
+	/**
+	 * Narrows query to only global moderators.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereModerator($query)
+	{
+		return $query->where('role', "moderator");
+	}
+	
+	/**
+	 * Narrows query to all staff roles.
+	 *
+	 * @return Query
+	 */
+	public function scopeWhereStaff($query)
+	{
+		return $query->whereIn('role', [
+			"admin",
+			"moderator",
+			"janitor",
+		]);
 	}
 	
 	/**

@@ -13,30 +13,7 @@
 	'class'  => "form-config",
 ]) !!}
 	
-	<fieldset class="form-fields group-role_basic">
-		<legend class="form-legend">{{ trans("config.legend.role_basic") }}</legend>
-		
-		@include("widgets.config.option.radio", [
-			'option_name'    => "roleType",
-			'option_value'   => "",
-			'option_choices' => $choices,
-		])
-		
-		@include("widgets.config.option.text", [
-			'option_name'    => "roleCaste",
-			'option_value'   => "",
-		])
-		
-		@include("widgets.config.option.text", [
-			'option_name'    => "roleName",
-			'option_value'   => "",
-		])
-		
-		@include("widgets.config.option.text", [
-			'option_name'    => "roleCapcode",
-			'option_value'   => "",
-		])
-	</fieldset>
+	@include('content.panel.board.roles.form')
 	
 	<div class="field row-submit">
 		<button type="submit" class="field-submit">@lang('panel.action.add_role')</button>

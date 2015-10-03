@@ -588,21 +588,24 @@ trait PermissionUser {
 	/**
 	 * Returns a complete list of roles that this user may delegate to others.
 	 *
-	 * @param  Board  $board
+	 * @param  Board|null  $board  If not null, will refine search to a single board.
 	 * @return Collection|array
 	 */
-	public function getAssignableRolesForBoard(Board $board)
+	public function getAssignableRoles(Board $board = null)
 	{
-		$roles = [];
-		
-		if ($this->can('board.user.role', $board))
-		{
-			return $board->roles()
-				->whereLevel(Role::ID_JANITOR)
-				->get();
-		}
-		
-		return $roles;
+		return $board->roles()
+			->where(function($query) use ($board)
+			{
+				if (is_null($board) && $this->canAdminRoles())
+				{
+					$query->whereStaff();
+				}
+				else if ($this->can('board.user.role', $board))
+				{
+					$query->whereJanitor();
+				}
+			})
+			->get();
 	}
 	
 	/**

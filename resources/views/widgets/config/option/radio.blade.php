@@ -13,7 +13,7 @@
 			{!! Form::radio(
 				$option_name,
 				$option_choice,
-				$option_value == $option_choice,
+				$option_value == $option_choice || count($option_choices) === 1,
 				[
 					'id'        => "{$option_name}-{$option_choice}",
 					'class'     => "field-control",

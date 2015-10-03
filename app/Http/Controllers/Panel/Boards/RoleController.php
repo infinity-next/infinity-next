@@ -8,6 +8,7 @@ use App\RolePermission;
 use App\Http\Controllers\Panel\PanelController;
 
 use Input;
+use Validator;
 
 use Event;
 use App\Events\RoleWasModified;
@@ -47,24 +48,29 @@ class RoleController extends PanelController {
 	 * @param  \App\Board  $board
 	 * @return Response
 	 */
-	public function getIndex(Board $board)
+	public function getIndex(Board $board, Role $role = null)
 	{
 		if (!$this->user->canEditConfig($board))
 		{
 			return abort(403);
 		}
 		
-		$roles   = Role::whereCanParentForBoard($board, $this->user)->get();
 		$choices = [];
 		
-		foreach ($roles as $role)
+		if (is_null($role))
 		{
-			$choices[$role->getDisplayName()] = $role->role;
+			$roles   = Role::whereCanParentForBoard($board, $this->user)->get();
+			
+			foreach ($roles as $role)
+			{
+				$choices[$role->getDisplayName()] = $role->role;
+			}
 		}
 		
 		return $this->view(static::VIEW_EDIT, [
 			'board'   => $board,
 			'choices' => $choices,
+			'role'    => $role,
 			'tab'     => "roles",
 		]);
 	}
@@ -89,7 +95,6 @@ class RoleController extends PanelController {
 				"unique:roles,role,board_uri,{$board->board_uri}",
 			],
 			'roleName'    => [
-				"required",
 				"string",
 			],
 			'roleCapcode' => [
@@ -107,7 +112,6 @@ class RoleController extends PanelController {
 				->withErrors($validator->errors());
 		}
 		
-		$role = new Role();
 		$role->caste     = strtolower(Input::get('roleCaste'));
 		$role->name      = Input::get('roleName');
 		$role->capcode   = Input::get('capcode');

@@ -80,6 +80,7 @@ class RolesController extends PanelController {
 		
 		return $this->view(static::VIEW_CREATE, [
 			'board'   => $board,
+			'role'    => null,
 			'choices' => $choices,
 			'tab'     => "roles",
 		]);
@@ -98,13 +99,13 @@ class RolesController extends PanelController {
 			return abort(403);
 		}
 		
-		$roles = Role::whereCanParentForBoard($board, $this->user)->get()->lists('role');
+		$roles = Role::whereCanParentForBoard($board, $this->user)->get();
 		
 		$rules = [
 			'roleType'    => [
 				"required",
 				"string",
-				"in:" . $roles->implode(","),
+				"in:" . $roles->lists('role')->implode(","),
 			],
 			'roleCaste'   => [
 				"string",
@@ -112,7 +113,6 @@ class RolesController extends PanelController {
 				"unique:roles,role,{$board->board_uri},board_uri",
 			],
 			'roleName'    => [
-				"required",
 				"string",
 			],
 			'roleCapcode' => [
@@ -131,12 +131,13 @@ class RolesController extends PanelController {
 		}
 		
 		$role = new Role();
-		$role->board_uri = $board->board_uri;
-		$role->role      = strtolower(Input::get('roleType'));
-		$role->caste     = strtolower(Input::get('roleCaste'));
-		$role->name      = Input::get('roleName');
-		$role->capcode   = Input::get('capcode');
-		$role->weight    = constant(Role::class . "::WEIGHT_" . strtoupper(Input::get('roleType')));
+		$role->board_uri  = $board->board_uri;
+		$role->inherit_id = $roles->where('role', strtolower(Input::get('roleType')))->pluck('role_id')[0];
+		$role->role       = strtolower(Input::get('roleType'));
+		$role->caste      = strtolower(Input::get('roleCaste'));
+		$role->name       = Input::get('roleName') ?: "user.role.{$role->role}";
+		$role->capcode    = Input::get('capcode');
+		$role->weight     = 5 + constant(Role::class . "::WEIGHT_" . strtoupper(Input::get('roleType')))  ;
 		$role->save();
 		
 		return redirect( $role->getPermissionsURLForBoard() );

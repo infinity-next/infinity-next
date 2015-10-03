@@ -483,20 +483,23 @@ main.cp form.form-config {
 			border-bottom: none;
 		}
 	
+	.form-select-group {
+		margin: 0.5em 0;
+	}
 	label.form-selector {
 		display: block;
 		color: #2b485c;
 		font-weight: bold;
 		font-size: 1.17em;
 		border-bottom: 1px solid #e0e0e0;
-		padding: 0.5em 1em;
+		padding: 0 1em 0.5em 1em;
 		margin: 0 -12px 0 -10px;
 	}
 		label.form-selector:hover {
 			text-decoration: underline;
 		}
 		input.form-selection {
-			display: none;
+			display: none !important;
 		}
 		input.form-selection:checked ~ .form-selector {
 			margin-top: 1em;
@@ -632,6 +635,10 @@ main.cp form.form-config {
 						padding: 0;
 						width: 6.25em;
 					}
+		
+		form.form-staff .row-castes .field-label {
+			display: inline-block;
+		}
 		
 		form.form-config .row-submit,
 		form.form-config .row-delete {

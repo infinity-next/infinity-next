@@ -108,6 +108,11 @@ return [
 		'desc' => [
 			'board_uri'            => "Part of the URL used to open your board. Cannot be changed.",
 			'boardSidebarText'     => "Markup allowed.",
+			
+			'roleType'             => "This role's group. Staff groups apply only to people they're assigned to. Anonymous types will apply to people who visit your board.",
+			'roleName'             => "Your name for this group. Internal use only.",
+			'roleCapcode'          => "Capcodes sign a post with authority. Leave blank for no capcode.",
+			'roleCaste'            => "A caste is used to separate different staff roles.",
 		],
 	],
 	
@@ -161,7 +166,6 @@ return [
 				'sticky' => "Sticky anyone's threads",
 				
 				'lock_bypass' => "Post in locked threads",
-				'nocaptcha' => "Post without CAPTCHAs",
 				
 				'report' => "Report post to board managers",
 			],
@@ -199,6 +203,7 @@ return [
 			'cache' => "Clear system cache",
 			'config' => "Edit system config",
 			'logs' => "View and manipulate logs",
+			'nocaptcha' => "Post without CAPTCHAs",
 			'payments' => "Edit payments and donations",
 			'permissions' => "Edit role permissions",
 			'roles' => "Edit roles",
