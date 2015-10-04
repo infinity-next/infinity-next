@@ -17,7 +17,7 @@
  *
  * Burichan
  * #EEF2FF - Background
- * #d6daf0 - Meidum blue
+ * #d6daf0 - Medium blue
  * #B7C5D9 - Medium dark blue
  * #34345C - Dark blue
  *
@@ -1905,6 +1905,14 @@ main.index-threaded {
 							.author .email {
 								text-decoration: underline;
 							}
+
+						.insecure-tripcode {
+							color: #117743;
+						}
+						.insecure-tripcode:before {
+							content: '!';
+						}
+
 						.createdon {
 							display: inline-block;
 						}
