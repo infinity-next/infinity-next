@@ -42,8 +42,18 @@ class ThreadRecache extends Listener
 		// "thread.board_id" because we will often want to clear threads
 		// for an entire board. Without that prefix, we can't easily
 		// accomplish that.
-		Cache::forget("board.{$post->board_uri}.thread.{$thread_id}");
-		Cache::tags(["board.{$post->board_uri}", "threads"])->forget("board.{$post->board_uri}.thread.{$thread_id}");
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				Cache::forget("board.{$post->board_uri}.thread.{$thread_id}");
+				break;
+			
+			default :
+				Cache::tags(["board.{$post->board_uri}", "threads"])
+					->forget("board.{$post->board_uri}.thread.{$thread_id}");
+				break;
+		}
 	}
 	
 }

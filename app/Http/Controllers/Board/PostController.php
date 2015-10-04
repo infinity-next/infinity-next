@@ -98,7 +98,7 @@ class PostController extends Controller {
 				}
 				
 				
-				$posts = Post::ipString($post->author_ip)
+				$posts = Post::ip($post->author_ip)
 					->with('reports')
 					->get();
 				
@@ -109,7 +109,8 @@ class PostController extends Controller {
 					"posts"     => $posts->count(),
 				]);
 				
-				$posts->delete();
+				
+				Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 				
 				foreach ($posts as $post)
 				{
@@ -127,7 +128,7 @@ class PostController extends Controller {
 				
 				if ($all)
 				{
-					$posts = Post::ipString($post->author_ip)
+					$posts = Post::ip($post->author_ip)
 						->where('board_uri', $board->board_uri)
 						->with('reports')
 						->get();
@@ -139,7 +140,7 @@ class PostController extends Controller {
 						"posts"     => $posts->count(),
 					]);
 					
-					$posts->delete();
+					Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 					
 					foreach ($posts as $post)
 					{

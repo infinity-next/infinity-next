@@ -202,14 +202,6 @@ class ConfigController extends PanelController {
 	 */
 	public function patchConfig(BoardConfigRequest $request, Board $board)
 	{
-		if (!$board->canEditConfig($this->user))
-		{
-			return abort(403);
-		}
-		
-		$request->setBoard($board);
-		$request->validate();
-		
 		$input        = $request->all();
 		$optionGroups = $request->getBoardOptions();
 		
