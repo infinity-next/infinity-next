@@ -7,6 +7,9 @@
 			{{ $post->author ?: $board->getConfig('defaultName', trans('board.anonymous')) }}
 		@if ($post->email && !$catalog)</a>@endif
 		</strong>
+		@if ($post->insecure_tripcode)
+		<span class="insecure-tripcode tripcode">{{ $post->insecure_tripcode }}</span>
+		@endif
 		
 		@if ($post->capcode_id > 0)
 		<strong class="post-detail-item capcode">{{ $post->getCapcodeName() }}</strong>

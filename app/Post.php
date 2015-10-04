@@ -1409,6 +1409,18 @@ class Post extends Model {
 			$this->reply_to = $thread->post_id;
 			$this->reply_to_board_id = $thread->board_id;
 		}
+
+		// Handle tripcode, if any.
+		if (preg_match('/^([^#]+)?(##|#)(.+)$/', $this->author, $match))
+		{
+			// Remove password from name.
+			$this->author = $match[1];
+			// Whether a secure tripcode was requested, currently unused.
+			$secure_tripcode_requested = ($match[2] == '##');
+			// Convert password to tripcode, store tripcode hash in DB.
+			$this->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
+			
+		}
 		
 		// Store the post in the database.
 		DB::transaction(function() use ($board, $thread)
