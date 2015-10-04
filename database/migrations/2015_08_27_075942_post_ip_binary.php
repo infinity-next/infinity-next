@@ -18,16 +18,16 @@ class PostIpBinary extends Migration
 	{
 		Schema::table('bans', function(Blueprint $table)
 		{
-			$table->binary('ban_ip_end')->after('ban_ip');
-			$table->binary('ban_ip_start')->after('ban_ip');
+			$table->binary('ban_ip_end')->after('ban_ip')->default('');
+			$table->binary('ban_ip_start')->after('ban_ip')->default('');
 		});
 		Schema::table('posts', function(Blueprint $table)
 		{
-			$table->binary('author_ip_bin')->nullable()->after('author_ip');
+			$table->binary('author_ip_bin')->nullable()->after('author_ip')->default('');
 		});
 		Schema::table('reports', function(Blueprint $table)
 		{
-			$table->binary('reporter_ip')->after('ip');
+			$table->binary('reporter_ip')->after('ip')->default('');
 		});
 		
 		

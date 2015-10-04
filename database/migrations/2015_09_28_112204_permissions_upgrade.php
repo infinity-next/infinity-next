@@ -20,7 +20,7 @@ class PermissionsUpgrade extends Migration
 		
 		Schema::table('roles', function(Blueprint $table)
 		{
-			$table->integer('weight')->unsigned();
+			$table->integer('weight')->unsigned()->default(0);
 		});
 		
 		Schema::table('permissions', function(Blueprint $table)
