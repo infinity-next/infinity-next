@@ -143,10 +143,11 @@
 					Even if they are at all doable, simply because of how things are built, the time it takes to get <em>any</em> feature out is tremendously bloated.
 				</p>
 				<p>
-					Go ahead and shitpost on <a href="{{{url('/test/')}}}">&gt;&gt;&gt;/test/</a> real quick.
-					You'll notice that, on your post, there is a delete button.
+					If you want, go <a href="{{url("/cp/boards/create")}}">create your own board</a> right now.
+					You'll notice that, while browsing your board, you will have an actions menu using the same URL as a normal anonymous user.
 					This is something that <em>already exists</em> on this software that is completely impossible on existing imageboards due to flaws in the technology.
-					There is no way to render a page differently depending on who accesses it, but on Infinity, it is.
+					There is no way to render a page differently depending on who accesses it, but on Infinity Next, it is.
+					This is why you have to use <tt>/mod.php?</tt> on 8chan.
 				</p>
 				<p>
 					Password protected boards, boards restricted to board owners / site staff, variable user permissions, a built-in thread archival, a robust API (for 3rd party tools), board settings for things like number of threads per page, and so on.
