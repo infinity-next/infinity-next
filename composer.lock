@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3045433a8abe3afcde1881e15f6d455d",
-    "content-hash": "ad6e1bcaca2d0b8c2cfe24c8bbd666cb",
+    "hash": "8c8ca445e371a0e3f9bc6ef00a50a10c",
+    "content-hash": "5add65114f749bb0d69400e94d217666",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -107,20 +107,20 @@
         },
         {
             "name": "cviebrock/image-validator",
-            "version": "2.0.0-beta",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cviebrock/image-validator.git",
-                "reference": "cd78e0fa6aeced2f4a0a61d8305d3cd160e5a3ee"
+                "reference": "83a7e7fc687f84a31ef72e9eee8cdc25a79b2f8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cviebrock/image-validator/zipball/cd78e0fa6aeced2f4a0a61d8305d3cd160e5a3ee",
-                "reference": "cd78e0fa6aeced2f4a0a61d8305d3cd160e5a3ee",
+                "url": "https://api.github.com/repos/cviebrock/image-validator/zipball/83a7e7fc687f84a31ef72e9eee8cdc25a79b2f8e",
+                "reference": "83a7e7fc687f84a31ef72e9eee8cdc25a79b2f8e",
                 "shasum": ""
             },
             "require": {
-                "ext-gd": "*",
+                "ext-bcmath": "*",
                 "illuminate/support": "5.*",
                 "illuminate/translation": "5.*",
                 "illuminate/validation": "5.*",
@@ -154,7 +154,7 @@
                 "laravel",
                 "validator"
             ],
-            "time": "2015-05-04 02:01:43"
+            "time": "2015-10-07 17:10:16"
         },
         {
             "name": "danielstjules/stringy",
@@ -763,6 +763,43 @@
             "time": "2014-09-09 13:34:57"
         },
         {
+            "name": "enshrined/svg-sanitize",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/darylldoyle/svg-sanitizer.git",
+                "reference": "ed123c268311b2f64adb5f417ffe30ed84335f5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/ed123c268311b2f64adb5f417ffe30ed84335f5f",
+                "reference": "ed123c268311b2f64adb5f417ffe30ed84335f5f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "^0.1.2",
+                "phpunit/phpunit": "^4.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "enshrined\\svgSanitize\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Daryll Doyle",
+                    "email": "daryll@enshrined.co.uk"
+                }
+            ],
+            "description": "An SVG sanitizer for PHP",
+            "time": "2015-07-06 23:33:41"
+        },
+        {
             "name": "erusev/parsedown",
             "version": "1.5.4",
             "source": {
@@ -905,16 +942,16 @@
         },
         {
             "name": "infinity-next/brennan-captcha",
-            "version": "dev-master",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/brennan-captcha.git",
-                "reference": "7449e37c2ff7c5201a5ef03d53a24ba471803d43"
+                "reference": "0de933e37cd3a2c4132df28de479baeef66983f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/7449e37c2ff7c5201a5ef03d53a24ba471803d43",
-                "reference": "7449e37c2ff7c5201a5ef03d53a24ba471803d43",
+                "url": "https://api.github.com/repos/infinity-next/brennan-captcha/zipball/0de933e37cd3a2c4132df28de479baeef66983f7",
+                "reference": "0de933e37cd3a2c4132df28de479baeef66983f7",
                 "shasum": ""
             },
             "require": {
@@ -942,7 +979,7 @@
                 }
             ],
             "description": "An anti-bot image captcha system written by Frederick Brennan and ported to Laravel for Infinity Next by Joshua Moon.",
-            "time": "2015-10-03 02:02:13"
+            "time": "2015-10-03 13:06:09"
         },
         {
             "name": "infinity-next/eightdown",
@@ -980,6 +1017,55 @@
             ],
             "description": "Eightdown is a Markdown implementation for Laravel that adds optional features imageboard users will be familiar with.",
             "time": "2015-08-04 20:07:42"
+        },
+        {
+            "name": "infinity-next/sleuth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/infinity-next/sleuth.git",
+                "reference": "303a20b282a24c6cb5a3544d2cd944671e639c2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/infinity-next/sleuth/zipball/303a20b282a24c6cb5a3544d2cd944671e639c2f",
+                "reference": "303a20b282a24c6cb5a3544d2cd944671e639c2f",
+                "shasum": ""
+            },
+            "require": {
+                "enshrined/svg-sanitize": "0.2.*",
+                "illuminate/support": "5.1.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "InfinityNext\\Sleuth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joshua Moon",
+                    "email": "josh@jaw.sh",
+                    "homepage": "https://jaw.sh"
+                }
+            ],
+            "keywords": [
+                "detection",
+                "file",
+                "laravel",
+                "mime",
+                "type"
+            ],
+            "time": "2015-10-07 21:53:34"
         },
         {
             "name": "intervention/image",
@@ -3515,16 +3601,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.2.3",
+            "version": "2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f"
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ef1ca6835468857944d5c3b48fa503d5554cff2f",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/eabf68b476ac7d0f73793aada060f1c1a9bf8979",
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979",
                 "shasum": ""
             },
             "require": {
@@ -3573,7 +3659,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-09-14 06:51:16"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3755,16 +3841,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.10",
+            "version": "4.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8"
+                "reference": "bdd199472410fd7e32751f9c814c7e06f2c21bd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/463163747474815c5ccd4ae12b5b355ec12158e8",
-                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bdd199472410fd7e32751f9c814c7e06f2c21bd5",
+                "reference": "bdd199472410fd7e32751f9c814c7e06f2c21bd5",
                 "shasum": ""
             },
             "require": {
@@ -3823,7 +3909,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-01 09:14:30"
+            "time": "2015-10-07 10:39:46"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4307,8 +4393,8 @@
     "stability-flags": {
         "cviebrock/image-validator": 10,
         "infinity-next/braintree": 20,
-        "infinity-next/brennan-captcha": 20,
-        "infinity-next/eightdown": 20
+        "infinity-next/eightdown": 20,
+        "infinity-next/sleuth": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

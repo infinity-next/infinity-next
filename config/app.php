@@ -166,6 +166,11 @@ return [
 		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
 		/*
+		 * File Validation
+		 */
+		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
+		
+		/*
 		 * Money
 		 */
 		//'Laravel\Cashier\CashierServiceProvider',
@@ -240,6 +245,11 @@ return [
 		 * Captcha
 		 */
 		'Captcha'   => 'InfinityNext\BrennanCaptcha\Facades\Captcha',
+		
+		/*
+		 * File Validation
+		 */
+		'Sleuth'   => 'InfinityNext\Sleuth\Facades\Sleuth',
 		
 		/*
 		 * CSS+JS Minify

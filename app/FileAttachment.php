@@ -58,7 +58,8 @@ class FileAttachment extends Model {
 	 */
 	public static function getRecentImages($number = 16, $sfwOnly = true)
 	{
-		return static::orderBy('attachment_id', 'desc')
+		return static::distinct('file_id')
+			->orderBy('attachment_id', 'desc')
 			->whereHas('storage', function($query) {
 				$query->where('has_thumbnail', '=', true);
 			})

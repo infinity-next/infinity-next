@@ -1370,11 +1370,12 @@ section.index-form {
 		}
 			
 			form.form-post button.field-submit {
-				width: 118px;
+				width: 125px;
 				margin: 0 5px 0 0;
 			}
 			form.form-post select.field-capcode {
-				width: 140 	px;
+				width: 145px;
+				float: right;
 			}
 			
 			/* Dropzone */

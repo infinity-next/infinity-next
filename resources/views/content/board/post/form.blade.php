@@ -136,7 +136,7 @@
 		</div>
 		@endif
 		
-		<div class="field row-submit row-inline">
+		<div class="field row-submit">
 			{!! Form::button(
 				trans("board.submit." . implode($actions, "+")),
 				[
@@ -151,7 +151,7 @@
 					<option value="" selected>Capcode</option>
 					
 					@foreach ($user->getCapcodes($board) as $role)
-						<option value="{!! $role->role_id !!}">{{{ $role->capcode }}}</option>
+						<option value="{!! $role->role_id !!}">{{{ $role->getCapcodeName() }}}</option>
 					@endforeach
 				</select>
 			@endif

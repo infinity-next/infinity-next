@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use File;
 use Input;
+use Sleuth;
 use Storage;
 
 class FileStorage extends Model {
@@ -194,30 +195,45 @@ class FileStorage extends Model {
 				return "png";
 			
 			##
-			# TEXT DOCUMENTS
+			# DOCUMENTS
 			##
 			case "text/plain" :
 				return "txt";
 			
+			case "application/epub+zip" :
+				return "epub";
+			
+			case "application/pdf" :
+				return "pdf";
+			
 			##
 			# AUDIO
 			##
+			case "audio/mpeg" :
 			case "audio/mp3" :
+				return "mp3";
+			
+			case "audio/aac" :
+				return "aac";
+			
+			case "audio/mp4" :
 				return "mp3";
 			
 			case "audio/ogg" :
 				return "ogg";
 			
-			case "audio/wav" :
+			case "audio/wave" :
 				return "wav";
 			
-			case "audio/mpeg" :
-				return "mpga";
+			case "audio/webm" :
+				return "wav";
 			
 			##
-			# MULTIMEDIA
+			# VIDEO
 			##
-			case "video/vp8" :
+			case "video/3gp" :
+				return "3gp";
+			
 			case "video/webm" :
 				return "webm";
 			
@@ -227,11 +243,8 @@ class FileStorage extends Model {
 			case "video/ogg" :
 				return "ogg";
 			
-			case "application/epub+zip" :
-				return "epub";
-			
-			case "application/pdf" :
-				return "pdf";
+			case "video/x-flv" :
+				return "flv";
 		}
 		
 		return $mimes[1];
@@ -367,13 +380,33 @@ class FileStorage extends Model {
 	 */
 	public function isImage()
 	{
-		switch ($this->guessExtension())
+		switch ($this->mime)
 		{
-			case "bmp"  :
-			case "jpeg" :
-			case "jpg"  :
-			case "gif"  :
-			case "png"  :
+			case "image/jpg" :
+			case "image/gif" :
+			case "image/png" :
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Is this attachment audio?
+	 *
+	 * @return boolean
+	 */
+	public function isAudio()
+	{
+		switch ($this->mime)
+		{
+			case "audio/mpeg" :
+			case "audio/mp3" :
+			case "audio/aac" :
+			case "audio/mp4" :
+			case "audio/ogg" :
+			case "audio/wave" :
+			case "audio/webm" :
 				return true;
 		}
 		
@@ -390,8 +423,11 @@ class FileStorage extends Model {
 	{
 		switch ($this->guessExtension())
 		{
-			case "mp4"  :
-			case "webm" :
+			case "video/3gp" :
+			case "video/webm" :
+			case "video/mp4" :
+			case "video/ogg" :
+			case "video/x-flv" :
 				return true;
 		}
 		
@@ -461,39 +497,6 @@ class FileStorage extends Model {
 		}
 		
 		return $attachment;
-	}
-	
-	/**
-	 * Collects data from an UploadFile type and stores it.
-	 *
-	 * @return int
-	 */
-	public static function probe(UploadedFile &$file)
-	{
-		$video = $file->getPathname();
-		$cmd   = env('LIB_VIDEO_PROBE', "ffprobe") . " -v error -show_format -show_streams {$video} 2>&1";
-		
-		exec($cmd, $output, $returnvalue);
-		
-		if (count($output) <= 3)
-		{
-			foreach ($output as $line)
-			{
-				$line = (string) $line;
-				
-				if (strlen($line) > 0 && (stripos($line, 'invalid') !== false || stripos($line, 'error') !== false))
-				{
-					dd($output);
-					return false;
-				}
-			}
-		}
-		
-		// Hack.
-		// Appends this output so we don't need to run twice.
-		$file->ffmpegData = $output;
-		
-		return $returnvalue !== 1;
 	}
 	
 	/**
@@ -653,53 +656,18 @@ class FileStorage extends Model {
 			$storage->first_uploaded_at = $fileTime;
 			$storage->upload_count = 0;
 			
-			if (isset($upload->ffmpegData))
+			if (!isset($upload->case))
 			{
-				$meta = [];
-				$codecType = null;
-				$codecName = null;
+				$upload->case = Sleuth::check($upload->getRealPath());
+			}
+			
+			if (is_object($upload->case))
+			{
+				$storage->mime = $upload->case->getMimeType();
 				
-				foreach ($upload->ffmpegData as $datum)
+				if ($upload->case->getMetaData())
 				{
-					$datumItems = explode("=", $datum, 2);
-					
-					if (count($datumItems) == 2)
-					{
-						$datumValue = $datumItems[1];
-						
-						switch ($datumItems[0])
-						{
-							case "codec_name" :
-								$codecName = $datumItems[1];
-								break;
-							
-							case "codec_type" :
-								$codecType = $datumItems[1];
-								break;
-							
-							default :
-								$datumKeys  = explode(":", $datumItems[0], 2);
-								
-								if (count($datumKeys) == 2)
-								{
-									if($datumKeys[0] === "TAG")
-									{
-										$meta[$datumKeys[1]] = $datumItems[1];
-									}
-								}
-								break;
-						}
-					}
-				}
-				
-				if (!is_null($codecType) && !is_null($codecName))
-				{
-					$storage->mime = "{$codecType}/{$codecName}";
-				}
-				
-				if (count($meta))
-				{
-					$storage->meta = json_encode($meta);
+					$storage->meta = json_encode($upload->case->getMetaData());
 				}
 			}
 		}

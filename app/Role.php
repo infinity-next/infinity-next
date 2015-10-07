@@ -145,6 +145,20 @@ class Role extends Model {
 	}
 	
 	/**
+	 * Returns a human-readable capcode string.
+	 *
+	 * @return string
+	 */
+	public function getCapcodeName()
+	{
+		if ($this->capcode_id)
+		{
+			return trans_choice((string) $this->capcode_name, 0);
+		}
+		
+		return "";
+	}
+	/**
 	 * Returns a human-readable name for this role.
 	 *
 	 * @return string 

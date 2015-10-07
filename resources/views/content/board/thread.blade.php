@@ -1,8 +1,8 @@
 <div class="post-container @if ($op === $thread) op-container @else reply-container @endif post-{{$thread->post_id}} post-{{$thread->board_uri}}-{{$thread->board_id}}" data-widget="post" data-updated-at="{{ $thread->updated_at->timestamp }}">
 	@if ($thread->reports)
 	@include('content.board.post.single', [
-		'board'   => &$board,
-		'post'    => &$thread,
+		'board'   => $board,
+		'post'    => $thread,
 		'catalog' => false,
 	])
 	
@@ -21,7 +21,7 @@
 		
 		@if ($thread->updated_by)
 		<li class="post-meta meta-updated_by">
-			<i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [ 'name' => $thread->updated_by_username, 'time' => $thread->updated_at ])
+			<i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [ 'name' => $thread->updated_by_username, 'time' => $thread->updated_at->timestamp ])
 		</li>
 		@endif
 	</ul>
@@ -36,7 +36,7 @@
 --}}
 @if ($op === $thread)
 <ul class="thread-replies">
-	@if ($thread->reply_count > count($thread->replies))
+	@if ($thread->reply_count > count($thread->replies) && !$reply_to)
 	<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
 	@endif
 	
@@ -44,10 +44,10 @@
 	<li class="thread-reply">
 		<article class="reply">
 			@include('content.board.thread', [
-				'board'    => &$board,
-				'thread'   => &$reply,
-				'op'       => &$op,
-				'reply_to' => &$reply_to,
+				'board'    => $board,
+				'thread'   => $reply,
+				'op'       => $op,
+				'reply_to' => $reply_to,
 			])
 		</article>
 	</li>

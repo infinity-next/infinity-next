@@ -774,7 +774,7 @@ class Post extends Model {
 	{
 		if ($this->capcode_id)
 		{
-			return trans($this->capcode_name);
+			return trans_choice((string) $this->capcode_name, 0);
 		}
 		
 		return "";

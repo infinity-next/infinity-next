@@ -2,3 +2,4 @@
 /packages
 /vendor
 .env
+composer.lock

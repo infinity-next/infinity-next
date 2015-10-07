@@ -40,7 +40,8 @@
 		
 		"infinity-next/braintree": "*@dev",
 		"infinity-next/brennan-captcha": "1.*",
-		"infinity-next/eightdown": "*@dev"
+		"infinity-next/eightdown": "*@dev",
+		"infinity-next/sleuth": "*@dev"
 	},
 	
 	"require-dev": {
