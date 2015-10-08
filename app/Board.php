@@ -11,9 +11,12 @@ use App\Contracts\PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
+use InfinityNext\BrennanCaptcha\Captcha;
+
 use DB;
 use Cache;
 use Collection;
+use Request;
 
 use Event;
 use App\Events\BoardWasCreated;
@@ -199,7 +202,22 @@ class Board extends Model {
 	
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
-		return $user->canPostWithoutCaptcha($this);
+		if ($user->canPostWithoutCaptcha($this))
+		{
+			return true;
+		}
+		
+		$lastCaptcha = Captcha::where('client_ip', inet_pton(Request::ip()))
+			->where('created_at', '>=', \Carbon\Carbon::now()->subHour()->timestamp)
+			->whereNotNull('cracked_at')
+			->first();
+		
+		if ($lastCaptcha instanceof Captcha && $lastCaptcha->cracked_at)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public function canPostInLockedThreads(PermissionUser $user)

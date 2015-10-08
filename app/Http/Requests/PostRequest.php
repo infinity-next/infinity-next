@@ -286,6 +286,24 @@ class PostRequest extends Request {
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
 		
+		// Check global flood.
+		$lastPost = Post::where('author_ip', inet_pton($this->ip()))
+			->where('created_at', '>', \Carbon\Carbon::now()->subSeconds(30))
+			->op()
+			->first();
+		
+		if ($lastPost instanceof Post)
+		{
+			$timeDiff = (30 - $lastPost->created_at->diffInSeconds());
+			
+			$messages = $validator->errors();
+			$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
+				'time_left' => $timeDiff,
+			]));
+			$this->failedValidation($validator);
+			return;
+		}
+		
 		// Ban check.
 		$ban = Ban::getBan($this->ip(), $board->board_uri);
 		

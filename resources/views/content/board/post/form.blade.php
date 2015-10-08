@@ -118,10 +118,14 @@
 		</div>
 		@endif
 		
-		@if (!$board->canPostWithoutCaptcha($user))
-		<div class="field row-captcha">
+		<div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;">
 			<label class="field-label" for="captcha">
-				{!! captcha() !!}
+				@if (!$board->canPostWithoutCaptcha($user))
+					{!! captcha() !!}
+				@else
+					<img src="" class="captcha">
+					<input type="hidden" name="captcha_hash" value="" />
+				@endif
 			</label>
 			
 			{!! Form::text(
@@ -134,7 +138,6 @@
 					'autocomplete' => "off",
 			]) !!}
 		</div>
-		@endif
 		
 		<div class="field row-submit">
 			{!! Form::button(

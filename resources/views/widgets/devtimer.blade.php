@@ -11,7 +11,7 @@
 		@else
 			<h3 class="shekel-title">I'm underfunded by ...</h3>
 			<blockquote class="shekel-timer timer-underfunded" title="This is on the assumption of a 40 hour work week.">{{{ $devTimer }}} </blockquote>
-			<p class="shekel-oyvey"> ... and will require <a href="{{ secure_url("contribute") }}">more donations</a> to keep working.</p>
+			<p class="shekel-oyvey"> ... and need <a href="{{ secure_url("contribute") }}">more contributions</a> to keep the project on time.</p>
 		@endif
 	</div>
 </section>
