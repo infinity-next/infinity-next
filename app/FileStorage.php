@@ -285,41 +285,35 @@ class FileStorage extends Model {
 		$stock = true;
 		$spoil = $this->isSpoiler();
 		
-		switch ($ext)
+		if ($this->isVideo())
 		{
-			case "mp3"  :
-			case "mpga" :
+			if ($this->hasThumb())
+			{
 				$stock = false;
-				$type  = "audio";
 				$url   = $this->getThumbnailURL($board);
-				break;
-			
-			case "mp4"  :
-			case "webm" :
-				if ($this->hasThumb())
-				{
-					$stock = false;
-					$url   = $this->getThumbnailURL($board);
-					$type  = "video";
-				}
-				break;
-			
-			case "svg"  :
+				$type  = "video";
+			}
+		}
+		else if ($this->isAudio())
+		{
+			$stock = false;
+			$type  = "audio";
+			$url   = $this->getThumbnailURL($board);
+		}
+		else if ($this->isImage())
+		{
+			if ($this->hasThumb())
+			{
 				$stock = false;
-				$url   = $this->getDownloadURL($board);
+				$url   = $this->getThumbnailURL($board);
 				$type  = "img";
-				break;
-			
-			case "jpg"  :
-			case "png"  :
-			case "gif"  :
-				if ($this->hasThumb())
-				{
-					$stock = false;
-					$url   = $this->getThumbnailURL($board);
-					$type  = "img";
-				}
-				break;
+			}
+		}
+		else if ($this->isImageVector())
+		{
+			$stock = false;
+			$url   = $this->getDownloadURL($board);
+			$type  = "img";
 		}
 		
 		$classes = [];
@@ -348,20 +342,17 @@ class FileStorage extends Model {
 			return $board->getSpoilerUrl();
 		}
 		
-		switch ($ext)
+		if ($this->isAudio())
 		{
-			case "mp3"  :
-			case "mpga" :
-				if (!$this->hasThumb())
-				{
-					return $board->getAudioArtURL();
-				}
-				break;
-			
-			case "svg" :
-				// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-				$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
-				break;
+			if (!$this->hasThumb())
+			{
+				return $board->getAudioArtURL();
+			}
+		}
+		else if ($this->isImageVector())
+		{
+			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
+			$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
 		}
 		
 		// Sometimes we supply a filename when fetching the filestorage as an attachment.
@@ -389,6 +380,16 @@ class FileStorage extends Model {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Is this attachment an image vector (SVG)?
+	 *
+	 * @reutrn boolean
+	 */
+	public function isImageVector()
+	{
+		return $this->mime === "image/svg+xml";
 	}
 	
 	/**
