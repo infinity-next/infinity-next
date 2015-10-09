@@ -10,8 +10,7 @@
     
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f [OR]
-    RewriteCond %{REQUEST_FILENAME} /index\.php
+    RewriteCond %{REQUEST_FILENAME} !-f
     
     <IfModule !mod_env.c>
         RewriteRule ^ index.php [L]
