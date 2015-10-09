@@ -1,22 +1,13 @@
 **Infinity Next** is an imageboard using the [Laravel Framework](https://github.com/laravel/laravel). It was conceived as a way to replace what [8chan](https://8ch.net) runs on. Its current codebase has aged poorly and I felt the world was ready for a redo.
 
-# License
-Infinity Next is distributed under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/).
+# Submitting Issues
+If you are submitting an [issue](https://github.com/infinity-next/infinity-next/issues) to developers, please supply the following:
 
-In short:
-* You may use Infinity Next for any reason you please.
-* You may modify Infinity Next as you see fit.
-* You may profit with Infinity Next.
+- A concise description of your problem.
+- An ''exact case'' of the error.
+- Additional details of articles if applicable.
 
-However, you also agree that:
-* Infinity Next & Contributors are not liable for this software and any damage it may do.
-* Infinity Next & Contributors are not liable if this software is used to break the law.
-* You will not sell copies or modifications of this source code (no sublicensing).
-* You *must* distribute the source code for any publicly hosted modifications of Infinity Next under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/) license in a conventional format.
-
-The AGPL3 license is designed to protect the end user by keeping modified copies of the source open and free.
-
-While not binding, I do ask that users link back to this git repository or to https://infinitydev.org on their website. Sharing is caring. ♥
+Please don't assume we'll understand exactly what you're talking about. If I can read an error, copy+paste something, or upload a file and reproduce an error in 30 seconds after opening your message, I can fix it without having to ask you for more information. If you do not provide an error case or details on how to recreate what you're experiencing, the first response to your issue will be "please provide an example".
 
 # Requirements
 Larachan runs on Laravel 5 and has the same requirements.
@@ -42,6 +33,24 @@ Infinity Next is currently below its first release version. When it is finished,
 7. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
 
 You should now have a `/test/` board. The admin account will be named `Admin`.
+
+# License
+Infinity Next is distributed under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/).
+
+In short:
+* You may use Infinity Next for any reason you please.
+* You may modify Infinity Next as you see fit.
+* You may profit with Infinity Next.
+
+However, you also agree that:
+* Infinity Next & Contributors are not liable for this software and any damage it may do.
+* Infinity Next & Contributors are not liable if this software is used to break the law.
+* You will not sell copies or modifications of this source code (no sublicensing).
+* You *must* distribute the source code for any publicly hosted modifications of Infinity Next under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/) license in a conventional format.
+
+The AGPL3 license is designed to protect the end user by keeping modified copies of the source open and free.
+
+While not binding, I do ask that users link back to this git repository or to https://infinitydev.org on their website. Sharing is caring. ♥
 
 # Contributing
 Everyone is welcome to contribute, but please follow repository etiquette.
