@@ -81,26 +81,12 @@ class ImageController extends Controller {
 				{
 					$xSendFile = true;
 					$responseHeaders['X-Accel-Redirect']     = $storagePathFull;
-					
-					if (env('debug', false))
-					{
-						$responseHeaders['X-Delivered-By'] = "x-accel-redirect";
-					}
 				}
 				// LIGHTTPD
 				else if (preg_match("/lighttpd\/1(\.[0-9]+)+/", $_SERVER['SERVER_SOFTWARE']))
 				{
 					$xSendFile = true;
 					$responseHeaders['X-LIGHTTPD-send-file']     = $storagePathFull;
-					
-					if (env('debug', false))
-					{
-						$responseHeaders['X-Delivered-By'] = "x-lighttpd-send-file";
-					}
-				}
-				else if (env('debug', false))
-				{
-					$responseHeaders['X-Delivered-By'] = "php";
 				}
 				
 				
