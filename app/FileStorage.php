@@ -342,12 +342,18 @@ class FileStorage extends Model {
 			return $board->getSpoilerUrl();
 		}
 		
-		if ($this->isAudio())
+		if ($this->isVideo())
+		{
+			$ext = "jpg";
+		}
+		else if ($this->isAudio())
 		{
 			if (!$this->hasThumb())
 			{
 				return $board->getAudioArtURL();
 			}
+			
+			$ext = "jpg";
 		}
 		else if ($this->isImageVector())
 		{
@@ -358,10 +364,10 @@ class FileStorage extends Model {
 		// Sometimes we supply a filename when fetching the filestorage as an attachment.
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			return url($baseURL . urlencode($this->pivot->filename));
+			return url($baseURL . urlencode("{$this->pivot->filename}.{$ext}"));
 		}
 		
-		return url($baseURL . strtotime($this->first_uploaded_at) . "." . $this->guessExtension());
+		return url($baseURL . strtotime($this->first_uploaded_at) . ".{$ext}");
 	}
 	
 	/**
@@ -423,7 +429,7 @@ class FileStorage extends Model {
 	 */
 	public function isVideo()
 	{
-		switch ($this->guessExtension())
+		switch ($this->mime)
 		{
 			case "video/3gp" :
 			case "video/webm" :
@@ -529,92 +535,62 @@ class FileStorage extends Model {
 	{
 		global $app;
 		
-		switch ($this->guessExtension())
+		if (!Storage::exists($this->getFullPathThumb()))
 		{
-			case "mp3"  :
-			case "mpga" :
-			case "wav"  :
-				if (!Storage::exists($this->getFullPathThumb()))
+			if ($this->isAudio())
+			{
+				$ID3  = new \getID3();
+				$meta = $ID3->analyze($this->getFullPath());
+				
+				if (isset($meta['comments']['picture']) && count($meta['comments']['picture']))
 				{
-					$ID3  = new \getID3();
-					$meta = $ID3->analyze($this->getFullPath());
-					
-					if (isset($meta['comments']['picture']) && count($meta['comments']['picture']))
+					foreach ($meta['comments']['picture'] as $albumArt)
 					{
-						foreach ($meta['comments']['picture'] as $albumArt)
+						try
 						{
-							try
-							{
-								$imageManager = new ImageManager;
-								$imageManager
-									->make($albumArt['data'])
-									->resize(
-										$app['settings']('attachmentThumbnailSize'),
-										$app['settings']('attachmentThumbnailSize'),
-										function($constraint) {
-											$constraint->aspectRatio();
-											$constraint->upsize();
-										}
-									)
-									->save($this->getFullPathThumb());
-								
-								$this->has_thumbnail = true;
-							}
-							catch (\Exception $error)
-							{
-								// Nothing.
-							}
+							$imageManager = new ImageManager;
+							$imageManager
+								->make($albumArt['data'])
+								->resize(
+									$app['settings']('attachmentThumbnailSize'),
+									$app['settings']('attachmentThumbnailSize'),
+									function($constraint) {
+										$constraint->aspectRatio();
+										$constraint->upsize();
+									}
+								)
+								->encode("jpg", 100)
+								->save($this->getFullPathThumb());
 							
-							break;
+							$this->has_thumbnail = true;
+							return true;
 						}
-					}
-				}
-				break;
-			
-			case "flv"  :
-			case "mp4"  :
-			case "webm" :
-				if (!Storage::exists($this->getFullPathThumb()))
-				{
-					Storage::makeDirectory($this->getDirectoryThumb());
-					
-					$video    = $this->getFullPath();
-					$image    = $this->getFullPathThumb();
-					$interval = 0;
-					$frames   = 1;
-					
-					$cmd = env('LIB_VIDEO', "ffmpeg") . " -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y $image 2>&1";
-					
-					exec($cmd, $output, $returnvalue);
-					
-					// Constrain thumbnail to proper dimensions.
-					if (Storage::exists($image))
-					{
-						$imageManager = new ImageManager;
-						$imageManager
-							->make($this->getFullPath())
-							->resize(
-								$app['settings']('attachmentThumbnailSize'),
-								$app['settings']('attachmentThumbnailSize'),
-								function($constraint) {
-									$constraint->aspectRatio();
-									$constraint->upsize();
-								}
-							)
-							->save($this->getFullPathThumb());
+						catch (\Exception $error)
+						{
+							// Nothing.
+						}
 						
-						$this->has_thumbnail = true;
+						break;
 					}
 				}
-				break;
-			
-			case "jpg"  :
-			case "gif"  :
-			case "png"  :
-				if (!Storage::exists($this->getFullPathThumb()))
+			}
+			else if ($this->isVideo())
+			{
+				Storage::makeDirectory($this->getDirectoryThumb());
+				
+				$video    = $this->getFullPath();
+				$image    = $this->getFullPathThumb();
+				$interval = 0;
+				$frames   = 1;
+				
+				$cmd = "ffmpeg -i {$video} -deinterlace -an -ss {$interval} -f mjpeg -t 1 -r 1 -y {$image} 2>&1";
+				
+				exec($cmd, $output, $returnvalue);
+				dd($output);
+				
+				// Constrain thumbnail to proper dimensions.
+				if (Storage::exists($image))
 				{
-					Storage::makeDirectory($this->getDirectoryThumb());
-					
 					$imageManager = new ImageManager;
 					$imageManager
 						->make($this->getFullPath())
@@ -626,12 +602,44 @@ class FileStorage extends Model {
 								$constraint->upsize();
 							}
 						)
+						->encode("jpeg", 100)
 						->save($this->getFullPathThumb());
 					
 					$this->has_thumbnail = true;
+					return true;
 				}
-				break;
+				else
+				{
+					dd($output);
+				}
+			}
+			else if ($this->isImage())
+			{
+				Storage::makeDirectory($this->getDirectoryThumb());
+				
+				$imageManager = new ImageManager;
+				$imageManager
+					->make($this->getFullPath())
+					->resize(
+						$app['settings']('attachmentThumbnailSize'),
+						$app['settings']('attachmentThumbnailSize'),
+						function($constraint) {
+							$constraint->aspectRatio();
+							$constraint->upsize();
+						}
+					)
+					->save($this->getFullPathThumb());
+				
+				$this->has_thumbnail = true;
+				return true;
+			}
 		}
+		else
+		{
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
