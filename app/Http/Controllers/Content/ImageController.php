@@ -41,22 +41,70 @@ class ImageController extends Controller {
 			$FileStorage     = FileStorage::getHash($hash);
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
-			$cacheTime       =  315360000; /// 10 years
+			$cacheTime       =  31536000; /// 1 year
 			
 			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
 			{
+				ini_set("zlib.output_compression", "Off");
+				
 				$responseSize    = Storage::size($storagePath);
 				$responseCode    = 200;
 				$responseHeaders = [
-					'Cache-Control'       => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
-					'Expires'             => gmdate(DATE_RFC1123, time() + $cacheTime),
-					'Last-Modified'       => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
-					'Content-Disposition' => "inline",
-					'Content-Length'      => $responseSize,
-					'Content-Type'        => $FileStorage->mime,
-					'Filename'            => $filename,
+					'Cache-Control'        => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
+					'Expires'              => gmdate(DATE_RFC1123, time() + $cacheTime),
+					'Last-Modified'        => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
+					'Content-Disposition'  => "inline",
+					//'Content-Disposition'  => "attachment; filename={$filename}",
+					'Content-Length'       => $responseSize,
+					'Content-Type'         => $FileStorage->mime,
+					'Filename'             => $filename,
 				];
 				
+				
+				// Determine if we can skip PHP content distribution.
+				// This is hugely important.
+				//
+				// APACHE
+				// Relies on the mod_xsendfile module.
+				if (function_exists("apache_get_modules") && in_array("mod_xsendfile", apache_get_modules()))
+				{
+					$xSendFile = true;
+					$responseHeaders['X-Sendfile']     = $storagePathFull;
+					
+					if (env('debug', false))
+					{
+						$responseHeaders['X-Delivered-By'] = "x-send-file";
+					}
+				}
+				// NGINX
+				else if (preg_match("/nginx\/1(\.[0-9]+)+/", $_SERVER['SERVER_SOFTWARE']))
+				{
+					$xSendFile = true;
+					$responseHeaders['X-Accel-Redirect']     = $storagePathFull;
+					
+					if (env('debug', false))
+					{
+						$responseHeaders['X-Delivered-By'] = "x-accel-redirect";
+					}
+				}
+				// LIGHTTPD
+				else if (preg_match("/lighttpd\/1(\.[0-9]+)+/", $_SERVER['SERVER_SOFTWARE']))
+				{
+					$xSendFile = true;
+					$responseHeaders['X-LIGHTTPD-send-file']     = $storagePathFull;
+					
+					if (env('debug', false))
+					{
+						$responseHeaders['X-Delivered-By'] = "x-lighttpd-send-file";
+					}
+				}
+				else if (env('debug', false))
+				{
+					$responseHeaders['X-Delivered-By'] = "php";
+				}
+				
+				
+				// Seek Audio and Video files.
 				$responseStart = 0;
 				$responseEnd   = $responseSize - 1;
 				
@@ -107,26 +155,39 @@ class ImageController extends Controller {
 					}
 				}
 				
-				return Response::stream(function() use ($storagePathFull, $responseStart, $responseEnd) {
-					if (!($responseStream = fopen($storagePathFull, 'rb'))) {
-						abort(500, "Could not open requested file.");
-					}
-					
-					if ($responseStart > 0)
-					{
-						fseek($responseStream, $responseStart);
-					}
-					
-					$streamCurrent = 0;
-					
-					while (!feof($responseStream) && $streamCurrent < $responseEnd && connection_status() == 0)
-					{
-						echo fread($responseStream, min(1024 * 16, $responseEnd - $responseStart + 1));
-						$streamCurrent += 1024 * 16;
-					}
-					
-					fclose($responseStream);
-				}, $responseCode, $responseHeaders);
+				
+				// Are we using the webserver to send files?
+				if ($xSendFile)
+				{
+					// Yes.
+					// Send an empty 200 response with the headers.
+					return Response::make("", $responseCode, $responseHeaders);
+				}
+				else
+				{
+					// No.
+					// Get our hands dirty and stream the file.
+					return Response::stream(function() use ($storagePathFull, $responseStart, $responseEnd) {
+						if (!($responseStream = fopen($storagePathFull, 'rb'))) {
+							abort(500, "Could not open requested file.");
+						}
+						
+						if ($responseStart > 0)
+						{
+							fseek($responseStream, $responseStart);
+						}
+						
+						$streamCurrent = 0;
+						
+						while (!feof($responseStream) && $streamCurrent < $responseEnd && connection_status() == 0)
+						{
+							echo fread($responseStream, min(1024 * 16, $responseEnd - $responseStart + 1));
+							$streamCurrent += 1024 * 16;
+						}
+						
+						fclose($responseStream);
+					}, $responseCode, $responseHeaders);
+				}
 			}
 		}
 		
