@@ -373,6 +373,7 @@ class FileStorage extends Model {
 	{
 		switch ($this->mime)
 		{
+			case "image/jpeg" :
 			case "image/jpg" :
 			case "image/gif" :
 			case "image/png" :
