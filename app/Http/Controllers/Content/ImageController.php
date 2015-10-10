@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use File;
+use Settings;
 use Storage;
 use Response;
 
