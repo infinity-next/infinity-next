@@ -754,15 +754,17 @@ ib.widget("post", function(window, $, undefined) {
 							'background-position' : 'center center',
 							'min-width'           : $img.width() + 'px',
 							'min-height'          : $img.height() + 'px',
-						})
-						// Blur the image while it loads so the user understands there is a loading action.
-						.css('opacity', 0.5);
+							'opacity'             : 0.5,
+						});
 					
 					$img
 						// Bind an event to handle the image loading.
 						.one("load", function() {
 							// Remove our opacity change.
-							$(this).parent().css('opacity', "");
+							$(this).parent().css({
+								'background-image'    : "none",
+								'opacity'             : ""
+							});
 						})
 						// Finally change the source of our thumb to the full image.
 						.attr('src', $link.attr('data-download-url'));

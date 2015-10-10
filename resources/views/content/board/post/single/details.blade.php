@@ -38,7 +38,7 @@
 	@if ($post->isStickied())
 	<li class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></li>
 	@elseif ($post->isBumplocked())
-	<li class="post-detail detail-icon post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-hand-o-down"></i></li>
+	<li class="post-detail detail-icon post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-anchor"></i></li>
 	@endif
 	
 	@if ($post->isLocked())
