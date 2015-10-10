@@ -3,7 +3,7 @@
 use App\Services\SettingManager;
 use Illuminate\Support\ServiceProvider;
 
-class ConfigServiceProvider extends ServiceProvider {
+class SettingsServiceProvider extends ServiceProvider {
 
 	/**
 	 * Overwrite any vendor / package configuration.
@@ -21,9 +21,15 @@ class ConfigServiceProvider extends ServiceProvider {
 			return new SettingManager($app);
 		});
 		
-		config([
-			//
-		]);
 	}
-
+	
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array('settings', 'App\Services\SettingManager');
+	}
 }

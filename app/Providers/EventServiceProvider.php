@@ -60,7 +60,7 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\UserRecachePermissions',
 		],
 		
-		// Site events
+		// Role events
 		'App\Events\RoleWasModified' => [
 			'App\Listeners\UserRecachePermissions',
 		],
@@ -72,6 +72,12 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\UserRolesModified' => [
 			'App\Listeners\UserRecachePermissions',
 		],
+		
+		// Site Events
+		'App\Events\SiteSettingsWereModified' => [
+			'App\Listeners\SiteSettingsRecache',
+		],
+		
 	];
 	
 	/**

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use File;
 use Input;
+use Settings;
 use Sleuth;
 use Storage;
 
@@ -342,7 +343,11 @@ class FileStorage extends Model {
 			return $board->getSpoilerUrl();
 		}
 		
-		if ($this->isVideo())
+		if ($this->isImage())
+		{
+			$ext = Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png";
+		}
+		else if ($this->isVideo())
 		{
 			$ext = "jpg";
 		}
@@ -353,7 +358,7 @@ class FileStorage extends Model {
 				return $board->getAudioArtURL();
 			}
 			
-			$ext = "jpg";
+			$ext = "png";
 		}
 		else if ($this->isImageVector())
 		{
@@ -533,8 +538,6 @@ class FileStorage extends Model {
 	 */
 	public function processThumb()
 	{
-		global $app;
-		
 		if (!Storage::exists($this->getFullPathThumb()))
 		{
 			if ($this->isAudio())
@@ -552,14 +555,14 @@ class FileStorage extends Model {
 							$imageManager
 								->make($albumArt['data'])
 								->resize(
-									$app['settings']('attachmentThumbnailSize'),
-									$app['settings']('attachmentThumbnailSize'),
+									Settings::get('attachmentThumbnailSize'),
+									Settings::get('attachmentThumbnailSize'),
 									function($constraint) {
 										$constraint->aspectRatio();
 										$constraint->upsize();
 									}
 								)
-								->encode("jpg", 100)
+								->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 								->save($this->getFullPathThumb());
 							
 							$this->has_thumbnail = true;
@@ -586,23 +589,22 @@ class FileStorage extends Model {
 				$cmd = "ffmpeg -i {$video} -deinterlace -an -ss {$interval} -f mjpeg -t 1 -r 1 -y {$image} 2>&1";
 				
 				exec($cmd, $output, $returnvalue);
-				dd($output);
 				
 				// Constrain thumbnail to proper dimensions.
 				if (Storage::exists($image))
 				{
 					$imageManager = new ImageManager;
 					$imageManager
-						->make($this->getFullPath())
+					->make($this->getFullPath())
 						->resize(
-							$app['settings']('attachmentThumbnailSize'),
-							$app['settings']('attachmentThumbnailSize'),
+							Settings::get('attachmentThumbnailSize'),
+							Settings::get('attachmentThumbnailSize'),
 							function($constraint) {
 								$constraint->aspectRatio();
 								$constraint->upsize();
 							}
 						)
-						->encode("jpeg", 100)
+						->encode("jpg", Settings::get('attachmentThumbnailQuality'))
 						->save($this->getFullPathThumb());
 					
 					$this->has_thumbnail = true;
@@ -621,13 +623,14 @@ class FileStorage extends Model {
 				$imageManager
 					->make($this->getFullPath())
 					->resize(
-						$app['settings']('attachmentThumbnailSize'),
-						$app['settings']('attachmentThumbnailSize'),
+						Settings::get('attachmentThumbnailSize'),
+						Settings::get('attachmentThumbnailSize'),
 						function($constraint) {
 							$constraint->aspectRatio();
 							$constraint->upsize();
 						}
 					)
+					->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 					->save($this->getFullPathThumb());
 				
 				$this->has_thumbnail = true;

@@ -26,6 +26,7 @@ class BladeServiceProvider extends ServiceProvider
 			return $value;
 		});
 	}
+	
 	/**
 	 * Get the services provided by the provider.
 	 *

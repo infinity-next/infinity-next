@@ -148,10 +148,11 @@ return [
 		'App\Providers\AuthServiceProvider',
 		'App\Providers\BladeServiceProvider',
 		'App\Providers\BusServiceProvider',
-		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'App\Providers\SettingsServiceProvider',
+		
 		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
 		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		
@@ -229,6 +230,8 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+		
+		'Settings'  => 'App\Support\Facades\Settings',
 		
 		/*
 		 * Forms

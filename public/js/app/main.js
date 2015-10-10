@@ -706,6 +706,7 @@ ib.widget("post", function(window, $, undefined) {
 				
 				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
+				$img.parent().css({ 'background-image' : 'none' });
 				$inline.remove();
 				$img.toggle(true);
 				
@@ -741,6 +742,12 @@ ib.widget("post", function(window, $, undefined) {
 				if ($img.is(widget.options.selector['attachment-image-expandable']))
 				{
 					$item.addClass('attachment-expanded');
+					$img.parent().css({
+						'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
+						'background-size'     : '100%',
+						'background-repeat'   : 'no-repeat',
+						'background-position' : 'center center'
+					});
 					
 					$img
 						// Blur the image while it loads so the user understands there is a loading action.

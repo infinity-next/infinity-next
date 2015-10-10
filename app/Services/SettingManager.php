@@ -42,6 +42,17 @@ class SettingManager {
 	 * @param  string  $option_name
 	 * @return mixed
 	 */
+	public function get($option_name)
+	{
+		return $this->getSetting($option_name);
+	}
+	
+	/**
+	 * Returns the value of a single setting.
+	 *
+	 * @param  string  $option_name
+	 * @return mixed
+	 */
 	public function getSetting($option_name)
 	{
 		foreach ($this->settings as $settings)

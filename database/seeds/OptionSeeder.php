@@ -63,6 +63,21 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => 'required|min:$min'
 				],
+				[
+					'option_name'           => "attachmentThumbnailQuality",
+					'default_value'         => "75",
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 100 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'required|min:$min'
+				],
+				[
+					'option_name'           => "attachmentThumbnailJpeg",
+					'default_value'         => 0,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => 'boolean'
+				],
 				
 				[
 					'option_name'           => "banMaxLength",
@@ -341,6 +356,8 @@ class OptionGroupSeeder extends Seeder {
 				'options'       => [
 					"attachmentFilesize",
 					"attachmentThumbnailSize",
+					"attachmentThumbnailQuality",
+					"attachmentThumbnailJpeg",
 				],
 			],
 			[

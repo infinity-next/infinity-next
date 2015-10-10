@@ -2004,7 +2004,7 @@ main.index-threaded {
 								margin: 0;
 								position: relative;
 								z-index: 3;
-								max-width: 250px;
+								max-width: 125px;
 							}
 								ul.attachments-multi li.post-attachment:last-child figure.attachment {
 									margin: 0 0 1em 0;
@@ -2019,8 +2019,8 @@ main.index-threaded {
 								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
 									padding: 0 3em 0 0;
-									max-height: 250px;
-									max-width: 250px;
+									max-height: 125px;
+									max-width: 125px;
 								}
 									.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
 										content: ' ';
@@ -2044,7 +2044,7 @@ main.index-threaded {
 									}
 									
 									.post-content li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
-										right: -110px;
+										right: -85px;
 										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
 									}
 								
@@ -2052,7 +2052,7 @@ main.index-threaded {
 									display: block;
 									margin: 0 auto;
 									max-width: 100%;
-									max-height: 250px;
+									max-height: 125px;
 									
 									position: relative;
 									z-index: 2;
