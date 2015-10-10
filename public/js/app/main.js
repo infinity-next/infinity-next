@@ -706,9 +706,13 @@ ib.widget("post", function(window, $, undefined) {
 				
 				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
-				$img.parent().css({ 'background-image' : 'none' });
 				$inline.remove();
 				$img.toggle(true);
+				$img.parent().css({
+					'background-image' : 'none',
+					'min-width'        : '',
+					'min-height'       : '',
+				});
 				
 				event.preventDefault();
 				return false;
@@ -746,7 +750,9 @@ ib.widget("post", function(window, $, undefined) {
 						'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
 						'background-size'     : '100%',
 						'background-repeat'   : 'no-repeat',
-						'background-position' : 'center center'
+						'background-position' : 'center center',
+						'min-width'           : $img.width() + 'px',
+						'min-height'          : $img.height() + 'px',
 					});
 					
 					$img
