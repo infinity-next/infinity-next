@@ -69,24 +69,19 @@ class ImageController extends Controller {
 				if (function_exists("apache_get_modules") && in_array("mod_xsendfile", apache_get_modules()))
 				{
 					$xSendFile = true;
-					$responseHeaders['X-Sendfile']     = $storagePathFull;
-					
-					if (env('debug', false))
-					{
-						$responseHeaders['X-Delivered-By'] = "x-send-file";
-					}
+					$responseHeaders['X-Sendfile'] = $storagePathFull;
 				}
 				// NGINX
 				else if (preg_match("/nginx\/1(\.[0-9]+)+/", $_SERVER['SERVER_SOFTWARE']))
 				{
 					$xSendFile = true;
-					$responseHeaders['X-Accel-Redirect']     = $storagePathFull;
+					$responseHeaders['X-Accel-Redirect'] = "/{$storagePath}";
 				}
 				// LIGHTTPD
 				else if (preg_match("/lighttpd\/1(\.[0-9]+)+/", $_SERVER['SERVER_SOFTWARE']))
 				{
 					$xSendFile = true;
-					$responseHeaders['X-LIGHTTPD-send-file']     = $storagePathFull;
+					$responseHeaders['X-LIGHTTPD-send-file'] = $storagePathFull;
 				}
 				
 				

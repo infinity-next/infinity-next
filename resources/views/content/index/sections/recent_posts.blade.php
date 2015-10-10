@@ -5,7 +5,7 @@
 			<ul class="recent-posts">
 				@foreach (App\Post::getRecentPosts(16, false) as $post)
 					<li class="recent-post grid-25">
-						<a class="recent-post-link" href="{{ $post->getURL() }}"></a>
+						<a class="recent-post-link @if ($post->isOp()) recent-post-op @endif" href="{{ $post->getURL() }}"></a>
 						<blockquote class="post ugc">
 							{!! $post->getBodyFormatted() !!}
 						</blockquote>

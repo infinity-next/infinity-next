@@ -872,7 +872,7 @@ figure.error {
 					position: relative;
 					
 					box-sizing: border-box;
-					padding: 1em;
+					padding: 0.5em;
 					margin: 2px 0 -2px 0;
 					
 					overflow: hidden;
@@ -895,6 +895,10 @@ figure.error {
 						bottom: 1.2em;
 						z-index: 2;
 					}
+						#site-recent-posts .recent-post-link.recent-post-op {
+							border-top: 0.25em solid rgba(0,0,255,0.25);
+						}
+						
 						#site-recent-posts .recent-post:hover .recent-post-link {
 							background-image: linear-gradient( to bottom, transparent 0%, #FFFFCC 100% );
 						}
@@ -902,6 +906,7 @@ figure.error {
 					#site-recent-posts .recent-post .post {
 						pointer-events: none;
 						
+						font-size: 90%;
 						min-width: 0px;
 						height: 100%;
 						box-sizing: border-box;
@@ -1849,6 +1854,9 @@ main.index-threaded {
 			
 			border-left: none;
 			border-top: none;
+		}
+		.post-container.op-container {
+			border-top: 0.5em solid rgba(0,0,255,0.25);
 		}
 			
 			.post-content {
