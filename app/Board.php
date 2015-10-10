@@ -311,7 +311,7 @@ class Board extends Model {
 		{
 			return $banners->random()->getURL();
 		}
-		else if (!$this->isWorksafe() && !$this->hasStylesheet())
+		else if (!$this->isWorksafe())
 		{
 			return "/img/logo_yotsuba.png";
 		}
@@ -518,9 +518,15 @@ class Board extends Model {
 		return $staff;
 	}
 	
-	public function getURL()
+	/**
+	 * Returns a fully qualified URL for a route on this board.
+	 *
+	 * @param  string  $route  Optional suffix to be added after the board URL.
+	 * @return string
+	 */
+	public function getURL($route = "")
 	{
-		return url($this->board_uri);
+		return url("{$this->board_uri}/{$route}");
 	}
 	
 	public function getURLForRoles($route = "add")
@@ -535,7 +541,7 @@ class Board extends Model {
 	
 	public function hasStylesheet()
 	{
-		return $this->getConfig('boardCustomCSS', "") != "";
+		return !$this->isWorksafe() || strlen((string) $this->getConfig('boardCustomCSS', "")) > 0;
 	}
 	
 	public function getStylesheet()
@@ -551,6 +557,16 @@ class Board extends Model {
 			
 			return $style;
 		});
+	}
+	
+	/**
+	 * Returns a fully qualified URL for the board's stylesheet.
+	 *
+	 * @return string
+	 */
+	public function getStylesheetUrl()
+	{
+		return $this->getUrl("style.css");
 	}
 	
 	public function getThreadByBoardId($board_id)

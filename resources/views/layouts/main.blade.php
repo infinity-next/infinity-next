@@ -74,7 +74,7 @@
 			
 			@section('header-inner')
 				<figure class="page-head">
-					<img id="logo" src="@yield('header-logo', "/img/logo.png")" alt="Infinity" />
+					<img id="logo" src="@yield('header-logo', asset('img/logo.png'))" alt="Infinity" />
 					
 					<figcaption class="page-details">
 						@if (!isset($hideTitles))

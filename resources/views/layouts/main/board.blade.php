@@ -4,7 +4,11 @@
 @section('description', e($board->description))
 
 @section('page-css')
-	<link id="page-stylesheet" href="/{{ $board->board_uri }}/style.css" rel="stylesheet" data-instant-track />
+	@if ($board->hasStylesheet())
+	<link id="page-stylesheet" href="{{ $board->getStylesheetUrl('style.css') }}" rel="stylesheet" data-instant-track />
+	@else
+	<link id="page-stylesheet" rel="stylesheet" data-instant-track />
+	@endif
 @stop
 
 @section('app-js')
