@@ -61,6 +61,23 @@ class ImageController extends Controller {
 				];
 				
 				
+				if ($thumbnail)
+				{
+					if ($FileStorage->isImage())
+					{
+						$responseHeaders['Content-Type'] = Settings::get('attachmentThumbnailJpeg') ? "image/jpg" : "image/png";
+					}
+					else if ($FileStorage->isVideo())
+					{
+						$responseHeaders['Content-Type'] = "image/jpg";
+					}
+					else if ($FileStorage->isAudio())
+					{
+						$responseHeaders['Content-Type'] = "image/png";
+					}
+				}
+				
+				
 				// Determine if we can skip PHP content distribution.
 				// This is hugely important.
 				//
