@@ -729,6 +729,7 @@ ib.widget("post", function(window, $, undefined) {
 				$img.attr('src', $link.attr('data-thumb-url'));
 				$inline.remove();
 				$img.toggle(true);
+				$img.parent().addClass('attachment-grow');
 			},
 			
 			attachmentExpandClick : function(event) {
@@ -793,6 +794,8 @@ ib.widget("post", function(window, $, undefined) {
 						
 						$audio.insertBefore($link);
 						widget.bind.mediaEvents($audio);
+						
+						$audio.parent().addClass('attachment-grow');
 					}
 					else
 					{

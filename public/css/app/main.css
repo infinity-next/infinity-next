@@ -1987,6 +1987,9 @@ main.index-threaded {
 							margin: 0 1em 1em 0;
 							max-width: 100%;
 						}
+							div.attachment-container.attachment-grow {
+								width: 100%;
+							}
 						
 						a.attachment-link {
 							display: inline;
@@ -2085,8 +2088,7 @@ main.index-threaded {
 								
 								li.post-attachment audio.attachment-inline {
 									display: block;
-									min-width: 250px;
-									max-width: 250px;
+									width: 100%;
 									margin: 0 3em 0.5em 0;
 								}
 								li.post-attachment video.attachment-inline {

@@ -51,7 +51,7 @@ header nav.boardlist {
 	border-color: #D9BFB7;
 }
 	.post-container.op-container {
-		border-top: 0.5em solid rgba(255,220,0,0.5);
+		border-top: 0.5em solid rgba(255,0,0,0.5);
 	}
 	.reply::before {
 		color: #D9BFB7;
