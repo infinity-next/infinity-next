@@ -762,8 +762,10 @@ ib.widget("post", function(window, $, undefined) {
 						.one("load", function() {
 							// Remove our opacity change.
 							$(this).parent().css({
-								'background-image'    : "none",
-								'opacity'             : ""
+								'background-image' : "none",
+								'min-width'        : '',
+								'min-height'       : '',
+								'opacity'          : ""
 							});
 						})
 						// Finally change the source of our thumb to the full image.
