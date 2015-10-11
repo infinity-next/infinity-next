@@ -6,59 +6,30 @@
 # cp /path/to/this/file /etc/nginx/sites-available/infinity-next && ln -s /etc/nginx/sites-available/infinity-next /etc/nginx/sites-enabled/ && killall -1 nginx
 #
 # this document is placed into the public domain
+# root is path of full site url
+# removed Document_root because it cause css,js,image,fonts,swf etc errors
 #
-server {
 
-
-    # this binds to all interfaces on port 80 if you are running as a tor hidden service you probably don't want to do that
-    # if this is running as a Tor hidden service you should seriously be writing your own configs and using proper jails with firewalls 
-    # if you think you don't need that eh whatever you're an idiot, comment the next line out and keep reading.
+    server {
     listen 80;
+    server_name example.com;
 
-    # You can't blame anyone but yourself when someone running skid scripts pops your box and deanonymizes you because you probably are also running outdated versions of everything
-    # if you really don't care about that level of security or are a lazy fuckface, uncomment the next line and get your placebo turn key security. :^3
-    #listen 127.0.0.1:80;
+    root /var/www/public;
+    index index.php index.htm index.html;
 
-    
-    # change this to where you unpacked or git clone'd infinity-next
-    set $webroot /srv/http/infinity-next;
-
-    # php info
-    location ~ \.php$ {
-
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-
-        # if you are using php5-fpm uncomment this line
-        fastcgi_pass unix:/var/run/php5-fpm.sock;
-        
-        # if you are using fastcgi on loopback uncomment this line
-	#fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
-
-    #
-    # josh you're retarded for using a fucking filesystem skiplist for storing this shit
-    # don't touch anything below this line or you'll cause dead kittens
-    #
-
-
-
-    set $static $webroot/storage/app/attachments;
-
-    root $webroot/public;
-    index index.php;
-    server_name infinity;
-    
-    # laravel bullshit rewrite rules
     location / {
-        if (!-e $request_filename ) {
-            rewrite ^/(.*)$ /index.php?/$1 last;
-            break;
-        }
+    try_files $uri $uri/ /index.php?$query_string;
     }
 
+    location ~ .php$ {
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME /var/www/public$fastcgi_script_name;
+    include fastcgi_params;
+    }
+
+    }
+    
     # rewrite rules for thumbnails
     location ~* /.*/file/thumb/.*/.*\.(.*)$ {
         alias $static/thumb/;
