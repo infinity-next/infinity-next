@@ -111,7 +111,7 @@
 			max-width: 150px;
 		}
 	img.attachment-img {
-		max-height: 150px;
+		max-width: 150px;
 	}
 }
 
@@ -199,6 +199,6 @@
 			max-width: 200px;
 		}
 	img.attachment-img {
-		max-height: 200px;
+		max-width: 200px;
 	}
 }

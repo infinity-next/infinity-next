@@ -1460,6 +1460,9 @@ section.index-form {
 			html.no-js .dz-container .dz-instructions {
 				display: none;
 			}
+			html.js .dz-container .fallback {
+				display: none;
+			}
 			
 			.dz-container .dz-preview {
 				position: relative;
@@ -1530,9 +1533,6 @@ section.index-form {
 						.dz-container .dz-preview .dz-actions .dz-spoiler {
 							text-align: left;
 						}
-							html.js .dz-container .dz-preview .dz-actions .dz-spoiler {
-								display: none;
-							}
 							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
 								display: inline-block;
 								vertical-align: text-bottom;
@@ -2057,7 +2057,7 @@ main.index-threaded {
 								img.attachment-img {
 									display: block;
 									margin: 0 auto;
-									max-width: 100%;
+									max-width: 125px;
 									max-height: 125px;
 									
 									position: relative;
