@@ -9,6 +9,17 @@ use Cache;
 class SettingManager {
 	
 	/**
+	 * Public settings.
+	 * THESE WILL BE EXPOSED TO THE FRONT-END WITH EVERY REQUEST.
+	 *
+	 * @var array  of SiteSetting names
+	 */
+	protected static $whitelist = [
+		'attachmentFilesize',
+		'postFloodTime',
+	];
+	
+	/**
 	 * Cached settings for the entire site.
 	 *
 	 * @var collection  of SiteSetting
@@ -45,6 +56,33 @@ class SettingManager {
 	public function get($option_name)
 	{
 		return $this->getSetting($option_name);
+	}
+	
+	/**
+	 * Returns all settings in an array.
+	 *
+	 * @return array
+	 */
+	public function getArray()
+	{
+		return $this->getSettings()->toArray();
+	}
+	
+	/**
+	 * Returns all settings in a json array string for front-end injection.
+	 *
+	 * @return string  (json array)
+	 */
+	public function getJson()
+	{
+		$settings = [];
+		
+		foreach (static::$whitelist as $setting)
+		{
+			$settings[$setting] = $this->get($setting);
+		}
+		
+		return json_encode($settings);
 	}
 	
 	/**

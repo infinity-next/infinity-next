@@ -74,6 +74,8 @@ return [
 		'boardListShow'            => "Show top boards in primary navigation",
 		
 		'attachmentFilesize'       => "Maximum filesize (KiB)",
+		'attachmentThumbnailJpeg'  => "Compress thumbnails to JPEG",
+		'attachmentThumbnailQuality' => "Image quality (percent)",
 		'attachmentThumbnailSize'  => "Attachment preview size (px)",
 		'banMaxLength'             => "Maximum length for bans (days)",
 		'banSubnets'               => "Allow subnet bans",

@@ -1530,6 +1530,9 @@ section.index-form {
 						.dz-container .dz-preview .dz-actions .dz-spoiler {
 							text-align: left;
 						}
+							html.js .dz-container .dz-preview .dz-actions .dz-spoiler {
+								display: none;
+							}
 							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
 								display: inline-block;
 								vertical-align: text-bottom;
@@ -2353,6 +2356,15 @@ aside.index-sidebar {
 blockquote.ugc {
 	
 }
+	blockquote.ugc h1,
+	blockquote.ugc h2,
+	blockquote.ugc h3,
+	blockquote.ugc h4,
+	blockquote.ugc h5,
+	blockquote.ugc h6 {
+		color: #AF0A0F;
+	}
+	
 	blockquote.ugc a {
 		text-decoration: underline;
 	}

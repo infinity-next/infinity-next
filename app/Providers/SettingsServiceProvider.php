@@ -30,6 +30,6 @@ class SettingsServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('settings', 'App\Services\SettingManager');
+		return array('settings');
 	}
 }

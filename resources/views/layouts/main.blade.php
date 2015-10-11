@@ -48,6 +48,8 @@
 				
 				@yield('app-js')
 				
+				'settings'   : {!! $app['settings']->getJson() !!},
+				
 				'version'    : 0
 			};
 		</script>
