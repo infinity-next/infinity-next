@@ -1,5 +1,5 @@
 /**
- * Post form widget
+ * Captcha widget
  */
 ib.widget("captcha", function(window, $, undefined) {
 	var widget = {
@@ -31,8 +31,7 @@ ib.widget("captcha", function(window, $, undefined) {
 				$parent.removeClass("captcha-loading");
 			},
 			
-			captchaReload : function()
-			{
+			captchaReload : function() {
 				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
 					$parent  = $captcha.parent(),
 					$hidden  = $captcha.next(),
@@ -55,14 +54,18 @@ ib.widget("captcha", function(window, $, undefined) {
 				$(widget.options.selector['captcha'])
 					// Load events cannot be tied on parents.
 					// Watch for source changes on the captcha.
-					.on('load.ip-postbox', widget.events.captchaLoad);
+					.on('load.ip-captcha', widget.events.captchaLoad);
 				
-				$(widget)
+				console.log(widget.options);
+				
+				widget.$widget
 					// Watch for captcha clicks.
-					.on('click.ib-postbox', widget.options.selector['captcha'], widget.events.captchaClick);
+					.on('click.ib-captcha', widget.options.selector['captcha'], widget.events.captchaClick);
 				
 			}
 		}
 		
-	}
+	};
+	
+	return widget;
 });

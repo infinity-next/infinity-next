@@ -118,7 +118,7 @@
 		</div>
 		@endif
 		
-		<div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;">
+		<div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;" data-widget="captcha">
 			<label class="field-label" for="captcha">
 				@if (!$board->canPostWithoutCaptcha($user))
 					{!! captcha() !!}

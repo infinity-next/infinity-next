@@ -202,6 +202,8 @@ class Board extends Model {
 	
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
+		return false;
+		
 		if ($user->canPostWithoutCaptcha($this))
 		{
 			return true;

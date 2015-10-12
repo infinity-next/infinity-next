@@ -10,7 +10,7 @@
 				data-download-url="{!! $attachment->getDownloadURL($board) !!}"
 				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
 			>
-				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
+				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
 					{!! $attachment->getThumbnailHTML($board) !!}
 					
 					<figcaption class="attachment-details">
@@ -29,7 +29,7 @@
 		</div>
 		@else
 		<a href="{!! $post->getURL() !!}" data-instant>
-			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}">
+			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
 				{!! $attachment->getThumbnailHTML($board) !!}
 			</figure>
 		</a>

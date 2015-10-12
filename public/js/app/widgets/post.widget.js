@@ -34,9 +34,6 @@ ib.widget("post", function(window, $, undefined) {
 			},
 		},
 		
-		// Compiled settings.
-		options  : false,
-		
 		// Events
 		events   : {
 			attachmentCollapseClick : function(event) {

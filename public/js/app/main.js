@@ -130,7 +130,20 @@
 	
 	if (typeof InstantClick === "object")
 	{
-		InstantClick.on('change', ib.bindAll);
+		InstantClick.on('change', function(event)
+		{
+			ib.bindAll();
+			
+			if (window.location.hash != "")
+			{
+				var elem = document.getElementById(window.location.hash);
+				
+				if (typeof elem.scrollToElement === "function")
+				{
+					elem.scrollToElement();
+				}
+			}
+		});
 	}
 	
 	return ib;
