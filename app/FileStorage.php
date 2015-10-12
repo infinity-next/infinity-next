@@ -502,7 +502,7 @@ class FileStorage extends Model {
 	 */
 	public function hasFile()
 	{
-		return file_exists($this->getFullPath());
+		return Storage::exists($this->getPath());
 	}
 	
 	/**
@@ -512,7 +512,7 @@ class FileStorage extends Model {
 	 */
 	public function hasThumb()
 	{
-		return file_exists($this->getFullPathThumb());
+		return Storage::exists($this->getPathThumb());
 	}
 	
 	/**
@@ -623,7 +623,7 @@ class FileStorage extends Model {
 	 */
 	public function processThumb()
 	{
-		if (!Storage::exists($this->getFullPathThumb()))
+		if (!Storage::exists($this->getPathThumb()))
 		{
 			if ($this->isAudio())
 			{
@@ -676,7 +676,7 @@ class FileStorage extends Model {
 				exec($cmd, $output, $returnvalue);
 				
 				// Constrain thumbnail to proper dimensions.
-				if (Storage::exists($image))
+				if (Storage::exists($this->getPathThumb()))
 				{
 					$imageManager = new ImageManager;
 					$imageManager
@@ -780,7 +780,14 @@ class FileStorage extends Model {
 			
 			if (!isset($upload->case))
 			{
-				$upload->case = Sleuth::check($upload->getRealPath());
+				$ext = $upload->guessExtension();
+				
+				$upload->case = Sleuth::check($upload->getRealPath(), $ext);
+				dd($upload->case);
+				if (!$upload->case)
+				{
+					$upload->case = Sleuth::check($upload->getRealPath());
+				}
 			}
 			
 			if (is_object($upload->case))

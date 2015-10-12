@@ -21,6 +21,7 @@ ib.widget("post", function(window, $, undefined) {
 				'post-form'      : "#post-form",
 				'post-form-body' : "#body",
 				
+				'attachment'         : "li.post-attachment",
 				'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
 				'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
 				'attachment-media'   : "audio.attachment-inline, video.attachment-inline",
@@ -69,6 +70,58 @@ ib.widget("post", function(window, $, undefined) {
 				return false;
 			},
 			
+			attachmentMediaCheck : function(event) {
+				var $img  = $(this);
+				var $link = $img.parents(widget.options.selector['attachment-link']).first();
+				
+				// Check for previous results.
+				if ($link.is(".attachment-canplay"))
+				{
+					return true;
+				}
+				else if ($link.is(".attachment-cannotplay"))
+				{
+					return false;
+				}
+				
+				
+				// Test audio.
+				if ($img.is(widget.options.selector['attachment-image-audio']))
+				{
+					var $audio  = $("<audio></audio>");
+					var mimetype = $img.attr('data-mime');
+					var fileext  = $link.attr('href').split('.').pop();
+					
+					if ($audio[0].canPlayType(mimetype) || $audio[0].canPlayType("audio/"+fileext))
+					{
+						$link.addClass("attachment-canplay");
+						return true;
+					}
+				}
+				// Test video.
+				else if ($img.is(widget.options.selector['attachment-image-video']))
+				{
+					var $video   = $("<video></video>");
+					var mimetype = $img.attr('data-mime');
+					var fileext  = $link.attr('href').split('.').pop();
+					
+					if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
+					{
+						$link.addClass("attachment-canplay");
+						return true;
+					}
+				}
+				
+				// Add failure results.
+				$link.addClass('attachment-cannotplay');
+				
+				$img
+					.addClass('attachment-type-file')
+					.removeClass('attachment-type-video attachment-type-audio');
+				
+				return false;
+			},
+			
 			attachmentMediaEnded : function(event) {
 				var $media  = $(this);
 				var $item   = $media.parents("li.post-attachment");
@@ -84,15 +137,16 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			attachmentExpandClick : function(event) {
-				// We don't do anything if the user is CTRL+Clicking.
-				if (event.ctrlKey)
-				{
-					return true;
-				}
-				
 				var $link = $(this);
 				var $item = $link.parents("li.post-attachment");
 				var $img  = $(widget.options.selector['attachment-image'], $link);
+				
+				// We don't do anything if the user is CTRL+Clicking,
+				// or if the file is a download type.
+				if (event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
+				{
+					return true;
+				}
 				
 				// If the attachment type is not an image, we can't expand inline.
 				if ($img.is(widget.options.selector['attachment-image-expandable']))
@@ -121,6 +175,9 @@ ib.widget("post", function(window, $, undefined) {
 						})
 						// Finally change the source of our thumb to the full image.
 						.attr('src', $link.attr('data-download-url'));
+					
+					event.preventDefault();
+					return false;
 				}
 				else if ($img.is(widget.options.selector['attachment-image-audio']))
 				{
@@ -142,7 +199,7 @@ ib.widget("post", function(window, $, undefined) {
 								$img
 									.trigger('click')
 									.removeClass('attachment-type-audio')
-									.addClass('attachment-type-download');
+									.addClass('attachment-type-file');
 							})
 							.appendTo($audio);
 						
@@ -150,10 +207,9 @@ ib.widget("post", function(window, $, undefined) {
 						widget.bind.mediaEvents($audio);
 						
 						$audio.parent().addClass('attachment-grow');
-					}
-					else
-					{
-						return true;
+						
+						event.preventDefault();
+						return false;
 					}
 				}
 				else if ($img.is(widget.options.selector['attachment-image-video']))
@@ -184,9 +240,16 @@ ib.widget("post", function(window, $, undefined) {
 						
 						widget.bind.mediaEvents($video);
 						$video.insertBefore($link);
+						
+						event.preventDefault();
+						return false;
 					}
 					else
 					{
+						$img
+							.addClass('attachment-type-file')
+							.removeClass('attachment-type-video');
+						
 						return true;
 					}
 				}
@@ -194,9 +257,6 @@ ib.widget("post", function(window, $, undefined) {
 				{
 					return true;
 				}
-				
-				event.preventDefault();
-				return false;
 			},
 			
 			codeHighlight : function() {
@@ -240,9 +300,10 @@ ib.widget("post", function(window, $, undefined) {
 				widget.events.codeHighlight();
 				
 				widget.$widget
-					.on('click.ib-post', widget.options.selector['post-reply'],         widget.events.postClick)
-					.on('click.ib-post', widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
-					.on('click.ib-post', widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
+					.on('click.ib-post',       widget.options.selector['post-reply'],         widget.events.postClick)
+					.on('media-check.ib-post', widget.options.selector['attachment-image'],   widget.events.attachmentMediaCheck)
+					.on('click.ib-post',       widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
+					.on('click.ib-post',       widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
 				;
 				
 			}

@@ -56,8 +56,6 @@ ib.widget("captcha", function(window, $, undefined) {
 					// Watch for source changes on the captcha.
 					.on('load.ip-captcha', widget.events.captchaLoad);
 				
-				console.log(widget.options);
-				
 				widget.$widget
 					// Watch for captcha clicks.
 					.on('click.ib-captcha', widget.options.selector['captcha'], widget.events.captchaClick);

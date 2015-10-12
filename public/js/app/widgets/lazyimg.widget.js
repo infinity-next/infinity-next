@@ -8,19 +8,31 @@ ib.widget("lazyimg", function(window, $, undefined) {
 		defaults : {
 			// Selectors for finding and binding elements.
 			selector : {
-				'img' : "img",
+				'img'      : "img",
+				'img-lazy' : "img.lazy-load",
 			}
 		},
 		
 		
 		events   : {
 			imageLoad : function() {
-				$(widget.options.selector.img, widget.$widget).each(function() {
-					this.src = $(this).attr('data-src');
+				$(widget.options.selector['img-lazy'], widget.$widget).each(function() {
+					var $this = $(this);
+					
+					$this.removeClass("lazy-load");
+					
+					// Correct the source.
+					this.src = $this.attr('data-src');
+					
+					// Call the postbox widget to check if the image can be played
+					// before the user tries to click it.
+					$this.trigger('media-check');
 				});
 			},
 			
 			windowScroll : function(event) {
+				// Determine if the boundaries of this image are in the viewport.
+				
 				var $elem         = widget.$widget;
 				var $window       = $(window);
 				
@@ -43,8 +55,11 @@ ib.widget("lazyimg", function(window, $, undefined) {
 		
 		bind     : {
 			widget : function() {
-				$(widget.options.selector.img, widget.$widget).each(function() {
-					$(this).attr('data-src', this.src);
+				$(widget.options.selector['img'], widget.$widget).each(function() {
+					var $this = $(this);
+					
+					$this.addClass("lazy-load");
+					$this.attr('data-src', this.src);
 					this.src = "";
 				});
 				

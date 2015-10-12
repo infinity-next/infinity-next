@@ -143,6 +143,10 @@ ib.widget("postbox", function(window, $, undefined) {
 					reader.readAsBinaryString(file);
 				},
 				
+				canceled : function(file) {
+					widget.$widget.trigger('fileCanceled', [ file ]);
+				},
+				
 				error : function(file, message, xhr) {
 					widget.notices.push(message, 'error');
 					
@@ -191,7 +195,7 @@ ib.widget("postbox", function(window, $, undefined) {
 							"<img data-dz-thumbnail />" +
 						"</div>" +
 						"<div class=\"dz-actions\">" +
-							"<button class=\"dz-remove\" data-dz-remove>x</button>" +
+							"<span class=\"dz-remove\" data-dz-remove>x</span>" +
 							"<label class=\"dz-spoiler\">" +
 								"<input type=\"checkbox\" class=\"dz-spoiler-check\" value=\"1\" data-dz-spoiler />" +
 								"<span class=\"dz-spoiler-desc\">Spoiler</span>" +
@@ -235,6 +239,14 @@ ib.widget("postbox", function(window, $, undefined) {
 				console.log(widget.activeUploads + " concurrent uploads.");
 				
 				console.log($(widget.options.selector['submit-post'], widget.$widget));
+				
+				$(widget.options.selector['submit-post'], widget.$widget)
+					.prop('disabled', widget.activeUploads > 0);
+			},
+			
+			fileCanceled : function(event, file) {
+				--widget.activeUploads;
+				console.log(widget.activeUploads + " concurrent uploads.");
 				
 				$(widget.options.selector['submit-post'], widget.$widget)
 					.prop('disabled', widget.activeUploads > 0);
@@ -409,6 +421,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					
 					// Watch for file statuses.
 					.on('fileFailed.ib-postbox',    widget.events.fileFailed)
+					.on('fileCanceled.ib-postbox',  widget.events.fileCanceled)
 					.on('fileUploaded.ib-postbox',  widget.events.fileUploaded)
 					.on('fileUploading.ib-postbox', widget.events.fileUploading)
 				;

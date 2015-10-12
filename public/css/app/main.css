@@ -1517,7 +1517,7 @@ section.index-form {
 							border-radius: 5px;
 							font-size: 12px;
 							line-height: 30px;
-							margin: 0.25em 0;
+							margin: 0.25em auto 0.25em 0;
 							padding: 0 0 1px 0;
 							outline: none;
 							
@@ -1528,20 +1528,24 @@ section.index-form {
 							
 							color: #C40000;
 							font-size: 11px;
-							line-height: 11px;
+							line-height: 18px;
 							text-align: center;
 							vertical-align: text-bottom;
 							
 							-moz-box-sizing: border-box;
 							box-sizing: border-box;
 						}
+						.dz-container .dz-preview .dz-actions .dz-remove {
+							display: inline-block;
+						}
 						.dz-container .dz-preview .dz-actions .dz-spoiler {
 							text-align: left;
 						}
 							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
 								display: inline-block;
+								border-radius: 2px;
 								vertical-align: text-bottom;
-								margin: 2px 0 -1px 2px;
+								margin: 2px 0 3px 2px;
 								width: 13px;
 								height: 13px;
 							}
@@ -1550,6 +1554,7 @@ section.index-form {
 								padding-right: 0.5em;
 								margin-left: 0.25em;
 								vertical-align: text-bottom;
+								line-height: 18px;
 								color: black;
 							}
 								.dz-container .dz-preview:hover .dz-actions .dz-spoiler .dz-spoiler-desc {
