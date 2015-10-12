@@ -425,7 +425,7 @@ class Post extends Model {
 		$hashParts[] = $this->author_ip;
 		
 		$hash = implode($hashParts, "-");
-		$hash = md5($hash);
+		$hash = hash('sha256', $hash);
 		$hash = substr($hash, 12, 6);
 		
 		return $hash;
