@@ -73,6 +73,7 @@ return [
 		
 		'boardListShow'            => "Show top boards in primary navigation",
 		
+		'attachmentName'           => "Attachment download names",
 		'attachmentFilesize'       => "Maximum filesize (KiB)",
 		'attachmentThumbnailJpeg'  => "Compress thumbnails to JPEG",
 		'attachmentThumbnailQuality' => "Image quality (percent)",
@@ -97,6 +98,9 @@ return [
 		'epheDeleteThreadReply'    => "Delete threads after this many replies",
 		'epheDeleteThreadDays'     => "Delete threads after this many days",
 		'epheDeleteThreadPage'     => "Delete threads on this page",
+		'ephePostIpLife'           => "Delete post IPs after this many days",
+		'ephePostHardDelete'       => "Permanently delete posts after this many days",
+		'epheMediaPrune'           => "Delete orphaned media after this many days",
 		
 		'roleType'                 => "Role",
 		'roleName'                 => "Internal Name",
@@ -108,13 +112,16 @@ return [
 		'postsThreadId'            => "Show thread author IDs",
 		
 		'desc' => [
-			'board_uri'            => "Part of the URL used to open your board. Cannot be changed.",
-			'boardSidebarText'     => "Markup allowed.",
+			'board_uri'                => "Part of the URL used to open your board. Cannot be changed.",
 			
-			'roleType'             => "This role's group. Staff groups apply only to people they're assigned to. Anonymous types will apply to people who visit your board.",
-			'roleName'             => "Your name for this group. Internal use only.",
-			'roleCapcode'          => "Capcodes sign a post with authority. Leave blank for no capcode.",
-			'roleCaste'            => "A caste is used to separate different staff roles.",
+			'attachmentName'           => "<tt>%t</tt> for the UNIX timestamp of post creation.<br />" .
+			                              "<tt>%i</tt> for the attachment's index on this post.<br />" .
+			                              "<tt>%n</tt> for the user's given filename.<br />",
+			
+			'roleType'                 => "This role's group. Staff groups apply only to people they're assigned to.<br />Anonymous types will apply to all people who visit your board.",
+			'roleName'                 => "Your name for this group. Internal use only.",
+			'roleCapcode'              => "Capcodes sign a post with authority. Leave blank for no capcode.",
+			'roleCaste'                => "A caste is used to separate different staff roles.",
 		],
 	],
 	

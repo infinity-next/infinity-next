@@ -33,29 +33,239 @@ class FileStorage extends Model {
 	 */
 	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count', 'has_thumbnail'];
 	
+	/**
+	 * Determines if Laravel should set created_at and updated_at timestamps.
+	 *
+	 * @var array
+	 */
 	public $timestamps = false;
 	
+	
+	/**
+	 * The \App\FileAttachment relationship.
+	 * Represents a post -> storage relationship.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function attachments()
 	{
 		return $this->hasMany('\App\FileAttachment', 'file_id');
 	}
 	
+	/**
+	 * The \App\BoardAsset relationship.
+	 * Used for multiple custom facets of a board.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
 	public function assets()
 	{
 		return $this->hasMany('\App\BoardAsset', 'file_id');
 	}
 	
+	/**
+	 * The \App\Posts relationship.
+	 * Uses the attachments() relationship to find posts where this file is attached..
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
 	public function posts()
 	{
 		return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename');
 	}
 	
 	
+	/**
+	 * Will trigger a file deletion if the storage item is not used anywhere.
+	 *
+	 * @return boolean
+	 */
+	public function challengeExistence()
+	{
+		$count = $this->assets->count() + $this->attachments->count();
+		
+		if ($count === 0)
+		{
+			$this->deleteFile();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Creates a new FileAttachment for a post using a direct upload.
+	 *
+	 * @param  UploadedFile  $file
+	 * @param  Post  $post
+	 * @return FileAttachment
+	 */
+	public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
+	{
+		$storage     = static::storeUpload($file);
+		
+		$uploadName  = urlencode($file->getClientOriginalName());
+		$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
+		
+		$fileName    = basename($uploadName, "." . $uploadExt);
+		$fileExt     = $storage->guessExtension();
+		
+		$attachment  = new FileAttachment();
+		$attachment->post_id    = $post->post_id;
+		$attachment->file_id    = $storage->file_id;
+		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
+		$attachment->is_spoiler = !!Input::get('spoilers');
+		
+		if ($autosave)
+		{
+			$attachment->save();
+			
+			$storage->upload_count++;
+			$storage->save();
+		}
+		
+		return $attachment;
+	}
+	
+	/**
+	 * Creates a new FileAttachment for a post using a hash.
+	 *
+	 * @param  Post  $post
+	 * @param  string  $filename
+	 * @param  boolean  $spoiler
+	 * @return FileAttachment
+	 */
+	public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
+	{
+		$fileName    = pathinfo($filename, PATHINFO_FILENAME);
+		$fileExt     = $this->guessExtension();
+		
+		$attachment  = new FileAttachment();
+		$attachment->post_id    = $post->post_id;
+		$attachment->file_id    = $this->file_id;
+		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
+		$attachment->is_spoiler = !!$spoiler;
+		
+		if ($autosave)
+		{
+			$attachment->save();
+			
+			$this->upload_count++;
+			$this->save();
+		}
+		
+		return $attachment;
+	}
+	
+	/**
+	 * Removes the associated file for this storage.
+	 *
+	 * @return boolean  Success. Will return FALSE if the file was already gone.
+	 */
+	public function deleteFile()
+	{
+		return unlink($this->getFullPath());
+	}
+	
+	/**
+	 * Returns the storage's file as a filesystem.
+	 *
+	 * @return \Illuminate\Filesystem\Filesystem
+	 */
+	public function getAsFile()
+	{
+		return new File($this->getFullPath());
+	}
+	
+	/**
+	 * Returns the storage's thumbnail as a filesystem.
+	 *
+	 * @return \Illuminate\Filesystem\Filesystem
+	 */
+	public function getAsFileThumb()
+	{
+		return new File($this->getFullPathThumb());
+	}
+	
+	/**
+	 * Returns the storage directory, minus the file name.
+	 *
+	 * @return string
+	 */
+	public function getDirectory()
+	{
+		$prefix = $this->getHashPrefix($this->hash);
+		
+		return "attachments/full/{$prefix}";
+	}
+	
+	/**
+	 * Returns the thumbnail's storage directory, minus the file name.
+	 *
+	 * @return string
+	 */
+	public function getDirectoryThumb()
+	{
+		$prefix = $this->getHashPrefix($this->hash);
+		
+		return "attachments/thumb/{$prefix}";
+	}
+	
+	/**
+	 * Supplies a clean URL for downloading an attachment on a board.
+	 *
+	 * @param  App\Board  $board
+	 * @return string
+	 */
+	public function getDownloadURL(Board $board)
+	{
+		if (isset($this->pivot) && isset($this->pivot->filename))
+		{
+			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
+		}
+		else
+		{
+			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+		}
+	}
+	
+	/**
+	 * Returns the full internal file path.
+	 *
+	 * @return string
+	 */
+	public function getFullPath()
+	{
+		return storage_path() . "/app/" . $this->getPath();
+	}
+	
+	/**
+	 * Returns the full internal file path for the thumbnail.
+	 *
+	 * @return string
+	 */
+	public function getFullPathThumb()
+	{
+		return storage_path() . "/app/" . $this->getPathThumb();
+	}
+	
+	/**
+	 * Fetch an instance of static using the checksum.
+	 *
+	 * @param  $hash  Checksum
+	 * @return static|null
+	 */
 	public static function getHash($hash)
 	{
 		return static::hash($hash)->get()->first();
 	}
 	
+	/**
+	 * Returns the skip file directoy prefix
+	 *
+	 * @param  $hash  Checksum
+	 * @return static  Like "a/a/a/a"
+	 */
 	public static function getHashPrefix($hash)
 	{
 		return implode(str_split(substr($hash, 0, 4)), "/");
@@ -77,198 +287,24 @@ class FileStorage extends Model {
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . " " . @$size[$factor];
 	}
 	
-	public function getDirectory()
-	{
-		$prefix = $this->getHashPrefix($this->hash);
-		
-		return "attachments/full/{$prefix}";
-	}
-	
-	public function getDirectoryThumb()
-	{
-		$prefix = $this->getHashPrefix($this->hash);
-		
-		return "attachments/thumb/{$prefix}";
-	}
-	
-	public function getAsFile()
-	{
-		return new File($this->getFullPath());
-	}
-	
-	public function getAsFileThumb()
-	{
-		return new File($this->getFullPathThumb());
-	}
-	
-	public function getFullPath()
-	{
-		return storage_path() . "/app/" . $this->getPath();
-	}
-	
-	public function getFullPathThumb()
-	{
-		return storage_path() . "/app/" . $this->getPathThumb();
-	}
-	
+	/**
+	 * Returns the relative internal file path.
+	 *
+	 * @return string
+	 */
 	public function getPath()
 	{
 		return $this->getDirectory() . "/" . $this->hash;
 	}
 	
+	/**
+	 * Returns the full internal file path for the thumbnail.
+	 *
+	 * @return string
+	 */
 	public function getPathThumb()
 	{
 		return $this->getDirectoryThumb() . "/" . $this->hash;
-	}
-	
-	public function isSpoiler()
-	{
-		return isset($this->pivot) && isset($this->pivot->is_spoiler) && !!$this->pivot->is_spoiler;
-	}
-	
-	public function hasThumb()
-	{
-		return file_exists($this->getFullPathThumb());
-	}
-	
-	public function scopeWhereCanDelete($query)
-	{
-		return $query->where('banned', false);
-	}
-	
-	public function scopeWhereOprhan($query)
-	{
-		return $query->whereCanDelete()
-			->has('assets',      '=', 0)
-			->has('attachments', '=', 0);
-	}
-	
-	public function scopeHash($query, $hash)
-	{
-		return $query->where('hash', $hash);
-	}
-	
-	
-	/**
-	 * Will trigger a file deletion if the storage item is not used anywhere.
-	 *
-	 * @return boolean
-	 */
-	public function challengeExistence()
-	{
-		$count = $this->assets->count() + $this->attachments->count();
-		
-		if ($count === 0)
-		{
-			$this->forceDelete();
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * A dumb way to guess the file type based on the mime
-	 * 
-	 * @return string
-	 */
-	
-	public function guessExtension()
-	{
-		$mimes = explode("/", $this->mime);
-		
-		switch ($this->mime)
-		{
-			##
-			# IMAGES
-			##
-			case "image/svg+xml" :
-				return "svg";
-			
-			case "image/jpeg" :
-			case "image/jpg" :
-				return "jpg";
-			
-			case "image/gif" :
-				return "gif";
-			
-			case "image/png" :
-				return "png";
-			
-			##
-			# DOCUMENTS
-			##
-			case "text/plain" :
-				return "txt";
-			
-			case "application/epub+zip" :
-				return "epub";
-			
-			case "application/pdf" :
-				return "pdf";
-			
-			##
-			# AUDIO
-			##
-			case "audio/mpeg" :
-			case "audio/mp3" :
-				return "mp3";
-			
-			case "audio/aac" :
-				return "aac";
-			
-			case "audio/mp4" :
-				return "mp3";
-			
-			case "audio/ogg" :
-				return "ogg";
-			
-			case "audio/wave" :
-				return "wav";
-			
-			case "audio/webm" :
-				return "wav";
-			
-			##
-			# VIDEO
-			##
-			case "video/3gp" :
-				return "3gp";
-			
-			case "video/webm" :
-				return "webm";
-			
-			case "video/mp4" :
-				return "mp4";
-			
-			case "video/ogg" :
-				return "ogg";
-			
-			case "video/x-flv" :
-				return "flv";
-		}
-		
-		return $mimes[1];
-	}
-	
-	
-	
-	/**
-	 * Supplies a clean URL for downloading an attachment on a board.
-	 *
-	 * @param  App\Board  $board
-	 * @return string
-	 */
-	public function getDownloadURL(Board $board)
-	{
-		if (isset($this->pivot) && isset($this->pivot->filename))
-		{
-			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
-		}
-		else
-		{
-			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
-		}
 	}
 	
 	/**
@@ -376,6 +412,132 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * A dumb way to guess the file type based on the mime
+	 * 
+	 * @return string
+	 */
+	
+	public function guessExtension()
+	{
+		$mimes = explode("/", $this->mime);
+		
+		switch ($this->mime)
+		{
+			##
+			# IMAGES
+			##
+			case "image/svg+xml" :
+				return "svg";
+			
+			case "image/jpeg" :
+			case "image/jpg" :
+				return "jpg";
+			
+			case "image/gif" :
+				return "gif";
+			
+			case "image/png" :
+				return "png";
+			
+			##
+			# DOCUMENTS
+			##
+			case "text/plain" :
+				return "txt";
+			
+			case "application/epub+zip" :
+				return "epub";
+			
+			case "application/pdf" :
+				return "pdf";
+			
+			##
+			# AUDIO
+			##
+			case "audio/mpeg" :
+			case "audio/mp3" :
+				return "mp3";
+			
+			case "audio/aac" :
+				return "aac";
+			
+			case "audio/mp4" :
+				return "mp3";
+			
+			case "audio/ogg" :
+				return "ogg";
+			
+			case "audio/wave" :
+				return "wav";
+			
+			case "audio/webm" :
+				return "wav";
+			
+			##
+			# VIDEO
+			##
+			case "video/3gp" :
+				return "3gp";
+			
+			case "video/webm" :
+				return "webm";
+			
+			case "video/mp4" :
+				return "mp4";
+			
+			case "video/ogg" :
+				return "ogg";
+			
+			case "video/x-flv" :
+				return "flv";
+		}
+		
+		return $mimes[1];
+	}
+	
+	/**
+	 * Returns if the file is present on the disk.
+	 *
+	 * @return boolean
+	 */
+	public function hasFile()
+	{
+		return file_exists($this->getFullPath());
+	}
+	
+	/**
+	 * Returns if a thumbnail is present on the disk.
+	 *
+	 * @return boolean
+	 */
+	public function hasThumb()
+	{
+		return file_exists($this->getFullPathThumb());
+	}
+	
+	/**
+	 * Is this attachment audio?
+	 *
+	 * @return boolean
+	 */
+	public function isAudio()
+	{
+		switch ($this->mime)
+		{
+			case "audio/mpeg" :
+			case "audio/mp3" :
+			case "audio/aac" :
+			case "audio/mp4" :
+			case "audio/ogg" :
+			case "audio/wave" :
+			case "audio/webm" :
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Is this attachment an image?
 	 *
 	 * @return boolean
@@ -405,25 +567,13 @@ class FileStorage extends Model {
 	}
 	
 	/**
-	 * Is this attachment audio?
+	 * Returns if our pivot is a spoiler.
 	 *
 	 * @return boolean
 	 */
-	public function isAudio()
+	public function isSpoiler()
 	{
-		switch ($this->mime)
-		{
-			case "audio/mpeg" :
-			case "audio/mp3" :
-			case "audio/aac" :
-			case "audio/mp4" :
-			case "audio/ogg" :
-			case "audio/wave" :
-			case "audio/webm" :
-				return true;
-		}
-		
-		return false;
+		return isset($this->pivot) && isset($this->pivot->is_spoiler) && !!$this->pivot->is_spoiler;
 	}
 	
 	/**
@@ -445,71 +595,6 @@ class FileStorage extends Model {
 		}
 		
 		return false;
-	}
-	
-	
-	/**
-	 * Creates a new FileAttachment for a post using a direct upload.
-	 *
-	 * @param  UploadedFile  $file
-	 * @param  Post  $post
-	 * @return FileAttachment
-	 */
-	public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
-	{
-		$storage     = static::storeUpload($file);
-		
-		$uploadName  = urlencode($file->getClientOriginalName());
-		$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
-		
-		$fileName    = basename($uploadName, "." . $uploadExt);
-		$fileExt     = $storage->guessExtension();
-		
-		$attachment  = new FileAttachment();
-		$attachment->post_id    = $post->post_id;
-		$attachment->file_id    = $storage->file_id;
-		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
-		$attachment->is_spoiler = !!Input::get('spoilers');
-		
-		if ($autosave)
-		{
-			$attachment->save();
-			
-			$storage->upload_count++;
-			$storage->save();
-		}
-		
-		return $attachment;
-	}
-	
-	/**
-	 * Creates a new FileAttachment for a post using a hash.
-	 *
-	 * @param  Post  $post
-	 * @param  string  $filename
-	 * @param  boolean  $spoiler
-	 * @return FileAttachment
-	 */
-	public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
-	{
-		$fileName    = pathinfo($filename, PATHINFO_FILENAME);
-		$fileExt     = $this->guessExtension();
-		
-		$attachment  = new FileAttachment();
-		$attachment->post_id    = $post->post_id;
-		$attachment->file_id    = $this->file_id;
-		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
-		$attachment->is_spoiler = !!$spoiler;
-		
-		if ($autosave)
-		{
-			$attachment->save();
-			
-			$this->upload_count++;
-			$this->save();
-		}
-		
-		return $attachment;
 	}
 	
 	/**
@@ -646,6 +731,30 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Refines a query to an exact hash match.
+	 *
+	 * @param  \Illuminate\Database\Query\Builder  $query  Supplied by the builder.
+	 * @param  string  $hash  The checksum hash.
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	public function scopeHash($query, $hash)
+	{
+		return $query->where('hash', $hash);
+	}
+	
+	/**
+	 * Refines a query to only storage items which are orphaned (not used anywhere).
+	 *
+	 * @param  \Illuminate\Database\Query\Builder  $query  Supplied by the builder.
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	public function scopeWhereOrphan($query)
+	{
+		return $query->whereDoesntHave('attachments')
+			->whereDoesntHave('assets');
+	}
+	
+	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
 	 * @param  UploadedFile  $upload
@@ -699,4 +808,5 @@ class FileStorage extends Model {
 		
 		return $storage;
 	}
+	
 }

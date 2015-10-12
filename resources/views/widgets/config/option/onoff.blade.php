@@ -15,5 +15,7 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		
+		@include('widgets.config.helper')
 	</dd>
 </dl>

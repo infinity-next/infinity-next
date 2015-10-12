@@ -582,10 +582,15 @@ main.cp form.form-config {
 				dl.option-banner dd.option-definition {
 					margin: 0;
 				}
-				dd.option-definition label.field-label {
-					display: inline-block;
-					vertical-align: top;
-				}
+					dd.option-definition label.field-label {
+						display: inline-block;
+						vertical-align: top;
+					}
+					dd.option-definition p.option-desc {
+						font-size: 90%;
+						color: rgb(150,150,150);
+						margin: 0.25em 0 0 0;
+					}
 				
 				label.option-permission {
 					display: inline-block;
@@ -1872,9 +1877,9 @@ main.index-threaded {
 				display: block;
 			}
 				.post-details {
-					margin-right: 9em;
-					margin-bottom: 0.60em;
+					margin: 0 9em 0.4em 0;
 					white-space: normal;
+					line-height: 1.8em;
 				}
 					.post-detail {
 						display: inline-block;
@@ -1938,8 +1943,8 @@ main.index-threaded {
 							}
 							.authorid.authorid-colorized {
 								border-radius: 6px;
-								margin: -2px 0.25em 0 0.25em;
-								padding: 1px 0.25em;
+								margin: 0 0.25em -0.4em 0.25em;
+								padding: 0 0.25em;
 							}
 							.authorid.authorid-colorized::before {
 								display: none;
@@ -2017,14 +2022,17 @@ main.index-threaded {
 								}
 								
 								li.post-attachment.attachment-expanded figure.attachment {
-									max-width: none;
+									min-width: 100%;
+									max-width: 100%;
+								}
+								li.post-attachment.attachment-expanded img.attachment-img {
 									min-width: 100%;
 									max-width: 100%;
 								}
 								
 								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
-									padding: 0 3em 0 0;
+									padding: 0 4em 0 0;
 									max-height: 125px;
 									max-width: 125px;
 								}

@@ -43,5 +43,7 @@
 					'class' => "field-control",
 			]) !!}
 		</label> --}}
+		
+		@include('widgets.config.helper')
 	</dd>
 </dl>

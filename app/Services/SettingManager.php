@@ -51,11 +51,19 @@ class SettingManager {
 	 * Returns the value of a single setting.
 	 *
 	 * @param  string  $option_name
+	 * @param  mixed  $fallback  Option. Defaults to null.
 	 * @return mixed
 	 */
-	public function get($option_name)
+	public function get($option_name, $fallback = null)
 	{
-		return $this->getSetting($option_name);
+		$setting = $this->getSetting($option_name);
+		
+		if (is_null($setting))
+		{
+			return $fallback;
+		}
+		
+		return $setting;
 	}
 	
 	/**

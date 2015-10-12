@@ -78,6 +78,14 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => 'boolean'
 				],
+				[
+					'option_name'           => "attachmentName",
+					'default_value'         => "%t-%i",
+					'format_parameters'     => json_encode( [ 'min' => 0, ] ),
+					'format'                => "text",
+					'data_type'             => "string",
+					'validation_parameters' => 'required|string|min:$min'
+				],
 				
 				[
 					'option_name'           => "banMaxLength",
@@ -139,6 +147,31 @@ class OptionSeeder extends Seeder {
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
 					'validation_parameters' => 'min:$min|max:$max'
+				],
+				
+				[
+					'option_name'           => "ephePostIpLife",
+					'default_value'         => 7,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'min:$min'
+				],
+				[
+					'option_name'           => "ephePostHardDelete",
+					'default_value'         => 7,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'min:$min'
+				],
+				[
+					'option_name'           => "epheMediaPrune",
+					'default_value'         => 31,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => 'min:$min'
 				],
 			],
 			
@@ -358,6 +391,7 @@ class OptionGroupSeeder extends Seeder {
 					"attachmentThumbnailSize",
 					"attachmentThumbnailQuality",
 					"attachmentThumbnailJpeg",
+					"attachmentName",
 				],
 			],
 			[
@@ -397,6 +431,7 @@ class OptionGroupSeeder extends Seeder {
 				'display_order' => 300,
 				
 				'options'       => [
+					// Board Settings
 					"epheSageThreadReply",
 					"epheSageThreadDays",
 					"epheSageThreadPage",
@@ -406,6 +441,11 @@ class OptionGroupSeeder extends Seeder {
 					"epheDeleteThreadReply",
 					"epheDeleteThreadDays",
 					"epheDeleteThreadPage",
+					
+					// Site Settings
+					"ephePostIpLife",
+					"ephePostHardDelete",
+					"epheMediaPrune",
 				],
 			],
 			[

@@ -15,5 +15,7 @@
 				'id'        => $option_name,
 				'class'     => "field-control",
 		]) !!}
+		
+		@include('widgets.config.helper')
 	</dd>
 </dl>

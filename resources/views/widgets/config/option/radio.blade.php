@@ -26,5 +26,7 @@
 			]) !!}
 		</div>
 		@endforeach
+		
+		@include('widgets.config.helper')
 	</dd>
 </dl>

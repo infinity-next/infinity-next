@@ -4,5 +4,7 @@
 	</dt>
 	<dd class="option-definition">
 		<span class="field-control">{{ $option_value }}</span>
+		
+		@include('widgets.config.helper')
 	</dd>
 </dl>

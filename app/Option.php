@@ -49,6 +49,7 @@ class Option extends Model implements PseudoEnumContract {
 		
 		'format'      => [
 			'textbox',
+			'text',
 			'spinbox',
 			'onoff',
 			'onofftextbox',

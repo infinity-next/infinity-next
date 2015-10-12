@@ -60,6 +60,16 @@ ib.widget("post", function(window, $, undefined) {
 					'min-height'       : '',
 				});
 				
+				
+				var jqXHR = $link.data('jqXHR');
+				
+				if (jqXHR.status != 200)
+				{
+					console.log("Killing jqXHR.");
+					jqXHR.abort();
+				}
+				
+				
 				event.preventDefault();
 				return false;
 			},
@@ -89,6 +99,14 @@ ib.widget("post", function(window, $, undefined) {
 				var $item = $link.parents("li.post-attachment");
 				var $img  = $(widget.options.selector['attachment-image'], $link);
 				
+				
+				// Begin loading the image.
+				// We save the jqXHR to the link so we can cancel it later.
+				var jqXHR = jQuery.ajax($link.attr('href'));
+				
+				$link.data('jqXHR', jqXHR);
+				
+				
 				// If the attachment type is not an image, we can't expand inline.
 				if ($img.is(widget.options.selector['attachment-image-expandable']))
 				{
@@ -116,7 +134,6 @@ ib.widget("post", function(window, $, undefined) {
 						})
 						// Finally change the source of our thumb to the full image.
 						.attr('src', $link.attr('data-download-url'));
-					
 				}
 				else if ($img.is(widget.options.selector['attachment-image-audio']))
 				{
