@@ -51,6 +51,8 @@ ib.widget("lazyimg", function(window, $, undefined) {
 				$(window)
 					.on('scroll.ib-lazyimg', widget.events.windowScroll)
 					.on('ready.ib-lazyimg', widget.events.windowScroll);
+				
+				widget.events.windowScroll();
 			}
 		}
 	};
