@@ -783,7 +783,7 @@ class FileStorage extends Model {
 				$ext = $upload->guessExtension();
 				
 				$upload->case = Sleuth::check($upload->getRealPath(), $ext);
-				dd($upload->case);
+				
 				if (!$upload->case)
 				{
 					$upload->case = Sleuth::check($upload->getRealPath());
