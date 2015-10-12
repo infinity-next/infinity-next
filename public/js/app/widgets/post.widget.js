@@ -50,9 +50,15 @@ ib.widget("post", function(window, $, undefined) {
 				var $img    = $(widget.options.selector['attachment-image'], $item);
 				var $inline = $(widget.options.selector['attachment-inline'], $item);
 				
-				$("[src]", $item).attr('src', "");
-				$item.removeClass('attachment-expanded');
+				if ($inline.length > 0)
+				{
+					$("[src]", $item).attr('src', "");
+					$inline[0].pause(0);
+					$inline[0].src = "";
+					$inline[0].load();
+				}
 				
+				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
 				$inline.remove();
 				$img.toggle(true);
