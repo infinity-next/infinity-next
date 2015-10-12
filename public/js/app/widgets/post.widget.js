@@ -50,7 +50,9 @@ ib.widget("post", function(window, $, undefined) {
 				var $img    = $(widget.options.selector['attachment-image'], $item);
 				var $inline = $(widget.options.selector['attachment-inline'], $item);
 				
+				$("[src]", $item).attr('src', "");
 				$item.removeClass('attachment-expanded');
+				
 				$img.attr('src', $link.attr('data-thumb-url'));
 				$inline.remove();
 				$img.toggle(true);
@@ -59,16 +61,6 @@ ib.widget("post", function(window, $, undefined) {
 					'min-width'        : '',
 					'min-height'       : '',
 				});
-				
-				
-				var jqXHR = $link.data('jqXHR');
-				
-				if (jqXHR.status != 200)
-				{
-					console.log("Killing jqXHR.");
-					jqXHR.abort();
-				}
-				
 				
 				event.preventDefault();
 				return false;
@@ -98,14 +90,6 @@ ib.widget("post", function(window, $, undefined) {
 				var $link = $(this);
 				var $item = $link.parents("li.post-attachment");
 				var $img  = $(widget.options.selector['attachment-image'], $link);
-				
-				
-				// Begin loading the image.
-				// We save the jqXHR to the link so we can cancel it later.
-				var jqXHR = jQuery.ajax($link.attr('href'));
-				
-				$link.data('jqXHR', jqXHR);
-				
 				
 				// If the attachment type is not an image, we can't expand inline.
 				if ($img.is(widget.options.selector['attachment-image-expandable']))
