@@ -271,7 +271,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			formClear     : function() {
 				var $form = widget.$widget;
 				
-				widget.events.captchaReload();
+				$(widget.options.selector['captcha'], widget.$widget).trigger('reload');
 				
 				if (widget.dropzone)
 				{

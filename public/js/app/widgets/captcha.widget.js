@@ -17,13 +17,6 @@ ib.widget("captcha", function(window, $, undefined) {
 		
 		// Events
 		events   : {
-			captchaClick : function(event) {
-				widget.events.captchaReload();
-				
-				event.preventDefault();
-				return false;
-			},
-			
 			captchaLoad : function(event) {
 				var $captcha = $(this),
 					$parent  = $captcha.parent();
@@ -58,7 +51,9 @@ ib.widget("captcha", function(window, $, undefined) {
 				
 				widget.$widget
 					// Watch for captcha clicks.
-					.on('click.ib-captcha', widget.options.selector['captcha'], widget.events.captchaClick);
+					.on('reload.ib-captcha',                                     widget.events.captchaReload)
+					.on('reload.ib-captcha', widget.options.selector['captcha'], widget.events.captchaReload)
+					.on('click.ib-captcha',  widget.options.selector['captcha'], widget.events.captchaReload);
 				
 			}
 		}

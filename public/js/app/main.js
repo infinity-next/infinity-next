@@ -138,7 +138,7 @@
 			{
 				var elem = document.getElementById(window.location.hash);
 				
-				if (typeof elem.scrollToElement === "function")
+				if (elem && typeof elem.scrollToElement === "function")
 				{
 					elem.scrollToElement();
 				}
