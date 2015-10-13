@@ -1288,6 +1288,8 @@ section.index-form {
 		margin: 0 1em 2em 1em;
 		max-width: 728px;
 		box-sizing: border-box;
+		
+		overflow: hidden;
 	}
 		html.no-js form.form-post .post-menu {
 			display: none;
