@@ -15,6 +15,7 @@ class Kernel extends HttpKernel {
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
+		'App\Http\Middleware\LocalizedSubdomains',
 	];
 
 	/**
@@ -23,7 +24,7 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth'      => 'App\Http\Middleware\Authenticate',
+		'auth'       => 'App\Http\Middleware\Authenticate',
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
 	];

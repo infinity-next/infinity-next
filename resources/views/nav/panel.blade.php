@@ -29,7 +29,7 @@
 		<ul class="cp-linkgroups linkgroups-user">
 			@if (!$user->isAnonymous())
 			<li class="cp-linkgroup">
-				Signed in as {{ $user->username }}
+				@lang('panel.authed_as', [ 'name' => $user->username ])
 			</li>
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name" href="{!! url('cp/auth/logout') !!}">Logout</a>

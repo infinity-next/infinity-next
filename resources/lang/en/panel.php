@@ -11,7 +11,7 @@ return [
 	|
 	*/
 	
-	'authed_as' => "Signed in as :name",
+	'authed_as' => "Hello, :name",
 	
 	'error' => [
 		'auth'  => [
