@@ -16,7 +16,7 @@ class FileAttachment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['post_id', 'file_id', 'filename', 'is_spoiler'];
+	protected $fillable = ['post_id', 'file_id', 'filename', 'is_spoiler', 'position'];
 	
 	public $timestamps = false;
 	

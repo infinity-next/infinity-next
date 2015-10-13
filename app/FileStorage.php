@@ -71,7 +71,7 @@ class FileStorage extends Model {
 	 */
 	public function posts()
 	{
-		return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename');
+		return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename', 'position');
 	}
 	
 	
@@ -219,14 +219,48 @@ class FileStorage extends Model {
 	 */
 	public function getDownloadURL(Board $board)
 	{
-		if (isset($this->pivot) && isset($this->pivot->filename))
+		return url("/{$board->board_uri}/file/{$this->hash}/{$this->getFileName()}.{$this->guessExtension()}");
+	}
+	
+	/**
+	 * Determines and returns the "xxx" of "/url/xxx.ext" for URLs.
+	 *
+	 * @param  string|null  $format  Optional. The token syntax for the filename. Defaults to site setting.
+	 * @return string
+	 */
+	public function getFileName($nameFormat = null)
+	{
+		if (is_null($nameFormat))
 		{
-			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . $this->pivot->filename;
+			// Build a thumbnail using the admin settings.
+			$nameFormat = Settings::get('attachmentName');
 		}
-		else
+		
+		$bits['t'] = \Carbon\Carbon::now()->timestamp;
+		$bits['i'] = 0;
+		$bits['n'] = $bits['t'];
+		
+		if (isset($this->pivot))
 		{
-			return url("/{$board->board_uri}/file/{$this->hash}/") . "/" . strtotime($this->first_uploaded_at) . "." . $this->guessExtension();
+			if (isset($this->pivot->filename))
+			{
+				$bits['n'] = $this->pivot->filename;
+			}
+			
+			if (isset($this->pivot->position))
+			{
+				$bits['i'] = $this->pivot->position;
+			}
 		}
+		
+		$attachmentName = $nameFormat;
+		
+		foreach ($bits as $bitKey => $bitVal)
+		{
+			$attachmentName = str_replace("%{$bitKey}", $bitVal, $attachmentName);
+		}
+		
+		return $attachmentName;
 	}
 	
 	/**
@@ -281,7 +315,7 @@ class FileStorage extends Model {
 	public function getHumanFilesize($decimals = 2)
 	{
 		$bytes  = $this->filesize;
-		$size   = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+		$size   = array('B', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
 		$factor = floor((strlen($bytes) - 1) / 3);
 		
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . " " . @$size[$factor];
@@ -402,13 +436,7 @@ class FileStorage extends Model {
 			$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
 		}
 		
-		// Sometimes we supply a filename when fetching the filestorage as an attachment.
-		if (isset($this->pivot) && isset($this->pivot->filename))
-		{
-			return url($baseURL . urlencode("{$this->pivot->filename}.{$ext}"));
-		}
-		
-		return url($baseURL . strtotime($this->first_uploaded_at) . ".{$ext}");
+		return url("{$baseURL}{$this->getFileName()}.{$ext}");
 	}
 	
 	/**

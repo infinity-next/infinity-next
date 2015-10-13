@@ -111,6 +111,11 @@ ib.widget("post", function(window, $, undefined) {
 						return true;
 					}
 				}
+				else
+				{
+					$link.addClass("attachment-canplay");
+					return true;
+				}
 				
 				// Add failure results.
 				$link.addClass('attachment-cannotplay');

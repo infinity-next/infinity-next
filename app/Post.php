@@ -117,7 +117,7 @@ class Post extends Model {
 	
 	public function attachments()
 	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename', 'is_spoiler');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('filename', 'is_spoiler', 'position');
 	}
 	
 	public function attachmentLinks()
@@ -1525,7 +1525,9 @@ class Post extends Model {
 					{
 						$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
 						
-						$uploads[] = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
+						$upload = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
+						$upload->position = $index;
+						$uploads[] = $upload;
 					}
 				}
 			}
