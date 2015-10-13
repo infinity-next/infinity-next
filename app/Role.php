@@ -151,12 +151,12 @@ class Role extends Model {
 	 */
 	public function getCapcodeName()
 	{
-		if ($this->capcode_id)
+		if ($this->capcode)
 		{
-			return trans_choice((string) $this->capcode_name, 0);
+			return trans_choice((string) $this->capcode, 0);
 		}
 		
-		return "";
+		return false;
 	}
 	/**
 	 * Returns a human-readable name for this role.

@@ -34,13 +34,14 @@ return [
 	
 	// Form Fields
 	// Specific fields in the form
-	'field'             => [
-		'subject'     => "Subject",
-		'author'      => "Author",
-		'email'       => "Email",
+	'field'               => [
+		'subject'         => "Subject",
+		'author'          => "Author",
+		'email'           => "Email",
+		'capcode'         => "No capcode",
 		
-		'file-dz'     => "Click or drag files here to upload",
-		'spoilers'    => "Spoilers",
+		'file-dz'         => "Click or drag files here to upload",
+		'spoilers'        => "Spoilers",
 		
 		'ip'              => "IP",
 		'ip_range'        => "Range",
