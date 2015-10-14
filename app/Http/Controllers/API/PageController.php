@@ -47,7 +47,7 @@ class PageController extends ParentController implements ApiController {
 		}
 		
 		return response()
-			->header('Access-Control-Allow-Origin', "*")
-			->json($json);
+			->json($json)
+			->header('Access-Control-Allow-Origin', "*");
 	}
 }
