@@ -12,7 +12,8 @@ class LocalizedSubdomains
 		$subdomain = $urlArray[0];
 		
 		// Does it have a "hello" message?
-		if (Lang::has("panel.authed_as", $subdomain)) {
+		if (Lang::has("panel.authed_as", $subdomain))
+		{
 			App::setLocale($subdomain);
 		}
 		

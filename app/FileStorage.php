@@ -708,7 +708,7 @@ class FileStorage extends Model {
 				{
 					$imageManager = new ImageManager;
 					$imageManager
-					->make($this->getFullPath())
+					->make($this->getFullPathThumb())
 						->resize(
 							Settings::get('attachmentThumbnailSize'),
 							Settings::get('attachmentThumbnailSize'),

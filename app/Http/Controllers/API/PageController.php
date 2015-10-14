@@ -1,11 +1,12 @@
 <?php namespace App\Http\Controllers\API;
 
 use App\Payment;
-
 use App\Contracts\ApiController;
-use App\Http\Controllers\Board\BoardController as ParentController;
+use App\Http\Controllers\PageController as ParentController;
+use Input;
+use Carbon\Carbon;
 
-class BoardController extends ParentController implements ApiController {
+class PageController extends ParentController implements ApiController {
 	
 	/**
 	 * Show the board index for the user.
@@ -30,13 +31,21 @@ class BoardController extends ParentController implements ApiController {
 		$devTime        = (($donationsTotal / 100) / (float) env('CONTRIB_HOUR_COST', 10)) * static::$ContributeDevInflation;
 		$devEnd->addHours($devTime);
 		
-		return response()->json([
+		$json = [
 			'development_start'      => $devStart->toRfc2822String(),
 			'development_public'     => $devCarbon->toRfc2822String(),
 			'development_paid_until' => $devEnd->toRfc2822String(),
 			
 			'donations_total'        => $donationsTotal,
-			'donors'                 => $donors->toJson(),
-		]);
+		];
+		
+		$input = Input::all();
+		
+		if (isset($input['wantsDonors']))
+		{
+			$json['donors'] = $donors->toJson();
+		}
+		
+		return response()->json($json);
 	}
 }
