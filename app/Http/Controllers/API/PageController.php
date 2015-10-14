@@ -46,6 +46,8 @@ class PageController extends ParentController implements ApiController {
 			$json['donors'] = $donors->toJson();
 		}
 		
-		return response()->json($json);
+		return response()
+			->header('Access-Control-Allow-Origin', "*")
+			->json($json);
 	}
 }

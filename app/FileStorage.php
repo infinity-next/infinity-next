@@ -705,7 +705,7 @@ class FileStorage extends Model {
 				
 				// Constrain thumbnail to proper dimensions.
 				if (Storage::exists($this->getPathThumb()))
-				{
+				{	
 					$imageManager = new ImageManager;
 					$imageManager
 					->make($this->getFullPathThumb())

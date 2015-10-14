@@ -22,11 +22,18 @@ class FileValidator extends Validator
 	{
 		if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile)
 		{
-			$detective = Sleuth::check($file->getRealPath());
+			$ext = $file->guessExtension();
+			
+			$detective = Sleuth::check($file->getRealPath(), $ext);
+			
+			if ($detective === false)
+			{
+				$detective = Sleuth::check($file->getRealPath());
+			}
 			
 			if ($detective !== false)
 			{
-				$file->sleuth = $detective;
+				$file->case = $detective;
 				return true;
 			}
 		}
