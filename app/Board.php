@@ -3,10 +3,13 @@
 use App\BoardSetting;
 use App\Option;
 use App\Role;
+use App\Stats;
+use App\StatsUnique;
 use App\User;
 use App\UserRole;
-use App\Services\ContentFormatter;
 use App\Contracts\PermissionUser;
+use App\Services\ContentFormatter;
+use App\Support\IP\CIDR;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -164,6 +167,11 @@ class Board extends Model {
 		return $this->hasMany('\App\BoardSetting', 'board_uri');
 	}
 	
+	public function stats()
+	{
+		return $this->hasMany('\App\Stats', 'board_uri');
+	}
+	
 	
 	public function canAttach(PermissionUser $user)
 	{
@@ -272,6 +280,123 @@ class Board extends Model {
 		}
 	}
 	
+	/**
+	 * 
+	 *
+	 * @param  \Carbon|Carbon  $carbon  A timestmap within the 0-60 minute block that is to be snapshotted.
+	 * @return array  of \App\Stats
+	 */
+	public static function createStatsSnapshots(\Carbon\Carbon $carbon = null)
+	{
+		$stats = [];
+		
+		if (is_null($carbon))
+		{
+			$carbon = \Carbon\Carbon::now()->subHour()->minute(0)->second(0);
+		}
+		
+		static::chunk(100, function($boards) use ($stats, $carbon)
+		{
+			foreach ($boards as $board)
+			{
+				$stats = array_merge($stats, $board->createStatsSnapshot($carbon));
+			}
+		});
+		
+		return $stats;
+	}
+	
+	/**
+	 * Generates a snapshot in the database for the previous hour.
+	 *
+	 * @param  \Carbon\Carbon  $carbon  A timestamp within the 0-60 minute block that is to be snapshotted.
+	 * @return array  of new \App\Stats
+	 */
+	public function createStatsSnapshot(\Carbon\Carbon $carbon)
+	{
+		$carbonStart = $carbon->minute(0)->second(0);
+		$carbonEnd   = (clone $carbonStart);
+		$carbonEnd   = $carbonEnd->addHour()->minute(0)->second(0)->subSecond();
+		
+		$posts = $this->posts()
+			->withTrashed()
+			->where('created_at', '>=', $carbonStart)
+			->where('created_at', '<=', $carbonEnd)
+			->select('post_id', 'author_ip', 'reply_to')
+			->get();
+		
+		if ($posts->count() === 0)
+		{
+			return [];
+		}
+		
+		// Unique IPs.
+		$authorsUnique = [];
+		// Unique Post IDs.
+		$postsUnique   = [];
+		// Unique \16 ranges.
+		$rangesUnique  = [];
+		// Unique Thread Post IDs.
+		$threadsUnique = [];
+		
+		foreach ($posts as $post)
+		{
+			$postsUnique[$post->post_id] = true;
+			
+			if (is_null($post->reply_to))
+			{
+				$threadsUnique[$post->post_id] = false;
+			}
+			
+			if (!is_null($post->author_ip))
+			{
+				$ip = inet_ntop($post->author_ip);
+				
+				if (!isset($authorsUnique[$ip]))
+				{
+					$authorsUnique[$ip] = true;
+					
+					$range = new CIDR("{$ip}/16");
+					$rangesUnique[$range->getStart()] = true;
+				}
+			}
+		}
+		
+		
+		// Save uniques
+		$statsRows = [];
+		$uniques   = [
+			'authors' => array_keys($authorsUnique),
+			'posts'   => array_keys($postsUnique),
+			'ranges'  => array_keys($rangesUnique),
+			'threads' => array_keys($threadsUnique),
+		];
+		
+		foreach ($uniques as $statsKey => $uniqueValues)
+		{
+			$statsBits = [];
+			
+			foreach ($uniqueValues as $uniqueValue)
+			{
+				$statsBits[] = [
+					'unique' => $uniqueValue,
+				];
+			}
+			
+			$statsRow = $this->stats()->save(new Stats([
+				'stats_time' => $carbonStart,
+				'stats_type' => $statsKey,
+				'counter'    => count($statsBits),
+			]));
+			
+			$statsRow->uniques()->createMany($statsBits);
+			
+			$statsRows[] = $statsRow;
+		}
+		
+		
+		return $statsRows;
+	}
 	
 	/**
 	 * Gets the default album art for an audio file.

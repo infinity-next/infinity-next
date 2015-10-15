@@ -44,58 +44,6 @@ return [
 		'reports'            => "Open Reports",
 	],
 	
-	'nav'       => [
-		'primary' => [
-			'home'  => "Home",
-			'board' => "Boards",
-			'site'  => "Site",
-			'users' => "Users",
-		],
-		
-		'secondary' => [
-			'home'   => [
-				'account'         => "Account",
-				'password_change' => "Change Password",
-				
-				'sponsorship'     => "Sponsorship",
-				'donate'          => "Send Cash Contribution",
-			],
-			
-			'site'   => [
-				'setup'           => "Setup",
-				'config'          => "Config",
-			],
-			
-			
-			'board'  => [
-				'create'          => "Create a Board",
-				
-				'boards'          => "Boards",
-				'assets'          => "Assets",
-				'config'          => "Config",
-				'staff'           => "Staff",
-				
-				'discipline'      => "Discipline",
-				'reports'         => "Reports",
-			],
-			
-			'users'  => [
-				'permissions'     => "Permissions",
-				'role_permissions' => "Role Permissions",
-			],
-		],
-		
-		'tertiary' => [
-			'board_settings' => [
-				'assets'  => "Assets",
-				'basic'   => "Basic Details",
-				'roles'   => "Roles",
-				'staff'   => "Staff",
-				'style'   => "Styling",
-			],
-		],
-	],
-	
 	'action'    => [
 		'add_staff'            => "Add Staff",
 		'edit_staff'           => "Save Staff",

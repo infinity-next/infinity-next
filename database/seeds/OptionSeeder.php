@@ -201,6 +201,13 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
+					'option_name'           => "postAnonymousName",
+					'default_value'         => null,
+					'format'                => "text",
+					'data_type'             => "string",
+					'validation_parameters' => 'string'
+				],
+				[
 					'option_name'           => "postAttachmentsMax",
 					'default_value'         => "5",
 					'format'                => "spinbox",
@@ -458,6 +465,7 @@ class OptionGroupSeeder extends Seeder {
 					"postMaxLength",
 					"postMinLength",
 					'postFloodTime',
+					'postAnonymousName',
 				],
 			],
 			[

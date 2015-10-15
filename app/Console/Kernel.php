@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'App\Console\Commands\Autoprune',
+		'App\Console\Commands\RecordStats',
 		'App\Console\Commands\Inspire',
 	];
 
@@ -26,6 +27,9 @@ class Kernel extends ConsoleKernel {
 	protected function schedule(Schedule $schedule)
 	{
 		$now = Carbon::now();
+		
+		$schedule->command('recordstats')
+			->hourly();
 		
 		$schedule->command('autoprune')
 			->hourly()

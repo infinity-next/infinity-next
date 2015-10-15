@@ -4,7 +4,7 @@
 	<li class="post-detail post-author">
 		<strong class="post-detail-item author ugc">
 		@if ($post->email && !$catalog)<a href="mailto:{{ $post->email }}" class="post-detail-item email">@endif
-			{{ $post->author ?: $board->getConfig('defaultName', trans('board.anonymous')) }}
+			{{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
 		@if ($post->email && !$catalog)</a>@endif
 		</strong>
 		@if ($post->insecure_tripcode)

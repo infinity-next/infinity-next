@@ -20,6 +20,8 @@ Route::group([
 	*/
 	Route::get('/', 'WelcomeController@getIndex');
 	
+	Route::controller('boards.html', 'BoardlistController');
+	
 	
 	/*
 	| Control Panel (cp)

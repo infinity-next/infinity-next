@@ -39,24 +39,19 @@
 		
 		@include('widgets.messages')
 		
-		<div class="field row-subject label-inline">
+		<div class="field row-subject">
 			{!! Form::text(
 				'subject',
 				old('subject'),
 				[
-					'id'        => "subject",
-					'class'     => "field-control",
-					'maxlength' => 255,
-			]) !!}
-			{!! Form::label(
-				"subject",
-				trans('board.field.subject'),
-				[
-					'class' => "field-label",
+					'id'          => "subject",
+					'class'       => "field-control",
+					'maxlength'   => 255,
+					'placeholder' => trans('board.field.subject'),
 			]) !!}
 		</div>
 		
-		<div class="field row-author label-inline">
+		<div class="field row-author">
 			{!! Form::text(
 				'author',
 				isset($post) ? $post->author . ($post->capcode_id ? " ## {$post->capcode->capcode}" : "") : old('author'),
@@ -64,32 +59,21 @@
 					'id'          => "author",
 					'class'       => "field-control",
 					'maxlength'   => 255,
-					'placeholder' => $board->getConfig('defaultName'),
+					'placeholder' => trans('board.field.author'),
 					
 					isset($post) && $post->capcode_id ? "disabled" : "data-enabled",
 			]) !!}
-			{!! Form::label(
-				"author",
-				trans('board.field.author'),
-				[
-					'class' => "field-label",
-			]) !!}
 		</div>
 		
-		<div class="field row-email label-inline">
+		<div class="field row-email">
 			{!! Form::text(
 				'email',
 				old('email'),
 				[
-					'id'        => "email",
-					'class'     => "field-control",
-					'maxlength' => 254,
-			]) !!}
-			{!! Form::label(
-				"email",
-				trans('board.field.email'),
-				[
-					'class' => "field-label",
+					'id'          => "email",
+					'class'       => "field-control",
+					'maxlength'   => 254,
+					'placeholder' => trans('board.field.email'),
 			]) !!}
 		</div>
 		

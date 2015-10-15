@@ -66,7 +66,7 @@
 	@yield('head')
 </head>
 
-<body class="infinity-next responsive @yield('body-class')" data-no-instant>
+<body class="infinity-next responsive @yield('body-class')">
 	<div id="page-container">
 		@section('header')
 		<header class="board-header header-height-1">
@@ -84,7 +84,7 @@
 						<h2 class="page-desc">@yield('description')</h2>
 						@endif
 						
-						@section('header-details')
+						@yield('header-details')
 					</figcaption>
 				</figure>
 				

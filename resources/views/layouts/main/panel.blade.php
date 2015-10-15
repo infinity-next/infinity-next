@@ -5,7 +5,7 @@
 @section('content')
 <main class="cp">
 	<div class="cp-container grid-container">
-		<div class="cp-box smooth-box">
+		<div class="cp-box smooth-box grid-100 grid-parent">
 			@section('nav-primary')
 				@include( $c::$navPrimary )
 			@show

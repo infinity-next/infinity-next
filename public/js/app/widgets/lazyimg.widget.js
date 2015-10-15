@@ -39,8 +39,10 @@ ib.widget("lazyimg", function(window, $, undefined) {
 				var docViewTop    = $window.scrollTop();
 				var docViewBottom = docViewTop + $window.height();
 				
-				var elemTop       = $elem.offset().top;
-				var elemBottom    = elemTop + $elem.height();
+				var viewPad = 200;
+				
+				var elemTop       = $elem.offset().top - viewPad;
+				var elemBottom    = elemTop + $elem.height() + viewPad;
 				
 				// We don't need the entire image to be present, just either edge.
 				

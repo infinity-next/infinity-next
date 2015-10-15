@@ -14,7 +14,7 @@ class PageController extends ParentController implements ApiController {
 	 * @return Response
 	 */
 	public function getContribute()
-	{  
+	{
 		$devStart       = new Carbon( static::$ContributeProjectStart );
 		$devCarbon      = new Carbon( static::$ContributePublicStart );
 		

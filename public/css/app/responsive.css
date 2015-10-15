@@ -52,7 +52,7 @@
 
 
 /**
- * 768px Width
+ * 728px Width
  * Tablets
  */
 @media (min-width: 728px) {
@@ -133,6 +133,119 @@
 }
 
 /**
+ * 840px Max
+ * Larger Tablets
+ */
+@media (max-width: 840px) {
+	/**
+	 * Primary Navigation
+	 */
+	header.board-header {
+		
+	}
+	nav.boardlist {
+		font-size: 1.5em;
+		line-height: 2.5em;
+	}
+	nav.boardlist div.boardlist-text {
+		display: block;
+		text-align: center;
+	}
+	nav.boardlist div.boardlist-row {
+		display: none;
+		border-bottom: 0.20em solid rgba(0,0,0,0.25);
+	}
+	nav.boardlist ul.boardlist-categories {
+		
+	}
+	nav.boardlist li.boardlist-category {
+		clear: both;
+		display: block;
+	}
+	nav.boardlist ul.boardlist-items {
+		display: block;
+		
+	}
+	nav.boardlist li.boardlist-item {
+		display: block;
+		box-sizing: border-box;
+		padding: 0 1em;
+		min-width: 300px;
+		width: 50%;
+		float: left;
+	}
+	nav.boardlist a.boardlist-link {
+		display: block;
+		
+	}
+}
+
+/**
+ * 840px Min
+ * Anything bigger
+ */
+@media (min-width: 840px) {
+	/**
+	 * Primary Navigation
+	 */
+	nav.boardlist {
+		font-size: 1em;
+		padding: 0 1em;
+	}
+		nav.boardlist .boardlist-text {
+			display: none;
+		}
+		nav.boardlist .boardlist-row {
+			display: inline-block;
+			
+			height: 1.4em;
+			line-height: 1.4em;
+			padding: 0;
+			margin: 0 0.5em 0 0;
+			
+			white-space: nowrap;
+		}
+		
+		nav.boardlist .boardlist-categories,
+		nav.boardlist .boardlist-category,
+		nav.boardlist .boardlist-items,
+		nav.boardlist .boardlist-item {
+			display: inline-block;
+			height: 1em;
+			line-height: 1em;
+		}
+		
+		nav.boardlist .boardlist-items {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		nav.boardlist .boardlist-item {
+			display: inline;
+		}
+		nav.boardlist .boardlist-link {
+			text-decoration: none;
+		}
+		
+		nav.boardlist .boardlist-category::before {
+			content: '[';
+			opacity: 0.6;
+		}
+		nav.boardlist .boardlist-category::after {
+			content: ']';
+			opacity: 0.6;
+		}
+		nav.boardlist .boardlist-item::after {
+			display: inline;
+			content: '/';
+			margin: 0 0.15em 0 0.4em;
+			opacity: 0.6;
+		}
+		nav.boardlist .boardlist-item:last-child::after {
+			display: none;
+		}
+}
+
+/**
  * 1028px width and 640px height
  * Desktop
  */
@@ -143,7 +256,7 @@
 	html.js body.responsive form.form-post {
 		position: fixed;
 		z-index: 1000;
-		top: 3.4em;
+		top: 45px;
 		right: 10px;
 		
 		display: block;
@@ -156,7 +269,7 @@
 		padding-right: 340px;
 	}
 	body.responsive .index-threaded section.index-threads .post {
-		/* max-width: 70vw; */
+		max-width: 70vw;
 	}
 	
 	/* Advertisements */

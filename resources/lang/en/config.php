@@ -84,6 +84,7 @@ return [
 		'boardReportText'          => "Message to users creating a local report",
 		'globalReportText'         => "Message to users creating a global report",
 		
+		'postAnonymousName'        => "Default author name for anonymous posts",
 		'postAttachmentsMax'       => "Maximum attachments per post",
 		'postMaxLength'            => "Maximum characters per post",
 		'postMinLength'            => "Minimum characters per post",

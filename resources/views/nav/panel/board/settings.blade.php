@@ -11,7 +11,7 @@
 							'staff'  => "staff",
 						] as $url => $name)
 							<a class="linkitem-name @if ($tab == $name) linkitem-active @endif" href="{{ url("/cp/board/$board->board_uri/$url") }}">
-								{{ trans("panel.nav.tertiary.board_settings.{$name}") }}
+								{{ trans("nav.panel.tertiary.board_settings.{$name}") }}
 							</a>
 						@endforeach
 					</li>

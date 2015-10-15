@@ -177,6 +177,7 @@ select:focus {
 	}
 	.infobox .infobox-info {
 		padding: 0.4em 0.6em 0.4em 0.6em;
+		min-height: 73px;
 	}
 	.infobox .infobox-info p {
 		margin: 0 0 0.4em 0;
@@ -1183,90 +1184,85 @@ header.contrib-header {
 		}
 
 /* Navigation */
-nav.boardlist {
-	padding: 0 1em;
-	font-size: 1em;
-	white-space: nowrap;
+nav.gnav {
+	background: rgba(220, 220, 220, 0.25);
+	border-bottom: 1px solid rgba(150, 150, 150, 0.25);
+	
+	/* white-space: nowrap; */
 	overflow: hidden;
+	
+	position: relative;
+	
+	padding: 0;
+	margin: 0;
+	
+	height: 39px;
+	width: 100%;
 }
-	nav.boardlist .boardlist-row {
+	nav.gnav ul.gnav-groups,
+	nav.gnav li.gnav-group,
+	nav.gnav ul.gnav-items,
+	nav.gnav li.gnav-item {
 		display: inline-block;
-		
-		height: 1.4em;
-		line-height: 1.4em;
+		margin: 0;
 		padding: 0;
-		margin: 0 0.5em 0 0;
-		
-		white-space: nowrap;
+		overflow: hidden;
 	}
+	
+	nav.gnav ul.gnav-groups {
+		display: block;
+	}
+	
+	nav.gnav li.gnav-item {
+		display: inline-block;
+		font-size: 14px;
+		line-height: 18px;
+		margin: 0 7px;
+		padding: 11px 2px;
+		text-decoration: none;
+		vertical-align: top;
+	}
+		nav.gnav li.gnav-item.gnav-active {
+			border-bottom: 3px solid #AF0A0F;
+			padding-bottom: 8px;
+		}
+		nav.gnav li.gnav-item.gnav-active a.gnav-link {
+			color: #AF0A0F;
+		}
+	
 	header nav.boardlist {
 		background: #d6daf0;
 		color: #34345C;
 		vertical-align: baseline;
 		
-		box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
-		-webkit-box-shadow: 0 2px 2px -1px rgba(0,0,0,.1);
+		box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+		-webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 		
+		/*
 		top: 0;
 		left: 0;
 		right: 0;
 		position: absolute;
 		z-index: 1000;
+		*/
 	}
+	header nav.boardlist .boardlist-link {
+		color: #34345C;
+	}
+	
+	
 	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
 		position: static;
 	}
-		footer .boardlist-row.row-pages {
-			display: none;
-		}
-	
-		nav.boardlist .boardlist-categories,
-		nav.boardlist .boardlist-category,
-		nav.boardlist .boardlist-items,
-		nav.boardlist .boardlist-item {
-			display: inline-block;
-			height: 1em;
-			line-height: 1em;
-		}
-		
-		nav.boardlist .boardlist-category::before {
-			content: '[';
-			opacity: 0.6;
-		}
-		nav.boardlist .boardlist-category::after {
-			content: ']';
-			opacity: 0.6;
-		}
-		
-			nav.boardlist .boardlist-items {
-				white-space: nowrap;
-				text-overflow: ellipsis;
-			}
-				nav.boardlist .boardlist-item {
-					display: inline;
-				}
-				
-				nav.boardlist .boardlist-item::after {
-					display: inline;
-					content: '/';
-					margin: 0 0.15em 0 0.4em;
-					opacity: 0.6;
-				}
-				nav.boardlist .boardlist-item:last-child::after {
-					display: none;
-				}
-				
-					nav.boardlist .boardlist-link {
-						text-decoration: none;
-					}
-						header nav.boardlist .boardlist-link {
-							color: #34345C;
-						}
-						footer nav.boardlist .boardlist-link {
-							color: #ffffff;
-						}
+	footer nav.boardlist-row.row-pages {
+		display: none;
+	}
+	footer nav.boardlist .boardlist-link {
+		color: #ffffff;
+	}
+
 
 /* Main Content */
 main {
@@ -2035,6 +2031,16 @@ main.index-threaded {
 								li.post-attachment.attachment-expanded img.attachment-img {
 									min-width: 100%;
 									max-width: 100%;
+								}
+								
+								li.post-attachment img.lazy-load {
+									/*
+										The other metrics will constrain these to something sensible.
+										My goal here is to keep the thumbnails pretty much to what you can expect them to be
+										as to reduce the jerkiness of the loading system.
+									*/
+									height: 250px;
+									width:  250px;
 								}
 								
 								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
@@ -3204,15 +3210,15 @@ body.error::before {
 
 /* Page Header */
 header {
-	/* background: #fff; */
-	border-top: 4.5em solid rgba(0,0,0,0);
+	/* background: #fff;
+	border-top: 4.5em solid rgba(0,0,0,0); */
 	color: #333;
 	padding: 0 0 0 0;
 	margin: 0 0 1em 0;
 }
-	header.header-height-1 {
+	/* header.header-height-1 {
 		border-top: 2.5em solid rgba(0,0,0,0);
-	}
+	} */
 
 figure.page-head {
 	display: block;
