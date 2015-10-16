@@ -14,6 +14,12 @@ return [
 	'navigation'  => "<i class=\"fa fa-bars\"></i>&nbsp;Navigation",
 	
 	'global'      => [
+		'flyout'       => [
+			'popular_boards'  => "Popular Boards",
+			'recent_boards'   => "Recently Active Boards",
+			'favorite_boards' => "Favorite Boards",
+		],
+		
 		'home'         => "Home",
 		'panel'        => "Panel",
 		'boards'       => "Boards",

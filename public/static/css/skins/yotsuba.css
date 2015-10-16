@@ -42,6 +42,8 @@ a.button {
 	color: #800000;
 }
 
+header nav.gnav,
+header nav.gnav .flyout-cols,
 header nav.boardlist {
 	background: #FFFFEE;
 	color: #800000;

@@ -383,11 +383,17 @@ class Board extends Model {
 				];
 			}
 			
-			$statsRow = $this->stats()->save(new Stats([
+			$statsRow = $this->stats()->updateOrCreate([
 				'stats_time' => $carbonStart,
 				'stats_type' => $statsKey,
+			], [
 				'counter'    => count($statsBits),
-			]));
+			]);
+			
+			if (!$statsRow->exists)
+			{
+				$statsRow->save();
+			}
 			
 			$statsRow->uniques()->createMany($statsBits);
 			
@@ -405,7 +411,7 @@ class Board extends Model {
 	 */
 	public function getAudioArtURL()
 	{
-		return url("/img/assets/audio.gif");
+		return asset("static/img/assets/audio.gif");
 	}
 	
 	/**
@@ -440,11 +446,11 @@ class Board extends Model {
 		}
 		else if (!$this->isWorksafe())
 		{
-			return "/img/logo_yotsuba.png";
+			return asset("static/img/logo_yotsuba.png");
 		}
 		else
 		{
-			return "/img/logo.png";
+			return asset("static/img/logo.png");
 		}
 		
 		return false;
@@ -452,12 +458,24 @@ class Board extends Model {
 	
 	public static function getBoardListBar()
 	{
+		$popularBoards = static::where('posts_total', '>', 0)
+			->wherePublic()
+			->select('board_uri', 'title')
+			->orderBy('posts_total', 'desc')
+			->take(20)
+			->get();
+		
+		$recentBoards = static::where('posts_total', '>', 0)
+			->wherePublic()
+			->whereNotIn('board_uri', $popularBoards->pluck('board_uri'))
+			->select('board_uri', 'title')
+			->orderBy('last_post_at', 'desc')
+			->take(20)
+			->get();
+		
 		return [
-			static::where('posts_total', '>', '-1')
-				->where('is_indexed', 1)
-				->orderBy('posts_total', 'desc')
-				->take(20)
-				->get()
+			'popular_boards' => $popularBoards,
+			'recent_boards'  => $recentBoards,
 		];
 	}
 	
@@ -624,7 +642,7 @@ class Board extends Model {
 	
 	public function getSpoilerUrl()
 	{
-		return url("/img/assets/spoiler.png");
+		return asset("static/img/assets/spoiler.png");
 	}
 	
 	public function getStaff()
@@ -679,7 +697,7 @@ class Board extends Model {
 			
 			if ($style == "" && !$this->isWorksafe())
 			{
-				$style = file_get_contents(public_path() . "/css/skins/yotsuba.css");
+				$style = file_get_contents(public_path() . "/static/css/skins/yotsuba.css");
 			}
 			
 			return $style;
@@ -925,7 +943,7 @@ class Board extends Model {
 	
 	public function scopeWherePublic($query)
 	{
-		return $query;
+		return $query->whereIndexed()->whereOverboard();
 	}
 	
 	public function scopeWhereSFW($query)

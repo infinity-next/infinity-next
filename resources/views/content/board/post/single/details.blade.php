@@ -24,14 +24,14 @@
 	
 	@if (!isset($catalog) || !$catalog)
 		@if ($board->getConfig('postsThreadId', false))
-		<li class="post-detail post-authorid"><span class="post-detail-item authorid authorid-colorized"
-			style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
+		<li class="post-detail post-authorid" id="{{ $post->board_id}}">
+			<span class="post-detail-item authorid authorid-colorized" style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
 		</li>
 		@endif
 		
-		<li class="post-detail post-id">
-			<a id="{{ $post->board_id}}" href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
-			<a id="reply-{{ $post->board_id}}" href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{(!isset($reply_to) || !$reply_to) ? "data-instant" : ""}}>{!! $post->board_id !!}</a>
+		<li class="post-detail post-id" id="reply-{{ $post->board_id}}">
+			<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
+			<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{(!isset($reply_to) || !$reply_to) ? "data-instant" : ""}}>{!! $post->board_id !!}</a>
 		</li>
 	@endif
 	

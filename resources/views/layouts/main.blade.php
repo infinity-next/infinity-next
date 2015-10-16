@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html class="no-js">
 <head>
-	<title data-original="@yield('title', 'Infinity')">@yield('title', 'Infinity')</title>
+	<title data-original="@yield('title', 'Infinity Next')">@yield('title', 'Infinity Next')</title>
+	<link rel="shortcut icon" href="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}"
+		data-normal="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}" data-alert="{{ asset('static/img/assets/Favicon_Yotsuba_new.ico') }}" />
 	
 	@section('css')
-		{!! Minify::stylesheetDir('/vendor/')->withFullUrl() !!}
-		{!! Minify::stylesheetDir('/css/app/')->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/static/vendor/')->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/static/css/app/')->withFullUrl() !!}
 		
 		@section('page-css')
 			<link id="page-stylesheet" rel="stylesheet" data-instant-track />
@@ -16,6 +18,8 @@
 		@yield('required-js')
 		
 		<script type="text/javascript">
+			document.getElementsByTagName('html')[0].class = "js";
+			
 			window.app = {
 				'lang'     : {!! json_encode( Lang::parseKey('board') ) !!},
 				
@@ -28,7 +32,7 @@
 				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
 				@endif
 				
-				@if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
+				@if (env('CASHIER_SERVICE') == "braintree" && isset($BfaintreeClientKey))
 				'braintree_key' : "{!! $BraintreeClientKey !!}",
 				@endif
 				
@@ -54,9 +58,9 @@
 			};
 		</script>
 		
-		{!! Minify::javascriptDir('/vendor/', ['data-no-instant'])->withFullUrl() !!}
-		{!! Minify::javascriptDir('/js/plugins/', ['data-no-instant'])->withFullUrl() !!}
-		{!! Minify::javascriptDir('/js/app/', ['data-no-instant'])->withFullUrl() !!}
+		{!! Minify::javascriptDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}
+		{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}
+		{!! Minify::javascriptDir('/static/js/app/', ['data-no-instant'])->withFullUrl() !!}
 	@show
 	
 	@section('meta')
@@ -71,16 +75,19 @@
 		@section('header')
 		<header class="board-header header-height-1">
 			@section('boardlist')
-				@include('nav.boardlist')
+				@include('nav.gnav')
 			@show
 			
 			@section('header-inner')
 				<figure class="page-head">
-					<img id="logo" src="@yield('header-logo', asset('img/logo.png'))" alt="Infinity" />
-					
+					<img id="logo" src="@yield('header-logo', asset('static/img/logo.png'))" alt="Infinity" />
 					<figcaption class="page-details">
 						@if (!isset($hideTitles))
-						<h1 class="page-title">@yield('title')</h1>
+							@if (array_key_exists('page-title', View::getSections()))
+							<h1 class="page-title">@yield('page-title')</h1>
+							@else
+							<h1 class="page-title">@yield('title'))</h1>
+							@endif
 						<h2 class="page-desc">@yield('description')</h2>
 						@endif
 						

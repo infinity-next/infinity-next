@@ -32,9 +32,11 @@
 			</li>
 			@endforeach
 		</ul>
+		
 	</section>
-	
 </main>
+
+@include( 'widgets.ads.board_bottom_right' )
 @stop
 
 @section('footer-inner')

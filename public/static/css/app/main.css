@@ -1,12 +1,12 @@
 /**
  * z-index list of importance
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
- *  9999 - Donation overlay.
- *  1000 - Boardlist, top. Shold be highest element on boards and threads.
- *	10 - Post action links.
- *	 5 - Post attachment.
- *	 1 - Global Footer
- *	 0 - Board Sidebar
+ *  9999 - jQuery Blocker Overlay.
+ *  1000 - Boardlist, top. Should be highest element on boards and threads.
+ *    10 - Post action links.
+ *     5 - Post attachment.
+ *     1 - Global Footer
+ *     0 - Board Sidebar
  */
 
 /**
@@ -361,13 +361,16 @@ form {
 		}
 	
 	.row-captcha {
-		background: #ffffff center 4px url('/img/assets/infinity.gif') no-repeat;
+		background: #ffffff center 4px url('../../img/assets/infinity.gif') no-repeat;
 		border: 1px solid rgb(169, 169, 169);
 		width: 280px;
 		
 		margin-left: 0;
 		margin-right: auto;
 	}
+		.row-captcha .field-label {
+			text-align: center;
+		}
 		.row-captcha .field-control {
 			border: none;
 			border-top: 1px solid rgb(169, 169, 169);
@@ -379,7 +382,7 @@ form {
 		
 		.row-captcha .captcha-loading {
 			padding-top: 80px;
-			background: center 4px url('/img/assets/infinity.gif') no-repeat;
+			background: center 4px url('../../img/assets/infinity.gif') no-repeat;
 		}
 			.row-captcha .captcha-loading img.captcha {
 				display: none;
@@ -597,7 +600,7 @@ main.cp form.form-config {
 					display: inline-block;
 					float: left;
 					
-					background-image: url('/img/backgrounds/permission-highlight.png');
+					background-image: url('../../img/backgrounds/permission-highlight.png');
 					background-position: top left;
 					background-repeat: repeat-x;
 					
@@ -1186,51 +1189,141 @@ header.contrib-header {
 /* Navigation */
 nav.gnav {
 	background: rgba(220, 220, 220, 0.25);
-	border-bottom: 1px solid rgba(150, 150, 150, 0.25);
+	border-bottom: 1px solid #dedede;
 	
-	/* white-space: nowrap; */
-	overflow: hidden;
-	
-	position: relative;
+	/*
+		white-space: nowrap;
+		overflow: hidden;
+	 */
 	
 	padding: 0;
 	margin: 0;
 	
 	height: 39px;
 	width: 100%;
+	
+	position: relative;
+	z-index: 1000;
 }
 	nav.gnav ul.gnav-groups,
 	nav.gnav li.gnav-group,
 	nav.gnav ul.gnav-items,
 	nav.gnav li.gnav-item {
-		display: inline-block;
+		display: block;
 		margin: 0;
 		padding: 0;
-		overflow: hidden;
+		white-space: nowrap;
+		line-height: 18px;
 	}
 	
 	nav.gnav ul.gnav-groups {
-		display: block;
+		position: relative;
 	}
 	
 	nav.gnav li.gnav-item {
 		display: inline-block;
+		padding: 0;
+	}
+	nav.gnav li.gnav-item  a.gnav-link {
+		display: inline-block;
 		font-size: 14px;
-		line-height: 18px;
 		margin: 0 7px;
 		padding: 11px 2px;
 		text-decoration: none;
 		vertical-align: top;
 	}
-		nav.gnav li.gnav-item.gnav-active {
+		nav.gnav li.gnav-item.gnav-active a.gnav-link {
 			border-bottom: 3px solid #AF0A0F;
 			padding-bottom: 8px;
-		}
-		nav.gnav li.gnav-item.gnav-active a.gnav-link {
 			color: #AF0A0F;
 		}
 	
+	nav.gnav .flyout {
+		display: block;
+		
+		z-index: 999;
+		position: absolute;
+		left: 0;
+		top: 0;
+		
+		box-sizing: border-box;
+		width: auto;
+		max-width: 100vw;
+		min-width: none;
+		height: auto;
+		max-height: 100vh;
+		min-height: 200px;
+		
+		margin: 0 0 0 0;
+		padding: 40px 0 0 0;
+		
+		pointer-events: none;
+		overflow: hidden;
+	}
+		nav.gnav .flyout-cols {
+			display: block;
+			width: 100%;
+			
+			background: #EEF2FF;
+			border-radius: 0 0 4px 4px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+			border-right: 1px solid #dedede;
+			border-bottom: 1px solid #dedede;
+			
+			pointer-events: all;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+			nav.gnav .flyout-cols:after {
+				content: ' ';
+				display: block;
+				clear: both;
+			}
+		nav.gnav .flyout-col-title {
+			font-size: 1.3em;
+			font-weight: bold;
+			padding: 12px 12px 6px 12px;
+		}
+		nav.gnav .flyout-col {
+			display: inline-block;
+			vertical-align: top;
+			
+			float: left;
+			width: 21em;
+			height: 100%;
+			
+			border-left: 1px solid #dedede;
+			border-right: 1px solid #dedede;
+			padding: 0 1px 12px 1px;
+			margin: 0 -1px 0 0;
+		}
+			nav.gnav .flyout-list {
+				display: block;
+			}
+			nav.gnav .flyout-link {
+				display: block;
+				font-size: 1.2em;
+				line-height: 1.7em;
+				height: 1.7em;
+				overflow: hidden;
+				padding: 0 12px;
+				white-space: normal;
+			}
+				nav.gnav .flyout-item:hover {
+					background-color: rgba(255,255,255,0.5);
+				}
+				
+				nav.gnav .flyout-uri {
+					font-weight: bold;
+				}
+				nav.gnav .flyout-title:before {
+					display: inline;
+					content: ' - ';
+				}
+	
 	header nav.boardlist {
+		display: none;
+		
 		background: #d6daf0;
 		color: #34345C;
 		vertical-align: baseline;
@@ -1353,7 +1446,7 @@ section.index-form {
 				form.form-post .menu-icon .menu-icon-button {
 					display: none;
 					display: inline-block;
-					background-image: url('/img/backgrounds/ui-icons_888888_256x240.png');
+					background-image: url('../../img/backgrounds/ui-icons_888888_256x240.png');
 					height: 16px;
 					width: 16px;
 				}
@@ -1741,7 +1834,7 @@ main.index-threaded {
 	section.index-threads {
 		margin: -1em 0 0 0;
 	}
-		/* Advertisements */
+		/* Advertisements for small screens */
 		aside.advertiser.top-left {
 			box-sizing: border-box;
 			padding: 0.5em;
@@ -1762,13 +1855,13 @@ main.index-threaded {
 				margin: 1em 0;
 			}
 		
-		section.index-threads aside.advertiser.top-left {
+		aside.advertiser.top-left {
 			display: none;
 		}
 		
 		/* Threads */
 		main.index-threaded .thread,
-		section.index-threads aside.advertiser.top-left {
+		aside.advertiser.top-left {
 			padding: 1em;
 		}
 		
@@ -2065,7 +2158,7 @@ main.index-threaded {
 										z-index: 1;
 										
 										background-position: center center;
-										background-image: url('/img/backgrounds/vinyl.svg');
+										background-image: url('../../img/backgrounds/vinyl.svg');
 										background-repeat: no-repeat;
 										background-size: contain;
 									}
@@ -2096,10 +2189,10 @@ main.index-threaded {
 									border-style: solid;
 									border-width: 17px;
 									
-									-moz-border-image:	url('/img/backgrounds/film.png') 27 fill stretch repeat;
-									-webkit-border-image: url('/img/backgrounds/film.png') 27 fill stretch repeat;
-									-o-border-image:		url('/img/backgrounds/film.png') 27 fill stretch repeat;
-									border-image:		 url('/img/backgrounds/film.png') 27 fill stretch repeat;
+									-moz-border-image     url('../../img/backgrounds/film.png') 27 fill stretch repeat;
+									-webkit-border-image: url('../../img/backgrounds/film.png') 27 fill stretch repeat;
+									-o-border-image:      url('../../img/backgrounds/film.png') 27 fill stretch repeat;
+									border-image:         url('../../img/backgrounds/film.png') 27 fill stretch repeat;
 								}
 								
 									li.post-attachment.attachment-expanded img.attachment-img {
@@ -2831,7 +2924,7 @@ nav.cp-inner {
 		}
 		#payment-form #payment-process,
 		#payment-form #payment-received {
-			background-image: url('/img/assets/infinity.gif');
+			background-image: url('../../img/assets/infinity.gif');
 			background-position: top center;
 			background-repeat: no-repeat;
 			background-color: #ffffff;
@@ -2844,7 +2937,7 @@ nav.cp-inner {
 			text-align: center;
 		}
 			#payment-form #payment-received {
-				background-image: url('/img/assets/heart.png');
+				background-image: url('../../img/assets/heart.png');
 				background-size: 128px 152px;
 				padding-top: 160px;
 			}
@@ -3071,7 +3164,7 @@ nav.cp-inner {
 			}
 			
 			#ccn {
-					background-image: url('/img/assets/providers.png'), url('/img/assets/providers.png');
+					background-image: url('../../img/assets/providers.png'), url('../../img/assets/providers.png');
 					background-position: 2px -121px;
 					background-size: 120px 361px;
 					background-repeat: no-repeat;
@@ -3109,7 +3202,7 @@ body.error::before {
 	pointer-events: none;
 	opacity: 0.2;
 	
-	background-image: url('/img/errors/whitenoise.gif');
+	background-image: url('../../img/errors/whitenoise.gif');
 }
 	main#error {
 	}
@@ -3240,6 +3333,23 @@ figcaption.page-details {
 		color: #333;
 		margin: 0.2em 0 0 0;
 	}
+		html.js body.view-board h1.page-title .fa {
+			position: absolute;
+			display: inline;
+			color: #aaa;
+			cursor: pointer;
+			line-height: 1.1em;
+			margin: 0.2em 0 0 0;
+			padding: 0 0 0 0.2em;
+		}
+			html.js body.view-board.board-int  h1.page-title .fa:before,
+			html.js body.view-board.board-ints h1.page-title .fa:before,
+			html.js body.view-board.board-intl h1.page-title .fa:before {
+				content: '✡';
+				font-size: 1.2em;
+				font-weight: bold;
+			}
+	
 	h2.page-desc {
 		color: #333;
 		margin: 0;

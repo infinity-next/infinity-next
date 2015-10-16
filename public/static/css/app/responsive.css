@@ -246,7 +246,7 @@
 }
 
 /**
- * 1028px width and 640px height
+ * 1028px width and 480px height
  * Desktop
  */
 @media (min-width: 1028px) and (min-height: 480px) {
@@ -273,13 +273,15 @@
 	}
 	
 	/* Advertisements */
-	body.responsive section.index-threads aside.advertiser.top-left {
+	body.responsive main.index-threaded aside.advertiser.top-left {
 		text-align: left;
 	}
-	body.responsive section.index-threads aside.advertiser.bottom-right {
+	body.responsive aside.advertiser.bottom-right {
 		position: absolute;
 		bottom: 0;
-		right: 0;
+		right: 5px;
+		
+		width: 310px;
 	}
 		body.responsive aside.advertiser.bottom-right figure.ad-field {
 			display: block;
@@ -304,7 +306,7 @@
 		width: 320px;
 		height: auto;
 	}
-		aside.index-sidebar aside.advertiser.bottom-right {
+		aside.advertiser.bottom-right {
 			position: absolute;
 		}
 	

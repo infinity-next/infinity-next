@@ -236,7 +236,9 @@ class FileStorage extends Model {
 			$nameFormat = Settings::get('attachmentName');
 		}
 		
-		$bits['t'] = \Carbon\Carbon::now()->timestamp;
+		$first_uploade_at = new \Carbon\Carbon($this->first_uploaded_at);
+		
+		$bits['t'] = $first_uploade_at->timestamp;
 		$bits['i'] = 0;
 		$bits['n'] = $bits['t'];
 		
@@ -350,7 +352,7 @@ class FileStorage extends Model {
 	{
 		$ext   = $this->guessExtension();
 		$mime  = $this->mime;
-		$url   = "/img/filetypes/{$ext}.svg";
+		$url   = asset("static/img/filetypes/{$ext}.svg");
 		$type  = "other";
 		$html  = "";
 		$stock = true;
