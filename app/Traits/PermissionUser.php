@@ -510,6 +510,22 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user sticky a thread?
+	 *
+	 * @return boolean
+	 */
+	public function canSticky(Post $post)
+	{
+		// We can only ever sticky a thread, for now.
+		if (is_null($post->reply_to))
+		{
+			return $this->can("board.post.sticky", $post->board_uri);
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Can this user view a board's reports?
 	 *
 	 * @return boolean
@@ -535,22 +551,6 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Can this user sticky a thread?
-	 *
-	 * @return boolean
-	 */
-	public function canSticky(Post $post)
-	{
-		// We can only ever sticky a thread, for now.
-		if (is_null($post->reply_to))
-		{
-			return $this->can("board.post.sticky", $post->board_uri);
-		}
-		
-		return false;
-	}
-	
-	/**
 	 * Can this user see another's raw IP?
 	 *
 	 * @return boolean
@@ -558,6 +558,16 @@ trait PermissionUser {
 	public function canViewRawIP()
 	{
 		return $this->can('site.user.raw_ip');
+	}
+	
+	/**
+	 * Can this user see another's raw IP?
+	 *
+	 * @return boolean
+	 */
+	public function canViewUnindexedBoards()
+	{
+		return $this->can('site.board.view_unindexed');
 	}
 	
 	/**

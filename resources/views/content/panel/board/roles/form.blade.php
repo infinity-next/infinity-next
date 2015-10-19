@@ -10,7 +10,7 @@
 	@else
 	@include("widgets.config.option.text_plain", [
 		'option_name'    => "roleType",
-		'option_value'   => $role->getDisplayNameForGroup(),
+		'option_value'   => $role->getDisplayName(),
 	])
 	@endif
 	

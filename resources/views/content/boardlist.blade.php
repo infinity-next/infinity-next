@@ -12,37 +12,33 @@
 				@include('content.index.modules.logo')
 			</div>
 			
-			<div class="grid-40">
-				@include('content.index.modules.description')
-			</div>
-			
-			<div class="grid-40">
+			<div class="grid-80">
 				@include('content.index.modules.statistics')
 			</div>
 		</section>
 		
 		<div class="board-list grid-100 grid-parent">
 			<aside class="search-container grid-20">
-				<form id="search-form" class="smooth-box" method="get" action="/boards.php">
-					<h2 class="box-title">Search</h2>
+				<form id="search-form" class="smooth-box" method="get" action="{{ \Request::url() }}">
+					<div class="box-title">@lang('boardlist.search.title')</div>
 					
 					<div class="board-search box-content">
 						<label class="search-item search-sfw">
-							<input type="checkbox" id="search-sfw-input" name="sfw" value="1" {{-- if not search.nsfw --}}checked="checked"{{-- endif --}} />&nbsp;Hide NSFW boards
+							<input type="checkbox" id="search-sfw-input" name="sfw" value="1" @if (Request::get('sfw', false))checked="checked"@endif />&nbsp;@lang('boardlist.search.sfw_only')
 						</label>
 						
 						<div class="search-item search-title">
-							<input type="text" id="search-title-input" name="title" name="title" value="{{-- search.title --}}" placeholder="Search titles..." />
+							<input type="text" id="search-title-input" name="title" name="title" value="{{ Request::get('titles',"") }}" placeholder="@lang('boardlist.search.titles')" />
 						</div>
 						
 						<div class="search-item search-lang">
 							<select id="search-lang-input" name="lang">
-								<optgroup label="Popular">
-									<option value="">All languages</option>
-									<option value="en">English</option>
-									<option value="es">Spanish</option>
+								<optgroup label="@lang('boardlist.search.lang.popular')">
+									<option value="">@lang('boardlist.search.lang.any')</option>
+									<option value="eng">@lang('lang.eng')</option>
+									<option value="spa">@lang('lang.spa')</option>
 								</optgroup>
-								<optgroup label="All">
+								<optgroup label="@lang('boardlist.search.lang.all')">
 									<!-- for lang_code, lang_name in languages -->
 									<option value="lang_code"><!-- lang_name --></option>
 									<!-- endfor -->
@@ -51,11 +47,11 @@
 						</div>
 						
 						<div class="search-item search-tag">
-							<input type="text" id="search-tag-input" name="tags" value="{{-- search.tags|join(' ') --}}" placeholder="Search tags..." />
+							<input type="text" id="search-tag-input" name="tags" value="{{ Request::get('tags',"") }}" placeholder="@lang('boardlist.search.tags')" />
 						</div>
 						
 						<div class="search-item search-submit">
-							<button id="search-submit">Search</button>
+							<button id="search-submit">@lang('boardlist.search.find')</button>
 							<span id="search-loading" class="loading-small board-list-loading" style="display: none;"></span>
 							<script type="text/javascript">
 								/*
@@ -102,14 +98,29 @@
 								<!-- <th class="board-meta" data-column="meta"></th> -->
 								<th class="board-uri" data-column="uri">@lang('boardlist.table.uri')</th>
 								<th class="board-title" data-column="title">@lang('boardlist.table.title')</th>
-								<th class="board-pph" data-column="pph" title="Posts per hour">@lang('boardlist.table.pph')</th>
-								<th class="board-unique" data-column="active" title="Unique IPs to post in the last 72 hours">@lang('boardlist.table.active')</th>
+								<th class="board-pph" data-column="pph" title="@lang('boardlist.table.pph_title')">@lang('boardlist.table.pph')</th>
+								<th class="board-unique" data-column="active" title="@lang('boardlist.table.active_title')">@lang('boardlist.table.active')</th>
 								<th class="board-tags" data-column="tags">@lang('boardlist.table.tags')</th>
 								<th class="board-max" data-column="posts_total">@lang('boardlist.table.total_posts')</th>
 							</tr>
 						</thead>
 						
-						<tbody class="board-list-tbody"><!-- TODO: INITIAL BOARD HTML HERE --></tbody>
+						<tbody class="board-list-tbody">
+							@foreach ($boards as $board)
+								<tr>
+									<!-- <td class="board-meta"> board.locale </td> -->
+									<td class="board-uri"><p class="board-cell">
+										<a href="{{ $board->getUrl() }}">/{{ $board->board_uri }}/</a>
+										@if ($board->is_worksafe)<i class="fa fa-briefcase board-sfw" title="SFW"></i>@endif
+									</p></td>
+									<td class="board-title"><p class="board-cell" title="Created board['time']">{{ $board->title }}</p></td>
+									<td class="board-pph"><p class="board-cell board-pph-desc" title="TODO made in the last hour, board['pph_average'] on average">{{ $board->stats_pph }}</p></td>
+									<td class="board-unique"><p class="board-cell">{{ $board->stats_active_users }}</p></td>
+									<td class="board-tags"><p class="board-cell">TODO {{--<a class="tag-link" href=""></a>--}}</p></td>
+									<td class="board-max"><p class="board-cell">{{ $board->posts_total }}</p></td>
+								</tr>
+							@endforeach
+						</tbody>
 						
 						<tbody class="board-list-loading">
 							<tr>
@@ -117,9 +128,18 @@
 							</tr>
 						</tbody>
 						
-						<tbody class="board-list-omitted" data-omitted="0"><!-- TODO:: BOARDS OMITTED COUNT HERE -->
+						<tbody class="board-list-omitted" data-omitted="{{ $boards->total() - $boards->perPage() }}" data-page="{{ $boards->currentPage() }}"}><!-- TODO:: BOARDS OMITTED COUNT HERE -->
 							<tr>
-								<td colspan="6" id="board-list-more">Displaying results <span class="board-page-num"><!-- search.page + 1 --></span> through <span class="board-page-count"><!-- boards|count + search.page --></span> out of <span class="board-page-total"><!-- boards|count + boards_omitted --></span>. <span class="board-page-loadmore">Click to load more.</span></td>
+								<td colspan="6">
+									<a data-no-instant id="board-list-more" href="{{ $boards->currentPage() == $boards->lastPage() ? $boards->url(1) : $boards->nextPageUrl() }}">
+										{!! trans('boardlist.footer.displaying', [
+											'board_current' => "<span class=\"board-page-num\">{$boards->firstItem()}</span>",
+											'board_count'   => "<span class=\"board-page-count\">{$boards->lastItem()}</span>",
+											'board_total'   => "<span class=\"board-page-total\">{$boards->total()}</span>",
+										]) !!}
+										<span class="board-page-loadmore">@lang('boardlist.footer.load_more')</span>
+									</a>
+								</td>
 								
 								<!-- if boards_omitted > 0 -->
 								<script type="text/javascript">

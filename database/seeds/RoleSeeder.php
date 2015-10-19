@@ -330,6 +330,7 @@ class RolePermissionSeeder extends Seeder {
 				
 				"board.reports",
 				"site.reports",
+				"site.board.view_unindexed",
 			],
 		];
 	}

@@ -9,6 +9,8 @@ ib.widget("boardlist", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			
+			searchUrl  : "/boards.html",
+			
 			// Selectors for finding and binding elements.
 			selector   : {
 				'board-head'    : ".board-list-head",
@@ -94,40 +96,61 @@ ib.widget("boardlist", function(window, $, undefined) {
 					// Bind form events.
 					widget.$widget
 						// Load more
-						.on( 'click', selectors['board-omitted'], searchForms, widget.events.loadMore )
+						.on( 'click',  selectors['board-omitted'], searchForms, widget.events.loadMore )
 						// Tag click
-						.on( 'click', selectors['tag-link'], searchForms, widget.events.tagClick )
+						.on( 'click',  selectors['tag-link'], searchForms, widget.events.tagClick )
 						// Form Submission
 						.on( 'submit', selectors['search'], searchForms, widget.events.searchSubmit )
 						// Submit click
-						.on( 'click', selectors['search-submit'], searchForms, widget.events.searchSubmit );
+						.on( 'click',  selectors['search-submit'], searchForms, widget.events.searchSubmit );
 					
 					$(window)
 						.on( 'hashchange', searchForms, widget.events.hashChange );
 					
 					$searchSubmit.prop( 'disabled', false );
 				}
+			},
+			
+			widget : function() {
+				
+				// Parse ?GET parameters into lastSearch object.
+				if (window.location.search != "" && window.location.search.length > 0)
+				{
+					// ?a=1&b=2 -> a=1&b=2 -> { a : 1, b : 2 }
+					window.location.search.substr(1).split("&").forEach( function(item) {
+						widget.lastSearch[item.split("=")[0]] = item.split("=")[1];
+					} );
+				}
+				
+				$( widget.options.selector['board-loading'], widget.$widget ).hide();
+				
+				widget.bind.form();
+				
+				if (window.location.hash != "")
+				{
+					$(window).trigger( 'hashchange' );
+				}
 			}
 		},
 		
 		build  : {
 			boardlist : function(data) {
-				widget.build.boards(data['boards'], data['order']);
-				widget.build.lastSearch(data['search']);
+				widget.build.boards(data['data']);
+				//widget.build.lastSearch(data['search']);
 				widget.build.footer(data);
 				widget.build.tags(data['tagWeight']);
 				
 			},
 			
-			boards : function(boards, order) {
+			boards : function(boards) {
 				// Find our head, columns, and body.
 				var $head = $( widget.options.selector['board-head'], widget.$widget );
 				var $cols = $("[data-column]", $head );
 				var $body = $( widget.options.selector['board-body'], widget.$widget );
 				
-				$.each( order, function( index, uri ) {
-					var row  = boards[uri];
-					var $row = $( widget.options.template['board-row'] );
+				$.each( boards, function( index, board ) {
+					var row  = board;
+					var $row = $( widget.options.templates['board-row'] );
 					
 					$cols.each( function( index, col ) {
 						widget.build.board( row, col ).appendTo( $row );
@@ -137,22 +160,23 @@ ib.widget("boardlist", function(window, $, undefined) {
 				} );
 				
 			},
+			
 			board : function(row, col) {
 				var $col   = $(col);
 				var column = $col.attr('data-column');
 				var value  = row[column];
-				var $cell  = $( widget.options.template['board-cell-' + column] );
-				var $wrap  = $( widget.options.template['board-content-wrap'] );
+				var $cell  = $( widget.options.templates['board-cell-' + column] );
+				var $wrap  = $( widget.options.templates['board-content-wrap'] );
 				
 				if (typeof widget.build.boardcell[column] === "undefined")
 				{
 					if (value instanceof Array)
 					{
-						if (typeof widget.options.template['board-datum-' + column] !== "undefined")
+						if (typeof widget.options.templates['board-datum-' + column] !== "undefined")
 						{
 							$.each( value, function( index, singleValue )
 							{
-								$( widget.options.template['board-datum-' + column] )
+								$( widget.options.templates['board-datum-' + column] )
 									.text( singleValue )
 									.appendTo( $wrap );
 							} );
@@ -198,29 +222,31 @@ ib.widget("boardlist", function(window, $, undefined) {
 				$wrap.appendTo( $cell );
 				return $cell;
 			},
+			
 			boardcell : {
 				'meta' : function(row, value) {
-					return $( widget.options.template['board-datum-lang'] ).text( row['locale'] );
+					return $( widget.options.templates['board-datum-lang'] ).text( row['locale'] );
 				},
 				'uri'  : function(row, value) {
-					var $link = $( widget.options.template['board-datum-uri'] );
-					var $sfw  = $( widget.options.template['board-datum-' + (row['sfw'] == 1 ? "sfw" : "nsfw")] );
+					var $link = $( widget.options.templates['board-datum-uri'] );
+					var $sfw  = $( widget.options.templates['board-datum-' + (row['sfw'] == 1 ? "sfw" : "nsfw")] );
 					
 					$link
-						.attr( 'href', "/"+row['uri']+"/" )
-						.text( "/"+row['uri']+"/" );
+						.attr( 'href', window.app.url + "/" + row['board_uri'] + "/" )
+						.text( "/"+row['board_uri']+"/" );
 					
 					// I decided against NSFW icons because it clutters the index.
 					// Blue briefcase = SFW. No briefcase = NSFW. Seems better.
-					if (row['sfw'] == 1) {
+					if (row['is_worksafe'] == 1) {
 						return $link[0].outerHTML + $sfw[0].outerHTML;
 					}
 					else {
 						return $link[0].outerHTML;
 					}
 				},
+				
 				'pph' : function(row, value) {
-					return $( widget.options.template['board-datum-pph'] )
+					return $( widget.options.templates['board-datum-pph'] )
 						.attr( 'title', function(index, value) {
 							return value.replace("%1", row['pph']).replace("%2", row['pph_average']);
 						} )
@@ -231,7 +257,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 			lastSearch : function(search) {
 				return widget.lastSearch =  { 
 					'lang'  : search.lang === false ? "" : search.lang,
-					'page'  : search.page,
+					'page'  : search.current_page,
 					'tags'  : search.tags === false ? "" : search.tags.join(" "),
 					'time'  : search.time,
 					'title' : search.title === false ? "" : search.title,
@@ -247,21 +273,16 @@ ib.widget("boardlist", function(window, $, undefined) {
 				var $more    = $( selector['footer-more'], widget.$widget );
 				var $omitted = $( selector['board-omitted'], widget.$widget );
 				
-				var boards   = Object.keys(data['boards']).length;
-				var omitted  = data['omitted'] - data['search']['page'];
-				
-				if (omitted < 0)
-				{
-					omitted = 0;
-				}
-				
-				var total    = boards + omitted + data['search']['page'];
+				var count    = (data['current_page'] * data['per_page']);
+				var total    = data['total'];
+				var omitted  = total - count;
 				
 				//$page.text( data['search']['page'] );
-				$count.text( data['search']['page'] + boards );
+				$count.text( count );
 				$total.text( total );
-				$more.toggleClass( "board-list-hasmore", omitted != 0 );
-				$omitted.toggle( boards + omitted > 0 );
+				$more.toggleClass( "board-list-hasmore", omitted > 0 );
+				$omitted.toggle( omitted > 0 );
+				$omitted.attr('data-page', data['page']);
 			},
 			
 			tags : function(tags) {
@@ -288,11 +309,15 @@ ib.widget("boardlist", function(window, $, undefined) {
 		
 		events : {
 			loadMore : function(event) {
+				event.preventDefault();
+				
 				var parameters = $.extend( {}, widget.lastSearch );
 				
-				parameters.page = $( widget.options.selector['board-body'], widget.$widget ).children().length;
+				parameters.page = parseInt( $( widget.options.selector['board-omitted'], widget.$widget ).attr('data-page'), 10) + 1;
 				
 				widget.submit( parameters );
+				
+				return false;
 			},
 			
 			hashChange : function(event) {
@@ -348,7 +373,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 			}
 		},
 		
-		submit : function( parameters ) {
+		submit : function( data ) {
 			var $boardlist    = widget.$widget;
 			var $boardload    = $( widget.options.selector['board-loading'], $boardlist );
 			var $searchSubmit = $( widget.options.selector['search-submit'], $boardlist );
@@ -358,47 +383,20 @@ ib.widget("boardlist", function(window, $, undefined) {
 			$boardload.show();
 			$footerMore.hide();
 			
-			return $.get(
-				"/board-search.php",
-				parameters,
-				function(data) {
+			return jQuery.ajax({
+					type:        "GET",
+					method:      "GET",
+					url:         widget.options.searchUrl,
+					data:        data,
+					dataType:    "json",
+					contentType: "application/json; charset=utf-8"
+				})
+				.done(function(data) {
 					$searchSubmit.prop( 'disabled', false );
 					$boardload.hide();
 					
-					widget.build.boardlist( $.parseJSON(data) );
-				}
-			);
-		},
-		
-		init : function( target ) {
-			if (typeof target !== "string")
-			{
-				target = widget.options.selector.boardlist;
-			}
-			
-			// Parse ?GET parameters into lastSearch object.
-			if (window.location.search != "" && window.location.search.length > 0)
-			{
-				// ?a=1&b=2 -> a=1&b=2 -> { a : 1, b : 2 }
-				window.location.search.substr(1).split("&").forEach( function(item) {
-					widget.lastSearch[item.split("=")[0]] = item.split("=")[1];
-				} );
-			}
-			
-			var $boardlist = $(target);
-			
-			if ($widget.length > 0 )
-			{
-				$( widget.options.selector['board-loading'], $boardlist ).hide();
-				
-				widget.$widget = $boardlist;
-				widget.bind.form();
-				
-				if (window.location.hash != "")
-				{
-					$(window).trigger( 'hashchange' );
-				}
-			}
+					widget.build.boardlist( data );
+				});
 		}
 	};
 	

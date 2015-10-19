@@ -26,6 +26,13 @@ class Stats extends Model {
 	protected $fillable = ['stats_time', 'board_uri', 'stats_type', 'counter'];
 	
 	/**
+	 * Columnns which should automatically be converted to Carbon objects.
+	 *
+	 * @var array
+	 */
+	public $dates = ['stats_time'];
+	
+	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
 	 *
 	 * @var array

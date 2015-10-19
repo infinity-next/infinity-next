@@ -158,11 +158,17 @@ return [
 					'other' => "Spoiler anyone's attachments",
 					'upload' => "Spoiler own attachments",
 				],
-				'upload' => "Upload attachments",
+				'upload' => [
+					'new' => "Upload new attachments",
+					'old' => "Upload recognized attachments",
+				],
 			],
 			
 			'post' => [
-				'create' => "Post threads and replies",
+				'create' => [
+					'thread' => "Post threads",
+					'reply'  => "Post replies",
+				],
 				'delete' => [
 					'other' => "Delete anyone's content",
 					'self' => "Delete own content",
@@ -195,6 +201,14 @@ return [
 		],
 		
 		'site' => [
+			'board' => [
+				'view_unindexed' => "Find Unindexed Boards",
+			],
+			
+			'image' => [
+				'ban' => "Ban image checksums",
+			],
+			
 			'pm' => "PM users",
 			
 			'post' => [

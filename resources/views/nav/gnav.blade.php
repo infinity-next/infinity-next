@@ -10,7 +10,7 @@
 						<!-- Board Directory -->
 						<li class="gnav-item item-boards">
 							<a href="{!! url("boards.html") !!}" class="gnav-link">@lang('nav.global.boards')</a>
-							
+							{{--
 							@if(isset($boardbar))
 							<div class="flyout flyout-boards">
 								<ul class="flyout-cols">
@@ -44,6 +44,7 @@
 								</ul>
 							</div>
 							@endif
+							--}}
 						</li>
 						
 						<!-- Overboard -->

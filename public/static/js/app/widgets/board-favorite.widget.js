@@ -20,7 +20,7 @@ ib.widget("board-favorite", function(window, $, undefined) {
 		// Event bindings
 		bind     : {
 			widget : function() {
-				var widget.board = widget.$widget.attr('data-board');
+				widget.board = widget.$widget.attr('data-board');
 				
 				if (widget.board != "")
 				{

@@ -18,7 +18,7 @@
 				"unset",
 				is_null($value),
 				[
-					'id'        => "{$permission->permission_id}-no",
+					'id'        => "{$permission->permission_id}-unset",
 					'class'     => "field-control",
 			]) !!}
 		</label>
@@ -43,7 +43,5 @@
 					'class' => "field-control",
 			]) !!}
 		</label> --}}
-		
-		@include('widgets.config.helper')
 	</dd>
 </dl>

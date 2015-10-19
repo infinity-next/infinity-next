@@ -11,6 +11,7 @@ use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
 use App\Support\IP\CIDR;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -18,7 +19,6 @@ use InfinityNext\BrennanCaptcha\Captcha;
 
 use DB;
 use Cache;
-use Collection;
 use Request;
 
 use Event;
@@ -62,6 +62,13 @@ class Board extends Model {
 	 * @var boolean
 	 */
 	public $applicationSingleton = false;
+	
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @var array
+	 */
+	protected $appends = ['stats_posts', 'stats_pph', 'stats_active_users', 'tags'];
 	
 	/**
 	 * The attributes that are mass assignable.
@@ -147,11 +154,6 @@ class Board extends Model {
 		return $this->belongsTo('\App\User', 'owned_by', 'user_id');
 	}
 	
-	public function staffAssignments()
-	{
-		return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'user_id');
-	}
-	
 	public function threads()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');
@@ -167,9 +169,19 @@ class Board extends Model {
 		return $this->hasMany('\App\BoardSetting', 'board_uri');
 	}
 	
+	public function staffAssignments()
+	{
+		return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'user_id');
+	}
+	
 	public function stats()
 	{
 		return $this->hasMany('\App\Stats', 'board_uri');
+	}
+	
+	public function unqiues()
+	{
+		return $this->hasManyThrough('App\StatsUnique', 'App\Stats', 'board_uri', 'stats_id');
 	}
 	
 	
@@ -664,6 +676,69 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Returns a 'stats_active_usrs' attribute for JSON output.
+	 *
+	 * @return int
+	 */
+	public function getStatsActiveUsersAttribute()
+	{
+		$stats = $this->stats->where('stats_type', "authors");
+		
+		if ($stats->count())
+		{
+			$uniques = new Collection();
+			
+			foreach ($stats as $stat)
+			{
+				$uniques = $uniques->merge($stat->uniques);
+			}
+			
+			// The word unique is not unique in this line of code ...
+			// We're finding the number of stat row "bits" and then
+			// sub-selecting the distinct values from that.
+			// 
+			// So if /b/ has 4 stat rows with these values as uniques
+			// 192.168.0.1, 192.168.0.2, 192.168.0.3
+			// 192.168.0.1, 192.168.0.2
+			// 192.168.0.2, 192.168.0.3
+			// 192.168.0.1
+			// The actual derived value is 3.
+			return $uniques->unique('unique')->count();
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * Returns a 'stat_posts' attribute for JSON output.
+	 *
+	 * @return int
+	 */
+	public function getStatsPostsAttribute()
+	{
+		$stats = $this->stats->where('stats_type', "posts");
+		
+		return $stats->count();
+	}
+	
+	/**
+	 * Returns a 'stats_pph' attribute for JSON output.
+	 *
+	 * @return int
+	 */
+	public function getStatsPphAttribute()
+	{
+		$stats = $this->stats->where('stats_type', "posts");
+		
+		if ($stats->count())
+		{
+			return $stats->sum('counter') / $stats->first()->stats_time->diffInHours();
+		}
+		
+		return 0;
+	}
+	
+	/**
 	 * Returns a fully qualified URL for a route on this board.
 	 *
 	 * @param  string  $route  Optional suffix to be added after the board URL.
@@ -921,9 +996,9 @@ class Board extends Model {
 		return $query->with('staffAssignments');
 	}
 	
-	public function scopeWhereIndexed($query)
+	public function scopeWhereIndexed($query, $indexed = true)
 	{
-		return $query->where('is_indexed', true);
+		return $query->where('is_indexed', !!$indexed);
 	}
 	
 	public function scopeWhereLastPost($query, $hours = 48)

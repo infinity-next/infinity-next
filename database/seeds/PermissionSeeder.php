@@ -72,6 +72,7 @@ class PermissionSeeder extends Seeder {
 			"board.user.role",
 			"board.user.unban",
 			
+			"site.board.view_unindexed",
 			"site.image.ban",
 			"site.pm",
 			"site.post.report",
@@ -224,6 +225,7 @@ class PermissionGroupSeeder extends Seeder {
 				
 				'permissions'   => [
 					"board.create",
+					"site.board.view_unindexed",
 					"site.image.ban",
 					"site.pm",
 					"site.post.report",
