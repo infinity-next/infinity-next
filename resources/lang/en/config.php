@@ -42,6 +42,7 @@ return [
 		'board_ephemerality' => "Content Ephemerality",
 		'board_posts'        => "Post Options",
 		'board_threads'      => "Thread Options",
+		'board_tags'         => "Board Tags",
 		'sidebar'            => "Sidebar",
 		'style'              => "Styling",
 		
@@ -62,6 +63,8 @@ return [
 		'boardCustomCSS'           => "Custom CSS",
 		'boardSidebarText'         => "Content",
 		'boardUriBanned'           => "Banned Board URIs",
+		
+		'boardTags'                => "Tags",
 		
 		'adventureEnabled'         => "Enable adventures",
 		'adventureIcons'           => "Show icons for adventure posts",

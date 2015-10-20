@@ -23,6 +23,7 @@ class FixMysqlCollate extends Migration
 		Schema::dropIfExists('board_assets');
 		Schema::dropIfExists('board_settings');
 		Schema::dropIfExists('board_tags');
+		Schema::dropIfExists('board_tag_assignments');
 		
 		Schema::dropIfExists('captcha');
 		
@@ -148,8 +149,18 @@ class FixMysqlCollate extends Migration
 		Schema::create('board_tags', function(Blueprint $table)
 		{
 			$table->increments('board_tag_id');
-			$table->string('board_uri', 32);
 			$table->string('tag', 32);
+		});
+		
+		/**
+		 * Board Tag Assignments
+		 */
+		Schema::create('board_tag_assignments', function(Blueprint $table)
+		{
+			$table->increments('board_tag_assignment_id');
+			$table->integer('board_tag_id')->unsigned();
+			$table->string('board_uri', 32);
+			
 		});
 		
 		/**
@@ -603,10 +614,14 @@ class FixMysqlCollate extends Migration
 		/**
 		 * Board Tags Keys
 		 */
-		Schema::table('board_tags', function(Blueprint $table)
+		Schema::table('board_tag_assignments', function(Blueprint $table)
 		{
 			$table->foreign('board_uri')
 				->references('board_uri')->on('boards')
+				->onDelete('cascade')->onUpdate('cascade');
+			
+			$table->foreign('board_tag_id')
+				->references('board_tag_id')->on('board_tags')
 				->onDelete('cascade')->onUpdate('cascade');
 		});
 		

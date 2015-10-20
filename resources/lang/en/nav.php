@@ -83,6 +83,7 @@ return [
 				'roles'   => "Roles",
 				'staff'   => "Staff",
 				'style'   => "Styling",
+				'tags'    => "Tags",
 			],
 		],
 	],

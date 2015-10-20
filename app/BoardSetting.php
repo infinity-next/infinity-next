@@ -25,6 +25,11 @@ class BoardSetting extends Model {
 	 */
 	protected $primaryKey = 'board_setting_id';
 	
+	/**
+	 * Determines if Laravel should set created_at and updated_at timestamps.
+	 *
+	 * @var array
+	 */
 	public $timestamps = false;
 	
 	

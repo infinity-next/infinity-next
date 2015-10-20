@@ -9,6 +9,7 @@
 							'config' => "basic",
 							'roles'  => "roles",
 							'staff'  => "staff",
+							'tags'   => "tags",
 						] as $url => $name)
 							<a class="linkitem-name @if ($tab == $name) linkitem-active @endif" href="{{ url("/cp/board/$board->board_uri/$url") }}">
 								{{ trans("nav.panel.tertiary.board_settings.{$name}") }}

@@ -67,8 +67,12 @@
 						</div>
 					</div>
 					
-					<ul class="tag-list box-content">
-						<!-- TODO: html_tags -->
+					<ul class="tag-list box-content" data-no-instant>
+						@foreach ($tags as $tag => $weight)
+						<li class="tag-item">
+							<a class="tag-link" href="{{ "?tags={$tag}" }}" style="font-size: 100%;">{{ $tag }}</a> 
+						</li>
+						@endforeach
 					</ul>
 				</form>
 			</aside>
@@ -116,7 +120,7 @@
 									<td class="board-title"><p class="board-cell" title="Created board['time']">{{ $board->title }}</p></td>
 									<td class="board-pph"><p class="board-cell board-pph-desc" title="TODO made in the last hour, board['pph_average'] on average">{{ $board->stats_pph }}</p></td>
 									<td class="board-unique"><p class="board-cell">{{ $board->stats_active_users }}</p></td>
-									<td class="board-tags"><p class="board-cell">TODO {{--<a class="tag-link" href=""></a>--}}</p></td>
+									<td class="board-tags" data-no-instant><p class="board-cell">@foreach ($board->tags as $tag)<a class="tag-link" href="{{ "?tags={$tag->tag}" }}">{{ $tag->tag }}</a>@endforeach</p></td>
 									<td class="board-max"><p class="board-cell">{{ $board->posts_total }}</p></td>
 								</tr>
 							@endforeach

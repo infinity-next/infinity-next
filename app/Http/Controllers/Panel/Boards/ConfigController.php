@@ -3,6 +3,7 @@
 use App\Board;
 use App\BoardAsset;
 use App\BoardSetting;
+use App\BoardTag;
 use App\FileStorage;
 use App\OptionGroup;
 
@@ -33,6 +34,7 @@ class ConfigController extends PanelController {
 	const VIEW_ASSETS = "panel.board.assets";
 	const VIEW_CONFIG = "panel.board.config";
 	const VIEW_STAFF  = "panel.board.staff";
+	const VIEW_TAGS   = "panel.board.config";
 	
 	/**
 	 * View path for the secondary (sidebar) navigation.
@@ -253,4 +255,108 @@ class ConfigController extends PanelController {
 	{
 		return $this->patchConfig($request, $board);
 	}
+	
+	/**
+	 * Display tags.
+	 *
+	 * @return Response
+	 */
+	public function getTags(Board $board)
+	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
+		$tagArray = [];
+		
+		foreach ($board->tags as $tag)
+		{
+			$tagArray[] = $tag->tag;
+		}
+		
+		return $this->view(static::VIEW_TAGS, [
+			'board'   => $board,
+			'tags'    => $tagArray,
+			
+			'tab'     => "tags",
+		]);
+	}
+	
+	/**
+	 * Put tags.
+	 *
+	 * @return Response
+	 */
+	public function putTags(Board $board)
+	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
+		$input = Input::all();
+		$rules = [
+			'boardTags' => [
+				"array",
+				"min:0",
+				"max:5",
+			]
+		];
+		
+		if (isset($input['boardTags']) && is_array($input['boardTags']))
+		{
+			$input['boardTags'] = array_filter($input['boardTags']);
+		}
+		
+		$validator = Validator::make($input, $rules);
+		
+		$validator->each('boardTags', [
+			'string',
+			'alpha_dash',
+			'max:24',
+		]);
+		
+		if (!$validator->passes())
+		{
+			return redirect()
+				->back()
+				->withErrors($validator->errors());
+		}
+		
+		
+		$tags     = [];
+		$tagArray = [];
+		
+		foreach ($input['boardTags'] as $boardTag)
+		{
+			$boardTag = (string) $boardTag;
+			
+			if (strlen($boardTag) && !isset($tagArray[$boardTag]))
+			{
+				// Add the tag to the list of set tags to prevent duplicates.
+				$tagArray[$boardTag] = true;
+				
+				// Find or create the board tag.
+				$tags[] = BoardTag::firstorCreate([
+					'tag' => $boardTag,
+				]);
+			}
+		}
+		
+		$board->tags()->detach();
+		
+		if (count($tags))
+		{
+			$tags = $board->tags()->saveMany($tags);
+		}
+		
+		return $this->view(static::VIEW_TAGS, [
+			'board'   => $board,
+			'tags'    => array_keys($tagArray),
+			
+			'tab'     => "tags",
+		]);
+	}
+	
 }

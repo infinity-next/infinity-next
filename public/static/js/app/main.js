@@ -46,9 +46,9 @@
 	ib.bindElement = function(element) {
 		var requestedWidget = element.getAttribute('data-widget');
 		
-		if (ib[requestedWidget])
+		if (ib.widgets[requestedWidget])
 		{
-			return ib.bindWidget(element, ib[requestedWidget]);
+			return ib.bindWidget(element, ib.widgets[requestedWidget]);
 		}
 		else
 		{
@@ -86,13 +86,13 @@
 	
 	ib.widget = function(name, widget) {
 		
-		if (ib[name] !== undefined)
+		if (ib.widgets[name] !== undefined)
 		{
 			console.log("Trying to re-declare widget \""+name+"\".");
 			return false;
 		}
 		
-		ib[name] = widget;
+		ib.widgets[name] = widget;
 		return true;
 	};
 	
@@ -118,7 +118,13 @@
 		
 		if ($widget.length)
 		{
-			widget.bind.widget();
+			try {
+				widget.bind.widget();
+			}
+			catch (error) {
+				console.log("FAILED to initiate widget.", ib.widgets);
+			}
+			
 			return true;
 		}
 		

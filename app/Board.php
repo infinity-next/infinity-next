@@ -179,6 +179,11 @@ class Board extends Model {
 		return $this->hasMany('\App\Stats', 'board_uri');
 	}
 	
+	public function tags()
+	{
+		return $this->belongsToMany('App\BoardTag', 'board_tag_assignments', 'board_uri', 'board_tag_id');
+	}
+	
 	public function unqiues()
 	{
 		return $this->hasManyThrough('App\StatsUnique', 'App\Stats', 'board_uri', 'stats_id');
@@ -1024,5 +1029,17 @@ class Board extends Model {
 	public function scopeWhereSFW($query)
 	{
 		return $query->where('is_worksafe', true);
+	}
+	
+	public function scopeWhereHasTags($query, $tags)
+	{
+		if (!is_array($tags))
+		{
+			$tags = explode(",", $tags);
+		}
+		
+		return $query->whereHas('tags', function($query) use ($tags) {
+			$query->whereIn('tag', $tags);
+		});
 	}
 }

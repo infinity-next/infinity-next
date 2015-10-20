@@ -633,6 +633,16 @@ main.cp form.form-config {
 						margin: 0.25em 0 0 0;
 					}
 				
+				ul.option-list {
+					
+				}
+					li.option-item {
+						margin-bottom: 0.5em;
+					}
+					li.option-item-template {
+						margin-top: 1.5em;
+					}
+				
 				label.option-permission {
 					display: inline-block;
 					float: left;

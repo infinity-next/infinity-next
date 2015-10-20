@@ -7,6 +7,7 @@
 	'files'  => true,
 	'id'     => "config-site",
 	'class'  => "form-config",
+	'data-widget' => "config",
 ]) !!}
 	<h3 class="config-title">@lang("panel.title.site")</h3>
 	

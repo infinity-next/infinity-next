@@ -4,6 +4,7 @@
 	'files'  => true,
 	'id'     => "config-board",
 	'class'  => "form-config",
+	'data-widget' => "config",
 ]) !!}
 	{{-- Basic Details --}}
 	<fieldset class="form-fields group-board_basic">

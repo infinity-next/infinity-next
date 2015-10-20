@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Board;
+use App\BoardTag;
 
 use App\Http\Controllers\Board\BoardStats;
 
@@ -41,9 +42,14 @@ class BoardlistController extends Controller {
 			return $this->boardListSearch()->toJson();
 		}
 		
+		$boards = $this->boardListSearch();
+		$stats  = $this->boardStats();
+		$tags   = $this->boardListTags($boards);
+		
 		return $this->view(static::VIEW_INDEX, [
-			'stats'  => $this->boardStats(),
-			'boards' => $this->boardListSearch(),
+			'boards' => $boards,
+			'stats'  => $stats,
+			'tags'   => $tags,
 		]);
 	}
 	
@@ -71,8 +77,13 @@ class BoardlistController extends Controller {
 					$query->whereIndexed(true);
 				}
 				
+				if (Request::get('tags', false))
+				{
+					$query->whereHasTags(Request::get('tags'));
+				}
 			})
 			->with([
+				'tags',
 				'stats' => function($query) {
 					$query->where('stats_time', '>=', \Carbon\Carbon::now()->minute(0)->second(0)->subDays(3));
 				},
@@ -103,5 +114,28 @@ class BoardlistController extends Controller {
 		
 		
 		return $paginator;
+	}
+	
+	protected function boardListTags($board)
+	{
+		$tags = BoardTag::distinct('tag')->with([
+			'boards',
+			'boards.stats',
+			'boards.stats.uniques',
+		])->get();
+		
+		$tagWeight = [];
+		
+		foreach ($tags as $tag)
+		{
+			$tagWeight[$tag->tag] = $tag->getWeight();
+			
+			if ($tag->getWeight() > 0)
+			{
+				dd($tag);
+			}
+		}
+		
+		return $tagWeight;
 	}
 }

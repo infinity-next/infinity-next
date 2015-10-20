@@ -18,6 +18,11 @@ class FileAttachment extends Model {
 	 */
 	protected $fillable = ['post_id', 'file_id', 'filename', 'is_spoiler', 'position'];
 	
+	/**
+	 * Determines if Laravel should set created_at and updated_at timestamps.
+	 *
+	 * @var array
+	 */
 	public $timestamps = false;
 	
 	
