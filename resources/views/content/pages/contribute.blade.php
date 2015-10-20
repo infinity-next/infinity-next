@@ -275,7 +275,7 @@
 				<h4 class="goal-title">$12,000 Mark</h4>
 				<div clas="grid-100">
 					<figure class="goal-figure">
-						<img id="goal-newchan" src="/img/assets/newchan.png" alt="Infinity + Other Imageboards Combining" />
+						<img id="goal-newchan" src="{{ url('static/img/assets/newchan.png') }}" alt="Infinity + Other Imageboards Combining" />
 						<figcaption class="goal-helper">
 							Having achieved a feature richness that meets and exceeds large, existing websites,
 							it is likely that they will want to adopt the technology.<br />

@@ -209,8 +209,8 @@ class Role extends Model {
 			'board_uri'  => $board->board_uri,
 			'caste'      => NULL,
 			'inherit_id' => Role::ID_OWNER,
-			'name'       => "user.role.owner",
-			'capcode'    => "user.role.owner",
+			'name'       => "user.role.board_owner",
+			'capcode'    => "user.role.board_owner",
 			'system'     => false,
 			'weight'     => Role::WEIGHT_OWNER + 5,
 		]);

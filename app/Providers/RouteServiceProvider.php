@@ -6,7 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider {
-
+	
 	/**
 	 * This namespace is applied to the controller routes in your routes file.
 	 *
@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider {
 	 * @var string
 	 */
 	protected $namespace = 'App\Http\Controllers';
-
+	
 	/**
 	 * Define your route model bindings, pattern filters, etc.
 	 *
@@ -56,17 +56,15 @@ class RouteServiceProvider extends ServiceProvider {
 		
 		
 		// Binds a matched instance of a {board} as a singleton instance.
-		$app = $this->app;
-		
-		$router->matched(function($route, $request) use ($app) {
+		$router->matched(function($route, $request) {
 			// Binds the board to the application if it exists.
 			$board = $route->getParameter('board');
 			
 			if ($board instanceof Board && $board->exists)
 			{
 				$board->applicationSingleton = true;
-				$app->instance("\App\Board", $board);
-				$app->singleton("\App\Board", function($app) use ($board) {
+				$this->app->instance("\App\Board", $board);
+				$this->app->singleton("\App\Board", function($app) use ($board) {
 					return $board->load('settings');
 				});
 			}
@@ -75,7 +73,7 @@ class RouteServiceProvider extends ServiceProvider {
 		
 		parent::boot($router);
 	}
-
+	
 	/**
 	 * Define the routes for the application.
 	 *
@@ -89,5 +87,5 @@ class RouteServiceProvider extends ServiceProvider {
 			require app_path('Http/routes.php');
 		});
 	}
-
+	
 }

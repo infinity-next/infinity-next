@@ -43,15 +43,15 @@ return [
 	| choice installed on your machine before you begin development.
 	|
 	*/
-
+	
 	'connections' => [
-
+		
 		'sqlite' => [
 			'driver'   => 'sqlite',
 			'database' => storage_path().'/database.sqlite',
 			'prefix'   => '',
 		],
-
+		
 		'mysql' => [
 			'driver'    => 'mysql',
 			'host'      => env('DB_HOST', 'localhost'),
@@ -63,7 +63,7 @@ return [
 			'prefix'    => '',
 			'strict'    => false,
 		],
-
+		
 		'pgsql' => [
 			'driver'   => 'pgsql',
 			'host'     => env('DB_HOST', 'localhost'),
@@ -74,7 +74,7 @@ return [
 			'prefix'   => '',
 			'schema'   => 'public',
 		],
-
+		
 		'sqlsrv' => [
 			'driver'   => 'sqlsrv',
 			'host'     => env('DB_HOST', 'localhost'),
@@ -83,9 +83,9 @@ return [
 			'password' => env('DB_PASSWORD', ''),
 			'prefix'   => '',
 		],
-
+		
 	],
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Migration Repository Table

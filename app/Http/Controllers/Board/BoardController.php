@@ -201,7 +201,7 @@ class BoardController extends Controller {
 			$this->log('log.post.capcode', $post, [
 				"board_id"  => $post->board_id,
 				"board_uri" => $post->board_uri,
-				"capcode"   => $post->capcode->capcode,
+				"capcode"   => $post->capcode->getCapcodeName(),
 				"role"      => $post->capcode->role,
 			]);
 		}

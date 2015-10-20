@@ -284,6 +284,11 @@ ib.widget("donate", function(window, $, undefined) {
 					// Send the information to our merchant.
 					switch (widget.options.config['merchant'])
 					{
+						case "stripe" :
+							Stripe.card.createToken($form, widget.events.stripeResponse);
+							break;
+						
+						default :
 						case "braintree" :
 							var client = new braintree.api.Client({clientToken: window.ib.config('braintree_key')});
 							
@@ -294,10 +299,6 @@ ib.widget("donate", function(window, $, undefined) {
 									cvv:             $cvc.val()
 								}, widget.events.braintreeResponse);
 							
-							break;
-						
-						case "stripe" :
-							Stripe.card.createToken($form, widget.events.stripeResponse);
 							break;
 					}
 					
@@ -360,7 +361,7 @@ ib.widget("donate", function(window, $, undefined) {
 					$form.unblock();
 					$form.find('button').prop('disabled', false);
 				}
-				else {
+				else if (nonce) {
 					// Response contains id and card, which contains additional card details
 					var token = nonce;
 					
@@ -378,6 +379,10 @@ ib.widget("donate", function(window, $, undefined) {
 					}
 					
 					widget.submit(parameters);
+				}
+				else
+				{
+					console.log("Unrecognized braintree response.", arguments);
 				}
 			},
 			

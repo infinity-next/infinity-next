@@ -68,7 +68,7 @@ class DonateController extends PanelController {
 		$payment = [
 			'customer'     => $user->user_id,
 			'attribution'  => $input['attribution'],
-			'ip'           => $request->getClientIp(),
+			'payment_ip'   => inet_pton($request->getClientIp()),
 			'amount'       => $input['amount'] * 100,
 			'currency'     => "usd",
 			'subscription' => NULL,
@@ -101,15 +101,15 @@ class DonateController extends PanelController {
 				$receipt = $user->charge($payment['amount'], $tx);
 			break;
 			
+			/*
 			case "monthly":
-				/* Stripe
+				Stripe
 				$tx = [
 					'description'   => "Infinity Next Dev",
 					'source'        => $input['nonce'],
 					'email'         => $input['email'],
 				];
 				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['nonce'], $tx);
-				*/
 				
 				
 				$tx = [
@@ -120,6 +120,7 @@ class DonateController extends PanelController {
 				$receipt = $user->subscription("monthly-{$input['amount']}")->create($input['nonce'], $tx);
 				$payment['subscription'] = "monthly-{$input['amount']}";
 			break;
+			*/
 		}
 		
 		

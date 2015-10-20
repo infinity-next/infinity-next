@@ -32,8 +32,8 @@ class Board extends Model {
 	 *
 	 * @var string
 	 */
-	const URI_PATTERN = "^[a-z0-9]{1,30}\b$";
-	const URI_PATTERN_INNER = "[a-z0-9]{1,30}";
+	const URI_PATTERN = "^[a-z0-9]{1,32}\b$";
+	const URI_PATTERN_INNER = "[a-z0-9]{1,32}";
 	
 	/**
 	 * The database table used by the model.

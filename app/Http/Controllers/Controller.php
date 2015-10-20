@@ -104,7 +104,7 @@ abstract class Controller extends BaseController {
 			'action_name'    => $action,
 			'action_details' => $action_details,
 			'user_id'        => $this->user->isAnonymous() ? null : $this->user->user_id,
-			'user_ip'        => Request::getClientIp(),
+			'user_ip'        => inet_pton(Request::getClientIp()),
 			'board_uri'      => $board_uri,
 		]);
 		

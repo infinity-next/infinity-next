@@ -182,7 +182,7 @@ return [
 		 */
 		'Devfactory\Minify\MinifyServiceProvider',
 	],
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Class Aliases

@@ -23,7 +23,7 @@ class Payment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['customer_id', 'attribution', 'ip', 'amount', 'subscription'];
+	protected $fillable = ['customer_id', 'attribution', 'payment_ip', 'amount', 'subscription'];
 	
 	/**
 	 * API visible fields.

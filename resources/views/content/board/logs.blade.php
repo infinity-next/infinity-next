@@ -24,7 +24,7 @@
 					@foreach ($logs as $log)
 					<tr>
 						<td><time datetime="{{ $log->created_at }}">{{ $log->created_at }}</time></td>
-						<td>{{ $log->user->username }}</td>
+						<td>{{ $log->user->getDisplayName() }}</td>
 						
 						@if ($log->action_details)
 						<td>@lang($log->action_name, $log->getDetails($c->user))</td>

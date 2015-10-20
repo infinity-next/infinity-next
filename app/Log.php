@@ -54,6 +54,11 @@ class Log extends Model {
 		return $details;
 	}
 	
+	public function getLogVisibleCapcode($capcode, $user = null)
+	{
+		return trans($capcode);
+	}
+	
 	public function getLogVisibleIp($ip, $user = null)
 	{
 		if ($user instanceof PermissionUser && $user->canViewRawIP())

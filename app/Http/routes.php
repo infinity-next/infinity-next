@@ -205,19 +205,19 @@ Route::group([
 			*/
 			if (env('LEGACY_ROUTES', false))
 			{
-				Route::any('/index.html', function(App\Board $board) {
+				Route::any('index.html', function(App\Board $board) {
 					return redirect("{$board->board_uri}");
 				});
-				Route::any('/catalog.html', function(App\Board $board) {
+				Route::any('catalog.html', function(App\Board $board) {
 					return redirect("{$board->board_uri}/catalog");
 				});
-				Route::any('/{id}.html', function(App\Board $board, $id) {
+				Route::any('{id}.html', function(App\Board $board, $id) {
 					return redirect("{$board->board_uri}/{$id}");
 				});
-				Route::any('/res/{id}.html', function(App\Board $board, $id) {
+				Route::any('res/{id}.html', function(App\Board $board, $id) {
 					return redirect("{$board->board_uri}/thread/{$id}");
 				});
-				Route::any('/res/{id}+{last}.html', function(App\Board $board, $id, $last) {
+				Route::any('res/{id}+{last}.html', function(App\Board $board, $id, $last) {
 					return redirect("{$board->board_uri}/thread/{$id}/{$last}");
 				})->where(['last' => '[0-9]+']);
 			}
@@ -258,14 +258,14 @@ Route::group([
 			// Get single thread.
 			Route::get('thread/{id}', 'BoardController@getThread');
 			
+			// Redirect to a post.
+			Route::get('post/{id}', 'BoardController@getPost');
+			
 			// Put new thread
 			Route::put('thread', 'BoardController@putThread');
 			
-			// Put eply to thread.
+			// Put reply to thread.
 			Route::put('thread/{id}', 'BoardController@putThread');
-			
-			// Redirect to a post.
-			Route::get('post/{id}', 'BoardController@getPost');
 			
 			// Generate post preview.
 			Route::any('post/preview', 'PostController@anyPreview');

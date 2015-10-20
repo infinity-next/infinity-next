@@ -32,7 +32,7 @@
 				'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
 				@endif
 				
-				@if (env('CASHIER_SERVICE') == "braintree" && isset($BfaintreeClientKey))
+				@if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
 				'braintree_key' : "{!! $BraintreeClientKey !!}",
 				@endif
 				
