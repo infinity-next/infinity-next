@@ -111,7 +111,7 @@ return [
 	'providers' => [
 		
 		/*
-		 * Debugging tools
+		 * Debugging tools...
 		 */
 		'Barryvdh\Debugbar\ServiceProvider',
 		
@@ -142,6 +142,11 @@ return [
 		'Illuminate\View\ViewServiceProvider',
 		
 		/*
+		 * Captcha...
+		 */
+		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
+		
+		/*
 		 * Application Service Providers...
 		 */
 		'App\Providers\AppServiceProvider',
@@ -153,32 +158,30 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'App\Providers\SettingsServiceProvider',
 		
-		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
-		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
-		
 		/*
-		 * Forms
+		 * Forms...
 		 */
 		'Collective\Html\HtmlServiceProvider',
 		
 		/*
-		 * Markdown
+		 * Markdown...
 		 */
 		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
 		/*
-		 * File Validation
+		 * File Validation...
 		 */
+		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
 		
 		/*
-		 * Money
+		 * Money...
 		 */
 		//'Laravel\Cashier\CashierServiceProvider',
 		'InfinityNext\Braintree\BraintreeServiceProvider',
 		
 		/*
-		 * CSS+JS Minify
+		 * CSS+JS Minify...
 		 */
 		'Devfactory\Minify\MinifyServiceProvider',
 	],

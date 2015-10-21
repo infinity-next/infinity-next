@@ -35,6 +35,13 @@ class PostRequest extends Request {
 	protected $ban;
 	
 	/**
+	 * The thread we're replying to.
+	 *
+	 * @var App\Post
+	 */
+	protected $thread;
+	
+	/**
 	 * The user.
 	 *
 	 * @var App\Trait\PermissionUser
@@ -46,10 +53,15 @@ class PostRequest extends Request {
 	 *
 	 * @return void
 	 */
-	public function __construct(Board $board, UserManager $manager)
+	public function __construct(Board $board, Post $thread, UserManager $manager)
 	{
-		$this->board = $board;
-		$this->user  = $manager->user;
+		$this->board  = $board;
+		$this->user   = $manager->user;
+		
+		if ($thread->exists)
+		{
+			$this->thread = $thread;
+		}
 	}
 	
 	/**
@@ -285,23 +297,48 @@ class PostRequest extends Request {
 		
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
+		$isReply   = $this->thread instanceof Post;
 		
-		// Check global flood.
-		$lastPost = Post::where('author_ip', inet_pton($this->ip()))
-			->where('created_at', '>', \Carbon\Carbon::now()->subSeconds(30))
-			->op()
-			->first();
-		
-		if ($lastPost instanceof Post)
+		if ($isReply)
 		{
-			$timeDiff = (30 - $lastPost->created_at->diffInSeconds());
+			// Check global flood.
+			$lastPost = Post::select('created_at')
+				->where('author_ip', inet_pton($this->ip()))
+				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(5))
+				->first();
 			
-			$messages = $validator->errors();
-			$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
-				'time_left' => $timeDiff,
-			]));
-			$this->failedValidation($validator);
-			return;
+			if ($lastPost instanceof Post)
+			{
+				$timeDiff = (5 - $lastPost->created_at->diffInSeconds()) + 1;
+				
+				$messages = $validator->errors();
+				$messages->add("flood", trans_choice("validation.custom.post_flood", $timeDiff, [
+						'time_left' => $timeDiff,
+				]));
+				$this->failedValidation($validator);
+				return;
+			}
+		}
+		else
+		{
+			// Check global flood.
+			$lastThread = Post::select('created_at')
+				->where('author_ip', inet_pton($this->ip()))
+				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(20))
+				->op()
+				->first();
+			
+			if ($lastThread instanceof Post)
+			{
+				$timeDiff = (20 - $lastThread->created_at->diffInSeconds()) + 1;
+				
+				$messages = $validator->errors();
+				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
+						'time_left' => $timeDiff,
+				]));
+				$this->failedValidation($validator);
+				return;
+			}
 		}
 		
 		// Ban check.

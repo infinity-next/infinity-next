@@ -228,21 +228,26 @@ class Board extends Model {
 	
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
-		return false;
-		
 		if ($user->canPostWithoutCaptcha($this))
 		{
 			return true;
 		}
 		
-		$lastCaptcha = Captcha::where('client_ip', inet_pton(Request::ip()))
-			->where('created_at', '>=', \Carbon\Carbon::now()->subHour()->timestamp)
+		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
+			->where('client_ip', inet_pton(Request::ip()))
+			->where('created_at', '>=', \Carbon\Carbon::now()->subHour())
 			->whereNotNull('cracked_at')
+			->orderBy('cracked_at', 'desc')
 			->first();
 		
-		if ($lastCaptcha instanceof Captcha && $lastCaptcha->cracked_at)
+		if ($lastCaptcha instanceof Captcha)
 		{
-			return true;
+			$postsWithCaptcha = Post::select('created_at')
+				->where('author_ip', inet_pton(Request::ip()))
+				->where('created_at', '>=', $lastCaptcha->created_at)
+				->count();
+			
+			return $postsWithCaptcha <= 10;
 		}
 		
 		return false;

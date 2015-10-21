@@ -130,14 +130,11 @@
 								@endforeach
 							</tbody>
 							
-							<tbody class="board-list-loading">
-								<tr>
+							<tfoot>
+								<tr class="board-list-loading">
 									<td colspan="7" class="loading"></td>
 								</tr>
-							</tbody>
-							
-							<tbody class="board-list-omitted" data-omitted="{{ $boards->total() - $boards->perPage() }}" data-page="{{ $boards->currentPage() }}">
-								<tr>
+								<tr class="board-list-omitted" data-omitted="{{ $boards->total() - $boards->perPage() }}" data-page="{{ $boards->currentPage() }}">
 									<td colspan="7">
 										<a id="board-list-more" class="{{ $boards->hasPages() ? "board-list-hasmore" : "" }}" href="{{ $boards->currentPage() == $boards->lastPage() ? $boards->url(1) : $boards->nextPageUrl() }}">
 											{!! trans('boardlist.footer.displaying', [
@@ -158,7 +155,7 @@
 									</script>
 									<!-- endif -->
 								</tr>
-							</tbody>
+							</tfoot>
 						</table>
 					</div>
 				</section>

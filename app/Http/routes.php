@@ -228,7 +228,7 @@ Route::group([
 			| Board Post Routes (Modding)
 			*/
 			Route::group([
-				'prefix' => 'post/{id}',
+				'prefix' => 'post/{post_id}',
 			], function()
 			{
 				Route::controller('', 'PostController');
@@ -243,7 +243,7 @@ Route::group([
 			Route::any('/', 'BoardController@getIndex');
 			
 			// Routes /board/1 to an index page for a specific pagination point.
-			Route::get('{id}', 'BoardController@getIndex');
+			Route::get('{post_id}', 'BoardController@getIndex');
 			
 			
 			// Get the catalog.
@@ -257,16 +257,16 @@ Route::group([
 			
 			
 			// Get single thread.
-			Route::get('thread/{id}', 'BoardController@getThread');
+			Route::get('thread/{post_id}', 'BoardController@getThread');
 			
 			// Redirect to a post.
-			Route::get('post/{id}', 'BoardController@getPost');
+			Route::get('post/{post_id}', 'BoardController@getThread');
 			
 			// Put new thread
 			Route::put('thread', 'BoardController@putThread');
 			
 			// Put reply to thread.
-			Route::put('thread/{id}', 'BoardController@putThread');
+			Route::put('thread/{post_id}', 'BoardController@putThread');
 			
 			// Generate post preview.
 			Route::any('post/preview', 'PostController@anyPreview');
@@ -296,10 +296,10 @@ Route::group([
 			Route::any('catalog.json', 'BoardController@getCatalog');
 			
 			// Get single thread.
-			Route::get('thread/{id}.json', 'BoardController@getThread');
+			Route::get('thread/{post_id}.json', 'BoardController@getThread');
 			
 			// Get single post.
-			Route::get('post/{id}.json', 'BoardController@getPost');
+			Route::get('post/{post_id}.json', 'BoardController@getPost');
 			
 		});
 	});

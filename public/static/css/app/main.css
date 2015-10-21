@@ -176,9 +176,6 @@ table {
 		table tbody tr:nth-child(even) {
 			background: rgba(0,0,0,0.05);
 		}
-		table tbody tr:hover {
-			background: rgba(0,0,0,0.1);
-		}
 			table tbody td {
 				padding: 0.35em 0.75em;
 			}
@@ -1052,15 +1049,15 @@ table.board-list-table {
 		overflow: hidden;
 	}
 	
-	tbody.board-list-loading {
+	tr.board-list-loading {
 		display: none;
 		width: 100%;
 	}
 	
-	tbody.board-list-omitted td {
+	tr.board-list-omitted td {
 		padding: 0;
 	}
-		tbody.board-list-omitted #board-list-more {
+		tr.board-list-omitted #board-list-more {
 			cursor: default;
 			display: none;
 			background: rgba(0,0,0,0.1);
@@ -1070,14 +1067,14 @@ table.board-list-table {
 			font-size: 125%;
 			text-align: center;
 		}
-		tbody.board-list-omitted #board-list-more.board-list-hasmore {
+		tr.board-list-omitted #board-list-more.board-list-hasmore {
 			cursor: pointer;
 			display: block;
 		}
-			tbody.board-list-omitted .board-page-loadmore {
+			tr.board-list-omitted .board-page-loadmore {
 				display: none;
 			}
-			tbody.board-list-omitted .board-list-hasmore .board-page-loadmore {
+			tr.board-list-omitted .board-list-hasmore .board-page-loadmore {
 				display: inline;
 			}
 	

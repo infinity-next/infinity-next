@@ -93,7 +93,7 @@ return [
 	
 	'custom' => [
 		'file_corrupt'   => "<tt>:filename</tt> is corrupt or has an invalid file name.",
-		'post_flood'     => "You you must wait <strong>:time_left</strong> second(s) before posting again.",
+		'post_flood'     => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
 		'thread_flood'   => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
 		
 		'banned'         => "You are banned!",

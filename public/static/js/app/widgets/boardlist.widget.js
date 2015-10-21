@@ -331,6 +331,11 @@ ib.widget("boardlist", function(window, $, undefined) {
 				
 				parameters.page = parseInt(parameters.page, 10) + 1;
 				
+				if (parameters.page === 1)
+				{
+					++parameters.page;
+				}
+				
 				widget.submit( parameters );
 				
 				return false;
@@ -396,7 +401,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 			var $footerMore   = $( widget.options.selector['board-omitted'], $boardlist );
 			
 			$searchSubmit.prop( 'disabled', true );
-			$boardload.show();
+			$boardload.css('display', 'table-row');
 			$footerMore.hide();
 			
 			return jQuery.ajax({

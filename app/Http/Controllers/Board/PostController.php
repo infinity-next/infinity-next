@@ -40,14 +40,11 @@ class PostController extends Controller {
 	/**
 	 * 
 	 */
-	public function getMod(Request $request, Board $board, $post)
+	public function getMod(Request $request, Board $board, Post $post)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		// Take trailing arguments,
@@ -193,14 +190,11 @@ class PostController extends Controller {
 	/**
 	 *
 	 */
-	public function putMod(Request $request, Board $board, $post)
+	public function putMod(Request $request, Board $board, Post $post)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		// Take trailing arguments,
@@ -401,14 +395,11 @@ class PostController extends Controller {
 	/**
 	 * Renders the post edit form.
 	 */
-	public function getEdit(Request $request, Board $board, $post)
+	public function getEdit(Request $request, Board $board, Post $post)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		if ($post->canEdit($this->user))
@@ -427,14 +418,11 @@ class PostController extends Controller {
 	/**
 	 * Updates a post with the edit.
 	 */
-	public function patchEdit(Request $request, Board $board, $post)
+	public function patchEdit(Request $request, Board $board, Post $post)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		if ($post->canEdit($this->user))
@@ -468,14 +456,11 @@ class PostController extends Controller {
 	/**
 	 * Renders the post edit form.
 	 */
-	public function getReport(Request $request, Board $board, $post, $global = false)
+	public function getReport(Request $request, Board $board, Post $post, $global = false)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		$actions = ["report"];
@@ -535,14 +520,11 @@ class PostController extends Controller {
 	/**
 	 * Updates a post with the edit.
 	 */
-	public function postReport(Request $request, Board $board, $post, $global = false)
+	public function postReport(Request $request, Board $board, Post $post, $global = false)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		if ($global === "global")
@@ -607,14 +589,11 @@ class PostController extends Controller {
 	/**
 	 * Locks a thread.
 	 */
-	public function anyLock(Request $request, Board $board, $post, $lock = true)
+	public function anyLock(Request $request, Board $board, Post $post, $lock = true)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		if ($post->canLock($this->user))
@@ -635,23 +614,20 @@ class PostController extends Controller {
 	/**
 	 * Unlocks a thread.
 	 */
-	public function anyUnlock(Request $request, Board $board, $lock)
+	public function anyUnlock(Request $request, Board $board, Post $post)
 	{
 		// Redirect to anyBumplock with a flag denoting an unlock.
-		return $this->anyLock($request, $board, $lock, false);
+		return $this->anyLock($request, $board, $post, false);
 	}
 	
 	/**
 	 * Bumplocks a thread.
 	 */
-	public function anyBumplock(Request $request, Board $board, $post, $bumplock = true)
+	public function anyBumplock(Request $request, Board $board, Post $post, $bumplock = true)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
 		
 		if ($post->canBumplock($this->user))
@@ -672,24 +648,22 @@ class PostController extends Controller {
 	/**
 	 * Un-bumplocks a thread.
 	 */
-	public function anyUnbumplock(Request $request, Board $board, $bumplock)
+	public function anyUnbumplock(Request $request, Board $board, Post $post)
 	{
 		// Redirect to anyBumplock with a flag denoting an unbumplock.
-		return $this->anyBumplock($request, $board, $bumplock, false);
+		return $this->anyBumplock($request, $board, $post, false);
 	}
 	
 	/**
 	 * Stickies a thread.
 	 */
-	public function anySticky(Request $request, Board $board, $post, $sticky = true)
+	public function anySticky(Request $request, Board $board, Post $post, $sticky = true)
 	{
-		// Validate the request parameters.
-		if(!(($post = $this->validatePost($board, $post)) instanceof Post))
+		if (!$post->exists)
 		{
-			// If the response isn't a Post, it's a redirect or error.
-			// Return the message.
-			return $post;
+			abort(404);
 		}
+		
 		
 		if ($post->canSticky($this->user))
 		{
@@ -709,7 +683,7 @@ class PostController extends Controller {
 	/**
 	 * Unstickies a thread.
 	 */
-	public function anyUnsticky(Request $request, Board $board, $post)
+	public function anyUnsticky(Request $request, Board $board, Post $post)
 	{
 		// Redirect to anySticky with a flag denoting an unsticky.
 		return $this->anySticky($request, $board, $post, false);
@@ -727,35 +701,4 @@ class PostController extends Controller {
 		]);
 	}
 	
-	/**
-	 * Check the request for all post controller methods.
-	 *
-	 * @var Board $board
-	 * @var Post $post
-	 * @return HttpException|RedirectResponse|Post
-	 */
-	protected function validatePost(Board $board, $post)
-	{
-		if ($post instanceof Post)
-		{
-			return $post;
-		}
-		
-		// If no post is specified, we can't do anything.
-		// Push the user to the index.
-		if (is_null($post))
-		{
-			return redirect($board->board_uri);
-		}
-		
-		// Find the post.
-		$post = $board->getLocalReply($post);
-		
-		if (!$post)
-		{
-			return abort(404);
-		}
-		
-		return $post;
-	}
 }

@@ -1233,8 +1233,7 @@ class Post extends Model {
 	
 	public function scopeWithEverythingAndReplies($query)
 	{
-		return $query->op()
-			->withEverything()
+		return $query->withEverything()
 			->with(['replies' => function($query) {
 				$query->withEverything();
 			}]);
@@ -1406,10 +1405,14 @@ class Post extends Model {
 		if (!is_null($thread) && !($thread instanceof Post))
 		{
 			$thread = $board->getLocalThread($thread);
+		}
+		
+		if ($thread instanceof Post)
+		{
 			$this->reply_to = $thread->post_id;
 			$this->reply_to_board_id = $thread->board_id;
 		}
-
+		
 		// Handle tripcode, if any.
 		if (preg_match('/^([^#]+)?(##|#)(.+)$/', $this->author, $match))
 		{
@@ -1540,8 +1543,11 @@ class Post extends Model {
 		// Finally fire event on OP, if it exists.
 		if ($thread instanceof Post)
 		{
+			$thread->setRelation('board', $board);
 			Event::fire(new ThreadNewReply($thread));
 		}
+		
+		return $this;
 	}
 	
 }

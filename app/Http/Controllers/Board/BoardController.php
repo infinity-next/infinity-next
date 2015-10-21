@@ -122,22 +122,18 @@ class BoardController extends Controller {
 	 * Renders a thread.
 	 *
 	 * @param  Board  $board
-	 * @param  integer|null  $thread
+	 * @param  Post   $thread
 	 * @return Response
 	 */
-	public function getThread(Board $board, $thread_id = null)
+	public function getThread(Board $board, Post $thread)
 	{
-		if (is_null($thread_id))
+		if (!$thread->exists)
 		{
 			return redirect($board->board_uri);
 		}
-		
-		// Pull the thread.
-		$thread = $board->getThreadByBoardId($thread_id);
-		
-		if (!$thread)
+		else if ($thread->reply_to)
 		{
-			return abort(404);
+			return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}#{$thread->board_id}");
 		}
 		
 		return $this->view(static::VIEW_THREAD, [
@@ -148,47 +144,14 @@ class BoardController extends Controller {
 	}
 	
 	/**
-	 * Redirect from a local id to a thread OP..
-	 *
-	 * @param  Board $board
-	 * @param  integer $thread
-	 * @return Redirect
-	 */
-	public function getPost(Board $board, $post)
-	{
-		if (is_null($post))
-		{
-			return redirect($board->board_uri);
-		}
-		
-		// Check to see if the thread exists.
-		$post = $board->posts()
-			->where('board_id', $post)
-			->get()
-			->first();
-		
-		if (!$post)
-		{
-			return abort(404);
-		}
-		
-		if ($post->reply_to)
-		{
-			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
-		}
-		
-		return redirect("{$board->board_uri}/thread/{$post->board_id}");
-	}
-	
-	/**
 	 * Handles the creation of a new thread or reply.
 	 *
 	 * @param  \App\Http\Requests\PostRequest  $request
 	 * @param  Board  $board
-	 * @param  integer|null  $thread
+	 * @param  Post|null  $thread
 	 * @return Response (redirects to the thread view)
 	 */
-	public function putThread(PostRequest $request, Board $board, $thread = null)
+	public function putThread(PostRequest $request, Board $board, Post $thread = null)
 	{
 		// Create the post.
 		$post = new Post($request->all());
@@ -222,13 +185,13 @@ class BoardController extends Controller {
 		}
 		
 		// Redirect to the new post or thread.
-		if (is_null($thread))
+		if ($post->reply_to_board_id)
 		{
-			return redirect("{$board->board_uri}/thread/{$post->board_id}");
+			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
 		}
 		else
 		{
-			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
+			return redirect("{$board->board_uri}/thread/{$post->board_id}#{$post->board_id}");
 		}
 	}
 	
