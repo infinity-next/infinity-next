@@ -43,8 +43,11 @@ ib.widget("boardlist", function(window, $, undefined) {
 				'board-cell-meta'    : "<td class=\"board-meta\"></td>",
 				'board-cell-uri'     : "<td class=\"board-uri\"></td>",
 				'board-cell-title'   : "<td class=\"board-title\"></td>",
-				'board-cell-pph'     : "<td class=\"board-pph\"></td>",
-				'board-cell-posts_total' : "<td class=\"board-max\"></td>",
+				'board-cell-stats_pph'          : "<td class=\"board-pph\"></td>",
+				'board-cell-stats_ppd'          : "<td class=\"board-ppd\"></td>",
+				'board-cell-stats_plh'          : "<td class=\"board-plh\"></td>",
+				'board-cell-stats_active_users' : "<td class=\"board-unique\"></td>",
+				'board-cell-posts_total'        : "<td class=\"board-max\"></td>",
 				'board-cell-active'  : "<td class=\"board-unique\"></td>",
 				'board-cell-tags'    : "<td class=\"board-tags\"></td>",
 				
@@ -58,7 +61,6 @@ ib.widget("boardlist", function(window, $, undefined) {
 				'board-datum-sfw'    : "<i class=\"fa fa-briefcase board-sfw\" title=\"SFW\"></i>",
 				'board-datum-nsfw'   : "<i class=\"fa fa-briefcase board-nsfw\" title=\"NSFW\"></i>",
 				'board-datum-tags'   : "<a class=\"tag-link\" href=\"#\"></a>",
-				'board-datum-pph'    : "<p class=\"board-cell board-pph-desc\" title=\"%1 made in the last hour, %2 on average\"></p>",
 				
 				
 				// Tag list.
@@ -135,8 +137,8 @@ ib.widget("boardlist", function(window, $, undefined) {
 		
 		build  : {
 			boardlist : function(data) {
-				widget.build.boards(data['data']);
-				//widget.build.lastSearch(data['search']);
+				widget.build.boards(data['boards']);
+				widget.build.lastSearch(data['search']);
 				widget.build.footer(data);
 				widget.build.tags(data['tagWeight']);
 				
@@ -227,9 +229,10 @@ ib.widget("boardlist", function(window, $, undefined) {
 				'meta' : function(row, value) {
 					return $( widget.options.templates['board-datum-lang'] ).text( row['locale'] );
 				},
+				
 				'uri'  : function(row, value) {
 					var $link = $( widget.options.templates['board-datum-uri'] );
-					var $sfw  = $( widget.options.templates['board-datum-' + (row['sfw'] == 1 ? "sfw" : "nsfw")] );
+					var $sfw  = $( widget.options.templates['board-datum-' + (row['is_worksafe'] == 1 ? "sfw" : "nsfw")] );
 					
 					$link
 						.attr( 'href', window.app.url + "/" + row['board_uri'] + "/" )
@@ -245,23 +248,36 @@ ib.widget("boardlist", function(window, $, undefined) {
 					}
 				},
 				
-				'pph' : function(row, value) {
+				'active' : function(row, value) {
 					return $( widget.options.templates['board-datum-pph'] )
 						.attr( 'title', function(index, value) {
-							return value.replace("%1", row['pph']).replace("%2", row['pph_average']);
+							return value.replace("%1", row['stats_pph']).replace("%2", row['pph_average']);
 						} )
-						.text( row['pph'] );
+						.text( row['stats_pph'] );
 				},
+				
+				'tags'  : function(row, value) {
+					var $datum = $( widget.options.templates['board-datum-tags'] )
+					
+					$.each( value, function( index, singleValue )
+					{
+						$( widget.options.templates['board-datum-tags'] )
+							.text( singleValue.tag )
+							.appendTo( $datum );
+					} );
+					
+					return $datum;
+				}
 			},
 			
 			lastSearch : function(search) {
-				return widget.lastSearch =  { 
+				return widget.lastSearch = { 
 					'lang'  : search.lang === false ? "" : search.lang,
-					'page'  : search.current_page,
+					'page'  : search.page,
 					'tags'  : search.tags === false ? "" : search.tags.join(" "),
 					'time'  : search.time,
 					'title' : search.title === false ? "" : search.title,
-					'sfw'   : search.nsfw ? 0 : 1
+					'sfw'   : search.sfw ? 1 : 0
 				};
 			},
 			
@@ -275,10 +291,10 @@ ib.widget("boardlist", function(window, $, undefined) {
 				
 				var count    = (data['current_page'] * data['per_page']);
 				var total    = data['total'];
-				var omitted  = total - count;
+				var omitted  = data['omitted'];
 				
-				//$page.text( data['search']['page'] );
-				$count.text( count );
+				//$page.text( data['search']['page'] * data['per_page']);
+				$count.text( data['current_page'] * data['per_page'] );
 				$total.text( total );
 				$more.toggleClass( "board-list-hasmore", omitted > 0 );
 				$omitted.toggle( omitted > 0 );
@@ -290,7 +306,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 				var template = widget.options.template;
 				var $list    = $( selector['tag-list'], widget.$widget );
 				
-				if ($list.length)
+				if ($list.length && tags instanceof Object)
 				{
 					$.each( tags, function(tag, weight) {
 						var $item = $( template['tag-item'] );
@@ -298,7 +314,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 						
 						$link
 							.css( 'font-size', weight+"%" )
-							.text( tag )
+							.text( tag.tag )
 							.appendTo( $item );
 						
 						$item.appendTo( $list );
@@ -313,7 +329,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 				
 				var parameters = $.extend( {}, widget.lastSearch );
 				
-				parameters.page = parseInt( $( widget.options.selector['board-omitted'], widget.$widget ).attr('data-page'), 10) + 1;
+				parameters.page = parseInt(parameters.page, 10) + 1;
 				
 				widget.submit( parameters );
 				

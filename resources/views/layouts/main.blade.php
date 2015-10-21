@@ -86,7 +86,7 @@
 							@if (array_key_exists('page-title', View::getSections()))
 							<h1 class="page-title">@yield('page-title')</h1>
 							@else
-							<h1 class="page-title">@yield('title'))</h1>
+							<h1 class="page-title">@yield('title')</h1>
 							@endif
 						<h2 class="page-desc">@yield('description')</h2>
 						@endif

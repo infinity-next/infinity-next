@@ -168,7 +168,7 @@ table {
 			border-top: none;
 			padding: 0.5em;
 			text-align: left;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 		}
 	
 	table tbody {
@@ -180,9 +180,9 @@ table {
 			background: rgba(0,0,0,0.1);
 		}
 			table tbody td {
-				padding: 0.25em 0.5em;
+				padding: 0.35em 0.75em;
 			}
-	
+
 
 
 /*
@@ -193,7 +193,7 @@ table {
 .smooth-box {
 	background: #fff;
 	border-radius: 4px;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 	padding: 1.5em;
 	overflow: hidden;
 }
@@ -203,11 +203,11 @@ table {
 
 .infobox {
 	background: #fff;
-	border: 1px solid #d6daf0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 0.25em;
 }
 	.infobox .infobox-title {
-		border-bottom: 1px solid #d6daf0;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 		font-weight: bold;
 		color: #34345C;
 		padding: 0.5em;
@@ -219,6 +219,11 @@ table {
 	.infobox .infobox-info p {
 		margin: 0 0 0.4em 0;
 	}
+
+.loading {
+	padding-top: 80px;
+	background: center 4px url('../../img/assets/infinity.gif') no-repeat;
+}
 
 html.no-js .no-js,
 html.js	.require-js {
@@ -999,17 +1004,16 @@ table.board-list-table {
 	table.board-list-table .board-title {
 		width: auto;
 	}
-	table.board-list-table .board-pph {
-		width: 55px;
-		padding: 4px;
+	table.board-list-table .board-plh,
+	table.board-list-table .board-ppd,
+	table.board-list-table .board-pph,
+	table.board-list-table .board-max,
+	table.board-list-table .board-unique {
+		width: 80px;
+		text-align: right;
 	}
 	table.board-list-table .board-max {
-		width: 90px;
-		padding: 4px;
-	}
-	table.board-list-table .board-unique {
 		width: 100px;
-		padding: 4px;
 	}
 	table.board-list-table .board-tags {
 		position: relative;
@@ -1050,17 +1054,15 @@ table.board-list-table {
 	
 	tbody.board-list-loading {
 		display: none;
+		width: 100%;
 	}
-		tbody.board-list-loading .loading {
-			height: 80px;
-		}
-		
+	
 	tbody.board-list-omitted td {
 		padding: 0;
 	}
 		tbody.board-list-omitted #board-list-more {
 			cursor: default;
-			display: block;
+			display: none;
 			background: rgba(0,0,0,0.1);
 			border-top: 1px solid rgba(0,0,0,0.25);
 			color: #333;
@@ -1070,6 +1072,7 @@ table.board-list-table {
 		}
 		tbody.board-list-omitted #board-list-more.board-list-hasmore {
 			cursor: pointer;
+			display: block;
 		}
 			tbody.board-list-omitted .board-page-loadmore {
 				display: none;
@@ -1089,7 +1092,7 @@ table.board-list-table {
 		padding: 0;
 	}
 		#search-form  .box-title {
-			border-bottom: 1px solid #d6daf0;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 			font-weight: bold;
 			color: #34345C;
 			padding: 0.5em;

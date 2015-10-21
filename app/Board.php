@@ -11,6 +11,7 @@ use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
 use App\Support\IP\CIDR;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
@@ -68,7 +69,7 @@ class Board extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['stats_posts', 'stats_pph', 'stats_active_users', 'tags'];
+	protected $appends = ['stats_plh', 'stats_pph', 'stats_ppd', 'stats_active_users', 'stats_active_ranges'];
 	
 	/**
 	 * The attributes that are mass assignable.
@@ -681,7 +682,7 @@ class Board extends Model {
 	}
 	
 	/**
-	 * Returns a 'stats_active_usrs' attribute for JSON output.
+	 * Returns a 'stats_active_users' attribute for JSON output.
 	 *
 	 * @return int
 	 */
@@ -715,29 +716,93 @@ class Board extends Model {
 	}
 	
 	/**
-	 * Returns a 'stat_posts' attribute for JSON output.
+	 * Returns a 'stats_active_ranges' attribute for JSON output.
 	 *
 	 * @return int
 	 */
-	public function getStatsPostsAttribute()
+	public function getStatsActiveRangesAttribute()
 	{
-		$stats = $this->stats->where('stats_type', "posts");
+		$stats = $this->stats->where('stats_type', "ranges");
 		
-		return $stats->count();
+		if ($stats->count())
+		{
+			$uniques = new Collection();
+			
+			foreach ($stats as $stat)
+			{
+				$uniques = $uniques->merge($stat->uniques);
+			}
+			
+			return $uniques->unique('unique')->count();
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * Returns a 'stats_plh' attribute for JSON output.
+	 *
+	 * @return int
+	 */
+	public function getStatsPlhAttribute()
+	{
+		$oneHourAgo = Carbon::now()->minute(0)->second(0)->subHour();
+		
+		$stats = $this->stats
+			->where('stats_type', "posts")
+			->filter(function($item) use ($oneHourAgo) {
+				return $item->stats_time->gte($oneHourAgo);
+			});
+		
+		if ($stats->count())
+		{
+			return (int) $stats->sum('counter');
+		}
+		
+		return 0;
 	}
 	
 	/**
 	 * Returns a 'stats_pph' attribute for JSON output.
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public function getStatsPphAttribute()
 	{
-		$stats = $this->stats->where('stats_type', "posts");
+		$sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
+		
+		$stats = $this->stats
+			->where('stats_type', "posts")
+			->filter(function($item) use ($sevenDaysAgo) {
+				return $item->stats_time->gte($sevenDaysAgo);
+			});
 		
 		if ($stats->count())
 		{
-			return $stats->sum('counter') / $stats->first()->stats_time->diffInHours();
+			return number_format($stats->sum('counter') / 168, 2);
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * Returns a 'stats_ppd' attribute for JSON output.
+	 *
+	 * @return float
+	 */
+	public function getStatsPpdAttribute()
+	{
+		$sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
+		
+		$stats = $this->stats
+			->where('stats_type', "posts")
+			->filter(function($item) use ($sevenDaysAgo) {
+				return $item->stats_time->gte($sevenDaysAgo);
+			});
+		
+		if ($stats->count())
+		{
+			return number_format($stats->sum('counter') / 24, 2);
 		}
 		
 		return 0;
@@ -769,6 +834,11 @@ class Board extends Model {
 		return !$this->isWorksafe() || strlen((string) $this->getConfig('boardCustomCSS', "")) > 0;
 	}
 	
+	/**
+	 * Returns the current stylesheet's raw CSS.
+	 *
+	 * @return string
+	 */
 	public function getStylesheet()
 	{
 		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
@@ -792,6 +862,47 @@ class Board extends Model {
 	public function getStylesheetUrl()
 	{
 		return $this->getUrl("style.css");
+	}
+	
+	public static function getBoardsForBoardlist()
+	{
+		$rememberTags    = ["site", "boardlist"];
+		// This timer is very precisely set to be a minute after the turn of the next hour.
+		// Laravel's CRON system will add new stat rows and we will be free to recache
+		// with the up-to-date information.
+		$rememberTimer   = Carbon::now()->minute(1)->second(0)->addHour()->diffInMinutes();
+		$rememberKey     = "site.boardlist";
+		$rememberClosure = function() {
+			return static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
+				->with([
+					'tags',
+					'stats' => function($query) {
+						$query->where('stats_time', '>=', Carbon::now()->minute(0)->second(0)->subDays(7));
+					},
+					'stats.uniques',
+				])
+				->get()
+				->sort(function($a, $b) {
+					// Sort by active users, then last post time.
+					return $b->stats_active_ranges - $a->stats_active_ranges
+						?: $b->stats_active_users - $a->stats_active_users
+						?: ($b->last_post_at ? $b->last_post_at->timestamp : 0) - ($a->last_post_at ? $a->last_post_at->timestamp : 0);
+				});
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$boards = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $boards;
 	}
 	
 	public function getThreadByBoardId($board_id)

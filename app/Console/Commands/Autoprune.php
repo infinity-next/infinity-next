@@ -61,7 +61,8 @@ class Autoprune extends Command {
 		$this->handlePostInformation();
 		
 		// Run this second so pruned posts from the above are included.
-		$this->handleMediaFiles();	}
+		$this->handleMediaFiles();
+	}
 	
 	/**
 	 * Manage media.

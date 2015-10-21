@@ -5,6 +5,8 @@ use App\BoardTag;
 
 use App\Http\Controllers\Board\BoardStats;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Input;
@@ -37,14 +39,38 @@ class BoardlistController extends Controller {
 	 */
 	public function getIndex()
 	{
-		if (Request::wantsJson())
-		{
-			return $this->boardListSearch()->toJson();
-		}
-		
 		$boards = $this->boardListSearch();
 		$stats  = $this->boardStats();
-		$tags   = $this->boardListTags($boards);
+		$tags   = $this->boardListTags();
+		
+		if (Request::wantsJson())
+		{
+			$input = $this->boardListInput();
+			$items = new Collection($boards->items());
+			$items = $items->toArray();
+			
+			foreach ($items as &$item)
+			{
+				unset($item['stats']);
+			}
+			
+			return json_encode([
+				'boards'   => $items,
+				'current_page' => (int) $boards->currentPage(),
+				'per_page' => (int) $boards->perPage(),
+				'total'    => $boards->total(),
+				'omitted'  => (int) max(0, $boards->total() - ($boards->currentPage() * $boards->perPage())),
+				'tagWeght' => $tags,
+				'search'   => [
+					'lang'  => $input['lang'] ?: "",
+					'page'  => $input['page'] ?: 1,
+					'tags'  => $input['tags'] ?: [],
+					'time'  => Carbon::now()->timestamp,
+					'title' => $input['title'] ?: "",
+					'sfw'   => !!$input['sfw'],
+				]
+			]);
+		}
 		
 		return $this->view(static::VIEW_INDEX, [
 			'boards' => $boards,
@@ -55,42 +81,106 @@ class BoardlistController extends Controller {
 	
 	protected function boardListInput()
 	{
-		return Input::only('sfw', 'title', 'lang', 'tags');;
+		$input = Input::only('page', 'sfw', 'title', 'lang', 'tags');
+		
+		$input['page']  = isset($input['page'])  ? max((int) $input['page'], 1) : 1;
+		$input['sfw']   = isset($input['sfw'])   ? !!$input['sfw'] : false;
+		$input['title'] = isset($input['title']) ? $input['title'] : false;
+		$input['lang']  = isset($input['lang'])  ? $input['lang'] : false;
+		
+		if (isset($input['tags']))
+		{
+			$input['tags'] = str_replace(["+", "-", " "], ",", $input['tags']);
+			$input['tags'] = array_filter(explode(",", $input['tags']));
+		}
+		else
+		{
+			$input['tags'] = [];
+		}
+		
+		return $input;
 	}
 	
 	protected function boardListSearch($perPage = 25)
 	{
-		$page = Request::get('page', 1);
+		$input = $this->boardListInput();
 		
-		$boards = Board::select('board_uri', 'title', 'description', 'posts_total')
-			->where(function($query) {
+		$title = $input['title'];
+		$page  = $input['page'];
+		$tags  = $input['tags'];
+		$sfw   = $input['sfw'];
+		
+		$boards = Board::getBoardsForBoardlist();
+		$boards = $boards->filter(function($item) use ($tags, $sfw, $title) {
+				// Are we able to view unindexed boards?
+				if (!$item->is_indexed && !$this->user->canViewUnindexedBoards())
+				{
+					return false;
+				}
 				
 				// Are we requesting SFW only?
-				if (Request::get('sfw', false))
+				if ($sfw && !$item->is_worksafe)
 				{
-					$query->whereSFW();
+					return false;
 				}
 				
-				// Are we able to view unindexed boards?
-				if (!$this->user->canViewUnindexedBoards())
+				if ($tags && count(array_intersect($tags, $item->tags->pluck('tag')->toArray())) < count($tags))
 				{
-					$query->whereIndexed(true);
+					return false;
 				}
 				
-				if (Request::get('tags', false))
+				if ($title && stripos($item->board_uri, $title) === false && stripos($item->title, $title) === false && stripos($item->description, $title) === false)
 				{
-					$query->whereHasTags(Request::get('tags'));
+					return false;
 				}
-			})
-			->with([
-				'tags',
-				'stats' => function($query) {
-					$query->where('stats_time', '>=', \Carbon\Carbon::now()->minute(0)->second(0)->subDays(3));
-				},
-				'stats.uniques',
-			])
-			->get()
-			->sortByDesc('stats_active_users');
+				
+				return true;
+			});
+		
+		if ($title)
+		{
+			$boards = $boards->sort(function($a, $b) use ($title) {
+				// Sort by active users, then last post time.
+				$aw = 0;
+				$bw = 0;
+				
+				if ($a->board_uri === $title)
+				{
+					$aw += 8;
+				}
+				if (stripos($a->board_uri, $title) !== false)
+				{
+					$aw += 4;
+				}
+				if (stripos($a->title, $title) !== false)
+				{
+					$aw += 2;
+				}
+				if (stripos($a->description, $title) !== false)
+				{
+					$aw += 1;
+				}
+				
+				if ($b->board_uri === $title)
+				{
+					$bw += 8;
+				}
+				if (stripos($b->board_uri, $title) !== false)
+				{
+					$bw += 4;
+				}
+				if (stripos($b->title, $title) !== false)
+				{
+					$bw += 2;
+				}
+				if (stripos($b->description, $title) !== false)
+				{
+					$bw += 1;
+				}
+				
+				return $bw - $aw;
+			});
+		}
 		
 		$paginator = new LengthAwarePaginator(
 			$boards->forPage($page, $perPage),
@@ -98,9 +188,7 @@ class BoardlistController extends Controller {
 			$perPage,
 			$page
 		);
-		
-		
-		$input = $this->boardListInput();
+		$paginator->setPath("boards.html");
 		
 		foreach ($input as $inputIndex => $inputValue)
 		{
@@ -116,7 +204,7 @@ class BoardlistController extends Controller {
 		return $paginator;
 	}
 	
-	protected function boardListTags($board)
+	protected function boardListTags()
 	{
 		$tags = BoardTag::distinct('tag')->with([
 			'boards',
@@ -128,14 +216,15 @@ class BoardlistController extends Controller {
 		
 		foreach ($tags as $tag)
 		{
-			$tagWeight[$tag->tag] = $tag->getWeight();
+			$tagWeight[$tag->tag] = $tag->getWeight(3);
 			
 			if ($tag->getWeight() > 0)
 			{
-				dd($tag);
+				
 			}
 		}
 		
 		return $tagWeight;
 	}
+	
 }
