@@ -239,6 +239,9 @@ Route::group([
 			| Board Controller Routes
 			| These are greedy and will redirect before others, so make sure they stay last.
 			*/
+			// Get stylesheet
+			Route::get('style.css', 'BoardController@getStylesheet');
+			
 			// Pushes simple /board/ requests to their index page.
 			Route::any('/', 'BoardController@getIndex');
 			
@@ -251,9 +254,6 @@ Route::group([
 			
 			// Get moderator logs
 			Route::get('logs', 'BoardController@getLogs');
-			
-			// Get stylesheet
-			Route::get('style.css', 'BoardController@getStylesheet');
 			
 			
 			// Get single thread.
