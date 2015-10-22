@@ -38,9 +38,7 @@ ib.widget("gnav", function(window, $, undefined) {
 				var item     = $link.attr('data-item');
 				var $flyout  = $("#flyout-"+item);
 				
-				console.log($link, item, $flyout);
-				
-				if (!$flyout.is("."+widget.options.selector['class-open']))
+				if ($flyout.length && !$flyout.is("."+widget.options.selector['class-open']))
 				{
 					$flyout.addClass(widget.options.selector['class-open']);
 					

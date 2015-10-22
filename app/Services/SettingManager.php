@@ -105,7 +105,7 @@ class SettingManager {
 		$nav = [
 			'home'      => url('/'),
 			'boards'    => url('boards.html'),
-			'new_board' => url('overboard.html'),
+			'recent_posts' => url('overboard.html'),
 			'panel'     => url('cp'),
 		];
 		
@@ -115,7 +115,7 @@ class SettingManager {
 		
 		if ($manager->user && $manager->user->canCreateBoard())
 		{
-			$nav['recent_posts'] = url("cp/boards/create");
+			$nav['new_board'] = url("cp/boards/create");
 		}
 		
 		
