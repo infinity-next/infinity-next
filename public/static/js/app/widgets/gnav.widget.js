@@ -38,12 +38,19 @@ ib.widget("gnav", function(window, $, undefined) {
 				var item     = $link.attr('data-item');
 				var $flyout  = $("#flyout-"+item);
 				
-				if ($flyout.length && !$flyout.is("."+widget.options.selector['class-open']))
+				if ($flyout.length)
 				{
-					$flyout.addClass(widget.options.selector['class-open']);
-					
-					event.preventDefault();
-					return false;
+					if ($flyout.is("."+widget.options.selector['class-open']))
+					{
+						$flyout.removeClass(widget.options.selector['class-open']);
+					}
+					else
+					{
+						$flyout.addClass(widget.options.selector['class-open']);
+						
+						event.preventDefault();
+						return false;
+					}
 				}
 			},
 			
