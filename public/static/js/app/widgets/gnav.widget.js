@@ -10,8 +10,10 @@ ib.widget("gnav", function(window, $, undefined) {
 			selector : {
 				'class-open'  : "flyout-open",
 				
+				'nav-link'    : ".gnav-link[data-item]",
+				
 				'flyout'      : ".flyout",
-				'flyout-link' : ".gnav-link[data-item]"
+				'flyout-link' : ".flyout-link"
 			}
 		},
 		
@@ -36,20 +38,21 @@ ib.widget("gnav", function(window, $, undefined) {
 				var item     = $link.attr('data-item');
 				var $flyout  = $("#flyout-"+item);
 				
-				if ($flyout.length > 0)
+				console.log($link, item, $flyout);
+				
+				if (!$flyout.is("."+widget.options.selector['class-open']))
 				{
-					if ($flyout.is("."+widget.options.selector['class-open']))
-					{
-						
-					}
-					else
-					{
-						$flyout.addClass(widget.options.selector['class-open']);
-						event.preventDefault();
-						return false;
-					}
+					$flyout.addClass(widget.options.selector['class-open']);
+					
+					event.preventDefault();
+					return false;
 				}
 			},
+			
+			flyoutClick : function(event) {
+				$(this).parents("."+widget.options.selector['class-open'])
+					.removeClass(widget.options.selector['class-open']);
+			}
 		},
 		
 		// Event bindings
@@ -60,10 +63,11 @@ ib.widget("gnav", function(window, $, undefined) {
 				;
 				
 				widget.$widget
-					.on( 'click', widget.options.selector['flyout-link'], widget.events.itemClick )
+					.on( 'click', widget.options.selector['flyout-link'], widget.events.flyoutClick )
+					.on( 'click', widget.options.selector['nav-link'],    widget.events.itemClick )
 				;
 				
-				$(widget.options.selector['flyout-link'], widget.$widget)
+				$(widget.options.selector['nav-link'], widget.$widget)
 					.attr('data-no-instant', "true");
 			}
 		}

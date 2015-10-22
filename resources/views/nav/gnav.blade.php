@@ -11,7 +11,7 @@
 				</li>
 			</ul>
 			
-			<div class="flyout" id="flyout-boards">
+			<div class="flyout" id="flyout-boards" data-no-instant>
 				<ul class="flyout-cols">
 					<li class="flyout-col" id="favorite-boards">
 						<div class="flyout-col-title">{{ trans("nav.global.flyout.favorite_boards") }} <i class="fa fa-star"></i></div>
