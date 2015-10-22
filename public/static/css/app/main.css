@@ -33,12 +33,12 @@
 html,
 body {
 	background-color: #EEF2FF;
-	background-image: -ms-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
-	background-image: -moz-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
-	background-image: -o-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d1d5ee), color-stop(1em, #d1d5ee), color-stop(200px, #EEF2FF), color-stop(100, #EEF2FF));
-	background-image: -webkit-linear-gradient(top, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
-	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 1em, #EEF2FF 200px, #EEF2FF 100%);
+	background-image: -ms-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
+	background-image: -moz-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
+	background-image: -o-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d1d5ee), color-stop(40px, #d1d5ee), color-stop(240px, #EEF2FF), color-stop(100, #EEF2FF));
+	background-image: -webkit-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
+	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
 	
 	min-height: 100vh;
 	
@@ -1422,7 +1422,7 @@ header.contrib-header {
 
 /* Navigation */
 nav.gnav {
-	background: rgba(220, 220, 220, 0.25);
+	background: #EEF2FF;
 	border-bottom: 1px solid #dedede;
 	
 	/*
@@ -1436,9 +1436,11 @@ nav.gnav {
 	height: 39px;
 	width: 100%;
 	
-	position: relative;
 	z-index: 1000;
 }
+	nav.gnav div.gnav-binder {
+		position: relative;
+	}
 	nav.gnav ul.gnav-groups,
 	nav.gnav li.gnav-group,
 	nav.gnav ul.gnav-items,
@@ -1446,12 +1448,9 @@ nav.gnav {
 		display: block;
 		margin: 0;
 		padding: 0;
-		white-space: nowrap;
+		white-space: normal;
 		line-height: 18px;
-	}
-	
-	nav.gnav ul.gnav-groups {
-		position: relative;
+		overflow: hidden;
 	}
 	
 	nav.gnav li.gnav-item {
@@ -1473,7 +1472,7 @@ nav.gnav {
 		}
 	
 	nav.gnav .flyout {
-		display: block;
+		display: none;
 		
 		z-index: 999;
 		position: absolute;
@@ -1485,7 +1484,7 @@ nav.gnav {
 		max-width: 100vw;
 		min-width: none;
 		height: auto;
-		max-height: 100vh;
+		max-height: none;
 		min-height: 200px;
 		
 		margin: 0 0 0 0;
@@ -1494,6 +1493,10 @@ nav.gnav {
 		pointer-events: none;
 		overflow: hidden;
 	}
+		nav.gnav .flyout.flyout-open {
+			display: block;
+		}
+		
 		nav.gnav .flyout-cols {
 			display: block;
 			width: 100%;
@@ -1507,12 +1510,18 @@ nav.gnav {
 			pointer-events: all;
 			white-space: nowrap;
 			overflow: hidden;
+			direction: ltr;
 		}
 			nav.gnav .flyout-cols:after {
 				content: ' ';
 				display: block;
 				clear: both;
 			}
+			
+			#favorite-boards {
+				display: none;
+			}
+			
 		nav.gnav .flyout-col-title {
 			font-size: 1.3em;
 			font-weight: bold;
@@ -1527,7 +1536,7 @@ nav.gnav {
 			height: 100%;
 			
 			border-left: 1px solid #dedede;
-			border-right: 1px solid #dedede;
+			border-right: 1px solid transparent;
 			padding: 0 1px 12px 1px;
 			margin: 0 -1px 0 0;
 		}
@@ -1612,6 +1621,7 @@ section.index-form {
 		max-width: 728px;
 		box-sizing: border-box;
 		
+		position: relative;
 		overflow: hidden;
 	}
 		html.no-js form.form-post .post-menu {
@@ -2213,6 +2223,9 @@ main.index-threaded {
 				}
 					.post-detail {
 						display: inline-block;
+					}
+					.post-detail:empty {
+						display; none;
 					}
 						.post-container .post-details .post-detail.post-deleted {
 							display: none;

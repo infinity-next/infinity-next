@@ -74,7 +74,7 @@
 	<div id="page-container">
 		@section('header')
 		<header class="board-header header-height-1">
-			@section('boardlist')
+			@section('nav-header')
 				@include('nav.gnav')
 			@show
 			
@@ -107,7 +107,7 @@
 	<footer>
 		@yield('footer-inner')
 		
-		@section('boardlist')
+		@section('nav-footer')
 			@include('nav.boardlist')
 		@show
 		

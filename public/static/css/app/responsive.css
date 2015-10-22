@@ -191,6 +191,7 @@
 	nav.boardlist {
 		font-size: 1em;
 		padding: 0 1em;
+		overflow: hidden;
 	}
 		nav.boardlist .boardlist-text {
 			display: none;

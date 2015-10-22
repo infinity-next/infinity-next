@@ -27,7 +27,9 @@ return [
 		'contribute'   => "Contribute",
 		'donate'       => "Fund Us",
 		'adventure'    => "Adventure",
-		// TN: 'Overboard' has a specific meaning to English IB users.
+		
+		// Translators:
+		// 'Overboard' has a specific meaning to English IB users.
 		// Feel free to translate to Recent Posts instead.
 		'recent_posts' => "Overboard",
 	],

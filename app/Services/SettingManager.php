@@ -4,6 +4,8 @@ use App\Board;
 use App\BoardSetting;
 use App\SiteSetting;
 use App\Option;
+
+use App\Services\UserManager;
 use Cache;
 
 class SettingManager {
@@ -91,6 +93,46 @@ class SettingManager {
 		}
 		
 		return json_encode($settings);
+	}
+	
+	/**
+	 * Returns the primary navigation array.
+	 *
+	 * @return array  of [key => url]
+	 */
+	public function getNavigationPrimary()
+	{
+		$nav = [
+			'home'      => url('/'),
+			'boards'    => url('boards.html'),
+			'new_board' => url('overboard.html'),
+			'panel'     => url('cp'),
+		];
+		
+		
+		global $app;
+		$manager = $app->make(UserManager::class);
+		
+		if ($manager->user && $manager->user->canCreateBoard())
+		{
+			$nav['recent_posts'] = url("cp/boards/create");
+		}
+		
+		
+		if (env('CONTRIB_ENABLED', false))
+		{
+			$nav['contribute'] = url("contribute");
+			$nav['donate']     = secure_url("cp/donate");
+		}
+		
+		
+		if ($this->get('adventureEnabled'))
+		{
+			$nav['adventure'] = url("cp/adventure");
+		}
+		
+		
+		return $nav;
 	}
 	
 	/**
