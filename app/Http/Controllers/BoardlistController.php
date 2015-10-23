@@ -33,49 +33,21 @@ class BoardlistController extends Controller {
 	const VIEW_INDEX = "boardlist";
 	
 	/**
-	 * Show the application welcome screen to the user.
+	 * Show board list to the user, either rendering the full blade template or just the json..
 	 *
-	 * @return Response
+	 * @return Response|JSON
 	 */
 	public function getIndex()
 	{
-		$boards = $this->boardListSearch();
-		$stats  = $this->boardStats();
-		$tags   = $this->boardListTags();
-		
 		if (Request::wantsJson())
 		{
-			$input = $this->boardListInput();
-			$items = new Collection($boards->items());
-			$items = $items->toArray();
-			
-			foreach ($items as &$item)
-			{
-				unset($item['stats']);
-			}
-			
-			return json_encode([
-				'boards'   => $items,
-				'current_page' => (int) $boards->currentPage(),
-				'per_page' => (int) $boards->perPage(),
-				'total'    => $boards->total(),
-				'omitted'  => (int) max(0, $boards->total() - ($boards->currentPage() * $boards->perPage())),
-				'tagWeght' => $tags,
-				'search'   => [
-					'lang'  => $input['lang'] ?: "",
-					'page'  => $input['page'] ?: 1,
-					'tags'  => $input['tags'] ?: [],
-					'time'  => Carbon::now()->timestamp,
-					'title' => $input['title'] ?: "",
-					'sfw'   => !!$input['sfw'],
-				]
-			]);
+			return $this->boardListJson();
 		}
 		
 		return $this->view(static::VIEW_INDEX, [
-			'boards' => $boards,
-			'stats'  => $stats,
-			'tags'   => $tags,
+			'boards' => $this->boardListSearch(),
+			'stats'  => $this->boardStats(),
+			'tags'   => $this->boardListTags(),
 		]);
 	}
 	
@@ -99,6 +71,39 @@ class BoardlistController extends Controller {
 		}
 		
 		return $input;
+	}
+	
+	protected function boardListJson()
+	{
+		$boards = $this->boardListSearch();
+		$stats  = $this->boardStats();
+		$tags   = $this->boardListTags();
+		$input  = $this->boardListInput();
+		
+		$items  = new Collection($boards->items());
+		$items  = $items->toArray();
+		
+		foreach ($items as &$item)
+		{
+			unset($item['stats']);
+		}
+		
+		return json_encode([
+			'boards'   => $items,
+			'current_page' => (int) $boards->currentPage(),
+			'per_page' => (int) $boards->perPage(),
+			'total'    => $boards->total(),
+			'omitted'  => (int) max(0, $boards->total() - ($boards->currentPage() * $boards->perPage())),
+			'tagWeght' => $tags,
+			'search'   => [
+				'lang'  => $input['lang'] ?: "",
+				'page'  => $input['page'] ?: 1,
+				'tags'  => $input['tags'] ?: [],
+				'time'  => Carbon::now()->timestamp,
+				'title' => $input['title'] ?: "",
+				'sfw'   => !!$input['sfw'],
+			]
+		]);
 	}
 	
 	protected function boardListSearch($perPage = 25)

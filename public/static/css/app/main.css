@@ -1496,7 +1496,7 @@ nav.gnav {
 		nav.gnav .flyout.flyout-open {
 			display: block;
 		}
-		
+		 	
 		nav.gnav .flyout-cols {
 			display: block;
 			width: 100%;
@@ -3580,7 +3580,7 @@ figcaption.page-details {
 		color: #333;
 		margin: 0.2em 0 0 0;
 	}
-		html.js body.view-board h1.page-title .fa {
+		html.js.localstorage body.view-board h1.page-title .fa {
 			position: absolute;
 			display: inline;
 			color: #aaa;
@@ -3588,6 +3588,9 @@ figcaption.page-details {
 			line-height: 1.1em;
 			margin: 0.2em 0 0 0;
 			padding: 0 0 0 0.2em;
+		}
+		html.js.localstorage body.view-board h1.page-title .fa.board-favorited {
+			color: #FFC800;
 		}
 			html.js body.view-board.board-int  h1.page-title .fa:before,
 			html.js body.view-board.board-ints h1.page-title .fa:before,

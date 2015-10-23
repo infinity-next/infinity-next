@@ -7,13 +7,28 @@ ib.widget("gnav", function(window, $, undefined) {
 	var widget = {
 		
 		defaults : {
+			storage   : {
+				// Mirrors board-favorite widget's.
+				'favorites-data' : "ib.favoritedata"
+			},
+			
 			selector : {
 				'class-open'  : "flyout-open",
 				
 				'nav-link'    : ".gnav-link[data-item]",
 				
 				'flyout'      : ".flyout",
-				'flyout-link' : ".flyout-link"
+				'flyout-list' : ".flyout-list",
+				'flyout-link' : ".flyout-link",
+				
+				'favorites'   : "#favorite-boards"
+			},
+			
+			templates : {
+				'flyout-item'  : "<li class=\"flyout-item\"></li>",
+				'flyout-link'  : "<a href=\"\" class=\"flyout-link\"></a>",
+				'flyout-uri'   : "<span class=\"flyout-uri\"></span>",
+				'flyout-title' : "<span class=\"flyout-title\"></span>"
 			}
 		},
 		
@@ -54,9 +69,22 @@ ib.widget("gnav", function(window, $, undefined) {
 				}
 			},
 			
+			favoritesBuild : function(event) {
+				widget.build.favorites();
+			},
+			
 			flyoutClick : function(event) {
 				$(this).parents("."+widget.options.selector['class-open'])
 					.removeClass(widget.options.selector['class-open']);
+			},
+			
+			// This is an HTML localStorage event.
+			// it only fires if ANOTHER WINDOW trips the change.
+			storage : function(event) {
+				if (event.originalEvent.key == widget.options.storage['favorites-data'])
+				{
+					widget.build.favorites();
+				}
 			}
 		},
 		
@@ -64,19 +92,64 @@ ib.widget("gnav", function(window, $, undefined) {
 		bind     : {
 			widget : function() {
 				$(window)
-					.on( 'click', widget.events.anyClick )
+					.on( 'click.ib-gnav',   widget.events.anyClick )
+					.on( 'storage.ib-gnav', widget.events.storage )
 				;
 				
 				widget.$widget
-					.on( 'click', widget.options.selector['flyout-link'], widget.events.flyoutClick )
-					.on( 'click', widget.options.selector['nav-link'],    widget.events.itemClick )
+					.on( 'click.ib-gnav', widget.options.selector['flyout-link'], widget.events.flyoutClick )
+					.on( 'click.ib-gnav', widget.options.selector['nav-link'],    widget.events.itemClick )
+					.on( 'build.ib-gnav', widget.options.selector['favorites'],   widget.events.favoritesBuild )
 				;
 				
 				$(widget.options.selector['nav-link'], widget.$widget)
 					.attr('data-no-instant', "true");
+				
+				widget.build.favorites();
 			}
-		}
+		},
 		
+		build    : {
+			favorites : function() {
+				if (typeof localStorage === "object")
+				{
+					var $favorites = $(widget.options.selector['favorites'], widget.$widget);
+					var $list      = $(widget.options.selector['flyout-list'], $favorites);
+					var favorites  = JSON.parse(localStorage.getItem(widget.options.storage['favorites-data']));
+					
+					$favorites.toggle(favorites.length > 0);
+					$list.children().remove();
+					
+					if (favorites.length)
+					{
+						for (var i = 0; i < favorites.length; ++i)
+						{
+							var favorite = favorites[i];
+							
+							var $item  = $(widget.options.templates['flyout-item']);
+							var $link  = $(widget.options.templates['flyout-link']);
+							var $uri   = $(widget.options.templates['flyout-uri']);
+							var $title = $(widget.options.templates['flyout-title']);
+							
+							$item
+								.appendTo($list);
+							
+							$link
+								.attr('href', window.app.url+"/"+favorite.board_uri+"/")
+								.appendTo($item);
+							
+							$uri
+								.text("/"+favorite.board_uri+"/")
+								.appendTo($link);
+							
+							$title
+								.text(favorite.title)
+								.appendTo($link);
+						}
+					}
+				}
+			}
+		},
 	};
 	
 	return widget;

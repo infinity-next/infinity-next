@@ -16,15 +16,18 @@
 					<li class="flyout-col" id="favorite-boards">
 						<div class="flyout-col-title">{{ trans("nav.global.flyout.favorite_boards") }} <i class="fa fa-star"></i></div>
 						<ul class="flyout-list">
+						{{-- This is now stored in gnav.widget.js!
 							<li class="flyout-item">
 								<a href="{!! url('b') !!}" class="flyout-link">
 									<span class="flyout-uri">/b/</span>
 									<span class="flyout-title">Random</span>
 								</a>
 							</li>
+						--}}
 						</ul>
 					</li>
 					
+					@if (isset($boardbar))
 					@foreach ($boardbar as $groupname => $boards)
 					<li class="flyout-col">
 						<div class="flyout-col-title">{{ trans("nav.global.flyout.{$groupname}") }}</div>
@@ -40,6 +43,7 @@
 						</ul>
 					</li>
 					@endforeach
+					@endif
 				</ul>
 			</div>
 		</div>

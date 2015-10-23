@@ -353,7 +353,7 @@ ib.widget("postbox", function(window, $, undefined) {
 								});
 							});
 						}
-						else if(autoupdater !== false)
+						else if (autoupdater !== false)
 						{
 							console.log("Post submitted. Inline updating.");
 							
@@ -362,14 +362,14 @@ ib.widget("postbox", function(window, $, undefined) {
 							autoupdater.updating    = true;
 							autoupdater.updateTimer = false;
 							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
-							autoupdater.events.updateSuccess(response, textStatus, jqXHR);
+							autoupdater.events.updateSuccess(response, textStatus, jqXHR, true);
 							autoupdater.events.updateComplete(response, textStatus, jqXHR);
 							
 							widget.events.formClear();
 						}
 						else
 						{
-							console.log("Post submitted. Refreshing.");
+							console.log("Post submitted. No autoupdater. Refreshing.");
 							window.location.reload();
 						}
 					});

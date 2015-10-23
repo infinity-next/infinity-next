@@ -69,7 +69,7 @@ class Board extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['stats_plh', 'stats_pph', 'stats_ppd', 'stats_active_users', 'stats_active_ranges'];
+	//protected $appends = ['stats_plh', 'stats_pph', 'stats_ppd', 'stats_active_users', 'stats_active_ranges'];
 	
 	/**
 	 * The attributes that are mass assignable.

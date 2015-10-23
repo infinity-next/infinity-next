@@ -164,6 +164,17 @@ Route::group([
 		Route::get('contribute.json', 'API\PageController@getContribute');
 	}
 	
+	/*
+	| API
+	*/
+	Route::group([
+		'namespace' => "API",
+	], function()
+	{
+		Route::get('board-details.json',  'BoardlistController@getDetails');
+		Route::post('board-details.json', 'BoardlistController@getDetails');
+	});
+	
 	
 	/*
 	| Board (/anything/)
@@ -245,10 +256,6 @@ Route::group([
 			// Pushes simple /board/ requests to their index page.
 			Route::any('/', 'BoardController@getIndex');
 			
-			// Routes /board/1 to an index page for a specific pagination point.
-			Route::get('{post_id}', 'BoardController@getIndex');
-			
-			
 			// Get the catalog.
 			Route::get('catalog', 'BoardController@getCatalog');
 			
@@ -256,17 +263,8 @@ Route::group([
 			Route::get('logs', 'BoardController@getLogs');
 			
 			
-			// Get single thread.
-			Route::get('thread/{post_id}', 'BoardController@getThread');
-			
-			// Redirect to a post.
-			Route::get('post/{post_id}', 'BoardController@getThread');
-			
 			// Put new thread
 			Route::put('thread', 'BoardController@putThread');
-			
-			// Put reply to thread.
-			Route::put('thread/{post_id}', 'BoardController@putThread');
 			
 			// Generate post preview.
 			Route::any('post/preview', 'PostController@anyPreview');
@@ -276,6 +274,20 @@ Route::group([
 			
 			// Handle a file upload.
 			Route::post('upload-file', 'BoardController@putFile');
+			
+			
+			// Routes /board/1 to an index page for a specific pagination point.
+			Route::get('{post_id}', 'BoardController@getIndex');
+			
+			// Get single thread.
+			Route::get('thread/{post_id}', 'BoardController@getThread');
+			
+			// Redirect to a post.
+			Route::get('post/{post_id}', 'BoardController@getThread');
+			
+			// Put reply to thread.
+			Route::put('thread/{post_id}', 'BoardController@putThread');
+			
 		});
 		
 		
@@ -303,22 +315,6 @@ Route::group([
 			
 		});
 	});
-	
-});
-
-Route::group([
-	'domain'     => 'api.{domain}.{tld}',
-	'namespace'  => "API",
-], function () {
-	
-	/*
-	| Page Controllers
-	| Catches specific strings to route to static content.
-	*/
-	if (env('CONTRIB_ENABLED', false))
-	{
-		Route::get('contribute', 'PageController@getContribute');
-	}
 	
 });
 

@@ -53,7 +53,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				}
 			},
 			
-			updateSuccess : function(data, textStatus, jqXHR) {
+			updateSuccess : function(data, textStatus, jqXHR, scrollIntoView) {
 				var $newPost = $();
 				
 				if (data instanceof Array)
@@ -90,6 +90,24 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							$newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
 							$newPost.insertBefore(widget.$widget);
 							ib.bindAll($newPost);
+							
+							if (scrollIntoView === true)
+							{
+								if (typeof $newPost[0].scrollIntoView !== "undefined")
+								{
+									$newPost[0].scrollIntoView({
+										behavior : "smooth",
+										block    : "end"
+									});
+								}
+								else if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined")
+								{
+									$newPost[0].scrollIntoViewIfNeeded({
+										behavior : "smooth",
+										block    : "end"
+									});
+								}
+							}
 						}
 					});
 				}

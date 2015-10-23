@@ -118,14 +118,21 @@
 		
 		if ($widget.length)
 		{
-			try {
-				widget.bind.widget();
+			if (typeof widget.can !== "function" || widget.can())
+			{
+				try {
+					widget.bind.widget();
+				}
+				catch (error) {
+					console.error("Failed to initiate widget!", error);
+				}
+				
+				return true;
 			}
-			catch (error) {
-				console.log("FAILED to initiate widget.", ib.widgets);
+			else if (typeof widget.bind.failure === "function")
+			{
+				widget.bind.failure();
 			}
-			
-			return true;
 		}
 		
 		return false;
