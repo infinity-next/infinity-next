@@ -252,6 +252,7 @@ Route::group([
 			*/
 			// Get stylesheet
 			Route::get('style.css', 'BoardController@getStylesheet');
+			Route::get('style.txt', 'BoardController@getStylesheetAsText');
 			
 			// Pushes simple /board/ requests to their index page.
 			Route::any('/', 'BoardController@getIndex');

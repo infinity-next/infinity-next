@@ -217,6 +217,18 @@ class BoardController extends Controller {
 	}
 	
 	/**
+	 * Supplies a user generated stylesheet based on board options in plaintext as to avoid compression.
+	 *
+	 * @param  Board  $board
+	 * @return Response
+	 */
+	public function getStylesheetAsText(Board $board)
+	{
+		return $this->getStylesheet($board)
+			->header('Content-Type', "text/plain");
+	}
+	
+	/**
 	 * Checks if a file exists.
 	 *
 	 * @param  Request  $request
