@@ -6,7 +6,7 @@
 @section('footer-inner', "<!-- -->")
 
 @section('content')
-<main id="error" class="{$status_code}">
+<main id="error" class="error-code-{{ $status_code }}">
 	<section class="error-flair smooth-box">
 		<figure class="error-figure">
 			<img src="{{ asset("static/img/errors/{$status_code}.jpg") }}" class="error-image" />

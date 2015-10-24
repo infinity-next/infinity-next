@@ -1436,6 +1436,7 @@ nav.gnav {
 	height: 39px;
 	width: 100%;
 	
+	position: relative;
 	z-index: 1000;
 }
 	nav.gnav div.gnav-binder {
@@ -1474,7 +1475,6 @@ nav.gnav {
 	nav.gnav .flyout {
 		display: none;
 		
-		z-index: 999;
 		position: absolute;
 		left: 0;
 		top: 0;
@@ -1487,8 +1487,14 @@ nav.gnav {
 		max-height: none;
 		min-height: 200px;
 		
-		margin: 0 0 0 0;
-		padding: 40px 0 0 0;
+		background: #EEF2FF;
+		border-radius: 0 0 4px 4px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+		border-right: 1px solid #dedede;
+		border-bottom: 1px solid #dedede;
+		
+		margin: 40px 0 0 0;
+		padding: 0;
 		
 		pointer-events: none;
 		overflow: hidden;
@@ -1496,16 +1502,20 @@ nav.gnav {
 		nav.gnav .flyout.flyout-open {
 			display: block;
 		}
-		 	
+		
+		nav.gnav .flyout-header {
+			font-size: 1.3em;
+			font-weight: bold;
+			padding: 12px 12px 6px 12px;
+			pointer-events: all;
+		}
+			nav.gnav .flyout-toplink {
+				
+			}
+		
 		nav.gnav .flyout-cols {
 			display: block;
 			width: 100%;
-			
-			background: #EEF2FF;
-			border-radius: 0 0 4px 4px;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-			border-right: 1px solid #dedede;
-			border-bottom: 1px solid #dedede;
 			
 			pointer-events: all;
 			white-space: nowrap;
@@ -3433,16 +3443,13 @@ nav.cp-inner {
 					background-position: 2px -331px;
 				}
 
-body.error {
-	background-color: rgba(238, 242, 255, 0.8);
-}
 body.error::before {
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 1;
+	z-index: 0;
 	
 	display: block;
 	content: ' ';

@@ -39,6 +39,7 @@ ib.widget("gnav", function(window, $, undefined) {
 				var $flyouts = $("."+widget.options.selector['class-open']);
 				
 				$flyouts.each(function() {
+					console.log($(event.target).closest(this));
 					if (!$(event.target).closest(this).length)
 					{
 						$(this).removeClass(widget.options.selector['class-open']);

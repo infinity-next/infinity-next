@@ -12,6 +12,10 @@
 			</ul>
 			
 			<div class="flyout" id="flyout-boards" data-no-instant>
+				<div class="flyout-header">
+					<a class="flyout-headlink" href="{{ url('/boards.html') }}"><i class="fa fa-th-list"></i>&nbsp;@lang('nav.global.view_all_boards')</a>
+				</div>
+				
 				<ul class="flyout-cols">
 					<li class="flyout-col" id="favorite-boards">
 						<div class="flyout-col-title">{{ trans("nav.global.flyout.favorite_boards") }} <i class="fa fa-star"></i></div>
