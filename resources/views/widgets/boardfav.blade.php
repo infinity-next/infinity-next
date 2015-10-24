@@ -1,0 +1,1 @@
+<i class="board-favorite fa fa-star" data-widget="board-favorite" data-board="{{ $board->board_uri }}"></i>

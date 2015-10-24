@@ -117,6 +117,7 @@
 									<tr>
 										<!-- <td class="board-meta"> board.locale </td> -->
 										<td class="board-uri"><p class="board-cell">
+											@include('widgets.boardfav', [ 'board' => $board ])
 											<a href="{{ $board->getUrl() }}">/{{ $board->board_uri }}/</a>
 											@if ($board->is_worksafe)<i class="fa fa-briefcase board-sfw" title="SFW"></i>@endif
 										</p></td>

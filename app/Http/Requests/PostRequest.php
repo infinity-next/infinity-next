@@ -227,8 +227,11 @@ class PostRequest extends Request {
 		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
 		
 		$rules['files'][] = "array";
-		$rules['files'][] = "min:1";
-		$rules['files'][] = "max:{$attachmentsMax}";
+		$rules['files'][] = "between:2,3";
+		
+		$rules['files.name']    = "array|max:{$attachmentsMax}";
+		$rules['files.hash']    = "array|max:{$attachmentsMax}";
+		$rules['files.spoiler'] = "array|max:{$attachmentsMax}";
 		
 		// Create an additional rule for each possible file.
 		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)

@@ -3580,16 +3580,27 @@ figcaption.page-details {
 		color: #333;
 		margin: 0.2em 0 0 0;
 	}
-		html.js.localstorage body.view-board h1.page-title .fa {
+		.board-favorite.fa {
+			display: none;
+			color: #aaa;
+		}
+		
+		html.js.localstorage .board-list .board-favorite {
+			display: block;
+			float: left;
+			margin: 0 0.25em 0 0;
+			font-size: 1.2em;
+			line-height: 1.2;
+		}
+		html.js.localstorage body.view-board h1.page-title .board-favorite {
 			position: absolute;
 			display: inline;
-			color: #aaa;
 			cursor: pointer;
 			line-height: 1.1em;
 			margin: 0.2em 0 0 0;
 			padding: 0 0 0 0.2em;
 		}
-		html.js.localstorage body.view-board h1.page-title .fa.board-favorited {
+		.fa.board-favorited {
 			color: #FFC800;
 		}
 			html.js body.view-board.board-int  h1.page-title .fa:before,

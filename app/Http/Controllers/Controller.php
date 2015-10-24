@@ -13,6 +13,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Cache;
 use Input;
 use Request;
+use Settings;
 use View;
 
 abstract class Controller extends BaseController {
@@ -35,11 +36,6 @@ abstract class Controller extends BaseController {
 		$this->auth        = $manager->auth;
 		$this->registrar   = $manager->registrar;
 		$this->user        = $manager->user;
-		
-		if ($this->option('boardListShow'))
-		{
-			View::share('boardbar', Board::getBoardListBar());
-		}
 		
 		View::share('user', $this->user);
 		

@@ -1,9 +1,23 @@
-@if(isset($boardbar))
-<nav class="boardlist">
-	<!-- Yes, this is only here so you can style it back into existance. -->
-	<div class="boardlist-row row-boards" {{isset($board) ? "data-instant" : ""}}>
+<!-- Yes, this is only here so you can style it back into existance. -->
+<nav class="boardlist" data-instant>
+	
+	<div class="boardlist-row row-links">
 		<ul class="boardlist-categories">
-		@foreach ($boardbar as $boards)
+			<li class="boardlist-category">
+				<ul class="boardlist-items">
+					@foreach (Settings::getNavigationPrimary() as $navItem => $navUrl)
+					<li class="boardlist-item">
+						<a href="{!! $navUrl !!}" class="boardlist-link">{{ trans("nav.global.{$navItem}") }}</a>
+					</li>
+					@endforeach
+				</ul>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="boardlist-row row-boards">
+		<ul class="boardlist-categories">
+		@foreach (Settings::getNavigationPrimaryBoards() as $boards)
 			<li class="boardlist-category">
 				<ul class="boardlist-items">
 					@foreach ($boards as $board)
@@ -17,17 +31,4 @@
 		</ul>
 	</div>
 	
-	<div class="board-row row-favorites" style="display: none;">
-		<!-- This is for JS templating. -->
-		<ul class="boardlist-categories">
-			<li class="boardlist-category">
-				<ul class="boardlist-items">
-					<li class="boardlist-item">
-						<a href="" class="boardlist-link"></a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
 </nav>
-@endif

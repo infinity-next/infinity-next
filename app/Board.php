@@ -479,29 +479,6 @@ class Board extends Model {
 		return false;
 	}
 	
-	public static function getBoardListBar()
-	{
-		$popularBoards = static::where('posts_total', '>', 0)
-			->wherePublic()
-			->select('board_uri', 'title')
-			->orderBy('posts_total', 'desc')
-			->take(20)
-			->get();
-		
-		$recentBoards = static::where('posts_total', '>', 0)
-			->wherePublic()
-			->whereNotIn('board_uri', $popularBoards->pluck('board_uri'))
-			->select('board_uri', 'title')
-			->orderBy('last_post_at', 'desc')
-			->take(20)
-			->get();
-		
-		return [
-			'popular_boards' => $popularBoards,
-			'recent_boards'  => $recentBoards,
-		];
-	}
-	
 	/**
 	 * Returns all board_banner type BoardAsset items.
 	 *

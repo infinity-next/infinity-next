@@ -27,8 +27,7 @@
 						</ul>
 					</li>
 					
-					@if (isset($boardbar))
-					@foreach ($boardbar as $groupname => $boards)
+					@foreach (Settings::getNavigationPrimaryBoards() as $groupname => $boards)
 					<li class="flyout-col">
 						<div class="flyout-col-title">{{ trans("nav.global.flyout.{$groupname}") }}</div>
 						<ul class="flyout-list">
@@ -43,7 +42,6 @@
 						</ul>
 					</li>
 					@endforeach
-					@endif
 				</ul>
 			</div>
 		</div>

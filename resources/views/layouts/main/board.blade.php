@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title', e("{$board->title} - /{$board->board_uri}/"))
-@section('page-title', e("{$board->title} - /{$board->board_uri}/") . "<i class=\"require-js fa fa-star\" data-widget=\"board-favorite\" data-board=\"{$board->board_uri}\"></i>")
+@section('page-title', e("{$board->title} - /{$board->board_uri}/") . View::make('widgets.boardfav', [ 'board' => $board ]))
 @section('description', e($board->description))
 @section('body-class', "view-board board-{$board->board_uri}")
 
