@@ -55,17 +55,9 @@ ib.widget("gnav", function(window, $, undefined) {
 				
 				if ($flyout.length)
 				{
-					if ($flyout.is("."+widget.options.selector['class-open']))
-					{
-						$flyout.removeClass(widget.options.selector['class-open']);
-					}
-					else
-					{
-						$flyout.addClass(widget.options.selector['class-open']);
-						
-						event.preventDefault();
-						return false;
-					}
+					$flyout.toggleClass(widget.options.selector['class-open']);
+					event.preventDefault();
+					return false;
 				}
 			},
 			

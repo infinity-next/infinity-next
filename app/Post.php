@@ -937,11 +937,11 @@ class Post extends Model {
 	 *
 	 * @param  Carbon  $sinceTime
 	 * @param  Board  $board
-	 * @param  int  $thread  Board ID
+	 * @param  Post  $thread
 	 * @param  boolean  $includeHTML  If the posts should also have very large 'content_html' values.
 	 * @return Collection  of Posts
 	 */
-	public static function getUpdates($sinceTime, Board $board, $thread = null, $includeHTML = false)
+	public static function getUpdates($sinceTime, Board $board, Post $thread, $includeHTML = false)
 	{
 		$posts = static::whereInUpdate($sinceTime, $board, $thread)->get();
 		
@@ -1271,10 +1271,10 @@ class Post extends Model {
 	 * @param  DbQuery  $query  Provided by Laravel.
 	 * @param  Board  $board
 	 * @param  Carbon  $sinceTime
-	 * @param  int  $thread  Board ID.
+	 * @param  Post   $thread  Board ID.
 	 * @return $query
 	 */
-	public function scopeWhereInUpdate($query, $sinceTime, Board $board, $thread)
+	public function scopeWhereInUpdate($query, $sinceTime, Board $board, Post $thread)
 	{
 			// Find posts in this board.
 		return $query->where('posts.board_uri', $board->board_uri)
@@ -1282,8 +1282,8 @@ class Post extends Model {
 			->withEverything()
 			// Only pull posts in this thread, or that is this thread.
 			->where(function($query) use ($thread) {
-				$query->where('posts.reply_to_board_id', $thread);
-				$query->orWhere('posts.board_id', $thread);
+				$query->where('posts.reply_to_board_id', $thread->board_id);
+				$query->orWhere('posts.board_id', $thread->board_id);
 			})
 			// Nab posts that've been updated since our sinceTime.
 			->where(function($query) use ($sinceTime) {

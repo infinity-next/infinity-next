@@ -61,16 +61,11 @@ class BoardController extends ParentController implements ApiController {
 	 * Returns a post to the client. 
 	 *
 	 * @var Board $board
-	 * @var integer|null $post
+	 * @var Post  $post
 	 * @return Response
 	 */
-	public function getPost(Board $board, $post)
+	public function getPost(Board $board, Post $post)
 	{
-		if (is_null($post))
-		{
-			return abort(404);
-		}
-		
 		// Pull the post.
 		$post = $board->posts()
 			->where('board_id', $post)
@@ -89,16 +84,11 @@ class BoardController extends ParentController implements ApiController {
 	 * Returns a thread and its replies to the client. 
 	 *
 	 * @var Board $board
-	 * @var integer|null $thread
+	 * @var Post $thread
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, $thread)
+	public function getThread(Request $request, Board $board, Post $thread)
 	{
-		if (is_null($thread))
-		{
-			return abort(404);
-		}
-		
 		$input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 		
 		if (isset($input['updatesOnly']))

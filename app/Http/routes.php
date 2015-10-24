@@ -205,6 +205,32 @@ Route::group([
 		});
 		
 		
+		
+		/*
+		| Board API Routes (JSON)
+		*/
+		Route::group([
+			'namespace' => "API\Board",
+		], function()
+		{
+			// Gets the first page of a board.
+			Route::any('index.json', 'BoardController@getIndex');
+			
+			// Gets index pages for the board.
+			Route::get('{id}.json', 'BoardController@getIndex');
+			
+			// Gets all visible OPs on a board.
+			Route::any('catalog.json', 'BoardController@getCatalog');
+			
+			// Get single thread.
+			Route::get('thread/{post_id}.json', 'BoardController@getThread');
+			
+			// Get single post.
+			Route::get('post/{post_id}.json', 'BoardController@getPost');
+			
+		});
+		
+		
 		/*
 		| Board Routes (Standard Requests)
 		*/
@@ -288,31 +314,6 @@ Route::group([
 			
 			// Put reply to thread.
 			Route::put('thread/{post_id}', 'BoardController@putThread');
-			
-		});
-		
-		
-		/*
-		| Board API Routes (JSON)
-		*/
-		Route::group([
-			'namespace' => "API\Board",
-		], function()
-		{
-			// Gets the first page of a board.
-			Route::any('index.json', 'BoardController@getIndex');
-			
-			// Gets index pages for the board.
-			Route::get('{id}.json', 'BoardController@getIndex');
-			
-			// Gets all visible OPs on a board.
-			Route::any('catalog.json', 'BoardController@getCatalog');
-			
-			// Get single thread.
-			Route::get('thread/{post_id}.json', 'BoardController@getThread');
-			
-			// Get single post.
-			Route::get('post/{post_id}.json', 'BoardController@getPost');
 			
 		});
 	});
