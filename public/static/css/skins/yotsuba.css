@@ -43,7 +43,7 @@ a.button {
 }
 
 header nav.gnav,
-header nav.gnav .flyout-cols,
+header nav.gnav .flyout-container,
 header nav.boardlist {
 	background: #FFFFEE;
 	color: #800000;

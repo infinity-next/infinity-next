@@ -8,7 +8,7 @@
 <main id="frontpage">
 	<div class="grid-container">
 		<section id="site-info">
-			<div class="grid-20">
+			<div class="grid-20 tablet-grid-100 mobile-grid-100">
 				@include($c->template('index.modules.logo'))
 			</div>
 			

@@ -1,4 +1,12 @@
 /**
+ * EXPANDING RESPONSIVENESS
+ *
+ * These media tags ADD as the screen GROWS.
+ * They do not take away as the screen shrinks.
+ * Scroll down for max-width selectors.
+ */
+
+/**
  * 360px Width
  * Vertical phones
  */
@@ -59,10 +67,6 @@
 	/**
 	 * Index
 	 */
-	#site-logo-img {
-		margin-top: 2.2em;
-	}
-	
 	#site-description .infobox,
 	#site-statistics .infobox {
 		min-height: 10em;
@@ -129,54 +133,6 @@
 	img.attachment-img {
 		max-width: 150px;
 		max-height: 150px;
-	}
-}
-
-/**
- * 840px Max
- * Larger Tablets
- */
-@media (max-width: 840px) {
-	/**
-	 * Primary Navigation
-	 */
-	header.board-header {
-		
-	}
-	nav.boardlist {
-		font-size: 1.5em;
-		line-height: 2.5em;
-	}
-	nav.boardlist div.boardlist-text {
-		display: block;
-		text-align: center;
-	}
-	nav.boardlist div.boardlist-row {
-		display: none;
-		border-bottom: 0.20em solid rgba(0,0,0,0.25);
-	}
-	nav.boardlist ul.boardlist-categories {
-		
-	}
-	nav.boardlist li.boardlist-category {
-		clear: both;
-		display: block;
-	}
-	nav.boardlist ul.boardlist-items {
-		display: block;
-		
-	}
-	nav.boardlist li.boardlist-item {
-		display: block;
-		box-sizing: border-box;
-		padding: 0 1em;
-		min-width: 300px;
-		width: 50%;
-		float: left;
-	}
-	nav.boardlist a.boardlist-link {
-		display: block;
-		
 	}
 }
 
@@ -248,9 +204,24 @@
 
 /**
  * 1028px width and 480px height
- * Desktop
  */
 @media (min-width: 1028px) and (min-height: 480px) {
+	/**
+	 * Navigation
+	 */
+	nav.gnav .flyout {
+		width: auto;
+	}
+	nav.gnav .flyout-col {
+		display: inline-block;
+		float: left;
+		width: 21em;
+	}
+	nav.gnav .flyout-link {
+		line-height: 1.7em;
+		height: 1.7em;
+	}
+	
 	/**
 	 * Posts and Threads
 	 */
@@ -334,5 +305,100 @@
 	img.attachment-img {
 		max-width: 200px;
 		max-height: 200px;
+	}
+}
+
+
+/**
+ * SHRINKING RESPONSIVENESS
+ *
+ * These media tags REMOVE as the screen SHRINKS.
+ * Scroll up for max-width selectors.
+ */
+
+/**
+ * 360px Width
+ * Vertical phones
+ */
+@media (max-width: 360px) {
+	
+	table.board-list-table .board-max,
+	table.board-list-table .board-unique {
+		padding: 0;
+		margin: 0;
+		font-size: 0;
+		width: 0;
+	}
+}
+
+/**
+ * 640px Width
+ * Horizontal phones
+ */
+@media (max-width: 640px) {
+	
+	table.board-list-table .board-title,
+	table.board-list-table .board-ppd,
+	table.board-list-table .board-pph {
+		padding: 0;
+		margin: 0;
+		font-size: 0;
+		width: 0;
+	}
+}
+
+/**
+ * 840px Max
+ * Larger Tablets
+ */
+@media (max-width: 840px) {
+	
+	table.board-list-table .board-tags {
+		padding: 0;
+		margin: 0;
+		font-size: 0;
+		width: 0;
+	}
+	
+	/**
+	 * Primary Navigation
+	 */
+	header.board-header {
+		
+	}
+	nav.boardlist {
+		font-size: 1.5em;
+		line-height: 2.5em;
+	}
+	nav.boardlist div.boardlist-text {
+		display: block;
+		text-align: center;
+	}
+	nav.boardlist div.boardlist-row {
+		display: none;
+		border-bottom: 0.20em solid rgba(0,0,0,0.25);
+	}
+	nav.boardlist ul.boardlist-categories {
+		
+	}
+	nav.boardlist li.boardlist-category {
+		clear: both;
+		display: block;
+	}
+	nav.boardlist ul.boardlist-items {
+		display: block;
+		
+	}
+	nav.boardlist li.boardlist-item {
+		display: block;
+		box-sizing: border-box;
+		padding: 0 1em;
+		min-width: 300px;
+		width: 50%;
+		float: left;
+	}
+	nav.boardlist a.boardlist-link {
+		display: block;
+		
 	}
 }

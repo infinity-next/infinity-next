@@ -40,9 +40,9 @@
 										<option value="spa">@lang('lang.spa')</option>
 									</optgroup>
 									<optgroup label="@lang('boardlist.search.lang.all')">
-										<!-- for lang_code, lang_name in languages -->
-										<option value="lang_code"><!-- lang_name --></option>
-										<!-- endfor -->
+										@foreach (trans('lang') as $langIso => $langName)
+										<option value="{{ $langIso }}">{{ $langName }}</option>
+										@endforeach
 									</optgroup>
 								</select>
 							</div>
@@ -84,21 +84,10 @@
 							<!--
 								If you are adding or removing columns to this file, there's a few steps.
 								1. Make sure the data is being supplied by the boards.php/board-search.php file.
-								2. Add or remove the <col /> tag and <th /> tag.
-								3. If ADDING, please-please-please add a unique class to your cells and specify information in style.css! Don't duplicate class names.
-								4. If ADDING, open js/board-directory.js and 'board-datum-xxx' definition that matches your data-column <th> attribute.
-								5. Change the colspan="" attributes to be the new total of cells.
+								2. If ADDING, please-please-please add a unique class to your cells and specify information in style.css! Don't duplicate class names.
+								3. If ADDING, open js/board-directory.js and 'board-datum-xxx' definition that matches your data-column <th> attribute.
+								4. Change the colspan="" attributes to be the new total of cells.
 							-->
-							<colgroup>
-								<!-- <col class="board-meta" /> -->
-								<col class="board-uri" />
-								<col class="board-title" />
-								<col class="board-ppd" />
-								<col class="board-plh" />
-								<col class="board-unique" />
-								<col class="board-tags" />
-								<col class="board-max" />
-							</colgroup>
 							<thead class="board-list-head">
 								<tr>
 									<!-- <th class="board-meta" data-column="meta"></th> -->

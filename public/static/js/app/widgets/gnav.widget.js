@@ -110,7 +110,7 @@ ib.widget("gnav", function(window, $, undefined) {
 					var $list      = $(widget.options.selector['flyout-list'], $favorites);
 					var favorites  = JSON.parse(localStorage.getItem(widget.options.storage['favorites-data']));
 					
-					$favorites.toggle(favorites.length > 0);
+					$favorites.css('display', favorites.length > 0 ? "block" : "none");
 					$list.children().remove();
 					
 					if (favorites.length)

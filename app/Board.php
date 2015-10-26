@@ -566,13 +566,14 @@ class Board extends Model {
 		return $fallback;
 	}
 	
-	public function getLocalThread($local_id)
+	/**
+	 * Returns the board's primary language. Defaults to the site language.
+	 * 
+	 * @return string
+	 */
+	public function getLanguageAttribute()
 	{
-		return $this->threads()
-			->op()
-			->where('board_id', $local_id)
-			->get()
-			->first();
+		return $this->getConfig('boardLanguage', config('app.locale', "en"));
 	}
 	
 	public function getLocalReply($local_id)

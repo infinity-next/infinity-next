@@ -186,6 +186,13 @@ table {
  * Generic Classes
  */
 
+/* Function */
+.selfclear::after {
+	display: block;
+	content: ' ';
+	clear: both;
+}
+
 /* Design */
 .smooth-box {
 	background: #fff;
@@ -222,6 +229,9 @@ table {
 	background: center 4px url('../../img/assets/infinity.gif') no-repeat;
 }
 
+/**
+ * Responsiveness
+ */
 html.no-js .no-js,
 html.js	.require-js {
 	display: block;
@@ -229,6 +239,11 @@ html.js	.require-js {
 html.no-js .require-js,
 html.js	.no-js {
 	display: none;
+}
+
+.tablet-or-larger {
+	display: none;
+	
 }
 
 /* Forms */
@@ -772,6 +787,8 @@ figure.error {
 		}
 		#site-logo {
 			margin: 0;
+			line-height: 120px;
+			text-align: center;
 		}
 			#site-logo::after {
 				content: ' ';
@@ -779,10 +796,10 @@ figure.error {
 				display: block;
 			}
 			#site-logo-img {
+				display: inline-block;
 				margin: 0 auto 1em auto;
-				width: 220px;
+				width: auto;
 				max-width: 100%;
-				display: block;
 			}
 		
 		#site-description,
@@ -849,7 +866,8 @@ figure.error {
 			#site-recent-images .recent-image {
 				position: relative;
 				display: inline-block;
-				
+				box-sizing: border-box;
+				padding: 0.5em;
 				width: 10%;
 				min-width: 116px;
 			}
@@ -868,7 +886,7 @@ figure.error {
 					#site-recent-images .attachment-wrapper {
 						height: 100%;
 						width: 100%;
-						vertical-align: center;
+						vertical-align: top;
 						text-align: center;
 					}
 						#site-recent-images img.attachment-img {
@@ -929,7 +947,7 @@ figure.error {
 						top: 0;
 						right: 0;
 						left: 0;
-						bottom: 1.2em;
+						bottom: 0	;
 						z-index: 2;
 					}
 						#site-recent-posts .recent-post-link.recent-post-op {
@@ -976,6 +994,7 @@ table.board-list-table {
 	width: 100%;
 	overflow: hidden;
 	table-layout: fixed;
+	border-collapse: collapse;
 }
 	table.board-list-table .board-cell {
 		position: static;
@@ -991,43 +1010,16 @@ table.board-list-table {
 			clear: both;
 		}
 	
+	
 	table.board-list-table .board-meta {
+		display: none;
 		padding-right: 4px;
 		width: 70px;
 	}
 	table.board-list-table .board-uri {
-		max-width: 196px;
+		display: table-cell;
+		min-width: 196px;
 	}
-	table.board-list-table .board-title {
-		width: auto;
-	}
-	table.board-list-table .board-plh,
-	table.board-list-table .board-ppd,
-	table.board-list-table .board-pph,
-	table.board-list-table .board-max,
-	table.board-list-table .board-unique {
-		width: 80px;
-		text-align: right;
-	}
-	table.board-list-table .board-max {
-		width: 100px;
-	}
-	table.board-list-table .board-tags {
-		position: relative;
-		height: 15px;
-		width: auto;
-		padding: 0 15px 0 4px;
-	}
-	table.board-list-table .board-tags .tag-link {
-		display: inline;
-	}
-		table.board-list-table .board-tags .board-cell:hover {
-			position: absolute;
-			line-height: 23px;
-			top: 0;
-			bottom: 0;
-			width: 310px;
-		}
 		table.board-list-table .board-uri a {
 			display: inline-block;
 			float: left;
@@ -1042,6 +1034,35 @@ table.board-list-table {
 			color: #34345C;
 			margin: 0 0 0 0.6em;
 			float: right;
+		}
+	table.board-list-table .board-title {
+	}
+	table.board-list-table .board-plh,
+	table.board-list-table .board-ppd,
+	table.board-list-table .board-pph,
+	table.board-list-table .board-max,
+	table.board-list-table .board-unique {
+		width: 60px;
+		text-align: right;
+	}
+	table.board-list-table .board-max {
+		width: 80px;
+	}
+	table.board-list-table .board-tags {
+		position: relative;
+		height: 15px;
+		width: auto;
+		padding: 0 15px 0 4px;
+	}
+		table.board-list-table .board-tags .tag-link {
+			display: inline;
+		}
+		table.board-list-table .board-tags .board-cell:hover {
+			position: absolute;
+			line-height: 23px;
+			top: 0;
+			bottom: 0;
+			width: 310px;
 		}
 	
 	table.board-list-table div.board-cell {
@@ -1449,7 +1470,7 @@ nav.gnav {
 		display: block;
 		margin: 0;
 		padding: 0;
-		white-space: normal;
+		white-space: nowrap;
 		line-height: 18px;
 		overflow: hidden;
 	}
@@ -1476,25 +1497,19 @@ nav.gnav {
 		display: none;
 		
 		position: absolute;
-		left: 0;
+		left: -20px;
 		top: 0;
 		
 		box-sizing: border-box;
-		width: auto;
+		width: 100vw;
 		max-width: 100vw;
 		min-width: none;
 		height: auto;
 		max-height: none;
 		min-height: 200px;
 		
-		background: #EEF2FF;
-		border-radius: 0 0 4px 4px;
-		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-		border-right: 1px solid #dedede;
-		border-bottom: 1px solid #dedede;
-		
 		margin: 40px 0 0 0;
-		padding: 0;
+		padding: 0 20px;
 		
 		pointer-events: none;
 		overflow: hidden;
@@ -1503,14 +1518,28 @@ nav.gnav {
 			display: block;
 		}
 		
+		nav.gnav .flyout-container {
+			box-sizing: border-box;
+			max-width: 100%;
+			
+			background: #EEF2FF;
+			border-radius: 0 0 4px 4px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+			border-right: 1px solid #dedede;
+			border-bottom: 1px solid #dedede;
+			
+		}
+		
 		nav.gnav .flyout-header {
+			display: block;
 			font-size: 1.3em;
 			font-weight: bold;
 			padding: 12px 12px 6px 12px;
 			pointer-events: all;
+			border-bottom: 1px solid #dedede;
 		}
-			nav.gnav .flyout-toplink {
-				
+			nav.gnav .flyout-headlink {
+				display: block;
 			}
 		
 		nav.gnav .flyout-cols {
@@ -1538,41 +1567,44 @@ nav.gnav {
 			padding: 12px 12px 6px 12px;
 		}
 		nav.gnav .flyout-col {
-			display: inline-block;
+			display: block;
 			vertical-align: top;
 			
-			float: left;
-			width: 21em;
+			width: 100%;
 			height: 100%;
 			
 			border-left: 1px solid #dedede;
 			border-right: 1px solid transparent;
 			padding: 0 1px 12px 1px;
-			margin: 0 -1px 0 0;
+			margin: 0 -1px 0 -1px;
 		}
 			nav.gnav .flyout-list {
 				display: block;
 			}
-			nav.gnav .flyout-link {
-				display: block;
-				font-size: 1.2em;
-				line-height: 1.7em;
-				height: 1.7em;
-				overflow: hidden;
-				padding: 0 12px;
-				white-space: normal;
-			}
-				nav.gnav .flyout-item:hover {
-					background-color: rgba(255,255,255,0.5);
+				nav.gnav .flyout-item {
 				}
-				
-				nav.gnav .flyout-uri {
-					font-weight: bold;
+				nav.gnav .flyout-link {
+					display: block;
+					font-size: 1.2em;
+					line-height: 2.2em;
+					height: 2.2em;
+					overflow: hidden;
+					padding: 0 12px;
+					white-space: normal;
 				}
-				nav.gnav .flyout-title:before {
-					display: inline;
-					content: ' - ';
-				}
+					nav.gnav .flyout-item:hover {
+						background-color: rgba(255,255,255,0.5);
+					}
+					
+					nav.gnav .flyout-uri {
+						font-weight: bold;
+					}
+					nav.gnav .flyout-title {
+					}
+						nav.gnav .flyout-title:before {
+							display: inline;
+							content: ' - ';
+						}
 	
 	header nav.boardlist {
 		display: none;

@@ -10,7 +10,7 @@
 	<section class="error-flair smooth-box">
 		<figure class="error-figure">
 			<img src="{{ asset("static/img/errors/{$status_code}.jpg") }}" class="error-image" />
-			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/kr0npr1nz">Ilya Kuvshinov @Kuvshinov_Ilya</a></figcaption>
+			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/Kuvshinov_Ilya">Ilya Kuvshinov @Kuvshinov_Ilya</a></figcaption>
 		</figure>
 	</section>
 </main>
