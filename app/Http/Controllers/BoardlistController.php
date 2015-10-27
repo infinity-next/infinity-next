@@ -111,12 +111,13 @@ class BoardlistController extends Controller {
 		$input = $this->boardListInput();
 		
 		$title = $input['title'];
+		$lang  = $input['lang'];
 		$page  = $input['page'];
 		$tags  = $input['tags'];
 		$sfw   = $input['sfw'];
 		
 		$boards = Board::getBoardsForBoardlist();
-		$boards = $boards->filter(function($item) use ($tags, $sfw, $title) {
+		$boards = $boards->filter(function($item) use ($lang, $tags, $sfw, $title) {
 				// Are we able to view unindexed boards?
 				if (!$item->is_indexed && !$this->user->canViewUnindexedBoards())
 				{
@@ -129,11 +130,27 @@ class BoardlistController extends Controller {
 					return false;
 				}
 				
+				// Are we searching by language?
+				if ($lang)
+				{
+					$boardLang = $item->settings
+						->where('option_name', 'boardLanguage')
+						->pluck('option_value')
+						->first();
+					
+					if ($lang != $boardLang)
+					{
+						return false;
+					}
+				}
+				
+				// Are we searching tags?
 				if ($tags && count(array_intersect($tags, $item->tags->pluck('tag')->toArray())) < count($tags))
 				{
 					return false;
 				}
 				
+				// Are we searching titles and descriptions?
 				if ($title && stripos($item->board_uri, $title) === false && stripos($item->title, $title) === false && stripos($item->description, $title) === false)
 				{
 					return false;

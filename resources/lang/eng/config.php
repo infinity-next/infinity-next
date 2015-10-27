@@ -11,10 +11,13 @@ return [
 	|
 	*/
 	
-	'confirm' => "Please confirm your action.",
-	'create'  => "Create",
-	'upload'  => "Upload",
-	'submit'  => "Save Changes",
+	'confirm'      => "Please confirm your action.",
+	'create'       => "Create",
+	'upload'       => "Upload",
+	'delete'       => "Delete",
+	'submit'       => "Save Changes",
+	'any_language' => "International",
+	
 	
 	'legend' => [
 		'permissions'   => [
@@ -31,6 +34,7 @@ return [
 		'account_existing'   => "Existing Username",
 		'attachments'        => "Attachment Options",
 		'bans'               => "Ban Options",
+		'board_language'     => "Language",
 		'reports'            => "Report Options",
 		'role_basic'         => "Role Details",
 		'staff_castes'       => "Castes",
@@ -61,6 +65,7 @@ return [
 		'boardBasicIndexed'        => "Publicly Indexed",
 		'boardBasicWorksafe'       => "Safe for Work",
 		'boardCustomCSS'           => "Custom CSS",
+		'boardLanguage'            => "Primary Language",
 		'boardSidebarText'         => "Content",
 		'boardUriBanned'           => "Banned Board URIs",
 		

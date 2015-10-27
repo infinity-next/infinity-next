@@ -29,7 +29,7 @@ class DonationRequest extends Request {
 	{
 		return [
 			"One-time payment" =>'once',
-			"Monthly support" => 'monthly',
+			//"Monthly support" => 'monthly',
 		];
 	}
 	

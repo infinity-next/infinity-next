@@ -62,7 +62,7 @@ class OptionGroup extends Model {
 				'options.*',
 				'site_settings.option_value as option_value'
 			);
-		}])->get();
+		}])->orderBy('display_order', 'asc')->get();
 	}
 	
 	public static function getBoardConfig(Board $board)
@@ -81,6 +81,6 @@ class OptionGroup extends Model {
 				'options.*',
 				'board_settings.option_value as option_value'
 			);
-		}])->get();
+		}])->orderBy('display_order', 'asc')->get();
 	}
 }

@@ -185,15 +185,15 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => 'min:$min|max:$max'
 				],
 				[
-					'option_name'           => "boardReportText",
-					'default_value'         => "",
-					'format'                => "textbox",
-					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+					'option_name'           => "boardLanguage",
+					'default_value'         => config('app.locale'),
+					'format'                => "template",
+					'format_parameters'     => json_encode( [ 'lang' => implode(",", array_keys(trans('lang'))) ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'string|in:$lang',
 				],
 				[
-					'option_name'           => "boardSidebarText",
+					'option_name'           => "boardReportText",
 					'default_value'         => "",
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
@@ -423,13 +423,12 @@ class OptionGroupSeeder extends Seeder {
 				],
 			],
 			[
-				'group_name'    => "adventures",
+				'group_name'    => "board_language",
 				'debug_only'    => false,
-				'display_order' => 350,
+				'display_order' => 250,
 				
 				'options'       => [
-					"adventureEnabled",
-					"adventureIcons",
+					"boardLanguage",
 				],
 			],
 			[
@@ -453,6 +452,16 @@ class OptionGroupSeeder extends Seeder {
 					"ephePostIpLife",
 					"ephePostHardDelete",
 					"epheMediaPrune",
+				],
+			],
+			[
+				'group_name'    => "adventures",
+				'debug_only'    => false,
+				'display_order' => 350,
+				
+				'options'       => [
+					"adventureEnabled",
+					"adventureIcons",
 				],
 			],
 			[
@@ -495,15 +504,6 @@ class OptionGroupSeeder extends Seeder {
 				
 				'options'       => [
 					"boardCustomCSS",
-				],
-			],
-			[
-				'group_name'    => "sidebar",
-				'debug_only'    => false,
-				'display_order' => 1100,
-				
-				'options'       => [
-					"boardSidebarText",
 				],
 			],
 			[

@@ -11,6 +11,7 @@
 */
 
 return [
+	
 	##
 	# DO NOT TRANSLATE THESE
 	##
@@ -25,7 +26,7 @@ return [
 	'ara' => "عربي",
 	'por' => "Português",
 	'ben' => "বাংলা",
-	'rus' => "русский язык",
+	'rus' => "русский",
 	'jpn' => "日本語",
 	'pan' => "ਪੰਜਾਬੀ",
 	'ger' => "Deutsch",
@@ -39,6 +40,8 @@ return [
 	'yue' => "粵語",
 	
 	'pol' => "Język Polski",
+	
+	'ukr' => "українська",
 	
 	'tgl' => "Wikang Tagalog",
 	

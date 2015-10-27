@@ -438,6 +438,32 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Returns either the URL for an asset or their default item.
+	 *
+	 * @param  string  asset name
+	 * @return string  url
+	 */
+	public function getAssetURL($asset)
+	{
+		$url      = "";
+		$checksum = $this->assets->where($asset);
+		
+		switch ($asset)
+		{
+			case "icon"    :
+				return asset("static/img/assets/Favorite_" . ($this->isWorksafe() ? "Burichan" : "Yotsuba") . ".ico");
+			
+			case "spoiler" :
+				return asset("static/img/assets/spoiler.png");
+			
+			case "deleted" :
+				return asset("static/img/assets/spoiler.png");
+		}
+		
+		return $url;
+	}
+	
+	/**
 	 * Returns a single board_banner BoardAsset.
 	 *
 	 * @return BoardAsset
@@ -859,6 +885,7 @@ class Board extends Model {
 			return static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
 				->with([
 					'tags',
+					'settings',
 					'stats' => function($query) {
 						$query->where('stats_time', '>=', Carbon::now()->minute(0)->second(0)->subDays(7));
 					},

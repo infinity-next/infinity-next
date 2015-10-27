@@ -127,7 +127,7 @@ class Option extends Model implements PseudoEnumContract {
 		switch ($this->format)
 		{
 			case "template":
-				return $this->getFormatParameter('template');
+				return "widgets.config.option.template.{$this->option_name}";
 			
 			case "callback":
 				## TODO ##

@@ -9,7 +9,7 @@
 return [
 	'search' => [
 		'lang' => [
-			'any'      => "Any Languages",
+			'any'      => "Any Language",
 			'all'      => "All",
 			'popular'  => "Popular",
 		],

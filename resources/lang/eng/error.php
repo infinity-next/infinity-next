@@ -18,7 +18,7 @@ return [
 		'title' => "Not Found",
 	],
 	'500' => [
-		'title' => "Unexpected Error",
+		'title' => "Internal Server Error",
 	],
 	'503' => [
 		'title' => "Maintenance",

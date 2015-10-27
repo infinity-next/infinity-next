@@ -132,6 +132,16 @@ a.button {
 			border: 1px solid #ccc;
 			color: #ccc;
 		}
+	button.field-delete,
+	button.delete {
+		border-color: #5C3434;
+		color: #5C3434;
+	}
+	button.field-delete:hover,
+	button.delete:hover {
+		background: #5C3434;
+		color: #FFF;
+	}
 
 input,
 textarea,
@@ -721,14 +731,6 @@ main.cp form.form-config {
 			form.form-config .field-confirm {
 				display: block;
 				margin: 0 0 0.5em 0;
-			}
-			form.form-config .row-delete button.field-delete {
-				border-color: #5C3434;
-				color: #5C3434;
-			}
-			form.form-config .row-delete button.field-delete:hover {
-				background: #5C3434;
-				color: #FFF;
 			}
 
 /*
@@ -3524,6 +3526,12 @@ body.error::before {
 					text-shadow: 1px black;
 					text-align: right;
 				}
+		
+		main#error .error-trace {
+			display: block;
+			margin: 0 auto;
+			max-width: 960px;
+		}
 	
 	main#adventure {
 		position: absolute;

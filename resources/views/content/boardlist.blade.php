@@ -41,7 +41,7 @@
 									</optgroup>
 									<optgroup label="@lang('boardlist.search.lang.all')">
 										@foreach (trans('lang') as $langIso => $langName)
-										<option value="{{ $langIso }}">{{ $langName }}</option>
+										<option value="{{ $langIso }}" {{ Request::get('lang',"") == $langIso ? "selected=\"selected\"" : "" }}>{{ $langName }}</option>
 										@endforeach
 									</optgroup>
 								</select>
@@ -136,14 +136,14 @@
 										</a>
 									</td>
 									
-									<!-- if boards_omitted > 0 -->
+									@if ($boards->total() - $boards->perPage() > 0)
 									<script type="text/javascript">
-										/* Cheeky hack redux.
+										/* Cheeky hack.
 										   We want to show the loadmore for JS users when we have omitted boards.
 										   However, the board-directory.js isn't designed to manipulate the page index on immediate load. */
 										document.getElementById("board-list-more").className = "board-list-hasmore";
 									</script>
-									<!-- endif -->
+									@endif
 								</tr>
 							</tfoot>
 						</table>
