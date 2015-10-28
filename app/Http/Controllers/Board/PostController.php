@@ -306,7 +306,7 @@ class PostController extends Controller {
 			
 			if ($delete)
 			{
-				$posts = Post::ipString($banIp);
+				$posts = Post::ipBinary($post->author_ip);
 				
 				$this->log('log.post.ban.delete', $post, [
 					"board_id"  => $post->board_id,
@@ -344,7 +344,7 @@ class PostController extends Controller {
 			{
 				if ($all)
 				{
-					$posts = Post::ipBinary($banIp)
+					$posts = Post::ipBinary($post->author_ip)
 						->where('board_uri', $board->board_uri);
 					
 					$this->log('log.post.ban.delete', $post, [

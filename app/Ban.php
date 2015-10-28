@@ -36,7 +36,10 @@ class Ban extends Model {
 	protected $fillable = ['ban_ip', 'board_uri', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification'];
 	
 	
-	
+	public function appeals()
+	{
+		return $this->hasMany('\App\BanAppeal', 'ban_id');
+	}
 	
 	public function board()
 	{
@@ -51,6 +54,16 @@ class Ban extends Model {
 	public function post()
 	{
 		return $this->belongsTo('\App\Post', 'post_id');
+	}
+	
+	/**
+	 * Determines if this ban can be appealed.
+	 *
+	 * @return boolean
+	 */
+	public function canAppeal()
+	{
+		return !$this->getAppeal();
 	}
 	
 	/**

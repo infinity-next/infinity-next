@@ -29,6 +29,14 @@
 		]) !!}</p>
 		
 		<p>@lang('panel.bans.ban_review.identity', [ 'ip' => \Request::ip() ])</p>
+		
+		@if ($ban->expires_at->diffInDays() < 7)
+			<p>@lang('panel.bans.ban_review.appeal_at')</p>
+		@elseif (!$ban->canAppeal())
+			<p>@lang('panel.bans.ban_review.appeal_now')</p>
+		@else
+			<p>@lang('panel.bans.ban_review.appeal_no')</p>
+		@endif
 	@else
 	
 	@endif

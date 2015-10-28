@@ -177,12 +177,14 @@ class ConfigController extends PanelController {
 				"required_if:asset_type,board_banned",
 				"image",
 				"image_size:100-500",
+				"max:250",
 			],
 			
 			'new_board_banner' => [
 				"required_if:asset_type,board_banner",
 				"image",
 				"image_size:<=300,<=100",
+				"max:1024",
 			],
 			
 			'new_board_icon' => [
@@ -190,18 +192,21 @@ class ConfigController extends PanelController {
 				"image",
 				"image_aspect:1",
 				"image_size:64,64",
+				"max:50",
 			],
 			
 			'new_file_deleted' => [
 				"required_if:asset_type,file_deleted",
 				"image",
 				"image_size:100-500",
+				"max:250",
 			],
 			
 			'new_file_spoiler' => [
 				"required_if:asset_type,file_spoiler",
 				"image",
 				"image_size:100-500",
+				"max:250",
 			],
 		]);
 		
