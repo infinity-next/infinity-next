@@ -6,7 +6,7 @@
 		@section('title', trans('panel.title.you_are_banned'))
 		
 		<figure class="error-figure">
-			<img src="/img/errors/banned.gif" class="error-image" />
+			<img src="{{ asset("static/img/errors/banned.gif") }}" class="error-image" />
 			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/kr0npr1nz">Ilya Kuvshinov @kr0npr1nz</a></figcaption>
 		</figure>
 		

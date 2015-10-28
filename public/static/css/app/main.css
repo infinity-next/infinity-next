@@ -518,6 +518,7 @@ main.cp .filterlist {
 main.cp form.form-config {
 	min-width: 760px;
 	margin: 0 auto 0 0;
+	border-bottom: 1px solid #EEF2FF;
 }
 	form.form-config#config-site {
 		max-width: none;
@@ -545,7 +546,6 @@ main.cp form.form-config {
 	}
 	
 	form.form-config fieldset.form-fields {
-		border-bottom: 1px solid #EEF2FF;
 	}
 		form.form-config fieldset.form-fields:last-child {
 			border-bottom: none;
@@ -616,12 +616,16 @@ main.cp form.form-config {
 			clear: both;
 			margin: 1em 0;
 		}
-			dl.option-banner {
+			dl.option-asset {
 				display: inline-block;
 				
 				box-sizing: border-box;
-				min-width: 33%;
+				max-width: 33%;
 			}
+				dl.option-asset img.board-asset {
+					max-width: 90%;
+				}
+			
 			#config-permissions dl.option {
 				margin: 0;
 			}
@@ -636,7 +640,7 @@ main.cp form.form-config {
 				text-align: right;
 				vertical-align: top;
 			}
-				dl.option-banner dt.option-term {
+				dl.option-asset dt.option-term {
 					display: none;
 				}
 			
@@ -647,7 +651,7 @@ main.cp form.form-config {
 				width: auto;
 				vertical-align: top;
 			}
-				dl.option-banner dd.option-definition {
+				dl.option-asset dd.option-definition {
 					margin: 0;
 				}
 					dd.option-definition label.field-label {
@@ -689,7 +693,7 @@ main.cp form.form-config {
 					width: 5em;
 					text-align: center;
 				}
-					dl.option-banner input.field-control {
+					dl.option-asset input.field-control {
 						margin: 0 0.25em;
 					}
 					
@@ -732,6 +736,27 @@ main.cp form.form-config {
 				display: block;
 				margin: 0 0 0.5em 0;
 			}
+	
+	form.form-asset {
+		border-bottom: 1px solid #EEF2FF;
+		text-align: center;
+	}
+		form.form-asset .form-fields {
+			display: block;
+			width: auto;
+			margin: 0;
+		}
+			form.form-asset figure.form-asset {
+				height: 250px;
+				line-height: 250px;
+				vertical-align: middle;
+				text-align: center;
+			}
+				form.form-asset img.form-asset-img {
+					display: inline-block;
+					max-width: 100%;
+					height: auto;
+				}
 
 /*
  * Errors
@@ -3508,8 +3533,9 @@ body.error::before {
 				padding: 0;
 				position: relative;
 			}
-			figure.error-figure img.error-image {
-				
+			figure.error-figure img.board-asset {
+				max-width: 500px;
+				max-height: 250px;
 			}
 			figure.error-figure figcaption.error-caption {
 				display: block;

@@ -796,6 +796,21 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns a SHA1 checksum for this post's text.
+	 *
+	 * @param  boolean Option. If return should be binary. Defaults false.
+	 * @return string|binary
+	 */
+	public function getChecksum($binary = false)
+	{
+		$postBody  = $this->body;
+		$postRobot = preg_replace('/\W+/', "", $postBody);
+		$checksum  = sha1($postRobot, $binary);
+		
+		return $checksum;
+	}
+	
+	/**
 	 * Returns the post model using the board's URI and the post's local board ID.
 	 *
 	 * @param  string  $board_uri
@@ -1457,6 +1472,11 @@ class Post extends Model {
 			
 			$posts_total = $boards[0]->posts_total;
 			
+			// Third, we store a checksum for this post in the database.
+			$board->checksums()->create([
+				'checksum' => $this->getChecksum(true),
+			]);
+			
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($thread instanceof Post)
 			{
@@ -1484,7 +1504,6 @@ class Post extends Model {
 				$adventure->expended_at = $this->created_at;
 				$adventure->save();
 			}
-			
 			
 			// Finally, we set our board_id and save.
 			$this->board_id  = $posts_total;

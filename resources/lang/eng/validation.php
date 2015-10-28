@@ -93,6 +93,7 @@ return [
 	
 	'custom' => [
 		'file_corrupt'   => "<tt>:filename</tt> is corrupt or has an invalid file name.",
+		'file_generic'   => "Your file could not be uploaded",
 		'post_flood'     => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
 		'thread_flood'   => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
 		

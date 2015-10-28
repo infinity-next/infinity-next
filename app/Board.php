@@ -135,6 +135,11 @@ class Board extends Model {
 		return $this->hasMany('\App\BoardAsset', 'board_uri');
 	}
 	
+	public function checksums()
+	{
+		return $this->hasMany('\App\PostChecksum', 'board_uri');
+	}
+	
 	public function posts()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');
@@ -445,22 +450,42 @@ class Board extends Model {
 	 */
 	public function getAssetURL($asset)
 	{
-		$url      = "";
-		$checksum = $this->assets->where($asset);
+		$assetObj = $this->assets()
+			->with('storage')
+			->where('asset_type', $asset)
+			->first();
+		
+		if ($assetObj)
+		{
+			return $assetObj->getURL();
+		}
 		
 		switch ($asset)
 		{
-			case "icon"    :
-				return asset("static/img/assets/Favorite_" . ($this->isWorksafe() ? "Burichan" : "Yotsuba") . ".ico");
+			case "board_icon"   :
+				return asset("static/img/assets/Favicon_" . ($this->isWorksafe() ? "Burichan" : "Yotsuba") . ".ico");
 			
-			case "spoiler" :
+			case "file_spoiler" :
 				return asset("static/img/assets/spoiler.png");
 			
-			case "deleted" :
-				return asset("static/img/assets/spoiler.png");
+			case "file_deleted" :
+				return asset("static/img/assets/deleted.png");
 		}
 		
-		return $url;
+		return asset("static/img/errors/404.jpg");
+	}
+	
+	/**
+	 * Returns all board_banned type BoardAsset items.
+	 *
+	 * @return Collection
+	 */
+	public function getBannedImages()
+	{
+		$this->load('assets', 'assets.storage');
+		
+		return $this->assets
+			->where('asset_type', "board_banned");
 	}
 	
 	/**

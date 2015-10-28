@@ -101,6 +101,8 @@ return [
 	],
 	
 	'bans'      => [
+		'ban_list_empty' => "No active bans for your IP address can be found on any board.",
+		
 		'ban_list_desc' => "<p>This is a list of bans applied to your IP address. " .
 						"You may be affected by a ban not intended for you, especially if on a public computer, network, or using a VPN, Proxy, or Tor. " .
 						"Some bans are applied to entire ranges and will be denoted with a <a href=\"https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing\">CIDR integer</a>.</p>" .
@@ -119,6 +121,19 @@ return [
 		'ban_global' => "All Boards",
 		
 		'appeal_open' => "Appeals Open",
+		
+		'ban_review' => [
+			'banned_from' => "You are banned from /:board_uri/.",
+			'banned_all'  => "You are banned from <strong>all boards</strong>.",
+			'no_reason'   => "No reason given.",
+			'expires_at'  => "This ban was placed at :start and expires at :end, which is :diff.",
+			'expires_no'  => "This ban was placed at :start and <strong>never</strong> expires.",
+			'mod'         => "The volunteer who filed your ban was :mod.",
+			'identity'    => "According to our server, your IP is <tt>:ip</tt>",
+			'appeal_now'  => "You may appeal your ban.",
+			'appeal_at'   => "Your ban is too short to appeal and must be waited out.",
+			'appeal_no'   => "Your appeal has been reviewed and denied.",
+		],
 	],
 	
 	'reports'   => [

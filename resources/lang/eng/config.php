@@ -20,6 +20,11 @@ return [
 	
 	
 	'legend' => [
+		'asset'        => [
+			'board_icon'       => "Overboard Icon",
+			'file_deleted'     => "Attachment Deleted",
+			'file_spoiler'     => "Spoiler",
+		],
 		'permissions'   => [
 			'board_controls'   => "Board Controls",
 			'board_images'     => "Images",

@@ -164,7 +164,7 @@ class FileStorage extends Model {
 	 */
 	public function deleteFile()
 	{
-		return unlink($this->getFullPath());
+		return unlink($this->getFullPath()) && unlink($this->getFullPathThumb());
 	}
 	
 	/**
@@ -358,7 +358,11 @@ class FileStorage extends Model {
 		$stock = true;
 		$spoil = $this->isSpoiler();
 		
-		if ($this->isVideo())
+		if ($spoil)
+		{
+			$url = $board->getAssetUrl('file_spoiler');
+		}
+		else if ($this->isVideo())
 		{
 			if ($this->hasThumb())
 			{

@@ -1,7 +1,9 @@
 <?php namespace App;
 
 use App\Support\IP\CIDR as CIDR;
+use App\Contracts\PermissionUser  as PermissionUser;
 use Illuminate\Database\Eloquent\Model;
+use Request;
 
 class Ban extends Model {
 	
@@ -20,12 +22,26 @@ class Ban extends Model {
 	protected $primaryKey = 'ban_id';
 	
 	/**
+	 * Attributes which are automatically sent through a Carbon instance on load.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['created_at', 'updated_at', 'expires_at'];
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['ban_ip', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification'];
+	protected $fillable = ['ban_ip', 'board_uri', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification'];
 	
+	
+	
+	
+	public function board()
+	{
+		return $this->belongsTo('\App\Board', 'board_uri');
+	}
 	
 	public function mod()
 	{
@@ -37,22 +53,21 @@ class Ban extends Model {
 		return $this->belongsTo('\App\Post', 'post_id');
 	}
 	
-	public static function isBanned($ip, $board = null)
+	/**
+	 * Determines if a user can view this ban (as moderator or client).
+	 *
+	 * @param  PermissionUser  $user
+	 * @return boolean
+	 */
+	public function canView(PermissionUser $user)
 	{
-		$board_uri = null;
-		
-		if ($board instanceof Board)
-		{
-			$board_uri = $board->board_uri;
-		}
-		else if ($board != "")
-		{
-			$board_uri = $board;
-		}
-		
-		return static::getBan($ip, $board_uri) ? true : false;
+		return $this->isBanForIP();
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public function getBanIpAttribute()
 	{
 		return new CIDR(inet_ntop($this->ban_ip_start), inet_ntop($this->ban_ip_end));
@@ -108,6 +123,43 @@ class Ban extends Model {
 		return "/cp/banned/global/{$this->ban_id}";
 	}
 	
+	public static function isBanned($ip, $board = null)
+	{
+		$board_uri = null;
+		
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		else if ($board != "")
+		{
+			$board_uri = $board;
+		}
+		
+		return static::getBan($ip, $board_uri) ? true : false;
+	}
+	
+	/**
+	 * Determines if this ban applies to the requesting client.
+	 *
+	 * @param  string  Optional. IP to be checked. Defaults to request IP.
+	 * @return boolean  If the IP is within he range of this ban.
+	 */
+	public function isBanForIP($ip = null)
+	{
+		if (is_null($ip))
+		{
+			$ip = Request::ip();
+		}
+		
+		return CIDR::cidr_intersect($ip, $this->ban_ip);
+	}
+	
+	public function isExpired()
+	{
+		return !is_null($this->expired_at) && $this->expired_at->isPast();
+	}
+	
 	public function scopeBoard($query, $board_uri = null)
 	{
 		if ($board_uri === false)
@@ -132,7 +184,7 @@ class Ban extends Model {
 		return $query
 			->where(function($query) {
 				$query
-					->where('expires_at', '>', $this->freshTimestamp()->timestamp)
+					->where('expires_at', '>', $this->freshTimestamp())
 					->orWhere('seen', 0);
 			});
 	}

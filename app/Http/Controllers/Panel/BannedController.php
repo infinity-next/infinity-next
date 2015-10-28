@@ -31,7 +31,7 @@ class BannedController extends PanelController {
 	
 	public function getIndex(Board $board)
 	{
-		$bans = Ban::getBans(Request::ip());
+		$bans = Ban::getBans(Request::ip(), false);
 		
 		return $this->view(static::VIEW_BANNED, [
 			'bans' => $bans,
@@ -40,6 +40,12 @@ class BannedController extends PanelController {
 	
 	public function getBan(Board $board, Ban $ban)
 	{
+		if (!$ban->canView($this->user))
+		{
+			return abort(403);
+		}
+		
+		$ban->setRelation('board', $board);
 		
 		return $this->view(static::VIEW_BAN, [
 			'board' => $board,

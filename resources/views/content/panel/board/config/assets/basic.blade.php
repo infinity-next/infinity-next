@@ -6,19 +6,19 @@
 	'id'     => "icon-upload",
 	'class'  => "form-asset grid-33",
 ]) !!}
-	<fieldset class="form-fields group-new_board_{{$asset}}">
-		<legend class="form-legend">{{ trans("config.legend.board_{$asset}") }}</legend>
+	<fieldset class="form-fields group-new_{{$asset}}">
+		<legend class="form-legend">{{ trans("config.legend.asset.{$asset}") }}</legend>
 		
 		<figure class="form-asset">
 			<img class="form-asset-img" src="{{ $board->getAssetURL($asset) }}" />
-			
-			<figcaption class="form-asset-replace">
-				<input class="field-control" id="new_board_icon" name="new_board_{{$asset}" type="file" />
-			</figcaption>
 		</figure>
+		
+		<div class="form-asset-replace">
+			<input class="field-control" id="new_{{$asset}}" name="new_{{$asset}}" type="file" />
+		</div>
 	</fieldset>
 	
-	{!! Form::hidden('asset_type', 'board_' . $asset) !!}
+	{!! Form::hidden('asset_type', $asset) !!}
 	
 	<div class="field row-submit">
 		{!! Form::button(
@@ -30,7 +30,9 @@
 		{!! Form::button(
 			trans("config.delete"),
 			[
-				'type'      => "delete",
+				'type'      => "submit",
+				'name'      => "delete",
+				'value'     => 1,
 				'class'     => "field-delete",
 		]) !!}
 	</div>

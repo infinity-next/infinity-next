@@ -38,8 +38,9 @@ class BoardAsset extends Model implements PseudoEnumContract {
 	protected $enum = [
 		'asset_type' => [
 			'board_banner',
+			'board_banned',
+			'board_icon',
 			'file_deleted',
-			'file_none',
 			'file_spoiler',
 		],
 	];
@@ -57,11 +58,11 @@ class BoardAsset extends Model implements PseudoEnumContract {
 	
 	public function asHTML()
 	{
-		return "<img src=\"{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-banner\" />";
+		return "<img src=\"{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-asset\" />";
 	}
 	
 	public function getURL()
 	{
-		return "/{$this->board_uri}/file/{$this->storage->hash}/banner.png";
+		return url("{$this->board_uri}/file/{$this->storage->hash}/banner.png");
 	}
 }

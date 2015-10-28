@@ -77,6 +77,7 @@ class ConfigController extends PanelController {
 		
 		return $this->view(static::VIEW_CONFIG, [
 			'board'   => $board,
+			'banned'  => $board->getBannedImages(),
 			'banners' => $board->getBanners(),
 			
 			'tab'     => "assets",
@@ -95,32 +96,60 @@ class ConfigController extends PanelController {
 			return abort(403);
 		}
 		
-		$banners = $board->getBanners();
-		$input   = Input::all();
+		$assetsToKeep = Input::get('asset', []);
+		$assetType    = Input::get('patching', false);
+		$assets       = $board->assets()->where('asset_type', $assetType)->get();
 		
-		foreach ($banners as $bannerIndex => $banner)
+		foreach ($assets as $assetIndex => $asset)
 		{
-			if (!isset($input['banner'][$banner->board_asset_id]) || !$input['banner'][$banner->board_asset_id])
+			if (!isset($assetsToKeep[$asset->board_asset_id]) || !$assetsToKeep[$asset->board_asset_id])
 			{
-				$storage = $banner->storage;
-				
-				$banner->forceDelete();
-				unset($banners[$bannerIndex]);
-				
-				$storage->challengeExistence();
+				$asset->delete();
+				$asset->storage->challengeExistence();
 			}
 		}
 		
-		return $this->view(static::VIEW_CONFIG, [
-			'board'   => $board,
-			'banners' => $banners,
-			
-			'tab'     => "assets",
-		]);
+		return $this->getAssets($board);
 	}
 	
 	/**
-	 * Display existing assets.
+	 * Clear singular board assets.
+	 *
+	 * @return Response
+	 */
+	public function deleteAssets(Request $request, Board $board)
+	{
+		$input     = Input::all();
+		$validator = Validator::make($input, [
+			'asset_type' => [
+				"required",
+				"in:board_banner,board_icon,file_deleted,file_spoiler",
+			],
+		]);
+		
+		if (!$validator->passes())
+		{
+			return redirect()
+				->back()
+				->withErrors($validator->errors());
+		}
+		
+		$assets = $board->assets()
+			->with('storage')
+			->where('asset_type', $input['asset_type'])
+			->get();
+		
+		foreach ($assets as $asset)
+		{
+			$asset->delete();
+			$asset->storage->challengeExistence();
+		}
+		
+		return $this->getAssets($board);
+	}
+	
+	/**
+	 * Add new assets.
 	 *
 	 * @return Response
 	 */
@@ -131,17 +160,48 @@ class ConfigController extends PanelController {
 			return abort(403);
 		}
 		
+		if (!!Input::get('delete', false))
+		{
+			return $this->deleteAssets($request, $board);
+		}
+		
 		$input     = Input::all();
+		$assetType = Input::get('asset_type', false);
 		$validator = Validator::make($input, [
 			'asset_type' => [
 				"required",
-				"in:board_banner,file_deleted,file_none,file_spoiler",
+				"in:board_banner,board_banned,board_icon,file_deleted,file_spoiler",
+			],
+			
+			'new_board_banned' => [
+				"required_if:asset_type,board_banned",
+				"image",
+				"image_size:100-500",
 			],
 			
 			'new_board_banner' => [
 				"required_if:asset_type,board_banner",
 				"image",
 				"image_size:<=300,<=100",
+			],
+			
+			'new_board_icon' => [
+				"required_if:asset_type,board_icon",
+				"image",
+				"image_aspect:1",
+				"image_size:64,64",
+			],
+			
+			'new_file_deleted' => [
+				"required_if:asset_type,file_deleted",
+				"image",
+				"image_size:100-500",
+			],
+			
+			'new_file_spoiler' => [
+				"required_if:asset_type,file_spoiler",
+				"image",
+				"image_size:100-500",
 			],
 		]);
 		
@@ -153,25 +213,44 @@ class ConfigController extends PanelController {
 		}
 		
 		// Fetch the asset.
-		$upload = Input::file("new_{$input['asset_type']}");
+		$upload    = Input::file("new_{$input['asset_type']}");
+		$multiples = $assetType == "board_banner" || $assetType == "board_banned";
 		
 		if(file_exists($upload->getPathname()))
 		{
 			$storage     = FileStorage::storeUpload($upload);
 			
-			$asset       = new BoardAsset();
-			$asset->asset_type = "board_banner";
-			$asset->board_uri  = $board->board_uri;
-			$asset->file_id    = $storage->file_id;
-			$asset->save();
+			if ($storage->exists)
+			{
+				if (!$multiples)
+				{
+					$assets = $board->assets()
+						->with('storage')
+						->where('asset_type', $input['asset_type'])
+						->get();
+					
+					foreach ($assets as $asset)
+					{
+						$asset->delete();
+						$asset->storage->challengeExistence();
+					}
+				}
+				
+				$asset             = new BoardAsset();
+				$asset->asset_type = $input['asset_type'];
+				$asset->board_uri  = $board->board_uri;
+				$asset->file_id    = $storage->file_id;
+				$asset->save();
+			}
+			else
+			{
+				return redirect()
+					->back()
+					->withErrors([ "validation.custom.file_generic" ]);
+			}
 		}
 		
-		return $this->view(static::VIEW_CONFIG, [
-			'board'   => $board,
-			'banners' => $board->getBanners(),
-			
-			'tab'     => "assets",
-		]);
+		return $this->getAssets($board);
 	}
 	
 	
