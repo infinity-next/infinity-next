@@ -52,7 +52,7 @@
 	</li>
 	@endforeach
 	
-	@if ($thread->reply_to)
+	@if (!$thread->reply_to)
 	@include('widgets.thread-autoupdater')
 	@endif
 </ul>
