@@ -863,6 +863,7 @@ class Post extends Model {
 		
 		return static::where('featured_at', '>=', $oldestPossible)
 			->withEverything()
+			->orderBy('featured_at', 'desc')
 			->first();
 	}
 	
