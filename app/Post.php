@@ -1500,11 +1500,7 @@ class Post extends Model {
 				if (!$this->isBumpless() && !$thread->isBumplocked())
 				{
 					$thread->bumped_last = $this->created_at;
-					// We explicitly set the updated_at to what it is now.
-					// If we didn't, this would change.
-					// We don't want that because it screws up the API and
-					// makes it think the OP post has had its content edited.
-					$thread->updated_at  = $thread->updated_at;
+					$thread->timestamps  = false;
 				}
 				
 				$thread->reply_last  = $this->created_at;

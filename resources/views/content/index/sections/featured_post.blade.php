@@ -3,10 +3,9 @@
 	<div class="smooth-box">
 		<h2>@lang('index.title.featured_post')</h2>
 		
-		@include('content.board.thread', [
-			'board'   => $featured->board,
-			'thread'  => $featured,
-			'op'      => false,
+		@include('content.board.post', [
+			'board' => $featured->board,
+			'post'  => $featured,
 		])
 	</div>
 </section>
