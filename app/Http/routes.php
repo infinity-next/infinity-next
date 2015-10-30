@@ -306,7 +306,7 @@ Route::group([
 			
 			
 			// Routes /board/1 to an index page for a specific pagination point.
-			Route::get('{post_id}', 'BoardController@getIndex');
+			Route::get('{id}', 'BoardController@getIndex');
 			
 			// Get single thread.
 			Route::get('thread/{post_id}', 'BoardController@getThread');
