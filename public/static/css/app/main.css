@@ -119,29 +119,42 @@ a.button {
 		background: #34345C;
 		color: #FFFFFF;
 	}
-		button:disabled,
-		a.button.disabled {
-			background: #ffffff;
-			border: 1px solid #ccc;
-			color: #ccc;
-			cursor: default;
-		}
+	
+	button:disabled,
+	a.button.disabled {
+		background: #ffffff;
+		border: 1px solid #ccc;
+		color: #ccc;
+		cursor: default;
+	}
 		button:disabled:hover,
 		a.button.disabled:hover {
 			background: #ffffff;
 			border: 1px solid #ccc;
 			color: #ccc;
 		}
+	
 	button.field-delete,
+	button.reject,
 	button.delete {
 		border-color: #5C3434;
 		color: #5C3434;
 	}
-	button.field-delete:hover,
-	button.delete:hover {
-		background: #5C3434;
-		color: #FFF;
+		button.field-delete:hover,
+		button.reject:hover,
+		button.delete:hover {
+			background: #5C3434;
+			color: #FFF;
+		}
+	
+	button.approve {
+		border-color: #4F9E2E;
+		color: #4F9E2E;
 	}
+		button.approve:hover {
+			background: #4F9E2E;
+			color: #FFF;
+		}
 
 input,
 textarea,
@@ -870,6 +883,25 @@ figure.error {
 	#frontpage p {
 		margin: 0 0 1em 0;
 	}
+	
+	/* Featured */
+	#site-featured-post {
+		margin-bottom: 1em;
+	}
+		#site-featured-post .smooth-box {
+			padding: 0;
+		}
+		#site-featured-post h2 {
+			padding: 1em 1em 0 1em;
+		}
+		#site-featured-post .post-container {
+			background: none;
+			border-right: none;
+			border-bottom: none;
+			border-left: none;
+			width: 100%;
+			margin: 0;
+		}
 	
 	/* Activity */
 	#site-recent-images {
@@ -3218,6 +3250,40 @@ nav.cp-inner {
 				padding: 0 0 0.5em 0;
 				border-bottom: 1px solid rgba(0,0,0,0.2);
 			}
+
+/* Ban Appeals */
+.ban-appeals {
+	display: block;
+	clear: both;
+}
+	.ban-appeal {
+		padding: 1em 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	}
+	.ban-appeal:last-child {
+		border-bottom: none;
+	}
+		#submit-ban-appeal,
+		.ban-appeal-container {
+			display: inline-block;
+			position: relative;
+			overflow: hidden;
+			margin: 0;
+			padding: 1em;
+			max-width: 100%;
+			
+			background: #fff;
+			border-radius: 4px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+			border-color: rgba(0, 0, 0, 0.2);
+			border-width: 1px;
+			border-style: solid;
+		}
+		
+		.ban-appeal-submit {
+			text-align: right;
+		}
 
 #payment-form {
 	margin: 0 0 1em 0;

@@ -37,6 +37,10 @@
 				
 				<ul class="cp-linkitems">
 					<li class="cp-linkitem">
+						<a class="linkitem-name" href="{!! url('cp/boards/appeals') !!}">@lang('nav.panel.secondary.board.appeals')</a>
+					</li>
+					
+					<li class="cp-linkitem">
 						<a class="linkitem-name" href="{!! url('cp/boards/reports') !!}">@lang('nav.panel.secondary.board.reports')</a>
 					</li>
 				</ul>

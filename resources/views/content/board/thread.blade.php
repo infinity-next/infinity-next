@@ -36,7 +36,7 @@
 --}}
 @if ($op === $thread)
 <ul class="thread-replies">
-	@if ($thread->reply_count > count($thread->replies) && !$reply_to)
+	@if ($thread->reply_count > count($thread->replies) && !$thread->reply_to)
 	<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
 	@endif
 	
@@ -47,13 +47,12 @@
 				'board'    => $board,
 				'thread'   => $reply,
 				'op'       => $op,
-				'reply_to' => $reply_to,
 			])
 		</article>
 	</li>
 	@endforeach
 	
-	@if ($reply_to)
+	@if ($thread->reply_to)
 	@include('widgets.thread-autoupdater')
 	@endif
 </ul>

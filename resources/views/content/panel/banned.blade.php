@@ -7,7 +7,7 @@
 		
 		<figure class="error-figure">
 			<img src="{{ asset("static/img/errors/banned.gif") }}" class="error-image" />
-			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/kr0npr1nz">Ilya Kuvshinov @kr0npr1nz</a></figcaption>
+			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/Kuvshinov_Ilya">Ilya Kuvshinov</a></figcaption>
 		</figure>
 		
 		@lang('panel.bans.ban_list_desc')
@@ -28,7 +28,7 @@
 				<tr>
 					<td>@if (is_null($ban->board_uri))<strong>@lang('panel.bans.ban_global')</strong>@else/{{$ban->board_uri}}/@endif</td>
 					<td>{{ $ban->ban_ip }}</td>
-					<td><a href="{!! $ban->getAppealUrl() !!}">@lang('panel.bans.appeal_open')</a></td>
+					<td>@if ($ban->canAppeal())<a href="{!! $ban->getAppealUrl() !!}">@lang('panel.bans.appeal_open')</a>@else @lang('panel.bans.appeal_closed') @endif</td>
 					<td>{!! $ban->mod->getUsernameHTML() !!}</td>
 					<td>{{ $ban->created_at }}</td>
 					<td>{{ $ban->expires_at }}</td>

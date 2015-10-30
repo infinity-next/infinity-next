@@ -63,7 +63,7 @@ class Ban extends Model {
 	 */
 	public function canAppeal()
 	{
-		return !$this->getAppeal();
+		return is_null($this->getAppeal());
 	}
 	
 	/**
@@ -87,17 +87,35 @@ class Ban extends Model {
 	}
 	
 	/**
+	 * Fetches the last appeal for this IP on this ban.
+	 *
+	 * @param  string  $ip  Optional. Human-readable IP. Defaults to the request.
+	 * @return \App\BanAppeal
+	 */
+	public function getAppeal($ip = null)
+	{
+		if (is_null($ip))
+		{
+			$ip = Request::ip();
+		}
+		
+		$ip = inet_pton($ip);
+		
+		return $this->appeals->where('appeal_ip', $ip)->last();
+	}
+	
+	/**
 	 * Fetches the latest applicable ban.
 	 *
 	 * @param  string  $ip  Human-readable IP.
 	 * @param  string|null|false  (Board|Global Only|Both)
-	 * @return Ban
+	 * @return \App\Ban
 	 */
 	public static function getBan($ip, $board_uri = null)
 	{
 		return Ban::ipString($ip)
 			->board($board_uri)
-			->current()
+			->whereActive()
 			->orderBy('board_uri', 'desc') // Prioritizes local over global bans.
 			->take(1)
 			->get()
@@ -115,7 +133,7 @@ class Ban extends Model {
 	{
 		return Ban::ipString($ip)
 			->board($board_uri)
-			->current()
+			->whereActive()
 			->orderBy('board_uri', 'desc') // Prioritizes local over global bans.
 			->with('mod')
 			->get();
@@ -170,7 +188,7 @@ class Ban extends Model {
 	
 	public function isExpired()
 	{
-		return !is_null($this->expired_at) && $this->expired_at->isPast();
+		return !is_null($this->expires_at) && $this->expires_at->isPast();
 	}
 	
 	public function scopeBoard($query, $board_uri = null)
@@ -192,16 +210,6 @@ class Ban extends Model {
 			});
 	}
 	
-	public function scopeCurrent($query)
-	{
-		return $query
-			->where(function($query) {
-				$query
-					->where('expires_at', '>', $this->freshTimestamp())
-					->orWhere('seen', 0);
-			});
-	}
-	
 	public function scopeIpString($query, $ip)
 	{
 		return $query->ipBinary(inet_pton($ip));
@@ -214,4 +222,23 @@ class Ban extends Model {
 				$query->where('ban_ip_end',   '>=', $ip);
 			});
 	}
+	
+	public function scopeWhereActive($query)
+	{
+		return $query->where(function($query) {
+				$query->whereCurrent();
+				$query->orWhere('seen', false);
+			});
+	}
+	
+	public function scopeWhereCurrent($query)
+	{
+		return $query->where('expires_at', '>', $this->freshTimestamp());
+	}
+	
+	public function willExpire()
+	{
+		return !is_null($this->expires_at);
+	}
+	
 }

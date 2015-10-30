@@ -105,6 +105,14 @@
 				</ul>
 				
 				<ul class="post-actions">
+					@if ($user->canFeatureGlobally($post))
+					@set('postActions', true)
+						<li class="post-action">
+							<a class="post-action-link action-link-feature-global" href="{!! $post->url("feature/global") !!}">@lang('board.action.feature_global')</a>
+						</li>
+						
+					@endif
+					
 					@if ($user->canDeleteGlobally())
 					@set('postActions', true)
 						<li class="post-action">

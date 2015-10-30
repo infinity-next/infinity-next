@@ -587,6 +587,22 @@ class PostController extends Controller {
 	}
 	
 	/**
+	 * Features a post.
+	 */
+	public function anyFeature(Request $request, Board $board, Post $post, $global = false)
+	{
+		if (!$this->user->canFeatureGlobally($post))
+		{
+			return abort(403);
+		}
+		
+		$post->featured_at = \Carbon\Carbon::now();
+		$post->save();
+		
+		return redirect("/");
+	}
+	
+	/**
 	 * Locks a thread.
 	 */
 	public function anyLock(Request $request, Board $board, Post $post, $lock = true)

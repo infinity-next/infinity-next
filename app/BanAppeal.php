@@ -1,9 +1,11 @@
 <?php namespace App;
 
+use App\Contracts\PermissionUser as PermissionUser;
 use App\Support\IP\CIDR as CIDR;
+use Illuminate\Database\Eloquent\Model;
 use Request;
 
-class Ban extends Model {
+class BanAppeal extends Model {
 	
 	/**
 	 * The database table used by the model.
@@ -39,6 +41,22 @@ class Ban extends Model {
 		return $this->belongsTo('\App\Ban', 'ban_id');
 	}
 	
+	/**
+	 * Returns any appeals that are open which this user can manage.
+	 *
+	 * @return Collection  of \App\BanAppeal
+	 */
+	public static function getAppealsFor(PermissionUser $user)
+	{
+		return static::whereHas('ban', function($query) use ($user) {
+				$query->whereActive();
+				$query->whereIn('board_uri', $user->canManageAppealsIn());
+			})
+			->with('ban')
+			->whereOpen()
+			->get();
+	}
+	
 	public function scopeIpString($query, $ip)
 	{
 		return $query->ipBinary(inet_pton($ip));
@@ -48,4 +66,10 @@ class Ban extends Model {
 	{
 		return $query->where('appeal_ip', $ip);
 	}
+	
+	public function scopeWhereOpen($query)
+	{
+		return $query->whereNull('approved');
+	}
+	
 }

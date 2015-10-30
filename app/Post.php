@@ -58,6 +58,7 @@ class Post extends Model {
 		'stickied_at',
 		'bumplocked_at',
 		'locked_at',
+		'featured_at',
 		
 		'author_ip',
 		'author_ip_nulled_at',
@@ -811,22 +812,6 @@ class Post extends Model {
 	}
 	
 	/**
-	 * Returns the post model using the board's URI and the post's local board ID.
-	 *
-	 * @param  string  $board_uri
-	 * @param  integer  $board_id
-	 * @return \App\Post
-	 */
-	public static function getPostForBoard($board_uri, $board_id)
-	{
-		return static::where([
-				'board_uri' => $board_uri,
-				'board_id' => $board_id,
-			])
-			->first();
-	}
-	
-	/**
 	 * Returns the last post made by this user across the entire site.
 	 *
 	 * @param  string $ip
@@ -864,6 +849,37 @@ class Post extends Model {
 		}
 		
 		return 1;
+	}
+	
+	/**
+	 * Returns the post model for the most recently featured post.
+	 *
+	 * @param  int  $dayRange  Optional. Number of days at most that the last most featured post can be in. Defaults 3.
+	 * @return \App\Post
+	 */
+	public static function getPostFeatured($dayRange = 3)
+	{
+		$oldestPossible = \Carbon\Carbon::now()->subDays($dayRange);
+		
+		return static::where('featured_at', '>=', $oldestPossible)
+			->withEverything()
+			->first();
+	}
+	
+	/**
+	 * Returns the post model using the board's URI and the post's local board ID.
+	 *
+	 * @param  string  $board_uri
+	 * @param  integer  $board_id
+	 * @return \App\Post
+	 */
+	public static function getPostForBoard($board_uri, $board_id)
+	{
+		return static::where([
+				'board_uri' => $board_uri,
+				'board_id' => $board_id,
+			])
+			->first();
 	}
 	
 	/**

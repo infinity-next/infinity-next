@@ -69,6 +69,7 @@ Route::group([
 		], function()
 		{
 			Route::get('board/{board}/{ban}', 'BannedController@getBan');
+			Route::put('board/{board}/{ban}', 'BannedController@putAppeal');
 			Route::get('global/{ban}',        'BannedController@getBan');
 			Route::get('board/{board}',       'BannedController@getBoardIndex');
 			Route::get('global',              'BannedController@getGlobalIndex');
@@ -91,6 +92,7 @@ Route::group([
 			Route::put('create', 'BoardsController@putCreate');
 			
 			
+			Route::controller('appeals', 'AppealsController');
 			Route::controller('reports', 'ReportsController');
 			
 			Route::group([

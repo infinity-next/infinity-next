@@ -95,8 +95,14 @@ ib.widget("gnav", function(window, $, undefined) {
 					.on( 'build.ib-gnav', widget.options.selector['favorites'],   widget.events.favoritesBuild )
 				;
 				
-				$(widget.options.selector['nav-link'], widget.$widget)
-					.attr('data-no-instant', "true");
+				$(widget.options.selector['nav-link'], widget.$widget).each(function() {
+					var $link = $(this);
+					
+					if ($("#flyout-" + $link.attr('data-item')).length > 0)
+					{
+						$link.attr('data-no-instant', "true");
+					}
+				});
 				
 				widget.build.favorites();
 			}

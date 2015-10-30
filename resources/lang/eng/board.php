@@ -138,6 +138,7 @@ return [
 		'delete'            => "Delete",
 		'delete_board'      => "Delete Board-wide",
 		'delete_global'     => "Delete Site-wide",
+		'feature_global'    => "Feature Site-wide",
 		'lock'              => "Lock",
 		'unlock'            => "Unlock",
 		'edit'              => "Edit",

@@ -21,7 +21,7 @@ class CreateBanAppeals extends Migration
 			$table->text('appeal_text');
 			$table->boolean('seen')->default(false);
 			$table->boolean('approved')->nullable()->default(null);
-			$table->integer('mod_id')->unsigned();
+			$table->integer('mod_id')->unsigned()->nullable();
 			
 			$table->foreign('ban_id')
 				->references('ban_id')->on('bans')

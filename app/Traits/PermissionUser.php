@@ -434,6 +434,17 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user feature a post globally?
+	 *
+	 * @return boolean
+	 */
+	public function canFeatureGlobally(Post $post)
+	{
+		return $this->can('sys.config');
+	}
+	
+	
+	/**
 	 * Can this user lock this thread to replies?
 	 *
 	 * @return boolean
@@ -477,6 +488,26 @@ trait PermissionUser {
 	public function canPostReply(Board $board = null)
 	{
 		return $this->can('board.post.create.reply', $board);
+	}
+	
+	/**
+	 * Can this user manage appeals for any board?
+	 *
+	 * @return boolean
+	 */
+	public function canManageAppealsAny()
+	{
+		return $this->canAny('board.user.unban');
+	}
+	
+	/**
+	 * Returns a list of boards that this user can manage ban appeals in.
+	 *
+	 * @return array  of board URis.
+	 */
+	public function canManageAppealsIn()
+	{
+		return $this->canInBoards('board.user.unban');
 	}
 	
 	/**

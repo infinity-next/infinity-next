@@ -71,6 +71,7 @@ return [
 				'staff'           => "Staff",
 				
 				'discipline'      => "Discipline",
+				'appeals'         => "Appeals",
 				'reports'         => "Reports",
 			],
 			

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Post;
 use App\Http\Controllers\Board\BoardStats;
 use Illuminate\Support\Facades\View;
 
@@ -32,8 +33,11 @@ class WelcomeController extends Controller {
 	 */
 	public function getIndex()
 	{
+		$featured = Post::getPostFeatured();
+		
 		return $this->view(static::VIEW_INDEX, [
-			'stats' => $this->boardStats(),
+			'featured' => $featured,
+			'stats'    => $this->boardStats(),
 		]);
 	}
 	

@@ -13,6 +13,9 @@ return [
 	
 	'authed_as' => "Hello, :name",
 	
+	'approve'   => "Approve",
+	'reject'    => "Reject",
+	
 	'error' => [
 		'auth'  => [
 			'csrf_token' => "The control panel requires cookies to be enabled.",
@@ -27,6 +30,7 @@ return [
 	],
 	
 	'title' => [
+		'appeals'            => "Ban Appeals",
 		'board'              => "Configuration for /:board_uri/",
 		'site'               => "Site Configuration",
 		'board_create'       => "Create a Board",
@@ -100,6 +104,10 @@ return [
 		'select_register_form' => "Register new account for staff member",
 	],
 	
+	'appeals'   => [
+		'empty' => "There are no pending appeals.",
+	],
+	
 	'bans'      => [
 		'ban_list_empty' => "No active bans for your IP address can be found on any board.",
 		
@@ -110,12 +118,15 @@ return [
 						"If you can, a link will be visible in the ban row that goes to the appeals page.</p>",
 		
 		'table' => [
-			'board'      => "Banned In",
-			'ban_ip'     => "Banned IP",
-			'ban_appeal' => "Appeal Status",
-			'ban_user'   => "Moderator",
-			'ban_placed' => "Placed On",
-			'ban_expire' => "Expires At",
+			'board'          => "Banned In",
+			'ban_ip'         => "Banned IP",
+			'ban_appeal'     => "Appeal Status",
+			'ban_user'       => "Moderator", 
+			'ban_placed'     => "Placed On",  // Placed On .. 19.12.2015
+			'ban_expire'     => "Expires At", // Expires At .. 19.12.2015
+			'ban_placed_ago' => "Placed",     // Placed .. 3 hours ago
+			'ban_expire_in'  => "Expires In", // Expires In .. 3 hours from now
+			'appeal_text'    => "Appeal",
 		],
 		
 		'ban_global' => "All Boards",
@@ -123,16 +134,23 @@ return [
 		'appeal_open' => "Appeals Open",
 		
 		'ban_review' => [
-			'banned_from' => "You are banned from /:board_uri/.",
-			'banned_all'  => "You are banned from <strong>all boards</strong>.",
-			'no_reason'   => "No reason given.",
-			'expires_at'  => "This ban was placed at :start and expires at :end, which is :diff.",
-			'expires_no'  => "This ban was placed at :start and <strong>never</strong> expires.",
-			'mod'         => "The volunteer who filed your ban was :mod.",
-			'identity'    => "According to our server, your IP is <tt>:ip</tt>",
-			'appeal_now'  => "You may appeal your ban.",
-			'appeal_at'   => "Your ban is too short to appeal and must be waited out.",
-			'appeal_no'   => "Your appeal has been reviewed and denied.",
+			'expired'        => "This ban is expired.",
+			'seeing'         => "Now that you have seen this ban you can continue posting.",
+			
+			'banned_from'    => "You are banned from /:board_uri/.",
+			'banned_all'     => "You are banned from <strong>all boards</strong>.",
+			'no_reason'      => "No reason given.",
+			'expires_at'     => "This ban was placed at :start and expires at :end, which is :diff.",
+			'expires_no'     => "This ban was placed at :start and <strong>never</strong> expires.",
+			'mod'            => "The volunteer who filed your ban was :mod.",
+			'identity'       => "According to our server, your IP is <tt>:ip</tt>",
+			'appeal_now'     => "You may appeal your ban.",
+			'appeal_pending' => "Your appeal was submitted on :date (:diff) and is pending approval.",
+			'appeal_at'      => "Your ban is too short to appeal and must be waited out.",
+			'appeal_no'      => "Your appeal has been reviewed and denied.",
+			'appeal_yes'     => "Your appeal has been reviewed and granted.",
+			
+			'appeal_submit'  => "Submit Appeal",
 		],
 	],
 	
