@@ -6,7 +6,7 @@
 		@include('content.board.thread', [
 			'board'   => $featured->board,
 			'thread'  => $featured,
-			'op'      => $featured,
+			'op'      => false,
 		])
 	</div>
 </section>
