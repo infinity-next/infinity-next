@@ -54,7 +54,7 @@ header nav.boardlist {
 	border-color: #D9BFB7;
 }
 	main.index-threaded .thread-item {
-		border-color: #D9BFB7;
+		/* border-color: #D9BFB7; */
 	}
 	
 	.post-container.op-container {

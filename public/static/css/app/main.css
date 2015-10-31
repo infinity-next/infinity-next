@@ -2214,8 +2214,7 @@ main.index-threaded {
 		}
 		
 		main.index-threaded .thread-item {
-			/* Fuck you. */
-			border-top: 1px solid #B7C5D9;
+			/* border-top: 1px solid #B7C5D9; */
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;

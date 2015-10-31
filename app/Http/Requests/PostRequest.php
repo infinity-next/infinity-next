@@ -120,7 +120,7 @@ class PostRequest extends Request {
 		
 		## TODO ##
 		// Separate these permsisions.
-		return $this->canPostThread() || $this->canPostReply();
+		return $this->user->canPostThread() || $this->user->canPostReply();
 	}
 	
 	/**
