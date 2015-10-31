@@ -5,7 +5,7 @@
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
  *    10 - Post action links.
  *     5 - Post attachment.
- *     1 - Global Footer
+ *     1 - Global Footerp
  *     0 - Board Sidebar
  */
 
@@ -2311,6 +2311,7 @@ main.index-threaded {
 			.post-content {
 				padding: 0.75em;
 				padding-bottom: 0;
+				overflow-x:scroll;
 			}
 			.post-content::after {
 				content: ' ';
