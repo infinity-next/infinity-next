@@ -141,7 +141,7 @@ class Ban extends Model {
 	
 	public function getRedirectUrl()
 	{
-		return "/cp/banned";
+		return "/cp/banned/" . ($this->isGlobal() ? "global" : "board/{$this->board_uri}") . "/{$this->ban_id}";
 	}
 	
 	public function getAppealUrl()
@@ -191,6 +191,16 @@ class Ban extends Model {
 		return !is_null($this->expires_at) && $this->expires_at->isPast();
 	}
 	
+	/**
+	 * Returns if this ban applies to all boards.
+	 *
+	 * @return boolean
+	 */
+	public function isGlobal()
+	{
+		return is_null($this->board_uri);
+	}
+	
 	public function scopeBoard($query, $board_uri = null)
 	{
 		if ($board_uri === false)
@@ -225,15 +235,33 @@ class Ban extends Model {
 	
 	public function scopeWhereActive($query)
 	{
-		return $query->where(function($query) {
+		return $query
+			->where(function($query) {
 				$query->whereCurrent();
 				$query->orWhere('seen', false);
-			});
+			})
+			->whereUnappealed();
+	}
+	
+	public function scopeWhereAppealed($query)
+	{
+		return $query->whereHas('appeals', function($query)
+		{
+			$query->where('approved', true);
+		});
 	}
 	
 	public function scopeWhereCurrent($query)
 	{
 		return $query->where('expires_at', '>', $this->freshTimestamp());
+	}
+	
+	public function scopeWhereUnappealed($query)
+	{
+		return $query->whereDoesntHave('appeals', function($query)
+		{
+			$query->where('approved', true);
+		});
 	}
 	
 	public function willExpire()

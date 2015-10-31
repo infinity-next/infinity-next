@@ -53,6 +53,10 @@ header nav.boardlist {
 	background: #f0e0d6;
 	border-color: #D9BFB7;
 }
+	main.index-threaded .thread-item {
+		border-color: #D9BFB7;
+	}
+	
 	.post-container.op-container {
 		border-top: 0.5em solid rgba(255,0,0,0.5);
 	}

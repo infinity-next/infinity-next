@@ -28,7 +28,7 @@
 				<tr>
 					<td>@if (is_null($ban->board_uri))<strong>@lang('panel.bans.ban_global')</strong>@else/{{$ban->board_uri}}/@endif</td>
 					<td>{{ $ban->ban_ip }}</td>
-					<td>@if ($ban->canAppeal())<a href="{!! $ban->getAppealUrl() !!}">@lang('panel.bans.appeal_open')</a>@else @lang('panel.bans.appeal_closed') @endif</td>
+					<td><a href="{!! $ban->getAppealUrl() !!}">@lang( $ban->canAppeal() ? 'panel.bans.appeal_open' : 'panel.bans.appeal_closed')</a></td>
 					<td>{!! $ban->mod->getUsernameHTML() !!}</td>
 					<td>{{ $ban->created_at }}</td>
 					<td>{{ $ban->expires_at }}</td>

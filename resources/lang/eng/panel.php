@@ -131,7 +131,8 @@ return [
 		
 		'ban_global' => "All Boards",
 		
-		'appeal_open' => "Appeals Open",
+		'appeal_open'   => "Appeals Open",
+		'appeal_closed' => "Appeals Closed",
 		
 		'ban_review' => [
 			'expired'        => "This ban is expired.",

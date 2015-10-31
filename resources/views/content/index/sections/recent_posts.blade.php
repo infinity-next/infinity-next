@@ -1,6 +1,6 @@
 <section id="site-recent-posts" class="grid-50">
 	<div class="smooth-box">
-		<h2>Recent Posts</h2>
+		<h2>@lang('index.title.recent_posts')</h2>
 		<div class="grid-container">
 			<ul class="recent-posts">
 				@foreach (App\Post::getRecentPosts(16, false) as $post)

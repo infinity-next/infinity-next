@@ -491,6 +491,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user manage appeals for a specific board or globally?
+	 *
+	 * @return boolean
+	 */
+	public function canManageAppeals(Board $board = null)
+	{
+		return $this->can('board.user.unban', $board);
+	}
+	
+	/**
 	 * Can this user manage appeals for any board?
 	 *
 	 * @return boolean

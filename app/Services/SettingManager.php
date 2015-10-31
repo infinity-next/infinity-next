@@ -103,10 +103,10 @@ class SettingManager {
 	public function getNavigationPrimary()
 	{
 		$nav = [
-			'home'      => url('/'),
-			'boards'    => url('boards.html'),
+			'home'         => url('/'),
+			'boards'       => url('boards.html'),
 			'recent_posts' => url('overboard.html'),
-			'panel'     => url('cp'),
+			'panel'        => url('cp'),
 		];
 		
 		
@@ -144,25 +144,28 @@ class SettingManager {
 	{
 		if ($this->get('boardListShow', false))
 		{
-			$popularBoards = Board::where('posts_total', '>', 0)
-				->wherePublic()
-				->select('board_uri', 'title')
-				->orderBy('posts_total', 'desc')
-				->take(20)
-				->get();
-			
-			$recentBoards  = Board::where('posts_total', '>', 0)
-				->wherePublic()
-				->whereNotIn('board_uri', $popularBoards->pluck('board_uri'))
-				->select('board_uri', 'title')
-				->orderBy('last_post_at', 'desc')
-				->take(20)
-				->get();
-			
-			return [
-				'popular_boards' => $popularBoards,
-				'recent_boards'  => $recentBoards,
-			];
+			return Cache::remember('site.gnav.boards', 1, function()
+			{
+				$popularBoards = Board::where('posts_total', '>', 0)
+					->wherePublic()
+					->select('board_uri', 'title')
+					->orderBy('posts_total', 'desc')
+					->take(20)
+					->get();
+				
+				$recentBoards  = Board::where('posts_total', '>', 0)
+					->wherePublic()
+					->whereNotIn('board_uri', $popularBoards->pluck('board_uri'))
+					->select('board_uri', 'title')
+					->orderBy('last_post_at', 'desc')
+					->take(20)
+					->get();
+				
+				return [
+					'popular_boards' => $popularBoards,
+					'recent_boards'  => $recentBoards,
+				];
+			});
 		}
 		
 		return false;

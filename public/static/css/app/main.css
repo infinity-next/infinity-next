@@ -1529,9 +1529,9 @@ nav.gnav {
 		display: block;
 		margin: 0;
 		padding: 0;
-		white-space: nowrap;
 		line-height: 18px;
 		overflow: hidden;
+		height: 40px;
 	}
 	
 	nav.gnav li.gnav-item {
@@ -2180,6 +2180,10 @@ main.index-threaded {
 		margin: -1em 0 0 0;
 	}
 		/* Advertisements for small screens */
+		aside.advertiser img {
+			max-width: 100%;
+			height: auto;
+		}
 		aside.advertiser.top-left {
 			box-sizing: border-box;
 			padding: 0.5em;
@@ -2201,7 +2205,6 @@ main.index-threaded {
 			}
 		
 		aside.advertiser.top-left {
-			display: none;
 		}
 		
 		/* Threads */
@@ -2211,10 +2214,8 @@ main.index-threaded {
 		}
 		
 		main.index-threaded .thread-item {
-			/*
-			border-top:    1px solid rgba(255, 255, 255, 0.2);
-			border-bottom: 1px solid rgba(  0,   0,   0, 0.2);
-			*/
+			/* Fuck you. */
+			border-top: 1px solid #B7C5D9;
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;

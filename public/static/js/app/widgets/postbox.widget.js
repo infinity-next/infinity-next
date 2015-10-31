@@ -341,7 +341,11 @@ ib.widget("postbox", function(window, $, undefined) {
 							}
 						}
 						
-						if (typeof response.errors !== "undefined")
+						if (typeof response.redirect !== "undefined")
+						{
+							window.location = response.redirect;
+						}
+						else if (typeof response.errors !== "undefined")
 						{
 							console.log("Post rejected.");
 							

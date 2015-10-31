@@ -109,9 +109,42 @@ class PostRequest extends Request {
 	 */
 	public function authorize()
 	{
+		// Ban check.
+		$ban = Ban::getBan($this->ip(), $this->board->board_uri);
+		
+		if ($ban)
+		{
+			$this->ban = $ban;
+			return false;
+		}
+		
 		## TODO ##
 		// Separate these permsisions.
 		return $this->canPostThread() || $this->canPostReply();
+	}
+	
+	/**
+	 * Returns the response if authorize() fails.
+	 *
+	 * @return Response
+	 */
+	public function forbiddenResponse()
+	{
+		if ($this->ban)
+		{
+			$url = $this->ban->getRedirectUrl();
+			
+			if ($this->wantsJson())
+			{
+				return response()->json([ 'redirect' => $url ]);
+			}
+			else
+			{
+				return redirect($url);
+			}
+		}
+		
+		return abort(403);
 	}
 	
 	/**
@@ -266,11 +299,6 @@ class PostRequest extends Request {
 	{
 		$redirectURL = $this->getRedirectUrl();
 		
-		if ($this->ban)
-		{
-			return redirect($this->ban->getRedirectUrl());
-		}
-		
 		if ($this->wantsJson())
 		{
 			return response(['errors' => $errors]);
@@ -289,14 +317,8 @@ class PostRequest extends Request {
 	 */
 	public function validate()
 	{
-		$board = $this->board;
-		$user  = $this->user;
-		
-		if (is_null($board) || is_null($user))
-		{
-			return parent::validate();
-		}
-		
+		$board     = $this->board;
+		$user      = $this->user;
 		
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
@@ -342,18 +364,6 @@ class PostRequest extends Request {
 				$this->failedValidation($validator);
 				return;
 			}
-		}
-		
-		// Ban check.
-		$ban = Ban::getBan($this->ip(), $board->board_uri);
-		
-		if ($ban)
-		{
-			$messages = $validator->errors();
-			$messages->add("body", trans("validation.custom.banned"));
-			$this->ban = $ban;
-			$this->failedValidation($validator);
-			return;
 		}
 		
 		// Board-level setting validaiton.
@@ -421,5 +431,11 @@ class PostRequest extends Request {
 		{
 			$this->failedValidation($validator);
 		}
+		else if (!$this->passesAuthorization())
+		{
+			$this->failedAuthorization();
+		}
+		
 	}
+	
 }

@@ -6,6 +6,8 @@ use App\Post;
 use App\Report;
 use App\Http\Controllers\Panel\PanelController;
 
+use Input;
+
 class AppealsController extends PanelController {
 	
 	/*
@@ -40,4 +42,35 @@ class AppealsController extends PanelController {
 		]);
 	}
 	
+	public function patchIndex(Board $board = null)
+	{
+		$approve = true;
+		$appeal  = Input::get('approve', false);
+		
+		if ($appeal === false)
+		{
+			$approve = false;
+			$appeal  = Input::get('reject', false);
+		}
+		if ($appeal === false)
+		{
+			return abort(404);
+		}
+		
+		$appeal = BanAppeal::whereOpen()
+			->with('ban', 'ban.board')
+			->findOrFail((int) $appeal);
+		
+		if (!$this->user->canManageAppeals($appeal->ban->board))
+		{
+			return abort(403);
+		}
+		
+		$appeal->approved = $approve;
+		$appeal->seen     = true;
+		$appeal->mod_id   = $this->user->user_id;
+		$appeal->save();
+		
+		return $this->getIndex($board);
+	}
 }
