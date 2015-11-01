@@ -84,7 +84,6 @@ ib.widget("post", function(window, $, undefined) {
 					return false;
 				}
 				
-				
 				// Test audio.
 				if ($img.is(widget.options.selector['attachment-image-audio']))
 				{
@@ -92,7 +91,8 @@ ib.widget("post", function(window, $, undefined) {
 					var mimetype = $img.attr('data-mime');
 					var fileext  = $link.attr('href').split('.').pop();
 					
-					if ($audio[0].canPlayType(mimetype) || $audio[0].canPlayType("audio/"+fileext))
+					console.log($audio[0].canPlayType(mimetype));
+					if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "")
 					{
 						$link.addClass("attachment-canplay");
 						return true;

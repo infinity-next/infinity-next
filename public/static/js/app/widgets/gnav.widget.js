@@ -114,36 +114,41 @@ ib.widget("gnav", function(window, $, undefined) {
 				{
 					var $favorites = $(widget.options.selector['favorites'], widget.$widget);
 					var $list      = $(widget.options.selector['flyout-list'], $favorites);
-					var favorites  = JSON.parse(localStorage.getItem(widget.options.storage['favorites-data']));
+					var favorites  = localStorage.getItem(widget.options.storage['favorites-data']);
 					
-					$favorites.css('display', favorites.length > 0 ? "block" : "none");
-					$list.children().remove();
-					
-					if (favorites.length)
+					if (typeof favorites === "string")
 					{
-						for (var i = 0; i < favorites.length; ++i)
+						favorites = JSON.parse(favorites);
+						
+						$favorites.css('display', favorites.length > 0 ? "block" : "none");
+						$list.children().remove();
+						
+						if (favorites.length)
 						{
-							var favorite = favorites[i];
-							
-							var $item  = $(widget.options.templates['flyout-item']);
-							var $link  = $(widget.options.templates['flyout-link']);
-							var $uri   = $(widget.options.templates['flyout-uri']);
-							var $title = $(widget.options.templates['flyout-title']);
-							
-							$item
-								.appendTo($list);
-							
-							$link
-								.attr('href', window.app.url+"/"+favorite.board_uri+"/")
-								.appendTo($item);
-							
-							$uri
-								.text("/"+favorite.board_uri+"/")
-								.appendTo($link);
-							
-							$title
-								.text(favorite.title)
-								.appendTo($link);
+							for (var i = 0; i < favorites.length; ++i)
+							{
+								var favorite = favorites[i];
+								
+								var $item  = $(widget.options.templates['flyout-item']);
+								var $link  = $(widget.options.templates['flyout-link']);
+								var $uri   = $(widget.options.templates['flyout-uri']);
+								var $title = $(widget.options.templates['flyout-title']);
+								
+								$item
+									.appendTo($list);
+								
+								$link
+									.attr('href', window.app.url+"/"+favorite.board_uri+"/")
+									.appendTo($item);
+								
+								$uri
+									.text("/"+favorite.board_uri+"/")
+									.appendTo($link);
+								
+								$title
+									.text(favorite.title)
+									.appendTo($link);
+							}
 						}
 					}
 				}

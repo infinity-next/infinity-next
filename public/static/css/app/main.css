@@ -2436,7 +2436,7 @@ main.index-threaded {
 						
 						div.attachment-container {
 							display: inline-block;
-							margin: 0 1em 1em 0;
+							margin: 0 1em 0 0;
 							max-width: 100%;
 						}
 							div.attachment-container.attachment-grow {
@@ -2486,7 +2486,7 @@ main.index-threaded {
 								
 								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
-									padding: 0 4em 0 0;
+									margin: 0 4em 0 0;
 									max-height: 125px;
 									max-width: 125px;
 								}
