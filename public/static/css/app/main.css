@@ -2444,12 +2444,16 @@ main.index-threaded {
 							}
 						
 						a.attachment-link {
-							display: inline;
+							display: block;
 						}
 						a.attachment-link::after {
 							content: ' ';
 							display: block;
+							clear: both;
 						}
+							a.attachment-link.attachment-canplay {
+								margin: 0 15% 0 0px;
+							}
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
@@ -2486,7 +2490,8 @@ main.index-threaded {
 								
 								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
 									position: relative;
-									margin: 0 4em 0 0;
+									padding: 0;
+									margin: 0;
 									max-height: 125px;
 									max-width: 125px;
 								}
@@ -2495,13 +2500,13 @@ main.index-threaded {
 										display: block;
 										height: 100%;
 										width: 100%;
-										padding: 0 0 0 0;
+										padding: 0;
 										pointer-events: none;
 										
 										position: absolute;
 										top: 0;
 										left: auto;
-										right: -2em;
+										right: -15%;
 										bottom: 0;
 										z-index: 1;
 										

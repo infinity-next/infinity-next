@@ -91,7 +91,6 @@ ib.widget("post", function(window, $, undefined) {
 					var mimetype = $img.attr('data-mime');
 					var fileext  = $link.attr('href').split('.').pop();
 					
-					console.log($audio[0].canPlayType(mimetype));
 					if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "")
 					{
 						$link.addClass("attachment-canplay");
