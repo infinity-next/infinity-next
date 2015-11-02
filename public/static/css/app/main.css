@@ -1988,6 +1988,7 @@ section.index-form {
 			.dz-container .dz-preview {
 				position: relative;
 				display: inline-block;
+				text-align: left;
 				vertical-align: top;
 				margin: 0;
 				height: auto;
