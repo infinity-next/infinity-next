@@ -388,7 +388,7 @@ form {
 		width: 100%;
 		
 		font-size: 120%;
-		line-height: 1.4em;
+		line-height: 1.4545em;
 	}
 		span.field-control {
 			border-color: rgba(0,0,0,0);
@@ -1711,116 +1711,139 @@ section.index-form {
 }
 	form.form-post {
 		background: #d6daf0;
-		border: 1px solid #ccc;
-		
-		padding: 0.75em 0.75em 0 0.75em;
-		margin: 0 1em 2em 1em;
-		max-width: 728px;
-		box-sizing: border-box;
-		
 		position: relative;
 		overflow: hidden;
 	}
 		html.no-js form.form-post .post-menu {
 			display: none;
 		}
-		html.js form.form-post .post-menu {
-			position: absolute;
-			top: 0;
-			right: 0;
-			padding: 4px 4px 0 0;
-			margin: -1px -1px 0 0;
-		}
-			html.js li.menu-icon-minimize {
-				visibility: hidden;
-			}
-			
-			html.js form.postbox-maximized li.menu-icon-minimize {
-				visibility: visible;
-			}
-			html.js form.postbox-maximized li.menu-icon-maximize {
-				visibility: hidden;
-			}
-			
-			html.js form.postbox-closed {
-				cursor: pointer;
-			}
-			html.js form.postbox-closed li.menu-icon-close,
-			html.js form.postbox-closed li.menu-icon-minimize,
-			html.js form.postbox-closed li.menu-icon-maximize {
-				visibility: hidden;
-			}
-			html.js form.postbox-closed div.field {
-				display: none !important;
-			}
-			
-			html.js body.responsive  form.form-post.postbox-maximized {
-				box-sizing: border-box;
-				max-width: none;
+			html.js form.form-post .post-menu {
+				position: absolute;
 				top: 0;
-				left: 0;
 				right: 0;
-				bottom: 0;
-				width: 100%;
-				position: fixed;
-				height: 100vh;
+				padding: 4px 4px 0 0;
+				margin: -1px -1px 0 0;
 			}
-			
-			form.form-post .menu-icon {
-				display: inline-block;
-				cursor: pointer;
-				height: 17px;
-				min-width:  17px;
-				border: 1px solid rgba(255,255,255,0.4);
-				background-color: rgba(255,255,255,0.1);
-			}
-				form.form-post .menu-icon:hover {
-					background-color: rgba(255,255,255,0.4);
-					border-color: rgba(255,255,255,0.8);
+				html.js li.menu-icon-minimize {
+					visibility: hidden;
 				}
 				
-				form.form-post .menu-icon .menu-icon-text {
+				html.js form.postbox-maximized li.menu-icon-minimize {
+					visibility: visible;
+				}
+				html.js form.postbox-maximized li.menu-icon-maximize {
+					visibility: hidden;
+				}
+				
+				html.js form.postbox-closed {
+					cursor: pointer;
+				}
+				html.js form.postbox-closed li.menu-icon-close,
+				html.js form.postbox-closed li.menu-icon-minimize,
+				html.js form.postbox-closed li.menu-icon-maximize {
+					visibility: hidden;
+				}
+				html.js form.postbox-closed div.field {
+					display: none !important;
+				}
+				
+				html.js body.responsive  form.form-post.postbox-maximized {
+					box-sizing: border-box;
+					max-width: none;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					width: 100%;
+					position: fixed;
+					height: 100vh;
+				}
+				
+				form.form-post .menu-icon {
 					display: inline-block;
-					display: none;
-					padding: 0 3px;
+					cursor: pointer;
+					height: 17px;
+					min-width:  17px;
+					border: 1px solid rgba(255,255,255,0.4);
+					background-color: rgba(255,255,255,0.1);
 				}
-				form.form-post .menu-icon .menu-icon-button {
-					display: none;
-					display: inline-block;
-					background-image: url('../../img/backgrounds/ui-icons_FFFFFF_256x240.png');
-					height: 16px;
-					width: 16px;
+					form.form-post .menu-icon:hover {
+						background-color: rgba(255,255,255,0.4);
+						border-color: rgba(255,255,255,0.8);
+					}
+					
+					form.form-post .menu-icon .menu-icon-text {
+						display: inline-block;
+						display: none;
+						padding: 0 3px;
+					}
+					form.form-post .menu-icon .menu-icon-button {
+						display: none;
+						display: inline-block;
+						background-image: url('../../img/backgrounds/ui-icons_FFFFFF_256x240.png');
+						height: 16px;
+						width: 16px;
+					}
+					form.form-post .menu-icon.menu-icon-minimize .menu-icon-button {
+						background-position: -64px -128px;
+					}
+					form.form-post .menu-icon.menu-icon-maximize .menu-icon-button {
+						background-position: -32px -128px;
+					}
+					form.form-post .menu-icon.menu-icon-close .menu-icon-button {
+						background-position: -96px -128px;
+					}
+			
+			form.form-post legend.form-legend .fa {
+				display: none;
+				margin: 0 0.25em 0 0;
+			}
+				.mode-reply form.form-post legend.form-legend .fa {
+					display: inline;
 				}
-				form.form-post .menu-icon.menu-icon-minimize .menu-icon-button {
-					background-position: -64px -128px;
-				}
-				form.form-post .menu-icon.menu-icon-maximize .menu-icon-button {
-					background-position: -32px -128px;
-				}
-				form.form-post .menu-icon.menu-icon-close .menu-icon-button {
-					background-position: -96px -128px;
+				.mode-reply form.form-post legend.form-legend {
+					
 				}
 		
-		form.form-post legend.form-legend .fa {
-			display: none;
-			margin: 0 0.25em 0 0;
+		form.form-post fieldset.form-fields {
+			border: 1px solid #ccc;
+			padding: 0.75em 0.75em 0 0.75em;
+			margin: 0 1em 2em 1em;
+			max-width: 728px;
+			box-sizing: border-box;
 		}
-			.mode-reply form.form-post legend.form-legend .fa {
-				display: inline;
-			}
-			.mode-reply form.form-post legend.form-legend {
-				
-			}
 		
 		form.form-post .field {
 			margin: 0.5em 0;
 			
 		}
 		
+		/* Text area */
+		form.form-post .row-post {
+			background: #fff;
+			border: 1px solid #ccc;
+		}
+			form.form-post .row-post #body {
+				border: none;
+			}
+			form.form-post .ui-resizable-handle {
+				background-image: url('../../img/backgrounds/ui-icons_000000_256x240.png');
+				background-position: -64px -224px;
+				cursor: sw-resize;
+				width:  16px;
+				height: 16px;
+				left:    0px;
+				bottom:  0px;
+				
+				-ms-transform: rotate(90deg); /* IE 9 */
+				-webkit-transform: rotate(90deg); /* Safari */
+				transform: rotate(90deg);
+			}
+		
 		/* Dropzone */
 		form.form-post div.row-file {
-			box-sizing: content-box;
-			padding: 0 1px 0 0;
+			box-sizing: border-box;
+			padding: 0;
 			margin: 0.5em 0;
 			width: auto;
 			overflow: hidden;
@@ -1860,8 +1883,12 @@ section.index-form {
 			font-size: 90%;
 			max-height: 50vh;
 		}
+			form.form-post .row-post .ui-wrapper .field-control {
+				max-height: none;
+			}
 			
 			form.form-post button.field-submit {
+				box-sizing: border-box;
 				margin: 0;
 				float: right;
 				width: 100%;
@@ -1872,7 +1899,8 @@ section.index-form {
 				}
 			
 			form.form-post select.field-capcode {
-				border: none;
+				box-sizing: border-box;
+				border: 1px solid #ccc;
 				float: left;
 				width: 50%;
 			}

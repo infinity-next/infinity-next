@@ -119,7 +119,7 @@ ib.widget("board-favorite", function(window, $, undefined) {
 				widget.board = widget.$widget.attr('data-board');
 				
 				widget.$widget
-					.show()
+					.css('display', 'inline-block')
 					.on( 'click.ib-board-favorite', widget.events.favoriteClick )
 				;
 				

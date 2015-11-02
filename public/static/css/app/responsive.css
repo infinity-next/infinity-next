@@ -230,11 +230,6 @@
 		z-index: 1000;
 		top: 45px;
 		right: 10px;
-		
-		display: block;
-		margin: 0;
-		padding: 0;
-		width: 300px;
 	}
 		html.js body.responsive form.form-post .form-legend {
 			display: block;
@@ -249,33 +244,37 @@
 		}
 		
 		html.js body.responsive form.form-post .form-fields {
+			display: block;
+			border-top: none;
+			border-right: none;
+			border-left: none;
+			margin: 0;
 			padding: 0;
+			width: 300px;
+			max-width: none;
 		}
 			html.js body.responsive form.form-post .field {
 				margin: 0;
 			}
 				html.js body.responsive form.form-post .field-control {
 					border-bottom: none;
-					border-left: none;
-					border-right: none;
 					resize: none;
 				}
 			
 			form.form-post .row-file .dz-container {
-				border-left: none;
 				border-bottom: none;
-				border-right: none;
 			}
-			form.form-post .row-captcha {
-				border-left: none;
+			
+			form.form-post .row-post {
 				border-bottom: none;
-				border-right: none;
+			}
+			
+			form.form-post .row-captcha {
+				border-bottom: none;
 				width: 100%;
 			}
 			form.form-post button.field-submit {
-				border-left: none;
 				border-bottom: none;
-				border-right: none;
 			}
 	
 	body.responsive .index-threaded section.index-threads .thread {

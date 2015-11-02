@@ -778,9 +778,13 @@ class Post extends Model {
 	 */
 	public function getCapcodeName()
 	{
-		if ($this->capcode_id)
+		if ($this->capcode_capcode)
 		{
-			return trans_choice((string) $this->capcode_name, 0);
+			return trans_choice((string) $this->capcode_capcode, 0);
+		}
+		else if ($this->capcode_id)
+		{
+			return $this->capcode->getCapcodeName();
 		}
 		
 		return "";

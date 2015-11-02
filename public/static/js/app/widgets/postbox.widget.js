@@ -30,6 +30,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				'submit-post'     : "#submit-post",
 				
+				'form-fields'     : ".form-fields",
 				'form-body'       : "#body",
 				'form-clear'      : "#subject, #body, #captcha",
 				
@@ -395,6 +396,12 @@ ib.widget("postbox", function(window, $, undefined) {
 					.removeClass("postbox-maximized postbox-closed")
 					.addClass("postbox-minimized");
 				
+			},
+			
+			postResize : function(event, ui) {
+				ui.position.top  = 0;
+				ui.position.left = 0;
+				return ui;
 			}
 			
 		},
@@ -414,16 +421,6 @@ ib.widget("postbox", function(window, $, undefined) {
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
 				}
 				
-				
-				var $body = $(widget.options.selector['form-body']);
-				
-				if ($body.length && typeof $body.resizable === "function")
-				{
-					$body.resizable({
-						handles: "sw"
-					});
-				}
-				
 				widget.$widget
 					// Watch for form size clicks
 					.on('click.ib-postbox',                                             widget.events.formClick)
@@ -440,6 +437,25 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('fileUploaded.ib-postbox',  widget.events.fileUploaded)
 					.on('fileUploading.ib-postbox', widget.events.fileUploading)
 				;
+				
+				// Bind resizability onto the post area.
+				var $body   = $(widget.options.selector['form-body'], widget.$widget);
+				
+				if ($body.length && typeof $body.resizable === "function")
+				{
+					$body.resizable({
+						handles:    "sw",
+						alsoResize: widget.$widget,
+						resize:     widget.events.postResize,
+						minWidth:   300
+					});
+					
+					widget.$widget.resizable({
+						handles:  null,
+						resize:   widget.events.postResize,
+						minWidth: 300
+					});
+				}
 				
 			}
 		}
