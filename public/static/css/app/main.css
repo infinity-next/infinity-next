@@ -2519,7 +2519,11 @@ main.index-threaded {
 							margin: 0 1em 0 0;
 							max-width: 100%;
 						}
+							ul.post-attachments.attachments-single div.attachment-container {
+								margin-right: 2em;
+							}
 							div.attachment-container.attachment-grow {
+								margin: 0;
 								width: 100%;
 							}
 						
