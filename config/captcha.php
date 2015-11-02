@@ -161,14 +161,14 @@ return [
 			 *
 			 * @var int
 			 */
-			'length_min'  => 6,
+			'length_min'  => 3,
 			
 			/**
 			 * Maximum characters per captcha.
 			 *
 			 * @var int
 			 */
-			'length_max'  => 8,
+			'length_max'  => 5,
 			
 			/**
 			 * Applies a sine wave effect through the captcha.
@@ -225,9 +225,9 @@ return [
 			
 			'canvas'      => [15,15,15],
 			
-			'length_min'  => 6,
+			'length_min'  => 3,
 			
-			'length_max'  => 8,
+			'length_max'  => 5,
 			
 			'sine'        => true,
 			
@@ -237,7 +237,7 @@ return [
 			
 			'font_size'   => 96,
 			
-			'flourishes'  => 2,
+			'flourishes'  => 1,
 		],
 		
 		/**
