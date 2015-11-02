@@ -30,6 +30,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				'submit-post'     : "#submit-post",
 				
+				'form-body'       : "#body",
 				'form-clear'      : "#subject, #body, #captcha",
 				
 				'captcha'         : ".captcha",
@@ -411,6 +412,16 @@ ib.widget("postbox", function(window, $, undefined) {
 				{
 					var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
+				}
+				
+				
+				var $body = $(widget.options.selector['form-body']);
+				
+				if ($body.length && typeof $body.resizable === "function")
+				{
+					$body.resizable({
+						handles: "sw"
+					});
 				}
 				
 				widget.$widget

@@ -233,9 +233,50 @@
 		
 		display: block;
 		margin: 0;
-		padding: 10px 10px 0 10px;
+		padding: 0;
 		width: 300px;
 	}
+		html.js body.responsive form.form-post .form-legend {
+			display: block;
+			color: white;
+			font-weight: bold;
+			font-size: 1.2em;
+			line-height: 27px;
+			text-indent: 4px;
+			vertical-align: middle;
+			background: #E04000;
+			width: 100%;
+		}
+		
+		html.js body.responsive form.form-post .form-fields {
+			padding: 0;
+		}
+			html.js body.responsive form.form-post .field {
+				margin: 0;
+			}
+				html.js body.responsive form.form-post .field-control {
+					border-bottom: none;
+					border-left: none;
+					border-right: none;
+					resize: none;
+				}
+			
+			form.form-post .row-file .dz-container {
+				border-left: none;
+				border-bottom: none;
+				border-right: none;
+			}
+			form.form-post .row-captcha {
+				border-left: none;
+				border-bottom: none;
+				border-right: none;
+				width: 100%;
+			}
+			form.form-post button.field-submit {
+				border-left: none;
+				border-bottom: none;
+				border-right: none;
+			}
 	
 	body.responsive .index-threaded section.index-threads .thread {
 		padding-right: 340px;

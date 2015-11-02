@@ -35,7 +35,7 @@
 	@endif
 	
 	<fieldset class="form-fields">
-		<legend class="form-legend">{{ trans("board.legend." . implode($actions, "+")) }}</legend>
+		<legend class="form-legend"><i class="fa fa-reply"></i>{{ trans("board.legend." . implode($actions, "+")) }}</legend>
 		
 		@include('widgets.messages')
 		
@@ -91,7 +91,7 @@
 		@if ($board->canAttach($user) && !isset($post))
 		<div class="field row-file">
 			<div class="dz-container">
-				<span class="dz-instructions"><span class="dz-instructions-text">@lang('board.field.file-dz')</span></span>
+				<span class="dz-instructions"><span class="dz-instructions-text"><i class="fa fa-upload"></i>&nbsp;@lang('board.field.file-dz')</span></span>
 				<div class="fallback">
 					<input class="field-control" id="file" name="files[]" type="file" multiple />
 					<div class="field-control">
@@ -123,7 +123,19 @@
 			]) !!}
 		</div>
 		
+		@if (!$user->isAnonymous() && !isset($post) && $user->getCapcodes($board))
+		<div class="field row-submit row-double">
+			<select id="capcode" class="field-control field-capcode" name="capcode">
+				<option value="" selected>@lang('board.field.capcode')</option>
+				
+				@foreach ($user->getCapcodes($board) as $role)
+					<option value="{!! $role->role_id !!}">{{{ $role->getCapcodeName() }}}</option>
+				@endforeach
+			</select>
+		@else
 		<div class="field row-submit">
+		@endif
+			
 			{!! Form::button(
 				trans("board.submit." . implode($actions, "+")),
 				[
@@ -131,18 +143,6 @@
 					'id'        => "submit-post",
 					'class'     => "field-submit",
 			]) !!}
-			
-			@if (!$user->isAnonymous() && !isset($post))
-			@if ($user->getCapcodes($board))
-				<select id="capcode" class="field-control field-capcode" name="capcode">
-					<option value="" selected>@lang('board.field.capcode')</option>
-					
-					@foreach ($user->getCapcodes($board) as $role)
-						<option value="{!! $role->role_id !!}">{{{ $role->getCapcodeName() }}}</option>
-					@endforeach
-				</select>
-			@endif
-			@endif
 		</div>
 	</fieldset>
 	

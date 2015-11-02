@@ -91,8 +91,6 @@ header nav.boardlist {
 
 form.form-post {
 	background: #f0e0d6;
-	border-color: #D9BFB7;
-	color: #800000;
 }
 
 ul.pagination-pages::before,

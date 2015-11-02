@@ -265,7 +265,8 @@ ib.widget("post", function(window, $, undefined) {
 			
 			codeHighlight : function() {
 				// Activate code highlighting if the JS module is enabled.
-				if (typeof hljs === "object") {
+				if (typeof hljs === "object")
+				{
 					$(widget.defaults.selector.elementCode, widget.$widget).each(function(index, element) {
 						hljs.highlightBlock(element);
 					});
@@ -309,7 +310,6 @@ ib.widget("post", function(window, $, undefined) {
 					.on('click.ib-post',       widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
 					.on('click.ib-post',       widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
 				;
-				
 			}
 		},
 		

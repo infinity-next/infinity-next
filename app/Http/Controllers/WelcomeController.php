@@ -33,8 +33,10 @@ class WelcomeController extends Controller {
 	 */
 	public function getIndex()
 	{
-		$featured = Post::getPostFeatured();
-		$featured->setRelation('replies', []);
+		if ($featured = Post::getPostFeatured())
+		{
+			$featured->setRelation('replies', []);
+		}
 		
 		return $this->view(static::VIEW_INDEX, [
 			'featured' => $featured,

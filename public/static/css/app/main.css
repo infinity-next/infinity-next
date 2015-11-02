@@ -380,10 +380,7 @@ form {
 	
 	.field-control {
 		display: block;
-		
-		/*
-		border: 1px solid #34345C;
-		*/
+		border: 1px solid #ccc;
 		
 		box-sizing: border-box;
 		margin: 0;
@@ -399,6 +396,7 @@ form {
 		.field-control[type="checkbox"],
 		.field-control[type="radio"] {
 			display: inline-block;
+			border: none;
 			margin: 0 0.5em 0 0;
 			width: auto;
 		}
@@ -442,7 +440,7 @@ form {
 		border: 1px solid rgb(169, 169, 169);
 		width: 280px;
 		
-		margin-left: 0;
+		margin-left: auto;
 		margin-right: auto;
 	}
 		.row-captcha .field-label {
@@ -1713,11 +1711,9 @@ section.index-form {
 }
 	form.form-post {
 		background: #d6daf0;
-		border-color: #B7C5D9;
-		border-width: 1px;
-		border-style: none solid solid none;
+		border: 1px solid #ccc;
 		
-		padding: 0.75em;
+		padding: 0.75em 0.75em 0 0.75em;
 		margin: 0 1em 2em 1em;
 		max-width: 728px;
 		box-sizing: border-box;
@@ -1732,7 +1728,7 @@ section.index-form {
 			position: absolute;
 			top: 0;
 			right: 0;
-			padding: 10px 10px 0 0;
+			padding: 4px 4px 0 0;
 			margin: -1px -1px 0 0;
 		}
 			html.js li.menu-icon-minimize {
@@ -1755,7 +1751,7 @@ section.index-form {
 				visibility: hidden;
 			}
 			html.js form.postbox-closed div.field {
-				display: none;
+				display: none !important;
 			}
 			
 			html.js body.responsive  form.form-post.postbox-maximized {
@@ -1775,12 +1771,12 @@ section.index-form {
 				cursor: pointer;
 				height: 17px;
 				min-width:  17px;
-				border: 1px solid rgba(0,0,0,0.1);
+				border: 1px solid rgba(255,255,255,0.4);
 				background-color: rgba(255,255,255,0.1);
 			}
 				form.form-post .menu-icon:hover {
 					background-color: rgba(255,255,255,0.4);
-					border-color: rgba(0,0,0,0.25);
+					border-color: rgba(255,255,255,0.8);
 				}
 				
 				form.form-post .menu-icon .menu-icon-text {
@@ -1791,7 +1787,7 @@ section.index-form {
 				form.form-post .menu-icon .menu-icon-button {
 					display: none;
 					display: inline-block;
-					background-image: url('../../img/backgrounds/ui-icons_888888_256x240.png');
+					background-image: url('../../img/backgrounds/ui-icons_FFFFFF_256x240.png');
 					height: 16px;
 					width: 16px;
 				}
@@ -1805,10 +1801,60 @@ section.index-form {
 					background-position: -96px -128px;
 				}
 		
+		form.form-post legend.form-legend .fa {
+			display: none;
+			margin: 0 0.25em 0 0;
+		}
+			.mode-reply form.form-post legend.form-legend .fa {
+				display: inline;
+			}
+			.mode-reply form.form-post legend.form-legend {
+				
+			}
+		
 		form.form-post .field {
 			margin: 0.5em 0;
 			
 		}
+		
+		/* Dropzone */
+		form.form-post div.row-file {
+			box-sizing: content-box;
+			padding: 0 1px 0 0;
+			margin: 0.5em 0;
+			width: auto;
+			overflow: hidden;
+		}
+			form.form-post button.field-submit,
+			form.form-post div.row-file {
+				border: none;
+				background: #E4E4E4;
+				color: rgb(34,34,34);
+				text-align: center;
+			}
+			
+			form.form-post button.field-submit:hover,
+			form.form-post div.row-file:hover {
+				background-color: #F1EFEF;
+			}
+			
+			html.js form.form-post div.dz-container {
+			}
+				html.js form.form-post div.dz-container input {
+					display: none;
+				}
+		
+		form.form-post .row-captcha {
+			border: 1px solid #ccc;
+			margin-left: auto;
+			margin-right: auto;
+			padding: 0;
+			width: 100%;
+		}
+			form.form-post .row-captcha .field-control {
+				border-color: #ccc;
+			}
+		
 		form.form-post .row-post .field-control {
 			height: 6.25em;
 			font-size: 90%;
@@ -1816,29 +1862,20 @@ section.index-form {
 		}
 			
 			form.form-post button.field-submit {
-				width: 125px;
-				margin: 0 5px 0 0;
-			}
-			form.form-post select.field-capcode {
-				width: 145px;
+				margin: 0;
 				float: right;
+				width: 100%;
+				border: 1px solid #ccc;
 			}
-			
-			/* Dropzone */
-			form.form-post div.row-file {
-				box-sizing: content-box;
-				padding: 0 1px 0 0;
-				margin: 0 -0.75em;
-				width: auto;
-				overflow: hidden;
-				
-				background: rgba(0,0,0,0.2);
-			}
-				html.js form.form-post div.dz-container {
+				form.form-post .row-double button.field-submit {
+					width: 50%;
 				}
-					html.js form.form-post div.dz-container input {
-						display: none;
-					}
+			
+			form.form-post select.field-capcode {
+				border: none;
+				float: left;
+				width: 50%;
+			}
 		/*
 		 * The MIT License
 		 * Copyright (c) 2012 Matias Meno <m@tias.me>
@@ -1852,7 +1889,7 @@ section.index-form {
 			min-height: 2em;
 			line-height: 2em;
 			
-			margin: 0 -2px 0 -1px;
+			margin: 0;
 			padding: 0;
 			
 			min-width: 100%;
@@ -1865,9 +1902,7 @@ section.index-form {
 			overflow-y: hidden;
 			overflow-x: auto;
 			
-			border: 1px solid rgb(169, 169, 169);
-			border-left: none;
-			border-right: none;
+			border: 1px solid #ccc;
 		}
 			.dz-container.dz-clickable {
 				cursor: pointer;
@@ -1913,7 +1948,7 @@ section.index-form {
 				height: auto;
 				min-height: 100px;
 				max-height: 100px;
-				width: 33%;
+				width: 100px;
 				max-width: 100px;
 			}
 				
@@ -2049,7 +2084,6 @@ section.index-form {
 						position: relative;
 						display: block;
 						z-index: 10;
-						padding: 0 0 2px 0;
 					}
 						.dz-container .dz-preview .dz-image img {
 							display: block;
