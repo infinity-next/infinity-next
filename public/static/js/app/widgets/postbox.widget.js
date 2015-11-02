@@ -444,10 +444,12 @@ ib.widget("postbox", function(window, $, undefined) {
 				if ($body.length && typeof $body.resizable === "function")
 				{
 					$body.resizable({
-						handles:    "sw",
-						alsoResize: widget.$widget,
-						resize:     widget.events.postResize,
-						minWidth:   300
+						handles:     "sw",
+						alsoResize:  widget.$widget,
+						containment: "#page-container",
+						resize:      widget.events.postResize,
+						minWidth:    300,
+						minHeight:   26,
 					});
 					
 					widget.$widget.resizable({

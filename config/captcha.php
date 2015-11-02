@@ -214,7 +214,7 @@ return [
 		 * @var array  of settings
 		 */
 		'dark' => [
-			'charset'    => 'AaBbCcDdEeFGHhIJKkLMmNnOoPpQRrSsTtUuVvWwXxYyZ',
+			'charset'    => 'abcdeFGhijklmnopQrstuvwxyZ',
 			
 			'colors'      => [
 				[ 92,  89, 225],

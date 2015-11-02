@@ -1711,10 +1711,13 @@ section.index-form {
 }
 	form.form-post {
 		background: #d6daf0;
+		border: 1px solid #ccc;
 		position: relative;
 		overflow: hidden;
+		max-width: 740px;
+		margin: 0 1em 2em 1em;
 	}
-		html.no-js form.form-post .post-menu {
+		form.form-post .post-menu {
 			display: none;
 		}
 			html.js form.form-post .post-menu {
@@ -1806,11 +1809,20 @@ section.index-form {
 				}
 		
 		form.form-post fieldset.form-fields {
-			border: 1px solid #ccc;
-			padding: 0.75em 0.75em 0 0.75em;
-			margin: 0 1em 2em 1em;
+			padding: 0.75em;
 			max-width: 728px;
 			box-sizing: border-box;
+		}
+		
+		form.form-post .form-legend {
+			display: block;
+			padding: 0.75em 0 0 0;
+			margin: 0 0 -1em 0;
+			font-weight: bold;
+			font-size: 1.2em;
+			line-height: 27px;
+			vertical-align: middle;
+			width: 100%;
 		}
 		
 		form.form-post .field {
@@ -1867,8 +1879,13 @@ section.index-form {
 					display: none;
 				}
 		
+		form.form-post .field-control {
+			outline: none;
+		}
+		
 		form.form-post .row-captcha {
 			border: 1px solid #ccc;
+			box-sizing: border-box;
 			margin-left: auto;
 			margin-right: auto;
 			padding: 0;

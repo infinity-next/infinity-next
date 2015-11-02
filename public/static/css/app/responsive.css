@@ -111,8 +111,6 @@
 	 * Thread & Posts
 	 */
 	body.responsive form.form-post {
-		margin-left: auto;
-		margin-right: auto;
 	}
 	
 	body.responsive section.index-threads aside.advertiser.top-left {
@@ -226,33 +224,35 @@
 	 * Posts and Threads
 	 */
 	html.js body.responsive form.form-post {
+		border: none;
 		position: fixed;
 		z-index: 1000;
 		top: 45px;
 		right: 10px;
+		max-width: none;
+		margin: 0;
 	}
-		html.js body.responsive form.form-post .form-legend {
-			display: block;
-			color: white;
-			font-weight: bold;
-			font-size: 1.2em;
-			line-height: 27px;
-			text-indent: 4px;
-			vertical-align: middle;
-			background: #E04000;
-			width: 100%;
+		form.form-post .post-menu {
+			display: block
 		}
 		
 		html.js body.responsive form.form-post .form-fields {
 			display: block;
-			border-top: none;
-			border-right: none;
-			border-left: none;
+			border-bottom: 1px solid #ccc;
 			margin: 0;
 			padding: 0;
 			width: 300px;
 			max-width: none;
 		}
+			form.form-post .form-legend {
+				margin: 0;
+				padding: 0;
+				
+				background: #E04000;
+				color: white;
+				text-indent: 4px;
+			}
+			
 			html.js body.responsive form.form-post .field {
 				margin: 0;
 			}
