@@ -14,8 +14,6 @@ class OverboardRecache extends Listener
 	 */
 	public function handle($event)
 	{
-		$board = $event->board;
-		
 		Cache::forget("overboard");
 	}
 	
