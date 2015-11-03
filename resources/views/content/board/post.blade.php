@@ -1,5 +1,13 @@
 <div class="post-container {{ is_null($post->reply_to) ? 'op-container' : 'reply-container' }} post-{{$post->post_id}} post-{{$post->board_uri}}-{{$post->board_id}}" data-widget="post" data-updated-at="{{ $post->updated_at->timestamp }}">
-	@if ($post->reports)
+	@set('multiboard', isset($multiboard) ? $multiboard : false)
+	
+	@if ($multiboard)
+	@include('content.board.crown', [
+		'board'  => $post->board,
+	])
+	@endif
+	
+	@if (true /* $post->reports */)
 	@include('content.board.post.single', [
 		'board'   => $board,
 		'post'    => $post,

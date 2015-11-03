@@ -3,6 +3,7 @@
 use App\Post;
 use Carbon\Carbon;
 
+use Cache;
 use Input;
 use Request;
 use Validator;
@@ -22,9 +23,14 @@ class MultiboardController extends Controller {
 	
 	public function getIndex()
 	{
-		$posts = Post::with('op', 'board')
-			->orderBy('post_id', 'desc')
-			->paginate(15);
+		$posts = Cache::remember('overboard', 60, function()
+		{
+			return Post::with('op', 'board', 'board.assets')
+				->withEverything()
+				->orderBy('post_id', 'desc')
+				->take(75)
+				->paginate(15);
+		});
 		
 		return $this->view(static::VIEW_MULTIBOARD, [
 			'posts' => $posts,

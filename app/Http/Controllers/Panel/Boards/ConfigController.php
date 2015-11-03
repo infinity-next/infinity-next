@@ -109,6 +109,8 @@ class ConfigController extends PanelController {
 			}
 		}
 		
+		Event::fire(new BoardWasModified($board));
+		
 		return $this->getAssets($board);
 	}
 	
@@ -144,6 +146,8 @@ class ConfigController extends PanelController {
 			$asset->delete();
 			$asset->storage->challengeExistence();
 		}
+		
+		Event::fire(new BoardWasModified($board));
 		
 		return $this->getAssets($board);
 	}
@@ -254,6 +258,8 @@ class ConfigController extends PanelController {
 					->withErrors([ "validation.custom.file_generic" ]);
 			}
 		}
+		
+		Event::fire(new BoardWasModified($board));
 		
 		return $this->getAssets($board);
 	}
@@ -434,6 +440,8 @@ class ConfigController extends PanelController {
 		{
 			$tags = $board->tags()->saveMany($tags);
 		}
+		
+		Event::fire(new BoardWasModified($board));
 		
 		return $this->view(static::VIEW_TAGS, [
 			'board'   => $board,

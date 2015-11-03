@@ -11,9 +11,9 @@
 			<li class="thread-item">
 				<article class="thread">
 					@include('content.board.post', [
-						'board'   => $post->board,
-						'thread'  => $post->op ?: $post,
-						'updater' => false,
+						'board'      => $post->board,
+						'thread'     => $post->op ?: $post,
+						'multiboard' => true,
 					])
 				</article>
 			</li>

@@ -2306,6 +2306,37 @@ main.index-threaded {
 			border-bottom: none;
 		}
 		
+		main.multiboard-index .post-crown {
+			margin: 0;
+			padding: 0;
+		}
+			main.multiboard-index .crown-figure {
+				background: #fff;
+				margin: 0 -1px 0 0;
+				padding: 0 0.75em;
+				
+				line-height: 42px;
+				vertical-align: middle;
+			}
+				main.multiboard-index .crown-image {
+					display: inline-block;
+					max-height: 32px;
+					max-width: 32px;
+					line-height: 42px;
+				}
+				main.multiboard-index .crown-title {
+					display: inline-block;
+					margin: 0 0 0 0.25em;
+					line-height: 42px;
+					font-size: 1.2em;
+					font-weight: bold;
+					vertical-align: middle;
+					white-space: nowrap;
+				}
+				main.multiboard-index .crown-link {
+					line-height: 42px;
+				}
+		
 		#autoupdater {
 			margin: 1em 0;
 			padding: 0 0 0 1.5em;

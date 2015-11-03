@@ -618,6 +618,40 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Returns the board's display name.
+	 * 
+	 * @return string
+	 */
+	public function getDisplayName()
+	{
+		return $this->title;
+	}
+	
+	/**
+	 * Returns the board's fully qualified icon image url.
+	 * 
+	 * @return string
+	 */
+	public function getIconURL()
+	{
+		$icon = $this->assets->where('asset_type', 'board_icon')->first();
+		
+		if (!$icon)
+		{
+			if ($this->is_worksafe)
+			{
+				return asset('/static/img/assets/Favicon_Burichan.ico');
+			}
+			else
+			{
+				return asset('/static/img/assets/Favicon_Yotsuba.ico');
+			}
+		}
+		
+		return $icon->getURL();
+	}
+	
+	/**
 	 * Returns the board's primary language. Defaults to the site language.
 	 * 
 	 * @return string
