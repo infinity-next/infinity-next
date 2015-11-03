@@ -1193,7 +1193,7 @@ class Post extends Model {
 		}]);
 	}
 	
-	public function scopeAndReports($query)
+	public function scopeAndPromotedReports($query)
 	{
 		return $query->with(['reports' => function($query) {
 			$query->whereOpen();
@@ -1268,8 +1268,7 @@ class Post extends Model {
 			->andBans()
 			->andCapcode()
 			->andCites()
-			->andEditor()
-			->andReports();
+			->andEditor();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)

@@ -116,6 +116,16 @@ class Report extends Model {
 	}
 	
 	/**
+	 * Determines if the post is still open.
+	 *
+	 * @return boolean
+	 */
+	public function isOpen()
+	{
+		return !$this->is_dismissed && !$this->is_successful;
+	}
+	
+	/**
 	 * Determines if the post has been promoted.
 	 *
 	 * @return boolean

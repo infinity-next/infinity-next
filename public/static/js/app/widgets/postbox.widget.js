@@ -401,8 +401,15 @@ ib.widget("postbox", function(window, $, undefined) {
 			postResize : function(event, ui) {
 				ui.position.top  = 0;
 				ui.position.left = 0;
+				
 				return ui;
-			}
+			},
+			
+			windowResize : function(event) {
+				var $body = $(widget.options.selector['form-body'], widget.$widget);
+				
+				$body.trigger('resize');
+			},
 			
 		},
 		
@@ -420,6 +427,8 @@ ib.widget("postbox", function(window, $, undefined) {
 					var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
 				}
+				
+				$(window).on('ressize', widget.events.windowResize);
 				
 				widget.$widget
 					// Watch for form size clicks
@@ -445,16 +454,15 @@ ib.widget("postbox", function(window, $, undefined) {
 				{
 					$body.resizable({
 						handles:     "sw",
-						alsoResize:  widget.$widget,
-						containment: "#page-container",
 						resize:      widget.events.postResize,
+						alsoResize:  widget.$widget,
 						minWidth:    300,
-						minHeight:   26,
+						minHeight:   26
 					});
 					
 					widget.$widget.resizable({
-						handles:  null,
 						resize:   widget.events.postResize,
+						handles:  null,
 						minWidth: 300
 					});
 				}

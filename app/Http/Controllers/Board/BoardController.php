@@ -240,7 +240,7 @@ class BoardController extends Controller {
 		$hash    = $request->get('md5');
 		$storage = FileStorage::getHash($hash);
 		
-		if (is_null($storage) || $storage->hasFile())
+		if (is_null($storage) || !$storage->hasFile())
 		{
 			return [ $hash => null ];
 		}

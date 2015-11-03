@@ -39,7 +39,9 @@ class ReportsController extends PanelController {
 			abort(403);
 		}
 		
-		return $this->viewReports();
+		return $this->view(static::VIEW_REPORTS, [
+			'reportedPosts' => $this->user->getReportedPostsViewable(),
+		]);
 	}
 	
 	
@@ -223,11 +225,4 @@ class ReportsController extends PanelController {
 			->withSuccess(trans_choice("panel.reports.demoted", $reports, [ 'reports' => $reports ]));
 	}
 	
-	
-	public function viewReports()
-	{
-		return $this->view(static::VIEW_REPORTS, [
-			'reportedPosts' => $this->user->getReportedPostsViewable(),
-		]);
-	}
 }

@@ -1834,6 +1834,7 @@ section.index-form {
 		form.form-post .row-post {
 			background: #fff;
 			border: 1px solid #ccc;
+			position: static;
 		}
 			form.form-post .row-post #body {
 				border: none;
@@ -2255,9 +2256,11 @@ section.moderate-post {
 /* Thread View */
 main.index-threaded {
 	margin: 0 0 -1em 0;
+	min-height: 50vh;
 }
 	section.index-threads {
 		margin: -1em 0 0 0;
+		min-height: 550px;
 	}
 		/* Advertisements for small screens */
 		aside.advertiser img {
@@ -3815,7 +3818,7 @@ figcaption.page-details {
 			cursor: pointer;
 		}
 		
-		html.js.localstorage .board-list .board-favorite {
+		html.js .board-list .board-favorite {
 			display: block;
 			float: left;
 			margin: 0 0.25em 0 0;

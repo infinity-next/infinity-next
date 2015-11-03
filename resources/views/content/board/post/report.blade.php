@@ -1,4 +1,4 @@
-<div class="report-content">
+<div class="report-content" data-no-instant>
 	<ul class="report-actions actions-report">
 		<li class="report-action action-dismiss">
 			[<a href="{{ url("/cp/boards/report/{$report->report_id}/dismiss") }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_single')</a>]
