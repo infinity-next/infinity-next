@@ -54,8 +54,6 @@
 		</ul>
 		@else
 			<p>@lang('panel.reports.empty')
-	
-	{{ dd($reportedPost->reports) }}
 		@endif
 	</section>
 @stop
