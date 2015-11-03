@@ -23,6 +23,7 @@ class MultiboardController extends Controller {
 	public function getIndex()
 	{
 		$posts = Post::with('op', 'board')
+			->orderBy('post_id', 'desc')
 			->paginate(15);
 		
 		return $this->view(static::VIEW_MULTIBOARD, [
