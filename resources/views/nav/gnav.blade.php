@@ -11,6 +11,7 @@
 				</li>
 			</ul>
 			
+			@if (Settings::get('boardListShow', false))
 			<div class="flyout" id="flyout-boards" data-no-instant>
 				<div class="flyout-container">
 					<div class="flyout-header">
@@ -52,6 +53,8 @@
 					</ul>
 				</div>
 			</div>
+			@endif
+			
 		</div>
 	</div>
 </nav>

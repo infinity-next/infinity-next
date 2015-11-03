@@ -15,6 +15,7 @@
 		</ul>
 	</div>
 	
+	@if (Settings::get('boardListShow', false))
 	<div class="boardlist-row row-boards">
 		<ul class="boardlist-categories">
 		@foreach (Settings::getNavigationPrimaryBoards() as $boards)
@@ -30,5 +31,6 @@
 		@endforeach
 		</ul>
 	</div>
+	@endif
 	
 </nav>
