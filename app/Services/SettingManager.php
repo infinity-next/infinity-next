@@ -29,6 +29,13 @@ class SettingManager {
 	protected $settings;
 	
 	/**
+	 * Remembers if we have a stable database connection.
+	 *
+	 * @var boolean
+	 */
+	protected $db;
+	
+	/**
 	 * Create a new authentication controller instance.
 	 *
 	 * @return void
@@ -110,14 +117,16 @@ class SettingManager {
 		];
 		
 		
-		global $app;
-		$manager = $app->make(UserManager::class);
-		
-		if ($manager->user && $manager->user->canCreateBoard())
+		if ($this->hasDB())
 		{
-			$nav['new_board'] = url("cp/boards/create");
+			global $app;
+			$manager = $app->make(UserManager::class);
+			
+			if ($manager->user && $manager->user->canCreateBoard())
+			{
+				$nav['new_board'] = url("cp/boards/create");
+			}
 		}
-		
 		
 		if (env('CONTRIB_ENABLED', false))
 		{
@@ -142,7 +151,7 @@ class SettingManager {
 	 */
 	public function getNavigationPrimaryBoards()
 	{
-		if ($this->get('boardListShow', false))
+		if ($this->hasDB() && $this->get('boardListShow', false))
 		{
 			return Cache::remember('site.gnav.boards', 1, function()
 			{
@@ -201,25 +210,52 @@ class SettingManager {
 	}
 	
 	/**
+	 * Determines if we have a DB connection.
+	 * 
+	 * @return boolean
+	 */
+	public function hasDB()
+	{
+		if (!is_null($this->db))
+		{
+			try
+			{
+				$this->db = !!\DB::connection()->getDatabaseName();
+			}
+			catch (\Exception $e)
+			{
+				$this->db = false;
+			}
+		}
+		
+		return $this->db;
+	}
+	
+	/**
 	 * Loads all settings.
 	 *
 	 * @return collection
 	 */
 	public function fetchSettings()
 	{
-		switch (env('CACHE_DRIVER'))
+		if ($this->hasDB())
 		{
-			case "file" :
-			case "database" :
-				return SiteSetting::getAll();
-			
-			// We only cache settings when we are using a memory cache.
-			// Anything else is slower than the query.
-			default :
-				return Cache::remember('site.settings', 30, function()
-				{
+			switch (env('CACHE_DRIVER'))
+			{
+				case "file" :
+				case "database" :
 					return SiteSetting::getAll();
-				});
+				
+				// We only cache settings when we are using a memory cache.
+				// Anything else is slower than the query.
+				default :
+					return Cache::remember('site.settings', 30, function()
+					{
+						return SiteSetting::getAll();
+					});
+			}
 		}
+		
+		return [];
 	}
 };

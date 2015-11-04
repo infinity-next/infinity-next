@@ -233,7 +233,7 @@
 		margin: 0;
 	}
 		form.form-post .post-menu {
-			display: block
+			display: block;
 		}
 		
 		html.js body.responsive form.form-post .form-fields {

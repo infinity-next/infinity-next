@@ -40,6 +40,8 @@ body {
 	background-image: -webkit-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
 	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
 	
+	box-sizing: border-box;
+	min-width: 320px;
 	min-height: 100vh;
 	
 	font-family: Arial, Helvetica, sans-serif;
@@ -2352,7 +2354,7 @@ main.index-threaded {
 				}
 		
 		.reply {
-			margin: 0.5em 0 0.5em 0;
+			margin: 0.25em
 			padding: 0 0 0 1.5em;
 			white-space: nowrap;
 		}
@@ -2401,8 +2403,6 @@ main.index-threaded {
 			display: inline-block;
 			position: relative;
 			
-			overflow: hidden;
-			
 			margin: 0;
 			max-width: 100%;
 			
@@ -2425,6 +2425,7 @@ main.index-threaded {
 			.post-content {
 				padding: 0.75em;
 				padding-bottom: 0;
+				overflow: hidden;
 			}
 			.post-content::after {
 				content: ' ';
@@ -2432,7 +2433,7 @@ main.index-threaded {
 				display: block;
 			}
 				.post-details {
-					margin: 0 9em 0.4em 0;
+					margin: -0.4em 9em 0.4em 0;
 					white-space: normal;
 					line-height: 1.8em;
 				}
@@ -2745,21 +2746,17 @@ main.index-threaded {
 					margin-left: 0.25em;
 				}
 					ul.post-action-groups {
-						display: none;
+						display: block;
+						max-width: 100vw;
 						
 						position: absolute;
 						top: 1.5em;
-						right: 0;
+						right: -10px;
 						z-index: 10;
 						
-						background-color: #D6DAF0;
-						border: 1px solid #B7C5D9;
-						
 						list-style: none;
-						padding: 0;
-						margin: 0 0 0 -1px;
-						
-						white-space: nowrap;
+						padding: 0 10px;
+						margin: 0 -1px 0 0;
 					}
 						div.post-action-tab:hover ul.post-action-groups,
 						ul.post-action-groups.open {
@@ -2767,14 +2764,17 @@ main.index-threaded {
 						}
 						
 						li.post-action-group {
-							
+							background-color: #D6DAF0;
+							border: 1px solid #B7C5D9;
 						}
 							ul.post-actions {
 								display: inline-block;
 								vertical-align: top;
+								width: 100%;
 							}
 								li.post-action {
 									border-bottom: 1px solid #B7C5D9;
+									width: 100%;
 								}
 								li.post-action:last-child {
 									margin-bottom: -1px;
@@ -2782,8 +2782,9 @@ main.index-threaded {
 									a.post-action-link {
 										display: block;
 										
-										vertical-align: middle;
 										color: #34345C;
+										vertical-align: middle;
+										white-space: nowrap;
 										
 										padding: 0.25em 1em 0.25em;
 									}
@@ -2977,6 +2978,7 @@ blockquote.ugc {
 			display: block;
 			margin: 0;
 			padding: 1em;
+			white-space: pre-wrap;
 		}
 		
 		blockquote.ugc pre code.language-aa,
@@ -3085,6 +3087,10 @@ nav.pagination {
 		float: left;
 		margin: 0 1em;
 	}
+		div.buttons-pages {
+			float: none;
+			clear: both;
+		}
 		div.pagination-buttons .pagination-button {
 			line-height: 1.2;
 			margin: 0.2em 0;

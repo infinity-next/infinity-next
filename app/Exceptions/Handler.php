@@ -2,6 +2,8 @@
 
 use Exception;
 use ErrorException;
+use Response;
+
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException as FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
@@ -39,7 +41,23 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		if ($e instanceof ErrorException)
+		switch (get_class($e))
+		{
+			case "Swift_TransportException" :
+			case "PDOException" :
+				$errorView = "errors.500_config";
+				break;
+			
+			case "ErrorException" :
+				$errorView = "errors.500";
+				break;
+			
+			default :
+				$errorView = false;
+				break;
+		}
+		
+		if ($errorView)
 		{
 			// This makes use of a Symfony error handler to make pretty traces.
 			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
@@ -48,11 +66,14 @@ class Handler extends ExceptionHandler {
 			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
 			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
 			
-			return response()->view('errors.500', [
-				'error'      => $e,
-				'error_css'  => $SymfonyCss,
-				'error_html' => $SymfonyHtml,
+			$response = response()->view($errorView, [
+				'exception'   => $e,
+				'error_class' => get_class($e),
+				'error_css'   => $SymfonyCss,
+				'error_html'  => $SymfonyHtml,
 			], 500);
+			
+			return $this->toIlluminateResponse($response, $e);
 		}
 		else
 		{

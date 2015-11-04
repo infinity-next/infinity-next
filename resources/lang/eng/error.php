@@ -20,6 +20,9 @@ return [
 	'500' => [
 		'title' => "Internal Server Error",
 	],
+	'500_config' => [
+		'title' => "Misconfiguration",
+	],
 	'503' => [
 		'title' => "Maintenance",
 	],
