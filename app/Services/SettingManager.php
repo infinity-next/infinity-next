@@ -216,7 +216,7 @@ class SettingManager {
 	 */
 	public function hasDB()
 	{
-		if (!is_null($this->db))
+		if (!isset($this->db))
 		{
 			try
 			{
