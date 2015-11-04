@@ -2746,7 +2746,7 @@ main.index-threaded {
 					margin-left: 0.25em;
 				}
 					ul.post-action-groups {
-						display: block;
+						display: none;
 						max-width: 100vw;
 						
 						position: absolute;

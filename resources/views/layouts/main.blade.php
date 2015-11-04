@@ -1,9 +1,8 @@
-@include('layouts.static')
+@extends('layouts.static')
 
 @section('js')
 	@yield('required-js')
 	
-	@if ( false )
 	<script type="text/javascript">
 		document.getElementsByTagName('html')[0].class = "js";
 		
@@ -44,7 +43,6 @@
 			'version'    : 0
 		};
 	</script>
-	@endif
 	
 	{!! Minify::javascriptDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}
 	{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}
