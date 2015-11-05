@@ -666,7 +666,7 @@ class FileStorage extends Model {
 	 */
 	public function processThumb()
 	{
-		if (1 || !Storage::exists($this->getPathThumb()))
+		if (!Storage::exists($this->getPathThumb()))
 		{
 			if ($this->isAudio())
 			{
@@ -773,7 +773,6 @@ class FileStorage extends Model {
 				}
 				catch (\Exception $e)
 				{
-					dd($e);
 					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
 				}
 			}
