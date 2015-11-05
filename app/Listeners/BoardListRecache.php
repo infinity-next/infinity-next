@@ -10,16 +10,6 @@ class BoardListRecache extends Listener
 {
 	
 	/**
-	 * Create the event listener.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		//
-	}
-	
-	/**
 	 * Handle the event.
 	 *
 	 * @param  Event  $event
@@ -27,18 +17,8 @@ class BoardListRecache extends Listener
 	 */
 	public function handle($event)
 	{
-		if ($event->board instanceof Board)
-		{
-			$board = $event->board;
-		}
-		else if ($event->post instanceof Post)
-		{
-			$board = $event->post->board;
-		}
-		
-		## TODO ##
-		// There will be board lists that need to be recached after a board is modified.
-		// This includes the overboard.
+		Cache::forget('site.boardlist');
+		Cache::forget('site.overboard');
 	}
 	
 }

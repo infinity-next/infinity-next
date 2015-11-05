@@ -41,7 +41,7 @@ body {
 	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
 	
 	box-sizing: border-box;
-	min-width: 320px;
+	min-width: 300px;
 	min-height: 100vh;
 	
 	font-family: Arial, Helvetica, sans-serif;
@@ -1717,7 +1717,7 @@ section.index-form {
 		position: relative;
 		overflow: hidden;
 		max-width: 740px;
-		margin: 0 1em 2em 1em;
+		margin: 0 auto 2em auto;
 	}
 		form.form-post .post-menu {
 			display: none;
@@ -1816,7 +1816,7 @@ section.index-form {
 			box-sizing: border-box;
 		}
 		
-		form.form-post .form-legend {
+		html.js form.form-post .form-legend {
 			display: block;
 			padding: 0.75em 0 0 0;
 			margin: 0 0 -1em 0;
@@ -1881,6 +1881,10 @@ section.index-form {
 				html.js form.form-post div.dz-container input {
 					display: none;
 				}
+			
+			form.form-post div.row-file .fallback {
+				text-align: left;
+			}
 		
 		form.form-post .field-control {
 			outline: none;

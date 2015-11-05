@@ -232,7 +232,7 @@
 		max-width: none;
 		margin: 0;
 	}
-		form.form-post .post-menu {
+		html.js form.form-post .post-menu {
 			display: block;
 		}
 		
@@ -244,7 +244,7 @@
 			width: 300px;
 			max-width: none;
 		}
-			form.form-post .form-legend {
+			html.js form.form-post .form-legend {
 				margin: 0;
 				padding: 0;
 				

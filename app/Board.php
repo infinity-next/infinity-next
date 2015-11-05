@@ -932,9 +932,13 @@ class Board extends Model {
 		return $this->getUrl("style.css");
 	}
 	
+	/**
+	 * Returns the entire board list and all associative boards by levying the cache.
+	 *
+	 * @return Colelction  of \App\Board
+	 */
 	public static function getBoardsForBoardlist()
 	{
-		$rememberTags    = ["site", "boardlist"];
 		// This timer is very precisely set to be a minute after the turn of the next hour.
 		// Laravel's CRON system will add new stat rows and we will be free to recache
 		// with the up-to-date information.
@@ -959,19 +963,7 @@ class Board extends Model {
 				});
 		};
 		
-		switch (env('CACHE_DRIVER'))
-		{
-			case "file" :
-			case "database" :
-				$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
-			
-			default :
-				$boards = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
-		}
-		
-		return $boards;
+		return Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
 	}
 	
 	public function getThreadByBoardId($board_id)

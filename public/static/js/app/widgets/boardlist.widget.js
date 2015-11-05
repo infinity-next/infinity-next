@@ -56,6 +56,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 				'board-content-wrap' : "<p class=\"board-cell\"></p>",
 				
 				// Individual items or parts of a single table cell.
+				'board-datum-fav'    : "<i class=\"board-favorite fa fa-star\" data-widget=\"board-favorite\"></i>",
 				'board-datum-lang'   : "<span class=\"board-lang\"></span>",
 				'board-datum-uri'    : "<a class=\"board-link\"></a>",
 				'board-datum-sfw'    : "<i class=\"fa fa-briefcase board-sfw\" title=\"SFW\"></i>",
@@ -158,7 +159,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 						widget.build.board( row, col ).appendTo( $row );
 					} );
 					
-					$row.appendTo( $body );
+					ib.bindAll( $row.appendTo( $body ) );
 				} );
 				
 			},
@@ -231,8 +232,12 @@ ib.widget("boardlist", function(window, $, undefined) {
 				},
 				
 				'uri'  : function(row, value) {
+					var $fav  = $( widget.options.templates['board-datum-fav'] );
 					var $link = $( widget.options.templates['board-datum-uri'] );
 					var $sfw  = $( widget.options.templates['board-datum-' + (row['is_worksafe'] == 1 ? "sfw" : "nsfw")] );
+					
+					$fav
+						.attr( 'data-board', row['board_uri'] );
 					
 					$link
 						.attr( 'href', window.app.url + "/" + row['board_uri'] + "/" )
@@ -240,12 +245,7 @@ ib.widget("boardlist", function(window, $, undefined) {
 					
 					// I decided against NSFW icons because it clutters the index.
 					// Blue briefcase = SFW. No briefcase = NSFW. Seems better.
-					if (row['is_worksafe'] == 1) {
-						return $link[0].outerHTML + $sfw[0].outerHTML;
-					}
-					else {
-						return $link[0].outerHTML;
-					}
+					return $fav[0].outerHTML + $link[0].outerHTML + (row['is_worksafe'] == 1 ? $sfw[0].outerHTML : "");
 				},
 				
 				'active' : function(row, value) {
@@ -329,7 +329,14 @@ ib.widget("boardlist", function(window, $, undefined) {
 				
 				var parameters = $.extend( {}, widget.lastSearch );
 				
-				parameters.page = parseInt(parameters.page, 10) + 1;
+				parameters.page = parseInt(parameters.page, 10);
+				
+				if (isNaN(parameters.page))
+				{
+					parameters.page = 1;
+				}
+				
+				++parameters.page;
 				
 				if (parameters.page === 1)
 				{

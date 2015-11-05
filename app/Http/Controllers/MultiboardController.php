@@ -23,7 +23,7 @@ class MultiboardController extends Controller {
 	
 	public function getIndex()
 	{
-		$posts = Cache::remember('overboard', 60, function()
+		$posts = Cache::remember('site.overboard', 60, function()
 		{
 			return Post::with('op', 'board', 'board.assets')
 				->withEverything()
