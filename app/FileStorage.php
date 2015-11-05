@@ -724,16 +724,30 @@ class FileStorage extends Model {
 					
 					// duration in seconds; half the duration = middle
 					$durationBits      = explode(":", $time);
-					$durationSeconds   = (float)$durationBits[2] + ((int)$durationBits[1] * 60) + ((int)$durationBits[0] * 3600);
+					$durationSeconds   = (float) $durationBits[2] + ((int)$durationBits[1] * 60) + ((int)$durationBits[0] * 3600);
 					$durationMiddle    = $durationSeconds / 2;
 					
-					$middleHours       = floor($durationMiddle / 3600);
-					$middleMinutes     = floor($durationMiddle / 60 % 3600);
-					$middleSeconds     = number_format($durationMiddle % 60, 2);
+					$middleHours       = str_pad(floor($durationMiddle / 3600), 2, "0", STR_PAD_LEFT);
+					$middleMinutes     = str_pad(floor($durationMiddle / 60 % 3600), 2, "0", STR_PAD_LEFT);
+					$middleSeconds     = str_pad(number_format($durationMiddle % 60, 2), 5, "0", STR_PAD_LEFT);
 					$middleTimestamp   = "{$middleHours}:{$middleMinutes}:{$middleSeconds}";
 					
-					$cmd = "ffmpeg -i {$video} -filter:v yadif -an -ss {$middleTimestamp} -f mjpeg -t 1 -r {$frames} -y {$image} 2>&1";
+					// $ffmpeg -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y -s $size $image 2>&1
 					
+					$cmd = "ffmpeg " .
+							"-i {$video} " . // Input video.
+							//"-filter:v yadif " . // Deinterlace.
+							"-deinterlace " .
+							"-an " . // No audio.
+							"-ss {$middleTimestamp} " . // Timestamp for our thumbnail.
+							"-f mjpeg " . // Output format.
+							"-vcodec png " .
+							"-t 1 " . // Duration in seconds.
+							"-r 1 " . // FPS, 1 for 1 frame.
+							"-y " . // Overwrite file if it already exists.
+							"{$image} 2>&1";
+					
+					$output = "";
 					exec($cmd, $output, $returnvalue);
 					
 					// Constrain thumbnail to proper dimensions.
@@ -743,8 +757,8 @@ class FileStorage extends Model {
 						$imageManager
 						->make($this->getFullPathThumb())
 							->resize(
-								Settings::get('attachmentThumbnailSize'),
-								Settings::get('attachmentThumbnailSize'),
+								Settings::get('attachmentThumbnailSize', 250),
+								Settings::get('attachmentThumbnailSize', 250),
 								function($constraint) {
 									$constraint->aspectRatio();
 									$constraint->upsize();
@@ -759,7 +773,8 @@ class FileStorage extends Model {
 				}
 				catch (\Exception $e)
 				{
-					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}. Output: {$output}");
+					dd($e);
+					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
 				}
 			}
 			else if ($this->isImage())
