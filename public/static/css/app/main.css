@@ -2558,6 +2558,9 @@ main.index-threaded {
 							margin: 0 1em 0 0;
 							max-width: 100%;
 						}
+							li.post-attachment.attachment-expanded div.attachment-container {
+								background-color: rgba(255, 255, 255, 0.1);
+							}
 							ul.post-attachments.attachments-single div.attachment-container {
 								margin-right: 2em;
 							}

@@ -23,11 +23,13 @@
 			@foreach ($posts as $thread)
 			<li class="thread-item">
 				<article class="thread">
-					@include('content.board.thread', [
-						'board'   => $board,
-						'thread'  => $thread,
-						'updater' => !!$reply_to,
-					])
+					<div class="thread-interior">
+						@include('content.board.thread', [
+							'board'   => $board,
+							'thread'  => $thread,
+							'updater' => !!$reply_to,
+						])
+					</div>
 				</article>
 			</li>
 			@endforeach

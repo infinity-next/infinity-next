@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use File;
 use Input;
+use Log;
 use Settings;
 use Sleuth;
 use Storage;
@@ -507,6 +508,9 @@ class FileStorage extends Model {
 			case "audio/webm" :
 				return "wav";
 			
+			case "audio/x-matroska" :
+				return "mka";
+			
 			##
 			# VIDEO
 			##
@@ -524,6 +528,9 @@ class FileStorage extends Model {
 			
 			case "video/x-flv" :
 				return "flv";
+			
+			case "video/x-matroska" :
+				return "mkv";
 		}
 		
 		return $mimes[1];
@@ -565,6 +572,7 @@ class FileStorage extends Model {
 			case "audio/ogg" :
 			case "audio/wave" :
 			case "audio/webm" :
+			case "audio/x-matroska" :
 				return true;
 		}
 		
@@ -625,6 +633,7 @@ class FileStorage extends Model {
 			case "video/mp4" :
 			case "video/ogg" :
 			case "video/x-flv" :
+			case "video/x-matroska" :
 				return true;
 		}
 		
@@ -698,40 +707,59 @@ class FileStorage extends Model {
 			}
 			else if ($this->isVideo())
 			{
-				Storage::makeDirectory($this->getDirectoryThumb());
+				// Used for debugging.
+				$output   = "Haven't executed once yet.";
 				
-				$video    = $this->getFullPath();
-				$image    = $this->getFullPathThumb();
-				$interval = 0;
-				$frames   = 1;
-				
-				$cmd = "ffmpeg -i {$video} -deinterlace -an -ss {$interval} -f mjpeg -t 1 -r 1 -y {$image} 2>&1";
-				
-				exec($cmd, $output, $returnvalue);
-				
-				// Constrain thumbnail to proper dimensions.
-				if (Storage::exists($this->getPathThumb()))
-				{	
-					$imageManager = new ImageManager;
-					$imageManager
-					->make($this->getFullPathThumb())
-						->resize(
-							Settings::get('attachmentThumbnailSize'),
-							Settings::get('attachmentThumbnailSize'),
-							function($constraint) {
-								$constraint->aspectRatio();
-								$constraint->upsize();
-							}
-						)
-						->encode("jpg", Settings::get('attachmentThumbnailQuality'))
-						->save($this->getFullPathThumb());
-					
-					$this->has_thumbnail = true;
-					return true;
-				}
-				else
+				try
 				{
-					dd($output);
+					Storage::makeDirectory($this->getDirectoryThumb());
+					
+					$video    = $this->getFullPath();
+					$image    = $this->getFullPathThumb();
+					$interval = 0;
+					$frames   = 1;
+					
+					// get duration
+					$time =  exec("ffmpeg -i $fileName.flv 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
+					
+					// duration in seconds; half the duration = middle
+					$duration          = explode(":",$time);
+					$durationInSeconds = $duration[0]*3600 + $duration[1]*60+ round($duration[2]);
+					$durationMiddle    = $durationInSeconds/2;
+					
+					// recalculte to minutes and seconds
+					$minutes    = $durationMiddle/60;
+					$realMinutes = floor($minutes);
+					$realSeconds = round(($minutes-$real_minutes)*60);
+					
+					$cmd = "ffmpeg -i {$video} -deinterlace -an -ss {$realMinutes}:{$realSeconds}:{$interval} -f mjpeg -t 1 -r 1 -y {$image} 2>&1";
+					
+					exec($cmd, $output, $returnvalue);
+					
+					// Constrain thumbnail to proper dimensions.
+					if (Storage::exists($this->getPathThumb()))
+					{	
+						$imageManager = new ImageManager;
+						$imageManager
+						->make($this->getFullPathThumb())
+							->resize(
+								Settings::get('attachmentThumbnailSize'),
+								Settings::get('attachmentThumbnailSize'),
+								function($constraint) {
+									$constraint->aspectRatio();
+									$constraint->upsize();
+								}
+							)
+							->encode("jpg", Settings::get('attachmentThumbnailQuality'))
+							->save($this->getFullPathThumb());
+						
+						$this->has_thumbnail = true;
+						return true;
+					}
+				}
+				catch (\Exception $e)
+				{
+					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}. Output: {$output}");
 				}
 			}
 			else if ($this->isImage())
