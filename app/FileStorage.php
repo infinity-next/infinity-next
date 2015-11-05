@@ -666,7 +666,7 @@ class FileStorage extends Model {
 	 */
 	public function processThumb()
 	{
-		if (!Storage::exists($this->getPathThumb()))
+		if (1 || !Storage::exists($this->getPathThumb()))
 		{
 			if ($this->isAudio())
 			{
@@ -720,25 +720,25 @@ class FileStorage extends Model {
 					$frames   = 1;
 					
 					// get duration
-					$time =  exec("ffmpeg -i $fileName.flv 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
+					$time =  exec("ffmpeg -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
 					
 					// duration in seconds; half the duration = middle
-					$duration          = explode(":",$time);
-					$durationInSeconds = $duration[0]*3600 + $duration[1]*60+ round($duration[2]);
-					$durationMiddle    = $durationInSeconds/2;
+					$durationBits      = explode(":", $time);
+					$durationSeconds   = (float)$durationBits[2] + ((int)$durationBits[1] * 60) + ((int)$durationBits[0] * 3600);
+					$durationMiddle    = $durationSeconds / 2;
 					
-					// recalculte to minutes and seconds
-					$minutes    = $durationMiddle/60;
-					$realMinutes = floor($minutes);
-					$realSeconds = round(($minutes-$real_minutes)*60);
+					$middleHours       = floor($durationMiddle / 3600);
+					$middleMinutes     = floor($durationMiddle / 60 % 3600);
+					$middleSeconds     = number_format($durationMiddle % 60, 2);
+					$middleTimestamp   = "{$middleHours}:{$middleMinutes}:{$middleSeconds}";
 					
-					$cmd = "ffmpeg -i {$video} -deinterlace -an -ss {$realMinutes}:{$realSeconds}:{$interval} -f mjpeg -t 1 -r 1 -y {$image} 2>&1";
+					$cmd = "ffmpeg -i {$video} -filter:v yadif -an -ss {$middleTimestamp} -f mjpeg -t 1 -r {$frames} -y {$image} 2>&1";
 					
 					exec($cmd, $output, $returnvalue);
 					
 					// Constrain thumbnail to proper dimensions.
 					if (Storage::exists($this->getPathThumb()))
-					{	
+					{
 						$imageManager = new ImageManager;
 						$imageManager
 						->make($this->getFullPathThumb())
@@ -759,6 +759,7 @@ class FileStorage extends Model {
 				}
 				catch (\Exception $e)
 				{
+					dd($e);
 					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}. Output: {$output}");
 				}
 			}
