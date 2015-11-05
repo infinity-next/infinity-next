@@ -759,7 +759,6 @@ class FileStorage extends Model {
 				}
 				catch (\Exception $e)
 				{
-					dd($e);
 					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}. Output: {$output}");
 				}
 			}
