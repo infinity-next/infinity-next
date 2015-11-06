@@ -40,5 +40,9 @@
 			@endforeach
 		</tbody>
 	</table>
+	
+	@include('nav.paginator', [
+		'paginator' => $boards,
+	])
 	@endif
 @endsection

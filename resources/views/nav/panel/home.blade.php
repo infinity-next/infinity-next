@@ -13,6 +13,16 @@
 			</li>
 			@endif
 			
+			<li class="cp-linkgroup">
+				<a class="linkgroup-name">@lang('nav.panel.secondary.home.status')</a>
+				
+				<ul class="cp-linkitems">
+					<li class="cp-linkitem">
+						<a class="linkitem-name" href="{!! url('cp/banned') !!}">@lang('nav.panel.secondary.home.bans')</a>
+					</li>
+				</ul>
+			</li>
+			
 			@if (env('CONTRIB_ENABLED', false))
 			<li class="cp-linkgroup">
 				<a class="linkgroup-name">@lang('nav.panel.secondary.home.sponsorship')</a>

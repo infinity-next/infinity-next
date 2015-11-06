@@ -704,10 +704,11 @@ trait PermissionUser {
 					$query->whereNotIn('board_uri', $boardlist);
 				}
 			})
+			->andAssets()
 			->andCreator()
 			->andOperator()
 			->andStaffAssignments()
-			->get();
+			->paginate(25);
 	}
 	
 	/**

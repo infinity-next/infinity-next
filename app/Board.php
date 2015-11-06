@@ -1136,6 +1136,10 @@ class Board extends Model {
 		]);
 	}
 	
+	public function scopeAndAssets($query)
+	{
+		return $query->with('assets');
+	}
 	
 	public function scopeAndCreator($query)
 	{

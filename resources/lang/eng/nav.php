@@ -52,6 +52,9 @@ return [
 				'account'         => "Account",
 				'password_change' => "Change Password",
 				
+				'status'          => "Status",
+				'bans'            => "Am I Banned?",
+				
 				'sponsorship'     => "Sponsorship",
 				'donate'          => "Send Cash Contribution",
 			],

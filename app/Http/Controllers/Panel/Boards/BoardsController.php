@@ -3,6 +3,7 @@
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Lang;
 use Input;
@@ -48,7 +49,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getAssets()
 	{
-		$boards = $this->user->getBoardsWithAssetRights()->load('assets');
+		$boards = $this->user->getBoardsWithAssetRights();
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
@@ -63,7 +64,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getConfig()
 	{
-		$boards = $this->user->getBoardsWithConfigRights()->load('assets');
+		$boards = $this->user->getBoardsWithConfigRights();
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,
@@ -78,7 +79,7 @@ class BoardsController extends PanelController {
 	 */
 	public function getStaff()
 	{
-		$boards = $this->user->getBoardsWithStaffRights()->load('assets');
+		$boards = $this->user->getBoardsWithStaffRights();
 		
 		return $this->view(static::VIEW_DASHBOARD, [
 			'boards' => $boards,

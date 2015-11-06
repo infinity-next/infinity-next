@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'App\Console\Commands\Autoprune',
+		'App\Console\Commands\Import',
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\RecordStats',
 		'App\Console\Commands\RecordStatsAll',
