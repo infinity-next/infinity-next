@@ -329,7 +329,11 @@ class Role extends Model {
 			// Do not select roles which are already being inherited,
 			// unless they are a Board or Global moderator role.
 			->where(function($query) use ($board, $user) {
-				$query->whereDoesntHave('inheritors');
+				$query->whereDoesntHave('inheritors', function($query) use ($board)
+				{
+					$query->where('board_uri', $board->board_uri);
+				});
+				
 				$query->orWhereIn('role_id', [
 					Role::ID_MODERATOR,
 					Role::ID_JANITOR,

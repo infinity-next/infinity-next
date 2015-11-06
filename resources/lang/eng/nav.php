@@ -53,7 +53,8 @@ return [
 				'password_change' => "Change Password",
 				
 				'status'          => "Status",
-				'bans'            => "Am I Banned?",
+				'banned'          => "Am I Banned?",
+				'bans'            => "Bans",
 				
 				'sponsorship'     => "Sponsorship",
 				'donate'          => "Send Cash Contribution",

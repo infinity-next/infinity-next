@@ -74,7 +74,7 @@ class Ban extends Model {
 	 */
 	public function canView(PermissionUser $user)
 	{
-		return $this->isBanForIP();
+		return $this->isBanForIP() || $user->canViewBan($this);
 	}
 	
 	/**
@@ -141,17 +141,17 @@ class Ban extends Model {
 	
 	public function getRedirectUrl()
 	{
-		return "/cp/banned/" . ($this->isGlobal() ? "global" : "board/{$this->board_uri}") . "/{$this->ban_id}";
+		return "/cp/bans/" . ($this->isGlobal() ? "global" : "board/{$this->board_uri}") . "/{$this->ban_id}";
 	}
 	
 	public function getAppealUrl()
 	{
 		if (!is_null($this->board_uri))
 		{
-			return "/cp/banned/board/{$this->board_uri}/{$this->ban_id}";
+			return "/cp/bans/board/{$this->board_uri}/{$this->ban_id}";
 		}
 		
-		return "/cp/banned/global/{$this->ban_id}";
+		return "/cp/bans/global/{$this->ban_id}";
 	}
 	
 	public static function isBanned($ip, $board = null)

@@ -33,6 +33,7 @@ return [
 		'appeals'            => "Ban Appeals",
 		'board'              => "Configuration for /:board_uri/",
 		'site'               => "Site Configuration",
+		'bans_public'        => "Public Bans",
 		'board_create'       => "Create a Board",
 		'board_create_your'  => "Create your Board",
 		'board_role_add'     => "New Role for /:board_uri/",
@@ -43,6 +44,7 @@ return [
 		'board_staff_add'    => "Creating /:board_uri/ Staff",
 		'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
 		'permissions'        => ":role Role Permissions",
+		'they_are_banned'    => "Ban Overview",
 		'you_are_banned'     => "You are BANNED!",
 		'you_are_not_banned' => "You are not banned.",
 		'reports'            => "Open Reports",
@@ -131,20 +133,22 @@ return [
 		
 		'ban_global' => "All Boards",
 		
-		'appeal_open'   => "Appeals Open",
-		'appeal_closed' => "Appeals Closed",
+		'appeal_open'    => "Appeals Open",
+		'appeal_closed'  => "Appeals Closed",
+		'appeal_expired' => "Ban has Expired",
 		
 		'ban_review' => [
 			'expired'        => "This ban is expired.",
 			'seeing'         => "Now that you have seen this ban you can continue posting.",
 			
-			'banned_from'    => "You are banned from /:board_uri/.",
-			'banned_all'     => "You are banned from <strong>all boards</strong>.",
+			'banned_from'    => "Banned from /:board_uri/.",
+			'banned_all'     => "Banned from <strong>all boards</strong>.",
 			'no_reason'      => "No reason given.",
 			'expires_at'     => "This ban was placed at :start and expires at :end, which is :diff.",
 			'expires_no'     => "This ban was placed at :start and <strong>never</strong> expires.",
 			'mod'            => "The volunteer who filed your ban was :mod.",
-			'identity'       => "According to our server, your IP is <tt>:ip</tt>",
+			'identity_match' => "According to our server, your IP is <tt>:ip</tt> and is affected by this ban.",
+			'identity_notit' => "According to our server, your IP is <tt>:ip</tt> and is <em>not</em> affected by this ban.",
 			'appeal_now'     => "You may appeal your ban.",
 			'appeal_pending' => "Your appeal was submitted on :date (:diff) and is pending approval.",
 			'appeal_at'      => "Your ban is too short to appeal and must be waited out.",

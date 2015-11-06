@@ -195,6 +195,13 @@ table {
 	
 	table tbody {
 	}
+		table tbody tr.row-inactive {
+			opacity: 0.4;
+		}
+			table tbody tr.row-inactive:hover {
+				opacity: 1;
+			}
+			
 		table tbody tr:nth-child(even) {
 			background: rgba(0,0,0,0.05);
 		}

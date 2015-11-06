@@ -275,9 +275,9 @@ class PostController extends Controller {
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;
 		$ban->expires_at    = clone $ban->created_at;
-		$ban->expires_at->addDays($expiresDays);
-		$ban->expires_at->addHours($expiresHours);
-		$ban->expires_at->addMinutes($expiresMinutes);
+		$ban->expires_at    = $ban->expires_at->addDays($expiresDays);
+		$ban->expires_at    = $ban->expires_at->addHours($expiresHours);
+		$ban->expires_at    = $ban->expires_at->addMinutes($expiresMinutes);
 		$ban->mod_id        = $this->user->user_id;
 		$ban->post_id       = $post->post_id;
 		$ban->ban_reason_id = null;

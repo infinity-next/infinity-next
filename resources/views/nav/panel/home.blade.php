@@ -18,7 +18,11 @@
 				
 				<ul class="cp-linkitems">
 					<li class="cp-linkitem">
-						<a class="linkitem-name" href="{!! url('cp/banned') !!}">@lang('nav.panel.secondary.home.bans')</a>
+						<a class="linkitem-name" href="{!! url('cp/bans/banned') !!}">@lang('nav.panel.secondary.home.banned')</a>
+					</li>
+					
+					<li class="cp-linkitem">
+						<a class="linkitem-name" href="{!! url('cp/bans') !!}">@lang('nav.panel.secondary.home.bans')</a>
 					</li>
 				</ul>
 			</li>

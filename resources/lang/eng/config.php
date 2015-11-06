@@ -156,6 +156,7 @@ return [
 		],
 		
 		'board' => [
+			'bans'   => "View board bans",
 			'logs'   => "View staff logs",
 			'config' => "Edit board config",
 			'create' => "Create board",

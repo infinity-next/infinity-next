@@ -567,6 +567,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user view this ban?
+	 *
+	 * @return boolean
+	 */
+	public function canViewBan(Ban $ban)
+	{
+		return $this->can('board.bans', $ban->board_uri);
+	}
+	
+	/**
 	 * Can this user view a board's reports?
 	 *
 	 * @return boolean

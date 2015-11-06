@@ -24,9 +24,9 @@ class AppealsController extends PanelController {
 	/**
 	 * View path for the secondary (sidebar) navigation.
 	 *
-	 * @var str
+	 * @var string
 	 */
-	public static $navSecondary = "nav.panel.home";
+	public static $navSecondary = "nav.panel.board";
 	
 	public function getIndex(Board $board = null)
 	{

@@ -45,6 +45,7 @@ class PermissionSeeder extends Seeder {
 	{
 		return [
 			"board.config",
+			"board.bans",
 			"board.logs",
 			"board.create",
 			"board.delete",
@@ -163,6 +164,7 @@ class PermissionGroupSeeder extends Seeder {
 				
 				'permissions'   => [
 					"board.config",
+					"board.bans",
 					"board.logs",
 					"board.delete",
 					"board.reassign",
