@@ -17,6 +17,12 @@ class OptionSeeder extends Seeder {
 			foreach ($slugs as $slug)
 			{
 				$slug['option_type'] = $slugType;
+				
+				if (!isset($slug['format_parameters']) || is_null($slug['format_parameters']))
+				{
+					$slug['format_parameters'] = "{}";
+				}
+				
 				$option = Option::updateOrCreate([
 					'option_name' => $slug['option_name'],
 				], $slug);
