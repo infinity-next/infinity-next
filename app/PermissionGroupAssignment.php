@@ -19,11 +19,18 @@ class PermissionGroupAssignment extends Model {
 	protected $fillable = ['permission_id', 'permission_group_id', 'display_order'];
 	
 	/**
-	 * Determines if Laravel should set created_at and updated_at timestamps.
+	 * Indicates if Laravel should set created_at and updated_at timestamps.
 	 *
 	 * @var array
 	 */
 	public $timestamps = false;
+	
+	/**
+	 * Indicates if the IDs are auto-incrementing.
+	 *
+	 * @var array
+	 */
+	public $incrementing = false;
 	
 	
 	public function option()

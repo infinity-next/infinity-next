@@ -79,7 +79,7 @@ class FileAttachment extends Model {
 			})
 			->with('storage')
 			->with('post.board')
-			->groupBy('file_id')
+			//->groupBy('file_id')
 			->limit(20)
 			->get();
 	}

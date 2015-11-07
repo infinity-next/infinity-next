@@ -43,14 +43,14 @@ class OptionSeeder extends Seeder {
 					'default_value'         => 1,
 					'format'                => "onoff",
 					'data_type'             => "boolean",
-					'validation_parameters' => 'boolean'
+					'validation_parameters' => "boolean",
 				],
 				[
 					'option_name'           => "adventureIcons",
 					'default_value'         => 1,
 					'format'                => "onoff",
 					'data_type'             => "boolean",
-					'validation_parameters' => 'boolean'
+					'validation_parameters' => "boolean",
 				],
 				
 				[
@@ -59,7 +59,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "attachmentThumbnailSize",
@@ -67,7 +67,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 50 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "attachmentThumbnailQuality",
@@ -75,7 +75,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 100 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "attachmentThumbnailJpeg",
@@ -87,10 +87,8 @@ class OptionSeeder extends Seeder {
 				[
 					'option_name'           => "attachmentName",
 					'default_value'         => "%t-%i",
-					'format_parameters'     => json_encode( [ 'min' => 0, ] ),
-					'format'                => "text",
 					'data_type'             => "string",
-					'validation_parameters' => 'required|string|min:$min'
+					'validation_parameters' => "required|string|min:\$min"
 				],
 				
 				[
@@ -99,7 +97,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => -1 ] ),
 					'data_type'             => "integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "banSubnets",
@@ -115,7 +113,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "boardCreateTimer",
@@ -123,7 +121,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "boardListShow",
@@ -137,6 +135,7 @@ class OptionSeeder extends Seeder {
 					'default_value'         => "",
 					'format'                => "textbox",
 					'data_type'             => "string",
+					'validation_parameters' => "string",
 				],
 				[
 					'option_name'           => "postFloodTime",
@@ -144,7 +143,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min'
+					'validation_parameters' => 'required|min:\$min'
 				],
 				[
 					'option_name'           => "globalReportText",
@@ -152,7 +151,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				
 				[
@@ -161,7 +160,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min'
+					'validation_parameters' => 'min:\$min'
 				],
 				[
 					'option_name'           => "ephePostHardDelete",
@@ -169,7 +168,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min'
+					'validation_parameters' => 'min:\$min'
 				],
 				[
 					'option_name'           => "epheMediaPrune",
@@ -177,7 +176,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min'
+					'validation_parameters' => 'min:\$min'
 				],
 			],
 			
@@ -188,7 +187,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "boardLanguage",
@@ -196,7 +195,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "template",
 					'format_parameters'     => json_encode( [ 'lang' => implode(",", array_keys(trans('lang'))) ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'string|in:$lang',
+					'validation_parameters' => 'string|in:\$lang',
 				],
 				[
 					'option_name'           => "boardReportText",
@@ -204,7 +203,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "postAnonymousName",
@@ -219,7 +218,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 10 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'required|min:$min|max:$max'
+					'validation_parameters' => 'required|min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "postMaxLength",
@@ -227,7 +226,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'integer|min:$min|max:$max|greater_than:postMinLength',
+					'validation_parameters' => 'integer|min:\$min|max:\$max|greater_than:postMinLength',
 				],
 				[
 					'option_name'           => "postMinLength",
@@ -235,7 +234,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'integer|min:$min|max:$max',
+					'validation_parameters' => 'integer|min:\$min|max:\$max',
 				],
 				[
 					'option_name'           => "postsPerPage",
@@ -243,7 +242,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 5, 'max' => 20 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "postsThreadId",
@@ -267,7 +266,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheSageThreadDays",
@@ -275,7 +274,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheSageThreadPage",
@@ -283,7 +282,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheLockThreadReply",
@@ -291,7 +290,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheLockThreadDays",
@@ -299,7 +298,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheLockThreadPage",
@@ -307,7 +306,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadReply",
@@ -315,7 +314,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadDays",
@@ -323,7 +322,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 365 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 				[
 					'option_name'           => "epheDeleteThreadPage",
@@ -331,7 +330,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'min:$min|max:$max'
+					'validation_parameters' => 'min:\$min|max:\$max'
 				],
 			],
 		];

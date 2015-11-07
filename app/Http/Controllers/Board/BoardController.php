@@ -173,7 +173,7 @@ class BoardController extends Controller {
 		
 		if ($request->wantsJson())
 		{
-			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
+			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', Carbon::now()->subMinutes(4)->timestamp));
 			$includeHTML  = isset($input['updateHtml']);
 			
 			$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);

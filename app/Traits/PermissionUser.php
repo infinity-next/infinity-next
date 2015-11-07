@@ -858,7 +858,8 @@ trait PermissionUser {
 				if (!$this->isAnonymous())
 				{
 					$query->orWhereHas('users', function($query) {
-						$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
+						//$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
+						$query->where("user_roles.user_id", $this->user_id);
 					});
 				}
 			})

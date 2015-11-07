@@ -261,7 +261,7 @@ class FixMysqlCollate extends Migration
 			$table->mediumText('format_parameters');
 			$table->string('data_type', 24)->default('board');
 			$table->text('validation_parameters');
-			$table->text('validation_class');
+			$table->text('validation_class')->nullable();
 		});
 		
 		/**

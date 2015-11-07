@@ -18,7 +18,19 @@ class RolePermission extends Model {
 	 */
 	protected $fillable = ['role_id', 'permission_id', 'value'];
 	
+	/**
+	 * Indicates if Laravel should set created_at and updated_at timestamps.
+	 *
+	 * @var array
+	 */
 	public $timestamps = false;
+	
+	/**
+	 * Indicates if the IDs are auto-incrementing.
+	 *
+	 * @var array
+	 */
+	public $incrementing = false;
 	
 	
 	public function permission()

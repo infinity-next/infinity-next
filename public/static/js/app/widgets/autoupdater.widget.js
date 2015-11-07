@@ -77,6 +77,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 								{
 									$existingPost.replaceWith($newPost);
 									ib.bindElement($newPost[0]);
+									return $newPost;
 								}
 							}
 							else
@@ -87,6 +88,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 						}
 						else if(reply.html !== null)
 						{
+							console.log("Inserting " + reply.post_id);
 							$newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
 							$newPost.insertBefore(widget.$widget);
 							ib.bindAll($newPost);
@@ -108,11 +110,13 @@ ib.widget("autoupdater", function(window, $, undefined) {
 									});
 								}
 							}
+							
+							return $newPost;
 						}
 					});
 				}
 				
-				return $newPost;
+				return false;
 			},
 			
 			updateComplete : function() {

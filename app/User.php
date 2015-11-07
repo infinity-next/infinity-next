@@ -211,7 +211,8 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 			$directSelect = $tempInstance->getTable();
 			$directKey    = $tempInstance->getKeyName();
 			
-			$query->where(\DB::raw("`{$directSelect}`.`{$directKey}`"), '=', Role::ID_ADMIN);
+			//$query->where(\DB::raw("`{$directSelect}`.`{$directKey}`"), '=', Role::ID_ADMIN);
+			$query->where("{$directSelect}.{$directKey}", '=', Role::ID_ADMIN);
 		});
 	}
 	/**

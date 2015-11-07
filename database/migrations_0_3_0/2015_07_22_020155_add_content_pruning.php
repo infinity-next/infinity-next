@@ -26,7 +26,7 @@ class AddContentPruning extends Migration {
 		Post::withTrashed()
 			->whereNull('bumped_last')
 			->update([
-				"bumped_last" => DB::raw("`reply_last`"),
+				"bumped_last" => DB::raw("reply_last"),
 			]);
 	}
 	

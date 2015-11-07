@@ -25,17 +25,18 @@ class RoleSeeder extends Seeder {
 		foreach (Board::get() as $board)
 		{
 			$boardRole = $this->slugs()[Role::ID_OWNER];
-			$boardRole['board_uri']  = $board->board_uri;
-			$boardRole['system']     = $board->board_uri;
-			$boardRole['inherit_id'] = Role::ID_OWNER;
-			$boardRole['weight']   += 5;
-			unset($boardRole['role_id']);
 			
-			Role::updateOrCreate([
-				'role'      => $boardRole['role'],
-				'board_uri' => $boardRole['board_uri'],
-				'caste'     => $boardRole['caste'],
-			], $boardRole);
+			$roleModel = Role::updateOrCreate([
+				'role'       => $boardRole['role'],
+				'board_uri'  => $board->board_uri,
+				'caste'      => $boardRole['caste'],
+			], [
+				'name'       => $boardRole['name'],
+				'capcode'    => $boardRole['capcode'],
+				'inherit_id' => Role::ID_OWNER,
+				'system'     => false,
+				'weight'     => $boardRole['weight'] + 5,
+			]);
 		}
 		
 	}
@@ -191,11 +192,6 @@ class RolePermissionSeeder extends Seeder {
 				
 				if (in_array($permission_id, $permissions))
 				{
-					RolePermission::firstOrCreate([
-						'role_id'       => $role_id,
-						'permission_id' => $permission_id,
-						'value'         => $permission_value,
-					]);
 				}
 				else
 				{
@@ -208,16 +204,20 @@ class RolePermissionSeeder extends Seeder {
 		// Give admin permissions.
 		if (count($permissions))
 		{
+			$role = Role::find( Role::ID_ADMIN );
+			$role->permissions()->detach();
+			
+			$attachments = [];
+			
 			foreach ($permissions as $permission_id)
 			{
-				$permission = RolePermission::firstOrNew([
-					'role_id'       => Role::ID_ADMIN,
+				$attachments[] =[
 					'permission_id' => $permission_id,
-				]);
-				
-				$permission->value = 1;
-				$permission->save();
+					'value'         => 1,
+				];
 			}
+			
+			$role->permissions()->attach($attachments);
 		}
 	}
 	

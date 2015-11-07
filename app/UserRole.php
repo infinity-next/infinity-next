@@ -18,7 +18,19 @@ class UserRole extends Model {
 	 */
 	protected $fillable = ['user_id', 'role_id'];
 	
+	/**
+	 * Indicates if Laravel should set created_at and updated_at timestamps.
+	 *
+	 * @var array
+	 */
 	public $timestamps = false;
+	
+	/**
+	 * Indicates if the IDs are auto-incrementing.
+	 *
+	 * @var array
+	 */
+	public $incrementing = false;
 	
 	
 	public function user()
