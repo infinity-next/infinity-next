@@ -366,25 +366,14 @@ class OptionGroupSeeder extends Seeder {
 			
 			foreach ($optionGroupOptions as $optionGroupIndex => $optionGroupOption)
 			{
-				$optionGroupOptionModel = OptionGroupAssignment::firstOrNew([
-					'option_name'     => $optionGroupOption,
-					'option_group_id' => $optionGroup->option_group_id,
-				]);
-				
-				if ($optionGroupOptionModel->exists)
-				{
-					OptionGroupAssignment::where([
-						'option_name'     => $optionGroupOption,
-						'option_group_id' => $optionGroup->option_group_id,
-					])->update([
-						'display_order' => $optionGroupIndex * 10,
+				$optionGroupOptionModel = $optionGroup
+					->assignments()
+					->firstOrNew([
+						'option_name' => $optionGroupOption,
 					]);
-				}
-				else
-				{
-					$optionGroupOptionModel->display_order = $optionGroupIndex * 10;
-					$optionGroupOptionModel->save();
-				}
+				
+				$optionGroupOptionModel->display_order = $optionGroupIndex * 10;
+				$optionGroupOptionModel->save();
 				
 				$optionGroupOptionModels[] = $optionGroupOptionModel;
 			}

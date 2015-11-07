@@ -114,7 +114,7 @@ class PermissionGroupSeeder extends Seeder {
 		
 		foreach ($this->slugs() as $slug)
 		{
-			$permissionGrouppermissions = $slug['permissions'];
+			$permissionGroupPermissionModels = $slug['permissions'];
 			unset($slug['permissions']);
 			
 			$permissionGroup = PermissionGroup::firstOrNew([
@@ -128,29 +128,18 @@ class PermissionGroupSeeder extends Seeder {
 			
 			$permissionGroup->save();
 			
-			foreach ($permissionGrouppermissions as $permissionGroupIndex => $permissionGroupPermission)
+			foreach ($permissionGroupPermissionModels as $permissionGroupIndex => $permissionGroupPermission)
 			{
-				$permissionGrouppermissionModel = PermissionGroupAssignment::firstOrNew([
-					'permission_id'       => $permissionGroupPermission,
-					'permission_group_id' => $permissionGroup->permission_group_id,
-				]);
-				
-				if ($permissionGrouppermissionModel->exists)
-				{
-					PermissionGroupAssignment::where([
-						'permission_id'       => $permissionGroupPermission,
-						'permission_group_id' => $permissionGroup->permission_group_id,
-					])->update([
-						'display_order' => $permissionGroupIndex * 10,
+				$permissionGroupPermissionModel = $permissionGroup
+					->assignments()
+					->firstOrNew([
+						'permission_id' => $permissionGroupPermission,
 					]);
-				}
-				else
-				{
-					$permissionGrouppermissionModel->display_order = $permissionGroupIndex * 10;
-					$permissionGrouppermissionModel->save();
-				}
 				
-				$permissionGrouppermissionModels[] = $permissionGrouppermissionModel;
+				$permissionGroupPermissionModel->display_order = $permissionGroupIndex * 10;
+				$permissionGroupPermissionModel->save();
+				
+				$permissionGroupPermissionModels[] = $permissionGroupPermissionModel;
 			}
 		}
 	}

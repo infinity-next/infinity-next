@@ -41,6 +41,10 @@ class OptionGroup extends Model {
 	 */
 	public $option_value;
 	
+	public function assignments()
+	{
+		return $this->hasMany('\App\OptionGroupAssignment', 'option_group_id');
+	}
 	
 	public function options()
 	{

@@ -33,6 +33,11 @@ class PermissionGroup extends Model {
 	public $timestamps = false;
 	
 	
+	public function assignments()
+	{
+		return $this->hasMany('\App\PermissionGroupAssignment', 'permission_group_id');
+	}
+	
 	public function permissions()
 	{
 		return $this->belongsToMany("\App\Permission", 'permission_group_assignments', 'permission_group_id', 'permission_id')->withPivot('display_order');
