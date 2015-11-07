@@ -7,6 +7,7 @@ use App\Post;
 use App\Role;
 use App\RolePermission;
 use App\Contracts\PermissionUser as PermissionUserContract;
+use App\Support\IP\CIDR;
 
 use Illuminate\Database\Eloquent\Collection;
 
@@ -1079,15 +1080,21 @@ trait PermissionUser {
 	 * Returns a human-readable IP address based on user permissions.
 	 * This will obfuscate it if we do not have permission to view raw IPs.
 	 *
-	 * @param  string  $ip  Normal IP string.
+	 * @param  string|CIDR  $ip  Normal IP string or a CIDR support object.
 	 * @return string  Either $ip or an ip_less version.
 	 */
 	public function getTextForIP($ip)
 	{
 		if ($this->canViewRawIP())
 		{
-			return $ip;
+			return (string) $ip;
 		}
+		
+		if ($ip instanceof CIDR && $ip->getStart() != $ip->getEnd())
+		{
+			return ip_less($ip->getStart()) . "/" . $ip->getPrefix();
+		}
+		
 		
 		return ip_less($ip);
 	}
