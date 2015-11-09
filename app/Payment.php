@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model {
 	
+	use \App\Traits\EloquentBinary;
+	
 	/**
 	 * The database table used by the model.
 	 *
@@ -56,6 +58,17 @@ class Payment extends Model {
 		return $this->belongsTo('\App\User', 'user_id', 'customer_id');
 	}
 	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getPaymentIpStartAttribute($value)
+	{
+		return new IP($value);
+	}
+	
 	public static function getDonorGroups()
 	{
 		$donors = static::where('amount', '>', '0')->orderBy('amount', 'desc')->get();
@@ -102,4 +115,16 @@ class Payment extends Model {
 		
 		return $donorGroups;
 	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setPaymentIpStartAttribute($value)
+	{
+		$this->attributes['payment_ip'] = (new IP($value))->toSQL();
+	}
+	
 }

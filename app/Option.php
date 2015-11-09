@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Option extends Model implements PseudoEnumContract {
 	
+	use \App\Traits\EloquentBinary;
 	use PseudoEnum;
 	
 	/**

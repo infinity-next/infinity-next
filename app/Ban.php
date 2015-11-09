@@ -1,11 +1,13 @@
 <?php namespace App;
 
 use App\Support\IP as IP;
-use App\Contracts\PermissionUser  as PermissionUser;
+use App\Contracts\PermissionUser as PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 use Request;
 
 class Ban extends Model {
+	
+	use \App\Traits\EloquentBinary;
 	
 	/**
 	 * The database table used by the model.

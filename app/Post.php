@@ -24,6 +24,7 @@ use App\Events\ThreadNewReply;
 
 class Post extends Model {
 	
+	use \App\Traits\EloquentBinary;
 	use SoftDeletes;
 	
 	/**

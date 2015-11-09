@@ -9,6 +9,8 @@ use Request;
 
 class BoardAdventure extends Model {
 	
+	use \App\Traits\EloquentBinary;
+	
 	/**
 	 * The database table used by the model.
 	 *

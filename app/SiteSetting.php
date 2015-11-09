@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SiteSetting extends Model {
 	
+	use \App\Traits\EloquentBinary;
+	
 	/**
 	 * The database table used by the model.
 	 *
