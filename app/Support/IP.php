@@ -55,7 +55,7 @@ class IP extends CIDR {
 			{
 				$start = inet_ntop(binary_unsql($cidr));
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				$start = $cidr;
 			}

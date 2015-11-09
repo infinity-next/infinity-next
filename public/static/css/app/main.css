@@ -2306,7 +2306,8 @@ main.index-threaded {
 		}
 		
 		main.index-threaded .thread-item {
-			/* border-top: 1px solid #B7C5D9; */
+			border-top:    1px solid rgba(0, 0, 255, 0.1);
+			border-bottom: 1px solid rgba(0, 0, 255, 0.1);
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;
@@ -2426,7 +2427,8 @@ main.index-threaded {
 			border-top: none;
 		}
 		.post-container.op-container {
-			border-top: 0.5em solid rgba(0,0,255,0.25);
+			border-top: 0.4em solid rgba(0,0,255,0.25);
+			border-left: 0.3em solid rgba(0,0,255,0.25);
 		}
 			
 			.post-content {

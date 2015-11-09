@@ -54,11 +54,12 @@ header nav.boardlist {
 	border-color: #D9BFB7;
 }
 	main.index-threaded .thread-item {
-		/* border-color: #D9BFB7; */
+		border-color: rgba(255, 0, 0, 0.1);
 	}
 	
 	.post-container.op-container {
-		border-top: 0.5em solid rgba(255,0,0,0.5);
+		border-top-color: rgba(255,0,0,0.5);
+		border-left-color: rgba(255,0,0,0.5);
 	}
 	.reply::before {
 		color: #D9BFB7;
