@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model {
 	
-	use App\Traits\EloquentBinary;
+	use \App\Traits\EloquentBinary;
 	
 	/**
 	 * The database table used by the model.

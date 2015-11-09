@@ -1,6 +1,7 @@
 <?php namespace App\Observers;
 
 use App\Post;
+use App\PostCite;
 use App\Support\IP;
 
 use Event;
