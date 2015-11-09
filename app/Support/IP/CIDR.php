@@ -404,8 +404,8 @@ class CIDR
 		// use fixed length HEX strings so we can easily do STRING comparisons
 		// instead of using slower bccomp() math.
 		$map = function($v){ return sprintf("%032s", IP::inet_ptoh($v)); };
-		list($lo,$hi)   = array_map($map, CIDR::cidr_to_range($ip));
-		list($min,$max) = array_map($map, CIDR::cidr_to_range($cidr));
+		list($lo,$hi)   = array_map($map, static::cidr_to_range($ip));
+		list($min,$max) = array_map($map, static::cidr_to_range($cidr));
 
 		/** visualization of logic used below
 			lo-hi   = $ip to check
@@ -660,7 +660,7 @@ class CIDR
 				return $a->getPrefix() < $b->getPrefix() ? -1 : 1;
 			};
 		} elseif (!($callback instanceof \Closure) or !is_callable($callback)) {
-			throw new \InvalidArgumentException("Invalid callback in CIDR::cidr_sort, expected Closure, got " . gettype($callback));
+			throw new \InvalidArgumentException("Invalid callback in static::cidr_sort, expected Closure, got " . gettype($callback));
 		}
 
 		usort($cidrs, $callback);

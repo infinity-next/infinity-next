@@ -1,7 +1,7 @@
 <?php namespace App;
 
 use App\Contracts\PermissionUser as PermissionUser;
-use App\Support\IP\CIDR as CIDR;
+use App\Support\IP;
 use Illuminate\Database\Eloquent\Model;
 use Request;
 
@@ -57,14 +57,41 @@ class BanAppeal extends Model {
 			->get();
 	}
 	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getAppealIpAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setAppealIpAttribute($value)
+	{
+		$this->attributes['appeal_ip'] = (new IP($value))->toSQL();
+	}
+	
+	public function scopeWhereAppealIP($query, $ip)
+	{
+		return $query->where('appeal_ip', (new IP));
+	}
+	
 	public function scopeIpString($query, $ip)
 	{
-		return $query->ipBinary(inet_pton($ip));
+		return $query->whereAppealIP($ip);
 	}
 	
 	public function scopeIpBinary($query, $ip)
 	{
-		return $query->where('appeal_ip', $ip);
+		return $query->whereAppealIP($ip);
 	}
 	
 	public function scopeWhereOpen($query)

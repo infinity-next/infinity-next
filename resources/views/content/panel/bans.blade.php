@@ -31,7 +31,7 @@
 				@foreach ($bans as $ban)
 				<tr class="@if ($ban->isExpired()) row-inactive @endif">
 					<td>@if (is_null($ban->board_uri))<strong>@lang('panel.bans.ban_global')</strong>@else/{{$ban->board_uri}}/@endif</td>
-					<td>{{ $user->getTextForIP($ban->ban_ip) }}</td>
+					<td>{{ $ban->ban_ip->toTextForUser($user) }}</td>
 					<td>
 						@if (!$ban->isExpired())
 							<a href="{!! $ban->getAppealUrl() !!}">@lang( $ban->canAppeal() ? 'panel.bans.appeal_open' : 'panel.bans.appeal_closed')</a>

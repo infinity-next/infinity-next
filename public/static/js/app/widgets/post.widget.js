@@ -38,11 +38,6 @@ ib.widget("post", function(window, $, undefined) {
 		// Events
 		events   : {
 			attachmentCollapseClick : function(event) {
-				if(event.altKey || event.shiftKey || event.ctrlKey)
-				{
-					return true;
-				}
-				
 				var $link   = $(this);
 				var $item   = $link.parents("li.post-attachment");
 				var $img    = $(widget.options.selector['attachment-image'], $item);
@@ -147,7 +142,7 @@ ib.widget("post", function(window, $, undefined) {
 				
 				// We don't do anything if the user is CTRL+Clicking,
 				// or if the file is a download type.
-				if (event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
+				if (event.altKey || event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
 				{
 					return true;
 				}

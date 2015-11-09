@@ -20,6 +20,10 @@
 			@endforeach
 		</ul>
 		
+		@include('nav.paginator', [
+			'paginator' => $posts,
+		])
+		
 	</section>
 </main>
 

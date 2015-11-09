@@ -328,7 +328,7 @@ class PostRequest extends Request {
 		{
 			// Check global flood.
 			$lastPost = Post::select('created_at')
-				->where('author_ip', inet_pton($this->ip()))
+				->whereAuthorIP($this->ip())
 				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(5))
 				->first();
 			
@@ -348,7 +348,7 @@ class PostRequest extends Request {
 		{
 			// Check global flood.
 			$lastThread = Post::select('created_at')
-				->where('author_ip', inet_pton($this->ip()))
+				->whereAuthorIP($this->ip())
 				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(20))
 				->op()
 				->first();

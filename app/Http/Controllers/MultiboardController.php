@@ -2,6 +2,7 @@
 
 use App\Post;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Cache;
 use Input;
@@ -25,15 +26,29 @@ class MultiboardController extends Controller {
 	{
 		$posts = Cache::remember('site.overboard', 60, function()
 		{
-			return Post::with('op', 'board', 'board.assets')
+			$posts = Post::with('op', 'board', 'board.assets')
 				->withEverything()
 				->orderBy('post_id', 'desc')
 				->take(75)
-				->paginate(15);
+				->get();
+			
+			return $posts;
 		});
 		
+		$page    = max(1, Input::get('page', 1));
+		$perPage = 15;
+		
+		$paginator = new LengthAwarePaginator(
+			$posts->forPage($page, $perPage),
+			$posts->count(),
+			$perPage,
+			$page
+		);
+		$paginator->setPath(url("overboard.html"));
+		
+		
 		return $this->view(static::VIEW_MULTIBOARD, [
-			'posts' => $posts,
+			'posts' => $paginator,
 		]);
 	}
 	

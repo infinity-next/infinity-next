@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Board;
+use App\Support\IP;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,7 +51,7 @@ class BoardAdventure extends Model {
 	
 	public function scopeWhereBelongsToClient($query)
 	{
-		return $query->where('adventurer_ip', inet_pton(Request::ip()));
+		return $query->where('adventurer_ip', (new IP)->toSQL());
 	}
 	
 	public function scopeWhereFresh($query)

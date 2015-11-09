@@ -47,6 +47,17 @@ class SiteSetting extends Model {
 	}
 	
 	/**
+	 * Gets our option value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function getOptionValueAttribute($value)
+	{
+		return binary_unsql($value);
+	}
+	
+	/**
 	 * Return a specific site setting.
 	 *
 	 * @return mixed
@@ -63,4 +74,16 @@ class SiteSetting extends Model {
 		
 		return null;
 	}
+	
+	/**
+	 * Sets our option value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setOptionValueAttribute($value)
+	{
+		$this->attributes['option_value'] = binary_sql($value);
+	}
+	
 }

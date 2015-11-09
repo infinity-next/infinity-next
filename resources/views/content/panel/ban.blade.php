@@ -1,5 +1,6 @@
 @extends('layouts.main.panel')
 
+
 @section('body')
 <main id="banned">
 	@if (!$ban->isExpired() || $seeing)

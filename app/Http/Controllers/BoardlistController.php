@@ -33,7 +33,7 @@ class BoardlistController extends Controller {
 	const VIEW_INDEX = "boardlist";
 	
 	/**
-	 * Show board list to the user, either rendering the full blade template or just the json..
+	 * Show board list to the user, either rendering the full blade template or just the json.
 	 *
 	 * @return Response|JSON
 	 */
@@ -210,7 +210,7 @@ class BoardlistController extends Controller {
 			$perPage,
 			$page
 		);
-		$paginator->setPath("boards.html");
+		$paginator->setPath(url("boards.html"));
 		
 		foreach ($input as $inputIndex => $inputValue)
 		{

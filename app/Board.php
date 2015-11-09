@@ -9,7 +9,7 @@ use App\User;
 use App\UserRole;
 use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
-use App\Support\IP\CIDR;
+use App\Support\IP;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -238,8 +238,10 @@ class Board extends Model {
 			return true;
 		}
 		
+		$ip = new IP;
+		
 		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
-			->where('client_ip', inet_pton(Request::ip()))
+			->where('client_ip', $ip->toSQL())
 			->where('created_at', '>=', \Carbon\Carbon::now()->subHour())
 			->whereNotNull('cracked_at')
 			->orderBy('cracked_at', 'desc')
@@ -248,7 +250,7 @@ class Board extends Model {
 		if ($lastCaptcha instanceof Captcha)
 		{
 			$postsWithCaptcha = Post::select('created_at')
-				->where('author_ip', inet_pton(Request::ip()))
+				->where('author_ip', $ip->toSQL())
 				->where('created_at', '>=', $lastCaptcha->created_at)
 				->count();
 			
@@ -378,13 +380,13 @@ class Board extends Model {
 			
 			if (!is_null($post->author_ip))
 			{
-				$ip = inet_ntop($post->author_ip);
+				$ip = new IP($post->author_ip);
 				
 				if (!isset($authorsUnique[$ip]))
 				{
 					$authorsUnique[$ip] = true;
 					
-					$range = new CIDR("{$ip}/16");
+					$range = new IP("{$ip->getStart()}/16");
 					$rangesUnique[$range->getStart()] = true;
 				}
 			}

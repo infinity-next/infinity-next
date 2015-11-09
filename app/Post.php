@@ -5,8 +5,10 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\PostCite;
 use App\Contracts\PermissionUser;
+use App\Observers\PostObserver;
 use App\Services\ContentFormatter;
 use App\Support\Geolocation;
+use App\Support\IP;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,9 +20,6 @@ use File;
 use Request;
 
 use Event;
-use App\Events\PostWasAdded;
-use App\Events\PostWasDeleted;
-use App\Events\PostWasModified;
 use App\Events\ThreadNewReply;
 
 class Post extends Model {
@@ -114,6 +113,12 @@ class Post extends Model {
 	 */
 	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip_nulled_at'];
 	
+	/**
+	 * Indicates if this model is currently being prepared for update or insert.
+	 *
+	 * @var boolean
+	 */
+	public $saving = false;
 	
 	
 	public function attachments()
@@ -190,89 +195,7 @@ class Post extends Model {
 	public static function boot()
 	{
 		parent::boot();
-		
-		// Setup event bindings...
-		
-		// When creating a post, make sure it has a board_id.
-		static::creating(function($post)
-		{
-			return isset($post->board_id);
-		});
-		
-		// Fire events on post created.
-		static::created(function(Post $post) {
-			Event::fire(new PostWasAdded($post));
-		});
-		
-		// When deleting a post, delete its children.
-		static::deleting(function($post)
-		{
-			static::replyTo($post->post_id)->delete();
-		});
-		
-		// After a post is deleted, update OP's reply count.
-		static::deleted(function($post) {
-			if (!is_null($post->reply_to))
-			{
-				$lastReply = $post->op->getReplyLast();
-				
-				if ($lastReply)
-				{
-					$post->op->reply_last = $lastReply->created_at;
-				}
-				else
-				{
-					$post->op->reply_last = $post->op->created_at;
-				}
-				
-				$post->op->reply_count -= 1;
-				$post->op->save();
-			}
-			
-			Event::fire(new PostWasDeleted($post));
-		});
-		
-		// Update citation references
-		static::saved(function(Post $post)
-		{
-			$post->cites()->delete();
-			
-			// Process citations.
-			$cited = $post->getCitesFromText();
-			$cites = [];
-			
-			foreach ($cited['posts'] as $citedPost)
-			{
-				$cites[] = new PostCite([
-					'post_board_uri' => $post->board_uri,
-					'post_board_id'  => $post->board_id,
-					'cite_id'        => $citedPost->post_id,
-					'cite_board_uri' => $citedPost->board_uri,
-					'cite_board_id'  => $citedPost->board_id,
-				]);
-			}
-			
-			foreach ($cited['boards'] as $citedBoard)
-			{
-				$cites[] = new PostCite([
-					'post_board_uri' => $post->board_uri,
-					'cite_board_uri' => $citedBoard->board_uri,
-				]);
-			}
-			
-			if (count($cites) > 0)
-			{
-				$post->cites()->saveMany($cites);
-			}
-			
-		});
-		
-		// Fire events on post updated.
-		static::updated(function(Post $post)
-		{
-			Event::fire(new PostWasModified($post));
-		});
-		
+		static::observe(new PostObserver);
 	}
 	
 	/**
@@ -663,7 +586,7 @@ class Post extends Model {
 			return false;
 		}
 		
-		return inet_ntop($this->author_ip) === \Request::ip();
+		return new IP($this->author_ip) === new IP();
 	}
 	
 	/**
@@ -715,10 +638,31 @@ class Post extends Model {
 	{
 		if ($this->hasAuthorIp())
 		{
-			return inet_ntop($this->author_ip);
+			return$this->author_ip->toText();
 		}
 		
 		return false;
+	}
+	
+	public function getAuthorIpAttribute($value)
+	{
+		if ($value instanceof IP)
+		{
+			return $value;
+		}
+		
+		return new IP($value);
+	}
+	
+	public function setAuthorIpAttribute($value)
+	{
+		if (!$this->saving && !is_binary($value))
+		{
+			$ip = new IP($value);
+			$value = $ip->getStart(true);
+		}
+		
+		return $this->attributes['author_ip'] = $value;
 	}
 	
 	/**
@@ -812,6 +756,11 @@ class Post extends Model {
 		$postRobot = preg_replace('/\W+/', "", $postBody);
 		$checksum  = sha1($postRobot, $binary);
 		
+		if ($binary)
+		{
+			return binary_sql($checksum);
+		}
+		
 		return $checksum;
 	}
 	
@@ -825,10 +774,10 @@ class Post extends Model {
 	{
 		if (is_null($ip))
 		{
-			$ip = Request::getClientIp();
+			$ip = new IP;
 		}
 		
-		return Post::where('author_ip', $ip)
+		return Post::whereAuthorIP($ip)
 			->orderBy('created_at', 'desc')
 			->take(1)
 			->get()
@@ -999,7 +948,7 @@ class Post extends Model {
 	 */
 	public function hasAuthorIp()
 	{
-		return !is_null($this->author_ip);
+		return $this->author_ip !== null;
 	}
 	
 	/**
@@ -1013,6 +962,26 @@ class Post extends Model {
 	{
 		return $this->appends;
 	}
+	
+	
+	/**
+	 * Create a new model instance that is existing.
+	 *
+	 * @param  array  $attributes
+	 * @param  \Illuminate\Database\Connection|null  $connection
+	 * @return \Illuminate\Database\Eloquent\Model|static
+	 */
+	public function newFromBuilder($attributes = array(), $connection = NULL)
+	{
+		if (isset($attributes->author_ip) && $attributes->author_ip !== null)
+		{
+			$attributes->author_ip = new IP($attributes->author_ip);
+		}
+		
+		
+		return parent::newFromBuilder($attributes);
+	}
+	
 	
 	/**
 	 * Sets the value of $this->appends to the input.
@@ -1201,24 +1170,20 @@ class Post extends Model {
 		}]);
 	}
 	
-	public function scopeIp($query, $ip)
+	public function scopeWhereAuthorIP($query, $ip)
 	{
-		if (ctype_print($ip))
-		{
-			return $query->ipString($ip);
-		}
-		
-		return $query->ipBinary($ip);
+		$ip = new IP($ip);
+		return $query->where('author_ip', $ip->toSQL());
 	}
 	
 	public function scopeIpString($query, $ip)
 	{
-		return $query->ipBinary(inet_pton($ip));
+		return $query->whereAuthorIP($ip);
 	}
 	
 	public function scopeIpBinary($query, $ip)
 	{
-		return $query->where('author_ip', $ip);
+		return $query->whereAuthorIP($ip);
 	}
 	
 	public function scopeOp($query)
@@ -1435,7 +1400,7 @@ class Post extends Model {
 	public function submitTo(Board &$board, &$thread = null)
 	{
 		$this->board_uri      = $board->board_uri;
-		$this->author_ip      = inet_pton(Request::ip());
+		$this->author_ip      = new IP;
 		$this->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation() : null;
 		$this->reply_last     = $this->freshTimestamp();
 		$this->bumped_last    = $this->reply_last;

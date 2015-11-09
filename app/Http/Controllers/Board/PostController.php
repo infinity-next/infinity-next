@@ -95,7 +95,7 @@ class PostController extends Controller {
 				}
 				
 				
-				$posts = Post::ip($post->author_ip)
+				$posts = Post::whereAuthorIP($post->author_ip)
 					->with('reports')
 					->get();
 				
@@ -269,8 +269,8 @@ class PostController extends Controller {
 		$banIp        = new CIDR($banCidrRange[0], $banCidrRange[1]);
 		
 		$ban = new Ban();
-		$ban->ban_ip_start  = inet_pton($banIp->getStart());
-		$ban->ban_ip_end    = inet_pton($banIp->getEnd());
+		$ban->ban_ip_start  = $banIp->getStart();
+		$ban->ban_ip_end    = $banIp->getEnd();
 		$ban->seen          = false;
 		$ban->created_at    = $ban->freshTimestamp();
 		$ban->updated_at    = clone $ban->created_at;

@@ -1,5 +1,8 @@
 <?php namespace App;
 
+use App\Contracts\PermissionUser;
+use App\Support\IP;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model {
@@ -37,6 +40,17 @@ class Log extends Model {
 	}
 	
 	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function getActionDetailsAttribute($value)
+	{
+		return binary_unsql($value);
+	}
+	
 	public function getDetails($user = null)
 	{
 		$details = json_decode($this->action_details, true);
@@ -59,13 +73,47 @@ class Log extends Model {
 		return trans($capcode);
 	}
 	
-	public function getLogVisibleIp($ip, $user = null)
+	public function getLogVisibleIp($ip, PermissionUser $user = null)
 	{
-		if ($user instanceof PermissionUser && $user->canViewRawIP())
+		if ($user !== null)
 		{
-			return $ip;
+			return $user->getTextForIP($ip);
 		}
 		
 		return ip_less($ip);
 	}
+	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getUserIpAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setActionDetailsAttribute($value)
+	{
+		$this->attributes['action_details'] = binary_sql($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setUserIpAttribute($value)
+	{
+		$this->attributes['user_ip'] = (new IP($value))->toSQL();
+	}
+	
 }

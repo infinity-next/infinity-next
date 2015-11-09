@@ -80,6 +80,31 @@ class Option extends Model implements PseudoEnumContract {
 	}
 	
 	
+	/**
+	 * Gets our default value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function getDefaultValueAttribute($value)
+	{
+		return binary_unsql($value);
+	}
+	
+	
+	/**
+	 * Gets our option value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function getOptionValueAttribute($value)
+	{
+		return binary_unsql($value);
+	}
+	
+	
+	
 	protected $decoded_format_parameters;
 	
 	public function getFormatParameter($parameter)
@@ -184,4 +209,27 @@ class Option extends Model implements PseudoEnumContract {
 		
 		return $requirement;
 	}
+	
+	/**
+	 * Sets our default value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setDefaultValueAttribute($value)
+	{
+		$this->attributes['default_value'] = binary_sql($value);
+	}
+	
+	/**
+	 * Sets our option value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setOptionValueAttribute($value)
+	{
+		$this->attributes['option_value'] = binary_sql($value);
+	}
+	
 }

@@ -1,6 +1,6 @@
 <?php namespace App;
 
-use App\Support\IP\CIDR as CIDR;
+use App\Support\IP as IP;
 use App\Contracts\PermissionUser  as PermissionUser;
 use Illuminate\Database\Eloquent\Model;
 use Request;
@@ -78,12 +78,57 @@ class Ban extends Model {
 	}
 	
 	/**
-	 * 
+	 * Mutator that creates a single IP instance with the start and end ban IPs.
 	 *
+	 * @return IP
 	 */
 	public function getBanIpAttribute()
 	{
-		return new CIDR(inet_ntop($this->ban_ip_start), inet_ntop($this->ban_ip_end));
+		return new IP($this->ban_ip_start, $this->ban_ip_end);
+	}
+	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getBanIpStartAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getBanIpEndAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setBanIpStartAttribute($value)
+	{
+		$this->attributes['ban_ip_start'] = (new IP($value))->toSQL();
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function setBanIpEndAttribute($value)
+	{
+		$this->attributes['ban_ip_end'] = (new IP($value))->toSQL();
 	}
 	
 	/**
@@ -94,14 +139,10 @@ class Ban extends Model {
 	 */
 	public function getAppeal($ip = null)
 	{
-		if (is_null($ip))
-		{
-			$ip = Request::ip();
-		}
-		
-		$ip = inet_pton($ip);
-		
-		return $this->appeals->where('appeal_ip', $ip)->last();
+		return $this->appeals()
+			->where('appeal_ip', (new IP($ip))->toSQL())
+			->orderBy('ban_appeal_id', 'desc')
+			->first();
 	}
 	
 	/**
@@ -178,12 +219,7 @@ class Ban extends Model {
 	 */
 	public function isBanForIP($ip = null)
 	{
-		if (is_null($ip))
-		{
-			$ip = Request::ip();
-		}
-		
-		return CIDR::cidr_intersect($ip, $this->ban_ip);
+		return IP::cidr_intersect(new IP($ip), $this->ban_ip);
 	}
 	
 	public function isExpired()
@@ -220,17 +256,23 @@ class Ban extends Model {
 			});
 	}
 	
+	public function scopeWhereIPInBan($query, $ip)
+	{
+		$ip = new IP($ip);
+		return $query->where(function($query) use ($ip) {
+				$query->where('ban_ip_start', '<=', $ip->toSQL());
+				$query->where('ban_ip_end',   '>=', $ip->toSQL());
+			});
+	}
+	
 	public function scopeIpString($query, $ip)
 	{
-		return $query->ipBinary(inet_pton($ip));
+		return $query->whereIPInBan($ip);
 	}
 	
 	public function scopeIpBinary($query, $ip)
 	{
-		return $query->where(function($query) use ($ip) {
-				$query->where('ban_ip_start', '<=', $ip);
-				$query->where('ban_ip_end',   '>=', $ip);
-			});
+		return $query->whereIPInBan($ip);
 	}
 	
 	public function scopeWhereActive($query)
