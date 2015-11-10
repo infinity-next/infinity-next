@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Cache;
 use DB;
 use Input;
 use File;
@@ -895,13 +896,9 @@ class Post extends Model {
 	 */
 	public function getReplies()
 	{
-		if (isset($this->replies))
-		{
-			return $this->replies;
-		}
-		
 		return $this->replies()
 			->withEverything()
+			->orderBy('post_id', 'asc')
 			->get();
 	}
 	
@@ -1234,7 +1231,8 @@ class Post extends Model {
 			->andBans()
 			->andCapcode()
 			->andCites()
-			->andEditor();
+			->andEditor()
+			->andPromotedReports();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)
@@ -1556,4 +1554,36 @@ class Post extends Model {
 		return $this;
 	}
 	
+	
+	/**
+	 * Returns a thread with its replies for a thread view.
+	 *
+	 * @return static
+	 */
+	public function forThreadView()
+	{
+		$rememberTags    = ["board.{$this->board_uri}", "threads"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board_uri}.thread.{$this->board_id}";
+		$rememberClosure = function() {
+			return $this->load(['replies' => function($query) {
+				$query->withEverything();
+				$query->orderBy('post_id', 'asc');
+			}]);
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $thread;
+	}
 }

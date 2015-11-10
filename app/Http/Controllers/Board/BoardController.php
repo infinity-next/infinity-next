@@ -138,7 +138,7 @@ class BoardController extends Controller {
 		
 		return $this->view(static::VIEW_THREAD, [
 			'board'    => &$board,
-			'posts'    => [ $thread ],
+			'posts'    => [ $thread->forThreadView() ],
 			'reply_to' => $thread,
 		]);
 	}

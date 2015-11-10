@@ -203,7 +203,7 @@ class Report extends Model {
 	 */
 	public function scopeWherePromoted($query)
 	{
-		return $query->where('promoted_at', '>', 0);
+		return $query->where('promoted_at');
 	}
 	
 	/**

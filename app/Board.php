@@ -970,43 +970,14 @@ class Board extends Model {
 	
 	public function getThreadByBoardId($board_id)
 	{
-		$rememberTags    = ["board.{$this->board_uri}", "threads"];
-		$rememberTimer   = 30;
-		$rememberKey     = "board.{$this->board_uri}.thread.{$board_id}";
-		$rememberClosure = function() use ($board_id) {
-			$thread = $this->posts()
-				->where('board_id', $board_id)
-				->withEverythingAndReplies()
-				->orderBy('bumped_last', 'desc')
-				->get()
-				->first();
-			
-			if ($thread instanceof Post)
-			{
-				$thread->setRelation('board', $this);
-				
-				foreach ($thread->replies as $reply)
-				{
-					$reply->setRelation('board', $this);
-				}
-			}
-			
-			return $thread;
-		};
+		$thread = $this->posts()->where(['board_id' => $board_id])->first();
 		
-		switch (env('CACHE_DRIVER'))
+		if ($thread)
 		{
-			case "file" :
-			case "database" :
-				$thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
-			
-			default :
-				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
+			return $thread->forThreadView();
 		}
 		
-		return $thread;
+		return null;
 	}
 	
 	public function getThreads()
