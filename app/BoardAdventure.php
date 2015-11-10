@@ -75,7 +75,7 @@ class BoardAdventure extends Model {
 	
 	public function scopeWhereBelongsToClient($query)
 	{
-		return $query->where('adventurer_ip', (new IP($value))->toSQL());
+		return $query->where('adventurer_ip', (new IP())->toSQL());
 	}
 	
 	public function scopeWhereFresh($query)
