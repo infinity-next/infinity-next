@@ -360,6 +360,12 @@ ib.widget("boardlist", function(window, $, undefined) {
 				parameters.sort   = sort;
 				parameters.sortBy = sortBy;
 				
+				if (sort === false || sortBy === false)
+				{
+					delete parameters.sort;
+					delete parameters.sortBy;
+				}
+				
 				widget.submit( parameters );
 				
 				return false;
