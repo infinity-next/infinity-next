@@ -118,7 +118,7 @@ class BoardlistController extends Controller {
 		]);
 	}
 	
-	protected function boardListSearch($perPage = 1)
+	protected function boardListSearch($perPage = 25)
 	{
 		$input = $this->boardListInput();
 		
