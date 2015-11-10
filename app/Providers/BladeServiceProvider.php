@@ -20,13 +20,21 @@ class BladeServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$blade = $this->app['view']->getEngineResolver()->resolve('blade')->getCompiler();
+		
 		$blade->extend(function($value, $compiler)
 		{
 			$value = preg_replace("/@set\('(.*?)'\,(.*)\)/", '<?php $$1 = $2; ?>', $value); 
 			return $value;
 		});
+		
+		$blade->directive('spaceless', function($expression) {
+			return "<?php ob_start(); ?>";
+		});
+		
+		$blade->directive('endspaceless', function($expression) {
+			return "<?php echo trim(preg_replace('/(?<=>)[\s]+(?=<)/', \"\", ob_get_clean())); ?>";
+		});
 	}
-	
 	/**
 	 * Get the services provided by the provider.
 	 *

@@ -1,4 +1,5 @@
 @if (count($post->attachments))
+@spaceless
 <ul class="post-attachments attachment-count-{{ count($post->attachments) }} {{ count($post->attachments) > 1 ? "attachments-multi" : "attachments-single" }}">
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">
@@ -38,4 +39,5 @@
 	</li>
 	@endforeach
 </ul>
+@endspaceless
 @endif

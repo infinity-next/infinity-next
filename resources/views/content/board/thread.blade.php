@@ -9,18 +9,20 @@
 	<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
 	@endif
 	
-	<!--
 	@foreach ($thread->getReplies() as $reply)
-	--><li class="thread-reply"><!--
-		--><article class="reply">
+	@spaceless
+	<li class="thread-reply">
+		<article class="reply">
+			@endspaceless
 			@include('content.board.post', [
 				'board' => $board,
 				'post'  => $reply,
 			])
-		</article><!--
-	--></li><!--
+			@spaceless
+		</article>
+	</li>
+	@endspaceless
 	@endforeach
-	-->
 	
 	@if (isset($updater) && $updater === true)
 	@include('widgets.thread-autoupdater')
