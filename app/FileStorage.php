@@ -666,7 +666,7 @@ class FileStorage extends Model {
 	 */
 	public function processThumb()
 	{
-		if (!Storage::exists($this->getPathThumb()))
+		if (!Storage::exists($this->getPathThumb()) || !$this->has_thumbnail)
 		{
 			if ($this->isAudio())
 			{

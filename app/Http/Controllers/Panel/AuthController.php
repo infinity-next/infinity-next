@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Panel;
 
+use App\User;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -115,7 +116,12 @@ class AuthController extends PanelController {
 		// Attempt a login with supplied credentials.
 		$credentials = $request->only('username', 'password');
 		
-		if (!$this->auth->attempt($credentials, $request->has('remember')))
+		if (env('APP_NO_AUTH', false))
+		{
+			$user = User::where(['username' => $request->get('username')])->firstOrFail();
+			$this->auth->login($user);
+		}
+		else if (!$this->auth->attempt($credentials, $request->has('remember')))
 		{
 			// Re-attempt with the supplied username as an email address.
 			$credentials['email'] = $credentials['username'];

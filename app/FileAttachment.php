@@ -19,11 +19,18 @@ class FileAttachment extends Model {
 	protected $fillable = ['post_id', 'file_id', 'filename', 'is_spoiler', 'position'];
 	
 	/**
-	 * Determines if Laravel should set created_at and updated_at timestamps.
+	 * Indicates if Laravel should set created_at and updated_at timestamps.
 	 *
 	 * @var array
 	 */
 	public $timestamps = false;
+	
+	/**
+	 * Indicates if the IDs are auto-incrementing.
+	 *
+	 * @var array
+	 */
+	public $incrementing = false;
 	
 	
 	public function post()
@@ -63,14 +70,13 @@ class FileAttachment extends Model {
 	 */
 	public static function getRecentImages($number = 16, $sfwOnly = true)
 	{
-		return static::distinct('file_id')
-			->orderBy('attachment_id', 'desc')
+		$query = static::where('is_spoiler', false)
 			->whereHas('storage', function($query) {
-				$query->where('has_thumbnail', '=', true);
+				$query->where('has_thumbnail', true);
 			})
 			->whereHas('post.board', function($query) use ($sfwOnly) {
-				$query->where('is_indexed', '=', true);
-				$query->where('is_overboard', '=', true);
+				$query->where('is_indexed', true);
+				$query->where('is_overboard', true);
 				
 				if ($sfwOnly)
 				{
@@ -79,9 +85,24 @@ class FileAttachment extends Model {
 			})
 			->with('storage')
 			->with('post.board')
-			//->groupBy('file_id')
-			->limit(20)
-			->get();
+			->limit(20);
+		
+		if ($query->getQuery()->getConnection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			// PostgreSQL does not support the MySQL standards non-compliant group_by syntax.
+			// DISTINCT itself selects distinct combinations [attachment_id,file_idd, not just file_id.
+			// We have to use raw SQL to accomplish this.
+			$query->select(
+				\DB::raw("DISTINCT ON (file_id) *")
+			);
+		}
+		else
+		{
+			$query->orderBy('attachment_id', 'desc');
+			$query->groupBy('file_id');
+		}
+		
+		return $query->get();
 	}
 	
 }
