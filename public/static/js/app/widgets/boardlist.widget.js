@@ -334,9 +334,18 @@ ib.widget("boardlist", function(window, $, undefined) {
 			sortClick : function(event) {
 				event.preventDefault();
 				
-				var $th    = $(this);
-				var sortBy = $th.hasClass("sorting-by-asc") ? "desc" : "asc";
+				var $th       = $(this);
+				var sort       = $th.attr('data-column');
+				var sortBy     = "desc";
 				var parameters = $.extend( {}, widget.lastSearch );
+				
+				if ($th.hasClass("sorting-by-desc")) {
+					sortBy = "asc";
+				}
+				else if ($th.hasClass("sorting-by-asc")) {
+					sort   = false;
+					sortBy = false;
+				}
 				
 				$( widget.options.selector['tag-list'], widget.$widget ).html("");
 				$( widget.options.selector['board-body'], widget.$widget ).html("");
@@ -347,7 +356,8 @@ ib.widget("boardlist", function(window, $, undefined) {
 				$th.toggleClass("sorting-by-desc", sortBy == "desc");
 				$th.toggleClass("sorting-by-asc",  sortBy == "asc");
 				
-				parameters.sort  = $th.attr('data-column');
+				parameters.page   = 1;
+				parameters.sort   = sort;
 				parameters.sortBy = sortBy;
 				
 				widget.submit( parameters );

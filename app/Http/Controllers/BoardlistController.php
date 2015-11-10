@@ -95,6 +95,7 @@ class BoardlistController extends Controller {
 		
 		foreach ($items as &$item)
 		{
+			unset($item['settings']);
 			unset($item['stats']);
 		}
 		
