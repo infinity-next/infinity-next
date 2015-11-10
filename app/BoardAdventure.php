@@ -45,6 +45,28 @@ class BoardAdventure extends Model {
 		return $this->belongsTo('\App\Board', 'board_uri');
 	}
 	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getAdventurerIpAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	
+	public function setAdventurerIpAttribute($value)
+	{
+		$this->attributes['adventurer_ip'] = (new IP($value))->toSQL();
+	}
 	
 	public function scopeWhereBoard($query, Board $board)
 	{
@@ -53,7 +75,7 @@ class BoardAdventure extends Model {
 	
 	public function scopeWhereBelongsToClient($query)
 	{
-		return $query->where('adventurer_ip', (new IP)->toSQL());
+		return $query->where('adventurer_ip', (new IP($value))->toSQL());
 	}
 	
 	public function scopeWhereFresh($query)

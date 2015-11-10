@@ -200,11 +200,22 @@ return [
 			'font_size'   => 96,
 			
 			/**
+			 * Minimum number of lines or circles to draw per ENTIRE CAPTCHA.
+			 *
+			 * @var int
+			 */
+			'flourishes_min' => 1,
+
+			'flourishes_max' => 2,
+			
+			/**
 			 * Maximum number of lines or circles to draw per letter blocking.
 			 *
 			 * @var int
 			 */
-			'flourishes'  => 2,
+			'flourishes_min' => 1,
+
+			'flourishes_max' => 2,
 			
 		],
 		
@@ -237,7 +248,9 @@ return [
 			
 			'font_size'   => 96,
 			
-			'flourishes'  => 1,
+			'flourishes_min' => 1,
+			
+			'flourishes_max' => 2,
 		],
 		
 		/**

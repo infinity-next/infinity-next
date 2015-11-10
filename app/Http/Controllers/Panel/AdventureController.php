@@ -2,8 +2,8 @@
 
 use App\Board;
 use App\BoardAdventure;
-
 use App\Http\Controllers\Panel\PanelController;
+use App\Support\IP;
 
 use Request;
 
@@ -34,7 +34,7 @@ class AdventureController extends PanelController {
 		}
 		
 		$adventures = BoardAdventure::select('board_uri')
-			->where('adventurer_ip', inet_pton(Request::ip()))
+			->where('adventurer_ip', new IP)
 			->get();
 		
 		$board_uris = [];
@@ -57,7 +57,7 @@ class AdventureController extends PanelController {
 			
 			$newAdventure = new BoardAdventure([
 				'board_uri'     => $board->board_uri,
-				'adventurer_ip' => inet_pton(Request::ip()),
+				'adventurer_ip' => new IP,
 			]);
 			$newAdventure->expires_at = $newAdventure->freshTimestamp()->addHours(1);
 			$newAdventure->save();
