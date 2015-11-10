@@ -2,7 +2,6 @@
  * Widget Master
  */
 (function(window, $, undefined) {
-	
 	var ib = window.ib = function() {};
 	
 	ib.widgets = {};
@@ -85,6 +84,7 @@
 	};
 	
 	ib.widget = function(name, widget) {
+		console.log("Declaring widget \""+name+"\".");
 		
 		if (ib.widgets[name] !== undefined)
 		{
@@ -138,26 +138,8 @@
 		return false;
 	};
 	
-	//$(document).on('ready', ib.bindAll);
-	$(document).on('ready', "[data-widget]", ib.bindOnEvent);
-	
-	if (typeof InstantClick === "object")
-	{
-		InstantClick.on('change', function(event)
-		{
-			ib.bindAll();
-			
-			if (window.location.hash != "")
-			{
-				var elem = document.getElementById(window.location.hash);
-				
-				if (elem && typeof elem.scrollToElement === "function")
-				{
-					elem.scrollToElement();
-				}
-			}
-		});
-	}
+	$(document).on('ready', ib.bindAll);
+	//$(document).on('ready', "[data-widget]", ib.bindOnEvent);
 	
 	return ib;
 	

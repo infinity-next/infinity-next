@@ -44,9 +44,11 @@
 		};
 	</script>
 	
-	{!! Minify::javascriptDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}
+	{!! Minify::javascriptDir('/static/vendor/',     ['data-no-instant'])->withFullUrl() !!}
 	{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}
-	{!! Minify::javascriptDir('/static/js/app/', ['data-no-instant'])->withFullUrl() !!}
+	{!! Minify::javascriptDir('/static/js/app/',     ['data-no-instant'])->withFullUrl() !!}
+	
+	@parent
 @stop
 
 @section('footer')
@@ -56,10 +58,6 @@
 	@section('nav-footer')
 		@include('nav.boardlist')
 	@show
-	
-	<script type="text/javascript" data-no-instant>
-		InstantClick.init(50);
-	</script>
 	
 	<section id="footnotes">
 		<!-- Infinity Next is licensed under AGPL 3.0 and any modifications to this software must link to its source code which can be downloaded in a traditional format, such as a repository. -->

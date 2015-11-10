@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" data-widget="instantclick">
 <head>
 	<title data-original="@yield('title', 'Infinity Next')">@yield('title', 'Infinity Next')</title>
 	<link rel="shortcut icon" href="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}"
 		data-normal="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}" data-alert="{{ asset('static/img/assets/Favicon_Yotsuba_new.ico') }}" />
 	
 	@section('css')
-		{!! Minify::stylesheetDir('/static/vendor/')->withFullUrl() !!}
-		{!! Minify::stylesheetDir('/static/css/app/')->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}
+		{!! Minify::stylesheetDir('/static/css/app/', ['data-no-instant'])->withFullUrl() !!}
 		
 		@section('page-css')
 			<link id="page-stylesheet" rel="stylesheet" data-instant-track />

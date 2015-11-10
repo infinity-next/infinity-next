@@ -2307,7 +2307,6 @@ main.index-threaded {
 		
 		main.index-threaded .thread-item {
 			border-top:    1px solid rgba(0, 0, 255, 0.1);
-			border-bottom: 1px solid rgba(0, 0, 255, 0.1);
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;
@@ -2427,8 +2426,9 @@ main.index-threaded {
 			border-top: none;
 		}
 		.post-container.op-container {
+			background: none;
+			border-style: solid none none none;
 			border-top: 0.25em solid rgba(0,0,255,0.25);
-			border-left: 0.4em solid rgba(0,0,255,0.25);
 		}
 			
 			.post-content {
@@ -2450,7 +2450,7 @@ main.index-threaded {
 						display: inline-block;
 					}
 					.post-detail:empty {
-						display; none;
+						display: none;
 					}
 						.post-container .post-details .post-detail.post-deleted {
 							display: none;
@@ -2729,6 +2729,12 @@ main.index-threaded {
 				border-top: 1px solid #B7C5D9;
 				margin: 0 0 -1px 0;
 			}
+				ul.post-metas:empty {
+					display: none;
+				}
+				.op-container ul.post-metas {
+					border-top: none;
+				}
 				li.post-meta {
 					display: block;
 					color: #333;
