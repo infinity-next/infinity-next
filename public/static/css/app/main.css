@@ -215,7 +215,12 @@ table {
  */
 
 .ugc {
-	overflow: hidden;
+	/*
+		DO NOT PUT THIS HERE
+		It stops post bodies from wrapping their images!
+		
+		overflow: hidden;
+	*/
 }
 
 /* Function */
@@ -2393,6 +2398,7 @@ main.index-threaded {
 			font-size: 105%;
 			margin: 0 auto 0 0;
 			padding: 0;
+			word-wrap: break-word;
 			white-space: normal;
 		}
 			.post p.line {
@@ -2546,15 +2552,7 @@ main.index-threaded {
 				
 				ul.post-attachments {
 					display: block;
-					padding-bottom: 0.75em;
 				}
-					ul.post-attachments::after,
-					ul.post-attachments::before {
-						display: block;
-						content: ' ';
-						clear: both;
-					}
-					
 					.reply-container ul.post-attachments.attachments-multi {
 						background: rgba(0,0,155,0.1);
 						padding: 0.75em 0 0 0.75em;
@@ -2577,8 +2575,6 @@ main.index-threaded {
 						
 						div.attachment-container {
 							display: block;
-							margin: 0 0.7em 0 0;
-							max-width: 100%;
 						}
 							li.post-attachment.attachment-expanded div.attachment-container {
 								background-color: rgba(255, 255, 255, 0.1);
@@ -2589,37 +2585,33 @@ main.index-threaded {
 							}
 						
 						a.attachment-link {
-							display: block;
+							display: inline;
+							outline: none;
 						}
-						a.attachment-link::after {
-							content: ' ';
-							display: block;
-							clear: both;
-						}
-							a.attachment-link.attachment-canplay {
-								/* margin: 0 15% 0 0px; */
-							}
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
 							
 							figure.attachment {
 								display: block;
+								float: left;
+								
 								margin: 0;
+								padding: 0 1em 1em 0;
 								position: relative;
 								z-index: 3;
 								max-width: 125px;
 							}
-								ul.attachments-multi li.post-attachment:last-child figure.attachment {
-									margin: 0 0 1em 0;
+								figure.attachment-type-audio {
+									margin-right: 2em;
 								}
 								
 								li.post-attachment.attachment-expanded figure.attachment {
-									min-width: 100%;
+									/* min-width: 100%; */
 									max-width: 100%;
 								}
 								li.post-attachment.attachment-expanded img.attachment-img {
-									min-width: 100%;
+									/* min-width: 100%; */
 									max-width: 100%;
 								}
 								
@@ -2633,26 +2625,28 @@ main.index-threaded {
 									width:  250px;
 								}
 								
-								.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
+								.post-content div.attachment-wrapper {
 									position: relative;
 									padding: 0;
 									margin: 0;
-									max-height: 125px;
-									max-width: 125px;
 								}
-									.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
+									.post-content figure.attachment-type-audio div.attachment-wrapper {
+										margin: 0 -2em 0 0;
+										padding: 0 2em 0 0;
+									}
+									.post-content figure.attachment-type-audio div.attachment-wrapper::after {
 										content: ' ';
 										display: block;
-										height: 100%;
-										width: 100%;
+										height: 98%;
+										width: 98%;
 										padding: 0;
 										pointer-events: none;
 										
 										position: absolute;
-										top: 0;
+										top: 1%;
 										left: auto;
-										right: -15%;
-										bottom: 0;
+										right: -1em;
+										bottom: 1%;
 										z-index: 1;
 										
 										background-position: center center;
@@ -2661,8 +2655,13 @@ main.index-threaded {
 										background-size: contain;
 									}
 									
-									.post-content li.attachment-expanded div.attachment-wrapper.thumbnail-content.attachment-type-audio::after {
-										right: -85px;
+									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper,
+									.post-content li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
+										margin: 0 0 0 0;
+										padding: 0 25% 0 0;
+									}
+									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
+										right: -20%;
 										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
 									}
 								
@@ -3068,7 +3067,7 @@ blockquote.ugc {
 		}
 	
 	blockquote.ugc p {
-		margin-left: 1em;
+		margin-left: 0;
 		margin-right: 0;
 	}
 		blockquote.ugc p:first-child {

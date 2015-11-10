@@ -345,53 +345,45 @@ class FileStorage extends Model {
 	}
 	
 	/**
-	 * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
+	 * Returns a string containing class names.
 	 *
-	 * @return string as HTML
+	 * @return string
 	 */
-	public function getThumbnailHTML(Board $board)
+	public function getThumbnailClasses()
 	{
 		$ext   = $this->guessExtension();
-		$mime  = $this->mime;
-		$url   = asset("static/img/filetypes/{$ext}.svg");
 		$type  = "other";
-		$html  = "";
 		$stock = true;
 		$spoil = $this->isSpoiler();
 		
-		if ($spoil)
+		if (!$spoil)
 		{
-			$url = $board->getAssetUrl('file_spoiler');
-		}
-		else if ($this->isVideo())
-		{
-			if ($this->hasThumb())
+			if ($this->isImageVector())
 			{
 				$stock = false;
-				$url   = $this->getThumbnailURL($board);
-				$type  = "video";
-			}
-		}
-		else if ($this->isAudio())
-		{
-			$stock = false;
-			$type  = "audio";
-			$url   = $this->getThumbnailURL($board);
-		}
-		else if ($this->isImage())
-		{
-			if ($this->hasThumb())
-			{
-				$stock = false;
-				$url   = $this->getThumbnailURL($board);
 				$type  = "img";
 			}
-		}
-		else if ($this->isImageVector())
-		{
-			$stock = false;
-			$url   = $this->getDownloadURL($board);
-			$type  = "img";
+			else if ($this->isImage())
+			{
+				if ($this->hasThumb())
+				{
+					$stock = false;
+					$type  = "img";
+				}
+			}
+			else if ($this->isVideo())
+			{
+				if ($this->hasThumb())
+				{
+					$stock = false;
+					$type  = "video";
+				}
+			}
+			else if ($this->isAudio())
+			{
+				$stock = false;
+				$type  = "audio";
+			}
 		}
 		
 		$classes = [];
@@ -401,7 +393,41 @@ class FileStorage extends Model {
 		$classes['spoil'] = $spoil ? "thumbnail-spoiler" : "thumbnail-not-spoiler";
 		$classHTML = implode(" ", $classes);
 		
-		return "<div class=\"attachment-wrapper {$classHTML}\"><img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" /></div>";
+		return $classHTML;
+	}
+	
+	/**
+	 * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
+	 *
+	 * @return string  as HTML
+	 */
+	public function getThumbnailHTML(Board $board)
+	{
+		$ext   = $this->guessExtension();
+		$mime  = $this->mime;
+		$url   = asset("static/img/filetypes/{$ext}.svg");
+		$spoil = $this->isSpoiler();
+		
+		if ($spoil)
+		{
+			$url = $board->getAssetUrl('file_spoiler');
+		}
+		else if ($this->isImageVector())
+		{
+			$url = $this->getDownloadURL($board);
+		}
+		
+		else if ($this->isAudio() || $this->isImage() || $this->isVideo())
+		{
+			if ($this->hasThumb())
+			{
+				$url   = $this->getThumbnailURL($board);
+			}
+		}
+		
+		$classHTML = $this->getThumbnailClasses();
+		
+		return "<div class=\"attachment-wrapper\"><img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" /></div>";
 	}
 	
 	/**

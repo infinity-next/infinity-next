@@ -11,7 +11,7 @@
 				data-download-url="{!! $attachment->getDownloadURL($board) !!}"
 				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
 			>
-				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
+				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }} {{ $attachment->getThumbnailClasses() }}" data-widget="lazyimg">
 					{!! $attachment->getThumbnailHTML($board) !!}
 					
 					<figcaption class="attachment-details">
