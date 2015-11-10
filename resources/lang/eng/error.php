@@ -17,6 +17,9 @@ return [
 	'404' => [
 		'title' => "Not Found",
 	],
+	'429' => [
+		'title' => "Slow Down",
+	],
 	'500' => [
 		'title' => "Internal Server Error",
 	],
