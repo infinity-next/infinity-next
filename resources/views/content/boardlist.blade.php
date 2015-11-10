@@ -91,13 +91,13 @@
 							<thead class="board-list-head">
 								<tr>
 									<!-- <th class="board-meta" data-column="meta"></th> -->
-									<th class="board-uri" data-column="uri"></th>
-									<th class="board-title" data-column="title">@lang('boardlist.table.title')</th>
-									<th class="board-ppd" data-column="stats_ppd" title="@lang('boardlist.table.ppd_title')">@lang('boardlist.table.ppd')</th>
-									<th class="board-plh" data-column="stats_plh" title="@lang('boardlist.table.plh_title')">@lang('boardlist.table.plh')</th>
-									<th class="board-unique" data-column="stats_active_users" title="@lang('boardlist.table.active_title')">@lang('boardlist.table.active')</th>
-									<th class="board-tags" data-column="tags">@lang('boardlist.table.tags')</th>
-									<th class="board-max" data-column="posts_total">@lang('boardlist.table.total_posts')</th>
+									<th class="board-uri"             data-column="uri"></th>
+									<th class="board-title"           data-column="title">@lang('boardlist.table.title')</th>
+									<th class="board-ppd sortable"    data-column="stats_ppd" title="@lang('boardlist.table.ppd_title')"><i class="fa"></i>@lang('boardlist.table.ppd')</th>
+									<th class="board-plh sortable"    data-column="stats_plh" title="@lang('boardlist.table.plh_title')"><i class="fa"></i>@lang('boardlist.table.plh')</th>
+									<th class="board-unique sortable" data-column="stats_active_users" title="@lang('boardlist.table.active_title')"><i class="fa"></i>@lang('boardlist.table.active')</th>
+									<th class="board-tags"            data-column="tags">@lang('boardlist.table.tags')</th>
+									<th class="board-max sortable"    data-column="posts_total"><i class="fa"></i>@lang('boardlist.table.total_posts')</th>
 								</tr>
 							</thead>
 							

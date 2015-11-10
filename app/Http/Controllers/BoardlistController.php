@@ -53,7 +53,7 @@ class BoardlistController extends Controller {
 	
 	protected function boardListInput()
 	{
-		$input = Input::only('page', 'sfw', 'title', 'lang', 'tags');
+		$input = Input::only('page', 'sfw', 'title', 'lang', 'tags', 'sort', 'sortBy');
 		
 		$input['page']  = isset($input['page'])  ? max((int) $input['page'], 1) : 1;
 		$input['sfw']   = isset($input['sfw'])   ? !!$input['sfw'] : false;
@@ -68,6 +68,16 @@ class BoardlistController extends Controller {
 		else
 		{
 			$input['tags'] = [];
+		}
+		
+		if (isset($input['sort']) && in_array($input['sort'], [ 'stats_ppd', 'stats_plh', 'stats_active_users', 'posts_total', ]))
+		{
+			$input['sortBy'] = $input['sortBy'] == "asc" ? "asc" : "desc";
+		}
+		else
+		{
+			$input['sort']   = 0;
+			$input['sortBy'] = "desc";
 		}
 		
 		return $input;
@@ -96,108 +106,105 @@ class BoardlistController extends Controller {
 			'omitted'  => (int) max(0, $boards->total() - ($boards->currentPage() * $boards->perPage())),
 			'tagWeght' => $tags,
 			'search'   => [
-				'lang'  => $input['lang'] ?: "",
-				'page'  => $input['page'] ?: 1,
-				'tags'  => $input['tags'] ?: [],
-				'time'  => Carbon::now()->timestamp,
-				'title' => $input['title'] ?: "",
-				'sfw'   => !!$input['sfw'],
-			]
+				'lang'   => $input['lang'] ?: "",
+				'page'   => $input['page'] ?: 1,
+				'tags'   => $input['tags'] ?: [],
+				'time'   => Carbon::now()->timestamp,
+				'title'  => $input['title'] ?: "",
+				'sfw'    => !!$input['sfw'],
+				'sort'   => $input['sort'],
+				'sortBy' => $input['sortBy'],
+			],
 		]);
 	}
 	
-	protected function boardListSearch($perPage = 25)
+	protected function boardListSearch($perPage = 1)
 	{
 		$input = $this->boardListInput();
 		
-		$title = $input['title'];
-		$lang  = $input['lang'];
-		$page  = $input['page'];
-		$tags  = $input['tags'];
-		$sfw   = $input['sfw'];
+		$title  = $input['title'];
+		$lang   = $input['lang'];
+		$page   = $input['page'];
+		$tags   = $input['tags'];
+		$sfw    = $input['sfw'];
+		$sort   = $input['sort'];
+		$sortBy = $input['sortBy'];
 		
 		$boards = Board::getBoardsForBoardlist();
 		$boards = $boards->filter(function($item) use ($lang, $tags, $sfw, $title) {
-				// Are we able to view unindexed boards?
-				if (!$item->is_indexed && !$this->user->canViewUnindexedBoards())
+			// Are we able to view unindexed boards?
+			if (!$item->is_indexed && !$this->user->canViewUnindexedBoards())
+			{
+				return false;
+			}
+			
+			// Are we requesting SFW only?
+			if ($sfw && !$item->is_worksafe)
+			{
+				return false;
+			}
+			
+			// Are we searching by language?
+			if ($lang)
+			{
+				$boardLang = $item->settings
+					->where('option_name', 'boardLanguage')
+					->pluck('option_value')
+					->first();
+				
+				if ($lang != $boardLang)
 				{
 					return false;
 				}
-				
-				// Are we requesting SFW only?
-				if ($sfw && !$item->is_worksafe)
-				{
-					return false;
-				}
-				
-				// Are we searching by language?
-				if ($lang)
-				{
-					$boardLang = $item->settings
-						->where('option_name', 'boardLanguage')
-						->pluck('option_value')
-						->first();
-					
-					if ($lang != $boardLang)
-					{
-						return false;
-					}
-				}
-				
-				// Are we searching tags?
-				if ($tags && count(array_intersect($tags, $item->tags->pluck('tag')->toArray())) < count($tags))
-				{
-					return false;
-				}
-				
-				// Are we searching titles and descriptions?
-				if ($title && stripos($item->board_uri, $title) === false && stripos($item->title, $title) === false && stripos($item->description, $title) === false)
-				{
-					return false;
-				}
-				
-				return true;
-			});
+			}
+			
+			// Are we searching tags?
+			if ($tags && count(array_intersect($tags, $item->tags->pluck('tag')->toArray())) < count($tags))
+			{
+				return false;
+			}
+			
+			// Are we searching titles and descriptions?
+			if ($title && stripos($item->board_uri, $title) === false && stripos($item->title, $title) === false && stripos($item->description, $title) === false)
+			{
+				return false;
+			}
+			
+			return true;
+		});
 		
-		if ($title)
+		if ($title || ($sort && $sortBy))
 		{
-			$boards = $boards->sort(function($a, $b) use ($title) {
+			$sortWeight = $sortBy == "asc" ? -1 : 1;
+			
+			$boards = $boards->sort(function($a, $b) use ($title, $sort, $sortWeight) {
 				// Sort by active users, then last post time.
 				$aw = 0;
 				$bw = 0;
 				
-				if ($a->board_uri === $title)
+				if ($title)
 				{
-					$aw += 8;
-				}
-				if (stripos($a->board_uri, $title) !== false)
-				{
-					$aw += 4;
-				}
-				if (stripos($a->title, $title) !== false)
-				{
-					$aw += 2;
-				}
-				if (stripos($a->description, $title) !== false)
-				{
-					$aw += 1;
+					$aw += ($a->board_uri === $title)                   ? 80 : 0;
+					$aw += (stripos($a->board_uri, $title) !== false)   ? 40 : 0;
+					$aw += (stripos($a->title, $title) !== false)       ? 20 : 0;
+					$aw += (stripos($a->description, $title) !== false) ? 10 : 0;
+					
+					$bw += ($b->board_uri === $title)                   ? 80 : 0;
+					$aw += (stripos($b->board_uri, $title) !== false)   ? 40 : 0;
+					$aw += (stripos($b->title, $title) !== false)       ? 20 : 0;
+					$aw += (stripos($b->description, $title) !== false) ? 10 : 0;
 				}
 				
-				if ($b->board_uri === $title)
+				if ($sort)
 				{
-					$bw += 8;
-				}
-				if (stripos($b->board_uri, $title) !== false)
-				{
-					$bw += 4;
-				}
-				if (stripos($b->title, $title) !== false)
-				{
-					$bw += 2;
-				}
-				if (stripos($b->description, $title) !== false)
-				{
-					$bw += 1;
+					if ($a->{$sort} > $b->{$sort})
+					{
+						$aw += $sortWeight;
+					}
+					else if ($a->{$sort} < $b->{$sort})
+					{
+						$bw += $sortWeight;
+					}
 				}
 				
 				return $bw - $aw;

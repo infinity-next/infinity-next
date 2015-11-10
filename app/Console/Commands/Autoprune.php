@@ -53,7 +53,7 @@ class Autoprune extends Command {
 			// With each board, fetch their autoprune settings.
 			foreach ($boards as $board)
 			{
-				//$this->handleThreadEphemeral($board, $carbonNow);
+				$this->handleThreadEphemeral($board, $carbonNow);
 			}
 			
 		});

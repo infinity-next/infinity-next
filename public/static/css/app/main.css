@@ -1141,6 +1141,28 @@ table.board-list-table {
 		overflow: hidden;
 	}
 	
+	table.board-list-table th.sortable {
+		position: relative;
+		padding-right: 1.6em;
+	}
+		table.board-list-table th.sorting-by-desc .fa,
+		table.board-list-table th.sorting-by-asc  .fa {
+			display: inline-block;
+			position: absolute;
+			right: 0.33em;
+			bottom: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			margin-top: 0.25em;
+			vertical-align: middle;
+		}
+		table.board-list-table th.sorting-by-asc  .fa::before {
+			content: "\f160";
+		}
+		table.board-list-table th.sorting-by-desc .fa::before {
+			content: "\f161";
+		}
+	
 	tr.board-list-loading {
 		display: none;
 		width: 100%;

@@ -28,6 +28,8 @@ ib.widget("boardlist", function(window, $, undefined) {
 				'tag-list'      : ".tag-list",
 				'tag-link'      : ".tag-link",
 				
+				'sortable'      : "th.sortable",
+				
 				'footer-page'   : ".board-page-num",
 				'footer-count'  : ".board-page-count",
 				'footer-total'  : ".board-page-total",
@@ -98,6 +100,8 @@ ib.widget("boardlist", function(window, $, undefined) {
 				{
 					// Bind form events.
 					widget.$widget
+						// Sort column
+						.on( 'click',  selectors['sortable'], searchForms, widget.events.sortClick )
 						// Load more
 						.on( 'click',  selectors['board-omitted'], searchForms, widget.events.loadMore )
 						// Tag click
@@ -142,7 +146,6 @@ ib.widget("boardlist", function(window, $, undefined) {
 				widget.build.lastSearch(data['search']);
 				widget.build.footer(data);
 				widget.build.tags(data['tagWeight']);
-				
 			},
 			
 			boards : function(boards) {
@@ -271,13 +274,17 @@ ib.widget("boardlist", function(window, $, undefined) {
 			},
 			
 			lastSearch : function(search) {
+				
 				return widget.lastSearch = { 
 					'lang'  : search.lang === false ? "" : search.lang,
 					'page'  : search.page,
 					'tags'  : search.tags === false ? "" : search.tags.join(" "),
 					'time'  : search.time,
 					'title' : search.title === false ? "" : search.title,
-					'sfw'   : search.sfw ? 1 : 0
+					'sfw'   : search.sfw ? 1 : 0,
+					
+					'sort'   : search.sort ? search.sort : null,
+					'sortBy' : search.sortBy == "asc" ? "asc" : "desc"
 				};
 			},
 			
@@ -324,6 +331,30 @@ ib.widget("boardlist", function(window, $, undefined) {
 		},
 		
 		events : {
+			sortClick : function(event) {
+				event.preventDefault();
+				
+				var $th    = $(this);
+				var sortBy = $th.hasClass("sorting-by-asc") ? "desc" : "asc";
+				var parameters = $.extend( {}, widget.lastSearch );
+				
+				$( widget.options.selector['tag-list'], widget.$widget ).html("");
+				$( widget.options.selector['board-body'], widget.$widget ).html("");
+				
+				$(".sorting-by-asc, .sorting-by-desc")
+					.removeClass("sorting-by-asc sorting-by-desc");
+				
+				$th.toggleClass("sorting-by-desc", sortBy == "desc");
+				$th.toggleClass("sorting-by-asc",  sortBy == "asc");
+				
+				parameters.sort  = $th.attr('data-column');
+				parameters.sortBy = sortBy;
+				
+				widget.submit( parameters );
+				
+				return false;
+			},
+			
 			loadMore : function(event) {
 				event.preventDefault();
 				
