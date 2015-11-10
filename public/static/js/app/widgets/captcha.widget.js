@@ -8,6 +8,7 @@ ib.widget("captcha", function(window, $, undefined) {
 		defaults : {
 			
 			captchaUrl    : "/cp/captcha",
+			reloadUrl     : "/cp/captcha/replace.json",
 			
 			// Selectors for finding and binding elements.
 			selector : {
@@ -17,6 +18,15 @@ ib.widget("captcha", function(window, $, undefined) {
 		
 		// Events
 		events   : {
+			captchaAjaxFail : function(jqXHR, textStatus, errorThrown) {
+				if (jqXHR.status == 429) {
+					// Retry again in a second.
+					setTimeout(function() {
+						widget.events.captchaReload();
+					}, 1000);
+				}
+			},
+			
 			captchaLoad : function(event) {
 				var $captcha = $(this),
 					$parent  = $captcha.parent();
@@ -33,10 +43,11 @@ ib.widget("captcha", function(window, $, undefined) {
 				$parent.addClass("captcha-loading");
 				$field.val("").focus();
 				
-				jQuery.getJSON(widget.options.captchaUrl + ".json", function(data) {
+				jQuery.getJSON(widget.options.reloadUrl, function(data) {
 					$captcha.attr('src', widget.options.captchaUrl + "/" + data['hash_string'] + ".png");
 					$hidden.val(data['hash_string']);
-				});
+				})
+				.fail(widget.events.captchaAjaxFail);
 			}
 		},
 		

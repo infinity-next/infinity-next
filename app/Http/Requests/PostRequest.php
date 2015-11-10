@@ -85,12 +85,16 @@ class PostRequest extends Request {
 			
 			if ($user && !$user->isAnonymous())
 			{
-				$role = $user->roles->where('role_id', $input['capcode'])->first();
+				$role = $user->roles->where('role_id', (int) $input['capcode'])->first();
 				
 				if ($role && $role->capcode != "")
 				{
 					$input['capcode_id'] = (int) $role->role_id;
 					$input['author']     = $user->username;
+				}
+				else
+				{
+					$this->failedAuthorization();
 				}
 			}
 			else

@@ -1,4 +1,4 @@
-@include('content.board.post.single.actions')
+@include('content.board.post.single.open')
 
 <div class="post-content @if ($post->capcode_capcode > 0) capcode-{{{ $post->capcode_role }}} @endif">
 	<a name="{!! $post->board_id !!}"></a>

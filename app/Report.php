@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Contracts\PermissionUser;
+use App\Support\IP;
 use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model {
@@ -144,7 +145,46 @@ class Report extends Model {
 	 */
 	public function getReporterIpAsString()
 	{
-		return inet_ntop($this->reporter_ip);
+		return (new IP($this->reporter_ip))->toText();
+	}
+	
+	/**
+	 * Gets our binary value and unwraps it from any stream wrappers.
+	 *
+	 * @param  mixed  $value
+	 * @return IP
+	 */
+	public function getReporterIpAttribute($value)
+	{
+		return new IP($value);
+	}
+	
+	/**
+	 * Sets our binary value and encodes it if required.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	
+	public function setReporterIpAttribute($value)
+	{
+		$this->attributes['reporter_ip'] = (new IP($value))->toSQL();
+	}
+	
+	/**
+	 * Refines query to only reports by this user or by this IP.
+	 */
+	public function scopeWhereByIPOrUser($query, PermissionUser $user)
+	{
+		$query->where(function($query) use ($user)
+		{
+			$query->where('reporter_ip', new IP);
+			
+			if (!$user->isAnonymous())
+			{
+				$query->orWhere('user_id', $user->user_id);
+			}
+		});
 	}
 	
 	/**

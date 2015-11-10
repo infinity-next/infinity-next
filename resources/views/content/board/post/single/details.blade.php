@@ -1,4 +1,6 @@
 <ul class="post-details">
+	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
+	
 	<li class="post-detail post-subject">@if ($post->subject)<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>@endif</li>
 	
 	<li class="post-detail post-author">

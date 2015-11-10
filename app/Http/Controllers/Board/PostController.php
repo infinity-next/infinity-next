@@ -6,7 +6,7 @@ use App\Post;
 use App\Report;
 use App\Http\Controllers\Controller;
 use App\Services\ContentFormatter;
-use App\Support\IP\CIDR;
+use App\Support\IP;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -264,9 +264,9 @@ class PostController extends Controller {
 		$banCidr      = Input::get('ban_ip_range');
 		// This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
 		// If we just pass the CDIR into the construct, we get 192.168.1.3-129.168.3.255 for some reason.
-		$banCidrRange = CIDR::cidr_to_range("{$banIpAddr}/{$banCidr}");
+		$banCidrRange = IP::cidr_to_range("{$banIpAddr}/{$banCidr}");
 		// We then pass this range into the construct method.
-		$banIp        = new CIDR($banCidrRange[0], $banCidrRange[1]);
+		$banIp        = new IP($banCidrRange[0], $banCidrRange[1]);
 		
 		$ban = new Ban();
 		$ban->ban_ip_start  = $banIp->getStart();
@@ -490,19 +490,10 @@ class PostController extends Controller {
 		
 		if (!isset($report))
 		{
-			$user   = $this->user;
 			$report = Report::where('post_id', '=', $post->post_id)
 				->where('global', $global === "global")
 				->where('board_uri', $board->board_uri)
-				->where(function($query) use ($user)
-				{
-					$query->where('reporter_ip', inet_pton(Request::ip()));
-					
-					if (!$user->isAnonymous())
-					{
-						$query->orWhere('user_id', $user->user_id);
-					}
-				})
+				->whereByIPOrUser($this->user)
 				->first();
 		}
 		
@@ -571,7 +562,7 @@ class PostController extends Controller {
 		$report =  Report::firstOrNew([
 			'global'      => $global === "global",
 			'post_id'     => $post->post_id,
-			'reporter_ip' => inet_pton(Request::ip()),
+			'reporter_ip' => new IP,
 		]);
 		
 		$report->board_uri     = $board->board_uri;
