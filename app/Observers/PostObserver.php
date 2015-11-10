@@ -48,7 +48,7 @@ class PostObserver {
 	// When deleting a post, delete its children.
 	public function deleting($post)
 	{
-		static::replyTo($post->post_id)->delete();
+		Post::replyTo($post->post_id)->delete();
 	}
 	
 	// Update citation references
