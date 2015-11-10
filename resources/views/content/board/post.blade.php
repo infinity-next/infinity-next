@@ -15,6 +15,7 @@
 			'catalog' => isset($catalog) ? !!$catalog : false,
 		])
 		
+		@if ($post->bans->count() || $post->updated_by)
 		<ul class="post-metas">
 			@if ($post->bans)
 			@foreach ($post->bans as $ban)
@@ -34,8 +35,9 @@
 			</li>
 			@endif
 		</ul>
+		@endif
 		@else
-		Post was hidden from view.
+			Post was hidden from view.
 		@endif
 	</div>
 </div>

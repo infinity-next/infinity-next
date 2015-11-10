@@ -61,9 +61,13 @@ header nav.boardlist {
 		border-top-color: rgba(255,0,0,0.5);
 		border-left-color: rgba(255,0,0,0.5);
 	}
+	
 	.reply::before {
 		color: #D9BFB7;
 	}
+		.reply-container ul.post-attachments.attachments-multi {
+			background-color: rgba(155,0,0,0.1);
+		}
 	
 	ul.post-actions,
 	ul.post-metas {

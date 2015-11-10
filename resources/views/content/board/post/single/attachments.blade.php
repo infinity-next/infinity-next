@@ -1,5 +1,5 @@
 @if (count($post->attachments))
-<ul class="post-attachments attachment-count-{{ count($post->attachments) }} @if(count($post->attachments) > 1) attachments-multi @else attachments-single @endif">
+<ul class="post-attachments attachment-count-{{ count($post->attachments) }} {{ count($post->attachments) > 1 ? "attachments-multi" : "attachments-single" }}">
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">
 		@if (!isset($catalog) || !$catalog)
