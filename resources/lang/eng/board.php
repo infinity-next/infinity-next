@@ -39,6 +39,7 @@ return [
 		'author'          => "Author",
 		'email'           => "Email",
 		'capcode'         => "No capcode",
+		'download'        => "Download",
 		
 		'file-dz'         => "Click or drag files here to upload",
 		'spoilers'        => "Spoilers",

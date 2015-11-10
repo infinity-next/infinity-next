@@ -29,16 +29,13 @@
 	}
 	
 	/**
-	 * Thumbnails
+	 * Thumbnailing
 	 */
-	figure.attachment {
-		max-width: 125px;
+	div.attachment-wrapper {
+		width: 125px;
+		height: 125px;
+		line-height: 125px;
 	}
-		.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
-			max-height: 125px;
-			max-width: 125px;
-		}
-	
 	img.attachment-img {
 		max-width: 125px;
 		max-height: 125px;
@@ -121,13 +118,11 @@
 	/**
 	 * Thumbnailing
 	 */
-	figure.attachment {
-		max-width: 150px;
+	div.attachment-wrapper {
+		width: 150px;
+		height: 150px;
+		line-height: 150px;
 	}
-		.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
-			max-height: 150px;
-			max-width: 150px;
-		}
 	img.attachment-img {
 		max-width: 150px;
 		max-height: 150px;
@@ -335,13 +330,11 @@
 	/**
 	 * Thumbnailing
 	 */
-	figure.attachment {
-		max-width: 200px;
+	div.attachment-wrapper {
+		width: 200px;
+		height: 200px;
+		line-height: 200px;
 	}
-		.post-content div.attachment-wrapper.thumbnail-content.attachment-type-audio {
-			max-height: 200px;
-			max-width: 200px;
-		}
 	img.attachment-img {
 		max-width: 200px;
 		max-height: 200px;

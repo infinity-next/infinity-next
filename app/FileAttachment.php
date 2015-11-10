@@ -47,6 +47,7 @@ class FileAttachment extends Model {
 	/**
 	 * Ties database triggers to the model.
 	 *
+	 * @static
 	 * @return void
 	 */
 	public static function boot()
@@ -64,6 +65,7 @@ class FileAttachment extends Model {
 	/**
 	 * Returns a few posts for the front page.
 	 *
+	 * @static
 	 * @param  int  $number  How many to pull.
 	 * @param  boolean $sfwOnly  If we only want SFW boards.
 	 * @return Collection  of static
@@ -104,5 +106,4 @@ class FileAttachment extends Model {
 		
 		return $query->get();
 	}
-	
 }

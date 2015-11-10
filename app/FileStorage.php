@@ -345,6 +345,32 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Truncates the middle of a filename to show extension.
+	 *
+	 * @return string  Filename.
+	 */
+	public function getShortFilename()
+	{
+		if (isset($this->pivot) && isset($this->pivot->filename))
+		{
+			$filename = strtolower($this->pivot->filename);
+			
+			if (strlen($filename) <= 20)
+			{
+				return $filename;
+			}
+			
+			$ext  = pathinfo($filename, PATHINFO_EXTENSION);
+			$name = pathinfo($filename, PATHINFO_FILENAME);
+			$name = substr($name, 0, 15);
+			
+			return "{$name}... .{$ext}";
+		}
+		
+		return $this->getFileName();
+	}
+	
+	/**
 	 * Returns a string containing class names.
 	 *
 	 * @return string

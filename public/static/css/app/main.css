@@ -2589,18 +2589,11 @@ main.index-threaded {
 					li.post-attachment {
 						display: block;
 						float: left;
+						padding: 0 1em 1em 0;
 					}
-						li.post-attachment.attachment-expanded {
-							float: none;
-							clear: both;
-						}
-						
 						div.attachment-container {
 							display: block;
 						}
-							li.post-attachment.attachment-expanded div.attachment-container {
-								background-color: rgba(255, 255, 255, 0.1);
-							}
 							div.attachment-container.attachment-grow {
 								margin: 0;
 								width: 100%;
@@ -2610,19 +2603,20 @@ main.index-threaded {
 							display: inline;
 							outline: none;
 						}
+						a.attachment-download {
+							clear: both;
+							display: block;
+							text-align: center;
+						}
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
 							
 							figure.attachment {
 								display: block;
-								float: left;
-								
 								margin: 0;
-								padding: 0 1em 1em 0;
 								position: relative;
 								z-index: 3;
-								max-width: 125px;
 							}
 								figure.attachment-type-audio {
 									margin-right: 2em;
@@ -2643,14 +2637,15 @@ main.index-threaded {
 										My goal here is to keep the thumbnails pretty much to what you can expect them to be
 										as to reduce the jerkiness of the loading system.
 									*/
-									height: 250px;
-									width:  250px;
+									height: 200px;
+									width:  200px;
 								}
 								
 								.post-content div.attachment-wrapper {
 									position: relative;
 									padding: 0;
 									margin: 0;
+									text-align: center;
 								}
 									.post-content figure.attachment-type-audio div.attachment-wrapper {
 										margin: 0 -2em 0 0;
@@ -2688,11 +2683,12 @@ main.index-threaded {
 									}
 								
 								img.attachment-img {
-									display: block;
+									display: inline-block;
 									margin: 0 auto;
 									max-width: 125px;
 									max-height: 125px;
 									
+									vertical-align: middle;
 									position: relative;
 									z-index: 2;
 								}
@@ -2714,9 +2710,27 @@ main.index-threaded {
 									-o-border-image:      url('../../img/backgrounds/film.png') 27 fill stretch repeat;
 									border-image:         url('../../img/backgrounds/film.png') 27 fill stretch repeat;
 								}
-								
+									li.post-attachment.attachment-expanded {
+										clear: both;
+										float: none;
+										width: 100%;
+									}
+										li.post-attachment.attachment-expanded::before,
+										li.post-attachment.attachment-expanded::after {
+											content: ' ';
+											clear: both;
+											display: block;
+										}
+									li.post-attachment.attachment-expanded,
+									li.post-attachment.attachment-expanded figure.attachment,
+									li.post-attachment.attachment-expanded div.attachment-wrapper,
 									li.post-attachment.attachment-expanded img.attachment-img {
+										clear: both;
+										float: none;
+										max-width: none;
 										max-height: none;
+										width: auto;
+										height: auto;
 									}
 									.thumbnail-stock img.attachment-img {
 										min-height: 150px;
@@ -2743,6 +2757,7 @@ main.index-threaded {
 									text-align: center;
 									white-space: nowrap;
 								}
+									a.attachment-download,
 									p.attachment-detail {
 										display: block;
 										color: rgba(0,0,0,0.75);

@@ -16,17 +16,18 @@
 					
 					<figcaption class="attachment-details">
 						<p class="attachment-detail">
-							<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
-						</p>
-						<p class="attachment-detail">
 							@if ($attachment->pivot->is_spoiler)
 							<span class="detail-item detail-filename filename-spoilers">@lang('board.field.spoilers')</span>
 							@else
-							<span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->pivot->filename }}">{{ $attachment->pivot->filename }}</span>
+							<span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->pivot->filename }}">{{ $attachment->getShortFilename() }}</span>
 							@endif
 						</p>
 					</figcaption>
 				</figure>
+			</a>
+			
+			<a class="attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}">
+				<i class="fa fa-download"></i>&nbsp;@lang('board.field.download')&nbsp;<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
 			</a>
 		</div>
 		@else

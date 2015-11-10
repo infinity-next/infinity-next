@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use File;
 use Settings;
 use Storage;
+use Request;
 use Response;
 
 class ImageController extends Controller {
@@ -54,7 +55,7 @@ class ImageController extends Controller {
 					'Cache-Control'        => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
 					'Expires'              => gmdate(DATE_RFC1123, time() + $cacheTime),
 					'Last-Modified'        => gmdate(DATE_RFC1123, File::lastModified($storagePathFull)),
-					'Content-Disposition'  => "inline",
+					'Content-Disposition'  => Request::get('disposition', "inline"),
 					//'Content-Disposition'  => "attachment; filename={$filename}",
 					'Content-Length'       => $responseSize,
 					'Content-Type'         => $FileStorage->mime,
