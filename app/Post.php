@@ -896,6 +896,11 @@ class Post extends Model {
 	 */
 	public function getReplies()
 	{
+		if (isset($this->replies))
+		{
+			return $this->replies;
+		}
+		
 		return $this->replies()
 			->withEverything()
 			->orderBy('post_id', 'asc')
