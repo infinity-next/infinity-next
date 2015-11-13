@@ -1,0 +1,21 @@
+{
+  "name": "infinity-next",
+  "description": "Infinity Next is an imageboard suite utilizing the Laravel framework.",
+  "license": "AGPL 3.0",
+  "homepage": "https://github.com/infinity-next/infinity-next",
+  "private": true,
+  "devDependencies": {
+    "dropzone": "4.0.1",
+    "blockUI": "2.70",
+    "SparkMD5": "1.0.0",
+    "jquery-creditcardvalidator": "1.0.0",
+    "jquery-serialize-object": "2.5.0",
+    "jquery": "2.1.4",
+    "jquery-ui": "1.11.4",
+    "html5-boilerplate": "5.2.0",
+    "unsemantic": "584596df7f210146d126c3333dc43b2c1e1a5c60",
+    "highlightjs": "8.6",
+    "instantclick": "3.1.0",
+    "font-awesome": "4.3.0"
+  }
+}
