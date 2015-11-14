@@ -848,7 +848,6 @@ trait PermissionUser {
 		// We only want uniques.
 		$allGroups = array_unique($allGroups);
 		
-		
 		// Write out a monster query to pull precisely what we need to build our permission masks.
 		$allRoles = Role::where(function($query) use ($allGroups)
 			{
@@ -891,7 +890,7 @@ trait PermissionUser {
 			$permissions[$branch] = [];
 			
 			// Loop through each role.
-			foreach ($allRoles as $role)
+			foreach ($allRoles as $roleIndex => $role)
 			{
 				// Check to see if it's either directly assigned to us or in the mask's route.
 				if (in_array($role->role, $roleGroups) || in_array($role->role_id, $userRoles))
@@ -928,13 +927,15 @@ trait PermissionUser {
 						{
 							if ((string) $board_uri != "")
 							{
-								unset($boardPermissions[$permission->permission_id]);
+								foreach ($boardPermissions as $boardPermission)
+								{
+									unset($permissions[$branch][$boardPermission]);
+								}
 							}
 						}
 					}
 				}
 			}
-			
 			// Clean up the permission mask and remove empty rulesets.
 			foreach ($permissions[$branch] as $board_uri => $boardPermissions)
 			{

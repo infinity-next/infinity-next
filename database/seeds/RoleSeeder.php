@@ -6,22 +6,43 @@ use App\Board;
 use App\Permission;
 use App\Role;
 use App\RolePermission;
+use App\User;
 use App\UserRole;
-
 
 class RoleSeeder extends Seeder {
 	
 	public function run()
 	{
-		$this->command->info('Seeding roles.');
-		
-		foreach ($this->slugs() as $slug)
+		// $this->command->info('Seeding roles.');
+		// 
+		// $this->runMaster();
+		// $this->runBoards();
+	}
+	
+	public function runMaster()
+	{
+			foreach ($this->slugs() as $slug)
 		{
-			Role::updateOrCreate([
-				'role_id'   => $slug['role_id'],
-			], $slug);
+			$role = Role::where([
+				'role'       => $slug['role'],
+				'board_uri'  => $slug['board_uri'],
+				'caste'      => $slug['caste'],
+				'system'     => true,
+			])->first();
+			
+			if ($role)
+			{
+				$role->forceDelete();
+			}
+			
+			$role = new Role($slug);
+			$role->role_id = $slug['role_id'];
+			$role->save();
 		}
-		
+	}
+	
+	public function runBoards()
+	{
 		foreach (Board::get() as $board)
 		{
 			$boardRole = $this->slugs()[Role::ID_OWNER];
@@ -38,7 +59,6 @@ class RoleSeeder extends Seeder {
 				'weight'     => $boardRole['weight'] + 5,
 			]);
 		}
-		
 	}
 	
 	private function slugs()
@@ -142,20 +162,33 @@ class UserRoleSeeder extends Seeder {
 	public function run()
 	{
 		$this->command->info('Seeding role to user associations.');
+		$userRoles = [];
 		
-		$userRoles = [
-			[
-				'user_id'  => 1,
+		$admins = User::whereIn('user_id', explode(",", env('APP_ROOT_USERS', "1")))->get();
+		
+		foreach ($admins as $admin)
+		{
+			$userRoles[] = [
+				'user_id'  => $admin->user_id,
 				'role_id'  => Role::ID_ADMIN,
-			]
-		];
+			];
+		}
 		
 		foreach (Board::get() as $board)
 		{
-			$userRoles[] = [
-				'user_id' => $board->operated_by,
-				'role_id' => $board->getOwnerRole()->role_id,
-			];
+			$ownerRole = $board->getOwnerRole();
+			
+			if ($ownerRole)
+			{
+				$userRoles[] = [
+					'user_id' => $board->operated_by,
+					'role_id' => $ownerRole->role_id,
+				];
+			}
+			else
+			{
+				$this->command->line("\t/{$board->board_uri}/ has no owner role.");
+			}
 		}
 		
 		foreach ($userRoles as $userRole)
@@ -192,6 +225,12 @@ class RolePermissionSeeder extends Seeder {
 				
 				if (in_array($permission_id, $permissions))
 				{
+					(new RolePermission([
+						'role_id'       => $role_id,
+						'permission_id' => $permission_id,
+						'value'         => $permission_value,
+					]))->save();
+					
 				}
 				else
 				{
