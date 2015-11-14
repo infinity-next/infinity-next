@@ -197,23 +197,79 @@ class Role extends Model {
 	}
 	
 	/**
-	 * Returns owner role (found or created) for a specific board.
+	 * Returns board volunteer / janitor role (found or created) for a specific board.
 	 *
-	 * @param  \App\Board  $board
+	 * @param  \App\Board|string  $board
 	 * @return \App\Role
 	 */
-	public static function getOwnerRoleForBoard(Board $board)
+	public static function getJanitorRoleForBoard($board)
 	{
-		return static::firstOrCreate([
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		else
+		{
+			$board_uri = (string) $board;
+		}
+		
+		$role = static::firstOrNew([
+			'role'       => "janitor",
+			'board_uri'  => $board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::ID_JANITOR,
+		]);
+		
+		if (!$role->exists)
+		{
+			$role->fill([
+				'name'       => "user.role.board_mod",
+				'capcode'    => "user.role.board_mod",
+				'system'     => false,
+				'weight'     => Role::WEIGHT_JANITOR + 5,
+			]);
+			$role->save();
+		}
+		
+		return $role;
+	}
+	
+	/**
+	 * Returns owner role (found or created) for a specific board.
+	 *
+	 * @param  \App\Board|string  $board
+	 * @return \App\Role
+	 */
+	public static function getOwnerRoleForBoard($board)
+	{
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		else
+		{
+			$board_uri = (string) $board;
+		}
+		
+		$role = static::firstOrNew([
 			'role'       => "owner",
-			'board_uri'  => $board->board_uri,
+			'board_uri'  => $board_uri,
 			'caste'      => NULL,
 			'inherit_id' => Role::ID_OWNER,
-			'name'       => "user.role.board_owner",
-			'capcode'    => "user.role.board_owner",
-			'system'     => false,
-			'weight'     => Role::WEIGHT_OWNER + 5,
 		]);
+		
+		if (!$role->exists)
+		{
+			$role->fill([
+				'name'       => "user.role.board_owner",
+				'capcode'    => "user.role.board_owner",
+				'system'     => false,
+				'weight'     => Role::WEIGHT_OWNER + 5,
+			]);
+			$role->save();
+		}
+		
+		return $role;
 	}
 	
 	/**

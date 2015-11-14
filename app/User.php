@@ -99,7 +99,6 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 		return $this->belongsToMany('\App\Role', 'user_roles', 'user_id', 'role_id');
 	}
 	
-	
 	/**
 	 * Supplies the hashed password for this user.
 	 *

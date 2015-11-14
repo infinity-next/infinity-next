@@ -69,28 +69,28 @@ class Board extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['stats_plh', 'stats_pph', 'stats_ppd', 'stats_active_users', 'stats_active_ranges'];
+	protected $appends = ['stats_plh', 'stats_pph', 'stats_ppd', 'stats_active_users', 'stats_active_ranges', ];
 	
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'title', 'description', 'created_by', 'operated_by', 'is_overboard', 'is_worksafe', 'is_indexed'];
+	protected $fillable = ['board_uri', 'title', 'description', 'created_at', 'created_by', 'operated_by', 'posts_total', 'is_indexed', 'is_overboard', 'is_worksafe', ];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at', 'created_by', 'operated_by'];
+	protected $hidden = ['created_at', 'created_by', 'operated_by', ];
 	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
 	 *
 	 * @var array
 	 */
-	protected $dates = ['created_at', 'updated_at', 'last_post_at'];
+	protected $dates = ['created_at', 'updated_at', 'last_post_at', ];
 	
 	/**
 	 * A cache of compiled board settings.
@@ -697,7 +697,6 @@ class Board extends Model {
 		return $this->roles()
 			->where('role', "owner")
 			->where('caste', NULL)
-			->get()
 			->first();
 	}
 	
