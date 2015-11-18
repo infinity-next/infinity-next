@@ -936,7 +936,7 @@ class Board extends Model {
 	/**
 	 * Returns the entire board list and all associative boards by levying the cache.
 	 *
-	 * @return Colelction  of \App\Board
+	 * @return Array
 	 */
 	public static function getBoardsForBoardlist()
 	{
@@ -961,7 +961,8 @@ class Board extends Model {
 					return $b->stats_active_ranges - $a->stats_active_ranges
 						?: $b->stats_active_users - $a->stats_active_users
 						?: ($b->last_post_at ? $b->last_post_at->timestamp : 0) - ($a->last_post_at ? $a->last_post_at->timestamp : 0);
-				});
+				})
+				->toArray();
 		};
 		
 		return Cache::remember($rememberKey, $rememberTimer, $rememberClosure);

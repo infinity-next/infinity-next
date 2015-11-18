@@ -131,16 +131,16 @@ class BoardlistController extends Controller {
 		$sort   = $input['sort'];
 		$sortBy = $input['sortBy'];
 		
-		$boards = Board::getBoardsForBoardlist();
+		$boards = collect(Board::getBoardsForBoardlist());
 		$boards = $boards->filter(function($item) use ($lang, $tags, $sfw, $title) {
 			// Are we able to view unindexed boards?
-			if (!$item->is_indexed && !$this->user->canViewUnindexedBoards())
+			if (!$item['is_indexed'] && !$this->user->canViewUnindexedBoards())
 			{
 				return false;
 			}
 			
 			// Are we requesting SFW only?
-			if ($sfw && !$item->is_worksafe)
+			if ($sfw && !$item['is_worksafe'])
 			{
 				return false;
 			}
@@ -148,10 +148,7 @@ class BoardlistController extends Controller {
 			// Are we searching by language?
 			if ($lang)
 			{
-				$boardLang = $item->settings
-					->where('option_name', 'boardLanguage')
-					->pluck('option_value')
-					->first();
+				$boardLang = $item->settings['boardLanguage'];
 				
 				if ($lang != $boardLang)
 				{
@@ -160,13 +157,13 @@ class BoardlistController extends Controller {
 			}
 			
 			// Are we searching tags?
-			if ($tags && count(array_intersect($tags, $item->tags->pluck('tag')->toArray())) < count($tags))
+			if ($tags && (!count($item['tags']) || count(array_intersect($tags, array_fetch($item['tags'], 'tag'))) < count($tags)))
 			{
 				return false;
 			}
 			
 			// Are we searching titles and descriptions?
-			if ($title && stripos($item->board_uri, $title) === false && stripos($item->title, $title) === false && stripos($item->description, $title) === false)
+			if ($title && stripos($item['board_uri'], $title) === false && stripos($item['title'], $title) === false && stripos($item['description'], $title) === false)
 			{
 				return false;
 			}
@@ -185,24 +182,24 @@ class BoardlistController extends Controller {
 				
 				if ($title)
 				{
-					$aw += ($a->board_uri === $title)                   ? 80 : 0;
-					$aw += (stripos($a->board_uri, $title) !== false)   ? 40 : 0;
-					$aw += (stripos($a->title, $title) !== false)       ? 20 : 0;
-					$aw += (stripos($a->description, $title) !== false) ? 10 : 0;
+					$aw += ($a['board_uri'] === $title)                   ? 80 : 0;
+					$aw += (stripos($a['board_uri'], $title) !== false)   ? 40 : 0;
+					$aw += (stripos($a['title'], $title) !== false)       ? 20 : 0;
+					$aw += (stripos($a['description'], $title) !== false) ? 10 : 0;
 					
-					$bw += ($b->board_uri === $title)                   ? 80 : 0;
-					$aw += (stripos($b->board_uri, $title) !== false)   ? 40 : 0;
-					$aw += (stripos($b->title, $title) !== false)       ? 20 : 0;
-					$aw += (stripos($b->description, $title) !== false) ? 10 : 0;
+					$bw += ($b['board_uri'] === $title)                   ? 80 : 0;
+					$aw += (stripos($b['board_uri'], $title) !== false)   ? 40 : 0;
+					$aw += (stripos($b['title'], $title) !== false)       ? 20 : 0;
+					$aw += (stripos($b['description'], $title) !== false) ? 10 : 0;
 				}
 				
 				if ($sort)
 				{
-					if ($a->{$sort} > $b->{$sort})
+					if ($a[$sort] > $b[$sort])
 					{
 						$aw += $sortWeight;
 					}
-					else if ($a->{$sort} < $b->{$sort})
+					else if ($a[$sort] < $b[$sort])
 					{
 						$bw += $sortWeight;
 					}
@@ -211,6 +208,7 @@ class BoardlistController extends Controller {
 				return $bw - $aw;
 			});
 		}
+		
 		
 		$paginator = new LengthAwarePaginator(
 			$boards->forPage($page, $perPage),

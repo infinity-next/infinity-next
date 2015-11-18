@@ -106,16 +106,16 @@
 									<tr>
 										<!-- <td class="board-meta"> board.locale </td> -->
 										<td class="board-uri"><p class="board-cell">
-											@include('widgets.boardfav', [ 'board' => $board ])
-											<a href="{{ $board->getUrl() }}">/{{ $board->board_uri }}/</a>
-											@if ($board->is_worksafe)<i class="fa fa-briefcase board-sfw" title="SFW"></i>@endif
+											@include('widgets.boardfav', [ 'board' => $board['board_uri'] ])
+											<a href="{{ url($board['board_uri']) }}">/{{ $board['board_uri'] }}/</a>
+											@if ($board['is_worksafe'])<i class="fa fa-briefcase board-sfw" title="SFW"></i>@endif
 										</p></td>
-										<td class="board-title"><p class="board-cell" title="Created board['time']">{{ $board->title }}</p></td>
-										<td class="board-ppd"><p class="board-cell board-ppd-desc">{{ $board->stats_ppd }}</p></td>
-										<td class="board-plh"><p class="board-cell board-plh-desc">{{ $board->stats_plh }}</p></td>
-										<td class="board-unique"><p class="board-cell">{{ $board->stats_active_users }}</p></td>
-										<td class="board-tags"><p class="board-cell">@foreach ($board->tags as $tag)<a class="tag-link" href="{{ "?tags={$tag->tag}" }}">{{ $tag->tag }}</a>@endforeach</p></td>
-										<td class="board-max"><p class="board-cell">{{ $board->posts_total }}</p></td>
+										<td class="board-title"><p class="board-cell" title="Created board['time']">{{ $board['title'] }}</p></td>
+										<td class="board-ppd"><p class="board-cell board-ppd-desc">{{ $board['stats_ppd'] }}</p></td>
+										<td class="board-plh"><p class="board-cell board-plh-desc">{{ $board['stats_plh'] }}</p></td>
+										<td class="board-unique"><p class="board-cell">{{ $board['stats_active_users'] }}</p></td>
+										<td class="board-tags"><p class="board-cell">@foreach ($board['tags'] as $tag)<a class="tag-link" href="{{ "?tags={$tag->tag}" }}">{{ $tag->tag }}</a>@endforeach</p></td>
+										<td class="board-max"><p class="board-cell">{{ $board['posts_total'] }}</p></td>
 									</tr>
 								@endforeach
 							</tbody>
