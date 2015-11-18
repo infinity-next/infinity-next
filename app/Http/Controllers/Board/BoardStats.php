@@ -55,7 +55,7 @@ trait BoardStats {
 						break;
 					
 					case "postCount" :
-						$stats[$boardStat] = Post::count();
+						$stats[$boardStat] = Board::sum('posts_total');
 						break;
 					
 					case "postRecentCount" :
