@@ -133,7 +133,7 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 			
 			$hasher = new $legacyHasher;
 			
-			foreach ($legacyData->options as $option => $value)
+			foreach ($legacyData as $option => $value)
 			{
 				$hasher->{$option} = $value;
 			}

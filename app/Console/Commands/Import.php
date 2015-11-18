@@ -306,6 +306,7 @@ class Import extends Command {
 					'password_legacy' => json_encode([
 						'hasher' => "Vichan",
 						'hash'   => $mod->password,
+						'salt'   => $mod->salt,
 					]),
 				]);
 				

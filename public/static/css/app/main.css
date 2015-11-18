@@ -2819,6 +2819,13 @@ main.index-threaded {
 						right: 0.75em;
 					}
 					
+					span.post-action-open {
+						
+					}
+						span.post-action-open span.post-action-text {
+							display: none;
+						}
+					
 					ul.post-action-groups {
 						display: none;
 						max-width: 100vw;
