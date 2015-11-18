@@ -245,14 +245,16 @@ class FileStorage extends Model {
 		
 		if (isset($this->pivot))
 		{
-			if (isset($this->pivot->filename))
-			{
-				$bits['n'] = $this->pivot->filename;
-			}
-			
 			if (isset($this->pivot->position))
 			{
 				$bits['i'] = $this->pivot->position;
+			}
+			
+			if (isset($this->pivot->filename))
+			{
+				$pathinfo  = pathinfo($this->pivot->filename);
+				$bits['n'] = $pathinfo['filename'];
+				unset($pathinfo);
 			}
 		}
 		
