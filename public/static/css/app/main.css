@@ -2617,11 +2617,9 @@ main.index-threaded {
 								margin: 0;
 								position: relative;
 								z-index: 3;
-								max-width: 350px;
 							}
 								figure.attachment-type-audio {
 									margin-right: 2em;
-									max-width: 350px;
 								}
 								
 								li.post-attachment.attachment-expanded figure.attachment {
@@ -2734,6 +2732,9 @@ main.index-threaded {
 										width: auto;
 										height: auto;
 									}
+										li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
+											max-width: 350px;
+										}
 									.thumbnail-stock img.attachment-img {
 										min-height: 150px;
 										min-width: 150px;
