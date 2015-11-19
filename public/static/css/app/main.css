@@ -2617,6 +2617,7 @@ main.index-threaded {
 								margin: 0;
 								position: relative;
 								z-index: 3;
+								max-width: 350px;
 							}
 								figure.attachment-type-audio {
 									margin-right: 2em;
