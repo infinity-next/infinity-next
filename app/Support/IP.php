@@ -2,6 +2,7 @@
 
 use App\Contracts\PermissionUser;
 use App\Support\IP\CIDR as CIDR;
+use Log;
 use Request;
 
 class IP extends CIDR {
@@ -47,7 +48,23 @@ class IP extends CIDR {
 		}
 		else if (is_binary($cidr))
 		{
-			$start = inet_ntop($cidr);
+			try
+			{
+				$start = inet_ntop($cidr);
+			}
+			catch (\Exception $e)
+			{
+				Log::warning("App\Support\IP::__construct trying to make IP from binary value \"{$cidr}\", but it's not a real IP!");
+				
+				if (env('APP_DEBUG', false))
+				{
+					$start = "127.0.0.1";
+				}
+				else
+				{
+					throw $e;
+				}
+			}
 		}
 		else
 		{
