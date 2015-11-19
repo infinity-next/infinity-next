@@ -426,9 +426,9 @@ class Import extends Command {
 					
 					'posts_total'  => $tBoard->posts_total,
 					
-					'is_indexed'   => $tBoard->indexed,
-					'is_overboard' => true,
-					'is_worksafe'  => $tBoard->sfw,
+					'is_indexed'   => !!$tBoard->indexed,
+					'is_overboard' => !!$tBoard->indexed,
+					'is_worksafe'  => !!$tBoard->sfw,
 				]);
 				
 				if ($hBoard->save())
