@@ -774,7 +774,7 @@ class FileStorage extends Model {
 					$frames   = 1;
 					
 					// get duration
-					$time =  exec("ffmpeg -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
+					$time =  exec(env('LIB_FFMPEG', "ffmpeg") . " -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
 					
 					// duration in seconds; half the duration = middle
 					$durationBits      = explode(":", $time);
