@@ -114,7 +114,7 @@
 										<td class="board-ppd"><p class="board-cell board-ppd-desc">{{ $board['stats_ppd'] }}</p></td>
 										<td class="board-plh"><p class="board-cell board-plh-desc">{{ $board['stats_plh'] }}</p></td>
 										<td class="board-unique"><p class="board-cell">{{ $board['stats_active_users'] }}</p></td>
-										<td class="board-tags"><p class="board-cell">@foreach ($board['tags'] as $tag)<a class="tag-link" href="{{ "?tags={$tag->tag}" }}">{{ $tag->tag }}</a>@endforeach</p></td>
+										<td class="board-tags"><p class="board-cell">@foreach ($board['tags'] as $tag)<a class="tag-link" href="{{ "?tags={$tag['tag']}" }}">{{ $tag['tag'] }}</a>@endforeach</p></td>
 										<td class="board-max"><p class="board-cell">{{ $board['posts_total'] }}</p></td>
 									</tr>
 								@endforeach
