@@ -54,9 +54,9 @@ class IP extends CIDR {
 			}
 			catch (\Exception $e)
 			{
-				Log::warning("App\Support\IP::__construct trying to make IP from binary value \"{$cidr}\", but it's not a real IP!");
+				Log::warning("App\Support\IP::__construct trying to make IP from \$cidr binary value \"{$cidr}\", but it's not a real IP!");
 				
-				if (env('APP_DEBUG', false))
+				if (!env('APP_DEBUG', false))
 				{
 					$start = "127.0.0.1";
 				}
