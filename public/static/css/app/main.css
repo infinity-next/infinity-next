@@ -2620,6 +2620,7 @@ main.index-threaded {
 							}
 								figure.attachment-type-audio {
 									margin-right: 2em;
+									max-width: 350px;
 								}
 								
 								li.post-attachment.attachment-expanded figure.attachment {
@@ -2740,7 +2741,8 @@ main.index-threaded {
 								li.post-attachment audio.attachment-inline {
 									display: block;
 									width: 100%;
-									margin: 0 3em 0.5em 0;
+									margin: 0 auto 0.5em 0;
+									max-width: 400px;
 								}
 								li.post-attachment video.attachment-inline {
 									display: inline-block;
