@@ -97,6 +97,8 @@ class FileAttachment extends Model {
 			$query->select(
 				\DB::raw("DISTINCT ON (file_id) *")
 			);
+			
+			$query->orderBy('file_id', 'desc');
 		}
 		else
 		{
