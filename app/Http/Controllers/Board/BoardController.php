@@ -277,7 +277,6 @@ class BoardController extends Controller {
 		
 		foreach ($input['files'] as $file)
 		{
-			dd($file->getRealPath());
 			$newStorage = FileStorage::storeUpload($file);
 			$storage[$newStorage->hash] = $newStorage;
 		}
