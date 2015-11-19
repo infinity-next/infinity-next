@@ -1435,67 +1435,75 @@ class Post extends Model {
 		}
 		
 		// Store the post in the database.
-		DB::beginTransaction();
-		// The objective of this transaction is to prevent concurrency issues in the database
-		// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
-		// alongside the primary autoincrement column `post_id`.
-		
-		// First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
-		DB::table('boards')
-			->where('board_uri', $this->board_uri)
-			->increment('posts_total');
-		
-		DB::table('boards')
-			->where('board_uri', $this->board_uri)
-			->update([
-				'last_post_at' => $this->created_at,
-			]);
-		
-		// Second, we record this value and lock the table.
-		$boards = DB::table('boards')
-			->where('board_uri', $this->board_uri)
-			->lockForUpdate()
-			->select('posts_total')
-			->get();
-		
-		$posts_total = $boards[0]->posts_total;
-		
-		// Third, we store a unique checksum for this post for duplicate tracking.
-		$board->checksums()->create([
-			'checksum' => $this->getChecksum(true),
-		]);
-		
-		// Optionally, the OP of this thread needs a +1 to reply count.
-		if ($thread instanceof static)
+		DB::transaction(function() use ($board, $thread)
 		{
-			if (!$this->isBumpless() && !$thread->isBumplocked())
+			// The objective of this transaction is to prevent concurrency issues in the database
+			// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
+			// alongside the primary autoincrement column `post_id`.
+			
+			// First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
+			DB::table('boards')
+				->where('board_uri', $this->board_uri)
+				->increment('posts_total');
+			
+			DB::table('boards')
+				->where('board_uri', $this->board_uri)
+				->update([
+					'last_post_at' => $this->created_at,
+				]);
+			
+			// Second, we record this value and lock the table.
+			$boards = DB::table('boards')
+				->where('board_uri', $this->board_uri)
+				->lockForUpdate()
+				->select('posts_total')
+				->get();
+			
+			$posts_total = $boards[0]->posts_total;
+			
+			// Third, we store a unique checksum for this post for duplicate tracking.
+			$board->checksums()->create([
+				'checksum' => $this->getChecksum(true),
+			]);
+			
+			// Optionally, we also expend the adventure.
+			$adventure = BoardAdventure::getAdventure($board);
+			
+			if ($adventure)
 			{
-				$thread->bumped_last = $this->created_at;
-				$thread->timestamps  = false;
+				$this->adventure_id = $adventure->adventure_id;
+				$adventure->expended_at = $this->created_at;
+				$adventure->save();
 			}
 			
-			$thread->reply_last  = $this->created_at;
-			$thread->reply_count += 1;
-			$thread->save();
-		}
-		
-		// Optionally, we also expend the adventure.
-		$adventure = BoardAdventure::getAdventure($board);
-		
-		if ($adventure)
-		{
-			$this->adventure_id = $adventure->adventure_id;
-			$adventure->expended_at = $this->created_at;
-			$adventure->save();
-		}
-		
-		// Finally, we set our board_id and save.
-		$this->board_id  = $posts_total;
-		$this->author_id = $this->makeAuthorId();
-		$this->save();
-		
-		// Pushes the transaction.
-		DB::commit();
+			// We set our board_id and save the post.
+			$this->board_id  = $posts_total;
+			$this->author_id = $this->makeAuthorId();
+			$this->save();
+			
+			// Optionally, the OP of this thread needs a +1 to reply count.
+			if ($thread instanceof static)
+			{
+				// We're not using the Model for this because it fails under high volume.
+				
+				$threadNewValues = [
+					'updated_at'  => $thread->updated_at,
+					'reply_last'  => $this->created_at,
+					'reply_count' => $thread->replies()->count(),
+				];
+				
+				if (!$this->isBumpless() && !$thread->isBumplocked())
+				{
+					$threadNewValues['bumped_last'] = $this->created_at;
+				}
+				
+				DB::table('posts')
+					->where('post_id', $thread->post_id)
+					->update($threadNewValues);
+			}
+			
+			// Queries and locks are handled automatically after this closure ends.
+		});
 		
 		// Process uploads.
 		$uploads = [];
