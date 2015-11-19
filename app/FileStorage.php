@@ -788,7 +788,7 @@ class FileStorage extends Model {
 					
 					// $ffmpeg -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y -s $size $image 2>&1
 					
-					$cmd = "ffmpeg " .
+					$cmd = env('LIB_FFMPEG', "ffmpeg") . " " .
 							"-i {$video} " . // Input video.
 							//"-filter:v yadif " . // Deinterlace.
 							"-deinterlace " .
