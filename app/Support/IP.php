@@ -144,6 +144,11 @@ class IP extends CIDR {
 		return $user->getTextForIP($this->toText());
 	}
 	
+	public function intersects($cidr)
+	{
+		return self::cidr_intersect(parent::__toString(), $cidr);
+	}
+	
 	/**
 	 * Converts an IPv4 or IPv6 CIDR block into its range.
 	 *
