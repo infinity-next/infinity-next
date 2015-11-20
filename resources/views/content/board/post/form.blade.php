@@ -61,9 +61,10 @@
 					'maxlength'   => 255,
 					'placeholder' => trans('board.field.author')
 			]) !!}
+		</div>
 		
 		@if (isset($post) && $post->capcode_id)
-		<div class="field row-author">
+		<div class="field row-capcode">
 			<span>{{ "## {$post->capcode->getDisplayName()}" }}</span>
 		</div>
 		@endif
