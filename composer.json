@@ -38,10 +38,10 @@
 		
 		"devfactory/minify" : "1.0.*",
 		
-		"infinity-next/braintree": "*@dev",
-		"infinity-next/brennan-captcha": "1.*",
-		"infinity-next/eightdown": "*@dev",
-		"infinity-next/sleuth": "*@dev"
+		"infinity-next/braintree":       "*@dev",
+		"infinity-next/brennan-captcha": "*@dev",
+		"infinity-next/eightdown":       "*@dev",
+		"infinity-next/sleuth":          "*@dev"
 	},
 	
 	"require-dev": {

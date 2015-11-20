@@ -449,7 +449,11 @@ class FileStorage extends Model {
 		{
 			if ($this->hasThumb())
 			{
-				$url   = $this->getThumbnailURL($board);
+				$url = $this->getThumbnailURL($board);
+			}
+			else if ($this->isAudio())
+			{
+				$url = asset("static/img/assets/audio.gif");
 			}
 		}
 		

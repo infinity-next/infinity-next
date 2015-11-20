@@ -54,16 +54,20 @@
 		<div class="field row-author">
 			{!! Form::text(
 				'author',
-				isset($post) ? $post->author . ($post->capcode_id ? " ## {$post->capcode->capcode}" : "") : old('author'),
+				isset($post) ? $post->author : old('author'),
 				[
 					'id'          => "author",
 					'class'       => "field-control",
 					'maxlength'   => 255,
-					'placeholder' => trans('board.field.author'),
-					
-					isset($post) && $post->capcode_id ? "disabled" : "data-enabled",
+					'placeholder' => trans('board.field.author')
 			]) !!}
 		</div>
+		
+		@if (isset($post) && $post->capcode_id)
+		<div class="field row-capcode">
+			<span>{{ "## {$post->capcode->getDisplayName()}" }}</span>
+		</div>
+		@endif
 		
 		<div class="field row-email">
 			{!! Form::text(

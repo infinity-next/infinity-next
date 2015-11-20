@@ -369,13 +369,13 @@ trait PermissionUser {
 	public function canEdit(Post $post)
 	{
 		// If we can edit any post for this board ...
-		if ($this->can("board.post.edit.other", $post))
+		if ($this->can("board.post.edit.other", $post->board_uri))
 		{
 			// Allow post edit.
 			return true;
 		}
 		// If the author and our current user share an IP ...
-		else if ($post->author_ip == Request::ip())
+		else if (!is_null($post->author_ip) && $post->author_ip->intersects(Request::ip()))
 		{
 			// Allow post edit, if the masks allows it.
 			return $this->can("board.post.edit.self", $post->board_uri);

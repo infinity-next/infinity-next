@@ -646,19 +646,19 @@ class Post extends Model {
 		return false;
 	}
 	
-	public function getAuthorIpAttribute($value)
+	public function getAuthorIpAttribute()
 	{
-		if ($value instanceof IP)
+		if ($this->attributes['author_ip'] instanceof IP)
 		{
-			return $value;
+			return $this->attributes['author_ip'];
 		}
 		
-		return new IP($value);
+		return new IP($this->attributes['author_ip']);
 	}
 	
 	public function setAuthorIpAttribute($value)
 	{
-		if (!$this->saving && !is_binary($value))
+		if (!is_binary($value))
 		{
 			$ip = new IP($value);
 			$value = $ip->getStart(true);
@@ -976,7 +976,7 @@ class Post extends Model {
 	 */
 	public function newFromBuilder($attributes = array(), $connection = NULL)
 	{
-		if (isset($attributes->author_ip) && $attributes->author_ip !== null)
+		if (isset($attributes->author_ip) && $attributes->author_ip !== null && !($attributes->author_ip instanceof IP))
 		{
 			$attributes->author_ip = new IP($attributes->author_ip);
 		}
@@ -1461,24 +1461,10 @@ class Post extends Model {
 			
 			$posts_total = $boards[0]->posts_total;
 			
-			// Third, we store a checksum for this post in the database.
+			// Third, we store a unique checksum for this post for duplicate tracking.
 			$board->checksums()->create([
 				'checksum' => $this->getChecksum(true),
 			]);
-			
-			// Optionally, the OP of this thread needs a +1 to reply count.
-			if ($thread instanceof Post)
-			{
-				if (!$this->isBumpless() && !$thread->isBumplocked())
-				{
-					$thread->bumped_last = $this->created_at;
-					$thread->timestamps  = false;
-				}
-				
-				$thread->reply_last  = $this->created_at;
-				$thread->reply_count += 1;
-				$thread->save();
-			}
 			
 			// Optionally, we also expend the adventure.
 			$adventure = BoardAdventure::getAdventure($board);
@@ -1490,10 +1476,31 @@ class Post extends Model {
 				$adventure->save();
 			}
 			
-			// Finally, we set our board_id and save.
+			// We set our board_id and save the post.
 			$this->board_id  = $posts_total;
 			$this->author_id = $this->makeAuthorId();
 			$this->save();
+			
+			// Optionally, the OP of this thread needs a +1 to reply count.
+			if ($thread instanceof static)
+			{
+				// We're not using the Model for this because it fails under high volume.
+				
+				$threadNewValues = [
+					'updated_at'  => $thread->updated_at,
+					'reply_last'  => $this->created_at,
+					'reply_count' => $thread->replies()->count(),
+				];
+				
+				if (!$this->isBumpless() && !$thread->isBumplocked())
+				{
+					$threadNewValues['bumped_last'] = $this->created_at;
+				}
+				
+				DB::table('posts')
+					->where('post_id', $thread->post_id)
+					->update($threadNewValues);
+			}
 			
 			// Queries and locks are handled automatically after this closure ends.
 		});
