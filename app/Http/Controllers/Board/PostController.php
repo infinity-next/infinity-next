@@ -444,8 +444,6 @@ class PostController extends Controller {
 				"board_uri" => $post->board_uri,
 			]);
 			
-			Event::fire(new PostWasModified($post));
-			
 			return $this->view(static::VIEW_EDIT, [
 				"actions" => ["edit"],
 				"form"    => "edit",
