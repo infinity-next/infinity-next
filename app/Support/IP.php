@@ -151,10 +151,6 @@ class IP extends CIDR {
 	{
 		if ($cidr instanceof static)
 		{
-		if ($bits < 0)
-		{
-			dd($cidr->prefix);
-		}
 			return parent::cidr_to_range($cidr->getCidr(), $bits);
 		}
 		
