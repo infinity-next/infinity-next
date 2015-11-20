@@ -90,7 +90,7 @@ class PostRequest extends Request {
 				if ($role && $role->capcode != "")
 				{
 					$input['capcode_id'] = (int) $role->role_id;
-					$input['author']     = $user->username;
+					// $input['author']     = $user->username;
 				}
 				else
 				{
