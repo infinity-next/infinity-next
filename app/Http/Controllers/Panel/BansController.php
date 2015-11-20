@@ -45,7 +45,8 @@ class BansController extends PanelController {
 	
 	public function getIndexForSelf(Board $board)
 	{
-		$bans = Ban::getBans(Request::ip(), false);
+		$bans = Ban::getBans(Request::ip(), false)
+			->paginate(15);
 		
 		return $this->view(static::VIEW_BANS, [
 			'bans'       => $bans,

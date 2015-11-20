@@ -126,7 +126,7 @@ class PostController extends Controller {
 				
 				if ($all)
 				{
-					$posts = Post::ip($post->author_ip)
+					$posts = Post::whereAuthorIP($post->author_ip)
 						->where('board_uri', $board->board_uri)
 						->with('reports')
 						->get();

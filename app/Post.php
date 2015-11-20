@@ -336,6 +336,35 @@ class Post extends Model {
 		return $count;
 	}
 	
+	/**
+	 * Removes thread caches containing this post.
+	 *
+	 * @return void
+	 */
+	public function clearThreadCache()
+	{
+		// If this post is a reply to a thread
+		if ($this->reply_to_board_id)
+		{
+			$thread_id = $this->reply_to_board_id;
+		}
+		else
+		{
+			$thread_id = $this->board_id;
+		}
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				Cache::forget("board.{$this->board_uri}.thread.{$thread_id}");
+				break;
+			
+			default :
+				Cache::tags(["board.{$this->board_uri}", "threads"])->forget("board.{$this->board_uri}.thread.{$thread_id}");
+				break;
+		}
+	}
 	
 	/**
 	 * Returns a small, unique code to identify an author in one thread.
