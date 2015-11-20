@@ -18,6 +18,7 @@ use Session;
 use Event;
 use App\Events\PostWasBanned;
 use App\Events\PostWasModerated;
+use App\Events\PostWasModified;
 
 class PostController extends Controller {
 	
@@ -429,6 +430,7 @@ class PostController extends Controller {
 		{
 			$post->subject        = Input::get('subject');
 			$post->email          = Input::get('email');
+			$post->author         = Input::get('author');
 			$post->body           = Input::get('body');
 			$post->body_parsed    = NULL;
 			$post->body_parsed_at = NULL;
@@ -441,6 +443,8 @@ class PostController extends Controller {
 				"board_id"  => $post->board_id,
 				"board_uri" => $post->board_uri,
 			]);
+			
+			Event::fire(new PostWasModified($post));
 			
 			return $this->view(static::VIEW_EDIT, [
 				"actions" => ["edit"],
