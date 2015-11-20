@@ -13,10 +13,10 @@ class RoleSeeder extends Seeder {
 	
 	public function run()
 	{
-		// $this->command->info('Seeding roles.');
+		$this->command->info('Seeding roles.');
 		// 
-		// $this->runMaster();
-		// $this->runBoards();
+		$this->runMaster();
+		$this->runBoards();
 	}
 	
 	public function runMaster()
