@@ -5,7 +5,6 @@ use App\Role;
 use App\UserRole;
 use App\User;
 
-use App\Contracts\PermissionUser;
 use App\Http\Controllers\Panel\PanelController;
 
 use Input;
@@ -50,7 +49,7 @@ class StaffingController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getEdit(Board $board, PermissionUser $user)
+	public function getEdit(Board $board, User $user)
 	{
 		if (!$this->user->canEditBoardStaffMember($user, $board))
 		{
@@ -76,7 +75,7 @@ class StaffingController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function patchEdit(Board $board, PermissionUser $user)
+	public function patchEdit(Board $board, User $user)
 	{
 		if (!$this->user->canEditBoardStaffMember($user, $board))
 		{
