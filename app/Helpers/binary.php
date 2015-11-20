@@ -24,7 +24,8 @@ if (!function_exists('binary_sql'))
 	{
 		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
 		{
-			return pg_escape_bytea($bin);
+			$bin = pg_escape_bytea($bin);
+			$bin = str_replace("''", "'", $bin);
 		}
 		
 		return $bin;

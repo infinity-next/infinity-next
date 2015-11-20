@@ -646,19 +646,19 @@ class Post extends Model {
 		return false;
 	}
 	
-	public function getAuthorIpAttribute($value)
+	public function getAuthorIpAttribute()
 	{
-		if ($value instanceof IP)
+		if ($this->attributes['author_ip'] instanceof IP)
 		{
-			return $value;
+			return $this->attributes['author_ip'];
 		}
 		
-		return new IP($value);
+		return new IP($this->attributes['author_ip']);
 	}
 	
 	public function setAuthorIpAttribute($value)
 	{
-		if (!$this->saving && !is_binary($value))
+		if (!is_binary($value))
 		{
 			$ip = new IP($value);
 			$value = $ip->getStart(true);
@@ -976,7 +976,7 @@ class Post extends Model {
 	 */
 	public function newFromBuilder($attributes = array(), $connection = NULL)
 	{
-		if (isset($attributes->author_ip) && $attributes->author_ip !== null)
+		if (isset($attributes->author_ip) && $attributes->author_ip !== null && !($attributes->author_ip instanceof IP))
 		{
 			$attributes->author_ip = new IP($attributes->author_ip);
 		}

@@ -9,20 +9,10 @@ class IP extends CIDR {
 	
 	public function __construct($cidr = null, $end = null)
 	{
-		if ($cidr === null)
+		if ($cidr === null || $cidr === "")
 		{
 			return parent::__construct(Request::ip());
 		}
-		else if(is_resource($cidr))
-		{
-			$cidr = stream_get_contents($cidr);
-		}
-		
-		if (is_resource($end))
-		{
-			$end = stream_get_contents($end);
-		}
-		
 		
 		// Passing a static, return it.
 		if ($cidr instanceof static)
@@ -70,7 +60,7 @@ class IP extends CIDR {
 		{
 			try
 			{
-				$start = inet_ntop(binary_unsql($cidr));
+				$start = inet_ntop($cidr);
 			}
 			catch (\Exception $e)
 			{

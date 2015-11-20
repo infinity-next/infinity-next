@@ -1,4 +1,7 @@
 <?php
+
+$_SERVER['REMOTE_ADDR'] = "92.92.92.92";
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
