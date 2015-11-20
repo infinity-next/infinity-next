@@ -50,6 +50,18 @@ server {
     root $webroot/public;
     index index.php;
     server_name infinity;
+
+    # rewrite rules for thumbnails
+    location ~* /.*/file/thumb/.*/.*\.(.*)$ {
+          root $static/thumb/;
+          rewrite ^/.*/file/thumb/(.)(.)(.)(.)(.*)/[^/]*$ /$1/$2/$3/$4/$1$2$3$4$5 break;
+    }
+
+    # rewrite rules for original uploads
+    location ~* /.*/file/.*/.*\.(.*)$ {
+          root $static/full/;
+          rewrite ^/.*/file/(.)(.)(.)(.)(.*)/.*$ /$1/$2/$3/$4/$1$2$3$4$5 break;
+    }
     
     # laravel bullshit rewrite rules
     location / {
@@ -57,17 +69,5 @@ server {
             rewrite ^/(.*)$ /index.php?/$1 last;
             break;
         }
-    }
-
-    # rewrite rules for thumbnails
-    location ~* /.*/file/thumb/.*/.*\.(.*)$ {
-        alias $static/thumb/;
-        rewrite ^/.*/file/thumb/(.)(.)(.)(.)(.*)/.*$ /$1/$2/$3/$4/$1$2$3$4$5;
-    }
-
-    # rewrite rules for original uploads
-    location ~* /.*/file/.*/.*\.(.*)$ {
-        alias $static/full/;
-        rewrite ^/.*/file/(.)(.)(.)(.)(.*)/.*$ /$1/$2/$3/$4/$1$2$3$4$5;
     }
 }
