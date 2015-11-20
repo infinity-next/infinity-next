@@ -54,7 +54,7 @@ class IP extends CIDR {
 			}
 			catch (\Exception $e)
 			{
-				Log::warning("App\Support\IP::__construct trying to make IP from \$cidr binary value \"{$cidr}\" 0x" . devbin($start) . ", but it's not a real IP!");
+				Log::warning("App\Support\IP::__construct trying to make IP from \$cidr binary value \"{$cidr}\" 0x" . decbin($start) . ", but it's not a real IP!");
 				
 				if (!env('APP_DEBUG', false))
 				{
@@ -91,7 +91,7 @@ class IP extends CIDR {
 			}
 			catch (\Exception $e)
 			{
-				Log::warning("App\Support\IP::__construct trying to make IP from \$end binary value \"{$cidr}\" 0x" . devbin($end) . ", but it's not a real IP!");
+				Log::warning("App\Support\IP::__construct trying to make IP from \$end binary value \"{$cidr}\" 0x" . decbin($end) . ", but it's not a real IP!");
 				
 				if (!env('APP_DEBUG', false))
 				{
