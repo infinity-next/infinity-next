@@ -172,14 +172,15 @@ class Ban extends Model {
 	 * @param  string|null|false  $board_uri  Board|Global Only|Both
 	 * @return Ban
 	 */
-	public static function getBans($ip, $board_uri = null)
+	public static function getBans($ip, $board_uri = null, $fetch = true)
 	{
-		return Ban::ipString($ip)
+		$query = Ban::ipString($ip)
 			->board($board_uri)
 			->whereActive()
 			->orderBy('board_uri', 'desc') // Prioritizes local over global bans.
-			->with('mod')
-			->get();
+			->with('mod');
+		
+		return ($fetch ? $query->get() : $query);
 	}
 	
 	public function getRedirectUrl()
