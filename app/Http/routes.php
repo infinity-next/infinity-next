@@ -59,11 +59,10 @@ Route::group([
 		
 		
 		// /cp/adventure forwards you to a random board.
-		if (true)
-		{
-			Route::controller('adventure', 'AdventureController');
-		}
+		Route::controller('adventure', 'AdventureController');
 		
+		// /cp/histoy/ip will show you post history for an address.
+		Route::get('history/{ip}', 'HistoryController@getHistory');
 		
 		Route::group([
 			'prefix'    => 'bans',
