@@ -18,7 +18,7 @@ ib.widget("postbox", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			
-			checkFileUrl  : window.app.board_url + "/check-file",
+			checkFileUrl  : "/" + window.app.board_url + "/check-file",
 			
 			// Selectors for finding and binding elements.
 			selector : {

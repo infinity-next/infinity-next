@@ -15,6 +15,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				'timer'          : "#autoupdater-timer",
 				'force-update'   : "#autoupdater-update",
 				'updating'       : "#autoupdater-updating",
+				
+				'thread-event-target' : ".thread:first"
 			},
 		},
 		
@@ -54,7 +56,9 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			},
 			
 			updateSuccess : function(data, textStatus, jqXHR, scrollIntoView) {
-				var $newPost = $();
+				var newPosts     = $();
+				var updatedPosts = $();
+				var deletedPosts = $();
 				
 				if (data instanceof Array)
 				{
@@ -75,23 +79,37 @@ ib.widget("autoupdater", function(window, $, undefined) {
 								
 								if (isNaN(existingUpdated) || isNaN(newUpdated) || (newUpdated > existingUpdated))
 								{
+									console.log("Autoupdater: Replacing " + reply.post_id);
+									
 									$existingPost.replaceWith($newPost);
 									ib.bindElement($newPost[0]);
-									return $newPost;
+									
+									updatedPosts.push($newPost);
+									
+									return true;
 								}
 							}
 							else
 							{
+								console.log("Autoupdater: Deleting " + reply.post_id);
+								
 								$existingPost.addClass('post-deleted');
-								return $existingPost;
+								
+								updatedPosts.push($existingPost);
+								deletedPosts.push($existingPost);
+								
+								return true;
 							}
 						}
 						else if(reply.html !== null)
 						{
-							console.log("Inserting " + reply.post_id);
+							console.log("Autoupdater: Inserting " + reply.post_id);
+							
 							$newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
 							$newPost.insertBefore(widget.$widget);
 							ib.bindAll($newPost);
+							
+							newPosts.push($newPost);
 							
 							if (scrollIntoView === true)
 							{
@@ -111,10 +129,18 @@ ib.widget("autoupdater", function(window, $, undefined) {
 								}
 							}
 							
-							return $newPost;
+							return true;
 						}
 					});
 				}
+				
+				widget.$widget
+					.parents( widget.options.selector['thread-event-target'] )
+					.trigger('au-updated', [{
+						'newPosts'     : newPosts,
+						'updatedPosts' : updatedPosts,
+						'deletedPosts' : deletedPosts,
+					}]);
 				
 				return false;
 			},
