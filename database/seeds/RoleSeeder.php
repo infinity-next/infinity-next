@@ -22,6 +22,25 @@ class RoleSeeder extends Seeder {
 		
 		$this->runBoards();
 		
+		
+		Schema::table('posts', function(Blueprint $table)
+		{
+			$table->foreign('capcode_id')
+				->references('role_id')->on('roles')
+				->onDelete('set null')->onUpdate('cascade');
+		});
+		Schema::table('role_permissions', function(Blueprint $table)
+		{
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
+				->onDelete('cascade')->onUpdate('cascade');
+		});
+		Schema::table('user_roles', function(Blueprint $table)
+		{
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
+				->onDelete('cascade')->onUpdate('cascade');
+		});
 	}
 	
 	public function sequencePrep()
@@ -67,25 +86,6 @@ class RoleSeeder extends Seeder {
 			DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
 			DB::statement("ALTER TABLE roles ALTER COLUMN role_id SET DEFAULT nextval('roles_role_id_seq');");
 		}
-		
-		Schema::table('posts', function(Blueprint $table)
-		{
-			$table->foreign('capcode_id')
-				->references('role_id')->on('roles')
-				->onDelete('set null')->onUpdate('cascade');
-		});
-		Schema::table('role_permissions', function(Blueprint $table)
-		{
-			$table->foreign('role_id')
-				->references('role_id')->on('roles')
-				->onDelete('cascade')->onUpdate('cascade');
-		});
-		Schema::table('user_roles', function(Blueprint $table)
-		{
-			$table->foreign('role_id')
-				->references('role_id')->on('roles')
-				->onDelete('cascade')->onUpdate('cascade');
-		});
 	}
 	
 	public function runMaster()
