@@ -1038,6 +1038,7 @@ figure.error {
 						box-sizing: border-box;
 						overflow: hidden;
 						
+						margin-left: 0;
 						padding-bottom: 1px;
 						border-bottom: 1px solid #d6daf0;
 					}
