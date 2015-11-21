@@ -2547,9 +2547,11 @@ main.index-threaded {
 								display: inline;
 							}
 							.authorid.authorid-colorized {
-								border-radius: 6px;
-								margin: 0 0.25em -0.4em 0.25em;
+								border-radius: 5px;
+								line-height: 1.5;
+								margin: -0.1em 0.25em -0.4em 0.25em;
 								padding: 0 0.25em;
+								vertical-align: text-top;
 							}
 							.authorid.authorid-colorized::before {
 								display: none;
