@@ -1752,6 +1752,7 @@ section.index-form {
 		overflow: hidden;
 		max-width: 740px;
 		margin: 0 auto 2em auto;
+		padding: 0 0.75em;
 	}
 		form.form-post .post-menu {
 			display: none;
@@ -1845,9 +1846,7 @@ section.index-form {
 				}
 		
 		form.form-post fieldset.form-fields {
-			padding: 0.75em;
-			max-width: 728px;
-			box-sizing: border-box;
+			padding: 0.75em 0;
 		}
 		
 		html.js form.form-post .form-legend {

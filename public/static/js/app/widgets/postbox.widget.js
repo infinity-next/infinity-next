@@ -18,7 +18,7 @@ ib.widget("postbox", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			
-			checkFileUrl  : "/" + window.app.board_url + "/check-file",
+			checkFileUrl  : window.app.board_url + "/check-file",
 			
 			// Selectors for finding and binding elements.
 			selector : {
@@ -230,9 +230,22 @@ ib.widget("postbox", function(window, $, undefined) {
 		events   : {
 			
 			closeClick : function(event) {
+				// Unbind the jQuery UI resize.
+				widget.unbind.resize();
+				
+				// Modify and normalize post elements.
 				widget.$widget
+					.css({
+						'height' : "",
+						'width'  : ""
+					})
 					.removeClass("postbox-maximized postbox-minimized")
 					.addClass("postbox-closed");
+				
+				$(widget.options.selector['form-body'], widget.$widget).css({
+					'height' : "",
+					'width'  : ""
+				});
 				
 				// Prevents formClick from immediately firing.
 				event.stopPropagation();
@@ -242,13 +255,11 @@ ib.widget("postbox", function(window, $, undefined) {
 				++widget.activeUploads;
 				console.log(widget.activeUploads + " concurrent uploads.");
 				
-				console.log($(widget.options.selector['submit-post'], widget.$widget));
-				
 				$(widget.options.selector['submit-post'], widget.$widget)
 					.prop('disabled', widget.activeUploads > 0);
 			},
 			
-			fileCanceled : function(event, file) {
+			fileCanceled  : function(event, file) {
 				--widget.activeUploads;
 				console.log(widget.activeUploads + " concurrent uploads.");
 				
@@ -256,7 +267,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					.prop('disabled', widget.activeUploads > 0);
 			},
 			
-			fileFailed : function(event, file) {
+			fileFailed    : function(event, file) {
 				--widget.activeUploads;
 				console.log(widget.activeUploads + " concurrent uploads.");
 				
@@ -264,7 +275,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					.prop('disabled', widget.activeUploads > 0);
 			},
 			
-			fileUploaded : function(event, file) {
+			fileUploaded  : function(event, file) {
 				--widget.activeUploads;
 				console.log(widget.activeUploads + " concurrent uploads.");
 				
@@ -285,14 +296,16 @@ ib.widget("postbox", function(window, $, undefined) {
 				$(widget.options.selector['form-clear'], $form)
 					.val("")
 					.html("");
-				
 			},
 			
 			formClick     : function(event) {
 				if (widget.$widget.is(".postbox-closed"))
 				{
-					widget.$widget
-						.removeClass("postbox-minimized postbox-closed postbox-maximized");
+					// Remove closing classes.
+					widget.$widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
+					
+					// Rebind jQuery UI Resize.
+					widget.bind.resize();
 				}
 			},
 			
@@ -393,16 +406,23 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			minimizeClick : function(event) {
-				
 				widget.$widget
 					.removeClass("postbox-maximized postbox-closed")
 					.addClass("postbox-minimized");
-				
 			},
 			
-			postResize : function(event, ui) {
+			postResize    : function(event, ui) {
+				var $post = $(this);
+				var $form = $post.resizable( "option", "alsoResize" );
+				
 				ui.position.top  = 0;
 				ui.position.left = 0;
+				
+				ui.size.width = Math.min(ui.size.width, $form.width());
+				
+				$form.css('height', "auto");
+				$post.css('width', ui.size.width);
+				$post.children().first().css('width', "100%");
 				
 				return ui;
 			},
@@ -414,16 +434,37 @@ ib.widget("postbox", function(window, $, undefined) {
 				$this.next().attr('value', $this.prop('checked') ? 1 : 0);
 			},
 			
-			windowResize : function(event) {
-				var $body = $(widget.options.selector['form-body'], widget.$widget);
-				
-				$body.trigger('resize');
+			windowResize  : function(event) {
+				// Trigger resize on the post body.
+				// Forces the post box to obey new window constraints.
+				$(widget.options.selector['form-body'], widget.$widget).trigger('resize');
 			},
 			
 		},
 		
 		// Event bindings
 		bind     : {
+			resize : function() {
+				// Bind resizability onto the post area.
+				var $body   = $(widget.options.selector['form-body'], widget.$widget);
+				
+				if ($body.length && typeof $body.resizable === "function")
+				{
+					$body.resizable({
+						handles:     "sw",
+						resize:      widget.events.postResize,
+						alsoResize:  widget.$widget,
+						minWidth:    300,
+						minHeight:   26
+					});
+					
+					widget.$widget.resizable({
+						handles:  null,
+						minWidth: 300
+					});
+				}
+			},
+			
 			widget : function() {
 				
 				// Force the notices widget to be bound, and then record it.
@@ -459,26 +500,20 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('fileUploading.ib-postbox', widget.events.fileUploading)
 				;
 				
+				widget.bind.resize();
+			}
+		},
+		
+		unbind   : {
+			resize : function() {
 				// Bind resizability onto the post area.
 				var $body   = $(widget.options.selector['form-body'], widget.$widget);
 				
 				if ($body.length && typeof $body.resizable === "function")
 				{
-					$body.resizable({
-						handles:     "sw",
-						resize:      widget.events.postResize,
-						alsoResize:  widget.$widget,
-						minWidth:    300,
-						minHeight:   26
-					});
-					
-					widget.$widget.resizable({
-						resize:   widget.events.postResize,
-						handles:  null,
-						minWidth: 300
-					});
+					$body.resizable( "destroy" );
+					widget.$widget.resizable( "destroy" );
 				}
-				
 			}
 		}
 	};

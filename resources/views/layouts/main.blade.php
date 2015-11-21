@@ -3,7 +3,7 @@
 @section('js')
 	@yield('required-js')
 	
-	<script type="text/javascript">
+	<script type="text/javascript" id="js-app-data">
 		document.getElementsByTagName('html')[0].class = "js";
 		
 		window.app = {

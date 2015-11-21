@@ -226,6 +226,7 @@
 		right: 10px;
 		max-width: none;
 		margin: 0;
+		padding: 0;
 	}
 		html.js form.form-post .post-menu {
 			display: block;

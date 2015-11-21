@@ -22,13 +22,19 @@ ib.widget("instantclick", function(window, $, undefined) {
 				change : function() {
 					console.log("InstantClick change");
 					
+					// Restore our cached objects.
 					window.jQuery       = widget.storage.jQuery;
 					window.$            = window.jQuery;
 					window.ib           = widget.storage.ib;
 					window.InstantClick = widget.storage.InstantClick;
 					
+					// Insert our window.app data.
+					jQuery.globalEval( $("#js-app-data").html() );
+					
+					// Bind all widgets.
 					ib.bindAll();
 					
+					// Scroll to requested item.
 					if (window.location.hash != "")
 					{
 						var elem = document.getElementById(window.location.hash);
