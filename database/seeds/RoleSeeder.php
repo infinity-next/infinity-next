@@ -90,7 +90,7 @@ class RoleSeeder extends Seeder {
 	
 	public function runMaster()
 	{
-		$this->comamnd->comment("\tInserting system roles.");
+		$this->command->comment("\tInserting system roles.");
 		foreach ($this->slugs() as $slug)
 		{
 			$role = Role::where([
