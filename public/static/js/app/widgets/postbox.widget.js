@@ -18,7 +18,7 @@ ib.widget("postbox", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			
-			checkFileUrl  : window.app.board_url + "/check-file",
+			checkFileUrl  : window.app.board_url + "check-file",
 			
 			// Selectors for finding and binding elements.
 			selector : {
@@ -62,7 +62,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				paramName      : "files",
 				
 				// File upload URL
-				url            : window.app.board_url + "/upload-file",
+				url            : window.app.board_url + "upload-file",
 				
 				// Allow multiple uploads.
 				uploadMultiple : true,
@@ -90,7 +90,7 @@ ib.widget("postbox", function(window, $, undefined) {
 						var hash = Hasher.end();
 						file.hash = hash;
 						
-						jQuery.get( window.app.board_url + "/check-file", {
+						jQuery.get( widget.options.checkFileUrl, {
 							'md5' : hash
 						})
 							.done(function(data, textStatus, jqXHR) {
@@ -410,6 +410,12 @@ ib.widget("postbox", function(window, $, undefined) {
 				widget.bind.resize();
 			},
 			
+			pageChange    : function() {
+				widget.options.checkFileUrl         = window.app.board_url + "check-file";
+				widget.dropzone.options.url         = window.app.board_url + "upload-file";
+				widget.dropzone.options.maxFilesize = window.app.settings.attachmentFilesize / 1024;
+			},
+			
 			postResize    : function(event, ui) {
 				var $post = $(this);
 				var $form = $post.resizable( "option", "alsoResize" );
@@ -477,7 +483,14 @@ ib.widget("postbox", function(window, $, undefined) {
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
 				}
 				
-				$(window).on('ressize', widget.events.windowResize);
+				$(window).on('resize', widget.events.windowResize);
+				
+				// This will actually bind multiple times so make sure it only happens once.
+				if (widget.initOnce !== true)
+				{
+					// Ensures window.app is current with dropzone stuff.
+					InstantClick.on("change", widget.events.pageChange);
+				}
 				
 				widget.$widget
 					// Watch for form size clicks

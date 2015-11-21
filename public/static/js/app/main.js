@@ -60,6 +60,7 @@
 		if (typeof dom.widget === "undefined")
 		{
 			dom.widget = new widget(window, jQuery);
+			dom.widget.initOnce = false;
 			
 			if (typeof dom.widget.init === "function")
 			{
@@ -69,6 +70,8 @@
 			{
 				window.ib.widgetArguments.call(dom.widget, [dom]);
 			}
+			
+			dom.widget.initOnce = true;
 		}
 		
 		return dom.widget;
