@@ -452,8 +452,7 @@ class Board extends Model {
 	 */
 	public function getAssetURL($asset)
 	{
-		$assetObj = $this->assets()
-			->with('storage')
+		$assetObj = $this->assets
 			->where('asset_type', $asset)
 			->first();
 		

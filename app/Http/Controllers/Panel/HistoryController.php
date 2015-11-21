@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Panel;
 
+use App\Board;
 use App\Post;
 use App\Support\IP;
 use Carbon\Carbon;
@@ -56,6 +57,26 @@ class HistoryController extends PanelController {
 		
 		return $this->view(static::VIEW_HISTORY, [
 			'posts' => $posts,
+		]);
+	}
+	
+	public function getBoardHistory(Board $board, Post $post)
+	{
+		$posts = $board->posts()
+			->with('op')
+			->withEverything()
+			->where('author_ip', $post->author_ip)
+			->orderBy('post_id', 'desc')
+			->paginate(15);
+		
+		foreach ($posts as $item)
+		{
+			$item->setRelation('board', $board);
+		}
+		
+		return $this->view(static::VIEW_HISTORY, [
+			'posts'      => $posts,
+			'multiboard' => false,
 		]);
 	}
 	

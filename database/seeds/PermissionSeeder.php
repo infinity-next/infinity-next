@@ -49,6 +49,7 @@ class PermissionSeeder extends Seeder {
 			"board.logs",
 			"board.create",
 			"board.delete",
+			"board.history",
 			"board.reassign",
 			"board.reports",
 			"board.image.upload.new",
@@ -195,6 +196,7 @@ class PermissionGroupSeeder extends Seeder {
 					"board.post.bumplock",
 					"board.post.lock_bypass",
 					"board.reports",
+					"board.history",
 				],
 			],
 			[

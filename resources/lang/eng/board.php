@@ -116,12 +116,17 @@ return [
 	
 	// Details
 	'detail'            => [
-		'adventurer' => "They came from outer space!",
 		'sticky'     => "Stickied",
 		'bumplocked' => "Bumplocked",
 		'locked'     => "Locked",
 		'deleted'    => "Deleted",
-		'logged'     => "IP on record"
+		'history'    => "View author history",
+		
+		// Translator's Note:
+		// This is a bit silly. It just means the poster
+		// found the site via "Adventure!" mode. This can be
+		// translated to anything else.
+		'adventurer' => "They came from outer space!",
 	],
 	
 	

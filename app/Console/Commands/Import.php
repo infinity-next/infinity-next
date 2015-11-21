@@ -230,11 +230,11 @@ class Import extends Command {
 	{
 		$this->comment("\tCleaning up.");
 		
-		// if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
-		// {
-		// 	DB::statement("CREATE SEQUENCE roles_role_id_seq OWNED BY \"roles\".\"role_id\";");
-		// 	DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
-		// }
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			DB::statement("CREATE SEQUENCE roles_role_id_seq OWNED BY \"roles\".\"role_id\";");
+			DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
+		}
 		
 		Schema::table('posts', function(Blueprint $table)
 		{

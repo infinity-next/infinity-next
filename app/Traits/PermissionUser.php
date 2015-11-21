@@ -73,6 +73,8 @@ trait PermissionUser {
 	 * Uses flexible argument options to challenge a permission/board
 	 * combination against the user's permission mask.
 	 *
+	 * @param  string  $permission  The permission ID we're checking for.
+	 * @param  \App\Board|string|null  Optional. Board, board_uri string, or NULL. If NULL, checks only global permissions.
 	 * @return boolean
 	 */
 	public function can($permission, $board = null)
@@ -570,11 +572,33 @@ trait PermissionUser {
 	/**
 	 * Can this user view this ban?
 	 *
+	 * @param  \App\Ban The ban we're checking to see if we can view.
 	 * @return boolean
 	 */
 	public function canViewBan(Ban $ban)
 	{
 		return $this->can('board.bans', $ban->board_uri);
+	}
+	
+	/**
+	 * Can this user view a post's local history?
+	 *
+	 * @param  \App\Post  $post  The post we want to see if we can check the history of locally.
+	 * @return boolean
+	 */
+	public function canViewHistory(Post $post)
+	{
+		return $this->can('board.history', $post->board_uri);
+	}
+	
+	/**
+	 * Can this user view an addresses's global history?
+	 *
+	 * @return boolean
+	 */
+	public function canViewGlobalHistory()
+	{
+		return $this->can('board.history', null);
 	}
 	
 	/**

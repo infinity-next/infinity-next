@@ -51,8 +51,10 @@
 	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
 	@endif
 	
-	@if (!is_null($post->author_ip))
-	<li class="post-detail detail-icon post-logged" title="@lang('board.detail.logged')"><i class="fa fa-server"></i></li>
+	@if (!is_null($post->author_ip) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
+		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
+			<a href="{{ $user->canViewGlobalHistory() ?  url('cp/history/' . $post->author_ip->toText()) : $post->getURL("history\{$post->board_id}") }}"><i class="fa fa-server"></i></a>
+		</li>
 	@endif
 	
 	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>

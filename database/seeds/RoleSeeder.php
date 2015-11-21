@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Schema\Blueprint;
 
 use App\Board;
 use App\Permission;
@@ -14,14 +15,83 @@ class RoleSeeder extends Seeder {
 	public function run()
 	{
 		$this->command->info('Seeding roles.');
-		// 
+		
+		$this->sequencePrep();
 		$this->runMaster();
+		$this->sequenceCleanup();
+		
 		$this->runBoards();
+		
+	}
+	
+	public function sequencePrep()
+	{
+		$this->command->comment("\tPrepping database.");
+		
+		# Yes, we are required to drop and recreate these FKs to get ID reassignment working.
+		# This is for PostgreSQL.
+		try
+		{
+			Schema::table('posts', function(Blueprint $table)
+			{
+				$table->dropForeign('posts_capcode_id_foreign');
+			});
+			Schema::table('role_permissions', function(Blueprint $table)
+			{
+				$table->dropForeign('role_permissions_role_id_foreign');
+			});
+			Schema::table('user_roles', function(Blueprint $table)
+			{
+				$table->dropForeign('user_roles_role_id_foreign');
+			});
+		}
+		catch (\Exception $e)
+		{
+			$this->command->comment("\tSkipping FK drops. Probably already missing.");
+		}
+		
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			DB::statement("DROP SEQUENCE IF EXISTS roles_role_id_seq CASCADE;");
+		}
+	}
+	
+	public function sequenceCleanup()
+	{
+		$this->command->comment("\tCleaning up relationships.");
+		
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			$this->command->comment("\tDealing with PGSQL sequences.");
+			DB::statement("CREATE SEQUENCE roles_role_id_seq OWNED BY \"roles\".\"role_id\";");
+			DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
+			DB::statement("ALTER TABLE roles ALTER COLUMN role_id SET DEFAULT nextval('roles_role_id_seq');");
+		}
+		
+		Schema::table('posts', function(Blueprint $table)
+		{
+			$table->foreign('capcode_id')
+				->references('role_id')->on('roles')
+				->onDelete('set null')->onUpdate('cascade');
+		});
+		Schema::table('role_permissions', function(Blueprint $table)
+		{
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
+				->onDelete('cascade')->onUpdate('cascade');
+		});
+		Schema::table('user_roles', function(Blueprint $table)
+		{
+			$table->foreign('role_id')
+				->references('role_id')->on('roles')
+				->onDelete('cascade')->onUpdate('cascade');
+		});
 	}
 	
 	public function runMaster()
 	{
-			foreach ($this->slugs() as $slug)
+		$this->comamnd->comment("\tInserting system roles.");
+		foreach ($this->slugs() as $slug)
 		{
 			$role = Role::where([
 				'role'       => $slug['role'],
@@ -43,10 +113,11 @@ class RoleSeeder extends Seeder {
 	
 	public function runBoards()
 	{
+		$this->command->comment("\tInserting board owner roles.");
+		$boardRole = $this->slugs()[Role::ID_OWNER];
+		
 		foreach (Board::get() as $board)
 		{
-			$boardRole = $this->slugs()[Role::ID_OWNER];
-			
 			$roleModel = Role::updateOrCreate([
 				'role'       => $boardRole['role'],
 				'board_uri'  => $board->board_uri,
@@ -294,6 +365,7 @@ class RolePermissionSeeder extends Seeder {
 			
 			Role::ID_JANITOR => [
 				"board.logs",
+				"board.history",
 				"board.reports",
 				"board.image.upload.new",
 				"board.image.upload.old",
@@ -318,6 +390,7 @@ class RolePermissionSeeder extends Seeder {
 			Role::ID_OWNER => [
 				"board.config",
 				"board.logs",
+				"board.history",
 				"board.reassign",
 				"board.reports",
 				"board.image.upload.new",
@@ -367,6 +440,7 @@ class RolePermissionSeeder extends Seeder {
 				"board.user.role",
 				"board.user.unban",
 				
+				"board.history",
 				"board.reports",
 				"site.reports",
 				"site.board.view_unindexed",

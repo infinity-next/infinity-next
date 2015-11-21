@@ -208,7 +208,6 @@ Route::group([
 		});
 		
 		
-		
 		/*
 		| Board API Routes (JSON)
 		*/
@@ -232,6 +231,11 @@ Route::group([
 			Route::get('post/{post_id}.json', 'BoardController@getPost');
 			
 		});
+		
+		/*
+		| Post History
+		*/
+		Route::get('history/{post_id}', 'Panel\HistoryController@getBoardHistory');
 		
 		
 		/*
