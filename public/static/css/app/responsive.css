@@ -237,8 +237,8 @@
 			border-bottom: 1px solid #ccc;
 			margin: 0;
 			padding: 0;
-			width: 300px;
 			max-width: none;
+			min-width: 300px;
 		}
 			html.js form.form-post .form-legend {
 				margin: 0;

@@ -230,22 +230,13 @@ ib.widget("postbox", function(window, $, undefined) {
 		events   : {
 			
 			closeClick : function(event) {
-				// Unbind the jQuery UI resize.
-				widget.unbind.resize();
-				
-				// Modify and normalize post elements.
+				// Tweak classes.
 				widget.$widget
-					.css({
-						'height' : "",
-						'width'  : ""
-					})
 					.removeClass("postbox-maximized postbox-minimized")
 					.addClass("postbox-closed");
 				
-				$(widget.options.selector['form-body'], widget.$widget).css({
-					'height' : "",
-					'width'  : ""
-				});
+				// Unbind the jQuery UI resize.
+				widget.unbind.resize();
 				
 				// Prevents formClick from immediately firing.
 				event.stopPropagation();
@@ -301,7 +292,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			formClick     : function(event) {
 				if (widget.$widget.is(".postbox-closed"))
 				{
-					// Remove closing classes.
+					// Tweak classes.
 					widget.$widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 					
 					// Rebind jQuery UI Resize.
@@ -400,15 +391,23 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			maximizeClick : function(event) {
+				// Tweak classes.
 				widget.$widget
 					.removeClass("postbox-minimized postbox-closed")
 					.addClass("postbox-maximized");
+				
+				// Remove jQuery UI Resize.
+				widget.unbind.resize();
 			},
 			
 			minimizeClick : function(event) {
+				// Tweak classes.
 				widget.$widget
 					.removeClass("postbox-maximized postbox-closed")
 					.addClass("postbox-minimized");
+				
+				// Rebind jQuery UI Resize.
+				widget.bind.resize();
 			},
 			
 			postResize    : function(event, ui) {
@@ -511,8 +510,15 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				if ($body.length && typeof $body.resizable === "function")
 				{
-					$body.resizable( "destroy" );
-					widget.$widget.resizable( "destroy" );
+					$body.resizable( "destroy" ).css({
+						'height' : "",
+						'width'  : ""
+					});
+					
+					widget.$widget.resizable( "destroy" ).css({
+						'height' : "",
+						'width'  : ""
+					});
 				}
 			}
 		}
