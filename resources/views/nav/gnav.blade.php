@@ -40,7 +40,7 @@
 							<ul class="flyout-list">
 								@foreach ($boards as $board)
 								<li class="flyout-item">
-									<a href="{!! url($board->board_uri) !!}" class="flyout-link">
+									<a href="{!! $board->getURL() !!}" class="flyout-link">
 										<span class="flyout-uri">/{!! $board->board_uri !!}/</span>
 										<span class="flyout-title">{!! $board->title !!}</span>
 									</a>

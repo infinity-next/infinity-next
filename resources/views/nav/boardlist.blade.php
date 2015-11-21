@@ -23,7 +23,7 @@
 				<ul class="boardlist-items">
 					@foreach ($boards as $board)
 					<li class="boardlist-item">
-						<a href="{!! url($board->board_uri) !!}" class="boardlist-link">{!! $board->board_uri !!}</a>
+						<a href="{!! $board->getURL() !!}" class="boardlist-link">{!! $board->board_uri !!}</a>
 					</li>
 					@endforeach
 				</ul>
