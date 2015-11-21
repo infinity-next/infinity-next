@@ -318,7 +318,6 @@ Route::group([
 			
 			// Put reply to thread.
 			Route::put('thread/{post_id}', 'BoardController@putThread');
-			
 		});
 	});
 	
