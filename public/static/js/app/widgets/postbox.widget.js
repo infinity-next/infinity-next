@@ -33,6 +33,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				'form-fields'     : ".form-fields",
 				'form-body'       : "#body",
 				'form-clear'      : "#subject, #body, #captcha",
+				'form-spoiler'    : ".dz-spoiler-check",
 				
 				'captcha'         : ".captcha",
 				'captcha-row'     : ".row-captcha",
@@ -199,7 +200,8 @@ ib.widget("postbox", function(window, $, undefined) {
 						"<div class=\"dz-actions\">" +
 							"<span class=\"dz-remove\" data-dz-remove>x</span>" +
 							"<label class=\"dz-spoiler\">" +
-								"<input type=\"checkbox\" class=\"dz-spoiler-check\" value=\"1\" data-dz-spoiler />" +
+								"<input type=\"checkbox\" class=\"dz-spoiler-check\" name=\"\" value=\"\" />" +
+								"<input type=\"chidden\" class=\"dz-spoiler-hidden\" value=\"0\" data-dz-spoiler />" +
 								"<span class=\"dz-spoiler-desc\">Spoiler</span>" +
 							"</label>" +
 						"</div>" +
@@ -405,6 +407,13 @@ ib.widget("postbox", function(window, $, undefined) {
 				return ui;
 			},
 			
+			spoilerChange : function(event) {
+				var $this = $(this);
+				var $next = $this.next();
+				
+				$this.next().attr('value', $this.prop('checked') ? 1 : 0);
+			},
+			
 			windowResize : function(event) {
 				var $body = $(widget.options.selector['form-body'], widget.$widget);
 				
@@ -436,6 +445,9 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
 					.on('click.ib-postbox', widget.options.selector['button-maximize'], widget.events.maximizeClick)
 					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
+					
+					// Watch field changes
+					.on('change.ib-postbox', widget.options.selector['form-spoiler'],    widget.events.spoilerChange)
 					
 					// Watch form submission.
 					.on('submit.ib-postbox',        widget.events.formSubmit)

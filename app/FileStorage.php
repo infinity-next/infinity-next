@@ -384,34 +384,31 @@ class FileStorage extends Model {
 		$stock = true;
 		$spoil = $this->isSpoiler();
 		
-		if (!$spoil)
+		if ($this->isImageVector())
 		{
-			if ($this->isImageVector())
+			$stock = false;
+			$type  = "img";
+		}
+		else if ($this->isImage())
+		{
+			if ($this->hasThumb())
 			{
 				$stock = false;
 				$type  = "img";
 			}
-			else if ($this->isImage())
-			{
-				if ($this->hasThumb())
-				{
-					$stock = false;
-					$type  = "img";
-				}
-			}
-			else if ($this->isVideo())
-			{
-				if ($this->hasThumb())
-				{
-					$stock = false;
-					$type  = "video";
-				}
-			}
-			else if ($this->isAudio())
+		}
+		else if ($this->isVideo())
+		{
+			if ($this->hasThumb())
 			{
 				$stock = false;
-				$type  = "audio";
+				$type  = "video";
 			}
+		}
+		else if ($this->isAudio())
+		{
+			$stock = false;
+			$type  = "audio";
 		}
 		
 		$classes = [];

@@ -152,10 +152,11 @@ ib.widget("post", function(window, $, undefined) {
 				{
 					$item.addClass('attachment-expanded');
 					$img.parent().css({
-							'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
-							'background-size'     : '100%',
-							'background-repeat'   : 'no-repeat',
-							'background-position' : 'center center',
+							// Removed because the effect was gross.
+							// 'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
+							// 'background-size'     : '100%',
+							// 'background-repeat'   : 'no-repeat',
+							// 'background-position' : 'center center',
 							'min-width'           : $img.width() + 'px',
 							'min-height'          : $img.height() + 'px',
 							'opacity'             : 0.5,
@@ -166,9 +167,9 @@ ib.widget("post", function(window, $, undefined) {
 						.one("load", function() {
 							// Remove our opacity change.
 							$(this).parent().css({
-								'background-image' : "none",
-								'min-width'        : '',
-								'min-height'       : '',
+								// 'background-image' : "none",
+								// 'min-width'        : '',
+								// 'min-height'       : '',
 								'opacity'          : ""
 							});
 						})
