@@ -1106,6 +1106,61 @@ class Post extends Model {
 		return $this->appends;
 	}
 	
+	/**
+	 * Pull threads for the overboard.
+	 *
+	 * @static
+	 * @param  int  $page
+	 * @return Collection  of static
+	 */
+	public static function getThreadsForOverboard($page = 0)
+	{
+		$postsPerPage    = 10;
+		
+		$rememberTags    = ["site.overboard"];
+		$rememberTimer   = 30;
+		$rememberKey     = "site.overboard.page.{$page}";
+		$rememberClosure = function() use ($page, $postsPerPage) {
+			$threads = static::with('board', 'board.settings')
+				->op()
+				->withEverything()
+				->with(['replies' => function($query) {
+					$query->forIndex();
+				}])
+				->orderBy('bumped_last', 'desc')
+				->skip($postsPerPage * ( $page - 1 ))
+				->take($postsPerPage)
+				->get();
+			
+			// The way that replies are fetched forIndex pulls them in reverse order.
+			// Fix that.
+			foreach ($threads as $thread)
+			{
+				$replyTake = $thread->stickied_at ? 1 : 5;
+				
+				$thread->body_parsed = $thread->getBodyFormatted();
+				$thread->replies     = $thread->replies
+					->reverse()
+					->splice(-$replyTake, $replyTake);
+			}
+			
+			return $threads;
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $threads;
+	}
 	
 	/**
 	 * Create a new model instance that is existing.

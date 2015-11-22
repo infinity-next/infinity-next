@@ -15,8 +15,9 @@
 		<article class="reply">
 			@endspaceless
 			@include('content.board.post', [
-				'board' => $board,
-				'post'  => $reply,
+				'board'      => $board,
+				'post'       => $reply,
+				'multiboard' => false,
 			])
 			@spaceless
 		</article>

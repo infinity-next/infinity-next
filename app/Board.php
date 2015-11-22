@@ -999,6 +999,50 @@ class Board extends Model {
 			->get();
 	}
 	
+	public function getThreadsForCatalog($page = 0)
+	{
+		$postsPerPage    = 100;
+		
+		$rememberTags    = ["board.{$this->board_uri}.pages"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board_uri}.catalog";
+		$rememberClosure = function() use ($page, $postsPerPage) {
+			$threads = $this->threads()
+				->op()
+				->andAttachments()
+				->andCapcode()
+				->orderBy('stickied', 'desc')
+				->orderBy('reply_last', 'desc')
+				->skip($postsPerPage * ( $page - 1 ))
+				->take($postsPerPage)
+				->get();
+			
+			// Limit the number of attachments to one.
+			foreach ($threads as $thread)
+			{
+				//$thread->body_parsed = $thread->getBodyFormatted();
+				$thread->setRelation('board', $this);
+				$thread->attachments = $thread->attachments->splice(0, 1);
+			}
+			
+			return $threads;
+		};
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+			
+			default :
+				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+				break;
+		}
+		
+		return $threads;
+	}
+	
 	public function getThreadsForIndex($page = 0)
 	{
 		$postsPerPage = $this->getConfig('postsPerPage', 10);
@@ -1035,50 +1079,6 @@ class Board extends Model {
 				{
 					$reply->setRelation('board', $this);
 				}
-			}
-			
-			return $threads;
-		};
-		
-		switch (env('CACHE_DRIVER'))
-		{
-			case "file" :
-			case "database" :
-				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
-			
-			default :
-				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-				break;
-		}
-		
-		return $threads;
-	}
-	
-	public function getThreadsForCatalog($page = 0)
-	{
-		$postsPerPage    = 100;
-		
-		$rememberTags    = ["board.{$this->board_uri}.pages"];
-		$rememberTimer   = 30;
-		$rememberKey     = "board.{$this->board_uri}.catalog";
-		$rememberClosure = function() use ($page, $postsPerPage) {
-			$threads = $this->threads()
-				->op()
-				->andAttachments()
-				->andCapcode()
-				->orderBy('stickied', 'desc')
-				->orderBy('reply_last', 'desc')
-				->skip($postsPerPage * ( $page - 1 ))
-				->take($postsPerPage)
-				->get();
-			
-			// Limit the number of attachments to one.
-			foreach ($threads as $thread)
-			{
-				//$thread->body_parsed = $thread->getBodyFormatted();
-				$thread->setRelation('board', $this);
-				$thread->attachments = $thread->attachments->splice(0, 1);
 			}
 			
 			return $threads;

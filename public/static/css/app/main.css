@@ -2354,7 +2354,6 @@ main.index-threaded {
 			padding: 0;
 		}
 			main.multiboard-index .crown-figure {
-				background: #fff;
 				margin: 0 -1px 0 0;
 				padding: 0 0.75em;
 				
@@ -2839,6 +2838,9 @@ main.index-threaded {
 							border-width: 0 1em 1em 0;
 							border-color: transparent #B7C5D9 transparent transparent;
 							overflow: hidden;
+						}
+						main.multiboard-index div.action-tab-reply {
+							top: -43px;
 						}
 						div.op-container a.post-action-reply {
 							border-color: transparent rgba(0,0,255,0.25) transparent transparent;

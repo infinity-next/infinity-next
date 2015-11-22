@@ -21,7 +21,8 @@ Route::group([
 	Route::get('/', 'WelcomeController@getIndex');
 	
 	Route::controller('boards.html',    'BoardlistController');
-	Route::controller('overboard.html', 'MultiboardController');
+	
+	Route::get('overboard.html', 'MultiboardController@getOverboard');
 	
 	
 	/*

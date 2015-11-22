@@ -193,4 +193,10 @@ return [
 	 */
 	'sfw'      => "Safe for work only",
 	'nsfw'     => "Not safe for work allowed",
+	
+	/**
+	 * Other
+	 */
+	'overboard'  => "Overboard",
+	'multiboard' => "Multiboard",
 ];

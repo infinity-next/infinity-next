@@ -20,35 +20,14 @@ class MultiboardController extends Controller {
 	|
 	*/
 	
-	const VIEW_MULTIBOARD = "multiboard";
+	const VIEW_OVERBOARD = "overboard";
 	
-	public function getIndex()
+	public function getOverboard()
 	{
-		$posts = Cache::remember('site.overboard', 60, function()
-		{
-			$posts = Post::with('op', 'board', 'board.assets')
-				->withEverything()
-				->orderBy('post_id', 'desc')
-				->take(75)
-				->get();
-			
-			return $posts;
-		});
+		$threads = Post::getThreadsForOverboard(max(1, Input::get('page', 1)));
 		
-		$page    = max(1, Input::get('page', 1));
-		$perPage = 15;
-		
-		$paginator = new LengthAwarePaginator(
-			$posts->forPage($page, $perPage),
-			$posts->count(),
-			$perPage,
-			$page
-		);
-		$paginator->setPath(url("overboard.html"));
-		
-		
-		return $this->view(static::VIEW_MULTIBOARD, [
-			'posts' => $paginator,
+		return $this->view(static::VIEW_OVERBOARD, [
+			'threads' => $threads,
 		]);
 	}
 	
