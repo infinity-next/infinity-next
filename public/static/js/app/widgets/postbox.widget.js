@@ -485,25 +485,28 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Event bindings
 		bind     : {
 			resize : function() {
-				// Bind resizability onto the post area.
-				var $body   = $(widget.options.selector['form-body'], widget.$widget);
-				
-				if (!widget.resizable && $body.length && typeof $body.resizable === "function")
+				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
 				{
-					$body.resizable({
-						handles:     "sw",
-						resize:      widget.events.postResize,
-						alsoResize:  widget.$widget,
-						minWidth:    300,
-						minHeight:   26
-					});
+					// Bind resizability onto the post area.
+					var $body   = $(widget.options.selector['form-body'], widget.$widget);
 					
-					widget.$widget.resizable({
-						handles:  null,
-						minWidth: 300
-					});
-					
-					widget.resizable = true;
+					if (!widget.resizable && $body.length && typeof $body.resizable === "function")
+					{
+						$body.resizable({
+							handles:     "sw",
+							resize:      widget.events.postResize,
+							alsoResize:  widget.$widget,
+							minWidth:    300,
+							minHeight:   26
+						});
+						
+						widget.$widget.resizable({
+							handles:  null,
+							minWidth: 300
+						});
+						
+						widget.resizable = true;
+					}
 				}
 			},
 			
@@ -560,15 +563,9 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				if (widget.resizable && $body.length && typeof $body.resizable === "function")
 				{
-					$body.resizable( "destroy" ).css({
-						'height' : "",
-						'width'  : ""
-					});
+					$body.resizable( "destroy" ).attr('style', "");
 					
-					widget.$widget.resizable( "destroy" ).css({
-						'height' : "",
-						'width'  : ""
-					});
+					widget.$widget.resizable( "destroy" ).attr('style', "");
 					
 					widget.resizable = false;
 				}
