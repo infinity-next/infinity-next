@@ -367,14 +367,8 @@ ib.widget("postbox", function(window, $, undefined) {
 						
 						if (typeof json.redirect !== "undefined")
 						{
-							if (InstantClick.supported)
-							{
-								InstantClick.open(json.redirect);
-							}
-							else
-							{
-								window.location = json.redirect;
-							}
+							console.log("Post submitted. Redirecting.");
+							window.location = json.redirect;
 						}
 						else if (typeof json.errors !== "undefined")
 						{

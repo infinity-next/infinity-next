@@ -77,6 +77,19 @@ header nav.boardlist {
 			color: #800000;
 			border-color: #D9BFB7;
 		}
+			a.post-action-reply {
+				display: block;
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: 0 1em 1em 0;
+				border-color: transparent #D9BFB7 transparent transparent;
+				overflow: hidden;
+			}
+			div.op-container a.post-action-reply {
+				border-color: transparent rgba(255,0,0,0.5) transparent transparent;
+			}
+			
 			li.post-action-group {
 				background-color: #F0E0D6;
 				border: 1px solid #D9BFB7;
