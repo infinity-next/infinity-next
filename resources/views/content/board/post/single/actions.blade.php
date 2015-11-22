@@ -1,3 +1,4 @@
+@spaceless
 <div div class="post-action-bar">
 	@section('post-actions')
 	@set('postActions', false)
@@ -132,3 +133,4 @@
 	@endif
 	
 </div>
+@endspaceless

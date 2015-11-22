@@ -2819,17 +2819,29 @@ main.index-threaded {
 					div.post-action-tab.action-tab-actions {
 						margin-left: 0;
 					}
+						div.action-tab-actions span.post-action-text {
+							display: none;
+						}
+					
 					div.post-action-tab.action-tab-reply {
 						position: absolute;
-						top: 0.33em;
-						right: 0.75em;
+						top: 0;
+						right: 0;
+						border: none;
+						padding: 0;
+						margin: 0;
 					}
-					
-					span.post-action-open {
-						
-					}
-						span.post-action-open span.post-action-text {
-							display: none;
+						a.post-action-reply {
+							display: block;
+							width: 0;
+							height: 0;
+							border-style: solid;
+							border-width: 0 1em 1em 0;
+							border-color: transparent #B7C5D9 transparent transparent;
+							overflow: hidden;
+						}
+						div.op-container a.post-action-reply {
+							border-color: transparent rgba(0,0,255,0.25) transparent transparent;
 						}
 					
 					ul.post-action-groups {
@@ -2858,6 +2870,9 @@ main.index-threaded {
 								display: inline-block;
 								vertical-align: top;
 								width: 100%;
+							}
+							ul.post-actions:empty {
+								display: none;
 							}
 								li.post-action {
 									border-bottom: 1px solid rgba(0,0,0,0.25);
@@ -3051,6 +3066,7 @@ blockquote.ugc {
 	blockquote.ugc h5,
 	blockquote.ugc h6 {
 		color: #AF0A0F;
+		padding: 0;
 	}
 	
 	blockquote.ugc a {
