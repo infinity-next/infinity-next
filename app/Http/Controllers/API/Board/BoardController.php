@@ -3,13 +3,18 @@
 use App\Board;
 use App\Post;
 
-use App\Contracts\ApiController;
-use App\Http\Controllers\PageController as ParentController;
+use App\Contracts\ApiController as ApiContract;
+use App\Http\Controllers\API\ApiController;
+use App\Http\Controllers\Board\BoardController as ParentController;
+use App\Http\MessengerResponse;
+use App\Http\Requests\PostRequest;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class BoardController extends ParentController implements ApiController {
+class BoardController extends ParentController implements ApiContract {
+	
+	use ApiController;
 	
 	/**
 	 * Show the board index for the user.
@@ -42,26 +47,26 @@ class BoardController extends ParentController implements ApiController {
 		// Load our list of threads and their latest replies.
 		$posts = $board->getThreadsForIndex($page);
 		
-		return $posts;
+		return $this->apiResponse($posts);
 	}
 	
 	/**
 	 * Show the catalog (gridded) board view.
 	 *
-	 * @var Board $board
+	 * @param  Board    $board
 	 * @return Response
 	 */
 	public function getCatalog(Board $board)
 	{
 		// Load our list of threads and their latest replies.
-		return $board->getThreadsForCatalog();
+		return $this->apiResponse($board->getThreadsForCatalog());
 	}
 	
 	/**
 	 * Returns a post to the client. 
 	 *
-	 * @var Board $board
-	 * @var Post  $post
+	 * @param  Board    $board
+	 * @param  Post     $thread
 	 * @return Response
 	 */
 	public function getPost(Board $board, Post $post)
@@ -77,14 +82,15 @@ class BoardController extends ParentController implements ApiController {
 			return abort(404);
 		}
 		
-		return $post;
+		return $this->apiResponse($post);
 	}
 	
 	/**
 	 * Returns a thread and its replies to the client. 
 	 *
-	 * @var Board $board
-	 * @var Post $thread
+	 * @param  Request  $request
+	 * @param  Board    $board
+	 * @param  Post     $thread
 	 * @return Response
 	 */
 	public function getThread(Request $request, Board $board, Post $thread)
@@ -99,7 +105,7 @@ class BoardController extends ParentController implements ApiController {
 			$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
 			$posts->sortBy('board_id');
 			
-			return $posts;
+			return $this->apiResponse($posts);
 		}
 		else
 		{
@@ -112,7 +118,28 @@ class BoardController extends ParentController implements ApiController {
 			}
 		}
 		
-		return $thread;
+		return $this->apiResponse($thread);
 	}
 	
+	/**
+	 * Handles the creation of a new thread or reply.
+	 *
+	 * @param  \App\Http\Requests\PostRequest  $request
+	 * @param  Board  $board
+	 * @param  Post|null  $thread
+	 * @return Response (redirects to the thread view)
+	 */
+	public function putThread(PostRequest $request, Board $board, Post $thread = null)
+	{
+		$response = parent::putThread($request, $board, $thread);
+		
+		if ($response instanceof Post)
+		{
+			$response = [
+				'redirect' => $response->getURL(),
+			];
+		}
+		
+		return $this->apiResponse($response);
+	}
 }

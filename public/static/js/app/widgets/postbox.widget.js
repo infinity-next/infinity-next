@@ -232,7 +232,15 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Events
 		events   : {
 			
-			closeClick : function(event) {
+			captchaHide   : function() {
+				$(widget.options.selector['captcha-row'], widget.$widget).hide();
+			},
+			
+			captchaShow   : function() {
+				$(widget.options.selector['captcha-row'], widget.$widget).show();
+			},
+			
+			closeClick    : function(event) {
 				// Tweak classes.
 				widget.$widget
 					.removeClass("postbox-maximized postbox-minimized")
@@ -313,7 +321,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				// Note: serializeJSON is a plugin we use to convert form data into
 				// a multidimensional array for application/json posts.
 				
-				if ($updater[0].widget)
+				if ($updater.length && $updater[0].widget)
 				{
 					var data = $form.serialize();
 					
@@ -329,10 +337,13 @@ ib.widget("postbox", function(window, $, undefined) {
 					var data = $form.serializeJSON();
 				}
 				
+				// Indicate we want a full messenger response.
+				data.messenger = true;
+				
 				jQuery.ajax({
 					type:        "POST",
 					method:      "PUT",
-					url:         $form.attr('action'),
+					url:         $form.attr('action') + ".json",
 					data:        data,
 					dataType:    "json",
 					contentType: "application/json; charset=utf-8"
@@ -352,15 +363,24 @@ ib.widget("postbox", function(window, $, undefined) {
 							}
 						}
 						
-						if (typeof response.redirect !== "undefined")
+						var json = response.messenger ? response.data : response;
+						
+						if (typeof json.redirect !== "undefined")
 						{
-							window.location = response.redirect;
+							if (InstantClick.supported)
+							{
+								InstantClick.open(json.redirect);
+							}
+							else
+							{
+								window.location = json.redirect;
+							}
 						}
-						else if (typeof response.errors !== "undefined")
+						else if (typeof json.errors !== "undefined")
 						{
 							console.log("Post rejected.");
 							
-							jQuery.each(response.errors, function(field, errors)
+							jQuery.each(json.errors, function(field, errors)
 							{
 								jQuery.each(errors, function(index, error)
 								{
@@ -377,8 +397,8 @@ ib.widget("postbox", function(window, $, undefined) {
 							autoupdater.updating    = true;
 							autoupdater.updateTimer = false;
 							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
-							autoupdater.events.updateSuccess(response, textStatus, jqXHR, true);
-							autoupdater.events.updateComplete(response, textStatus, jqXHR);
+							autoupdater.events.updateSuccess(json, textStatus, jqXHR, true);
+							autoupdater.events.updateComplete(json, textStatus, jqXHR);
 							
 							widget.events.formClear();
 						}
@@ -401,6 +421,21 @@ ib.widget("postbox", function(window, $, undefined) {
 				
 				// Remove jQuery UI Resize.
 				widget.unbind.resize();
+			},
+			
+			messenger     : function(event, messages) {
+				if (messages.messenger)
+				{
+					// Toggles captcha based on messenger information.
+					if (messages.captcha)
+					{
+						widget.events.captchaShow();
+					}
+					else
+					{
+						widget.events.captchaHide();
+					}
+				}
 			},
 			
 			minimizeClick : function(event) {
@@ -523,7 +558,9 @@ ib.widget("postbox", function(window, $, undefined) {
 					$(widget.options.selector['dropzone'], widget.$widget).dropzone(dropzoneOptions);
 				}
 				
-				$(window).on('resize', widget.events.windowResize);
+				$(window)
+					.on('messenger.ib-postbox.', widget.events.messenger)
+					.on('resize.ib-postbox',     widget.events.windowResize);
 				
 				// This will actually bind multiple times so make sure it only happens once.
 				if (widget.initOnce !== true)

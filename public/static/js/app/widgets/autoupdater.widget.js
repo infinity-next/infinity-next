@@ -44,6 +44,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							'updatesOnly'  : 1,
 							'updateHtml'   : 1,
 							'updatedSince' : widget.updateLast,
+							'messenger'    : 1
 						}
 					})
 						.done(widget.events.updateSuccess)
@@ -55,16 +56,24 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				}
 			},
 			
-			updateSuccess : function(data, textStatus, jqXHR, scrollIntoView) {
+			updateSuccess : function(json, textStatus, jqXHR, scrollIntoView) {
 				var newPosts     = $();
 				var updatedPosts = $();
 				var deletedPosts = $();
+				var postData     = json;
 				
-				if (data instanceof Array)
+				// This important event fire ensures that sibling data is intercepted.
+				if (json.messenger)
+				{
+					postData = json.data;
+					$(window).trigger('messenger', json);
+				}
+				
+				if (postData instanceof Array)
 				{
 					widget.updateLast = widget.updateAsked;
 					
-					$.each(data, function(index, reply)
+					$.each(postData, function(index, reply)
 					{
 						var $existingPost = $(".post-" + reply.post_id);
 						

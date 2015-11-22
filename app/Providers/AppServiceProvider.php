@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
-
+	
 	/**
 	 * Bootstrap any application services.
 	 *
@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		//
 	}
-
+	
 	/**
 	 * Register any application services.
 	 *
@@ -27,8 +27,9 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar',
-			'App\Services\Registrar'
+			'App\Services\Registrar',
+			'App\Services\UserManager'
 		);
 	}
-
+	
 }

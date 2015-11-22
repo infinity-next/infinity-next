@@ -125,7 +125,7 @@ class BoardController extends Controller {
 	 * @param  Post   $thread
 	 * @return Response
 	 */
-	public function getThread(Board $board, Post $thread)
+	public function getThread(Request $request, Board $board, Post $thread)
 	{
 		if (!$thread->exists)
 		{
@@ -173,15 +173,22 @@ class BoardController extends Controller {
 		
 		if ($request->wantsJson())
 		{
-			$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', Carbon::now()->subMinutes(4)->timestamp));
-			$includeHTML  = isset($input['updateHtml']);
-			
-			$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
-			$post->setAppendHTML($includeHTML);
-			$posts->push($post);
-			$posts->sortBy('board_id');
-			
-			return $posts;
+			if (!is_null($thread) && $thread->exists)
+			{
+				$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', Carbon::now()->timestamp));
+				$includeHTML  = isset($input['updateHtml']);
+				
+				$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
+				$post->setAppendHTML($includeHTML);
+				$posts->push($post);
+				$posts->sortBy('board_id');
+				
+				return $posts;
+			}
+			else
+			{
+				return $post;
+			}
 		}
 		
 		// Redirect to the new post or thread.

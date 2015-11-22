@@ -224,6 +224,12 @@ Route::group([
 			// Gets all visible OPs on a board.
 			Route::any('catalog.json', 'BoardController@getCatalog');
 			
+			// Put new thread
+			Route::put('thread.json', 'BoardController@putThread');
+			
+			// Put reply to thread.
+			Route::put('thread/{post_id}.json', 'BoardController@putThread');
+			
 			// Get single thread.
 			Route::get('thread/{post_id}.json', 'BoardController@getThread');
 			

@@ -969,6 +969,11 @@ class Board extends Model {
 	
 	public function getThreadByBoardId($board_id)
 	{
+		if ($board_id instanceof Post)
+		{
+			$board_id = $board_id->board_id;
+		}
+		
 		$thread = $this->posts()->where(['board_id' => $board_id])->first();
 		
 		if ($thread)
