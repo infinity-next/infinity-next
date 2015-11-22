@@ -1117,7 +1117,7 @@ class Post extends Model {
 	{
 		$postsPerPage    = 10;
 		
-		$rememberTags    = ["site.overboard"];
+		$rememberTags    = ["site.overboard.pages"];
 		$rememberTimer   = 30;
 		$rememberKey     = "site.overboard.page.{$page}";
 		$rememberClosure = function() use ($page, $postsPerPage) {

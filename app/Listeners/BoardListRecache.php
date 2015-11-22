@@ -18,7 +18,6 @@ class BoardListRecache extends Listener
 	public function handle($event)
 	{
 		Cache::forget('site.boardlist');
-		Cache::forget('site.overboard');
 	}
 	
 }

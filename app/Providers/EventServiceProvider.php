@@ -14,24 +14,29 @@ class EventServiceProvider extends ServiceProvider {
 		// Post specific events
 		'App\Events\PostWasAdded' => [
 			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasBanned' => [
 			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasDeleted' => [
 			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasModified' => [
 			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasModerated' => [
 			'App\Listeners\ReportMarkSuccessful',
 			
 			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		
@@ -51,9 +56,7 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\BoardWasModified' => [
 			'App\Listeners\BoardListRecache',
 			'App\Listeners\BoardStyleRecache',
-		],
-		'App\Events\BoardWasReassigned' => [
-			'App\Listeners\UserRecachePermissions',
+			'App\Listeners\OverboardRecache',
 		],
 		
 		// Role events
