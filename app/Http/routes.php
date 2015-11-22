@@ -321,6 +321,7 @@ Route::group([
 			
 			// Get single thread.
 			Route::get('thread/{post_id}', 'BoardController@getThread');
+			Route::get('thread/{post_id}/{splice}', 'BoardController@getThread');
 			
 			// Redirect to a post.
 			Route::get('post/{post_id}', 'BoardController@getThread');

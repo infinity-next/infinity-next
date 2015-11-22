@@ -125,20 +125,27 @@ class BoardController extends Controller {
 	 * @param  Post   $thread
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, Post $thread)
+	public function getThread(Request $request, Board $board, Post $thread, $splice = null)
 	{
 		if (!$thread->exists)
 		{
-			return redirect($board->board_uri);
+			return abort(404);
 		}
 		else if ($thread->reply_to)
 		{
-			return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}#{$thread->board_id}");
+			return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}{$sign}{$count}#{$thread->board_id}");
+		}
+		
+		$thread = $thread->forThreadView(is_string($splice) ? $splice : null);
+		
+		if ($thread === false)
+		{
+			abort(400);
 		}
 		
 		return $this->view(static::VIEW_THREAD, [
 			'board'    => &$board,
-			'posts'    => [ $thread->forThreadView() ],
+			'posts'    => [ $thread ],
 			'reply_to' => $thread,
 		]);
 	}

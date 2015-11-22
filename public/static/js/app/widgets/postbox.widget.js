@@ -430,6 +430,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					if (messages.captcha)
 					{
 						widget.events.captchaShow();
+						$(widget.options.selector['captcha-row'], widget.$widget).trigger('load', messages.captcha);
 					}
 					else
 					{

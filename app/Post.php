@@ -440,7 +440,7 @@ class Post extends Model {
 	 */
 	public function getAuthorIdAttribute()
 	{
-		if ($this->board->getConfig('postsThreadId'))
+		if ($this->board->getConfig('postsThreadId', false))
 		{
 			return $this->attributes['author_id'];
 		}
@@ -536,6 +536,112 @@ class Post extends Model {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Returns a splice of the replies based on the 2channel style input.
+	 *
+	 * @param  string  $uri
+	 * @return static|boolean  Returns $this with modified replies relationship, or false if input error.
+	 */
+	public function getReplySplice($splice)
+	{
+		// Matches:
+		// l50   OP and last 50 posts
+		// l2    OP and last 2 posts
+		// 600-  OP and all posts from 600 onwards
+		// 10-20 OP and posts ten through twenty
+		// 600   OP and post 600 only
+		// -100  OP and first 100 posts
+		// Indices start at 1, which includes OP.
+		if (preg_match('/^(?<last>l)?(?<start>\d+)?(?P<between>-)?(?P<end>\d+)?$/', $splice, $m) === 1)
+		{
+			$count   = $this->replies->count();
+			$last    = isset($m['last']) && $m['last'] == "l"        ? true : false;
+			$start   = isset($m['start']) && $m['start'] != ""       ? (int) $m['start'] : false;
+			$between = isset($m['between']) && $m['between'] == "-"  ? true : false;
+			$end     = isset($m['end']) && $m['end'] != ""           ? (int) $m['end']   : false;
+			$length  = null;
+			
+			// Fetching last posts?
+			if ($last === true)
+			{
+				// Pull last X.
+				if ($start !== false && $between == false && $end === false)
+				{
+					$start  = $count - $start;
+					$length = $count;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			// Pull between two indices.
+			else if($between === true)
+			{
+				// Have we specified an X-Y range?
+				if ($start !== false && $end !== false)
+				{
+					// Abort if we've specified an incorrect range.
+					if ($start <= 0 || $start > $end)
+					{
+						return false;
+					}
+					
+					$start -= 2;
+					$length = $end - $start - 1;
+				}
+				// Have we specified a -X (pull first X posts) range?
+				else if ($start === false && $end !== false)
+				{
+					$start = 0;
+					$length = $end - 1;
+					
+					if ($length < 0)
+					{
+						return false;
+					}
+				}
+				// Have we specified a X- (pull from post X up) range?
+				else if ($start !== false && $end === false)
+				{
+					$start -= 2;
+					$length = $count;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			// Pull a single post.
+			else if($start !== false)
+			{
+				if ($start > 1)
+				{
+					$length = 1;
+				}
+				// If we're requesting OP, we want no children.
+				else if ($start == 1)
+				{
+					$length = 0;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+			
+			$start = max($start, 0);
+			
+			return $this->setRelation('replies', $this->replies->splice($start, $length));
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -798,7 +904,8 @@ class Post extends Model {
 	/**
 	 * Returns the last post made by this user across the entire site.
 	 *
-	 * @param  string $ip
+	 * @static
+	 * @param  string  $ip
 	 * @return \App\Post
 	 */
 	public static function getLastPostForIP($ip = null)
@@ -838,6 +945,7 @@ class Post extends Model {
 	/**
 	 * Returns the post model for the most recently featured post.
 	 *
+	 * @static
 	 * @param  int  $dayRange  Optional. Number of days at most that the last most featured post can be in. Defaults 3.
 	 * @return \App\Post
 	 */
@@ -854,6 +962,7 @@ class Post extends Model {
 	/**
 	 * Returns the post model using the board's URI and the post's local board ID.
 	 *
+	 * @static
 	 * @param  string  $board_uri
 	 * @param  integer  $board_id
 	 * @return \App\Post
@@ -882,6 +991,7 @@ class Post extends Model {
 	/**
 	 * Returns a few posts for the front page.
 	 *
+	 * @static
 	 * @param  int  $number  How many to pull.
 	 * @param  boolean $sfwOnly  If we only want SFW boards.
 	 * @return Collection  of static
@@ -952,6 +1062,7 @@ class Post extends Model {
 	/**
 	 * Returns a set of posts for an update request.
 	 *
+	 * @static
 	 * @param  Carbon  $sinceTime
 	 * @param  Board  $board
 	 * @param  Post  $thread
@@ -1136,6 +1247,11 @@ class Post extends Model {
 	public function scopeAndAttachments($query)
 	{
 		return $query->with('attachments');
+	}
+	
+	public function scopeAndBoard($query)
+	{
+		return $query->with('board');
 	}
 	
 	public function scopeAndFirstAttachment($query)
@@ -1599,18 +1715,24 @@ class Post extends Model {
 	/**
 	 * Returns a thread with its replies for a thread view.
 	 *
+	 * @param  boolean  $fromStart  Optional. If true, pull replies start (first x). If false, pull replies from end (last x). Defaults to false.
+	 * @param  int  $count  Optional. Number of replies to return. 0 is all. Defaults to 0. 
 	 * @return static
 	 */
-	public function forThreadView()
+	public function forThreadView($uri = null)
 	{
 		$rememberTags    = ["board.{$this->board_uri}", "threads"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.thread.{$this->board_id}";
 		$rememberClosure = function() {
-			return $this->load(['replies' => function($query) {
-				$query->withEverything();
-				$query->orderBy('post_id', 'asc');
-			}]);
+			return $this->load([
+				'board',
+				'replies' => function($query) {
+					$query->withEverything();
+					$query->andBoard();
+					$query->orderBy('post_id', 'asc');
+				}
+			]);
 		};
 		
 		switch (env('CACHE_DRIVER'))
@@ -1623,6 +1745,11 @@ class Post extends Model {
 			default :
 				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
+		}
+		
+		if (!is_null($uri))
+		{
+			return $thread->getReplySplice($uri);
 		}
 		
 		return $thread;

@@ -95,6 +95,7 @@ class Board extends Model {
 	/**
 	 * A cache of compiled board settings.
 	 *
+	 * @static
 	 * @var array  of arrays which contain Options with BoardSetting.option_value pivot keys
 	 */
 	protected static $config = [];
@@ -102,6 +103,7 @@ class Board extends Model {
 	/**
 	 * Ties database triggers to the model.
 	 *
+	 * @static
 	 * @return void
 	 */
 	public static function boot()
@@ -241,8 +243,8 @@ class Board extends Model {
 		$ip = new IP;
 		
 		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
-			->where('client_ip', $ip->toSQL())
 			->where('created_at', '>=', \Carbon\Carbon::now()->subHour())
+			->where('client_ip', $ip)
 			->whereNotNull('cracked_at')
 			->orderBy('cracked_at', 'desc')
 			->first();
@@ -250,7 +252,7 @@ class Board extends Model {
 		if ($lastCaptcha instanceof Captcha)
 		{
 			$postsWithCaptcha = Post::select('created_at')
-				->where('author_ip', $ip->toSQL())
+				->where('author_ip', $ip)
 				->where('created_at', '>=', $lastCaptcha->created_at)
 				->count();
 			
@@ -313,6 +315,7 @@ class Board extends Model {
 	/**
 	 * 
 	 *
+	 * @static
 	 * @param  \Carbon|Carbon  $carbon  A timestmap within the 0-60 minute block that is to be snapshotted.
 	 * @return array  of \App\Stats
 	 */
@@ -935,6 +938,7 @@ class Board extends Model {
 	/**
 	 * Returns the entire board list and all associative boards by levying the cache.
 	 *
+	 * @static
 	 * @return Array
 	 */
 	public static function getBoardsForBoardlist()
@@ -969,12 +973,16 @@ class Board extends Model {
 	
 	public function getThreadByBoardId($board_id)
 	{
+		$thread = false;
+		
 		if ($board_id instanceof Post)
 		{
-			$board_id = $board_id->board_id;
+			$thread = $board_id;
 		}
-		
-		$thread = $this->posts()->where(['board_id' => $board_id])->first();
+		else
+		{
+			$thread = $this->posts()->where(['board_id' => $board_id])->first();
+		}
 		
 		if ($thread)
 		{

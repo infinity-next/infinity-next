@@ -34,18 +34,25 @@ ib.widget("captcha", function(window, $, undefined) {
 				$parent.removeClass("captcha-loading");
 			},
 			
+			captchaLoadIn : function(event, captcha) {
+				console.log(captcha);
+				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
+					$hidden  = $captcha.next();
+				
+				$captcha.attr('src', widget.options.captchaUrl + "/" + captcha['hash_string'] + ".png");
+				$hidden.val(captcha['hash_string']);
+			},
+			
 			captchaReload : function() {
 				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
 					$parent  = $captcha.parent(),
-					$hidden  = $captcha.next(),
 					$field   = $captcha.parents(widget.options.selector['captcha-row']).children(widget.options.selector['captcha-field']);
 				
 				$parent.addClass("captcha-loading");
 				$field.val("").focus();
 				
 				jQuery.getJSON(widget.options.reloadUrl, function(data) {
-					$captcha.attr('src', widget.options.captchaUrl + "/" + data['hash_string'] + ".png");
-					$hidden.val(data['hash_string']);
+					widget.$widget.trigger('load', data);
 				})
 				.fail(widget.events.captchaAjaxFail);
 			}
@@ -62,8 +69,8 @@ ib.widget("captcha", function(window, $, undefined) {
 				
 				widget.$widget
 					// Watch for captcha clicks.
+					.on('load.ib-captcha',                                       widget.events.captchaLoadIn)
 					.on('reload.ib-captcha',                                     widget.events.captchaReload)
-					.on('reload.ib-captcha', widget.options.selector['captcha'], widget.events.captchaReload)
 					.on('click.ib-captcha',  widget.options.selector['captcha'], widget.events.captchaReload);
 				
 			}

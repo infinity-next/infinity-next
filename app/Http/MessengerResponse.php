@@ -1,5 +1,6 @@
 <?php namespace App\Http;
 
+use InfinityNext\BrennanCaptcha\Captcha;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\ResponseTrait;
 use App;
@@ -38,9 +39,20 @@ class MessengerResponse extends JsonResponse {
 	protected function buildSiblingContent()
 	{
 		return $this->siblingContent = [
-			'captcha'   => !App::make('App\Board')->canPostWithoutCaptcha(App::make('App\Services\UserManager')->user),
+			'captcha'   => $this->buildSiblingCaptcha(),
 			'messenger' => true,
 		];
+	}
+	
+	/**
+	 * Retrieves the datum for the captcha sibling.
+	 *
+	 * @return \App\Captcha|boolean  False if no captcha required.
+	 */
+	protected function buildSiblingCaptcha()
+	{
+		$needCaptcha = !App::make('App\Board')->canPostWithoutCaptcha(App::make('App\Services\UserManager')->user);
+		return $needCaptcha ? Captcha::findOrCreateCaptcha() : false;
 	}
 	
 	/**

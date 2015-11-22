@@ -93,7 +93,7 @@ class BoardController extends ParentController implements ApiContract {
 	 * @param  Post     $thread
 	 * @return Response
 	 */
-	public function getThread(Request $request, Board $board, Post $thread)
+	public function getThread(Request $request, Board $board, Post $thread, $splice = null)
 	{
 		$input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 		
