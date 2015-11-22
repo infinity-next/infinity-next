@@ -11,6 +11,9 @@ return [
 	|
 	*/
 	
+	'400' => [
+		'title' => "Bad Request",
+	],
 	'403' => [
 		'title' => "Forbidden",
 	],
