@@ -2379,6 +2379,12 @@ main.index-threaded {
 					line-height: 42px;
 				}
 		
+		li.thread-last-reply {
+			margin-bottom: 0.5em;
+			padding-bottom: 0.5em;
+			border-bottom: 2px dotted #B7C5D9;
+		}
+		
 		#autoupdater {
 			margin: 1em 0;
 			padding: 0 0 0 1.5em;
@@ -2832,12 +2838,13 @@ main.index-threaded {
 					}
 						a.post-action-reply {
 							display: block;
-							width: 0;
 							height: 0;
 							border-style: solid;
-							border-width: 0 1em 1em 0;
+							border-width: 0 1.5em 1.5em 0;
 							border-color: transparent #B7C5D9 transparent transparent;
-							overflow: hidden;
+							text-align: right;
+							line-height: 2.25em;
+							vertical-align: bottom;
 						}
 						main.multiboard-index div.action-tab-reply {
 							top: -43px;

@@ -1491,8 +1491,8 @@ class Post extends Model {
 			})
 			// Nab posts that've been updated since our sinceTime.
 			->where(function($query) use ($sinceTime) {
-				$query->where('posts.updated_at', '>=', $sinceTime);
-				$query->orWhere('posts.deleted_at', '>=', $sinceTime);
+				$query->where('posts.updated_at', '>', $sinceTime);
+				$query->orWhere('posts.deleted_at', '>', $sinceTime);
 			})
 			// Include deleted posts.
 			->withTrashed()

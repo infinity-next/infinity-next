@@ -62,6 +62,10 @@ header nav.boardlist {
 		border-left-color: rgba(255,0,0,0.5);
 	}
 	
+	li.thread-last-reply {
+		border-color: #D9BFB7;
+	}
+	
 	.reply::before {
 		color: #D9BFB7;
 	}

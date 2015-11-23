@@ -5,8 +5,17 @@ ib.widget("autoupdater", function(window, $, undefined) {
 	
 	var widget = {
 		
+		// Keeps track of what our last post was before we focused the window.
+		$lastPost : null,
+		hasFocus  : false,
+		
 		// The default values that are set behind init values.
 		defaults : {
+			
+			classname : {
+				'last-reply' : "thread-last-reply"
+			},
+			
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'         : "#autoupdater",
@@ -16,7 +25,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				'force-update'   : "#autoupdater-update",
 				'updating'       : "#autoupdater-updating",
 				
-				'thread-event-target' : ".thread:first"
+				'thread-event-target' : ".thread:first",
+				'thread-reply'        : ".thread-reply"
 			},
 		},
 		
@@ -24,7 +34,57 @@ ib.widget("autoupdater", function(window, $, undefined) {
 		updateTimer : false,
 		updateURL   : false,
 		updateAsked : false,
-		updateLast  : parseInt(parseInt(Date.now(), 10) / 1000, 10),
+		updateLast  : false,
+		
+		// Helpers
+		getTimeFromPost : function($post) {
+			var $container = $post;
+			
+			if (!$container.is(".post-container"))
+			{
+				$container = $post.find(".post-container:first");
+			}
+			
+			if (!$container.length)
+			{
+				return false;
+			}
+			
+			
+			var times = [0];
+			
+			if ($container.is("[data-created-at]"))
+			{
+				var createdAt = parseInt($container.attr('data-created-at'), 10);
+				
+				if (!isNaN(createdAt))
+				{
+					times.push(createdAt);
+				}
+			}
+			
+			if ($container.is("[data-deleted-at]"))
+			{
+				var deletedAt = parseInt($container.attr('data-deleted-at'), 10);
+				
+				if (!isNaN(deletedAt))
+				{
+					times.push(deletedAt);
+				}
+			}
+			
+			if ($container.is("[data-updated-at]"))
+			{
+				var updatedAt = parseInt($container.attr('data-updated-at'), 10);
+				
+				if (!isNaN(updatedAt))
+				{
+					times.push(updatedAt);
+				}
+			}
+			
+			return Math.max.apply(Math, times);
+		},
 		
 		// Events
 		events   : {
@@ -56,11 +116,25 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				}
 			},
 			
+			updateLastReply : function() {
+				if (widget.$lastPost !== null)
+				{
+					widget.$widget
+						.siblings("." + widget.options.classname['last-reply'])
+						.removeClass(widget.options.classname['last-reply']);
+					
+					widget.$lastPost
+						.addClass(widget.options.classname['last-reply']);
+				}
+			},
+			
 			updateSuccess : function(json, textStatus, jqXHR, scrollIntoView) {
 				var newPosts     = $();
 				var updatedPosts = $();
 				var deletedPosts = $();
 				var postData     = json;
+				
+				widget.events.updateLastReply();
 				
 				// This important event fire ensures that sibling data is intercepted.
 				if (json.messenger)
@@ -71,8 +145,6 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				
 				if (postData instanceof Array)
 				{
-					widget.updateLast = widget.updateAsked;
-					
 					$.each(postData, function(index, reply)
 					{
 						var $existingPost = $(".post-" + reply.post_id);
@@ -95,6 +167,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 									
 									updatedPosts.push($newPost);
 									
+									widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
+									
 									return true;
 								}
 							}
@@ -106,6 +180,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 								
 								updatedPosts.push($existingPost);
 								deletedPosts.push($existingPost);
+								
+								widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($existingPost));
 								
 								return true;
 							}
@@ -119,6 +195,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							ib.bindAll($newPost);
 							
 							newPosts.push($newPost);
+							
+							widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
 							
 							if (scrollIntoView === true)
 							{
@@ -205,13 +283,33 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				
 				event.preventDefault();
 				return false;
-			}
+			},
+			
+			windowFocus    : function(event) {
+				widget.$lastPost = null;
+			},
+			
+			windowUnfocus  : function(event) {
+				// Sets our last seen post to the post immediately above the widget.
+				widget.$lastPost = widget.$widget.prev();
+			},
 			
 		},
 		
 		// Event bindings
 		bind     : {
 			timer  : function() {
+				var $lastReply = widget.$widget.prev();
+				
+				if (!$lastReply.length)
+				{
+					// Select OP if we have no replies.
+					$lastReply = widget.$widget.parents( widget.options.selector['thread-event-target'] );
+				}
+				
+				widget.updateLast = widget.getTimeFromPost($lastReply);
+				widget.hasFocus   = document.hasFocus();
+				
 				var url   = widget.$widget.data('url');
 				
 				if (url)
@@ -228,8 +326,13 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				
 				$(widget.options.selector['force-update'])
 					.show();
+				
 				$(widget.options.selector['updating'])
 					.hide();
+				
+				$(window)
+					.on('focus',       widget.events.windowFocus)
+					.on('blur',        widget.events.windowUnfocus);
 				
 				widget.$widget
 					.on('au-update',   widget.events.update)

@@ -28,7 +28,7 @@ class MessengerResponse extends JsonResponse {
 	{
 		$this->buildSiblingContent();
 		
-		return parent::__construct($data = null, $status = 200, $headers = array());
+		return parent::__construct($data, $status, $headers);
 	}
 	
 	/**
