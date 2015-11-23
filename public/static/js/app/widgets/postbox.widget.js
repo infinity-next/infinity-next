@@ -11,6 +11,7 @@ ib.widget("postbox", function(window, $, undefined) {
 		// jQuery UI bind indicators
 		resizable : false,
 		draggable : false,
+		axis      : ib.ltr ? "sw" : "se",
 		
 		// Widgets instance.
 		notices   : null,
@@ -46,6 +47,10 @@ ib.widget("postbox", function(window, $, undefined) {
 				'button-close'    : ".menu-icon-close",
 				'button-maximize' : ".menu-icon-maximize",
 				'button-minimize' : ".menu-icon-minimize"
+			},
+			
+			template : {
+				'counter'         : "<tt id=\"body-counter\"></tt>",
 			},
 			
 			dropzone : {
@@ -233,12 +238,49 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Events
 		events   : {
 			
+			bodyChange    : function(event) {
+				if (widget.$counter && widget.$counter instanceof jQuery)
+				{
+					var $body = $(this);
+					var len   = $body.val().length;
+					var text  = "<strong>" + len + "</strong>";
+					var valid = true;
+					var free  = true;
+					var max   = parseInt(window.app.board_settings.postMaxLength, 10);
+					var min   = parseInt(window.app.board_settings.postMinLength, 10);
+					
+					if (!isNaN(max))
+					{
+						text  = text + " ≤ " + max;
+						free  = false;
+						valid = valid && (len <= max);
+					}
+					
+					if (!isNaN(min))
+					{
+						text  = min + " ≤ " + text;
+						free  = false;
+						valid = valid && (len >= min);
+					}
+					
+					if (!free)
+					{
+						widget.$counter
+							.toggleClass("counter-valid",    valid)
+							.toggleClass("counter-invalid", !valid)
+							.html(text);
+					}
+				}
+			},
+			
 			captchaHide   : function() {
-				$(widget.options.selector['captcha-row'], widget.$widget).hide();
+				$(widget.options.selector['captcha-row'], widget.$widget)
+					.hide();
 			},
 			
 			captchaShow   : function() {
-				$(widget.options.selector['captcha-row'], widget.$widget).show();
+				$(widget.options.selector['captcha-row'], widget.$widget)
+					.show();
 			},
 			
 			closeClick    : function(event) {
@@ -299,6 +341,10 @@ ib.widget("postbox", function(window, $, undefined) {
 				$(widget.options.selector['form-clear'], $form)
 					.val("")
 					.html("");
+				
+				$(widget.options.selector['form-body'], $form)
+					.trigger('change')
+					.focus();
 			},
 			
 			formClick     : function(event) {
@@ -463,7 +509,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			postDragStop  : function(event, ui) {
-				if (ib.ltr)
+				if (ib.ltr && widget.axis == "sw")
 				{
 					// Okay, so:
 					// Our styling using top,right.
@@ -505,6 +551,38 @@ ib.widget("postbox", function(window, $, undefined) {
 				$post.children().first().css('width', "100%");
 				
 				return ui;
+			},
+			
+			postResizeStart : function(event, ui) {
+				var axis = $(this).data('ui-resizable').axis;
+				
+				if (widget.axis != axis)
+				{
+					var rect  = this.getBoundingClientRect();
+					
+					if (widget.axis == "sw")
+					{
+						widget.$widget[0].style.left  = rect.left + "px";
+						widget.$widget[0].style.right = "auto";
+					}
+				}
+			},
+			
+			postResizeStop  : function(event, ui) {
+				var axis = $(this).data('ui-resizable').axis;
+				
+				if (widget.axis != axis)
+				{
+					var rect  = this.getBoundingClientRect();
+					
+					if (widget.axis == "sw")
+					{
+						var right = (document.body.clientWidth - rect.right);
+						
+						widget.$widget[0].style.left  = "auto";
+						widget.$widget[0].style.right = right + "px";
+					}
+				}
 			},
 			
 			spoilerChange : function(event) {
@@ -555,6 +633,15 @@ ib.widget("postbox", function(window, $, undefined) {
 		
 		// Event bindings
 		bind     : {
+			counter   : function() {
+				var $body    = $(widget.options.selector['form-body'], widget.$widget);
+				var $counter = $(widget.options.template['counter']);
+				
+				$counter.insertAfter($body);
+				widget.$counter = $counter;
+				$body.trigger('change');
+			},
+			
 			draggable : function() {
 				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
 				{
@@ -568,7 +655,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 			},
 			
-			resize : function() {
+			resize    : function() {
 				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
 				{
 					// Bind resizability onto the post area.
@@ -577,8 +664,10 @@ ib.widget("postbox", function(window, $, undefined) {
 					if (!widget.resizable && $body.length && typeof $body.resizable === "function")
 					{
 						$body.resizable({
-							handles:     "sw",
+							handles:     "sw,se",
 							resize:      widget.events.postResize,
+							start:       widget.events.postResizeStart,
+							stop:        widget.events.postResizeStop,
 							alsoResize:  widget.$widget,
 							minWidth:    300,
 							minHeight:   26
@@ -594,7 +683,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 			},
 			
-			widget : function() {
+			widget    : function() {
 				
 				// Force the notices widget to be bound, and then record it.
 				// We have to do this because the notices widget is a child within this widget.
@@ -626,7 +715,9 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
 					
 					// Watch field changes
-					.on('change.ib-postbox', widget.options.selector['form-spoiler'],    widget.events.spoilerChange)
+					.on('change.ib-postbox', widget.options.selector['form-body'],      widget.events.bodyChange)
+					.on('keyup.ib-postbox',  widget.options.selector['form-body'],      widget.events.bodyChange)
+					.on('change.ib-postbox', widget.options.selector['form-spoiler'],   widget.events.spoilerChange)
 					
 					// Watch form submission.
 					.on('submit.ib-postbox',        widget.events.formSubmit)
@@ -638,12 +729,20 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('fileUploading.ib-postbox', widget.events.fileUploading)
 				;
 				
+				widget.bind.counter();
 				widget.bind.draggable();
 				widget.bind.resize();
 			}
 		},
 		
 		unbind   : {
+			counter   : function() {
+				if (widget.$counter && widget.$counter instanceof jQuery)
+				{
+					widget.$counter.remove();
+				}
+			},
+			
 			draggable : function() {
 				if (widget.draggable && typeof widget.$widget.draggable === "function")
 				{
@@ -653,7 +752,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 			},
 			
-			resize : function() {
+			resize    : function() {
 				// Bind resizability onto the post area.
 				var $body   = $(widget.options.selector['form-body'], widget.$widget);
 				

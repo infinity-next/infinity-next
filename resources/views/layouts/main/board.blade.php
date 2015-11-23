@@ -16,6 +16,12 @@
 @section('app-js')
 	'board'          : "{{ $board->board_uri }}",
 	'board_url'      : "{{ $board->getUrl() }}",
+	'board_settings' : {
+		'postAttachmentsMax' : "{{ $board->getConfig('postAttachmentsMax') }}",
+		'postAttachmentsMin' : "{{ $board->getConfig('postAttachmentsMin') }}",
+		'postMaxLength'      : "{{ $board->getConfig('postMaxLength') }}",
+		'postMinLength'      : "{{ $board->getConfig('postMinLength') }}"
+	},
 @stop
 
 @section('header-logo', $board->getBannerURL())

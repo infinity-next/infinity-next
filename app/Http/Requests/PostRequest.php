@@ -173,6 +173,7 @@ class PostRequest extends Request implements ApiContract{
 		if ($board && $user)
 		{
 			$rules['body'] = [
+				"min:" . $board->getConfig('postMinLength', 0),
 				"max:" . $board->getConfig('postMaxLength', 65534),
 			];
 			

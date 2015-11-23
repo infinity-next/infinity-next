@@ -1870,7 +1870,7 @@ section.index-form {
 		form.form-post .row-post {
 			background: #fff;
 			border: 1px solid #ccc;
-			position: static;
+			position: relative;
 		}
 			form.form-post .row-post #body {
 				border: none;
@@ -1878,9 +1878,17 @@ section.index-form {
 			form.form-post .ui-resizable-handle {
 				background-image: url('../../img/backgrounds/ui-icons_000000_256x240.png');
 				background-position: -64px -224px;
-				cursor: sw-resize;
+				
 				width:  16px;
 				height: 16px;
+			}
+			form.form-post .ui-resizable-se {
+				cursor: se-resize;
+				right:   0px;
+				bottom:  0px;
+			}
+			form.form-post .ui-resizable-sw {
+				cursor: sw-resize;
 				left:    0px;
 				bottom:  0px;
 				
@@ -1888,6 +1896,20 @@ section.index-form {
 				-webkit-transform: rotate(90deg); /* Safari */
 				transform: rotate(90deg);
 			}
+			
+			/* Counter */
+			#body-counter {
+				line-height: 16px;
+				font-size: 16px;
+				position: absolute;
+				text-align: center;
+				bottom: 0;
+				right: 0;
+				left: 0;
+			}
+				#body-counter.counter-invalid {
+					color: #C00;
+				}
 		
 		/* Dropzone */
 		form.form-post div.row-file {

@@ -1127,6 +1127,10 @@ class Post extends Model {
 				->with(['replies' => function($query) {
 					$query->forIndex();
 				}])
+				->whereHas('board', function($query) {
+					$query->where('is_indexed', true);
+					$query->where('is_overboard', true);
+				})
 				->orderBy('bumped_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))
 				->take($postsPerPage)
