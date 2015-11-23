@@ -2839,6 +2839,8 @@ main.index-threaded {
 						a.post-action-reply {
 							display: block;
 							height: 0;
+							width: none;
+							overflow: hidden;
 							border-style: solid;
 							border-width: 0 1.5em 1.5em 0;
 							border-color: transparent #B7C5D9 transparent transparent;
@@ -2846,7 +2848,7 @@ main.index-threaded {
 							line-height: 2.25em;
 							vertical-align: bottom;
 						}
-						main.multiboard-index div.action-tab-reply {
+						main.multiboard-index .op-container div.action-tab-reply {
 							top: -43px;
 						}
 						div.op-container a.post-action-reply {
