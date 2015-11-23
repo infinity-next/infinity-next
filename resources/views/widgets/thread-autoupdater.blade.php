@@ -1,4 +1,4 @@
-<li class="thread-autoupdater js" id="autoupdater" data-widget="autoupdater" data-url="{!! url($thread->urlJson()) !!}">
+<li class="thread-autoupdater require-js" id="autoupdater" data-widget="autoupdater" data-url="{!! url($thread->urlJson()) !!}">
 	<ul class="autoupdater-items">
 		<li class="autoupdater-item item-enabled">
 			<label><input id="autoupdater-enabled" type="checkbox" checked /> @lang('widget.autoupdater.enable')</label>
