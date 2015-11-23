@@ -636,7 +636,7 @@ class Board extends Model {
 						return $fallback;
 					}
 					
-					break;
+					return $config;
 				}
 			}
 		}
