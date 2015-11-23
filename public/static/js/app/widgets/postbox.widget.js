@@ -8,8 +8,9 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Dropzone instance.
 		dropzone  : null,
 		
-		// Resizing bound
+		// jQuery UI bind indicators
 		resizable : false,
+		draggable : false,
 		
 		// Widgets instance.
 		notices   : null,
@@ -306,7 +307,8 @@ ib.widget("postbox", function(window, $, undefined) {
 					// Tweak classes.
 					widget.$widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 					
-					// Rebind jQuery UI Resize.
+					// Rebind jQuery UI widgets.
+					widget.bind.draggable();
 					widget.bind.resize();
 				}
 			},
@@ -422,7 +424,8 @@ ib.widget("postbox", function(window, $, undefined) {
 					.removeClass("postbox-minimized postbox-closed")
 					.addClass("postbox-maximized");
 				
-				// Remove jQuery UI Resize.
+				// Remove jQuery UI widgets.
+				widget.unbind.draggable();
 				widget.unbind.resize();
 			},
 			
@@ -449,6 +452,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					.addClass("postbox-minimized");
 				
 				// Rebind jQuery UI Resize.
+				widget.bind.draggable();
 				widget.bind.resize();
 			},
 			
@@ -456,6 +460,30 @@ ib.widget("postbox", function(window, $, undefined) {
 				widget.options.checkFileUrl         = window.app.board_url + "check-file";
 				widget.dropzone.options.url         = window.app.board_url + "upload-file";
 				widget.dropzone.options.maxFilesize = window.app.settings.attachmentFilesize / 1024;
+			},
+			
+			postDragStop  : function(event, ui) {
+				if (ib.ltr)
+				{
+					// Okay, so:
+					// Our styling using top,right.
+					// Draggable sets the position using top,left.
+					// This causes the box to expand to the right when dragging with the resize handles.
+					// Because you cannot drag to expand and drag to move at the same time, it's safe
+					// to fix the right/left assignent after the drag has stopped.
+					// This uses little jQuery as well which is just gravy.
+					var rect  = this.getBoundingClientRect();
+					var right = (document.body.clientWidth - rect.right);
+					
+					if (rect.top <= 80 && right <= 40)
+					{
+						right = 10;
+						this.style.top = 45 + "px";
+					}
+					
+					this.style.left = "auto";
+					this.style.right = right + "px";
+				}
 			},
 			
 			postResize    : function(event, ui) {
@@ -469,7 +497,10 @@ ib.widget("postbox", function(window, $, undefined) {
 				ui.size.width   = Math.min(ui.size.width, $form.width());
 				ui.size.height += Math.min(0, formHangY);
 				
-				$form.css('height', formHangY > 0 ? "auto" : window.innerHeight - $form.position().top);
+				$form.css({
+					'height' : formHangY > 0 ? "auto" : window.innerHeight - $form.position().top
+				});
+				
 				$post.css('width', ui.size.width);
 				$post.children().first().css('width', "100%");
 				
@@ -493,6 +524,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					{
 						if (window.innerHeight < 480 || window.innerWidth < 1028)
 						{
+							widget.unbind.draggable();
 							widget.unbind.resize();
 						}
 						else
@@ -523,6 +555,19 @@ ib.widget("postbox", function(window, $, undefined) {
 		
 		// Event bindings
 		bind     : {
+			draggable : function() {
+				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
+				{
+					widget.$widget.draggable({
+						containment : "window",
+						handle      : "legend.form-legend",
+						stop        : widget.events.postDragStop
+					});
+					
+					widget.draggable = true;
+				}
+			},
+			
 			resize : function() {
 				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
 				{
@@ -593,11 +638,21 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('fileUploading.ib-postbox', widget.events.fileUploading)
 				;
 				
+				widget.bind.draggable();
 				widget.bind.resize();
 			}
 		},
 		
 		unbind   : {
+			draggable : function() {
+				if (widget.draggable && typeof widget.$widget.draggable === "function")
+				{
+					widget.$widget.draggable( "destroy" ).attr('style', "");
+					
+					widget.draggable = false;
+				}
+			},
+			
 			resize : function() {
 				// Bind resizability onto the post area.
 				var $body   = $(widget.options.selector['form-body'], widget.$widget);

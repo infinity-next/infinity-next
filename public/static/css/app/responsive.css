@@ -248,6 +248,15 @@
 				color: white;
 				text-indent: 4px;
 			}
+				html.js form.form-post .ui-draggable-handle {
+					cursor: drag;
+					cursor: -webkit-grab;
+					cursor: grab;
+				}
+				html.js form.form-post.ui-draggable-dragging .ui-draggable-handle {
+					cursor: -webkit-grabbing;
+					cursor: grabbing;
+				}
 			
 			html.js body.responsive form.form-post .field {
 				margin: 0;

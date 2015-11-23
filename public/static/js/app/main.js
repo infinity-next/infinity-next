@@ -6,6 +6,9 @@
 	
 	ib.widgets = {};
 	
+	ib.rtl = $("body").hasClass("rtl");
+	ib.ltr = !ib.rtl;
+	
 	ib.bindAll = function(eventOrScope) {
 		var $scope;
 		
