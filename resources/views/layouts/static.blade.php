@@ -2,8 +2,8 @@
 <html class="no-js" data-widget="instantclick">
 <head>
 	<title data-original="@yield('title', 'Infinity Next')">@yield('title', 'Infinity Next')</title>
-	<link rel="shortcut icon" href="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}"
-		data-normal="{{ asset('static/img/assets/Favicon_Yotsuba.ico') }}" data-alert="{{ asset('static/img/assets/Favicon_Yotsuba_new.ico') }}" />
+	<link rel="shortcut icon" id="favicon" href="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
+		data-normal="{{ asset('static/img/assets/Favicon_Vivian.ico') }}" data-alert="{{ asset('static/img/assets/Favicon_Vivian_new.ico') }}" />
 	
 	@section('css')
 		{!! Minify::stylesheetDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}

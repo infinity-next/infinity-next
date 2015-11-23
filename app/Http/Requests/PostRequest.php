@@ -3,13 +3,17 @@
 use App\Ban;
 use App\Board;
 use App\Post;
+use App\Contracts\ApiController as ApiContract;
+use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
 
 use Auth;
 use Validator;
 use View;
 
-class PostRequest extends Request {
+class PostRequest extends Request implements ApiContract{
+	
+	use ApiController;
 	
 	const VIEW_BANNED = "errors.banned";
 	
@@ -140,7 +144,7 @@ class PostRequest extends Request {
 			
 			if ($this->wantsJson())
 			{
-				return response()->json([ 'redirect' => $url ]);
+				return $this->apiResponse([ 'redirect' => $url ]);
 			}
 			else
 			{
@@ -305,7 +309,7 @@ class PostRequest extends Request {
 		
 		if ($this->wantsJson())
 		{
-			return response(['errors' => $errors]);
+			return $this->apiResponse([ 'errors' => $errors ]);
 		}
 		
 		return redirect($redirectURL)

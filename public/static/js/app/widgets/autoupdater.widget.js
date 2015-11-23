@@ -5,10 +5,6 @@ ib.widget("autoupdater", function(window, $, undefined) {
 	
 	var widget = {
 		
-		// Keeps track of what our last post was before we focused the window.
-		$lastPost : null,
-		hasFocus  : false,
-		
 		// The default values that are set behind init values.
 		defaults : {
 			
@@ -30,11 +26,17 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			},
 		},
 		
+		// Update tracking
 		updating    : false,
 		updateTimer : false,
 		updateURL   : false,
 		updateAsked : false,
 		updateLast  : false,
+		
+		// Keeps track of what our last post was before we focused the window.
+		$lastPost  : null,
+		hasFocus   : false,
+		newReplies : 0,
 		
 		// Helpers
 		getTimeFromPost : function($post) {
@@ -117,14 +119,31 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			},
 			
 			updateLastReply : function() {
+				// This corrects which post has the last reply class.
 				if (widget.$lastPost !== null)
 				{
 					widget.$widget
 						.siblings("." + widget.options.classname['last-reply'])
 						.removeClass(widget.options.classname['last-reply']);
 					
-					widget.$lastPost
-						.addClass(widget.options.classname['last-reply']);
+					// If we have replies after this, add the border.
+					if (widget.$lastPost.next(widget.options.selector['thread-reply']).length)
+					{
+						widget.$lastPost
+							.addClass(widget.options.classname['last-reply']);
+					}
+				}
+				
+				// This corrects our favicon.
+				if (widget.newReplies > 0)
+				{
+					$("#favicon").attr('href', window.app.favicon.alert);
+					document.title = "(" + widget.newReplies + ") " + window.app.title;
+				}
+				else
+				{
+					$("#favicon").attr('href', window.app.favicon.normal);
+					document.title = window.app.title;
 				}
 			},
 			
@@ -133,8 +152,6 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				var updatedPosts = $();
 				var deletedPosts = $();
 				var postData     = json;
-				
-				widget.events.updateLastReply();
 				
 				// This important event fire ensures that sibling data is intercepted.
 				if (json.messenger)
@@ -221,6 +238,10 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					});
 				}
 				
+				if (!widget.hasFocus) {
+					widget.newReplies += newPosts.length;
+				}
+				
 				widget.$widget
 					.parents( widget.options.selector['thread-event-target'] )
 					.trigger('au-updated', [{
@@ -228,6 +249,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 						'updatedPosts' : updatedPosts,
 						'deletedPosts' : deletedPosts,
 					}]);
+				
+				widget.events.updateLastReply();
 				
 				return false;
 			},
@@ -286,12 +309,19 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			},
 			
 			windowFocus    : function(event) {
-				widget.$lastPost = null;
+				widget.hasFocus   = true;
+				widget.$lastPost  = null;
+				widget.newReplies = 0;
+				
+				document.title = window.app.title;
+				$("#favicon").attr('href', window.app.favicon.normal);
 			},
 			
 			windowUnfocus  : function(event) {
 				// Sets our last seen post to the post immediately above the widget.
 				widget.$lastPost = widget.$widget.prev();
+				widget.$lastPost = widget.$lastPost.length ? widget.$lastPost : null;
+				widget.hasFocus = false;
 			},
 			
 		},
@@ -300,11 +330,15 @@ ib.widget("autoupdater", function(window, $, undefined) {
 		bind     : {
 			timer  : function() {
 				var $lastReply = widget.$widget.prev();
+				widget.$lastPost = $lastReply;
 				
 				if (!$lastReply.length)
 				{
 					// Select OP if we have no replies.
 					$lastReply = widget.$widget.parents( widget.options.selector['thread-event-target'] );
+					
+					// We don't want OP to be our last post.
+					widget.$lastPost = null;
 				}
 				
 				widget.updateLast = widget.getTimeFromPost($lastReply);

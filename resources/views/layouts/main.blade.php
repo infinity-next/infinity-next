@@ -34,6 +34,13 @@
 			@endif
 		@endif
 			
+			'favicon'    : {
+				'normal' : "{{ asset('static/img/assets/Favicon_Vivian.ico') }}",
+				'alert'  : "{{ asset('static/img/assets/Favicon_Vivian_new.ico') }}"
+			},
+			
+			'title'      : "@yield('title', 'Infinity Next')",
+			
 			'url'        : "{!! env('APP_URL', 'false') !!}",
 			
 			@yield('app-js')

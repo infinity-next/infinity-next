@@ -327,6 +327,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					
 					autoupdater = $updater[0].widget;
 					data = $form
+						.add("<input name=\"messenger\" value=\"1\" />")
 						.add("<input name=\"updatesOnly\" value=\"1\" />")
 						.add("<input name=\"updateHtml\" value=\"1\" />")
 						.add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
@@ -363,7 +364,16 @@ ib.widget("postbox", function(window, $, undefined) {
 							}
 						}
 						
-						var json = response.messenger ? response.data : response;
+						// This event trigger will cascade effects with our supplemental Messenger information.
+						if (response.messenger)
+						{
+							$(window).trigger('messenger', response);
+							var json = response.data;
+						}
+						else
+						{
+							var json = response;
+						}
 						
 						if (typeof json.redirect !== "undefined")
 						{
