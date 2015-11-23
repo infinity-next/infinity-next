@@ -629,7 +629,14 @@ class Board extends Model {
 			{
 				if ($setting->option_name == $option_name)
 				{
-					return $setting->getDisplayValue();
+					$config = $setting->getDisplayValue();
+					
+					if (is_null($config) || $config == "")
+					{
+						return $fallback;
+					}
+					
+					break;
 				}
 			}
 		}
