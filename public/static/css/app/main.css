@@ -2734,7 +2734,7 @@ main.index-threaded {
 									li.post-attachment.attachment-expanded img.attachment-img {
 										clear: both;
 										float: none;
-										max-width: none;
+										max-width: 100%;
 										max-height: none;
 										width: auto;
 										height: auto;
