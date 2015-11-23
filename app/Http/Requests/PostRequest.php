@@ -235,12 +235,18 @@ class PostRequest extends Request implements ApiContract{
 	{
 		global $app;
 		
-		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
-		
 		$rules['spoilers'] = "boolean";
 		
+		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
+		$attachmentsMin = $board->getConfig('postAttachmentsMin', 0);
+		
+		if ($attachmentsMin > 0)
+		{
+			$rules['files'][] = "required";
+		}
+		
 		$rules['files'][] = "array";
-		$rules['files'][] = "min:1";
+		$rules['files'][] = "min:{$attachmentsMin}";
 		$rules['files'][] = "max:{$attachmentsMax}";
 		
 		// Create an additional rule for each possible file.
@@ -266,6 +272,12 @@ class PostRequest extends Request implements ApiContract{
 		global $app;
 		
 		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
+		$attachmentsMin = $board->getConfig('postAttachmentsMin', 0);
+		
+		if ($attachmentsMin > 0)
+		{
+			$rules['files'][] = "required";
+		}
 		
 		$rules['files'][] = "array";
 		$rules['files'][] = "between:2,3";
