@@ -226,7 +226,7 @@ class OptionSeeder extends Seeder {
 			'board' => [
 				[
 					'option_name'           => "boardCustomCSSEnable",
-					'default_value'         => true,
+					'default_value'         => false,
 					'format'                => "onoff",
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
