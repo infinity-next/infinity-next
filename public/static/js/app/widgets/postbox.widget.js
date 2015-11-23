@@ -314,7 +314,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			formSubmit    : function(event) {
 				widget.notices.clear();
 				
-				var $form       = $(this);
+				var $form       = $(this).add("<input name=\"messenger\" value=\"1\" />");
 				var $updater    = $(widget.options.selector['autoupdater']);
 				var autoupdater = false;
 				
@@ -327,7 +327,6 @@ ib.widget("postbox", function(window, $, undefined) {
 					
 					autoupdater = $updater[0].widget;
 					data = $form
-						.add("<input name=\"messenger\" value=\"1\" />")
 						.add("<input name=\"updatesOnly\" value=\"1\" />")
 						.add("<input name=\"updateHtml\" value=\"1\" />")
 						.add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
