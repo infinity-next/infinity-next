@@ -296,10 +296,11 @@ class ConfigController extends PanelController {
 	{
 		$input        = $request->all();
 		$optionGroups = $request->getBoardOptions();
+		$settings     = [];
 		
-		foreach ($optionGroups as $optionGroup)
+		foreach ($optionGroups as &$optionGroup)
 		{
-			foreach ($optionGroup->options as $option)
+			foreach ($optionGroup->options as &$option)
 			{
 				$setting = BoardSetting::firstOrNew([
 					'option_name'  => $option->option_name,
@@ -312,10 +313,19 @@ class ConfigController extends PanelController {
 					$setting->option_value = $input[$option->option_name];
 					$setting->save();
 				}
+				else if ($option->format == "onoff")
+				{
+					$option->option_value  = false;
+					$setting->option_value = false;
+					$setting->save();
+				}
 				else
 				{
 					$setting->delete();
+					continue;
 				}
+				
+				$settings[] = $setting;
 			}
 		}
 		
@@ -325,6 +335,8 @@ class ConfigController extends PanelController {
 		$board->is_indexed   = isset($input['boardBasicIndexed']) && !!$input['boardBasicIndexed'];
 		$board->is_worksafe  = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
 		$board->save();
+		
+		$board->setRelation('settings', collect($settings));
 		
 		Event::fire(new BoardWasModified($board));
 		

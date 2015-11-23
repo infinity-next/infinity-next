@@ -217,6 +217,11 @@ class BoardController extends Controller {
 	 */
 	public function getStylesheet(Board $board)
 	{
+		if (!$board->hasStylesheet())
+		{
+			abort(404);
+		}
+		
 		$stylesheet  = $board->getStylesheet();
 		$statusCode  = 200;
 		$contentType = "text/css";

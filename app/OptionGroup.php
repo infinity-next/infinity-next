@@ -66,6 +66,8 @@ class OptionGroup extends Model {
 				'options.*',
 				'site_settings.option_value as option_value'
 			);
+			
+			$query->orderBy('display_order', 'asc');
 		}])->orderBy('display_order', 'asc')->get();
 	}
 	
@@ -85,6 +87,8 @@ class OptionGroup extends Model {
 				'options.*',
 				'board_settings.option_value as option_value'
 			);
+			
+			$query->orderBy('display_order', 'asc');
 		}])->orderBy('display_order', 'asc')->get();
 	}
 }

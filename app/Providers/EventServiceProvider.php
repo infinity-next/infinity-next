@@ -57,6 +57,7 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\BoardListRecache',
 			'App\Listeners\BoardStyleRecache',
 			'App\Listeners\OverboardRecache',
+			'App\Listeners\BoardRecachePages',
 		],
 		
 		// Role events

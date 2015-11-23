@@ -8,6 +8,7 @@ use App\Listeners\Listener;
 
 class BoardRecachePages extends Listener
 {
+	
 	/**
 	 * Create the event listener.
 	 *
@@ -17,7 +18,7 @@ class BoardRecachePages extends Listener
 	{
 		//
 	}
-
+	
 	/**
 	 * Handle the event.
 	 *
@@ -40,4 +41,5 @@ class BoardRecachePages extends Listener
 			$board->clearCachedPages();
 		}
 	}
+	
 }

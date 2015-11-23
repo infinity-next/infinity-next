@@ -18,7 +18,13 @@ class SettingManager {
 	 */
 	protected static $whitelist = [
 		'attachmentFilesize',
+		'postAttachmentsMax',
+		'postAttachmentsMin',
+		'postMaxLength',
+		'postMinLength',
 		'postFloodTime',
+		'threadFloodTime',
+		'postAnonymousName',
 	];
 	
 	/**

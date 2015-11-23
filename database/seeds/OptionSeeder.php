@@ -137,14 +137,48 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "string",
 					'validation_parameters' => "string",
 				],
+				
+				[
+					'option_name'           => "captchaEnabled",
+					'default_value'         => true,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
+				[
+					'option_name'           => "captchaLifespanTime",
+					'default_value'         => 60,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "required|min:\$min",
+				],
+				[
+					'option_name'           => "captchaLifespanPosts",
+					'default_value'         => 10,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "required|min:\$min",
+				],
+				
 				[
 					'option_name'           => "postFloodTime",
+					'default_value'         => 5,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "required|min:\$min",
+				],
+				[
+					'option_name'           => "threadFloodTime",
 					'default_value'         => 30,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0 ] ),
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => "required|min:\$min",
 				],
+				
 				[
 					'option_name'           => "globalReportText",
 					'default_value'         => "",
@@ -178,9 +212,33 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => "min:\$min",
 				],
+				
+				[
+					'option_name'           => "siteName",
+					'default_value'         => "Infinity Next",
+					'format'                => "text",
+					'format_parameters'     => json_encode( [ 'min' => 1, 'max' => 64, ] ),
+					'data_type'             => "string",
+					'validation_parameters' => "min:\$min|max:\$max",
+				],
 			],
 			
 			'board' => [
+				[
+					'option_name'           => "boardCustomCSSEnable",
+					'default_value'         => true,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
+				[
+					'option_name'           => "boardCustomCSSSteal",
+					'default_value'         => "",
+					'format'                => "text",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 32 ] ),
+					'data_type'             => "string",
+					'validation_parameters' => "min:\$min|max:\$max",
+				],
 				[
 					'option_name'           => "boardCustomCSS",
 					'default_value'         => "",
@@ -214,7 +272,15 @@ class OptionSeeder extends Seeder {
 				],
 				[
 					'option_name'           => "postAttachmentsMax",
-					'default_value'         => "5",
+					'default_value'         => 5,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 10 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "required|min:\$min|max:\$max|greater_than:postAttachmentsMin",
+				],
+				[
+					'option_name'           => "postAttachmentsMin",
+					'default_value'         => 0,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 10 ] ),
 					'data_type'             => "unsigned_integer",
@@ -222,15 +288,15 @@ class OptionSeeder extends Seeder {
 				],
 				[
 					'option_name'           => "postMaxLength",
-					'default_value'         => null,
+					'default_value'         => 2048,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
 					'data_type'             => "unsigned_integer",
-					'validation_parameters' => 'integer|min:\$min|max:\$max|greater_than:postMinLength',
+					'validation_parameters' => "integer|min:\$min|max:\$max|greater_than:postMinLength",
 				],
 				[
 					'option_name'           => "postMinLength",
-					'default_value'         => null,
+					'default_value'         => 0,
 					'format'                => "spinbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65534 ] ),
 					'data_type'             => "unsigned_integer",
@@ -383,6 +449,16 @@ class OptionGroupSeeder extends Seeder {
 	{
 		return [
 			[
+				'group_name'    => "site",
+				'debug_only'    => false,
+				'display_order' => 0,
+				
+				'options' => [
+					'siteName',
+				],
+			],
+			
+			[
 				'group_name'    => "attachments",
 				'debug_only'    => false,
 				'display_order' => 100,
@@ -465,9 +541,11 @@ class OptionGroupSeeder extends Seeder {
 				
 				'options'       => [
 					"postAttachmentsMax",
+					"postAttachmentsMin",
 					"postMaxLength",
 					"postMinLength",
 					'postFloodTime',
+					'threadFloodTime',
 					'postAnonymousName',
 				],
 			],
@@ -480,6 +558,17 @@ class OptionGroupSeeder extends Seeder {
 					"postsPerPage",
 					"postsAuthorCountry",
 					"postsThreadId",
+				],
+			],
+			[
+				'group_name'    => "captcha",
+				'debug_only'    => false,
+				'display_order' => 550,
+				
+				'options'       => [
+					"captchaEnabled",
+					"captchaLifespanPosts",
+					"captchaLifespanTime",
 				],
 			],
 			[
@@ -497,6 +586,8 @@ class OptionGroupSeeder extends Seeder {
 				'display_order' => 1000,
 				
 				'options'       => [
+					"boardCustomCSSEnable",
+					"boardCustomCSSSteal",
 					"boardCustomCSS",
 				],
 			],

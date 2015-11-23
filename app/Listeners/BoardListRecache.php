@@ -1,8 +1,5 @@
 <?php namespace App\Listeners;
 
-use App\Board;
-use App\Post;
-
 use App\Listeners\Listener;
 use Cache;
 

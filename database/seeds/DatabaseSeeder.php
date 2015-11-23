@@ -30,9 +30,9 @@ if (!class_exists("DatabaseSeeder"))
 			$this->call('PermissionSeeder');
 			$this->call('PermissionGroupSeeder');
 			
-			$this->call('RoleSeeder');
-			$this->call('UserRoleSeeder');
-			$this->call('RolePermissionSeeder');
+			// $this->call('RoleSeeder');
+			// $this->call('UserRoleSeeder');
+			// $this->call('RolePermissionSeeder');
 			
 			$this->call('OptionSeeder');
 			$this->call('OptionGroupSeeder');

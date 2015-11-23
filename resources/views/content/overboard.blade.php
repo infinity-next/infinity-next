@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', e("board.overboard"))
+@section('title', trans("board.overboard"))
 
 @section('content')
 <main class="multiboard-index index-threaded">

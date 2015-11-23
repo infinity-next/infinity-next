@@ -92,6 +92,38 @@ class Option extends Model implements PseudoEnumContract {
 		return binary_unsql($value);
 	}
 	
+	/**
+	 * Returns the value that should be applied to the config.
+	 * Relies on setting data being present.
+	 *
+	 * @return mixed
+	 */
+	public function getDisplayValue()
+	{
+		if (isset($this->attributes['option_value']))
+		{
+			$value = $this->option_value;
+			
+			switch ($this->data_type)
+			{
+				case "unsigned_integer" :
+					$value = abs((int) $this->option_value);
+					break;
+				
+				case "integer" :
+					$value = (int) $this->option_value;
+					break;
+				
+				case "boolean" :
+					$value = !!$value;
+					break;
+			}
+			
+			return $value;
+		}
+		
+		return $this->default_value;
+	}
 	
 	/**
 	 * Gets our option value and unwraps it from any stream wrappers.
@@ -170,11 +202,11 @@ class Option extends Model implements PseudoEnumContract {
 		switch ($this->data_type)
 		{
 			case "unsigned_integer" :
-				$requirement = "integer";
+				$requirement = "integer|min:0";
 				break;
 			
 			case "integer" :
-				$requirement = "integer|min:0";
+				$requirement = "integer";
 				break;
 			
 			case "boolean" :

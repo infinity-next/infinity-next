@@ -334,15 +334,17 @@ class PostRequest extends Request implements ApiContract{
 		
 		if ($isReply)
 		{
+			$floodTime = site_setting('postFloodTime');
+			
 			// Check global flood.
 			$lastPost = Post::select('created_at')
 				->whereAuthorIP($this->ip())
-				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(5))
+				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds($floodTime))
 				->first();
 			
 			if ($lastPost instanceof Post)
 			{
-				$timeDiff = (5 - $lastPost->created_at->diffInSeconds()) + 1;
+				$timeDiff = ($floodTime - $lastPost->created_at->diffInSeconds()) + 1;
 				
 				$messages = $validator->errors();
 				$messages->add("flood", trans_choice("validation.custom.post_flood", $timeDiff, [
@@ -354,16 +356,18 @@ class PostRequest extends Request implements ApiContract{
 		}
 		else
 		{
+			$floodTime = site_setting('threadFloodTime');
+			
 			// Check global flood.
 			$lastThread = Post::select('created_at')
 				->whereAuthorIP($this->ip())
-				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds(20))
+				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds($floodTime))
 				->op()
 				->first();
 			
 			if ($lastThread instanceof Post)
 			{
-				$timeDiff = (20 - $lastThread->created_at->diffInSeconds()) + 1;
+				$timeDiff = ($floodTime - $lastThread->created_at->diffInSeconds()) + 1;
 				
 				$messages = $validator->errors();
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [

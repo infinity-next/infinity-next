@@ -235,31 +235,57 @@ class Board extends Model {
 	
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
+		// Check if site requires captchas.
+		if (!site_setting('captchaEnabled'))
+		{
+			return true;
+		}
+		
+		// Check if this user can bypass captchas.
 		if ($user->canPostWithoutCaptcha($this))
 		{
 			return true;
 		}
 		
+		// Begin to check captchas for last answers.
 		$ip = new IP;
 		
 		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
-			->where('created_at', '>=', \Carbon\Carbon::now()->subHour())
-			->where('client_ip', $ip)
+			->where(function($query) use ($ip) {
+				// Find captchas answered by this user.
+				$query->where('client_ip', $ip);
+				
+				// Pull the lifespan of a captcha.
+				// This is the number of minutes between successful entries.
+				$captchaLifespan = (int) site_setting('captchaLifespanTime');
+				
+				if ($captchaLifespan > 0)
+				{
+					$query->where('created_at', '>=', \Carbon\Carbon::now()->subMinutes($captchaLifespan));
+				}
+			})
 			->whereNotNull('cracked_at')
 			->orderBy('cracked_at', 'desc')
 			->first();
 		
-		if ($lastCaptcha instanceof Captcha)
+		$requireCaptcha = !($lastCaptcha instanceof Captcha);
+		
+		if (!$requireCaptcha)
 		{
-			$postsWithCaptcha = Post::select('created_at')
-				->where('author_ip', $ip)
-				->where('created_at', '>=', $lastCaptcha->created_at)
-				->count();
+			$captchaLifespan = (int) site_setting('captchaLifespanPosts');
 			
-			return $postsWithCaptcha <= 10;
+			if ($captchaLifespan > 0)
+			{
+				$postsWithCaptcha = Post::select('created_at')
+					->where('author_ip', $ip)
+					->where('created_at', '>=', $lastCaptcha->created_at)
+					->count();
+				
+				$requireCaptcha = $postsWithCaptcha >= $captchaLifespan;
+			}
 		}
 		
-		return false;
+		return !$requireCaptcha;
 	}
 	
 	public function canPostInLockedThreads(PermissionUser $user)
@@ -290,11 +316,12 @@ class Board extends Model {
 	public function clearCachedPages()
 	{
 		Cache::forget("board.{$this->board_uri}.catalog");
+		Cache::forget("board.{$this->board_uri}.pages");
 		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
-				for ($i = 1; $i <= $this->getPageCount(); ++$i)
+				for ($i = 1; $i <= $this->getPageCount() * 2; ++$i)
 				{
 					Cache::forget("board.{$this->board_uri}.page.{$i}");
 				}
@@ -602,14 +629,7 @@ class Board extends Model {
 			{
 				if ($setting->option_name == $option_name)
 				{
-					$option_value = $setting->option_value;
-					
-					if (is_null($option_value) || $option_value === "")
-					{
-						return $fallback;
-					}
-					
-					return $option_value;
+					return $setting->getDisplayValue();
 				}
 			}
 		}
@@ -902,7 +922,16 @@ class Board extends Model {
 	
 	public function hasStylesheet()
 	{
-		return !$this->isWorksafe() || strlen((string) $this->getConfig('boardCustomCSS', "")) > 0;
+		if (!$this->isWorksafe())
+		{
+			return true;
+		}
+		
+		$optionEnable = $this->getConfig('boardCustomCSSEnable', false);
+		$optionSteal  = $this->getConfig('boardCustomCSSSteal', false);
+		$optionText   = strlen((string) $this->getConfig('boardCustomCSS', "")) > 0;
+		
+		return $optionEnable && ($optionSteal || $optionText);
 	}
 	
 	/**
@@ -912,8 +941,27 @@ class Board extends Model {
 	 */
 	public function getStylesheet()
 	{
-		return Cache::remember("board.{$this->board_uri}.stylesheet", 60, function()
+		return Cache::remember("board.{$this->board_uri}.stylesheet", 30, function()
 		{
+			$stealFrom = $this->getConfig('boardCustomCSSSteal', "");
+			
+			if ($stealFrom != "")
+			{
+				$stealFrom = Board::with('settings', 'settings.option')
+					->where('board_uri', $stealFrom)
+					->first();
+				
+				if ($stealFrom && $stealFrom->exists)
+				{
+					$stealFromStyle = $stealFrom->getConfig('boardCustomCSSEnable', false) ? $stealFrom->getConfig('boardCustomCSS') : "";
+					
+					if ($stealFromStyle != "")
+					{
+						return "/**\n * This style is borrowed from /{$stealFrom->board_uri}/.\n */\n\n\n" . $stealFromStyle;
+					}
+				}
+			}
+			
 			$style = $this->getConfig('boardCustomCSS', "");
 			
 			if ($style == "" && !$this->isWorksafe())

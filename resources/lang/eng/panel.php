@@ -131,7 +131,7 @@ return [
 			'appeal_text'    => "Appeal",
 		],
 		
-		'ban_global' => "All Boards",
+		'ban_global'     => "All Boards",
 		
 		'appeal_open'    => "Appeals Open",
 		'appeal_closed'  => "Appeals Closed",

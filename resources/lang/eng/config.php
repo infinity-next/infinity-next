@@ -44,21 +44,24 @@ return [
 		'role_basic'         => "Role Details",
 		'staff_castes'       => "Castes",
 		
-		'boards'             => "Board Options",
 		'adventures'         => "Adventure Options",
+		'boards'             => "Board Options",
 		'board_banners'      => "Board Banners",
 		'board_basic'        => "Basic Details",
 		'board_ephemerality' => "Content Ephemerality",
 		'board_posts'        => "Post Options",
 		'board_threads'      => "Thread Options",
 		'board_tags'         => "Board Tags",
+		'captcha'            => "Captcha Settings",
 		'sidebar'            => "Sidebar",
+		'site'               => "Site",
 		'style'              => "Styling",
 		
 		'navigation'         => "Site Navigation",
 	],
 	
 	'option' => [
+		'siteName'                 => "Site Name",
 		'board_uri'                => "URI",
 		'title'                    => "Title",
 		'description'              => "Subtitle",
@@ -69,11 +72,12 @@ return [
 		'boardBasicOverboard'      => "Stream to Overboard",
 		'boardBasicIndexed'        => "Publicly Indexed",
 		'boardBasicWorksafe'       => "Safe for Work",
+		'boardCustomCSSEnable'     => "Enable Custom CSS",
+		'boardCustomCSSSteal'      => "Borrow Custom CSS from Board",
 		'boardCustomCSS'           => "Custom CSS",
 		'boardLanguage'            => "Primary Language",
 		'boardSidebarText'         => "Content",
 		'boardUriBanned'           => "Banned Board URIs",
-		
 		'boardTags'                => "Tags",
 		
 		'adventureEnabled'         => "Enable adventures",
@@ -94,14 +98,20 @@ return [
 		'banMaxLength'             => "Maximum length for bans (days)",
 		'banSubnets'               => "Allow subnet bans",
 		
+		'captchaEnabled'           => "Enable CAPTCHAs",
+		'captchaLifespanTime'      => "Lifespan of solutions in minutes",
+		'captchaLifespanPosts'     => "Lifespan of solutions in posts made",
+		
 		'boardReportText'          => "Message to users creating a local report",
 		'globalReportText'         => "Message to users creating a global report",
 		
 		'postAnonymousName'        => "Default author name for anonymous posts",
 		'postAttachmentsMax'       => "Maximum attachments per post",
+		'postAttachmentsMin'       => "Minimum attachments per post",
 		'postMaxLength'            => "Maximum characters per post",
 		'postMinLength'            => "Minimum characters per post",
 		'postFloodTime'            => "Minimum time between posts (sec)",
+		'threadFloodTime'          => "Minimum time between threads (sec)",
 		
 		'epheSageThreadReply'      => "Autosage threads after this many replies",
 		'epheSageThreadDays'       => "Autosage threads after this many days",
@@ -131,6 +141,14 @@ return [
 			'attachmentName'           => "<tt>%t</tt> for the UNIX timestamp of post creation.<br />" .
 			                              "<tt>%i</tt> for the attachment's index on this post.<br />" .
 			                              "<tt>%n</tt> for the user's given filename.<br />",
+			
+			'boardCustomCSSSteal'      => "If enabled, your board will begin borrowing its style from another board.<br />" .
+			                              "If this board is also borrowing CSS, you will get nothing.<br />" .
+			                              "Check their style.txt to see if they're also borrowing.",
+			
+			'captchaEnabled'           => "Enables CAPTCHA tests for posts",
+			'captchaLifespanTime'      => "After this much time (in minutes), the captcha will expire.",
+			'captchaLifespanPosts'     => "After this many posts, the captcha will expire.",
 			
 			'roleType'                 => "This role's group. Staff groups apply only to people they're assigned to.<br />Anonymous types will apply to all people who visit your board.",
 			'roleName'                 => "Your name for this group. Internal use only.",
