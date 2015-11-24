@@ -27,7 +27,7 @@
 			</a>
 			
 			<a class="attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}">
-				<i class="fa fa-download"></i>&nbsp;@lang('board.field.download')&nbsp;<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
+				<i class="fa fa-download"></i>&nbsp;<span class="detail-item detail-download">@lang('board.field.download')</span>&nbsp;<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
 			</a>
 		</div>
 		@else
