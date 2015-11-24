@@ -126,6 +126,12 @@ class PostRequest extends Request implements ApiContract{
 			return false;
 		}
 		
+		// Locked thread check.
+		if ($this->thread instanceof Post && $this->thread->isLocked() && !$this->user->canPostInLockedThreads($this->board))
+		{
+			return false;
+		}
+		
 		## TODO ##
 		// Separate these permsisions.
 		return $this->user->canPostThread() || $this->user->canPostReply();

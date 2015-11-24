@@ -61,9 +61,22 @@ ib.widget("post", function(window, $, undefined) {
 			var boxHeight = $box.outerHeight();
 			var boxWidth  = $box.outerWidth();
 			
+			var posTop = linkRect.top + window.scrollY;
+			
+			if (posTop + boxHeight > window.scrollY + window.innerHeight)
+			{
+				// Selects the larger of two values:
+				// A) Our position in the scroll, or
+				// B) The hidden part of the post subtracted from the top.
+				// This check will try to keep the entire post visible,
+				// but will always keep the top of the post visible.
+				var posTopDiff = (posTop + boxHeight) - (window.scrollY + window.innerHeight);
+				posTop = Math.max( window.scrollY, posTop - posTopDiff );
+			}
+			
 			$box.css({
-				'top'       : linkRect.top + window.scrollY,
-				'left'      : linkRect.right + 5,
+				'top'       : posTop,
+				'left'      : ib.ltr ? linkRect.right + 5 : linkRect.left - 5,
 				'max-width' : Math.min(document.body.scrollWidth * 0.7, document.body.scrollWidth - linkRect.right - 15)
 			});
 			
