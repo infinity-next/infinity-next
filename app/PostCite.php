@@ -68,7 +68,7 @@ class PostCite extends Model {
 		$citeClass[] = "cite-post";
 		$citeClass = implode(" ", $citeClass);
 		
-		return"<a href=\"{$citeURL}\" data-cite-board=\"{$citeBoard}\" data-cite-post=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
+		return"<a href=\"{$citeURL}\" data-board_uri=\"{$citeBoard}\" data-board_id=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
 	}
 	
 	public function getBacklinkText(Board $board = null)

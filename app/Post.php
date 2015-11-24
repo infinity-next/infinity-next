@@ -491,14 +491,12 @@ class Post extends Model {
 	 */
 	public function getContentRawAttribute($value)
 	{
-		if (!$this->trashed())
+		if (!$this->trashed() && isset($this->attributes['body']))
 		{
 			return $this->attributes['body'];
 		}
-		else
-		{
-			return null;
-		}
+		
+		return null;
 	}
 	
 	/**
@@ -508,14 +506,12 @@ class Post extends Model {
 	 */
 	public function getContentHtmlAttribute($value)
 	{
-		if (!$this->trashed())
+		if (!$this->trashed() && isset($this->attributes['body']))
 		{
 			return $this->getBodyFormatted();
 		}
-		else
-		{
-			return null;
-		}
+		
+		return null;
 	}
 	
 	/**
@@ -653,9 +649,9 @@ class Post extends Model {
 	{
 		if (!$this->trashed())
 		{
-			return \View::make('content.board.thread', [
+			return \View::make('content.board.post', [
 					'board'    => $this->board,
-					'thread'   => $this,
+					'post'     => $this,
 					'op'       => false,
 					'reply_to' => $this->reply_to ?: $this->board_id,
 			])->render();

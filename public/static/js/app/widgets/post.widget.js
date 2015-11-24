@@ -5,10 +5,15 @@ ib.widget("post", function(window, $, undefined) {
 	var widget = {
 		
 		// The temporary hover-over item created to show backlink posts.
-		$cite : null,
+		$cite    : null,
+		citeLoad : null,
 		
 		// The default values that are set behind init values.
 		defaults : {
+			classname : {
+				'post-hover' : "post-hover",
+			},
+			
 			// Selectors for finding and binding elements.
 			selector : {
 				'widget'         : ".post-container",
@@ -21,7 +26,7 @@ ib.widget("post", function(window, $, undefined) {
 				'elementCode'    : "pre code",
 				'elementQuote'   : "blockquote",
 				
-				'cite'           : "a.cite",
+				'cite'           : "a.cite-post",
 				
 				'post-form'      : "#post-form",
 				'post-form-body' : "#body",
@@ -46,6 +51,13 @@ ib.widget("post", function(window, $, undefined) {
 			
 			var linkRect  = $link[0].getBoundingClientRect();
 			
+			if (!$box.parents().length)
+			{
+				$box.appendTo("body")
+					.addClass(widget.options.classname['post-hover'])
+					.css('position', "absolute");
+			}
+			
 			var boxHeight = $box.outerHeight();
 			var boxWidth  = $box.outerWidth();
 			
@@ -53,13 +65,39 @@ ib.widget("post", function(window, $, undefined) {
 				'top'      : linkRect.top + document.body.scrollTop - boxHeight - 5,
 				'left'     : linkRect.left + boxWidth >= bodyWidth ?  bodyWidth - boxWidth : linkRect.left,
 			});
+			
+			widget.$cite = $box;
 		},
 		
-		cachePost : function() {
+		cachePost : function(jsonOrjQuery) {
 			// This stores the post data into a session storage so backlink loading is zippy as heck.
 			if (typeof sessionStorage === "object")
 			{
-				sessionStorage.setItem( widget.$widget.attr('id'), widget.$widget[0].outerHTML);
+				var $post;
+				
+				if (typeof jsonOrjQuery === "undefined")
+				{
+					$post = widget.$widget;
+				}
+				else if (jsonOrjQuery instanceof jQuery)
+				{
+					$post = jsonOrjQuery;
+				}
+				else if (jsonOrjQuery.html)
+				{
+					var $post = $(jsonOrjQuery.html);
+				}
+				
+				// We have to do this even with an item we pulled from AJAX to remove the ID.
+				// The HTML dom cannot have duplicate IDs, ever. It's important.
+				var $post = $post.clone();
+				var id    = $post[0].id;
+				$post.removeAttr('id');
+				var html = $post[0].outerHTML;
+				
+				sessionStorage.setItem( id, html );
+				
+				return $post;
 			}
 		},
 		
@@ -69,7 +107,8 @@ ib.widget("post", function(window, $, undefined) {
 				widget.$cite.remove();
 			}
 			
-			widget.$cite = null;
+			widget.$cite    = null;
+			widget.citeLoad = null;
 		},
 		
 		// Events
@@ -296,17 +335,60 @@ ib.widget("post", function(window, $, undefined) {
 				}
 			},
 			
+			citeClick : function(event) {
+				var $cite     = $(this);
+				var board_uri = $cite.attr('data-board_uri');
+				var board_id  = parseInt($cite.attr('data-board_id'), 10);
+				var $target   = $("#post-"+board_uri+"-"+board_id);
+				
+				console.log(board_uri, board_id, $target)
+				if ($target.length)
+				{
+					window.location.hash = board_id;
+					$target[0].scrollIntoView();
+					
+					event.preventDefault();
+					return false;
+				}
+			},
+			
 			citeMouseOver : function(event) {
 				widget.clearCites();
 				
-				var $cite = $(this);
+				var $cite     = $(this);
+				var board_uri = $cite.attr('data-board_uri');
+				var board_id  = parseInt($cite.attr('data-board_id'), 10);
+				var post_id   = "post-"+board_uri+"-"+board_id;
 				var $post;
 				
-				// // This stores the post data into a session storage so backlink loading is zippy as heck.
-				// if (typeof sessionStorage === "object")
-				// {
-				// 	sessionStorage.getItem( widget.$widget.attr('id'), widget.$widget[0].outerHTML);
-				// }
+				// Loads session storage for our post if it exists.
+				if (typeof sessionStorage === "object")
+				{
+					$post = $(sessionStorage.getItem( post_id ));
+					
+					if ($post instanceof jQuery && $post.length)
+					{
+						widget.anchorBoxToLink($post, $cite);
+						return true;
+					}
+				}
+				
+				widget.citeLoad = post_id;
+				
+				console.log(board_id, post_id);
+				
+				jQuery.ajax({
+					type:        "GET",
+					url:         "/"+board_uri+"/post/"+board_id+".json",
+					contentType: "application/json; charset=utf-8"
+				}).done(function(response, textStatus, jqXHR) {
+					$post = widget.cachePost(response);
+					
+					if (widget.citeLoad === post_id)
+					{
+						widget.anchorBoxToLink($post, $cite);
+					}
+				});
 			},
 			
 			citeMouseOut : function(event) {
@@ -361,6 +443,7 @@ ib.widget("post", function(window, $, undefined) {
 					.on('click.ib-post',       widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
 					
 					// Citations
+					.on('click.ib-post',       widget.options.selector['cite'], widget.events.citeClick)
 					.on('mouseover.ib-post',   widget.options.selector['cite'], widget.events.citeMouseOver)
 					.on('mouseout.ib-post',    widget.options.selector['cite'], widget.events.citeMouseOut)
 				;

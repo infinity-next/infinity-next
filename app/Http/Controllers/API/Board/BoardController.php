@@ -71,6 +71,8 @@ class BoardController extends ParentController implements ApiContract {
 	 */
 	public function getPost(Board $board, Post $post)
 	{
+		$post->setAppendHTML(true);
+		$post->setRelation('replies', null);
 		return $this->apiResponse($post);
 	}
 	
