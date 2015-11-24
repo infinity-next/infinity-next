@@ -242,13 +242,11 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					widget.newReplies += newPosts.length;
 				}
 				
-				widget.$widget
-					.parents( widget.options.selector['thread-event-target'] )
-					.trigger('au-updated', [{
-						'newPosts'     : newPosts,
-						'updatedPosts' : updatedPosts,
-						'deletedPosts' : deletedPosts,
-					}]);
+				$(window).trigger('au-updated', [{
+					'newPosts'     : newPosts,
+					'updatedPosts' : updatedPosts,
+					'deletedPosts' : deletedPosts,
+				}]);
 				
 				widget.events.updateLastReply();
 				

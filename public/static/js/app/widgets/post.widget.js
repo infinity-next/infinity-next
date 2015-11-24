@@ -11,7 +11,7 @@ ib.widget("post", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			classname : {
-				'post-hover' : "post-hover",
+				'post-hover'  : "post-hover"
 			},
 			
 			// Selectors for finding and binding elements.
@@ -26,7 +26,10 @@ ib.widget("post", function(window, $, undefined) {
 				'elementCode'    : "pre code",
 				'elementQuote'   : "blockquote",
 				
+				'cite-slot'      : "li.detail-cites",
 				'cite'           : "a.cite-post",
+				'backlinks'      : "a.cite-backlink",
+				'forwardlink'    : "blockquote.post a.cite-post",
 				
 				'post-form'      : "#post-form",
 				'post-form-body' : "#body",
@@ -43,6 +46,10 @@ ib.widget("post", function(window, $, undefined) {
 				'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
 				'attachment-link'    : "a.attachment-link"
 			},
+			
+			template : {
+				'backlink' : "<a class=\"cite cite-backlink\"></a>"
+			}
 		},
 		
 		// Helpers
@@ -143,7 +150,29 @@ ib.widget("post", function(window, $, undefined) {
 				$post.removeAttr('id');
 				var html = $post[0].outerHTML;
 				
-				sessionStorage.setItem( id, html );
+				// Attempt to set a new storage item.
+				// Destroy older items if we are full.
+				var setting = true;
+				
+				while (setting === true)
+				{
+					try
+					{
+						sessionStorage.setItem( id, html );
+						break;
+					}
+					catch (e)
+					{
+						if (sessionStorage.length > 0)
+						{
+							sessionStorage.removeItem( sessionStorage.key(0) );
+						}
+						else
+						{
+							setting = false;
+						}
+					}
+				}
 				
 				return $post;
 			}
@@ -468,6 +497,49 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				
 				return true;
+			},
+			
+			threadNewPosts : function(event, posts) {
+				if (event.ibPostRan) {
+					return true;
+				}
+				
+				jQuery.each(posts, function(index, group) {
+					jQuery.each(group, function(index, $post) {
+						var $cites     = $(widget.options.selector['forwardlink'], $post);
+						
+						$cites.each(function(index) {
+							var $cite      = $(this);
+							var board_uri  = $cite.data('board_uri');
+							var board_id   = $cite.data('board_id');
+							
+							var $target    = $("#post-" + board_uri + "-" + board_id);
+							var $detail    = $(widget.options.selector['cite-slot'], $target);
+							var $backlinks = $detail.children();
+							
+							if (!$backlinks.filter("[data-board_uri="+board_uri+"][data-board_id="+board_id+"]").length)
+							{
+								var $backlink = $(widget.options.template['backlink'])
+									.attr('data-board_uri', board_uri)
+									.data('board_uri', board_uri)
+									.attr('data-board_id', board_id)
+									.data('board_id', board_id)
+									.appendTo($detail);
+								
+								if (board_uri == window.app.board)
+								{
+									$backlink.addClass('cite-local').text(">>" + board_id);
+								}
+								else
+								{
+									$backlink.addClass('cite-remote').text(">>>/" + board_uri + "/" + board_id);
+								}
+							}
+						});
+					});
+				});
+				
+				event.ibPostRan = true;
 			}
 		},
 		
@@ -482,6 +554,10 @@ ib.widget("post", function(window, $, undefined) {
 			widget : function() {
 				
 				widget.events.codeHighlight();
+				
+				$(window)
+					.on('au-updated.ib-post', widget.events.threadNewPosts)
+				;
 				
 				widget.$widget
 					.on('click.ib-post',       widget.options.selector['post-reply'],         widget.events.postClick)

@@ -2502,7 +2502,7 @@ main.index-threaded {
 			border-top: none;
 		}
 			.post-container.post-hover {
-				box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.4);
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 				pointer-events: none;
 				z-index: 1100;
 			}

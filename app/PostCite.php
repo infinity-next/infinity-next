@@ -27,6 +27,13 @@ class PostCite extends Model {
 	protected $fillable = ['post_id', 'post_board_uri', 'post_board_id', 'cite_id', 'cite_board_uri', 'cite_board_id'];
 	
 	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['post', 'postBoard', 'cite', 'citeBoard'];
+	
+	/**
 	 * Indicates their is no autoupdated timetsamps.
 	 *
 	 * @var boolean
@@ -68,6 +75,7 @@ class PostCite extends Model {
 		$citeClass[] = "cite-post";
 		$citeClass = implode(" ", $citeClass);
 		
+		// Don't forget to change the post.widget.js template too.
 		return"<a href=\"{$citeURL}\" data-board_uri=\"{$citeBoard}\" data-board_id=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
 	}
 	

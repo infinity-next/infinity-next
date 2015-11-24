@@ -92,7 +92,6 @@ class Post extends Model {
 		// Relationships
 		'bans',
 		'board',
-		'cites',
 		'citedBy',
 		'citedPosts',
 		'editor',
