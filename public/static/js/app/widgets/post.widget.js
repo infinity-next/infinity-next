@@ -61,7 +61,7 @@ ib.widget("post", function(window, $, undefined) {
 			var boxHeight = $box.outerHeight();
 			var boxWidth  = $box.outerWidth();
 			
-			var posTop = linkRect.top + window.scrollY;
+			var posTop  = linkRect.top + window.scrollY;
 			
 			if (posTop + boxHeight > window.scrollY + window.innerHeight)
 			{
@@ -74,10 +74,44 @@ ib.widget("post", function(window, $, undefined) {
 				posTop = Math.max( window.scrollY, posTop - posTopDiff );
 			}
 			
+			
+			// Float to the right.
+			// Default for LTR
+			var posLeft;
+			var posLeftOnRight = linkRect.right + 5;
+			var posLeftOnLeft  = linkRect.left  - 5;
+			var maxWidth       = (document.body.scrollWidth * 0.7) - 15;
+			var newWidth;
+			
+			// LTR display
+			if (ib.ltr)
+			{
+				// Left side has more space than right side,
+				// and box is wider than remaining space.
+				if (linkRect.left > document.body.scrollWidth - posLeftOnRight && boxWidth > document.body.scrollWidth - posLeftOnRight)
+				{
+					posLeft  = posLeftOnLeft;
+					newWidth = Math.min(maxWidth, boxWidth, linkRect.left - 15);
+					posLeft -= newWidth;
+				}
+				// Right side has more adequate room,
+				// Or box fits in.
+				else
+				{
+					posLeft  = posLeftOnRight;
+					newWidth = Math.min(maxWidth, boxWidth, document.body.scrollWidth - posLeftOnRight  - 15);
+				}
+			}
+			else
+			{
+				// TODO
+			}
+			
+			
 			$box.css({
 				'top'       : posTop,
-				'left'      : ib.ltr ? linkRect.right + 5 : linkRect.left - 5,
-				'max-width' : Math.min(document.body.scrollWidth * 0.7, document.body.scrollWidth - linkRect.right - 15)
+				'left'      : posLeft,
+				'width'     : newWidth,
 			});
 			
 			widget.$cite = $box;

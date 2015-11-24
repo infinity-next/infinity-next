@@ -2628,6 +2628,7 @@ main.index-threaded {
 							.post-detail.detail-cites a.cite {
 								font-size: 90%;
 								text-decoration: underline;
+								white-space: nowrap;
 							}
 				
 				ul.post-attachments {
