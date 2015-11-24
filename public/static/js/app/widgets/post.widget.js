@@ -341,7 +341,6 @@ ib.widget("post", function(window, $, undefined) {
 				var board_id  = parseInt($cite.attr('data-board_id'), 10);
 				var $target   = $("#post-"+board_uri+"-"+board_id);
 				
-				console.log(board_uri, board_id, $target)
 				if ($target.length)
 				{
 					window.location.hash = board_id;
@@ -374,8 +373,6 @@ ib.widget("post", function(window, $, undefined) {
 				}
 				
 				widget.citeLoad = post_id;
-				
-				console.log(board_id, post_id);
 				
 				jQuery.ajax({
 					type:        "GET",

@@ -285,7 +285,8 @@
 	body.responsive .index-threaded section.index-threads .thread {
 		padding-right: 340px;
 	}
-	body.responsive .index-threaded section.index-threads .post {
+	body.responsive .index-threaded section.index-threads .post,
+	body.responsive .post-hover {
 		max-width: 70vw;
 	}
 	

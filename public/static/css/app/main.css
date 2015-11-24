@@ -2,7 +2,9 @@
  * z-index list of importance
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
  *  9999 - jQuery Blocker Overlay.
+ *  1100 - Hover-over posts.
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
+ *  1000 - Post form.
  *    10 - Post action links.
  *     5 - Post attachment.
  *     1 - Global Footer
@@ -2499,6 +2501,11 @@ main.index-threaded {
 			border-left: none;
 			border-top: none;
 		}
+			.post-container.post-hover {
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+				z-index: 1100;
+			}
 		main.index-threaded .post-container.op-container {
 			background: none;
 			border-style: solid none none none;
