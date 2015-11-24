@@ -71,17 +71,6 @@ class BoardController extends ParentController implements ApiContract {
 	 */
 	public function getPost(Board $board, Post $post)
 	{
-		// Pull the post.
-		$post = $board->posts()
-			->where('board_id', $post)
-			->withEverything()
-			->firstOrFail();
-		
-		if (!$post)
-		{
-			return abort(404);
-		}
-		
 		return $this->apiResponse($post);
 	}
 	
@@ -106,16 +95,6 @@ class BoardController extends ParentController implements ApiContract {
 			$posts->sortBy('board_id');
 			
 			return $this->apiResponse($posts);
-		}
-		else
-		{
-			// Pull the thread.
-			$thread = $board->getThreadByBoardId($thread);
-			
-			if (!$thread)
-			{
-				return abort(404);
-			}
 		}
 		
 		return $this->apiResponse($thread);

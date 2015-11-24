@@ -1028,20 +1028,13 @@ class Board extends Model {
 	
 	public function getThreadByBoardId($board_id)
 	{
-		$thread = false;
-		
 		if ($board_id instanceof Post)
 		{
-			$thread = $board_id;
+			throw new InvalidArgumentException("Board::getThreadByBoardId was called using a real Laravel post model. Only a board id should be passed.");
 		}
 		else
 		{
-			$thread = $this->posts()->where(['board_id' => $board_id])->first();
-		}
-		
-		if ($thread)
-		{
-			return $thread->forThreadView();
+			return Post::getForThreadView($this->board_uri, $board_id);
 		}
 		
 		return null;

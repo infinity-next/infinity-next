@@ -2614,6 +2614,14 @@ main.index-threaded {
 							.capcode-admin .capcode {
 								color: red;
 							}
+						
+						.post-detail.detail-cites {
+							display: inline;
+						}
+							.post-detail.detail-cites a.cite {
+								font-size: 90%;
+								text-decoration: underline;
+							}
 				
 				ul.post-attachments {
 					display: block;

@@ -57,8 +57,8 @@ class PostCite extends Model {
 	
 	public function getBacklinkHTML(Board $board = null)
 	{
-		$citeBoard = $this->cite_board_uri;
-		$citePost  = $this->cite_board_id;
+		$citeBoard = $this->post_board_uri;
+		$citePost  = $this->post_board_id;
 		$citeURL   = $this->getBacklinkURL();
 		$citeText  = $board ? $this->getBacklinkText($board) : $this->getBacklinkText();
 		
@@ -68,7 +68,7 @@ class PostCite extends Model {
 		$citeClass[] = "cite-post";
 		$citeClass = implode(" ", $citeClass);
 		
-		return"<a href=\"{$citeURL} data-cite-board=\"{$citeBoard}\" data-cite-post=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
+		return"<a href=\"{$citeURL}\" data-cite-board=\"{$citeBoard}\" data-cite-post=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
 	}
 	
 	public function getBacklinkText(Board $board = null)
@@ -86,6 +86,6 @@ class PostCite extends Model {
 	
 	public function getBacklinkURL()
 	{
-		return url("/{$this->cite_board_uri}/post/{$this->cite_board_id}");
+		return url("/{$this->post_board_uri}/post/{$this->post_board_id}");
 	}
 }

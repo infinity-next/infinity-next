@@ -1310,7 +1310,14 @@ class Post extends Model {
 	
 	public function scopeAndBacklinks($query)
 	{
-		return $query->with('backlinks');
+		return $query->with([
+			'backlinks' => function($query) {
+				$query->orderBy('post_id', 'asc');
+			},
+			'backlinks.post' => function($query) {
+				$query->select('post_id', 'board_uri', 'board_id', 'reply_to', 'reply_to_board_id');
+			},
+		]);
 	}
 	
 	public function scopeAndBoard($query)
@@ -1441,21 +1448,29 @@ class Post extends Model {
 	public function scopeWithEverything($query)
 	{
 		return $query
-			->andAttachments()
-			->andBacklinks()
-			->andBans()
-			->andCapcode()
-			->andCites()
-			->andEditor()
-			->andPromotedReports();
+			->withEverythingForReplies()
+			->andBoard();
 	}
 	
 	public function scopeWithEverythingAndReplies($query)
 	{
-		return $query->withEverything()
+		return $query
+			->withEverything()
 			->with(['replies' => function($query) {
-				$query->withEverything();
+				$query->withEverythingForReplies();
 			}]);
+	}
+	
+	public function scopeWithEverythingForReplies($query)
+	{
+		return $query
+			->andAttachments()
+			->andBans()
+			->andBacklinks()
+			->andCapcode()
+			->andCites()
+			->andEditor()
+			->andPromotedReports();
 	}
 	
 	public function scopeWhereHasReports($query)
@@ -1778,27 +1793,26 @@ class Post extends Model {
 	
 	
 	/**
-	 * Returns a thread with its replies for a thread view.
+	 * Returns a thread with its replies for a thread view and leverages cache.
 	 *
-	 * @param  boolean  $fromStart  Optional. If true, pull replies start (first x). If false, pull replies from end (last x). Defaults to false.
-	 * @param  int  $count  Optional. Number of replies to return. 0 is all. Defaults to 0. 
+	 * @static
+	 * @param  string  $board_uri  Board primary key.
+	 * @param  int     $board_id   Local board id.
+	 * @param  string  $uri        Optional. URI string for splicing the thread. Defaults to null, for no splicing.
 	 * @return static
 	 */
-	public function forThreadView($uri = null)
+	public static function getForThreadView($board_uri, $board_id, $uri = null)
 	{
-		$rememberTags    = ["board.{$this->board_uri}", "threads"];
+		$rememberTags    = ["board.{$board_uri}", "threads"];
 		$rememberTimer   = 30;
-		$rememberKey     = "board.{$this->board_uri}.thread.{$this->board_id}";
-		$rememberClosure = function() {
-			return $this->load([
-				'board',
-				'replies' => function($query) {
-					$query->withEverything();
-					$query->andBoard();
-					$query->orderBy('post_id', 'asc');
-				}
-			]);
+		$rememberKey     = "board.{$board_uri}.thread.{$board_id}";
+		$rememberClosure = function() use ($board_uri, $board_id) {
+			return static::where([
+				'posts.board_uri' => $board_uri,
+				'posts.board_id'  => $board_id,
+			])->withEverythingAndReplies()->first();
 		};
+		
 		
 		switch (env('CACHE_DRIVER'))
 		{

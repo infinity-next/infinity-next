@@ -133,10 +133,13 @@ class BoardController extends Controller {
 		}
 		else if ($thread->reply_to)
 		{
-			return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}{$sign}{$count}#{$thread->board_id}");
+			return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}#{$thread->board_id}");
 		}
 		
-		$thread = $thread->forThreadView(is_string($splice) ? $splice : null);
+		if (is_string($splice))
+		{
+			$thread = $thread->getReplySplice($splice);
+		}
 		
 		if ($thread === false)
 		{

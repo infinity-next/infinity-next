@@ -4,6 +4,9 @@
 ib.widget("post", function(window, $, undefined) {
 	var widget = {
 		
+		// The temporary hover-over item created to show backlink posts.
+		$cite : null,
+		
 		// The default values that are set behind init values.
 		defaults : {
 			// Selectors for finding and binding elements.
@@ -17,6 +20,8 @@ ib.widget("post", function(window, $, undefined) {
 				
 				'elementCode'    : "pre code",
 				'elementQuote'   : "blockquote",
+				
+				'cite'           : "a.cite",
 				
 				'post-form'      : "#post-form",
 				'post-form-body' : "#body",
@@ -33,6 +38,38 @@ ib.widget("post", function(window, $, undefined) {
 				'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
 				'attachment-link'    : "a.attachment-link"
 			},
+		},
+		
+		// Helpers
+		anchorBoxToLink : function($box, $link) {
+			var bodyWidth = document.body.scrollWidth;
+			
+			var linkRect  = $link[0].getBoundingClientRect();
+			
+			var boxHeight = $box.outerHeight();
+			var boxWidth  = $box.outerWidth();
+			
+			$box.css({
+				'top'      : linkRect.top + document.body.scrollTop - boxHeight - 5,
+				'left'     : linkRect.left + boxWidth >= bodyWidth ?  bodyWidth - boxWidth : linkRect.left,
+			});
+		},
+		
+		cachePost : function() {
+			// This stores the post data into a session storage so backlink loading is zippy as heck.
+			if (typeof sessionStorage === "object")
+			{
+				sessionStorage.setItem( widget.$widget.attr('id'), widget.$widget[0].outerHTML);
+			}
+		},
+		
+		clearCites : function() {
+			if (widget.$cite instanceof jQuery)
+			{
+				widget.$cite.remove();
+			}
+			
+			widget.$cite = null;
 		},
 		
 		// Events
@@ -259,6 +296,23 @@ ib.widget("post", function(window, $, undefined) {
 				}
 			},
 			
+			citeMouseOver : function(event) {
+				widget.clearCites();
+				
+				var $cite = $(this);
+				var $post;
+				
+				// // This stores the post data into a session storage so backlink loading is zippy as heck.
+				// if (typeof sessionStorage === "object")
+				// {
+				// 	sessionStorage.getItem( widget.$widget.attr('id'), widget.$widget[0].outerHTML);
+				// }
+			},
+			
+			citeMouseOut : function(event) {
+				widget.clearCites();
+			},
+			
 			codeHighlight : function() {
 				// Activate code highlighting if the JS module is enabled.
 				if (typeof hljs === "object")
@@ -305,7 +359,13 @@ ib.widget("post", function(window, $, undefined) {
 					.on('media-check.ib-post', widget.options.selector['attachment-image'],   widget.events.attachmentMediaCheck)
 					.on('click.ib-post',       widget.options.selector['attacment-expand'],   widget.events.attachmentExpandClick)
 					.on('click.ib-post',       widget.options.selector['attacment-collapse'], widget.events.attachmentCollapseClick)
+					
+					// Citations
+					.on('mouseover.ib-post',   widget.options.selector['cite'], widget.events.citeMouseOver)
+					.on('mouseout.ib-post',    widget.options.selector['cite'], widget.events.citeMouseOut)
 				;
+				
+				widget.cachePost();
 			}
 		},
 		
