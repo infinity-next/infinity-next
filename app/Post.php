@@ -1458,6 +1458,7 @@ class Post extends Model {
 			->withEverything()
 			->with(['replies' => function($query) {
 				$query->withEverythingForReplies();
+				$query->orderBy('board_id', 'asc');
 			}]);
 	}
 	
