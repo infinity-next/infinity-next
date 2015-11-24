@@ -243,7 +243,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				{
 					var $body = $(this);
 					var len   = $body.val().length;
-					var text  = "<strong>" + len + "</strong>";
+					var text  = "<strong id=\"body-counter-curr\">" + len + "</strong>";
 					var valid = true;
 					var free  = true;
 					var max   = parseInt(window.app.board_settings.postMaxLength, 10);
@@ -251,14 +251,14 @@ ib.widget("postbox", function(window, $, undefined) {
 					
 					if (!isNaN(max))
 					{
-						text  = text + " ≤ " + max;
+						text  = text + "<span id=\"body-counter-max\">" + max + "</span>";
 						free  = false;
 						valid = valid && (len <= max);
 					}
 					
 					if (!isNaN(min))
 					{
-						text  = min + " ≤ " + text;
+						text  = "<span id=\"body-counter-min\">" + min + "</span>" + text;
 						free  = false;
 						valid = valid && (len >= min);
 					}

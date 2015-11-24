@@ -1874,6 +1874,7 @@ section.index-form {
 		}
 			form.form-post .row-post #body {
 				border: none;
+				font-size: 10pt;
 			}
 			form.form-post .ui-resizable-handle {
 				background-image: url('../../img/backgrounds/ui-icons_000000_256x240.png');
@@ -1900,13 +1901,26 @@ section.index-form {
 			/* Counter */
 			#body-counter {
 				line-height: 16px;
-				font-size: 16px;
+				font-size: 9pt;
+				vertical-align: middle;
 				position: absolute;
 				text-align: center;
 				bottom: 0;
 				right: 0;
 				left: 0;
+				pointer-events: none;
 			}
+				#body-counter-max::before {
+					display: inline;
+					content: ' ≤ ';
+				}
+				#body-counter-min::after {
+					display: inline;
+					content: ' ≤ ';
+				}
+				#body-counter.counter-valid {
+					color: #ccc;
+				}
 				#body-counter.counter-invalid {
 					color: #C00;
 				}
