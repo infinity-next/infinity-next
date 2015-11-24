@@ -1,4 +1,4 @@
-<div class="post-container {{ is_null($post->reply_to) ? 'op-container' : 'reply-container' }} post-{{$post->post_id}}" data-widget="post" data-updated-at="{{ $post->updated_at->timestamp }}" id="post-{{$post->board_uri}}-{{$post->board_id}}">
+<div class="post-container {{ is_null($post->reply_to) ? 'op-container' : 'reply-container' }} post-{{$post->post_id}}" data-board_uri="{{ $post->board_uri }}" data-board_id="{{ $post->board_id }}" data-widget="post" data-updated-at="{{ $post->updated_at->timestamp }}" id="post-{{$post->board_uri}}-{{$post->board_id}}">
 	@set('multiboard', isset($multiboard) ? $multiboard : false)
 	
 	@if ($multiboard)

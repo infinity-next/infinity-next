@@ -48,7 +48,7 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			template : {
-				'backlink' : "<a class=\"cite cite-backlink\"></a>"
+				'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>"
 			}
 		},
 		
@@ -415,6 +415,11 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			citeClick : function(event) {
+				if (event.altKey || event.ctrlKey)
+				{
+					return true;
+				}
+				
 				var $cite     = $(this);
 				var board_uri = $cite.attr('data-board_uri');
 				var board_id  = parseInt($cite.attr('data-board_id'), 10);
@@ -500,46 +505,61 @@ ib.widget("post", function(window, $, undefined) {
 			},
 			
 			threadNewPosts : function(event, posts) {
-				if (event.ibPostRan) {
-					return true;
-				}
+				// Data of our widget, the item we are hoping to insert new citations into.
+				var $detail          = $(widget.options.selector['cite-slot'], widget.$widget);
+				var $backlinks       = $detail.children();
+				var widget_board_uri = widget.$widget.attr('data-board_uri');
+				var widget_board_id  = widget.$widget.attr('data-board_id');
 				
+				// All new updates show off their posts in three difeferent groups.
 				jQuery.each(posts, function(index, group) {
+					// Each group can have many jQuery dom elements.
 					jQuery.each(group, function(index, $post) {
-						var $cites     = $(widget.options.selector['forwardlink'], $post);
+						// This information belongs to a new post.
+						var $container     = $post.find("[data-board_uri][data-board_id]:first");
+						var post_board_uri = $container.attr('data-board_uri');
+						var post_board_id  = $container.attr('data-board_id');
+						var $cites         = $(widget.options.selector['forwardlink'], $container);
 						
+						// Each post may have many citations.
 						$cites.each(function(index) {
-							var $cite      = $(this);
-							var board_uri  = $cite.data('board_uri');
-							var board_id   = $cite.data('board_id');
+							// This information represents the post we are citing.
+							var $cite          = $(this);
+							var cite_board_uri = $cite.attr('data-board_uri');
+							var cite_board_id  = $cite.attr('data-board_id');
 							
-							var $target    = $("#post-" + board_uri + "-" + board_id);
-							var $detail    = $(widget.options.selector['cite-slot'], $target);
-							var $backlinks = $detail.children();
-							
-							if (!$backlinks.filter("[data-board_uri="+board_uri+"][data-board_id="+board_id+"]").length)
+							// If it doesn't belong to our widget, we don't want it.
+							if (cite_board_uri == widget_board_uri && cite_board_id == widget_board_id)
 							{
-								var $backlink = $(widget.options.template['backlink'])
-									.attr('data-board_uri', board_uri)
-									.data('board_uri', board_uri)
-									.attr('data-board_id', board_id)
-									.data('board_id', board_id)
-									.appendTo($detail);
+								var $target    = $("#post-" + cite_board_uri + "-" + post_board_id);
 								
-								if (board_uri == window.app.board)
+								if (!$backlinks.filter("[data-board_uri="+post_board_uri+"][data-board_id="+post_board_id+"]").length)
 								{
-									$backlink.addClass('cite-local').text(">>" + board_id);
-								}
-								else
-								{
-									$backlink.addClass('cite-remote').text(">>>/" + board_uri + "/" + board_id);
+									var $backlink = $(widget.options.template['backlink'])
+										.attr('data-board_uri', post_board_uri)
+										.data('board_uri', post_board_uri)
+										.attr('data-board_id', post_board_id)
+										.data('board_id', post_board_id)
+										.attr('href', "/" + post_board_uri + "/post/" + post_board_id)
+										.appendTo($detail);
+									
+									// Believe it or not this is actually important.
+									// it adds a space after each item.
+									$detail.append("\n");
+									
+									if (post_board_uri == window.app.board)
+									{
+										$backlink.addClass('cite-local').html("&gt;&gt;" + post_board_id);
+									}
+									else
+									{
+										$backlink.addClass('cite-remote').html("&gt;&gt;&gt;/" + post_board_uri + "/" + post_board_id);
+									}
 								}
 							}
 						});
 					});
 				});
-				
-				event.ibPostRan = true;
 			}
 		},
 		
