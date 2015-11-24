@@ -62,8 +62,9 @@ ib.widget("post", function(window, $, undefined) {
 			var boxWidth  = $box.outerWidth();
 			
 			$box.css({
-				'top'      : linkRect.top + document.body.scrollTop - boxHeight - 5,
-				'left'     : linkRect.left + boxWidth >= bodyWidth ?  bodyWidth - boxWidth : linkRect.left,
+				'top'       : linkRect.top + window.scrollY,
+				'left'      : linkRect.right + 5,
+				'max-width' : Math.min(document.body.scrollWidth * 0.7, document.body.scrollWidth - linkRect.right - 15)
 			});
 			
 			widget.$cite = $box;
@@ -106,6 +107,8 @@ ib.widget("post", function(window, $, undefined) {
 			{
 				widget.$cite.remove();
 			}
+			
+			$(widget.options.classname['post-hover']).remove();
 			
 			widget.$cite    = null;
 			widget.citeLoad = null;
