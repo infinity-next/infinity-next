@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Board;
 use Illuminate\Database\Eloquent\Model;
 
 class PostCite extends Model {
@@ -32,17 +33,18 @@ class PostCite extends Model {
 	 */
 	public $timestamps = false;
 	
-	
+	// Post that this citation is made in.
 	public function post()
 	{
 		return $this->belongsTo('\App\Post', 'post_id');
 	}
 	
-	public function postBorad()
+	public function postBoard()
 	{
 		return $this->belongsTo('\App\Board', 'board_uri', 'post_board_uri');
 	}
 	
+	// That that this citation references
 	public function cite()
 	{
 		return $this->belongsTo('\App\Post', 'cite_id', 'post_id');
@@ -51,5 +53,39 @@ class PostCite extends Model {
 	public function citeBoard()
 	{
 		return $this->belongsTo('\App\Board', 'board_uri', 'cite_board_uri');
+	}
+	
+	public function getBacklinkHTML(Board $board = null)
+	{
+		$citeBoard = $this->cite_board_uri;
+		$citePost  = $this->cite_board_id;
+		$citeURL   = $this->getBacklinkURL();
+		$citeText  = $board ? $this->getBacklinkText($board) : $this->getBacklinkText();
+		
+		$citeClass = [];
+		$citeClass[] = "cite";
+		$citeClass[] = "cite-backlink";
+		$citeClass[] = "cite-post";
+		$citeClass = implode(" ", $citeClass);
+		
+		return"<a href=\"{$citeURL} data-cite-board=\"{$citeBoard}\" data-cite-post=\"{$citePost}\" class=\"{$citeClass}\">{$citeText}</a>";
+	}
+	
+	public function getBacklinkText(Board $board = null)
+	{
+		if ( ($board instanceof Board) && $board->board_uri === $this->post_board_uri )
+		{
+			return "&gt;&gt;{$this->post_board_id}";
+		}
+		else
+		{
+			return "&gt;&gt;&gt;/{$this->post_board_uri}/{$this->post_board_id}";
+		}
+		
+	}
+	
+	public function getBacklinkURL()
+	{
+		return url("/{$this->cite_board_uri}/post/{$this->cite_board_id}");
 	}
 }

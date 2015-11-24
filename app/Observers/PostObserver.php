@@ -75,6 +75,7 @@ class PostObserver {
 		{
 			$cites[] = new PostCite([
 				'post_board_uri' => $post->board_uri,
+				'post_board_id'  => $post->board_id,
 				'cite_board_uri' => $citedBoard->board_uri,
 			]);
 		}

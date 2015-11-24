@@ -58,4 +58,6 @@
 	@endif
 	
 	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
+	
+	<li class="post-detail detail-cites" data-no-instant>@include('content.board.post.single.cites')</li>
 </ul>

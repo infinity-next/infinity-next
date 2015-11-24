@@ -133,6 +133,11 @@ class Post extends Model {
 		return $this->hasMany("\App\FileAttachment");
 	}
 	
+	public function backlinks()
+	{
+		return $this->hasMany('\App\PostCite', 'cite_id', 'post_id');
+	}
+	
 	public function bans()
 	{
 		return $this->hasMany('\App\Ban', 'post_id');
@@ -151,11 +156,6 @@ class Post extends Model {
 	public function cites()
 	{
 		return $this->hasMany('\App\PostCite', 'post_id');
-	}
-	
-	public function citedBy()
-	{
-		return $this->hasMany('\App\PostCite', 'cite_id', 'post_id');
 	}
 	
 	public function citedPosts()
@@ -1308,17 +1308,14 @@ class Post extends Model {
 		return $query->with('attachments');
 	}
 	
+	public function scopeAndBacklinks($query)
+	{
+		return $query->with('backlinks');
+	}
+	
 	public function scopeAndBoard($query)
 	{
 		return $query->with('board');
-	}
-	
-	public function scopeAndFirstAttachment($query)
-	{
-		return $query->with(['attachments' => function($query)
-		{
-			$query->limit(1);
-		}]);
 	}
 	
 	public function scopeAndBans($query)
@@ -1360,6 +1357,14 @@ class Post extends Model {
 				'posts.*',
 				'users.username as updated_by_username'
 			);
+	}
+	
+	public function scopeAndFirstAttachment($query)
+	{
+		return $query->with(['attachments' => function($query)
+		{
+			$query->limit(1);
+		}]);
 	}
 	
 	public function scopeAndReplies($query)
@@ -1437,6 +1442,7 @@ class Post extends Model {
 	{
 		return $query
 			->andAttachments()
+			->andBacklinks()
 			->andBans()
 			->andCapcode()
 			->andCites()
