@@ -2515,6 +2515,9 @@ main.index-threaded {
 			.post-interior {
 				position: relative;
 			}
+				.post-content-wrapper {
+					overflow: hidden;
+				}
 			
 			.post-content {
 				padding: 0.75em;

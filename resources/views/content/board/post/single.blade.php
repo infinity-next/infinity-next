@@ -10,7 +10,9 @@
 		@include('content.board.post.single.post')
 	@else
 		@include('content.board.post.single.details')
-		@include('content.board.post.single.attachments')
-		@include('content.board.post.single.post')
+		<div class="post-content-wrapper">
+			@include('content.board.post.single.attachments')
+			@include('content.board.post.single.post')
+		</div>
 	@endif
 </div>
