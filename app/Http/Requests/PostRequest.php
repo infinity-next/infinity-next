@@ -66,6 +66,10 @@ class PostRequest extends Request implements ApiContract{
 		{
 			$this->thread = $thread;
 		}
+		else
+		{
+			$this->thread = false;
+		}
 	}
 	
 	/**
@@ -105,6 +109,16 @@ class PostRequest extends Request implements ApiContract{
 			{
 				unset($input['capcode']);
 			}
+		}
+		
+		if (!$this->board->canPostWithAuthor($this->user, !!$this->thread))
+		{
+			unset($input['author']);
+		}
+		
+		if (!$this->board->canPostWithSubject($this->user, !!$this->thread))
+		{
+			unset($input['subject']);
 		}
 		
 		return $input;
@@ -171,9 +185,23 @@ class PostRequest extends Request implements ApiContract{
 		$board = $this->board;
 		$user  = $this->user;
 		$rules = [
-			// Nothing, by default.
-			// Post options are contingent on board settings and user permissions.
+			'author'  => [
+				"string",
+			],
+			
+			'email'   => [
+				"string",
+			],
+			
+			'subject' => [
+				"string",
+			],
 		];
+		
+		if (!$this->thread && $board->getConfig('threadRequireSubject'))
+		{
+			$rules['subject'][] = "required";
+		}
 		
 		// Modify the validation rules based on what we've been supplied.
 		if ($board && $user)
@@ -193,6 +221,19 @@ class PostRequest extends Request implements ApiContract{
 			{
 				$rules['body'][]  = "required_without:files";
 				
+				$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
+				
+				// There are different rules for starting threads.
+				if (!($this->thread instanceof Post))
+				{
+					$attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0), (int) $board->getConfig('threadAttachmentsMin', 0));
+				}
+				else
+				{
+					$attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0));
+				}
+				
+				
 				// Add the rules for file uploads.
 				if (isset($this->all()['dropzone']))
 				{
@@ -200,6 +241,14 @@ class PostRequest extends Request implements ApiContract{
 					
 					// JavaScript enabled hash posting
 					static::rulesForFileHashes($board, $rules);
+					
+					if ($attachmentsMin > 0)
+					{
+						$rules['files.name'][] = "required";
+						$rules['files.name'][] = "min:{$attachmentsMin}";
+						$rules['files.hash'][] = "required";
+						$rules['files.hash'][] = "min:{$attachmentsMin}";
+					}
 				}
 				else
 				{
@@ -207,10 +256,13 @@ class PostRequest extends Request implements ApiContract{
 					
 					// Vanilla HTML upload
 					static::rulesForFiles($board, $rules);
+					
+					if ($attachmentsMin > 0)
+					{
+						$rules['files'][] = "required";
+						$rules['files'][] = "min:{$attachmentsMin}";
+					}
 				}
-				
-				
-				$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
 				
 				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
@@ -223,6 +275,11 @@ class PostRequest extends Request implements ApiContract{
 					else if ($user->canAttachNew($board) && !$user->canAttachOld($board))
 					{
 						$rules["{$fileToken}.{$attachment}"][] = "file_new";
+					}
+					
+					for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment)
+					{
+						$rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
 					}
 				}
 			}
@@ -242,18 +299,11 @@ class PostRequest extends Request implements ApiContract{
 	{
 		global $app;
 		
+		$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
+		
 		$rules['spoilers'] = "boolean";
 		
-		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
-		$attachmentsMin = $board->getConfig('postAttachmentsMin', 0);
-		
-		if ($attachmentsMin > 0)
-		{
-			$rules['files'][] = "required";
-		}
-		
 		$rules['files'][] = "array";
-		$rules['files'][] = "min:{$attachmentsMin}";
 		$rules['files'][] = "max:{$attachmentsMax}";
 		
 		// Create an additional rule for each possible file.
@@ -277,20 +327,14 @@ class PostRequest extends Request implements ApiContract{
 	{
 		global $app;
 		
-		$attachmentsMax = $board->getConfig('postAttachmentsMax', 1);
-		$attachmentsMin = $board->getConfig('postAttachmentsMin', 0);
-		
-		if ($attachmentsMin > 0)
-		{
-			$rules['files'][] = "required";
-		}
+		$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
 		
 		$rules['files'][] = "array";
-		$rules['files'][] = "between:2,3";
+		$rules['files'][] = "between:2,3"; // [files.hash,files.name] or +[files.spoiler]
 		
-		$rules['files.name']    = "array|max:{$attachmentsMax}";
-		$rules['files.hash']    = "array|max:{$attachmentsMax}";
-		$rules['files.spoiler'] = "array|max:{$attachmentsMax}";
+		$rules['files.name']    = ["array", "max:{$attachmentsMax}"];
+		$rules['files.hash']    = ["array", "max:{$attachmentsMax}"];
+		$rules['files.spoiler'] = ["array", "max:{$attachmentsMax}"];
 		
 		// Create an additional rule for each possible file.
 		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)

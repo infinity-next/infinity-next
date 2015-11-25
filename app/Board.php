@@ -1,6 +1,8 @@
 <?php namespace App;
 
 use App\BoardSetting;
+use App\Post;
+use App\PostCite;
 use App\Option;
 use App\Role;
 use App\Stats;
@@ -226,6 +228,24 @@ class Board extends Model {
 	public function canPostReply(PermissionUser $user)
 	{
 		return $user->canPostReply($this);
+	}
+	
+	public function canPostWithAuthor(PermissionUser $user, $asReply)
+	{
+		// If we don't allow author and user is not board admin
+		return $this->getConfig('postsAllowAuthor') || $user->canEditConfig($this);
+	}
+	
+	public function canPostWithSubject(PermissionUser $user, $asReply)
+	{
+		// If we don't allow subjects and user is not board admin
+		$canPostSubject = $this->getConfig('postsAllowSubject') || $user->canEditConfig($this);
+		
+		// ... and this is not a new thread and we don't require subjects for new threads
+		$canPostSubject = $canPostSubject || (!$asReply && $this->getConfig('threadRequireSubject'));
+		
+		return $canPostSubject;
+		
 	}
 	
 	public function canPostThread(PermissionUser $user)
@@ -1154,6 +1174,44 @@ class Board extends Model {
 		}
 		
 		return $threads;
+	}
+	
+	/**
+	 * Determines if this citation is permitted to appear visibly over a post.
+	 *
+	 * @param  \App\PostCite  $backlink  The backlink to be checked.
+	 * @return boolean If the backlink may appear.
+	 */
+	public function isBacklinkAllowed(PostCite $backlink)
+	{
+		// Always allow internal links.
+		if ($backlink->post_board_uri == $this->board_uri)
+		{
+			return true;
+		}
+		
+		// Always forbid blacklist items.
+		$blacklist = explode("\n", (string) $this->getConfig('boardBacklinksBlacklist'));
+		
+		if (in_array($backlink->post_board_uri, $blacklist))
+		{
+			return false;
+		}
+		
+		// Are we forcing whitelisting?
+		if (!$this->getConfig('boardBacklinksCrossboard'))
+		{
+			// Yes, we are forcing whitelisting.
+			// Check and see if this board uri is whitelisted.
+			$whitelist = explode("\n", (string) $this->getConfig('boardBacklinksWhitelist'));
+			
+			if (!in_array($backlink->post_board_uri, $whitelist))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public function isWorksafe()

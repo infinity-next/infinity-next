@@ -48,6 +48,7 @@ return [
 		'boards'             => "Board Options",
 		'board_banners'      => "Board Banners",
 		'board_basic'        => "Basic Details",
+		'board_diplomacy'    => "Board Diplomacy",
 		'board_ephemerality' => "Content Ephemerality",
 		'board_posts'        => "Post Options",
 		'board_threads'      => "Thread Options",
@@ -108,10 +109,13 @@ return [
 		'postAnonymousName'        => "Default author name for anonymous posts",
 		'postAttachmentsMax'       => "Maximum attachments per post",
 		'postAttachmentsMin'       => "Minimum attachments per post",
+		'threadAttachmentsMin'     => "Minimum attachments for new threads",
 		'postMaxLength'            => "Maximum characters per post",
 		'postMinLength'            => "Minimum characters per post",
 		'postFloodTime'            => "Minimum time between posts (sec)",
 		'threadFloodTime'          => "Minimum time between threads (sec)",
+		'postsAllowSubject'        => "Allow subject field",
+		'postsAllowAuthor'         => "Allow author field",
 		
 		'epheSageThreadReply'      => "Autosage threads after this many replies",
 		'epheSageThreadDays'       => "Autosage threads after this many days",
@@ -131,9 +135,14 @@ return [
 		'roleCapcode'              => "Capcode",
 		'roleCaste'                => "Caste",
 		
+		'threadRequireSubject'     => "Threads require subject",
 		'postsPerPage'             => "Threads per page",
 		'postsAuthorCountry'       => "Show author country flags",
 		'postsThreadId'            => "Show thread author IDs",
+		
+		'boardBacklinksCrossboard' => "Allow any board to backlink posts",
+		'boardBacklinksBlacklist'  => "Forbid these boards from backlinking",
+		'boardBacklinksWhitelist'  => "Always allow these boards to backlink",
 		
 		'desc' => [
 			'board_uri'                => "Part of the URL used to open your board. Cannot be changed.",
@@ -145,6 +154,14 @@ return [
 			'boardCustomCSSSteal'      => "If enabled, your board will begin borrowing its style from another board.<br />" .
 			                              "If this board is also borrowing CSS, you will get nothing.<br />" .
 			                              "Check their style.txt to see if they're also borrowing.",
+			
+			'boardBacklinksCrossboard' => "If enabled, any board off your blacklist may backlink posts.<br />" .
+			                              "If disabled, only boards on your whitelist may backlink posts.",
+			
+			'boardBacklinksBlacklist'  => "One board per line, only text, no slashes.",
+			'boardBacklinksWhitelist'  => "One board per line, only text, no slashes.",
+			
+			'threadAttachmentsMin'     => "If there are also minimum attachments per post, <wbr />the greater of the two will be used.",
 			
 			'captchaEnabled'           => "Enables CAPTCHA tests for posts",
 			'captchaLifespanTime'      => "After this much time (in minutes), the captcha will expire.",

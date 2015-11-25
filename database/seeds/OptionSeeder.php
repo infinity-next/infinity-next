@@ -264,6 +264,28 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => "min:\$min|max:\$max",
 				],
 				[
+					'option_name'           => "boardBacklinksCrossboard",
+					'default_value'         => true,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
+				[
+					'option_name'           => "boardBacklinksBlacklist",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'data_type'             => "string",
+					'validation_parameters' => "string",
+				],
+				[
+					'option_name'           => "boardBacklinksWhitelist",
+					'default_value'         => "",
+					'format'                => "textbox",
+					'data_type'             => "string",
+					'validation_parameters' => "string",
+				],
+				
+				[
 					'option_name'           => "postAnonymousName",
 					'default_value'         => null,
 					'format'                => "text",
@@ -324,7 +346,37 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
 				],
+				[
+					'option_name'           => "postsAllowAuthor",
+					'default_value'         => true,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
+				[
+					'option_name'           => "postsAllowSubject",
+					'default_value'         => true,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				
+				
+				[
+					'option_name'           => "threadAttachmentsMin",
+					'default_value'         => 1,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 10 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "required|min:\$min|max:\$max|less_than:postAttachmentsMax",
+				],
+				[
+					'option_name'           => "threadRequireSubject",
+					'default_value'         => false,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				
 				[
 					'option_name'           => "epheSageThreadReply",
@@ -542,11 +594,14 @@ class OptionGroupSeeder extends Seeder {
 				'options'       => [
 					"postAttachmentsMax",
 					"postAttachmentsMin",
+					"threadAttachmentsMin",
 					"postMaxLength",
 					"postMinLength",
-					'postFloodTime',
-					'threadFloodTime',
-					'postAnonymousName',
+					"postFloodTime",
+					"threadFloodTime",
+					"postAnonymousName",
+					"postsAllowAuthor",
+					"postsAllowSubject",
 				],
 			],
 			[
@@ -555,9 +610,10 @@ class OptionGroupSeeder extends Seeder {
 				'display_order' => 500,
 				
 				'options'       => [
-					"postsPerPage",
+					"threadRequireSubject",
 					"postsAuthorCountry",
 					"postsThreadId",
+					"postsPerPage",
 				],
 			],
 			[
@@ -600,6 +656,17 @@ class OptionGroupSeeder extends Seeder {
 					"boardReportText",
 					"globalReportText",
 				]
+			],
+			[
+				'group_name'    => "board_diplomacy",
+				'debug_only'    => false,
+				'display_order' => 1500,
+				
+				'options'       => [
+					"boardBacklinksCrossboard",
+					"boardBacklinksBlacklist",
+					"boardBacklinksWhitelist",
+				],
 			],
 		];
 	}

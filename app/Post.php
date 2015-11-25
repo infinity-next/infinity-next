@@ -366,6 +366,32 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns backlinks for this post which are permitted by board config.
+	 *
+	 * @param \App\Board|null  $board  Optional. Board to check against. If null, assumes this post's board.
+	 * @return Collection  of \App\PostCite
+	 */
+	public function getAllowedBacklinks(Board $board = null)
+	{
+		if (is_null($board))
+		{
+			$board = $this->board;
+		}
+		
+		$backlinks = collect();
+		
+		foreach ($this->backlinks as $backlink)
+		{
+			if ($board->isBacklinkAllowed($backlink))
+			{
+				$backlinks->push($backlink);
+			}
+		}
+		
+		return $backlinks;
+	}
+	
+	/**
 	 * Returns a small, unique code to identify an author in one thread.
 	 *
 	 * @return string

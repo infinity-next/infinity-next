@@ -39,6 +39,7 @@
 		
 		@include('widgets.messages')
 		
+		@if ($board->canPostWithSubject($user, !!$reply_to))
 		<div class="field row-subject">
 			{!! Form::text(
 				'subject',
@@ -50,7 +51,9 @@
 					'placeholder' => trans('board.field.subject'),
 			]) !!}
 		</div>
+		@endif
 		
+		@if ($board->canPostWithAuthor($user, !!$reply_to))
 		<div class="field row-author">
 			{!! Form::text(
 				'author',
@@ -62,6 +65,7 @@
 					'placeholder' => trans('board.field.author')
 			]) !!}
 		</div>
+		@endif
 		
 		@if (isset($post) && $post->capcode_id)
 		<div class="field row-capcode">
