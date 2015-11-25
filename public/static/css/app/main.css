@@ -2982,17 +2982,17 @@ main.index-threaded {
 					position: relative;
 					
 					background: rgba(182, 182, 182, 0.12);
-					border: 2px solid rgba(111, 111, 111, 0.34);
+					border: 1px solid rgba(111, 111, 111, 0.34);
 					
 					padding: 2px;
 					margin: 0;
 					
 					vertical-align: top;
-					text-align: center;
+					text-align: left;
 					font-weight: normal;
 					font-size: 11px;
 					
-					height: 22.5em;
+					height: 25em;
 				}
 					main.index-catalog .post-container {
 						position: absolute;
@@ -3001,32 +3001,42 @@ main.index-threaded {
 						right: 0;
 						bottom: 0;
 						
-						overflow: hidden;
-						
 						border: none;
-						padding-top: 2.25em;
+						padding-top: 0;
+						overflow: visible
 					}
 						main.index-catalog .post-container:hover {
-							box-shadow: rgba(0,0,0,0.5) 0.25em 0.25em 5px;
-							min-height: 225px;
+							box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
+							border-radius: 4px;
+							
+							min-width: 150%;
+							min-height: 100%;
 							overflow: visible;
 							
+							left: -25%;
 							bottom: auto;
-							z-index: 5;
+							z-index: 6;
 						}
 						
 						main.index-catalog .post-content {
 							padding: 0;
 							height: 100%;
+							overflow: hidden;
 						}
 							
 							main.index-catalog .post-attachments {
 								background: rgba(255,255,255,0.6);
-								padding: 0.5em 0;
+								padding: 0;
 							}
 								main.index-catalog .post-attachment {
 									float: none;
 									text-align: center;
+									padding: 0;
+								}
+								main.index-catalog .attachment-wrapper {
+									width: auto;
+									height: auto;
+									line-height: normal;
 								}
 									main.index-catalog .attachment {
 										display: inline;
@@ -3034,12 +3044,13 @@ main.index-threaded {
 									}
 										main.index-catalog .attachment-img {
 											display: inline-block;
-											max-height: 100px;
+											max-height: 150px;
 											max-width: 100%;
 										}
 							
 							main.index-catalog .post-details {
 								margin: 0;
+								min-height: 1.5em;
 							}
 								main.index-catalog .post-detail {
 									display: none;
@@ -3050,12 +3061,27 @@ main.index-threaded {
 									main.index-catalog .post-detail.post-actions,
 									main.index-catalog .post-detail.post-subject {
 										display: block;
+										margin: 2px 0 0;
+									}
+									main.index-catalog .post-detail.post-actions {
+										display: inline;
+										padding: 0px 0.75em 0 0.25em;
+										float: left;
 									}
 									main.index-catalog .post-detail.post-author {
-										display: inline-block;
+										display: none;
 									}
 										main.index-catalog .post-detail-item.author {
 											padding-right: 0;
+										}
+									main.index-catalog .post-detail.post-subject {
+										display: block;
+										padding: 0.2em 0.5em 0 0.5em;
+										font-size: 140%;
+										line-height: 1.2m;
+									}
+										main.index-catalog .post-detail-item.subject {
+											display: inline;
 										}
 									main.index-catalog .post-detail.post-capcode {
 										display: inline-block;
@@ -3064,26 +3090,29 @@ main.index-threaded {
 											padding-left: 0;
 										}
 							
-							main.index-catalog .post {
-								display: block;
-								width: 100%;
-								min-width: 0px;
-								max-width: none;
-								
-								text-align: left;
-								padding: 0 0.5em;
-							}
 			
 			main.index-catalog blockquote.post {
 				box-sizing: border-box;
-				padding: 0 0.5em;
+				display: block;
+				width: 100%;
+				min-width: 0px;
+				max-width: none;
+				
+				text-align: left;
 				margin-top: 0.4em;
+				margin-left: 0;
+				padding: 0 0.5em;
 			}
-				main.index-catalog p.line {
+				main.index-catalog blockquote.post pre {
+					margin: 1em 0;
+				}
+				main.index-catalog blockquote.post p.line {
 					max-width: 100%;
 				}
 			
 			main.index-catalog div.post-action-bar {
+				display: inline;
+				
 				top: 0;
 				left: 0;
 				right: 0;
@@ -3092,19 +3121,34 @@ main.index-threaded {
 			}
 				main.index-catalog div.post-action-tab,
 				main.index-catalog div.post-action-tab.action-tab-actions {
-					display: block;
+					display: inline-block;
 					
-					position: absolute;
+					position: relative;
 					top: 0.25em;
 					left: 0.25em;
+					float: left;
 					
+					border: none;
+					padding: 0;
 					margin: 0;
 					text-align: left;
+					
+					font-size: 140%;
 				}
+			
+			main.index-catalog div.post-action-bar.action-bar-open {
+				position: absolute;
+				z-index: 5;
+			}
 				main.index-catalog div.post-action-tab.action-tab-reply {
+					position: absolute;
+					top: 0;
+					right: 0;
 					left: auto;
-					right: 0.25em;
 				}
+					main.index-catalog div.op-container a.post-action-reply {
+						border-width: 0 1.5em 1.5em 0;
+					}
 
 
 /* Sidebar */

@@ -23,10 +23,13 @@
 	/**
 	 * Catalog
 	 */
-	body.responsive main.index-catalog .thread-item {
-		max-width: 150px;
-		min-width: 100px;
+	body.responsive main.index-catalog section.index-threads {
+		padding: 0;
 	}
+		body.responsive main.index-catalog .thread-item {
+			max-width: 150px;
+			min-width: 100px;
+		}
 	
 	/**
 	 * Thumbnailing
@@ -218,7 +221,7 @@
 	/**
 	 * Posts and Threads
 	 */
-	html.js body.responsive form.form-post {
+	html.js body.responsive main.index-threaded form.form-post {
 		border: none;
 		position: fixed;
 		z-index: 1000;
@@ -229,17 +232,17 @@
 		margin: 0;
 		padding: 0;
 	}
-		html.js body.responsive .form-message {
+		html.js body.responsive main.index-threaded .form-message {
 			border-style: none none solid none;
 			border-radius: 0px;
 			margin: 0;
 		}
 		
-		html.js form.form-post .post-menu {
+		html.js body.responsive main.index-threaded form.form-post .post-menu {
 			display: block;
 		}
 		
-		html.js body.responsive form.form-post .form-fields {
+		html.js body.responsive main.index-threaded form.form-post .form-fields {
 			display: block;
 			border-bottom: 1px solid #ccc;
 			margin: 0;
@@ -247,7 +250,7 @@
 			max-width: none;
 			min-width: 300px;
 		}
-			html.js form.form-post .form-legend {
+			html.js body.responsive main.index-threaded form.form-post .form-legend {
 				margin: 0;
 				padding: 0;
 				
@@ -255,60 +258,60 @@
 				color: white;
 				text-indent: 4px;
 			}
-				html.js form.form-post .ui-draggable-handle {
+				html.js body.responsive main.index-threaded form.form-post .ui-draggable-handle {
 					cursor: drag;
 					cursor: -webkit-grab;
 					cursor: grab;
 				}
-				html.js form.form-post.ui-draggable-dragging .ui-draggable-handle {
+				html.js body.responsive main.index-threaded form.form-post.ui-draggable-dragging .ui-draggable-handle {
 					cursor: -webkit-grabbing;
 					cursor: grabbing;
 				}
 			
-			html.js body.responsive form.form-post .field {
+			html.js body.responsive main.index-threaded form.form-post .field {
 				margin: 0;
 			}
-				html.js body.responsive form.form-post .field-control {
+				html.js body.responsive main.index-threaded form.form-post .field-control {
 					border-bottom: none;
 					resize: none;
 				}
 			
-			form.form-post .row-file .dz-container {
+			html.js body.responsive main.index-threaded form.form-post .row-file .dz-container {
 				border-bottom: none;
 			}
 			
-			form.form-post .row-post {
+			html.js body.responsive main.index-threaded form.form-post .row-post {
 				border-bottom: none;
 			}
 			
-			form.form-post .row-captcha {
+			html.js body.responsive main.index-threaded form.form-post .row-captcha {
 				border-bottom: none;
 				width: 100%;
 			}
-			form.form-post button.field-submit {
+			html.js body.responsive main.index-threaded form.form-post button.field-submit {
 				border-bottom: none;
 			}
 	
-	body.responsive .index-threaded section.index-threads .thread {
+	html.js body.responsive main.index-threaded .thread {
 		padding-right: 340px;
 	}
-	body.responsive .index-threaded section.index-threads .post,
-	body.responsive .post-hover {
+	html.js body.responsive main.index-threaded .post,
+	html.js body.responsive main.index-threaded .post-hover {
 		max-width: 70vw;
 	}
 	
 	/* Advertisements */
-	body.responsive main.index-threaded aside.advertiser.top-left {
+	html.js body.responsive main.index-threaded aside.advertiser.top-left {
 		text-align: left;
 	}
-	body.responsive aside.advertiser.bottom-right {
+	html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
 		position: absolute;
 		bottom: 0;
 		right: 5px;
 		
 		width: 310px;
 	}
-		body.responsive aside.advertiser.bottom-right figure.ad-field {
+		html.js body.responsive main.index-threaded aside.advertiser.bottom-right figure.ad-field {
 			display: block;
 			width: 310px;
 		}
@@ -316,7 +319,7 @@
 	/**
 	 * Sidebar
 	 */
-	aside.index-sidebar {
+	html.js body.responsive main.index-threaded aside.index-sidebar {
 		position: absolute;
 		right: 0.5em;
 		top: -1em;
@@ -331,15 +334,15 @@
 		width: 320px;
 		height: auto;
 	}
-		aside.advertiser.bottom-right {
+		html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
 			position: absolute;
 		}
 	
 	/**
 	 * Catalog
 	 */
-	html.js body.responsive main.index-catalog .index-threads {
-		padding-right: 320px;
+	body.responsive main.index-catalog section.index-threads {
+		padding: 0 45px;
 	}
 		body.responsive main.index-catalog .thread-item {
 			max-width: 180px;
@@ -373,6 +376,18 @@
  */
 @media (max-width: 360px) {
 	
+	/**
+	 * Catalog
+	*/
+	body.responsive main.index-catalog .thread-item:nth-child(odd) .post-container:hover {
+		left: auto;
+		right: -50%;
+	}
+	body.responsive main.index-catalog .thread-item:nth-child(even) .post-container:hover {
+		left: -50%;
+		right: auto;
+	}
+	
 	table.board-list-table .board-max,
 	table.board-list-table .board-unique {
 		padding: 0;
@@ -387,6 +402,18 @@
  * Horizontal phones
  */
 @media (max-width: 640px) {
+	
+	/**
+	 * Catalog
+	*/
+	body.responsive main.index-catalog .thread-item:nth-child(3n+1) .post-container:hover {
+		left: auto;
+		right: -50%;
+	}
+	body.responsive main.index-catalog .thread-item:nth-child(3n+3) .post-container:hover {
+		left: -50%;
+		right: auto;
+	}
 	
 	table.board-list-table .board-title,
 	table.board-list-table .board-ppd,

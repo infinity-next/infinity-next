@@ -1,5 +1,5 @@
 @spaceless
-<div div class="post-action-bar">
+<div class="post-action-bar action-bar-mod">
 	@section('post-actions')
 	@set('postActions', false)
 	<div class="post-action-tab action-tab-actions" data-no-instant>
