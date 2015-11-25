@@ -1005,7 +1005,7 @@ class Board extends Model {
 		// with the up-to-date information.
 		$rememberTimer   = Carbon::now()->minute(1)->second(0)->addHour()->diffInMinutes();
 		$rememberKey     = "site.boardlist";
-		$rememberClosure = function() {
+		$rememberClosure = function() use ($rememberKey) {
 			return static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
 				->with([
 					'tags',
