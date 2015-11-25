@@ -3023,6 +3023,9 @@ main.index-threaded {
 							height: 100%;
 							overflow: hidden;
 						}
+							main.index-catalog .post-container:hover .post-content {
+								overflow: visible;
+							}
 							
 							main.index-catalog .post-attachments {
 								background: rgba(255,255,255,0.6);
@@ -3134,6 +3137,13 @@ main.index-threaded {
 					text-align: left;
 					
 					font-size: 140%;
+				}
+				
+				main.index-catalog ul.post-action-groups {
+					position: absolute;
+					top: 0;
+					left: 0;
+					font-size: 72%;
 				}
 			
 			main.index-catalog div.post-action-bar.action-bar-open {
