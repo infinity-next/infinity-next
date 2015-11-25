@@ -154,13 +154,13 @@ class SettingManager {
 	{
 		if ($this->hasDB() && $this->get('boardListShow', false))
 		{
-			return Cache::remember('site.gnav.boards', 1, function()
+			if (Cache::has("site.boardlist"))
 			{
-				$popularBoards = collect();
-				$recentBoards  = collect();
-				
-				if (Cache::has("site.boardlist"))
+				return Cache::remember('site.gnav.boards', 1, function()
 				{
+					$popularBoards = collect();
+					$recentBoards  = collect();
+					
 					$popularBoardArray = Board::getBoardsForBoardlist(0, 20);
 					
 					foreach ($popularBoardArray as $popularBoard)
@@ -177,13 +177,18 @@ class SettingManager {
 						->orderBy('last_post_at', 'desc')
 						->take(20)
 						->get();
-				}
-				
-				return [
-					'popular_boards' => $popularBoards,
-					'recent_boards'  => $recentBoards,
-				];
-			});
+					
+					return [
+						'popular_boards' => $popularBoards,
+						'recent_boards'  => $recentBoards,
+					];
+				});
+			}
+			
+			return [
+				'popular_boards' => $popularBoards,
+				'recent_boards'  => $recentBoards,
+			];
 		}
 		
 		return false;
