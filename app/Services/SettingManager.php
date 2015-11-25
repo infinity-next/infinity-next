@@ -186,8 +186,8 @@ class SettingManager {
 			}
 			
 			return [
-				'popular_boards' => $popularBoards,
-				'recent_boards'  => $recentBoards,
+				'popular_boards' => [],
+				'recent_boards'  => [],
 			];
 		}
 		
