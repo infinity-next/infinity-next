@@ -186,8 +186,8 @@ class SettingManager {
 			}
 			
 			return [
-				'popular_boards' => [],
-				'recent_boards'  => [],
+				'popular_boards' => collect(),
+				'recent_boards'  => collect(),
 			];
 		}
 		
