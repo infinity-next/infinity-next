@@ -5,6 +5,7 @@ use App\Board;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
+use Cache;
 use Settings;
 
 class RecordStats extends Command {
@@ -30,6 +31,11 @@ class RecordStats extends Command {
 	 */
 	public function handle()
 	{
+		// Generate an activity snapshot.
 		Board::createStatsSnapshots();
+		// Drop boardlist cache.
+		Cache::forget('site.boardlist');
+		// Generate boardlist again.
+		Board::getBoardsForBoardlist();
 	}
 }
