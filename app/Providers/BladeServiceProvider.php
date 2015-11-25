@@ -27,11 +27,23 @@ class BladeServiceProvider extends ServiceProvider
 			return $value;
 		});
 		
-		$blade->directive('spaceless', function($expression) {
+		$blade->directive('ifhas', function($expression)
+		{
+			if (preg_match("/(?P<name>\w+)/", $expression, $m))
+			{
+				return "<?php if (array_key_exists(\"{$m['name']}\", app('view')->getSections())) : ?>";
+			}
+			
+			return "<?php if (false) : ?>";
+		});
+		
+		$blade->directive('spaceless', function($expression)
+		{
 			return "<?php ob_start(); ?>";
 		});
 		
-		$blade->directive('endspaceless', function($expression) {
+		$blade->directive('endspaceless', function($expression)
+		{
 			return "<?php echo trim(preg_replace('/(?<=>)[\s]+(?=<)/', \"\", ob_get_clean())); ?>";
 		});
 	}

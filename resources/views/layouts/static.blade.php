@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" data-widget="instantclick">
 <head>
-	<title data-original="@yield('title') - {{ site_setting('siteName') }}">@yield('title') - {{ site_setting('siteName') }}</title>
+	<title data-original="@yield('title') - {{ site_setting('siteName') }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
 	<link rel="shortcut icon" id="favicon" href="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
 		data-normal="{{ asset('static/img/assets/Favicon_Vivian.ico') }}" data-alert="{{ asset('static/img/assets/Favicon_Vivian_new.ico') }}" />
 	
