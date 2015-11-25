@@ -260,8 +260,7 @@ class PostRequest extends Request implements ApiContract{
 		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 		{
 			$rules["files.{$attachment}"] = [
-				//"mimes:jpeg,gif,png,bmp,svg,swf,webm,mp4,ogg,mp3,mpga,mpeg,wav,pdf,epub",
-				"between:0," . $app['settings']('attachmentFilesize'),
+				"between:0," . ( (int) $app['settings']('attachmentFilesize') * 1.024),
 				"file_integrity",
 			];
 		}
