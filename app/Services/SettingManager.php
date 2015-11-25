@@ -156,20 +156,24 @@ class SettingManager {
 		{
 			return Cache::remember('site.gnav.boards', 1, function()
 			{
-				$popularBoards = Board::where('posts_total', '>', 0)
-					->wherePublic()
-					->select('board_uri', 'title')
-					->orderBy('posts_total', 'desc')
-					->take(20)
-					->get();
+				$popularBoardArray = Board::getBoardsForBoardlist(0, 20);
+				$popularBoards = collect();
+				
+				foreach ($popularBoardArray as $popularBoard)
+				{
+					$popularBoards->push( new Board($popularBoard) );
+				}
+				
 				
 				$recentBoards  = Board::where('posts_total', '>', 0)
+					->whereNotNull('last_post_at')
 					->wherePublic()
 					->whereNotIn('board_uri', $popularBoards->pluck('board_uri'))
 					->select('board_uri', 'title')
 					->orderBy('last_post_at', 'desc')
 					->take(20)
 					->get();
+				
 				
 				return [
 					'popular_boards' => $popularBoards,

@@ -1665,12 +1665,8 @@ class Post extends Model {
 			// First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
 			DB::table('boards')
 				->where('board_uri', $this->board_uri)
-				->increment('posts_total');
-			
-			DB::table('boards')
-				->where('board_uri', $this->board_uri)
-				->update([
-					'last_post_at' => $this->created_at,
+				->increment('posts_total', 1, [
+					'last_post_at' => $this->reply_last,
 				]);
 			
 			// Second, we record this value and lock the table.
