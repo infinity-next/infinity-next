@@ -42,7 +42,6 @@ class RecordStatsAll extends Command
 	public function handle()
 	{
 		$firstPost = Post::orderBy('post_id', 'asc')->first()->pluck('created_at');
-		$trackTime = clone $firstPost;
 		$nowTime   = Carbon::now()->minute(0)->second(0)->timestamp;
 		$boards    = Board::all();
 		
@@ -57,8 +56,8 @@ class RecordStatsAll extends Command
 			{
 				if ($board->posts_total > 0)
 				{
-					$newRows = $board->createStatsSnapshot($firstPost);
-					$hourCount += count($newRows);
+					$newRows    = $board->createStatsSnapshot($firstPost);
+					$hourCount += $newRows->count();
 				}
 			}
 			

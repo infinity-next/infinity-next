@@ -363,7 +363,7 @@ class Board extends Model {
 			}
 		});
 		
-		return $stats;
+		return collect($stats);
 	}
 	
 	/**
@@ -387,7 +387,7 @@ class Board extends Model {
 		
 		if ($posts->count() === 0)
 		{
-			return [];
+			return collect([]);
 		}
 		
 		// Unique IPs.
@@ -412,12 +412,12 @@ class Board extends Model {
 			{
 				$ip = new IP($post->author_ip);
 				
-				if (!isset($authorsUnique[$ip]))
+				if (!isset($authorsUnique[$ip->toText()]))
 				{
-					$authorsUnique[$ip] = true;
+					$authorsUnique[$ip->toText()] = $ip->toLong();
 					
 					$range = new IP("{$ip->getStart()}/16");
-					$rangesUnique[$range->getStart()] = true;
+					$rangesUnique[$range->getStart()] = $range->toLong();
 				}
 			}
 		}
@@ -426,9 +426,9 @@ class Board extends Model {
 		// Save uniques
 		$statsRows = [];
 		$uniques   = [
-			'authors' => array_keys($authorsUnique),
+			'authors' => array_values($authorsUnique),
 			'posts'   => array_keys($postsUnique),
-			'ranges'  => array_keys($rangesUnique),
+			'ranges'  => array_values($rangesUnique),
 			'threads' => array_keys($threadsUnique),
 		];
 		
@@ -461,7 +461,7 @@ class Board extends Model {
 		}
 		
 		
-		return $statsRows;
+		return collect($statsRows);
 	}
 	
 	/**

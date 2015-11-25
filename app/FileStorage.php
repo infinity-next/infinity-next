@@ -355,16 +355,16 @@ class FileStorage extends Model {
 	{
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
-			$filename = strtolower($this->pivot->filename);
+			$filename = urldecode($this->pivot->filename);
 			
-			if (strlen($filename) <= 20)
+			if (mb_strlen($filename) <= 20)
 			{
 				return $filename;
 			}
 			
 			$ext  = pathinfo($filename, PATHINFO_EXTENSION);
 			$name = pathinfo($filename, PATHINFO_FILENAME);
-			$name = substr($name, 0, 15);
+			$name = mb_substr($name, 0, 15);
 			
 			return "{$name}... .{$ext}";
 		}

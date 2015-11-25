@@ -124,6 +124,11 @@ class IP extends CIDR {
 		return binary_sql(inet_pton($ip));
 	}
 	
+	public function toLong()
+	{
+		return ip2long(parent::__toString());
+	}
+	
 	public function toText()
 	{
 		return parent::__toString();
