@@ -2,18 +2,18 @@
 
 @section('content')
 <main class="board-index index-catalog">
+	@include('nav.board.pages', [
+		'showCatalog' => false,
+		'showIndex'   => true,
+		'showPages'   => false,
+	])
+	
 	<section class="index-form">
 		@include( $c->template('board.post.form'), [
 			'board'   => $board,
 			'actions' => [ $reply_to ? "reply" : "thread" ],
 		])
 	</section>
-	
-	@include('nav.board.pages', [
-		'showCatalog' => false,
-		'showIndex'   => true,
-		'showPages'   => false,
-	])
 	
 	<section class="index-threads static">
 		<ul class="thread-list">
@@ -29,9 +29,9 @@
 			@endforeach
 		</ul>
 	</section>
+	
+	@include('content.board.sidebar')
 </main>
-
-@include( $c->template('board.sidebar') )
 @stop
 
 @section('footer-inner')

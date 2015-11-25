@@ -34,11 +34,10 @@
 			</li>
 			@endforeach
 		</ul>
-		
 	</section>
+	
+	@include('content.board.sidebar')
 </main>
-
-@include( 'widgets.ads.board_bottom_right' )
 @stop
 
 @section('footer-inner')

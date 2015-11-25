@@ -265,6 +265,6 @@ class SettingManager {
 			}
 		}
 		
-		return [];
+		return collect([]);
 	}
 };

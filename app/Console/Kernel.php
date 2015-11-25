@@ -4,6 +4,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use Carbon\Carbon;
+use File;
 
 class Kernel extends ConsoleKernel {
 
@@ -30,12 +31,58 @@ class Kernel extends ConsoleKernel {
 	{
 		$now = Carbon::now();
 		
-		$schedule->command('recordstats')
-			->hourly()
-			->sendOutputTo("./storage/logs/recordstats-last.txt");
+		$this->runInspire($schedule, $now);
+		$this->runRecordStats($schedule, $now);
+		$this->runAutoprune($schedule, $now);
+	}
+	
+	/**
+	 *
+	 */
+	private function runAutoprune(Schedule $schedule, Carbon $now)
+	{
+		$logdir = "./storage/logs/autoprune";
+		
+		if(!File::exists($logdir)) {
+			File::makeDirectory($logdir);
+		}
 		
 		$schedule->command('autoprune')
 			->hourly()
-			->sendOutputTo("./storage/logs/autoprune-{$now->format('Y-m-d_H')}.txt");
+			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
+		
+	}
+	
+	/**
+	 *
+	 */
+	private function runInspire(Schedule $schedule, Carbon $now)
+	{
+		$logdir = "./storage/logs/inspire";
+		
+		if(!File::exists($logdir)) {
+			File::makeDirectory($logdir);
+		}
+		
+		$schedule->command('inspire')
+			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H:m')}.txt");
+		
+	}
+	
+	/**
+	 *
+	 */
+	private function runRecordStats(Schedule $schedule, Carbon $now)
+	{
+		$logdir = "./storage/logs/recordstats";
+		
+		if(!File::exists($logdir)) {
+			File::makeDirectory($logdir);
+		}
+		
+		$schedule->command('recordstats')
+			->hourly()
+			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt.txt");
+		
 	}
 }

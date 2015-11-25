@@ -2509,7 +2509,7 @@ main.index-threaded {
 		main.index-threaded .post-container.op-container {
 			background: none;
 			border-style: solid none none none;
-			border-top: 0.25em solid rgba(0,0,255,0.25);
+			border-top: 2px solid rgba(0,0,255,0.25);
 			width: 100%;
 		}
 			.post-interior {
