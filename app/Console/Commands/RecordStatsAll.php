@@ -5,6 +5,8 @@ use App\Post;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
+use Cache;
+
 class RecordStatsAll extends Command
 {
 	
@@ -65,6 +67,12 @@ class RecordStatsAll extends Command
 				$this->comment("\tAdded {$hourCount} new stat row(s) from " . $firstPost->diffForHumans());
 			}
 		}
+		
+		// Drop boardlist cache.
+		Cache::forget('site.boardlist');
+		
+		// Generate boardlist again.
+		Board::getBoardsForBoardlist();
 	}
 	
 }
