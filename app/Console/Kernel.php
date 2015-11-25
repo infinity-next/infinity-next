@@ -31,7 +31,8 @@ class Kernel extends ConsoleKernel {
 		$now = Carbon::now();
 		
 		$schedule->command('recordstats')
-			->hourly();
+			->hourly()
+			->sendOutputTo("./storage/logs/recordstats-last.txt");
 		
 		$schedule->command('autoprune')
 			->hourly()

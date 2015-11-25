@@ -348,7 +348,7 @@ class Board extends Model {
 	 */
 	public static function createStatsSnapshots(\Carbon\Carbon $carbon = null)
 	{
-		$stats = [];
+		$stats = collect([]);
 		
 		if (is_null($carbon))
 		{
@@ -359,11 +359,11 @@ class Board extends Model {
 		{
 			foreach ($boards as $board)
 			{
-				$stats = array_merge($stats, $board->createStatsSnapshot($carbon));
+				$stats = $stats->merge($board->createStatsSnapshot($carbon));
 			}
 		});
 		
-		return collect($stats);
+		return $stats;
 	}
 	
 	/**
