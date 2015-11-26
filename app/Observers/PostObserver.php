@@ -2,7 +2,6 @@
 
 use App\Post;
 use App\PostCite;
-use App\Support\IP;
 
 use Event;
 use App\Events\PostWasAdded;
@@ -11,20 +10,41 @@ use App\Events\PostWasModified;
 
 class PostObserver {
 	
-	// Fire events on post created.
+	/**
+	 * Handles model after create (non-existant save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function created(Post $post)
 	{
+		// Fire event, which clears cache among other things.
 		Event::fire(new PostWasAdded($post));
+		
+		return true;
 	}
 	
+	/**
+	 * Checks if this model is allowed to create (non-existant save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function creating(Post $post)
 	{
+		// Reuire board_id to save.
 		return isset($post->board_id);
 	}
 	
-	// After a post is deleted, update OP's reply count.
+	/**
+	 * Handles model after delete (pre-existing hard or soft deletion).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function deleted($post)
 	{
+		// After a post is deleted, update OP's reply count.
 		if (!is_null($post->reply_to))
 		{
 			$lastReply = $post->op->getReplyLast();
@@ -43,20 +63,38 @@ class PostObserver {
 		}
 		
 		Event::fire(new PostWasDeleted($post));
+		
+		return true;
 	}
 	
-	// When deleting a post, delete its children.
+	/**
+	 * Checks if this model is allowed to delete (pre-existing deletion).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function deleting($post)
 	{
+		// When deleting a post, delete its children.
 		Post::replyTo($post->post_id)->delete();
+		
+		return true;
 	}
 	
-	// Update citation references
+	/**
+	 * Handles model after save (pre-existing or non-existant save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function saved(Post $post)
 	{
+		// Rebuild citation relationships.
+		
+		// Clear citations.
 		$post->cites()->delete();
 		
-		// Process citations.
+		// Readd citations.
 		$cited = $post->getCitesFromText();
 		$cites = [];
 		
@@ -85,17 +123,44 @@ class PostObserver {
 			$post->cites()->saveMany($cites);
 		}
 		
+		return true;
 	}
 	
-	// public function saving(Post $post)
-	// {
-	// 	return $post;
-	// }
+	/**
+	 * Checks if this model is allowed to save (pre-existing or non-existant save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
+	public function saving(Post $post)
+	{
+		// Reuire board_id to save.
+		return isset($post->board_id);
+	}
 	
-	// Fire events on post updated.
+	/**
+	 * Handles model after update (pre-existing save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
 	public function updated(Post $post)
 	{
+		// Fire event, which clears cache among other things.
 		Event::fire(new PostWasModified($post));
+		
+		return true;
+	}
+	
+	/**
+	 * Checks if this model is allowed to update (pre-existing save).
+	 *
+	 * @param \App\Post  $post
+	 * @return boolean
+	 */
+	public function updating(Post $post)
+	{
+		return true;
 	}
 	
 }
