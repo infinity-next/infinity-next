@@ -187,7 +187,6 @@ ib.widget("post", function(window, $, undefined) {
 			$(widget.options.classname['post-hover']).remove();
 			
 			widget.$cite    = null;
-			widget.citeLoad = null;
 		},
 		
 		// Events
