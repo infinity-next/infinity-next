@@ -58,6 +58,8 @@ ib.widget("post", function(window, $, undefined) {
 			
 			var linkRect  = $link[0].getBoundingClientRect();
 			
+			$(widget.options.classname['post-hover']).remove();
+			
 			if (!$box.parents().length)
 			{
 				$box.appendTo("body")
@@ -187,6 +189,7 @@ ib.widget("post", function(window, $, undefined) {
 			$(widget.options.classname['post-hover']).remove();
 			
 			widget.$cite    = null;
+			widget.citeLoad = null;
 		},
 		
 		// Events
