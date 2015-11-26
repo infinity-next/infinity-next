@@ -444,6 +444,11 @@ ib.widget("post", function(window, $, undefined) {
 				var post_id   = "post-"+board_uri+"-"+board_id;
 				var $post;
 				
+				if (widget.citeLoad == post_id)
+				{
+					return true;
+				}
+				
 				// Loads session storage for our post if it exists.
 				if (typeof sessionStorage === "object")
 				{

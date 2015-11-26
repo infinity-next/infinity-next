@@ -2438,8 +2438,8 @@ main.index-threaded {
 				}
 		
 		.reply {
-			margin: 0;
-			padding: 0.25em 0 0.25em 1.5em;
+			padding: 0;
+			margin: 0.25em 0 0.25em 1.5em;
 			white-space: nowrap;
 		}
 			.reply::before {

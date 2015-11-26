@@ -59,7 +59,7 @@ class ImageController extends Controller {
 					//'Content-Disposition'  => "attachment; filename={$filename}",
 					'Content-Length'       => $responseSize,
 					'Content-Type'         => $FileStorage->mime,
-					'Filename'             => $filename,
+					'Filename'             => urldecode($filename),
 				];
 				
 				
