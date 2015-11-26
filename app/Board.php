@@ -459,7 +459,7 @@ class Board extends Model {
 			foreach ($uniqueValues as $uniqueValue)
 			{
 				$statsBits[] = [
-					'unique' => $uniqueValue,
+					'unique' => (int) $uniqueValue,
 				];
 			}
 			

@@ -677,6 +677,7 @@ class PostController extends Controller {
 		if ($post->canSticky($this->user))
 		{
 			$post->setSticky( $sticky )->save();
+			dd($post);
 			
 			$this->log($sticky ? 'log.post.sticky' : 'log.post.unsticky', $post, [
 				"board_id"  => $post->board_id,

@@ -5,7 +5,6 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\PostCite;
 use App\Contracts\PermissionUser;
-use App\Observers\PostObserver;
 use App\Services\ContentFormatter;
 use App\Support\Geolocation;
 use App\Support\IP;
@@ -185,18 +184,6 @@ class Post extends Model {
 	public function reports()
 	{
 		return $this->hasMany('\App\Report', 'post_id');
-	}
-	
-	
-	/**
-	 * Ties database triggers to the model.
-	 *
-	 * @return void
-	 */
-	public static function boot()
-	{
-		parent::boot();
-		static::observe(new PostObserver);
 	}
 	
 	/**
