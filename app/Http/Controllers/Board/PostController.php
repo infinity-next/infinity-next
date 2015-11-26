@@ -607,7 +607,7 @@ class PostController extends Controller {
 		
 		if ($post->canLock($this->user))
 		{
-			$post->setLocked( $lock )->save();
+			$post->setLocked( $lock !== false )->save();
 			
 			$this->log($lock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
 				"board_id"  => $post->board_id,
@@ -641,7 +641,7 @@ class PostController extends Controller {
 		
 		if ($post->canBumplock($this->user))
 		{
-			$post->setBumplock( $bumplock )->save();
+			$post->setBumplock( $bumplock !== false )->save();
 			
 			$this->log($bumplock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
 				"board_id"  => $post->board_id,
@@ -676,7 +676,7 @@ class PostController extends Controller {
 		
 		if ($post->canSticky($this->user))
 		{
-			$post->setSticky( $sticky )->save();
+			$post->setSticky( $sticky !== false )->save();
 			
 			$this->log($sticky ? 'log.post.sticky' : 'log.post.unsticky', $post, [
 				"board_id"  => $post->board_id,
