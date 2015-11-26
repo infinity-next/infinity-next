@@ -1089,7 +1089,7 @@ class Board extends Model {
 				->andAttachments()
 				->andCapcode()
 				->orderBy('stickied', 'desc')
-				->orderBy('reply_last', 'desc')
+				->orderBy('bumped_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))
 				->take($postsPerPage)
 				->get();

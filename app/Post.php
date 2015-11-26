@@ -332,22 +332,28 @@ class Post extends Model {
 		// If this post is a reply to a thread
 		if ($this->reply_to_board_id)
 		{
-			$thread_id = $this->reply_to_board_id;
-		}
-		else
-		{
-			$thread_id = $this->board_id;
+			switch (env('CACHE_DRIVER'))
+			{
+				case "file" :
+				case "database" :
+					Cache::forget("board.{$this->board_uri}.thread.{$this->reply_to_board_id}");
+					break;
+				
+				default :
+					Cache::tags(["board.{$this->board_uri}", "threads"])->forget("board.{$this->board_uri}.thread.{$this->reply_to_board_id}");
+					break;
+			}
 		}
 		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
 			case "database" :
-				Cache::forget("board.{$this->board_uri}.thread.{$thread_id}");
+				Cache::forget("board.{$this->board_uri}.thread.{$this->board_id}");
 				break;
 			
 			default :
-				Cache::tags(["board.{$this->board_uri}", "threads"])->forget("board.{$this->board_uri}.thread.{$thread_id}");
+				Cache::tags(["board.{$this->board_uri}", "threads"])->forget("board.{$this->board_uri}.thread.{$this->board_id}");
 				break;
 		}
 	}
