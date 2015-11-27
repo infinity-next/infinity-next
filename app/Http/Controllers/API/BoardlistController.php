@@ -2,12 +2,15 @@
 
 use App\Board;
 
-use App\Contracts\ApiController;
+use App\Contracts\ApiController as ApiContract;
+use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\BoardlistController as ParentController;
 use Input;
 use Request;
 
-class BoardlistController extends ParentController implements ApiController {
+class BoardlistController extends ParentController implements ApiContract {
+	
+	use ApiController;
 	
 	/**
 	 * Show board list to the user, either rendering the full blade template or just the json..
