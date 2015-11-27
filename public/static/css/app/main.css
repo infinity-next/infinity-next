@@ -3264,10 +3264,10 @@ blockquote.ugc {
 		margin-right: 0;
 		margin-top: 0;
 	}
-		blockquote.ugc > :first-child {
+		blockquote.ugc :first-child {
 			margin-top: 0;
 		}
-		blockquote.ugc > :last-child {
+		blockquote.ugc :last-child {
 			margin-bottom: 0;
 		}
 	
