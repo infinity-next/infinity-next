@@ -2478,6 +2478,7 @@ main.index-threaded {
 				color: #789922;
 			}
 		
+		
 		.thread-replies-omitted {
 			color: #ccc;
 			font-size: 90%;
@@ -2519,6 +2520,9 @@ main.index-threaded {
 				.post-content-wrapper {
 					overflow: hidden;
 				}
+					.post-content-wrapper .post {
+						padding-top: 0;
+					}
 			
 			.post-content {
 				padding: 0;
@@ -2638,10 +2642,11 @@ main.index-threaded {
 					display: block;
 				}
 					.reply-container ul.post-attachments {
-						padding: 0.75em 0 0 0.75em;
+						padding: 0 0 0 0.75em;
 					}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
+							padding-top: 0.75em;
 						}
 						ul.post-attachments.attachments-multi::after {
 							display: block;
@@ -3257,6 +3262,7 @@ blockquote.ugc {
 	blockquote.ugc p {
 		margin-left: 0;
 		margin-right: 0;
+		margin-top: 0;
 	}
 		blockquote.ugc > :first-child {
 			margin-top: 0;
