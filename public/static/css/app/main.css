@@ -3178,7 +3178,8 @@ aside.index-sidebar {
  * MAIN POST STYLING
  */
 blockquote.ugc {
-	
+	margin-left: 1.8em;
+	padding-left: 0;
 }
 	blockquote.ugc h1,
 	blockquote.ugc h2,
