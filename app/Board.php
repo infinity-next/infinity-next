@@ -194,7 +194,7 @@ class Board extends Model {
 		return $this->belongsToMany('App\BoardTag', 'board_tag_assignments', 'board_uri', 'board_tag_id');
 	}
 	
-	public function unqiues()
+	public function uniques()
 	{
 		return $this->hasManyThrough('App\StatsUnique', 'App\Stats', 'board_uri', 'stats_id');
 	}

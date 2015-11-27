@@ -694,10 +694,10 @@ class Post extends Model {
 		}
 		else
 		{
-			$url .= "{$this->board_id}";
+			$url .= "{$this->board_id}#{$this->board_id}";
 		}
 		
-		return $url;
+		return url($url);
 	}
 	
 	
@@ -1499,6 +1499,24 @@ class Post extends Model {
 				$query->whereOpen();
 				$query->whereResponsibleFor($user);
 			}]);
+	}
+	
+	public function scopeWhereInThread($query, Post $thread)
+	{
+		if ($thread->attributes['reply_to_board_id'])
+		{
+			return $query->where(function($query) use ($thread) {
+				$query->where('board_id',          $thread->attributes['reply_to_board_id']);
+				$query->orWhere('reply_to_board_id', $thread->attributes['reply_to_board_id']);
+			});
+		}
+		else
+		{
+			return $query->where(function($query) use ($thread) {
+				$query->where('board_id',          $thread->attributes['board_id']);
+				$query->orWhere('reply_to_board_id', $thread->attributes['board_id']);
+			});
+		}
 	}
 	
 	/**

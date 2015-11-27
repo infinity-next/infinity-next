@@ -102,6 +102,9 @@ return [
 		
 		'integrity'      => "Your file's integrity cannot be verified.",
 		
+		'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
+		'unoriginal_image_board'  => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
+		
 		'validate' => [
 			
 		],

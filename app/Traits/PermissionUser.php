@@ -410,8 +410,10 @@ trait PermissionUser {
 	/**
 	 * Can this user edit a board setting?
 	 *
-	 
-	*/
+	 * @param  \App\Board  $board  Board which this setting belongs to.
+	 * @param  \App\Option  $option  Option, usually with BoardSetting data embedded, that is being checked.
+	 * @return boolean
+	 */
 	public function canEditSetting(Board $board, Option $option)
 	{
 		if ($this->canEditConfig($board))

@@ -80,6 +80,23 @@ class Option extends Model implements PseudoEnumContract {
 		return $this->belongsToMany("\App\OptionGroup", 'option_group_assignments', 'option_name', 'option_group_id');
 	}
 	
+	/**
+	 * Gets choices for this select box.
+	 *
+	 * @return array  Of value => language associations.
+	 */
+	public function getChoices()
+	{
+		$formatChoices = $this->getFormatParameter('choices');
+		$choices       = [];
+		
+		foreach ($formatChoices as $choice)
+		{
+			$choices[$choice] = trans("config.choices.{$this->option_name}.$choice");
+		}
+		
+		return $choices;
+	}
 	
 	/**
 	 * Gets our default value and unwraps it from any stream wrappers.
@@ -219,8 +236,15 @@ class Option extends Model implements PseudoEnumContract {
 		
 		if (is_array($parameters))
 		{
+			// Replaces $etc vars in the validation parameter of an option with their true values.
 			$validation = preg_replace_callback('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)/', function($match) use ($parameters) {
 				if (isset($parameters[$match[1]])) {
+					// If the value is an array, we want to make that a CSV.
+					if (is_array($parameters[$match[1]]))
+					{
+						return implode(",", $parameters[$match[1]]);
+					}
+					
 					return $parameters[$match[1]];
 				}
 				

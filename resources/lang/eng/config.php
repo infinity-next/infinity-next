@@ -53,6 +53,7 @@ return [
 		'board_basic'        => "Basic Details",
 		'board_diplomacy'    => "Board Diplomacy",
 		'board_ephemerality' => "Content Ephemerality",
+		'board_originality'  => "Content Originality",
 		'board_posts'        => "Post Options",
 		'board_threads'      => "Thread Options",
 		'board_tags'         => "Board Tags",
@@ -133,6 +134,9 @@ return [
 		'ephePostHardDelete'       => "Permanently delete posts after this many days",
 		'epheMediaPrune'           => "Delete orphaned media after this many days",
 		
+		'originalityImages'        => "Image originality enforcement",
+		'originalityPosts'         => "Post content originality enforcement",
+		
 		'roleType'                 => "Role",
 		'roleName'                 => "Internal Name",
 		'roleCapcode'              => "Capcode",
@@ -174,6 +178,24 @@ return [
 			'roleName'                 => "Your name for this group. Internal use only.",
 			'roleCapcode'              => "Capcodes sign a post with authority. Leave blank for no capcode.",
 			'roleCaste'                => "A caste is used to separate different staff roles.",
+			
+			'originalityImages'        => "Will reject images being uploaded depending on location and setting.",
+			'originalityPosts'         => "Will reject posts if similar messages have been posted depending on location and setting.<br />" .
+			                              "<em>ROBOT9000</em> will <a href=\"http://blog.xkcd.com/2008/01/14/robot9000-and-xkcd-signal-attacking-noise-in-chat/\">autoban offenders</a> and is board-wide.<br />" .
+			                              "<em>Respect the Robot!</em> is R9K mode that bans for duplicate content found anywhere <em>on the entire site</em>, even boards without R9K mode.",
+		],
+	],
+	
+	'choices'                  => [
+		'originalityImages' => [
+			'thread' => "No duplicate images per thread.",
+			'board'  => "No duplicate images for entire board.",
+		],
+		'originalityPosts'  => [
+			'board'    => "No duplicate messages for entire board.",
+			'site'     => "No duplicate messages found anywhere on the site.",
+			'boardr9k' => "ROBOT9000",
+			'siter9k'  => "Respect the robot!",
 		],
 	],
 	

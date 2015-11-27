@@ -450,6 +450,24 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "unsigned_integer",
 					'validation_parameters' => "min:\$min|max:\$max",
 				],
+				
+				
+				[
+					'option_name'           => "originalityImages",
+					'default_value'         => "",
+					'format'                => "select",
+					'format_parameters'     => json_encode( [ 'choices' => [ 'thread', 'board' ] ] ),
+					'data_type'             => "string",
+					'validation_parameters' => "string|in:\$choices",
+				],
+				[
+					'option_name'           => "originalityPosts",
+					'default_value'         => "",
+					'format'                => "select",
+					'format_parameters'     => json_encode( [ 'choices' => [ 'board', 'site', 'boardr9k', 'siter9k' ] ] ),
+					'data_type'             => "string",
+					'validation_parameters' => "string|in:\$choices",
+				],
 			],
 		];
 	}
@@ -574,6 +592,16 @@ class OptionGroupSeeder extends Seeder {
 					"ephePostIpLife",
 					"ephePostHardDelete",
 					"epheMediaPrune",
+				],
+			],
+			[
+				'group_name'    => "board_originality",
+				'debug_only'    => false,
+				'display_order' => 310,
+				
+				'options'       => [
+					"originalityImages",
+					"originalityPosts",
 				],
 			],
 			[

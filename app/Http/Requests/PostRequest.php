@@ -2,16 +2,18 @@
 
 use App\Ban;
 use App\Board;
+use App\FileStorage;
 use App\Post;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Auth;
 use Validator;
 use View;
 
-class PostRequest extends Request implements ApiContract{
+class PostRequest extends Request implements ApiContract {
 	
 	use ApiController;
 	
@@ -37,6 +39,13 @@ class PostRequest extends Request implements ApiContract{
 	 * @var App\Ban
 	 */
 	protected $ban;
+	
+	/**
+	 * Indicates if we're checking a traditional file post or a dropzone file array.
+	 *
+	 * @var boolean
+	 */
+	protected $dropzone;
 	
 	/**
 	 * The thread we're replying to.
@@ -70,6 +79,8 @@ class PostRequest extends Request implements ApiContract{
 		{
 			$this->thread = false;
 		}
+		
+		
 	}
 	
 	/**
@@ -80,6 +91,8 @@ class PostRequest extends Request implements ApiContract{
 	public function all()
 	{
 		$input = parent::all();
+		
+		$this->dropzone = isset($input['dropzone']);
 		
 		if (isset($input['files']) && is_array($input['files']))
 		{
@@ -235,7 +248,7 @@ class PostRequest extends Request implements ApiContract{
 				
 				
 				// Add the rules for file uploads.
-				if (isset($this->all()['dropzone']))
+				if ($this->dropzone)
 				{
 					$fileToken = "files.hash";
 					
@@ -388,6 +401,7 @@ class PostRequest extends Request implements ApiContract{
 	public function validate()
 	{
 		$board     = $this->board;
+		$thread    = $this->thread;
 		$user      = $this->user;
 		
 		$validator = $this->getValidatorInstance();
@@ -408,10 +422,10 @@ class PostRequest extends Request implements ApiContract{
 			{
 				$timeDiff = ($floodTime - $lastPost->created_at->diffInSeconds()) + 1;
 				
-				$messages = $validator->errors();
 				$messages->add("flood", trans_choice("validation.custom.post_flood", $timeDiff, [
 						'time_left' => $timeDiff,
 				]));
+				
 				$this->failedValidation($validator);
 				return;
 			}
@@ -431,7 +445,6 @@ class PostRequest extends Request implements ApiContract{
 			{
 				$timeDiff = ($floodTime - $lastThread->created_at->diffInSeconds()) + 1;
 				
-				$messages = $validator->errors();
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
 						'time_left' => $timeDiff,
 				]));
@@ -476,29 +489,8 @@ class PostRequest extends Request implements ApiContract{
 			}
 			
 			
-			// Validate individual files.
-			
-			$input = $this->all();
-			
-			// Process uploads.
-			if (isset($input['files']))
-			{
-				$uploads = $input['files'];
-				
-				if(count($uploads) > 0)
-				{
-					foreach ($uploads as $uploadIndex => $upload)
-					{
-						// If a file is uploaded that has a specific filename, it breaks the process.
-						if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
-						{
-							$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
-								"filename" => $upload->getClientOriginalName(),
-							]));
-						}
-					}
-				}
-			}
+			// Validate individual files being uploaded right now.
+			$this->validateOriginality();
 		}
 		
 		if (count($validator->errors()))
@@ -510,6 +502,107 @@ class PostRequest extends Request implements ApiContract{
 			$this->failedAuthorization();
 		}
 		
+	}
+	
+	protected function validateOriginality()
+	{
+		$board     = $this->board;
+		$thread    = $this->thread;
+		$user      = $this->user;
+		$input     = $this->all();
+		
+		$validator = $this->getValidatorInstance();
+		$messages  = $validator->errors();
+		
+		// Process uploads.
+		if (isset($input['files']))
+		{
+			$uploads = $input['files'];
+			
+			if(count($uploads) > 0)
+			{
+				$validated = true;
+				
+				// Standard upload originality and integrity checks.
+				if (!$this->dropzone)
+				{
+					foreach ($uploads as $uploadIndex => $upload)
+					{
+						// If a file is uploaded that has a specific filename, it breaks the process.
+						if(method_exists($upload, "getPathname") && !file_exists($upload->getPathname()))
+						{
+							$validated = false;
+							$messages->add("files.{$uploadIndex}", trans("validation.custom.file_corrupt", [
+								"filename" => $upload->getClientOriginalName(),
+							]));
+						}
+					}
+				}
+				
+				if ($board->getConfig('originalityImages'))
+				{
+					foreach ($uploads as $uploadIndex => $upload)
+					{
+						if (!($upload instanceof UploadedFile))
+						{
+							continue;
+						}
+						
+						if ($board->getConfig('originalityImages') == "thread")
+						{
+							if ($thread instanceof Post && $originalPost = FileStorage::checkUploadExists($upload, $board, $thread))
+							{
+								$validated = false;
+								$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
+									"filename" => $upload->getClientOriginalName(),
+									"url"      => $originalPost->getURL(),
+								]));
+							}
+						}
+						else if ($originalPost = FileStorage::checkUploadExists($upload, $board))
+						{
+							$validated = false;
+							$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_board", [
+								"filename" => $upload->getClientOriginalName(),
+								"url"      => $originalPost->getURL(),
+							]));
+						}
+					}
+				}
+			}
+			// Dropzone hash checks.
+			else if ($board->getConfig('originalityImages'))
+			{
+				foreach ($uploads['hash'] as $uploadIndex => $upload)
+				{
+					if ($board->getConfig('originalityImages') == "thread")
+					{
+						if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread))
+						{
+							$validated = false;
+							$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
+								"filename" => $uploads['name'][$uploadIndex],
+								"url"      => $originalPost->getURL(),
+							]));
+						}
+					}
+					else if ($originalPost = FileStorage::checkHashExists($upload, $board))
+					{
+						$validated = false;
+						$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_board", [
+							"filename" => $uploads['name'][$uploadIndex],
+							"url"      => $originalPost->getURL(),
+						]));
+					}
+				}
+			}
+			
+			if ($validated !== true)
+			{
+				$this->failedValidation($validator);
+				return;
+			}
+		}
 	}
 	
 }

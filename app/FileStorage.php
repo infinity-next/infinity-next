@@ -94,6 +94,25 @@ class FileStorage extends Model {
 		return true;
 	}
 	
+	public static function checkUploadExists(UploadedFile $file, Board $board, Post $thread = null)
+	{
+		return static::checkHashExists(md5((string) File::get($file)), $board, $thread);
+	}
+	
+	public static function checkHashExists($hash, Board $board, Post $thread = null)
+	{
+		$query = Post::where('board_uri', $board->board_uri);
+		
+		if (!is_null($thread))
+		{
+			$query = $query->whereInThread($thread);
+		}
+		
+		return $query->whereHas('attachments', function($query) use ($hash) {
+			$query->whereHash($hash);
+		})->first();
+	}
+	
 	/**
 	 * Creates a new FileAttachment for a post using a direct upload.
 	 *
@@ -296,7 +315,7 @@ class FileStorage extends Model {
 	 */
 	public static function getHash($hash)
 	{
-		return static::hash($hash)->get()->first();
+		return static::whereHash($hash)->get()->first();
 	}
 	
 	/**
@@ -868,7 +887,7 @@ class FileStorage extends Model {
 	 * @param  string  $hash  The checksum hash.
 	 * @return \Illuminate\Database\Query\Builder
 	 */
-	public function scopeHash($query, $hash)
+	public function scopeWhereHash($query, $hash)
 	{
 		return $query->where('hash', $hash);
 	}

@@ -304,6 +304,11 @@ form {
 			background: #d5d5d5;
 			color: #7f7f7f;
 		}
+			.form-message a:link,
+			.form-message a:visited {
+				font-weight: bold;
+				text-decoration: underline;
+			}
 		html.js .form-message {
 			cursor: pointer;
 		}

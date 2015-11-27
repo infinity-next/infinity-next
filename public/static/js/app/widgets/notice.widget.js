@@ -35,10 +35,21 @@ ib.widget("notice", function(window, $, undefined) {
 		events   : {
 			
 			noticeClick : function(event) {
+				var $this = $(this);
+				
+				// Make sure we don't hijack and link clicks.
+				if ($(this.toElement).is(":link"))
+				{
+					return true;
+				}
+				
 				// Fade out and remove the notice very quickly after clicking it.
-				$(this).fadeOut(250, function() {
-					$(this).remove();
+				$this.fadeOut(250, function() {
+					$this.remove();
 				});
+				
+				event.preventDefault();
+				return false;
 			}
 			
 		},
