@@ -1,6 +1,6 @@
 <section id="site-recent-images" class="grid-50">
 	<div class="smooth-box">
-		<h2>@lang('index.title.recent_images')</h2>
+		<h2 class="index-title">@lang('index.title.recent_images')</h2>
 		<ul class="recent-images selfclear">
 			@foreach (App\FileAttachment::getRecentImages(20, true) as $file)
 				@if ($file->storage->hasThumb())

@@ -905,8 +905,9 @@ figure.error {
 		#site-featured-post .smooth-box {
 			padding: 0;
 		}
-		#site-featured-post h2 {
-			padding: 1em 1em 0 1em;
+		#site-featured-post .index-title {
+			padding: 1em 1em 0 0.83em;
+			margin: 0;
 		}
 		#site-featured-post .post-container {
 			background: none;
@@ -2461,8 +2462,8 @@ main.index-threaded {
 		.post {
 			position: relative;
 			font-size: 105%;
-			margin: 0 auto 0 1.1em;
-			padding: 0;
+			margin: 0;
+			padding: 0.7em;
 			word-wrap: break-word;
 			white-space: normal;
 		}
@@ -2517,13 +2518,10 @@ main.index-threaded {
 			}
 				.post-content-wrapper {
 					overflow: hidden;
-					padding: 0 0.75em 0 0.75em;
-					margin: 0 -0.75em 0 -0.75em;
 				}
 			
 			.post-content {
-				padding: 0.75em;
-				padding-bottom: 0;
+				padding: 0;
 			}
 			.post-content::after {
 				content: ' ';
@@ -2532,7 +2530,7 @@ main.index-threaded {
 			}
 				.post-details {
 					clear: both;
-					margin: -0.4em 5em 0.4em 0;
+					margin: 0.6em 3em 0.4em 1em;
 					white-space: normal;
 					line-height: 1.8em;
 				}
@@ -2640,8 +2638,7 @@ main.index-threaded {
 					display: block;
 				}
 					.reply-container ul.post-attachments.attachments-multi {
-						padding: 0.75em 0 0 0.75em;
-						margin: 0 -0.75em 0 -0.75em;
+						padding: 0.75em 0.7em 0 0.75em;
 					}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
@@ -2655,7 +2652,7 @@ main.index-threaded {
 					li.post-attachment {
 						display: block;
 						float: left;
-						padding: 0 1em 1em 0;
+						padding: 0 0.75 0.75em 0;
 					}
 						div.attachment-container {
 							display: block;
@@ -3260,11 +3257,11 @@ blockquote.ugc {
 		margin-left: 0;
 		margin-right: 0;
 	}
-		blockquote.ugc p:first-child {
-			margin-top: 0.5em;
+		blockquote.ugc > :first-child {
+			margin-top: 0;
 		}
-		blockquote.ugc p:last-child {
-			margin-bottom: 0.5em;
+		blockquote.ugc > :last-child {
+			margin-bottom: 0;
 		}
 	
 	blockquote.ugc ol,
