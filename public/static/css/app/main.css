@@ -888,13 +888,13 @@ figure.error {
 	#frontpage .smooth-box {
 		margin: 0 0 1em 0;
 	}
-	#frontpage h2 {
+	#site-intro h2 {
 		margin: 0 0 0.5em 0;
 	}
-	#frontpage h3 {
+	#site-intro h3 {
 		margin: 0 0 0.5em 0;
 	}
-	#frontpage p {
+	#site-intro p {
 		margin: 0 0 1em 0;
 	}
 	
@@ -2517,6 +2517,8 @@ main.index-threaded {
 			}
 				.post-content-wrapper {
 					overflow: hidden;
+					padding: 0.75em 0 0 0.75em;
+					margin: 0 -0.75em 0 -0.75em;
 				}
 			
 			.post-content {
@@ -2638,10 +2640,12 @@ main.index-threaded {
 					display: block;
 				}
 					.reply-container ul.post-attachments.attachments-multi {
-						background: rgba(0,0,155,0.1);
 						padding: 0.75em 0 0 0.75em;
 						margin: 0 -0.75em 0 -0.75em;
 					}
+						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
+							background: rgba(0,0,155,0.1);
+						}
 						ul.post-attachments.attachments-multi::after {
 							display: block;
 							content: ' ';

@@ -69,7 +69,7 @@ header nav.boardlist {
 	.reply::before {
 		color: #D9BFB7;
 	}
-		.reply-container ul.post-attachments.attachments-multi {
+		main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 			background-color: rgba(155,0,0,0.1);
 		}
 	
