@@ -75,6 +75,7 @@ class PermissionSeeder extends Seeder {
 			"board.user.unban",
 			
 			"site.board.view_unindexed",
+			"site.board.setting_lock",
 			"site.image.ban",
 			"site.pm",
 			"site.post.report",

@@ -4,6 +4,7 @@
 	
 	@foreach ($group->options as $option)
 		@include($option->getTemplate($controller), [
+			'option'            => $option,
 			'option_name'       => $option->option_name,
 			'option_value'      => $option->getDisplayValue(),
 			'format_parameters' => $option->getFormatParameters(),

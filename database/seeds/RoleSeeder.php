@@ -276,6 +276,8 @@ class RolePermissionSeeder extends Seeder {
 	{
 		$this->command->info('Seeding permission to role associations.');
 		
+		RolePermission::truncate();
+		
 		$permissions = Permission::get()->modelKeys();
 		
 		// Insert default permissions.

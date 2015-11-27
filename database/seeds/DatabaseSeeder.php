@@ -32,7 +32,7 @@ if (!class_exists("DatabaseSeeder"))
 			
 			// $this->call('RoleSeeder');
 			// $this->call('UserRoleSeeder');
-			// $this->call('RolePermissionSeeder');
+			$this->call('RolePermissionSeeder');
 			
 			$this->call('OptionSeeder');
 			$this->call('OptionGroupSeeder');

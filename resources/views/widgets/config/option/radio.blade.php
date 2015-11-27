@@ -6,6 +6,7 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		@include('widgets.config.lock')
 	</dt>
 	<dd class="option-definition">
 		@foreach ($option_choices as $option_choice_label => $option_choice)
@@ -17,6 +18,7 @@
 				[
 					'id'        => "{$option_name}-{$option_choice}",
 					'class'     => "field-control",
+					isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 			]) !!}
 			{!! Form::label(
 				"{$option_name}-{$option_choice}",

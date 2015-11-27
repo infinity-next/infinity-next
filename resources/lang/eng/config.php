@@ -18,6 +18,9 @@ return [
 	'submit'       => "Save Changes",
 	'any_language' => "International",
 	
+	'locked'       => "This setting has been locked by an admin.",
+	'locking'      => "Locks this setting value to users without special permissions.",
+	
 	
 	'legend' => [
 		'asset'        => [

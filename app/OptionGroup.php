@@ -85,7 +85,8 @@ class OptionGroup extends Model {
 			
 			$query->addSelect(
 				'options.*',
-				'board_settings.option_value as option_value'
+				'board_settings.option_value as option_value',
+				'board_settings.is_locked as is_locked'
 			);
 			
 			$query->orderBy('display_order', 'asc');

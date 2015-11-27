@@ -2,6 +2,7 @@
 
 use App\Ban;
 use App\Board;
+use App\Option;
 use App\Permission;
 use App\Post;
 use App\Role;
@@ -407,6 +408,38 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user edit a board setting?
+	 *
+	 
+	*/
+	public function canEditSetting(Board $board, Option $option)
+	{
+		if ($this->canEditConfig($board))
+		{
+			if ($option->isLocked())
+			{
+				return $this->canEditSettingLock($board, $option);
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Can this user edit a board setting lock?
+	 *
+	 * @param  \App\Board  $board  Board which this setting belongs to.
+	 * @param  \App\Option  $option  Option, usually with BoardSetting data embedded, that is being checked.
+	 * @return boolean
+	 */
+	public function canEditSettingLock(Board $board, Option $option)
+	{
+		return $this->can("site.board.setting_lock", $board);
+	}
+	
+	/**
 	 * Can this user edit this staff member on this board?
 	 *
 	 * @return boolean
@@ -644,6 +677,18 @@ trait PermissionUser {
 	public function canViewUnindexedBoards()
 	{
 		return $this->can('site.board.view_unindexed');
+	}
+	
+	/**
+	 * Can this user view a board setting lock?
+	 *
+	 * @param  \App\Board  $board  Board which this setting belongs to.
+	 * @param  \App\Option  $option  Option, usually with BoardSetting data embedded, that is being checked.
+	 * @return boolean
+	 */
+	public function canViewSettingLock(Board $board, Option $option)
+	{
+		return $option->isLocked() || $this->canEditSettingLock($board, $option);
 	}
 	
 	/**

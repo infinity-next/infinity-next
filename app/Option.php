@@ -244,6 +244,21 @@ class Option extends Model implements PseudoEnumContract {
 	}
 	
 	/**
+	 * Is this setting locked? (Editable only by users with special permissions)
+	 *
+	 * @return boolean
+	 */
+	public function isLocked()
+	{
+		if (isset($this->attributes['is_locked']))
+		{
+			return !!$this->attributes['is_locked'];
+		}
+		
+		return !!$this->is_locked;
+	}
+	
+	/**
 	 * Sets our default value and encodes it if required.
 	 *
 	 * @param  mixed  $value

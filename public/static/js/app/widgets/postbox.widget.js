@@ -532,6 +532,13 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 			},
 			
+			postKeyDown  : function(event) {
+				if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey)
+				{
+					
+				}
+			},
+			
 			postResize    : function(event, ui) {
 				var $post = $(this);
 				var $form = $post.resizable( "option", "alsoResize" );

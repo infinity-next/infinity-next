@@ -270,7 +270,7 @@ class ConfigController extends PanelController {
 	 *
 	 * @return Response
 	 */
-	public function getConfig(Request $request, Board $board)
+	public function getConfig(Board $board)
 	{
 		if (!$board->canEditConfig($this->user))
 		{
@@ -307,23 +307,37 @@ class ConfigController extends PanelController {
 					'board_uri'    => $board->board_uri,
 				]);
 				
+				$locking = isset($input['lock'][$option->option_name]) && !!$input['lock'][$option->option_name];
+				
+				if ($setting->isLocked() && !$this->user->canEditSettingLock($board, $option))
+				{
+					continue;
+				}
+				
 				if (isset($input[$option->option_name]))
 				{
-					$option->option_value  = $input[$option->option_name];
 					$setting->option_value = $input[$option->option_name];
-					$setting->save();
 				}
 				else if ($option->format == "onoff")
 				{
-					$option->option_value  = false;
 					$setting->option_value = false;
-					$setting->save();
 				}
-				else
+				else if (!$locking)
 				{
 					$setting->delete();
 					continue;
 				}
+				else
+				{
+					$setting->option_value = null;
+				}
+				
+				if ($locking)
+				{
+					$setting->is_locked = !!$input['lock'][$option->option_name];
+				}
+				
+				$setting->save();
 				
 				$settings[] = $setting;
 			}
@@ -336,16 +350,9 @@ class ConfigController extends PanelController {
 		$board->is_worksafe  = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
 		$board->save();
 		
-		$board->setRelation('settings', collect($settings));
-		
 		Event::fire(new BoardWasModified($board));
 		
-		return $this->view(static::VIEW_CONFIG, [
-			'board'  => $board,
-			'groups' => $optionGroups,
-			
-			'tab'    => "basic",
-		]);
+		return $this->getConfig($board);
 	}
 	
 	public function getIndex(Request $request, Board $board)

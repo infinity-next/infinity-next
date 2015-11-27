@@ -8,6 +8,7 @@
 			[
 				'id'        => $option_name,
 				'class'     => "field-control",
+				isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 		]) !!}
 		{!! Form::label(
 			$option_name,
@@ -15,6 +16,8 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		
+		@include('widgets.config.lock')
 		
 		@include('widgets.config.helper')
 	</dd>

@@ -1,5 +1,7 @@
 <dl class="option option-permission">
-	<dt class="option-term">@lang("config.permission.{$permission->permission_id}")</dt>
+	<dt class="option-term">
+		@lang("config.permission.{$permission->permission_id}")
+	</dt>
 	<dd class="option-definition">
 		<label class="option-permission option-permission-allow" for="{{ $permission->permission_id }}-allow">
 			{!! Form::radio(

@@ -6,6 +6,7 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		@include('widgets.config.lock')
 	</dt>
 	<dd class="option-definition">
 		<ul class="option-list">
@@ -17,9 +18,10 @@
 						$option_value[$option_list_i],
 						[
 							'class'     => "field-control",
+							isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 					]) !!}
 				</li>
-				@else
+				@else if($option->isLocked())
 				<li class="option-item option-item-template">
 					{!! Form::text(
 						$option_name . "[]",

@@ -6,6 +6,7 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		@include('widgets.config.lock')
 	</dt>
 	<dd class="option-definition">
 		<select class="field-control" name="{{ $option_name }}">

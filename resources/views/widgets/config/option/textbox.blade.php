@@ -6,6 +6,7 @@
 			[
 				'class' => "field-label",
 		]) !!}
+		@include('widgets.config.lock')
 	</dt>
 	<dd class="option-definition">
 		{!! Form::textarea(
@@ -14,6 +15,7 @@
 			[
 				'id'        => $option_name,
 				'class'     => "field-control",
+				isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 		]) !!}
 		
 		@include('widgets.config.helper')
