@@ -35,7 +35,7 @@ class FileAttachment extends Model {
 	
 	public function post()
 	{
-		return $this->hasOne('\App\Post', 'post_id');
+		return $this->belongsTo('\App\Post', 'post_id');
 	}
 	
 	public function storage()
