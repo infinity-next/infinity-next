@@ -4,6 +4,7 @@ use App\Ban;
 use App\Board;
 use App\FileStorage;
 use App\Post;
+use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
@@ -60,6 +61,15 @@ class PostRequest extends Request implements ApiContract {
 	 * @var App\Trait\PermissionUser
 	 */
 	protected $user;
+	
+	/**
+	 * Does this post respect the robot?
+	 * If set to false during validation and failedValidation is triggered,
+	 * an automatic board ban will be issued by The Robot for a variable length.
+	 *
+	 * @var boolean
+	 */
+	protected $respectTheRobot = true;
 	
 	/**
 	 * Fetches the user and our board config.
@@ -175,7 +185,7 @@ class PostRequest extends Request implements ApiContract {
 		{
 			$url = $this->ban->getRedirectUrl();
 			
-			if ($this->wantsJson())
+			if ($this->ajax() || $this->wantsJson())
 			{
 				return $this->apiResponse([ 'redirect' => $url ]);
 			}
@@ -186,6 +196,32 @@ class PostRequest extends Request implements ApiContract {
 		}
 		
 		return abort(403);
+	}
+	
+	/**
+	 * Get the proper failed validation response for the request.
+	 *
+	 * @param  array  $errors
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function response(array $errors)
+	{
+		if (!$this->respectTheRobot)
+		{
+			$this->ban = Ban::addRobotBan($this->board);
+			return $this->forbiddenResponse();
+		}
+		
+		$redirectURL = $this->getRedirectUrl();
+		
+		if ($this->wantsJson())
+		{
+			return $this->apiResponse([ 'errors' => $errors ]);
+		}
+		
+		return redirect($redirectURL)
+			->withInput($this->except($this->dontFlash))
+			->withErrors($errors, $this->errorBag);
 	}
 	
 	/**
@@ -373,26 +409,6 @@ class PostRequest extends Request implements ApiContract {
 	}
 	
 	/**
-	 * Get the response for a forbidden operation.
-	 *
-	 * @param  array $errors
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 */
-	public function response(array $errors)
-	{
-		$redirectURL = $this->getRedirectUrl();
-		
-		if ($this->wantsJson())
-		{
-			return $this->apiResponse([ 'errors' => $errors ]);
-		}
-		
-		return redirect($redirectURL)
-			->withInput($this->except($this->dontFlash))
-			->withErrors($errors, $this->errorBag);
-	}
-	
-	/**
 	 * Validate the class instance.
 	 * This overrides the default invocation to provide additional rules after the controller is setup.
 	 *
@@ -511,6 +527,7 @@ class PostRequest extends Request implements ApiContract {
 		$user      = $this->user;
 		$input     = $this->all();
 		
+		$validated = true;
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
 		
@@ -521,7 +538,6 @@ class PostRequest extends Request implements ApiContract {
 			
 			if(count($uploads) > 0)
 			{
-				$validated = true;
 				
 				// Standard upload originality and integrity checks.
 				if (!$this->dropzone)
@@ -596,12 +612,43 @@ class PostRequest extends Request implements ApiContract {
 					}
 				}
 			}
+		}
+		
+		
+		// Process body checksum for origianlity.
+		$strictness = $board->getConfig('originalityPosts');
+		
+		if (isset($input['body']) && $strictness)
+		{
+			$checksum = Post::makeChecksum($input['body']);
 			
-			if ($validated !== true)
+			if ($strictness == "board" || $strictness == "boardr9k")
 			{
-				$this->failedValidation($validator);
-				return;
+				$checksums = PostChecksum::getChecksum($checksum, $board);
 			}
+			else if ($strictness == "site" || $strictness == "siter9k")
+			{
+				$checksums = PostChecksum::getChecksum($checksum);
+			}
+			
+			//dd($checksums);
+			
+			if ($checksums->count())
+			{
+				$validated = false;
+				
+				$messages->add("body", trans("validation.custom.unoriginal_content"));
+				
+				// If we are in R9K mode, set $respectTheRobot property to to false.
+				// This will trigger a Robot ban in failedValidation.
+				$this->respectTheRobot = !($strictness == "boardr9k" || $strictness == "siter9k");
+			}
+		}
+		
+		if ($validated !== true)
+		{
+			$this->failedValidation($validator);
+			return;
 		}
 	}
 	

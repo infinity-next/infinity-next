@@ -1,6 +1,7 @@
 <?php namespace App\Observers;
 
 use App\Post;
+use App\PostChecksum;
 use App\PostCite;
 
 use Event;

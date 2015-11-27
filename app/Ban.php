@@ -1,8 +1,11 @@
 <?php namespace App;
 
+use App\Board;
 use App\Support\IP as IP;
 use App\Contracts\PermissionUser as PermissionUser;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use File;
 use Request;
 
 class Ban extends Model {
@@ -35,7 +38,7 @@ class Ban extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['ban_ip', 'board_uri', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification'];
+	protected $fillable = ['ban_ip_start', 'ban_ip_end', 'board_uri', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification', 'is_robot'];
 	
 	
 	public function appeals()
@@ -56,6 +59,48 @@ class Ban extends Model {
 	public function post()
 	{
 		return $this->belongsTo('\App\Post', 'post_id');
+	}
+	
+	/**
+	 * Automatically adds a R9K ban to the specified board.
+	 *
+	 * @static
+	 * @param  \App\Board  $board  The board the ban is to be added in.
+	 * @param  binary|string|null  $ip  Optional. The IP to ban. Defaults to client IP.
+	 * @return static
+	 */
+	public static function addRobotBan(Board $board, $ip = null)
+	{
+		$ip = new IP($ip);
+		
+		// Default time is 2 seconds.
+		$time = 2;
+		
+		// Pull the ban that expires the latest.
+		$ban = $board->bans()
+			->whereIpInBan($ip)
+			->whereRobot()
+			->orderBy('expires_at', 'desc')
+			->first();
+		
+		if ($ban instanceof static)
+		{
+			if (!$ban->isExpired())
+			{
+				return $ban;
+			}
+			
+			$time = $ban->created_at->diffInSeconds($ban->expires_at) * 2;
+		}
+		
+		return static::create([
+			'ban_ip_start'  => $ip,
+			'ban_ip_end'    => $ip,
+			'expires_at'    => Carbon::now()->addSeconds( $time ),
+			'board_uri'     => $board->board_uri,
+			'is_robot'      => true,
+			'justification' => trans('validation.custom.unoriginal_content'),
+		]);
 	}
 	
 	/**
@@ -188,6 +233,20 @@ class Ban extends Model {
 		return "/cp/bans/" . ($this->isGlobal() ? "global" : "board/{$this->board_uri}") . "/{$this->ban_id}";
 	}
 	
+	/**
+	 * Returns a random image from the Robot directory.
+	 *
+	 * @static
+	 * @return string
+	 */
+	public static function getRobotImage()
+	{
+		$images   = File::allFiles(base_path() . "/public/static/img/errors/robot");
+		$filename = $images[array_rand($images)]->getFilename();
+		
+		return asset("static/img/errors/robot/{$filename}");
+	}
+	
 	public function getAppealUrl()
 	{
 		if (!is_null($this->board_uri))
@@ -307,6 +366,11 @@ class Ban extends Model {
 		{
 			$query->where('approved', true);
 		});
+	}
+	
+	public function scopeWhereRobot($query)
+	{
+		return $query->where('is_robot', true);
 	}
 	
 	public function willExpire()

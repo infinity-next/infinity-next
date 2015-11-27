@@ -8,6 +8,7 @@ use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
 use App\Support\Geolocation;
 use App\Support\IP;
+use App\Traits\EloquentBinary;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,6 @@ use Request;
 
 use Event;
 use App\Events\ThreadNewReply;
-use App\Traits\EloquentBinary;
 
 class Post extends Model {
 	
@@ -403,6 +403,27 @@ class Post extends Model {
 		$hash = substr($hash, 12, 6);
 		
 		return $hash;
+	}
+	
+	/**
+	 * Returns a SHA1 hash (in text or binary) representing an originality/r9k checksum.
+	 *
+	 * @static
+	 * @param  string  $body    The body to be checksum'd.
+	 * @param  bool    $binary  Optional. If the return should be binary. Defaults false.
+	 * @return string|binary
+	 */
+	public static function makeChecksum($text, $binary = false)
+	{
+		$postRobot = preg_replace('/\s+/', "", $text);
+		$checksum  = sha1($postRobot, $binary);
+		
+		if ($binary)
+		{
+			return binary_sql($checksum);
+		}
+		
+		return $checksum;
 	}
 	
 	/**
@@ -904,16 +925,7 @@ class Post extends Model {
 	 */
 	public function getChecksum($binary = false)
 	{
-		$postBody  = $this->body;
-		$postRobot = preg_replace('/\W+/', "", $postBody);
-		$checksum  = sha1($postRobot, $binary);
-		
-		if ($binary)
-		{
-			return binary_sql($checksum);
-		}
-		
-		return $checksum;
+		return $this->makeChecksum($this->body, $binary);
 	}
 	
 	/**
@@ -1709,7 +1721,7 @@ class Post extends Model {
 			
 			// Third, we store a unique checksum for this post for duplicate tracking.
 			$board->checksums()->create([
-				'checksum' => $this->getChecksum(true),
+				'checksum' => $this->getChecksum(),
 			]);
 			
 			// Optionally, we also expend the adventure.

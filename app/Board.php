@@ -144,6 +144,11 @@ class Board extends Model {
 		return $this->hasMany('\App\PostChecksum', 'board_uri');
 	}
 	
+	public function bans()
+	{
+		return $this->hasMany('\App\Ban', 'board_uri');
+	}
+	
 	public function posts()
 	{
 		return $this->hasMany('\App\Post', 'board_uri');

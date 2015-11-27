@@ -38,7 +38,7 @@ ib.widget("notice", function(window, $, undefined) {
 				var $this = $(this);
 				
 				// Make sure we don't hijack and link clicks.
-				if ($(this.toElement).is(":link"))
+				if ($(this.toElement).is('[href]'))
 				{
 					return true;
 				}

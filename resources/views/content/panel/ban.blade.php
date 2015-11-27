@@ -7,10 +7,16 @@
 		@section('title', $ban->isBanForIP() ? trans('panel.title.you_are_banned') : trans('panel.title.they_are_banned'))
 		
 		@if (!$board || $board->getBannedImages()->count() == 0)
-		<figure class="error-figure">
-			<img src="{{ asset("static/img/errors/banned.gif") }}" class="error-image" />
-			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/kr0npr1nz">Ilya Kuvshinov</a></figcaption>
-		</figure>
+			@if ($ban->is_robot)
+			<figure class="error-figure">
+				<img src="{{ $ban->getRobotImage() }}" class="error-image" />
+			</figure>
+			@else
+			<figure class="error-figure">
+				<img src="{{ asset("static/img/errors/banned.gif") }}" class="error-image" />
+				<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/kr0npr1nz">Ilya Kuvshinov</a></figcaption>
+			</figure>
+			@endif
 		@else
 		<figure class="error-figure">
 			{!! $board->getBannedImages()->random()->asHTML() !!}
