@@ -1181,25 +1181,6 @@ class Post extends Model {
 	}
 	
 	/**
-	 * Create a new model instance that is existing.
-	 *
-	 * @param  array  $attributes
-	 * @param  \Illuminate\Database\Connection|null  $connection
-	 * @return \Illuminate\Database\Eloquent\Model|static
-	 */
-	public function newFromBuilder($attributes = array(), $connection = NULL)
-	{
-		if (isset($attributes->author_ip) && $attributes->author_ip !== null && !($attributes->author_ip instanceof IP))
-		{
-			$attributes->author_ip = new IP($attributes->author_ip);
-		}
-		
-		
-		return parent::newFromBuilder($attributes);
-	}
-	
-	
-	/**
 	 * Sets the value of $this->appends to the input.
 	 * Not normally available to models, but required for API responses.
 	 *
@@ -1836,6 +1817,7 @@ class Post extends Model {
 				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
+		
 		
 		if (!is_null($uri))
 		{
