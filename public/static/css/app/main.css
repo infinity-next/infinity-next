@@ -825,8 +825,8 @@ figure.error {
 	#site-warning {
 		display: block;
 		color: #f33;
-		margin: -1em 0 1em 0;
-		font-size: 0.8em;
+		margin: -0.5em 0 1em 20%;
+		font-size: 0.9em;
 		text-align: center;
 		text-shadow: rgba(224, 224, 224, 0.5) 1px 1px 0px;
 	}
