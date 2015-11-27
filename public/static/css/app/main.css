@@ -2461,8 +2461,8 @@ main.index-threaded {
 		.post {
 			position: relative;
 			font-size: 105%;
-			margin: 0 auto 0 1.15em;
-			padding: 0 0.7em 0 0;
+			margin: 0 auto 0 1.1em;
+			padding: 0;
 			word-wrap: break-word;
 			white-space: normal;
 		}
@@ -2517,7 +2517,7 @@ main.index-threaded {
 			}
 				.post-content-wrapper {
 					overflow: hidden;
-					padding: 0.75em 0 0 0.75em;
+					padding: 0 0.75em 0 0.75em;
 					margin: 0 -0.75em 0 -0.75em;
 				}
 			
