@@ -25,7 +25,7 @@ trait EloquentBinary {
 			{
 				if (is_resource($datum))
 				{
-					$item[$column] = stream_get_contents($datum);
+					$item->{$column} = stream_get_contents($datum);
 				}
 			}
 			
