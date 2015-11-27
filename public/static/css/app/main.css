@@ -2637,8 +2637,8 @@ main.index-threaded {
 				ul.post-attachments {
 					display: block;
 				}
-					.reply-container ul.post-attachments.attachments-multi {
-						padding: 0.75em 0.7em 0 0.75em;
+					.reply-container ul.post-attachments {
+						padding: 0.75em 0 0 0.75em;
 					}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
@@ -2652,7 +2652,7 @@ main.index-threaded {
 					li.post-attachment {
 						display: block;
 						float: left;
-						padding: 0 0.75 0.75em 0;
+						padding: 0 0.75em 0.75em 0;
 					}
 						div.attachment-container {
 							display: block;
