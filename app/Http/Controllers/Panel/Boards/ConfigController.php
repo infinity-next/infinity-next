@@ -357,7 +357,7 @@ class ConfigController extends PanelController {
 	
 	public function getIndex(Request $request, Board $board)
 	{
-		return $this->getConfig($request, $board);
+		return $this->getConfig($board);
 	}
 	
 	public function patchIndex(BoardConfigRequest $request, Board $board)
