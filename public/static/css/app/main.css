@@ -2648,6 +2648,9 @@ main.index-threaded {
 							background: rgba(0,0,155,0.1);
 							padding-top: 0.75em;
 						}
+						ul.post-attachments.attachments-multi + blockquote.post {
+							margin-top: 0.75em;
+						}
 						ul.post-attachments.attachments-multi::after {
 							display: block;
 							content: ' ';

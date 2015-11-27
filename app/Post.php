@@ -1110,6 +1110,16 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Determines if this post has a body message.
+	 *
+	 * @return boolean
+	 */
+	public function hasBody()
+	{
+		return strlen( trim( (string) $this->attributes['body'] ) ) > 0;
+	}
+	
+	/**
 	 * Get the appends attribute.
 	 * Not normally available to models, but required for API responses.
 	 *
