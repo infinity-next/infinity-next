@@ -21,10 +21,11 @@ use Request;
 
 use Event;
 use App\Events\ThreadNewReply;
+use App\Traits\EloquentBinary;
 
 class Post extends Model {
 	
-	use \App\Traits\EloquentBinary;
+	use EloquentBinary;
 	use SoftDeletes;
 	
 	/**

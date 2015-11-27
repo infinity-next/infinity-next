@@ -21,11 +21,11 @@ trait EloquentBinary {
 			// system we are using before doing business logic.
 			// 
 			// See: https://github.com/laravel/framework/issues/10847
-			foreach ($item as $column => &$datum)
+			foreach ($item as $column => $datum)
 			{
 				if (is_resource($datum))
 				{
-					$datum = stream_get_contents($datum);
+					$item[$column] = stream_get_contents($datum);
 				}
 			}
 			
