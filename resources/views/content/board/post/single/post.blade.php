@@ -1,6 +1,6 @@
 @spaceless
 @if ($post->hasBody())
-<blockquote class="post ugc attachment-count-{{ count($post->attachments) }} {{ count($post->attachments) > 1 ? "attachments-multi" : count($post->attachments) > 0 ? "attachments-single" : "attachments-none" }}">
+<blockquote class="post ugc">
 	{!! $post->getBodyFormatted() !!}
 </blockquote>
 @endif
