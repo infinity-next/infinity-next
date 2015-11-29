@@ -1,7 +1,5 @@
 <?php namespace App;
 
-use App\SiteSetting;
-
 use Illuminate\Database\Eloquent\Model;
 
 class SiteSetting extends Model {

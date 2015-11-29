@@ -2,7 +2,6 @@
 
 use App\Board;
 use App\Log;
-use App\SiteSetting;
 use App\Services\UserManager;
 
 use Illuminate\Foundation\Bus\DispatchesCommands;

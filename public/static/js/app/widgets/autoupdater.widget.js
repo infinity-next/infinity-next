@@ -164,7 +164,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				{
 					$.each(postData, function(index, reply)
 					{
-						var $existingPost = $(".post-" + reply.post_id);
+						var $existingPost = $(".post-container[data-post_id=" + reply.post_id+"]");
 						
 						if ($existingPost.length > 0)
 						{

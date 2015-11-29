@@ -235,6 +235,10 @@ ib.widget("postbox", function(window, $, undefined) {
 		// Compiled settings.
 		options  : false,
 		
+		hasCaptcha : function() {
+			return $(widget.options.selector['captcha-row'], widget.$widget).is(":visible");
+		},
+		
 		// Events
 		events   : {
 			
@@ -331,7 +335,11 @@ ib.widget("postbox", function(window, $, undefined) {
 			formClear     : function() {
 				var $form = widget.$widget;
 				
-				$(widget.options.selector['captcha'], widget.$widget).trigger('reload');
+				// Stops redundant loading of captcha when we don't need one.
+				if (widget.hasCaptcha())
+				{
+					$(widget.options.selector['captcha'], widget.$widget).trigger('reload');
+				}
 				
 				if (widget.dropzone)
 				{

@@ -282,14 +282,14 @@ class Board extends Model {
 				
 				// Pull the lifespan of a captcha.
 				// This is the number of minutes between successful entries.
-				$captchaLifespan = (int) site_setting('captchaLifespanTime');
+				$captchaLifespan = (int) site_setting('captchaLifespanTime', 0);
 				
 				if ($captchaLifespan > 0)
 				{
-					$query->where('created_at', '>=', \Carbon\Carbon::now()->subMinutes($captchaLifespan));
+					$query->whereNotNull('cracked_at');
+					$query->where('cracked_at', '>=', \Carbon\Carbon::now()->subMinutes($captchaLifespan));
 				}
 			})
-			->whereNotNull('cracked_at')
 			->orderBy('cracked_at', 'desc')
 			->first();
 		

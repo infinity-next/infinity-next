@@ -120,6 +120,12 @@ class BoardController extends ParentController implements ApiContract {
 				'redirect' => $response->getURL(),
 			];
 		}
+		else
+		{
+			$response = $response->unique(function ($post) {
+				return $post->post_id;
+			});
+		}
 		
 		return $this->apiResponse($response);
 	}
