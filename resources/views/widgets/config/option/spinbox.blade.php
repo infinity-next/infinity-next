@@ -15,7 +15,7 @@
 			[
 				'id'        => $option_name,
 				'class'     => "field-control",
-				isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
+				isset($board) && isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 		]) !!}
 		
 		@include('widgets.config.helper')

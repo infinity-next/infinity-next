@@ -79,6 +79,10 @@ class PostObserver {
 		// When deleting a post, delete its children.
 		Post::replyTo($post->post_id)->delete();
 		
+		// Clear authorshop information.
+		$post->author_ip = null;
+		$post->author_ip_nulled_at = \Carbon\Carbon::now();
+		
 		return true;
 	}
 	

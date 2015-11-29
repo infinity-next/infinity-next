@@ -18,7 +18,7 @@
 						$option_value[$option_list_i],
 						[
 							'class'     => "field-control",
-							isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
+							isset($board) && isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 					]) !!}
 				</li>
 				@else if($option->isLocked())
