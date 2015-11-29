@@ -82,6 +82,7 @@ class PostObserver {
 		// Clear authorshop information.
 		$post->author_ip = null;
 		$post->author_ip_nulled_at = \Carbon\Carbon::now();
+		$post->save();
 		
 		return true;
 	}

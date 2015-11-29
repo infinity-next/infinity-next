@@ -829,7 +829,11 @@ class Post extends Model {
 	
 	public function setAuthorIpAttribute($value)
 	{
-		if (!is_binary($value))
+		if ($value === null)
+		{
+			$alue = null;
+		}
+		else if (!is_binary($value))
 		{
 			$ip = new IP($value);
 			$value = $ip->getStart(true);
