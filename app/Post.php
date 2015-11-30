@@ -71,7 +71,9 @@ class Post extends Model {
 		'email',
 		
 		'body',
+		'body_too_long',
 		'body_parsed',
+		'body_parsed_preview',
 		'body_parsed_at',
 		'body_html',
 	];
@@ -509,19 +511,49 @@ class Post extends Model {
 			}
 		}
 		
-		$ContentFormatter     = new ContentFormatter();
-		$this->body_parsed    = $ContentFormatter->formatPost($this);
-		$this->body_parsed_at = $this->freshTimestamp();
+		$ContentFormatter          = new ContentFormatter();
+		$this->body_too_long       = false;
+		$this->body_parsed         = $ContentFormatter->formatPost($this);
+		$this->body_parsed_preview = null;
+		$this->body_parsed_at      = $this->freshTimestamp();
+		
+		// If our body is too long, we need to pull the first X characters and do that instead.
+		// We also set a token indicating this post has hidden content.
+		if (strlen($this->body) > 1200)
+		{
+			$this->body_too_long = true;
+			$this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
+		}
 		
 		// We use an update here instead of just saving $post because, in this method
 		// there will frequently be additional properties on this object that cannot
 		// be saved. To make life easier, we just touch the object.
 		static::where(['post_id' => $this->post_id])->update([
-			'body_parsed'    => $this->body_parsed,
-			'body_parsed_at' => $this->body_parsed_at,
+			'body_too_long'       => $this->body_too_long,
+			'body_parsed'         => $this->body_parsed,
+			'body_parsed_preview' => $this->body_parsed_preview,
+			'body_parsed_at'      => $this->body_parsed_at,
 		]);
 		
 		return $this->body_parsed;
+	}
+	
+	/**
+	 * Returns a partially rendered HTML preview of this post.
+	 *
+	 * @param  boolean  $skipCache
+	 * @return string
+	 */
+	public function getBodyPreview($skipCache = false)
+	{
+		$body_parsed = $this->getBodyFormatted($skipCache);
+		
+		if ($this->body_too_long !== true || !isset($this->body_parsed_preview))
+		{
+			return $body_parsed;
+		}
+		
+		return $this->body_parsed_preview;
 	}
 	
 	/**

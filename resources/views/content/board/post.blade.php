@@ -8,6 +8,7 @@
 	data-capcode="{{ $post->capcode_capcode ? $post->capcode_role : '' }}"
 	id="post-{{$post->board_uri}}-{{$post->board_id}}"
 >
+	@set('preview', isset($preview) && $preview && $post->body_too_long)
 	@set('multiboard', isset($multiboard) ? $multiboard : false)
 	
 	@if ($multiboard)
@@ -24,8 +25,15 @@
 			'catalog' => isset($catalog) ? !!$catalog : false,
 		])
 		
-		@if ($post->bans->count() || $post->updated_by)
+		{{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
+		@if ($preview || $post->bans->count() || $post->updated_by)
 		<ul class="post-metas">
+			@if ($preview)
+			<li class="post-meta meta-ban_reason">@lang('board.preview_see_more', [
+				'url' => $post->getURL(),
+			])</li>
+			@endif
+			
 			@if ($post->bans)
 			@foreach ($post->bans as $ban)
 			<li class="post-meta meta-ban_reason">

@@ -164,7 +164,7 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		
 		/*
-		 * Markdown...
+		 * Content Formatting...
 		 */
 		'InfinityNext\Eightdown\EightdownServiceProvider',
 		

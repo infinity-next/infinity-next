@@ -105,10 +105,34 @@ return [
 		'unoriginal_content'      => "Unoriginal content!",
 		'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
 		'unoriginal_image_board'  => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
+	],
+	
+	/*
+	|--------------------------------------------------------------------------
+	| Form Specific Language
+	|--------------------------------------------------------------------------
+	|
+	| These lines are particular to a single, unique instance of a form.
+	|
+	*/
+	
+	'form' => [
 		
-		'validate' => [
+		/**
+		 * Post Form
+		 */
+		'post' => [
+			
+			// Body content.
+			'body' => [
+				
+				// Newline requirement
+				'newlines' => "{1}Post body must be exactly :count line.|[2,Inf]Post body must have fewer than :count lines.",
+				
+			],
 			
 		],
+		
 	],
 	
 	/*

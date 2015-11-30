@@ -179,6 +179,8 @@ return [
 	'omitted_replies'   => '{0}|{1}:number_posts post|[2,Inf]:number_posts posts',
 	'omitted_file'      => '{0}|{1}:number_files file|[2,Inf]:number_files files;',
 	
+	'preview_see_more'  => "Post was truncated. <a href=\":url\">Click here</a> to view the full text.",
+	
 	/**
 	 * Pagination
 	 */

@@ -116,6 +116,7 @@ return [
 		'threadAttachmentsMin'     => "Minimum attachments for new threads",
 		'postMaxLength'            => "Maximum characters per post",
 		'postMinLength'            => "Minimum characters per post",
+		'postNewLines'             => "Maximum linebreaks per post",
 		'postFloodTime'            => "Minimum time between posts (sec)",
 		'threadFloodTime'          => "Minimum time between threads (sec)",
 		'postsAllowSubject'        => "Allow subject field",
@@ -169,6 +170,8 @@ return [
 			'boardBacklinksWhitelist'  => "One board per line, only text, no slashes.",
 			
 			'threadAttachmentsMin'     => "If there are also minimum attachments per post, <wbr />the greater of the two will be used.",
+			
+			'postNewLines'             => "Useful if spammers use many new lines to disrupt board flow.<br/>0 is no maximum.",
 			
 			'captchaEnabled'           => "Enables CAPTCHA tests for posts",
 			'captchaLifespanTime'      => "After this much time (in minutes), the captcha will expire.",

@@ -199,6 +199,21 @@ class PostRequest extends Request implements ApiContract {
 	}
 	
 	/**
+	 * Form specific error messages.
+	 *
+	 * @return array  Of field to language relationships.
+	 */
+	public function messages()
+	{
+		$board = $this->board;
+		$postNewLines = (int) $board->getConfig('postNewLines', 0);
+		
+		return [
+			'body.regex' => trans_choice('validation.form.post.body.newlines', $postNewLines, [ 'count' => $postNewLines ]),
+		];
+	}
+	
+	/**
 	 * Get the proper failed validation response for the request.
 	 *
 	 * @param  array  $errors
@@ -259,6 +274,13 @@ class PostRequest extends Request implements ApiContract {
 				"min:" . $board->getConfig('postMinLength', 0),
 				"max:" . $board->getConfig('postMaxLength', 65534),
 			];
+			
+			$newLineMax = (int) $board->getConfig('postNewLines', 0) ?: false;
+			
+			if ($newLineMax)
+			{
+				$rules['body'][] = "regex:/^(\n?(.*)){1,{$newLineMax}}$/";
+			}
 			
 			if (!$board->canAttach($user))
 			{

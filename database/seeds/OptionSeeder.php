@@ -325,6 +325,14 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => "integer|min:\$min|max:\$max",
 				],
 				[
+					'option_name'           => "postNewLines",
+					'default_value'         => 0,
+					'format'                => "spinbox",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
+					'data_type'             => "unsigned_integer",
+					'validation_parameters' => "integer|min:\$min|max:\$max",
+				],
+				[
 					'option_name'           => "postsPerPage",
 					'default_value'         => "10",
 					'format'                => "spinbox",
@@ -625,6 +633,7 @@ class OptionGroupSeeder extends Seeder {
 					"threadAttachmentsMin",
 					"postMaxLength",
 					"postMinLength",
+					"postNewLines",
 					"postFloodTime",
 					"threadFloodTime",
 					"postAnonymousName",

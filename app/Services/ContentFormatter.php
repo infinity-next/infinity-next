@@ -27,12 +27,69 @@ class ContentFormatter {
 	
 	
 	/**
+	 * Builds an array of attributes for the Parsedown engine.
+	 *
+	 * @param  \App\PostCite  $cite
+	 * @param  boolean  $remote
+	 * @param  boolean  $post
+	 * @return string
+	 */
+	protected function buildCiteAttributes(PostCite $cite, $remote = false, $post = false)
+	{
+		if ($post)
+		{
+			if ($cite->cite)
+			{
+				if ($cite->cite->reply_to)
+				{
+					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}");
+				}
+				else
+				{
+					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}");
+				}
+				
+				if ($remote)
+				{
+					return [
+						'href'           => $url,
+						'class'          => "cite cite-post cite-remote",
+						'data-board_uri' => $cite->cite_board_uri,
+						'data-board_id'  => $cite->cite_board_id,
+					];
+				}
+				else
+				{
+					return [
+						'href'           => $url,
+						'class'          => "cite cite-post cite-local",
+						'data-board_uri' => $cite->cite_board_uri,
+						'data-board_id'  => $cite->cite_board_id,
+						'data-instant',
+					];
+				}
+			}
+		}
+		else
+		{
+			$url = url("/{$cite->cite_board_uri}/");
+			
+			return [
+				'href'           => $url,
+				'class'          => "cite cite-board cite-remote",
+				'data-board-uri' => $cite->cite_board_uri,
+			];
+		}
+	}
+	
+	/**
 	 * Returns a formatted post.
 	 *
 	 * @param  \App\Post|string  $post
-	 * @return String (HTML, Formatted)
+	 * @param  int|null  $splice  Optional. First number of characters to parse instead of entire post. Defaults to null.
+	 * @return string  (HTML, Formatted)
 	 */
-	public function formatPost($post)
+	public function formatPost($post, $splice = null)
 	{
 		if ($post instanceof Post)
 		{
@@ -42,6 +99,11 @@ class ContentFormatter {
 		else
 		{
 			$body = (string) $post;
+		}
+		
+		if (!is_null($splice))
+		{
+			$body = substr($body, 0, (int) $splice);
 		}
 		
 		$this->options = [
@@ -76,7 +138,7 @@ class ContentFormatter {
 	 * However, it is retained because of its heavy use on anonymous websites from 2ch to 4chan.
 	 *
 	 * @param  string  $trip
-	 * @return string (Tripcode)
+	 * @return string  (Tripcode)
 	 */
 	public static function formatInsecureTripcode($trip)
 	{
@@ -89,29 +151,43 @@ class ContentFormatter {
 	}
 	
 	/**
-	 * Returns a formatted sidebar.
+	 * Parses an entire block of text.
 	 *
-	 * @param  string  $text
-	 * @return string (HTML, Formatted)
+	 * @param  string  $content
+	 * @return string
 	 */
-	public function formatSidebar($text)
+	protected function formatContent($content)
 	{
-		$this->options = [
-			'general' => [
-				'keepLineBreaks' => true,
-				'parseHTML'	  => true,
-				'parseURL'	   => true,
-			],
-		];
+		$html = "";
 		
-		return $this->formatContent($text);
+		$html = $this->formatMarkdown($content);
+		
+		return $html;
+	}
+	
+	/**
+	 * Santizes user input for a single line.
+	 *
+	 * @param  string  $content
+	 * @return string
+	 */
+	protected function formatMarkdown($content)
+	{
+		$content = Markdown::config($this->options)
+			->extendBlockComplete('Quote', $this->getQuoteParser())
+			->addInlineType('>', 'Cite')
+			->addInlineType('&', 'Cite')
+			->extendInline('Cite', $this->getCiteParser())
+			->parse($content);
+		
+		return $content;
 	}
 	
 	/**
 	 * Returns a formatted report rule text.
 	 *
 	 * @param  string  $text
-	 * @return string (HTML, Formatted)
+	 * @return string  (HTML, Formatted)
 	 */
 	public function formatReportText($text)
 	{
@@ -139,74 +215,6 @@ class ContentFormatter {
 		];
 		
 		return $this->formatContent($text);
-	}
-	
-	/**
-	 * Parses an entire block of text.
-	 *
-	 * @param  string $content
-	 * @return string
-	 */
-	protected function formatContent($content)
-	{
-		$html = "";
-		
-		$html = $this->formatMarkdown($content);
-		
-		return $html;
-	}
-	
-	/**
-	 * Santizes user input for a single line.
-	 *
-	 * @param  string $content
-	 * @return string
-	 */
-	protected function formatMarkdown($content)
-	{
-		$content = Markdown::config($this->options)
-			->extendBlockComplete('Quote', $this->getQuoteParser())
-			->addInlineType('>', 'Cite')
-			->addInlineType('&', 'Cite')
-			->extendInline('Cite', $this->getCiteParser())
-			->parse($content);
-		
-		return $content;
-	}
-	
-	/**
-	 * Provides a closure for the Eightdown API to deal with spoilers after a quote block is complete.
-	 *
-	 * @return Closure
-	 */
-	protected function getQuoteParser()
-	{
-		$parser = $this;
-		
-		return function($Block) use ($parser)
-		{
-			$spoiler = null;
-			
-			foreach ($Block['element']['text'] as &$text)
-			{
-				// $text = str_replace(">", "&gt;", $text);
-				
-				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
-				
-			}
-			
-			if ($spoiler === true)
-			{
-				$Block['element']['attributes']['class'] = "spoiler";
-				
-				foreach ($Block['element']['text'] as &$text)
-				{
-					$text = preg_replace('/^&gt;!/', "", $text, 1);
-				}
-			}
-			
-			return $Block;
-		};
 	}
 	
 	/**
@@ -383,59 +391,38 @@ class ContentFormatter {
 	}
 	
 	/**
-	 * Builds an array of attributes for the Parsedown engine.
+	 * Provides a closure for the Eightdown API to deal with spoilers after a quote block is complete.
 	 *
-	 * @param  \App\PostCite $cite
-	 * @param  boolean $remote
-	 * @param  boolean $post
-	 * @return string
+	 * @return Closure
 	 */
-	protected function buildCiteAttributes(PostCite $cite, $remote = false, $post = false)
+	protected function getQuoteParser()
 	{
-		if ($post)
+		$parser = $this;
+		
+		return function($Block) use ($parser)
 		{
-			if ($cite->cite)
+			$spoiler = null;
+			
+			foreach ($Block['element']['text'] as &$text)
 			{
-				if ($cite->cite->reply_to)
-				{
-					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}");
-				}
-				else
-				{
-					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}");
-				}
+				// $text = str_replace(">", "&gt;", $text);
 				
-				if ($remote)
+				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
+				
+			}
+			
+			if ($spoiler === true)
+			{
+				$Block['element']['attributes']['class'] = "spoiler";
+				
+				foreach ($Block['element']['text'] as &$text)
 				{
-					return [
-						'href'           => $url,
-						'class'          => "cite cite-post cite-remote",
-						'data-board_uri' => $cite->cite_board_uri,
-						'data-board_id'  => $cite->cite_board_id,
-					];
-				}
-				else
-				{
-					return [
-						'href'           => $url,
-						'class'          => "cite cite-post cite-local",
-						'data-board_uri' => $cite->cite_board_uri,
-						'data-board_id'  => $cite->cite_board_id,
-						'data-instant',
-					];
+					$text = preg_replace('/^&gt;!/', "", $text, 1);
 				}
 			}
-		}
-		else
-		{
-			$url = url("/{$cite->cite_board_uri}/");
 			
-			return [
-				'href'           => $url,
-				'class'          => "cite cite-board cite-remote",
-				'data-board-uri' => $cite->cite_board_uri,
-			];
-		}
+			return $Block;
+		};
 	}
 	
 }
