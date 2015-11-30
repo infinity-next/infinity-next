@@ -334,9 +334,10 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			
 			windowUnfocus  : function(event) {
 				// Sets our last seen post to the post immediately above the widget.
-				widget.$lastPost = widget.$widget.prev();
-				widget.$lastPost = widget.$lastPost.length ? widget.$lastPost : null;
-				widget.hasFocus = false;
+				widget.$lastPost    = widget.$widget.prev();
+				widget.$lastPost    = widget.$lastPost.length ? widget.$lastPost : null;
+				widget.hasFocus     = false;
+				widget.scrollLocked = false;
 			},
 			
 			windowScroll   : function(event) {

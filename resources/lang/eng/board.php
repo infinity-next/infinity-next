@@ -84,7 +84,7 @@ return [
 		'desc-global' => "Guidelines for global reports ...",
 		'global'      => "You are reporting this post to <strong>global management</strong>. " .
 		                 "If a post is in violation of a rule applied to all boards on a site, this is the appropriate action. " .
-		                 "More frivilous or borad-specific rule violations should be handled by board staff.",
+		                 "More frivilous or board-specific rule violations should be handled by board staff.",
 		
 		'associate'            => "Associate report with your account",
 		'associate-no-acct'    => "Register an account to take credit for your reports",

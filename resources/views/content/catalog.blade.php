@@ -21,8 +21,10 @@
 			<li class="thread-item">
 				<article class="thread">
 					@include($c->template('board.catalog'), [
-						'board'   => $board,
-						'thread'  => $thread,
+						'board'      => $board,
+						'thread'     => $thread,
+						'multiboard' => false,
+						'preview'    => false,
 					])
 				</article>
 			</li>
