@@ -1,8 +1,9 @@
 <?php namespace App\Http\Controllers\Board;
 
 use App\Board;
-use App\Post;
 use App\FileStorage;
+use App\OptionGroup;
+use App\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Validators\FileValidator;
@@ -32,6 +33,7 @@ class BoardController extends Controller {
 	
 	const VIEW_BOARD   = "board";
 	const VIEW_CATALOG = "catalog";
+	const VIEW_CONFIG  = "board.config";
 	const VIEW_THREAD  = "board";
 	const VIEW_LOGS    = "board.logs";
 	
@@ -48,7 +50,7 @@ class BoardController extends Controller {
 	 * This is usually the last few threads, depending on the optional page
 	 * parameter, which determines the thread offset.
 	 *
-	 * @param  Board  $board
+	 * @param  \App\Board  $board
 	 * @param  integer  $page
 	 * @return Response
 	 */
@@ -89,7 +91,7 @@ class BoardController extends Controller {
 	/**
 	 * Show the catalog (gridded) board view.
 	 *
-	 * @param  Board  $board
+	 * @param  \App\Board  $board
 	 * @return Response
 	 */
 	public function getCatalog(Board $board)
@@ -105,9 +107,25 @@ class BoardController extends Controller {
 	}
 	
 	/**
+	 * Renders public config.
+	 *
+	 * @param  \App\Board  $board
+	 * @return REsponse
+	 */
+	public function getConfig(Board $board)
+	{
+		$optionGroups = OptionGroup::getBoardConfig($board);
+		
+		return $this->view(static::VIEW_CONFIG, [
+			'board'  => $board,
+			'groups' => $optionGroups,
+		]);
+	}
+	
+	/**
 	 * Renders a thread.
 	 *
-	 * @var Board $board
+	 * @param  \App\Board  $board
 	 * @return Response
 	 */
 	public function getLogs(Board $board)

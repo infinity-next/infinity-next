@@ -52,6 +52,16 @@ class OptionGroup extends Model {
 	}
 	
 	
+	/**
+	 * Return the display name of this option group for UIs.
+	 *
+	 * @return mixed
+	 */
+	public function getDisplayName()
+	{
+		return trans("config.legend.{$this->group_name}");
+	}
+	
 	public static function getSiteConfig()
 	{
 		return static::with(['options' => function($query)
@@ -75,21 +85,8 @@ class OptionGroup extends Model {
 	{
 		return static::with(['options' => function($query) use ($board)
 		{
-			$query->where('option_type', "board");
-			
-			$query->leftJoin('board_settings', function($join) use ($board)
-			{
-				$join->on('board_settings.option_name', '=', 'options.option_name');
-				$join->where('board_settings.board_uri', '=', $board->board_uri);
-			});
-			
-			$query->addSelect(
-				'options.*',
-				'board_settings.option_value as option_value',
-				'board_settings.is_locked as is_locked'
-			);
-			
-			$query->orderBy('display_order', 'asc');
+			$query->andBoardSettings($board);
 		}])->orderBy('display_order', 'asc')->get();
 	}
+	
 }

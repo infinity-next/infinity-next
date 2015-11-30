@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Board;
 use App\Contracts\PseudoEnum  as PseudoEnumContract;
 use App\Traits\PseudoEnum as PseudoEnum;
 
@@ -96,6 +97,16 @@ class Option extends Model implements PseudoEnumContract {
 		}
 		
 		return $choices;
+	}
+	
+	/**
+	 * Return the display name of this option for UIs.
+	 *
+	 * @return mixed
+	 */
+	public function getDisplayName()
+	{
+		return trans("config.option.{$this->option_name}");
 	}
 	
 	/**
@@ -304,4 +315,30 @@ class Option extends Model implements PseudoEnumContract {
 		$this->attributes['option_value'] = binary_sql($value);
 	}
 	
+	/**
+	 * Joins board_setting data to the options.
+	 *
+	 * @param  \App\Board  $board
+	 * @return Builder
+	 */
+	public function scopeAndBoardSettings($query, Board $board)
+	{
+		$query->where('option_type', "board");
+		
+		$query->leftJoin('board_settings', function($join) use ($board)
+		{
+			$join->on('board_settings.option_name', '=', 'options.option_name');
+			$join->where('board_settings.board_uri', '=', $board->board_uri);
+		});
+		
+		$query->addSelect(
+			'options.*',
+			'board_settings.option_value as option_value',
+			'board_settings.is_locked as is_locked'
+		);
+		
+		// $query->orderBy('display_order', 'asc');
+		
+		return $query;
+	}
 }

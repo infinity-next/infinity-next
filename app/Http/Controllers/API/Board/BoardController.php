@@ -2,6 +2,7 @@
 
 use App\Board;
 use App\Post;
+use App\Option;
 
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
@@ -60,6 +61,17 @@ class BoardController extends ParentController implements ApiContract {
 	{
 		// Load our list of threads and their latest replies.
 		return $this->apiResponse($board->getThreadsForCatalog());
+	}
+	
+	/**
+	 * Renders public config.
+	 *
+	 * @param  \App\Board  $board
+	 * @return REsponse
+	 */
+	public function getConfig(Board $board)
+	{
+		return Option::andBoardSettings($board)->get();
 	}
 	
 	/**

@@ -168,6 +168,7 @@ return [
 		'updated_by'        => "This post was last edited by :name at :time.",
 	],
 	
+	
 	/**
 	 * Thread View
 	 */
@@ -181,6 +182,7 @@ return [
 	
 	'preview_see_more'  => "Post was truncated. <a href=\":url\">Click here</a> to view the full text.",
 	
+	
 	/**
 	 * Pagination
 	 */
@@ -190,11 +192,40 @@ return [
 	'next'     => 'Next',
 	'last'     => 'Last',
 	
+	
 	/**
 	 * SFW
 	 */
 	'sfw'      => "Safe for work only",
 	'nsfw'     => "Not safe for work allowed",
+	
+	
+	/**
+	 * Logs
+	 */
+	'logs' => [
+		'title' => "/:board_uri/ Staff Logs",
+		
+		'table' => [
+			'time'   => "Time",
+			'user'   => "Moderator",
+			'action' => "Action",
+		],
+	],
+	
+	
+	/**
+	 * Public Config
+	 */
+	'config'     => [
+		'title' => "/:board_uri/ Configuration",
+		
+		'table' => [
+			'option' => "Option",
+			'value'  => "Value",
+		],
+	],
+	
 	
 	/**
 	 * Other

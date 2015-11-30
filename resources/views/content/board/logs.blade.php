@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
-@section('title', "/{$board->board_uri}/ Staff Logs")
-@section('description', $board->description)
+@section('title', trans('board.logs.title', [ 'board_uri' => $board->board_uri ]))
 
 @section('content')
 <main class="board-logs">
@@ -15,9 +14,9 @@
 				</colgrop>
 				<thead>
 					<tr>
-						<th>Time</th>
-						<th>User</th>
-						<th>Action</th>
+						<th>@lang('board.logs.table.time')</th>
+						<th>@lang('board.logs.table.user')</th>
+						<th>@lang('board.logs.table.action')</th>
 					</tr>
 				</thead>
 				<tbody>

@@ -225,6 +225,9 @@ Route::group([
 			// Gets all visible OPs on a board.
 			Route::any('catalog.json', 'BoardController@getCatalog');
 			
+			// Gets all visible OPs on a board.
+			Route::any('config.json', 'BoardController@getConfig');
+			
 			// Put new thread
 			Route::put('thread.json', 'BoardController@putThread');
 			
@@ -299,6 +302,9 @@ Route::group([
 			
 			// Get the catalog.
 			Route::get('catalog', 'BoardController@getCatalog');
+			
+			// Get the config.
+			Route::get('config', 'BoardController@getConfig');
 			
 			// Get moderator logs
 			Route::get('logs', 'BoardController@getLogs');
