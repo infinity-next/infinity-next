@@ -57,19 +57,21 @@ ib.widget("lazyimg", function(window, $, undefined) {
 		
 		bind     : {
 			widget : function() {
-				$(widget.options.selector['img'], widget.$widget).each(function() {
-					var $this = $(this);
-					
-					$this.addClass("lazy-load");
-					$this.attr('data-src', this.src);
-					this.src = "";
-				});
-				
-				$(window)
-					.on('scroll.ib-lazyimg', widget.events.windowScroll)
-					.on('ready.ib-lazyimg', widget.events.windowScroll);
-				
-				widget.events.windowScroll();
+				// Disabling this for now as it is broken.
+				// 
+				// $(widget.options.selector['img'], widget.$widget).each(function() {
+				// 	var $this = $(this);
+				// 	
+				// 	$this.addClass("lazy-load");
+				// 	$this.attr('data-src', this.src);
+				// 	this.src = "";
+				// });
+				// 
+				// $(window)
+				// 	.on('scroll.ib-lazyimg', widget.events.windowScroll)
+				// 	.on('ready.ib-lazyimg', widget.events.windowScroll);
+				// 
+				// widget.events.windowScroll();
 			}
 		}
 	};
