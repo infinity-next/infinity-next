@@ -9,7 +9,7 @@
 	id="post-{{$post->board_uri}}-{{$post->board_id}}"
 >
 	@set('multiboard', isset($multiboard) ? $multiboard : false)
-	@set('preview', (!isset($updater) || !$updater) && $post->body_too_long )
+	@set('preview',    isset($preview)    ? $preview    : (!isset($updater) || !$updater) && $post->body_too_long )
 	
 	@if ($multiboard)
 	@include('content.board.crown', [

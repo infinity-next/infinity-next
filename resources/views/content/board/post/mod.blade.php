@@ -17,14 +17,13 @@
 		@endif
 		
 		<article class="moderated-content">
-			<div class="post-container">
-				@include( 'content.board.post.single', [
-					'board'   => $board,
-					'post'    => $post,
-					
-					'catalog' => false,
-				])
-			</div>
+			@include( 'content.board.post', [
+				'board'      => $board,
+				'post'       => $post,
+				'multiboard' => false,
+				'preview'    => false,
+				'catalog'    => false,
+			])
 		</article>
 	</section>
 </main>
