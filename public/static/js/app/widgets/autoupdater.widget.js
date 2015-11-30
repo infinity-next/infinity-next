@@ -35,9 +35,12 @@ ib.widget("autoupdater", function(window, $, undefined) {
 		updateMisses : 0,
 		
 		// Keeps track of what our last post was before we focused the window.
-		$lastPost  : null,
-		hasFocus   : false,
-		newReplies : 0,
+		$lastPost    : null,
+		hasFocus     : false,
+		newReplies   : 0,
+		
+		// Keeps track of if we're scrolled to the bottom.
+		scrollLocked : false,
 		
 		// Helpers
 		getTimeFromPost : function($post) {
@@ -218,16 +221,16 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							
 							if (scrollIntoView === true)
 							{
-								if (typeof $newPost[0].scrollIntoView !== "undefined")
+								if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined")
 								{
-									$newPost[0].scrollIntoView({
+									$newPost[0].scrollIntoViewIfNeeded({
 										behavior : "smooth",
 										block    : "end"
 									});
 								}
-								else if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined")
+								else if (typeof $newPost[0].scrollIntoView !== "undefined")
 								{
-									$newPost[0].scrollIntoViewIfNeeded({
+									$newPost[0].scrollIntoView({
 										behavior : "smooth",
 										block    : "end"
 									});
@@ -244,6 +247,10 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					if (!widget.hasFocus)
 					{
 						widget.newReplies += newPosts.length;
+					}
+					else if (widget.scrollLocked)
+					{
+						window.scrollTo(0, document.body.scrollHeight);
 					}
 					
 					widget.updateMisses = 0;
@@ -332,6 +339,25 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				widget.hasFocus = false;
 			},
 			
+			windowScroll   : function(event) {
+				// Determine if the boundaries of this image are in the viewport.
+				
+				var $elem         = widget.$widget;
+				var $window       = $(window);
+				
+				var docViewTop    = $window.scrollTop();
+				var docViewBottom = docViewTop + $window.height();
+				
+				var viewPad = 16;
+				
+				var elemTop       = $elem.offset().top - viewPad;
+				var elemBottom    = elemTop + $elem.height() + viewPad;
+				
+				// We don't need the entire image to be present, just either edge.
+				
+				// If the top boundary is present
+				widget.scrollLocked = (elemBottom <= docViewBottom) && (elemBottom >= docViewTop);
+			}
 		},
 		
 		// Event bindings
@@ -373,6 +399,7 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					.hide();
 				
 				$(window)
+					.on('scroll',      widget.events.windowScroll)
 					.on('focus',       widget.events.windowFocus)
 					.on('blur',        widget.events.windowUnfocus);
 				

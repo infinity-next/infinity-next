@@ -546,7 +546,6 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			postKeyDown  : function(event) {
-					console.log(event);
 				if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey)
 				{
 					$(widget.options.selector['submit-post'], widget.$widget)
