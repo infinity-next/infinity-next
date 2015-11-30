@@ -35,7 +35,6 @@ ib.widget("captcha", function(window, $, undefined) {
 			},
 			
 			captchaLoadIn : function(event, captcha) {
-				console.log(captcha);
 				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
 					$hidden  = $captcha.next();
 				

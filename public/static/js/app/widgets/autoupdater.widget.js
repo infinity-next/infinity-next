@@ -27,11 +27,12 @@ ib.widget("autoupdater", function(window, $, undefined) {
 		},
 		
 		// Update tracking
-		updating    : false,
-		updateTimer : false,
-		updateURL   : false,
-		updateAsked : false,
-		updateLast  : false,
+		updating     : false,
+		updateTimer  : false,
+		updateURL    : false,
+		updateAsked  : false,
+		updateLast   : false,
+		updateMisses : 0,
 		
 		// Keeps track of what our last post was before we focused the window.
 		$lastPost  : null,
@@ -238,8 +239,18 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					});
 				}
 				
-				if (!widget.hasFocus) {
-					widget.newReplies += newPosts.length;
+				if (newPosts.length)
+				{
+					if (!widget.hasFocus)
+					{
+						widget.newReplies += newPosts.length;
+					}
+					
+					widget.updateMisses = 0;
+				}
+				else
+				{
+					++widget.updateMisses;
 				}
 				
 				$(window).trigger('au-updated', [{
@@ -273,18 +284,17 @@ ib.widget("autoupdater", function(window, $, undefined) {
 					
 					if (isNaN(time))
 					{
-						time = 10;
+						time = 0;
 					}
-					else
+					
+					--time;
+					
+					if (time <= 0)
 					{
-						--time;
+						time = (widget.hasFocus ? widget.updateMisses * 2 : Math.pow(widget.updateMisses, 1.5)) + 3;
+						time = parseInt( Math.min(time, 30), 10);
 						
-						if (time <= 0)
-						{
-							time = 10;
-							
-							widget.$widget.trigger('au-update');
-						}
+						widget.$widget.trigger('au-update');
 					}
 					
 					$timer
