@@ -396,6 +396,8 @@ ib.widget("postbox", function(window, $, undefined) {
 				// Indicate we want a full messenger response.
 				data.messenger = true;
 				
+				$form.prop('disabled', true);
+				
 				jQuery.ajax({
 					type:        "POST",
 					method:      "PUT",
@@ -405,6 +407,9 @@ ib.widget("postbox", function(window, $, undefined) {
 					contentType: "application/json; charset=utf-8"
 				})
 					.done(function(response, textStatus, jqXHR) {
+						$form.prop('disabled', false);
+						
+						
 						if (typeof response !== "object")
 						{
 							try
@@ -541,9 +546,15 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			postKeyDown  : function(event) {
+					console.log(event);
 				if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey)
 				{
+					$(widget.options.selector['submit-post'], widget.$widget)
+						.click();
 					
+					
+					event.preventDefault();
+					return false;
 				}
 			},
 			
@@ -723,6 +734,10 @@ ib.widget("postbox", function(window, $, undefined) {
 				}
 				
 				widget.$widget
+					// Watch for key downs as to capture ctrl+enter submission.
+					// We don't die this to any particular item.
+					.on('keydown.ib-postbox', widget.events.postKeyDown)
+					
 					// Watch for form size clicks
 					.on('click.ib-postbox',                                             widget.events.formClick)
 					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
