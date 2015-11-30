@@ -275,9 +275,9 @@ class PostRequest extends Request implements ApiContract {
 				"max:" . $board->getConfig('postMaxLength', 65534),
 			];
 			
-			$newLineMax = (int) $board->getConfig('postNewLines', 0) ?: false;
+			$newLineMax = (int) $board->getConfig('postNewLines', 0);
 			
-			if ($newLineMax)
+			if ($newLineMax > 0)
 			{
 				$rules['body'][] = "regex:/^(\n?(.*)){1,{$newLineMax}}$/";
 			}

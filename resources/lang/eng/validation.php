@@ -127,7 +127,7 @@ return [
 			'body' => [
 				
 				// Newline requirement
-				'newlines' => "{1}Post body must be exactly :count line.|[2,Inf]Post body must have fewer than :count lines.",
+				'newlines' => "[0,1]Post body must be exactly :count line.|[2,Inf]Post body must have fewer than :count lines.",
 				
 			],
 			
