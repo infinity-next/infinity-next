@@ -17,7 +17,6 @@
 			@include('content.board.post', [
 				'board'      => $board,
 				'post'       => $reply,
-				'preview'    => !$reply_to,
 				'multiboard' => false,
 			])
 			@spaceless
