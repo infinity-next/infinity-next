@@ -32,7 +32,7 @@ class FileStorage extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count', 'has_thumbnail'];
+	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count', 'has_thumbnail', 'thumbnail_width', 'thumbnail_height'];
 	
 	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
@@ -773,21 +773,22 @@ class FileStorage extends Model {
 					{
 						try
 						{
-							$imageManager = new ImageManager;
-							$imageManager
-								->make($albumArt['data'])
-								->resize(
-									Settings::get('attachmentThumbnailSize'),
-									Settings::get('attachmentThumbnailSize'),
-									function($constraint) {
+							$image = (new ImageManager)->make($albumArt['data']);
+							
+							$this->file_height = $image->height();
+							$this->file_width  = $image->width();
+							
+							$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 										$constraint->aspectRatio();
 										$constraint->upsize();
-									}
-								)
+								})
 								->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 								->save($this->getFullPathThumb());
 							
-							$this->has_thumbnail = true;
+							$this->has_thumbnail    = true;
+							$this->thumbnail_height = $image->height();
+							$this->thumbnail_width  = $image->width();
+							
 							return true;
 						}
 						catch (\Exception $error)
@@ -847,21 +848,22 @@ class FileStorage extends Model {
 					// Constrain thumbnail to proper dimensions.
 					if (Storage::exists($this->getPathThumb()))
 					{
-						$imageManager = new ImageManager;
-						$imageManager
-						->make($this->getFullPathThumb())
-							->resize(
-								Settings::get('attachmentThumbnailSize', 250),
-								Settings::get('attachmentThumbnailSize', 250),
-								function($constraint) {
+						$image = (new ImageManager)->make($this->getFullPathThumb());
+						
+						$this->file_height = $image->height();
+						$this->file_width  = $image->width();
+						
+						$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 									$constraint->aspectRatio();
 									$constraint->upsize();
-								}
-							)
-							->encode("jpg", Settings::get('attachmentThumbnailQuality'))
+							})
+							->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 							->save($this->getFullPathThumb());
 						
-						$this->has_thumbnail = true;
+						$this->has_thumbnail    = true;
+						$this->thumbnail_height = $image->height();
+						$this->thumbnail_width  = $image->width();
+						
 						return true;
 					}
 				}
@@ -874,21 +876,22 @@ class FileStorage extends Model {
 			{
 				Storage::makeDirectory($this->getDirectoryThumb());
 				
-				$imageManager = new ImageManager;
-				$imageManager
-					->make($this->getFullPath())
-					->resize(
-						Settings::get('attachmentThumbnailSize'),
-						Settings::get('attachmentThumbnailSize'),
-						function($constraint) {
+				$image = (new ImageManager)->make($this->getFullPath());
+				
+				$this->file_height = $image->height();
+				$this->file_width  = $image->width();
+				
+				$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 							$constraint->aspectRatio();
 							$constraint->upsize();
-						}
-					)
+					})
 					->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 					->save($this->getFullPathThumb());
 				
-				$this->has_thumbnail = true;
+				$this->has_thumbnail    = true;
+				$this->thumbnail_height = $image->height();
+				$this->thumbnail_width  = $image->width();
+				
 				return true;
 			}
 		}

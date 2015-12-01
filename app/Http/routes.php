@@ -259,9 +259,6 @@ Route::group([
 				// Gets all visible OPs on a board.
 				Route::any('threads.json', 'BoardController@getThreads');
 				
-				// Gets all visible OPs on a board.
-				Route::any('settings.php', 'BoardController@getConfig');
-				
 				// Get single thread.
 				Route::get('res/{post_id}.json', 'BoardController@getThread');
 			});

@@ -9,63 +9,6 @@ use Carbon\Carbon;
 
 class BoardController extends ParentController {
 	
-	protected function postToJson(Post $post)
-	{
-		// Actual post information.
-		$postArray = [
-			'no'             => (int) $post->board_id,
-			'resto'          => (int) $post->reply_to_board_id ?: 0,
-			
-			'sticky'         => (bool) $post->isStickied(),
-			'locked'         => (bool) $post->isLocked(),
-			'cyclical'       => (bool) $post->isCyclic(),
-			
-			'name'           => (string) $post->author,
-			'sub'            => (string) $post->subject,
-			'com'            => (string) $post->getBodyFormatted(),
-			
-			'time'           => (int) $post->created_at->timestamp,
-			'last_modified'  => (int) $post->bumped_last->timestamp,
-			
-			'omitted_posts'  => 0,
-			'omitted_images' => 0,
-		];
-		
-		// Attachment information.
-		foreach ($post->attachments as $attachmentIndex => $attachment)
-		{
-			$attachmentArray = [
-				'filename'   => $attachment->getBaseFileName(),
-				'ext'        => "." . $attachment->getExtension(),
-				'tim'        => $attachment->getFileName("%t-%i"),
-				'md5'        => base64_encode(hex2bin($attachment->hash)),
-				
-				'fsize'      => 0,
-				
-				'tn_h'       => 250,
-				'tn_w'       => 250,
-				'h'          => 250,
-				'w'          => 250,
-			];
-			
-			if ($attachmentIndex === 0)
-			{
-				$postArray = array_merge($postArray, $attachmentArray);
-			}
-			else
-			{
-				if (!isset($postArray['extra_files']))
-				{
-					$postArray['extra_files'] = [];
-				}
-				
-				$postArray['extra_files'][] = $attachmentArray;
-			}
-		}
-		
-		return $postArray;
-	}
-	
 	/**
 	 * Show the board index for the user.
 	 * This is usually the last few threads, depending on the optional page
@@ -167,4 +110,66 @@ class BoardController extends ParentController {
 		return response()->json($response);
 	}
 	
+	/**
+	 * Converts a single post in standard legacy API output.
+	 *
+	 * @param  \App\Post  $post
+	 * @return array
+	 */
+	protected function postToJson(Post $post)
+	{
+		// Actual post information.
+		$postArray = [
+			'no'             => (int) $post->board_id,
+			'resto'          => (int) $post->reply_to_board_id ?: 0,
+			
+			'sticky'         => (bool) $post->isStickied(),
+			'locked'         => (bool) $post->isLocked(),
+			'cyclical'       => (bool) $post->isCyclic(),
+			
+			'name'           => (string) $post->author,
+			'sub'            => (string) $post->subject,
+			'com'            => (string) $post->getBodyFormatted(),
+			
+			'time'           => (int) $post->created_at->timestamp,
+			'last_modified'  => (int) $post->bumped_last->timestamp,
+			
+			'omitted_posts'  => 0,
+			'omitted_images' => 0,
+		];
+		
+		// Attachment information.
+		foreach ($post->attachments as $attachmentIndex => $attachment)
+		{
+			$attachmentArray = [
+				'filename'   => $attachment->getBaseFileName(),
+				'ext'        => "." . $attachment->getExtension(),
+				'tim'        => $attachment->getFileName("%t-%i"),
+				'md5'        => base64_encode(hex2bin($attachment->hash)),
+				
+				'fsize'      => $attachment->filesize,
+				
+				'tn_h'       => $attachment->thumbnail_height,
+				'tn_w'       => $attachment->thumbnail_width,
+				'h'          => $attachment->file_height,
+				'w'          => $attachment->file_width,
+			];
+			
+			if ($attachmentIndex === 0)
+			{
+				$postArray = array_merge($postArray, $attachmentArray);
+			}
+			else
+			{
+				if (!isset($postArray['extra_files']))
+				{
+					$postArray['extra_files'] = [];
+				}
+				
+				$postArray['extra_files'][] = $attachmentArray;
+			}
+		}
+		
+		return $postArray;
+	}
 }
