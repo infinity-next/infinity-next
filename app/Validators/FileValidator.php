@@ -1,7 +1,6 @@
 <?php namespace App\Validators;
 
 use App\FileStorage;
-
 use DB;
 use Sleuth;
 

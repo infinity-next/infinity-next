@@ -1,9 +1,8 @@
 <?php namespace App\Validators;
 
-use Illuminate\Validation\Validator;
-
-class ComparisonValidator extends Validator
+class ComparisonValidator
 {
+	
 	public function validateGreaterThan($attribute, $value, $parameters)
 	{
 		$value = (int) $value;
@@ -32,4 +31,5 @@ class ComparisonValidator extends Validator
 		
 		return true;
 	}
+	
 }

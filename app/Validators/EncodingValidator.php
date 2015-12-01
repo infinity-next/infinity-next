@@ -1,7 +1,5 @@
 <?php namespace App\Validators;
 
-use Illuminate\Validation\Validator;
-
 class EncodingValidator
 {
 	

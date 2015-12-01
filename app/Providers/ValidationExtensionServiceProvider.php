@@ -15,7 +15,11 @@ class ValidationExtensionServiceProvider extends ServiceProvider
 	
 	protected function registerValidationRules($validator)
 	{
+		$validator->extend('greater_than',   'App\Validators\ComparisonValidator@validateGreaterThan');
+		$validator->extend('less_than',      'App\Validators\ComparisonValidator@validateLessThan');
+		
 		$validator->extend('encoding',       'App\Validators\EncodingValidator@validateEncoding');
+		
 		$validator->extend('md5',            'App\Validators\FileValidator@validateMd5');
 		$validator->extend('file_name',      'App\Validators\FileValidator@validateFileName');
 		$validator->extend('file_integrity', 'App\Validators\FileValidator@validateFileIntegrity');

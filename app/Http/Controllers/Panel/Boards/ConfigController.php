@@ -51,19 +51,6 @@ class ConfigController extends PanelController {
 	public static $navTertiary = "nav.panel.board.settings";
 	
 	/**
-	 * Add a unique validator upon boot.
-	 *
-	 * @return void
-	 */
-	protected function boot()
-	{
-		Validator::resolver(function($translator, $data, $rules, $messages)
-		{
-			return new ComparisonValidator($translator, $data, $rules, $messages);
-		});
-	}
-	
-	/**
 	 * Display existing assets.
 	 *
 	 * @return Response
