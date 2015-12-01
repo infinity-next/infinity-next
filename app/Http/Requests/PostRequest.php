@@ -8,6 +8,7 @@ use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
+use App\Validators\EncodingValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Auth;
@@ -78,6 +79,11 @@ class PostRequest extends Request implements ApiContract {
 	 */
 	public function __construct(Board $board, Post $thread, UserManager $manager)
 	{
+		Validator::resolver(function($translator, $data, $rules, $messages)
+		{
+			return new EncodingValidator($translator, $data, $rules, $messages);
+		});
+		
 		$this->board  = $board;
 		$this->user   = $manager->user;
 		
@@ -89,8 +95,6 @@ class PostRequest extends Request implements ApiContract {
 		{
 			$this->thread = false;
 		}
-		
-		
 	}
 	
 	/**
@@ -251,14 +255,17 @@ class PostRequest extends Request implements ApiContract {
 		$rules = [
 			'author'  => [
 				"string",
+				"encoding:UTF-8",
 			],
 			
 			'email'   => [
 				"string",
+				"encoding:UTF-8",
 			],
 			
 			'subject' => [
 				"string",
+				"encoding:UTF-8",
 			],
 		];
 		
@@ -271,6 +278,7 @@ class PostRequest extends Request implements ApiContract {
 		if ($board && $user)
 		{
 			$rules['body'] = [
+				"encoding:UTF-8",
 				"min:" . $board->getConfig('postMinLength', 0),
 				"max:" . $board->getConfig('postMaxLength', 65534),
 			];

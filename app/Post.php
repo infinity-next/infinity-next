@@ -500,11 +500,18 @@ class Post extends Model {
 	{
 		if (!$skipCache)
 		{
+			// Markdown parsed content
 			if (!is_null($this->body_html))
 			{
+				if (mb_check_encoding($this->body_html, 'UTF-8'))
+				{
+					return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
+				}
+				
 				return $this->body_html;
 			}
 			
+			// Raw HTML input
 			if (!is_null($this->body_parsed))
 			{
 				return $this->body_parsed;

@@ -257,7 +257,7 @@ Route::group([
 				Route::get('{id}.json', 'BoardController@getIndex');
 				
 				// Gets all visible OPs on a board.
-				Route::any('threads.json', 'BoardController@getThraeds');
+				Route::any('threads.json', 'BoardController@getThreads');
 				
 				// Gets all visible OPs on a board.
 				Route::any('settings.php', 'BoardController@getConfig');

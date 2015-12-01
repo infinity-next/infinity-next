@@ -25,7 +25,7 @@ class BoardController extends ParentController {
 			'com'            => (string) $post->getBodyFormatted(),
 			
 			'time'           => (int) $post->created_at->timestamp,
-			'last_modified'  => (int) $post->updated_at->timestamp,
+			'last_modified'  => (int) $post->bumped_last->timestamp,
 			
 			'omitted_posts'  => 0,
 			'omitted_images' => 0,
@@ -130,6 +130,38 @@ class BoardController extends ParentController {
 		foreach ($posts as $post)
 		{
 			$response['posts'][] = $this->postToJson($post);
+		}
+		
+		return response()->json($response);
+	}
+	
+	/**
+	 * Returns a thread and its replies. 
+	 *
+	 * @param  \App\Board $board
+	 * @return Response
+	 */
+	public function getThreads(Board $board)
+	{
+		// Determine what page we are on.
+		$pages = $board->getPageCount();
+		
+		$response = [];
+		
+		for ($i = 0; $i < $pages; ++$i)
+		{
+			$pageArray = [ 'page' => $i, 'threads' => [] ];
+			$threads   = $board->getThreadsForIndex($i);
+			
+			foreach ($threads as $thread)
+			{
+				$pageArray['threads'][] = [
+					'no'            => (int) $thread->board_id,
+					'last_modified' => (int) $thread->bumped_last->timestamp,
+				];
+			}
+			
+			$response[] = $pageArray;
 		}
 		
 		return response()->json($response);
