@@ -1,3 +1,4 @@
+{{-- Don't call this directly. Call `content.board.post`. --}}
 @include('content.board.post.single.open')
 
 <div class="post-content">

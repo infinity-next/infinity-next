@@ -26,14 +26,13 @@
 					@endif
 				</ul>
 				
-				<div class="post-container">
-					@include( 'content.board.post.single', [
-						'board'   => $reportedPost->board,
-						'post'    => $reportedPost,
-						'reports' => $reportedPost->reports,
-						'catalog' => false,
-					])
-				</div>
+				@include( 'content.board.post', [
+					'board'   => $reportedPost->board,
+					'post'    => $reportedPost,
+					'reports' => $reportedPost->reports,
+					'catalog' => false,
+					'preview' => false,
+				])
 			</article>
 			
 			<ul class="post-reports">
