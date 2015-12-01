@@ -526,13 +526,12 @@ class Post extends Model {
 		
 		if (!mb_check_encoding($this->body_parsed, 'UTF-8'))
 		{
-			return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
+			$this->body_parsed = "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
+			$this->body_parsed_preview = null;
 		}
-		
-		
 		// If our body is too long, we need to pull the first X characters and do that instead.
 		// We also set a token indicating this post has hidden content.
-		if (strlen($this->body) > 1200)
+		else if (strlen($this->body) > 1200)
 		{
 			$this->body_too_long = true;
 			$this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
