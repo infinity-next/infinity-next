@@ -524,6 +524,12 @@ class Post extends Model {
 		$this->body_parsed_preview = null;
 		$this->body_parsed_at      = $this->freshTimestamp();
 		
+		if (mb_check_encoding($this->body_parsed, 'UTF-8'))
+		{
+			return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
+		}
+		
+		
 		// If our body is too long, we need to pull the first X characters and do that instead.
 		// We also set a token indicating this post has hidden content.
 		if (strlen($this->body) > 1200)
@@ -531,8 +537,7 @@ class Post extends Model {
 			$this->body_too_long = true;
 			$this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
 		}
-		
-		// We use an update here instead of just saving $post because, in this method
+				// We use an update here instead of just saving $post because, in this method
 		// there will frequently be additional properties on this object that cannot
 		// be saved. To make life easier, we just touch the object.
 		static::where(['post_id' => $this->post_id])->update([
