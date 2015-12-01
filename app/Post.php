@@ -524,7 +524,7 @@ class Post extends Model {
 		$this->body_parsed_preview = null;
 		$this->body_parsed_at      = $this->freshTimestamp();
 		
-		if (mb_check_encoding($this->body_parsed, 'UTF-8'))
+		if (!mb_check_encoding($this->body_parsed, 'UTF-8'))
 		{
 			return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
 		}
