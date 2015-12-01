@@ -316,7 +316,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			updaterUpdateClick : function(event) {
 				var $timer = $(widget.options.selector['timer'], widget.$widget);
 				
-				$timer.attr('data-time', 10);
+				widget.updateMisses = 0;
+				$timer.attr('data-time', 5);
 				widget.events.update();
 				
 				event.preventDefault();

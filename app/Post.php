@@ -726,6 +726,7 @@ class Post extends Model {
 					'post'     => $this,
 					'op'       => false,
 					'reply_to' => $this->reply_to ?: $this->board_id,
+					'preview'  => false,
 			])->render();
 		}
 		
@@ -755,6 +756,21 @@ class Post extends Model {
 	
 	
 	/**
+	 * Determines if the post is made from the client's remote address.
+	 *
+	 * @return boolean
+	 */
+	public function isAuthoredByClient()
+	{
+		if (is_null($this->author_ip))
+		{
+			return false;
+		}
+		
+		return new IP($this->author_ip) === new IP();
+	}
+	
+	/**
 	 * Determines if this is a bumpless post.
 	 *
 	 * @return boolean
@@ -780,18 +796,13 @@ class Post extends Model {
 	}
 	
 	/**
-	 * Determines if the post is made from the client's remote address.
+	 * Determines if this is cyclic.
 	 *
 	 * @return boolean
 	 */
-	public function isAuthoredByClient()
+	public function isCyclic()
 	{
-		if (is_null($this->author_ip))
-		{
-			return false;
-		}
-		
-		return new IP($this->author_ip) === new IP();
+		return false;
 	}
 	
 	/**

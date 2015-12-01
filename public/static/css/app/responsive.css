@@ -321,17 +321,16 @@
 	 */
 	html.js body.responsive main.index-threaded aside.index-sidebar {
 		position: absolute;
-		right: 0.5em;
+		right: 0;
 		top: -1em;
-		bottom: 1em;
+		bottom: -2em;
 		
-		padding-top: 15em;
-		padding-left: 1em;
-		padding-right: 1em;
+		padding-top: 0;
+		padding-left: 0;
+		padding-right: 0;
 		padding-bottom: 1em;
 		
-		box-sizing: border-box;
-		width: 320px;
+		width: 310px;
 		height: auto;
 	}
 		html.js body.responsive main.index-threaded aside.advertiser.bottom-right {

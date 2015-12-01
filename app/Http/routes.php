@@ -220,7 +220,7 @@ Route::group([
 			Route::any('index.json', 'BoardController@getIndex');
 			
 			// Gets index pages for the board.
-			Route::get('{id}.json', 'BoardController@getIndex');
+			Route::get('page/{id}.json', 'BoardController@getIndex');
 			
 			// Gets all visible OPs on a board.
 			Route::any('catalog.json', 'BoardController@getCatalog');
@@ -239,8 +239,34 @@ Route::group([
 			
 			// Get single post.
 			Route::get('post/{post_id}.json', 'BoardController@getPost');
-			
 		});
+		
+		/*
+		| Legacy API Routes (JSON)
+		*/
+		if (env('LEGACY_ROUTES', false))
+		{
+			Route::group([
+				'namespace' => "API\Legacy",
+			], function()
+			{
+				// Gets the first page of a board.
+				Route::any('index.json', 'BoardController@getIndex');
+				
+				// Gets index pages for the board.
+				Route::get('{id}.json', 'BoardController@getIndex');
+				
+				// Gets all visible OPs on a board.
+				Route::any('threads.json', 'BoardController@getThraeds');
+				
+				// Gets all visible OPs on a board.
+				Route::any('settings.php', 'BoardController@getConfig');
+				
+				// Get single thread.
+				Route::get('res/{post_id}.json', 'BoardController@getThread');
+			});
+		}
+		
 		
 		/*
 		| Post History

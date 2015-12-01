@@ -2,8 +2,4 @@
 	<figure class="ad-field">
 		<img src="{{ asset('static/img/templates/ad_300x250.png') }}" alt="Advertimsent placeholder" />
 	</figure>
-	
-	<figure class="ad-field">
-		<img src="{{ asset('static/img/templates/ad_300x250.png') }}" alt="Advertimsent placeholder" />
-	</figure>
 </aside>

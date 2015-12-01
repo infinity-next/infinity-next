@@ -208,6 +208,17 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Returns the attachment's base filename.
+	 *
+	 * @return string
+	 */
+	public function getBaseFileName()
+	{
+		$pathinfo  = pathinfo($this->pivot->filename);
+		return $pathinfo['filename'];
+	}
+	
+	/**
 	 * Returns the storage directory, minus the file name.
 	 *
 	 * @return string
@@ -243,6 +254,17 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Returns the attachment's extension.
+	 *
+	 * @return string
+	 */
+	public function getExtension()
+	{
+		$pathinfo  = pathinfo($this->pivot->filename);
+		return $pathinfo['extension'];
+	}
+	
+	/**
 	 * Determines and returns the "xxx" of "/url/xxx.ext" for URLs.
 	 *
 	 * @param  string|null  $format  Optional. The token syntax for the filename. Defaults to site setting.
@@ -271,9 +293,7 @@ class FileStorage extends Model {
 			
 			if (isset($this->pivot->filename))
 			{
-				$pathinfo  = pathinfo($this->pivot->filename);
-				$bits['n'] = $pathinfo['filename'];
-				unset($pathinfo);
+				$bits['n'] = $this->getBaseFileName();
 			}
 		}
 		
