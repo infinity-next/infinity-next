@@ -103,7 +103,7 @@ class ContentFormatter {
 		
 		if (!is_null($splice))
 		{
-			$body = substr($body, 0, (int) $splice);
+			$body = mb_substr($body, 0, (int) $splice);
 		}
 		
 		$this->options = [
