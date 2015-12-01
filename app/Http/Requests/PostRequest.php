@@ -8,8 +8,6 @@ use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
-use App\Validators\EncodingValidator;
-use App\Validators\FileValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Auth;
@@ -80,16 +78,6 @@ class PostRequest extends Request implements ApiContract {
 	 */
 	public function __construct(Board $board, Post $thread, UserManager $manager)
 	{
-		Validator::resolver(function($translator, $data, $rules, $messages)
-		{
-			return new EncodingValidator($translator, $data, $rules, $messages);
-		});
-		
-		Validator::resolver(function($translator, $data, $rules, $messages)
-		{
-			return new FileValidator($translator, $data, $rules, $messages);
-		});
-		
 		$this->board  = $board;
 		$this->user   = $manager->user;
 		

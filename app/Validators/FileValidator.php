@@ -1,12 +1,11 @@
 <?php namespace App\Validators;
 
 use App\FileStorage;
-use Illuminate\Validation\Validator;
 
 use DB;
 use Sleuth;
 
-class FileValidator extends Validator
+class FileValidator
 {
 	public function validateMd5($attribute, $value, $parameters)
 	{

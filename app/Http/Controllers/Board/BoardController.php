@@ -6,7 +6,6 @@ use App\OptionGroup;
 use App\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
-use App\Validators\FileValidator;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,14 +35,6 @@ class BoardController extends Controller {
 	const VIEW_CONFIG  = "board.config";
 	const VIEW_THREAD  = "board";
 	const VIEW_LOGS    = "board.logs";
-	
-	public function boot()
-	{
-		Validator::resolver(function($translator, $data, $rules, $messages)
-		{
-			return new FileValidator($translator, $data, $rules, $messages);
-		});
-	}
 	
 	/**
 	 * Show the board index for the user.

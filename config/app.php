@@ -157,6 +157,7 @@ return [
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
 		'App\Providers\SettingsServiceProvider',
+		'App\Providers\ValidationExtensionServiceProvider',
 		
 		/*
 		 * Forms...
@@ -164,15 +165,15 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		
 		/*
-		 * Content Formatting...
-		 */
-		'InfinityNext\Eightdown\EightdownServiceProvider',
-		
-		/*
-		 * File Validation...
+		 * Files and Validation...
 		 */
 		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
+		
+		/*
+		 * Content Formatting...
+		 */
+		'InfinityNext\Eightdown\EightdownServiceProvider',
 		
 		/*
 		 * Money...

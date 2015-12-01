@@ -2,7 +2,7 @@
 
 use Illuminate\Validation\Validator;
 
-class EncodingValidator extends Validator
+class EncodingValidator
 {
 	
 	public function validateEncoding($attribute, $value, $parameters)
