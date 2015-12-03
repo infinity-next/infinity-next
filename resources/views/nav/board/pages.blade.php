@@ -9,6 +9,14 @@
 		@endif
 		
 		<a class="button pagination-button" href="{{ $board->getUrl('logs') }}">Logs</a>
+		
+		@if (isset($header))
+		@if (!$header)
+		<a class="button pagination-button go-to-top" href="#top">Go to top</a>
+		@else 
+		<a class="button pagination-button go-to-bottom" href="#bottom">Go to bottom</a>
+		@endif
+		@endif
 	</div>
 	
 	@if (isset($pages) && $showPages)

@@ -65,6 +65,6 @@ return [
 	| value. By default if empty HTTP_HOST would be used.
 	|
 	*/
-	'base_url' => '',
+	'base_url' => '',// env('APP_URL')."/static",
 	
 ];

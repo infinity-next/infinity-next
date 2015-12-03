@@ -23,7 +23,7 @@
 	@yield('head')
 </head>
 
-<body class="infinity-next responsive @yield('body-dir', 'ltr') @yield('body-class')">
+<body class="infinity-next responsive ltr @yield('body-class')" id="top">
 	<div id="page-container">
 		@section('header')
 		<header class="board-header header-height-1">
