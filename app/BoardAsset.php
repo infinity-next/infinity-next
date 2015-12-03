@@ -40,6 +40,7 @@ class BoardAsset extends Model implements PseudoEnumContract {
 			'board_banner',
 			'board_banned',
 			'board_icon',
+			'board_flags',
 			'file_deleted',
 			'file_spoiler',
 		],
