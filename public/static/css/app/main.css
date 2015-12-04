@@ -417,6 +417,9 @@ form {
 		font-size: 120%;
 		line-height: 1.4545em;
 	}
+		select.field-control {
+			height: 1.9em;
+		}
 		span.field-control {
 			border-color: rgba(0,0,0,0);
 		}
@@ -663,6 +666,7 @@ main.cp form.form-config {
 			}
 				dl.option-asset img.board-asset {
 					max-width: 90%;
+					vertical-align: middle;
 				}
 			
 			#config-permissions dl.option {
@@ -692,7 +696,22 @@ main.cp form.form-config {
 			}
 				dl.option-asset dd.option-definition {
 					margin: 0;
+					white-space: nowrap;
 				}
+					dl.option-asset dd.option-definition.asset-definition {
+						line-height: 1.8em;
+						margin-right: 2em;
+					}
+						dl.option-asset dd.option-definition.asset-definition label.field-label {
+							vertical-align: middle;
+						}
+						dl.option-asset dd.option-definition .asset-enable-input,
+						dl.option-asset dd.option-definition .asset-name-input,
+						dl.option-asset dd.option-definition .asset-file-input {
+							display: inline-block;
+							max-width: 40%;
+							vertical-align: middle;
+						}
 					dd.option-definition label.field-label {
 						display: inline-block;
 						vertical-align: top;
@@ -793,8 +812,9 @@ main.cp form.form-config {
 			}
 				form.form-asset img.form-asset-img {
 					display: inline-block;
-					max-width: 100%;
 					height: auto;
+					max-width: 250px;
+					max-height: 250px;
 				}
 
 /*
@@ -1996,6 +2016,15 @@ section.index-form {
 				max-height: none;
 			}
 			
+			form.form-post .row-double #email {
+				width: 60%;
+			}
+			form.form-post .row-double #flag {
+				float: right;
+				border-left: none;
+				width: 40%;
+			}
+			
 			form.form-post button.field-submit {
 				box-sizing: border-box;
 				margin: 0;
@@ -2552,7 +2581,7 @@ main.index-threaded {
 					padding: 0.6em 1em 0.4em 1em;
 					margin: 0;
 					line-height: 1.8em;
-					white-space: normal;
+					white-space: nowrap;
 				}
 					.post-detail {
 						display: inline-block;

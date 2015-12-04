@@ -684,6 +684,20 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Returns flag board assets
+	 *
+	 * @return Collection  Of \App\BoardAsset
+	 */
+	public function getFlags()
+	{
+		$this->load('assets', 'assets.storage');
+		
+		return $this->assets
+			->where('asset_type', "board_flags")
+			->sortBy('asset_name');
+	}
+	
+	/**
 	 * Returns the board's fully qualified icon image url.
 	 * 
 	 * @return string
@@ -952,6 +966,37 @@ class Board extends Model {
 		return url("/cp/board/{$this->board_uri}/staff/{$route}");
 	}
 	
+	/**
+	 * Returns if this board has a specific flag asset currently loaded.
+	 *
+	 * @param  int  $asset_id
+	 * @return bool
+	 */
+	public function hasFlag($asset_id)
+	{
+		if (!isset($this->assets))
+		{
+			return false;
+		}
+		
+		return !!$this->assets->where('asset_type', "board_flags")->where('board_asset_id', (int) $asset_id)->count();
+	}
+	
+	/**
+	 * Returns if this board has flag assets currently loaded.
+	 *
+	 * @return bool
+	 */
+	public function hasFlags()
+	{
+		if (!isset($this->assets))
+		{
+			return false;
+		}
+		
+		return !!$this->assets->where('asset_type', "board_flags")->count();
+	}
+	
 	public function hasStylesheet()
 	{
 		if (!$this->isWorksafe())
@@ -1093,6 +1138,7 @@ class Board extends Model {
 				->op()
 				->andAttachments()
 				->andCapcode()
+				->andCites()
 				->orderBy('stickied', 'desc')
 				->orderBy('bumped_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))

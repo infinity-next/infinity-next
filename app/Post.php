@@ -69,6 +69,8 @@ class Post extends Model {
 		'subject',
 		'author',
 		'email',
+		'password',
+		'flag_id',
 		
 		'body',
 		'body_too_long',
@@ -86,6 +88,7 @@ class Post extends Model {
 	protected $hidden = [
 		// Post Items
 		'author_ip',
+		'password',
 		'body',
 		'body_parsed',
 		'body_parsed_at',
@@ -172,6 +175,11 @@ class Post extends Model {
 	public function editor()
 	{
 		return $this->hasOne('\App\User', 'user_id', 'updated_by');
+	}
+	
+	public function flag()
+	{
+		return $this->hasOne('\App\BoardAsset', 'board_asset_id', 'flag_id');
 	}
 	
 	public function op()
@@ -1444,6 +1452,11 @@ class Post extends Model {
 			);
 	}
 	
+	public function scopeAndFlag($query)
+	{
+		return $query->with('flag');
+	}
+	
 	public function scopeAndFirstAttachment($query)
 	{
 		return $query->with(['attachments' => function($query)
@@ -1549,6 +1562,7 @@ class Post extends Model {
 			->andCapcode()
 			->andCites()
 			->andEditor()
+			->andFlag()
 			->andPromotedReports();
 	}
 	
@@ -1754,6 +1768,12 @@ class Post extends Model {
 			// Convert password to tripcode, store tripcode hash in DB.
 			$this->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
 			
+		}
+		
+		// Ensure we're using a valid flag.
+		if (!$this->flag_id || !$board->hasFlag($this->flag_id))
+		{
+			$this->flag_id = null;
 		}
 		
 		// Store the post in the database.

@@ -133,10 +133,11 @@
 }
 
 /**
- * 840px Min
+ * 728px width and 480px height
  * Anything bigger
  */
-@media (min-width: 840px) {
+@media (min-width: 728px) and (min-height: 480px) {
+	
 	/**
 	 * Primary Navigation
 	 */
@@ -196,12 +197,7 @@
 		nav.boardlist .boardlist-item:last-child::after {
 			display: none;
 		}
-}
-
-/**
- * 1028px width and 480px height
- */
-@media (min-width: 1028px) and (min-height: 480px) {
+	
 	/**
 	 * Navigation
 	 */
@@ -292,51 +288,6 @@
 				border-bottom: none;
 			}
 	
-	html.js body.responsive main.index-threaded .thread {
-		padding-right: 340px;
-	}
-	html.js body.responsive main.index-threaded .post,
-	html.js body.responsive main.index-threaded .post-hover {
-		max-width: 70vw;
-	}
-	
-	/* Advertisements */
-	html.js body.responsive main.index-threaded aside.advertiser.top-left {
-		text-align: left;
-	}
-	html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
-		position: absolute;
-		bottom: 0;
-		right: 5px;
-		
-		width: 310px;
-	}
-		html.js body.responsive main.index-threaded aside.advertiser.bottom-right figure.ad-field {
-			display: block;
-			width: 310px;
-		}
-	
-	/**
-	 * Sidebar
-	 */
-	html.js body.responsive main.index-threaded aside.index-sidebar {
-		position: absolute;
-		right: 0;
-		top: -1em;
-		bottom: -2em;
-		
-		padding-top: 0;
-		padding-left: 0;
-		padding-right: 0;
-		padding-bottom: 1em;
-		
-		width: 310px;
-		height: auto;
-	}
-		html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
-			position: absolute;
-		}
-	
 	/**
 	 * Catalog
 	 */
@@ -359,6 +310,54 @@
 		max-width: 200px;
 		max-height: 200px;
 	}
+}
+
+/**
+ * 1040px width and 480px height
+ */
+@media (min-width: 1040px) and (min-height: 480px) {
+	
+	/**
+	 * Sidebar
+	 */
+	html.js body.responsive main.index-threaded .thread {
+		padding-right: 340px;
+	}
+	
+	html.js body.responsive main.index-threaded aside.index-sidebar {
+		position: absolute;
+		right: 0;
+		top: -1em;
+		bottom: -2em;
+		
+		padding-top: 0;
+		padding-left: 0;
+		padding-right: 0;
+		padding-bottom: 1em;
+		
+		width: 310px;
+		height: auto;
+	}
+		html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
+			position: absolute;
+		}
+	
+	/* Advertisements */
+	html.js body.responsive main.index-threaded aside.advertiser.top-left {
+		text-align: left;
+	}
+	html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
+		position: absolute;
+		bottom: 0;
+		right: 5px;
+		
+		width: 310px;
+	}
+		html.js body.responsive main.index-threaded aside.advertiser.bottom-right figure.ad-field {
+			display: block;
+			width: 310px;
+		}
+	
 }
 
 

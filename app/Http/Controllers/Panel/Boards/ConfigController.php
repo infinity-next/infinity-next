@@ -66,39 +66,10 @@ class ConfigController extends PanelController {
 			'board'   => $board,
 			'banned'  => $board->getBannedImages(),
 			'banners' => $board->getBanners(),
+			'flags'   => $board->getFlags(),
 			
 			'tab'     => "assets",
 		]);
-	}
-	
-	/**
-	 * Removes existing assets.
-	 *
-	 * @return Response
-	 */
-	public function patchAssets(Board $board)
-	{
-		if (!$board->canEditConfig($this->user))
-		{
-			return abort(403);
-		}
-		
-		$assetsToKeep = Input::get('asset', []);
-		$assetType    = Input::get('patching', false);
-		$assets       = $board->assets()->where('asset_type', $assetType)->get();
-		
-		foreach ($assets as $assetIndex => $asset)
-		{
-			if (!isset($assetsToKeep[$asset->board_asset_id]) || !$assetsToKeep[$asset->board_asset_id])
-			{
-				$asset->delete();
-				$asset->storage->challengeExistence();
-			}
-		}
-		
-		Event::fire(new BoardWasModified($board));
-		
-		return $this->getAssets($board);
 	}
 	
 	/**
@@ -140,6 +111,92 @@ class ConfigController extends PanelController {
 	}
 	
 	/**
+	 * Removes existing assets.
+	 *
+	 * @return Response
+	 */
+	public function patchAssets(Board $board)
+	{
+		if (!$board->canEditConfig($this->user))
+		{
+			return abort(403);
+		}
+		
+		$assetsToKeep    = Input::get('asset', []);
+		$assetsToName    = Input::get('asset_name', []);
+		$assetsToReplace = Input::file('asset_file', []);
+		$assetType       = Input::get('patching', false);
+		$assets          = $board->assets()->where('asset_type', $assetType)->get();
+		
+		foreach ($assets as $assetIndex => $asset)
+		{
+			if (!isset($assetsToKeep[$asset->board_asset_id]) || !$assetsToKeep[$asset->board_asset_id])
+			{
+				$asset->delete();
+				$asset->storage->challengeExistence();
+			}
+			else
+			{
+				$changed = false;
+				
+				if (isset($assetsToName[$asset->board_asset_id]))
+				{
+					$changed = true;
+					$asset->asset_name = $assetsToName[$asset->board_asset_id];
+				}
+				
+				if (isset($assetsToReplace[$asset->board_asset_id]) && !is_null($assetsToReplace[$asset->board_asset_id]))
+				{
+					$newFile = $assetsToReplace[$asset->board_asset_id];
+					
+					switch ($assetType)
+					{
+						// Don't copy this logic.
+						// This is a lazy duplicate of putAssets.
+						case "board_flags" :
+							$imageRules = array_merge([ "required" ], BoardAsset::getRulesForFlags($board));
+							
+							$validator = Validator::make([
+								'file' => $newFile,
+							], [
+								'file' => $imageRules,
+							]);
+							
+							if (!$validator->passes())
+							{
+								return redirect()
+									->back()
+									->withErrors($validator->errors());
+							}
+							
+							$storage     = FileStorage::storeUpload($newFile);
+							
+							if ($storage->exists)
+							{
+								$changed = true;
+								$asset->file_id = $storage->file_id;
+							}
+							else
+							{
+								return redirect()
+									->back()
+									->withErrors([ "validation.custom.file_generic" ]);
+							}
+							
+							break;
+					}
+				}
+				
+				$asset->save();
+			}
+		}
+		
+		Event::fire(new BoardWasModified($board));
+		
+		return $this->getAssets($board);
+	}
+	
+	/**
 	 * Add new assets.
 	 *
 	 * @return Response
@@ -161,7 +218,7 @@ class ConfigController extends PanelController {
 		$validator = Validator::make($input, [
 			'asset_type' => [
 				"required",
-				"in:board_banner,board_banned,board_icon,file_deleted,file_spoiler",
+				"in:board_banner,board_banned,board_icon,board_flags,file_deleted,file_spoiler",
 			],
 			
 			'new_board_banned' => [
@@ -176,6 +233,13 @@ class ConfigController extends PanelController {
 				"image",
 				"image_size:<=300,<=100",
 				"max:1024",
+			],
+			
+			'new_board_flags' => [
+				"required_if:asset_type,board_flags",
+				"array",
+				"min:1",
+				"max:500",
 			],
 			
 			'new_board_icon' => [
@@ -209,40 +273,77 @@ class ConfigController extends PanelController {
 		}
 		
 		// Fetch the asset.
-		$upload    = Input::file("new_{$input['asset_type']}");
-		$multiples = $assetType == "board_banner" || $assetType == "board_banned";
+		$multiples = $assetType == "board_banner" || $assetType == "board_banned" || $assetType == "board_flags";
 		
-		if(file_exists($upload->getPathname()))
+		if ($assetType == "board_flags")
 		{
-			$storage     = FileStorage::storeUpload($upload);
+			$new     = $input["new_{$input['asset_type']}"];
+			$names   = isset($new['name']) ? $new['name'] : [];
+			$uploads = isset($new['file']) ? $new['file'] : [];
+			$rules   = [];
 			
-			if ($storage->exists)
+			$nameRules  = [
+				"required",
+				"string",
+				"between:1,128",
+			];
+			$imageRules = array_merge([ "required" ], BoardAsset::getRulesForFlags($board));
+			
+			foreach (range(0, count($uploads) - 1) as $index)
 			{
-				if (!$multiples)
-				{
-					$assets = $board->assets()
-						->with('storage')
-						->where('asset_type', $input['asset_type'])
-						->get();
-					
-					foreach ($assets as $asset)
-					{
-						$asset->delete();
-						$asset->storage->challengeExistence();
-					}
-				}
-				
-				$asset             = new BoardAsset();
-				$asset->asset_type = $input['asset_type'];
-				$asset->board_uri  = $board->board_uri;
-				$asset->file_id    = $storage->file_id;
-				$asset->save();
+				$rules["name.{$index}"] = $nameRules;
+				$rules["file.{$index}"] = $imageRules;
 			}
-			else
+			
+			$validator = Validator::make($new, $rules);
+			
+			if (!$validator->passes())
 			{
 				return redirect()
 					->back()
-					->withErrors([ "validation.custom.file_generic" ]);
+					->withErrors($validator->errors());
+			}
+		}
+		else
+		{
+			$uploads = [ Input::file("new_{$input['asset_type']}") ];
+		}
+		
+		foreach( (array) $uploads as $indes => $upload )
+		{
+			if(file_exists($upload->getPathname()))
+			{
+				$storage     = FileStorage::storeUpload($upload);
+				
+				if ($storage->exists)
+				{
+					if (!$multiples)
+					{
+						$assets = $board->assets()
+							->with('storage')
+							->where('asset_type', $input['asset_type'])
+							->get();
+						
+						foreach ($assets as $asset)
+						{
+							$asset->delete();
+							$asset->storage->challengeExistence();
+						}
+					}
+					
+					$asset             = new BoardAsset();
+					$asset->asset_type = $input['asset_type'];
+					$asset->asset_name = isset($names[$index]) ? $names[$index] : null;
+					$asset->board_uri  = $board->board_uri;
+					$asset->file_id    = $storage->file_id;
+					$asset->save();
+				}
+				else
+				{
+					return redirect()
+						->back()
+						->withErrors([ "validation.custom.file_generic" ]);
+				}
 			}
 		}
 		

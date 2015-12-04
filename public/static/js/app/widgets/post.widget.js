@@ -319,7 +319,12 @@ ib.widget("post", function(window, $, undefined) {
 							'opacity'             : 0.5,
 						});
 					
+					// Clear source first so that lodaing works correctly.
+					$img.attr('src', "");
+					
 					$img
+						// Change the source of our thumb to the full image.
+						.attr('src', $link.attr('data-download-url'))
 						// Bind an event to handle the image loading.
 						.one("load", function() {
 							// Remove our opacity change.
@@ -329,9 +334,7 @@ ib.widget("post", function(window, $, undefined) {
 								// 'min-height'       : '',
 								'opacity'          : ""
 							});
-						})
-						// Finally change the source of our thumb to the full image.
-						.attr('src', $link.attr('data-download-url'));
+						});
 					
 					event.preventDefault();
 					return false;

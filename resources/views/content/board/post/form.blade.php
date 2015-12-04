@@ -73,7 +73,18 @@
 		</div>
 		@endif
 		
-		<div class="field row-email">
+		@if ($board->hasFlags())
+		<div class="field row-submit row-double">
+			<select id="flag" class="field-control field-flag" name="flag_id">
+				<option value="" selected>@lang('board.field.flag')</option>
+				
+				@foreach ($board->getFlags() as $flag)
+					<option value="{!! $flag->board_asset_id !!}">{{{ $flag->asset_name }}}</option>
+				@endforeach
+			</select>
+		@else
+		<div class="field row-submit">
+		@endif
 			{!! Form::text(
 				'email',
 				old('email'),
