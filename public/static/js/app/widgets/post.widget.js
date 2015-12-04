@@ -208,6 +208,16 @@ ib.widget("post", function(window, $, undefined) {
 					$inline[0].load();
 				}
 				
+				if ($img.is('[data-thumb-width]'))
+				{
+					$img.css('width', $img.attr('data-thumb-width') + "px");
+				}
+				
+				if ($img.is('[data-thumb-height]'))
+				{
+					$img.css('height', $img.attr('data-thumb-height') + "px");
+				}
+				
 				$item.removeClass('attachment-expanded');
 				$img.attr('src', $link.attr('data-thumb-url'));
 				$inline.remove();
@@ -320,7 +330,14 @@ ib.widget("post", function(window, $, undefined) {
 						});
 					
 					// Clear source first so that lodaing works correctly.
-					$img.attr('src', "");
+					$img
+						.attr('data-thumb-width', $img.width())
+						.attr('data-thumb-height', $img.height())
+						.attr('src', "")
+						.css({
+							'width'  : "auto",
+							'height' : "auto"
+						});
 					
 					$img
 						// Change the source of our thumb to the full image.
