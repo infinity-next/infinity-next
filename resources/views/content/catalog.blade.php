@@ -6,6 +6,7 @@
 		'showCatalog' => false,
 		'showIndex'   => true,
 		'showPages'   => false,
+		'header'      => true,
 	])
 	
 	<section class="index-form">
@@ -41,5 +42,6 @@
 		'showCatalog' => false,
 		'showIndex'   => true,
 		'showPages'   => true,
+		'header'      => false,
 	])
 @stop

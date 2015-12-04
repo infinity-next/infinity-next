@@ -13,7 +13,7 @@
 			<dt class="option-term">
 				{!! Form::label(
 					null,
-					trans("config.option.{boardAssetFlagUpload"),
+					trans("config.option.boardAssetFlagUpload"),
 					[
 						'class' => "field-label",
 				]) !!}
@@ -31,28 +31,19 @@
 									'disabled',
 							]) !!}
 						</li>
+						@else
+						<li class="option-item">
+							{!! Form::text(
+								"board_flags[name][]",
+								"",
+								[
+									'class'     => "field-control",
+									'disabled',
+							]) !!}
+						</li>
 						@endif
 					@endfor
 				</ul>
-			</dd>
-		</dl>
-	</fieldset>
-	
-	
-	<fieldset class="form-fields group-new_board_flag">
-		<legend class="form-legend">{{ trans("config.legend.board_flag") }}</legend>
-		
-		<dl class="option option-new_board_flag">
-			<dt class="option-term">
-				{!! Form::label(
-					"new_board_flag",
-					trans("config.option.boardAssetbannedUpload"),
-					[
-						'class' => "field-label",
-				]) !!}
-			</dt>
-			<dd class="option-definition">
-				<input class="field-control" id="new_board_flag" name="new_board_flag" type="file" />
 			</dd>
 		</dl>
 	</fieldset>

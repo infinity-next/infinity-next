@@ -495,7 +495,27 @@ class FileStorage extends Model {
 		
 		$classHTML = $this->getThumbnailClasses();
 		
-		return "<div class=\"attachment-wrapper\"><img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" /></div>";
+		
+		// Measure dimensions.
+		$height = "auto";
+		$width  = "auto";
+		
+		if ($this->has_thumbnail)
+		{
+			if ($this->thumbnail_width > $this->thumbnail_height)
+			{
+				$width = $this->thumbnail_width . "px";
+			}
+			else
+			{
+				$height = $this->thumbnail_height . "px";
+			}
+		}
+		
+		
+		return "<div class=\"attachment-wrapper\">" .
+			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
+		"</div>";
 	}
 	
 	/**
