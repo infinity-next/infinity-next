@@ -40,6 +40,8 @@ return [
 		'email'           => "Email",
 		'capcode'         => "No capcode",
 		'download'        => "Download",
+		'flag'            => "Flag",
+		'password'        => "Flag",
 		
 		'file-dz'         => "Click or drag files here to upload",
 		'spoilers'        => "Spoilers",

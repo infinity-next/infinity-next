@@ -54,6 +54,7 @@ return [
 		'board_basic'        => "Basic Details",
 		'board_diplomacy'    => "Board Diplomacy",
 		'board_ephemerality' => "Content Ephemerality",
+		'board_flags'        => "Custom Flags",
 		'board_originality'  => "Content Originality",
 		'board_posts'        => "Post Options",
 		'board_threads'      => "Thread Options",
@@ -91,6 +92,7 @@ return [
 		
 		'boardAssetBannerUpload'   => "Upload new board banner",
 		'boardAssetbannedUpload'   => "Upload new banned image",
+		'boardAssetFlagUpload'     => "Upload new custom flag",
 		
 		'boardCreateMax'           => "Maximum boards per user",
 		'boardCreateTimer'         => "Cooldown between board creations (min)",
