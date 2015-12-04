@@ -2987,7 +2987,7 @@ main.index-threaded {
 							border: 1px solid rgba(0,0,0,0.25);
 						}
 							ul.post-actions {
-								display: inline-block;
+								display: block;
 								vertical-align: top;
 								width: 100%;
 							}
