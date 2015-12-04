@@ -14,6 +14,7 @@
 		'showCatalog' => true,
 		'showIndex'   => !!$reply_to,
 		'showPages'   => false,
+		'header'      => true,
 	])
 	
 	<section class="index-threads">
@@ -45,5 +46,6 @@
 		'showCatalog' => true,
 		'showIndex'   => !!$reply_to,
 		'showPages'   => true,
+		'header'      => false,
 	])
 @stop
