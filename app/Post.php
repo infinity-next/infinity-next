@@ -8,6 +8,7 @@ use App\Contracts\PermissionUser;
 use App\Services\ContentFormatter;
 use App\Support\Geolocation;
 use App\Support\IP;
+use App\Traits\TakePerGroup;
 use App\Traits\EloquentBinary;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -26,6 +27,7 @@ use App\Events\ThreadNewReply;
 class Post extends Model {
 	
 	use EloquentBinary;
+	use TakePerGroup;
 	use SoftDeletes;
 	
 	/**
@@ -1510,8 +1512,7 @@ class Post extends Model {
 	{
 		return $query->withEverythingForReplies()
 			->orderBy('post_id', 'desc')
-			->skip(0)
-			->take(5);
+			->takePerGroup('reply_to', 5);
 	}
 	
 	public function scopeReplyTo($query, $replies = false)
