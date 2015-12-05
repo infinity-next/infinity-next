@@ -2676,6 +2676,7 @@ main.index-threaded {
 						
 						.post-detail.detail-cites {
 							display: inline;
+							white-space: normal;
 						}
 							.post-detail.detail-cites a.cite {
 								font-size: 90%;

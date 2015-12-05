@@ -21,7 +21,7 @@
 							isset($board) && isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
 					]) !!}
 				</li>
-				@else if($option->isLocked())
+				@elseif (!isset($option) || !$option->isLocked())
 				<li class="option-item option-item-template">
 					{!! Form::text(
 						$option_name . "[]",
