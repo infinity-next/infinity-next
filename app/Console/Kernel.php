@@ -31,9 +31,9 @@ class Kernel extends ConsoleKernel {
 	{
 		$now = Carbon::now();
 		
-		$this->runInspire($schedule, $now);
+		$this->runInspire($schedule,     $now);
 		$this->runRecordStats($schedule, $now);
-		$this->runAutoprune($schedule, $now);
+		$this->runAutoprune($schedule,   $now);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	private function runAutoprune(Schedule $schedule, Carbon $now)
 	{
-		$logdir = "./storage/logs/autoprune";
+		$logdir = storage_path("logs/autoprune");
 		
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);
@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	private function runInspire(Schedule $schedule, Carbon $now)
 	{
-		$logdir = "./storage/logs/inspire";
+		$logdir = storage_path("logs/inspire");
 		
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);
@@ -66,7 +66,6 @@ class Kernel extends ConsoleKernel {
 		
 		$schedule->command('inspire')
 			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H:m')}.txt");
-		
 	}
 	
 	/**
@@ -74,7 +73,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	private function runRecordStats(Schedule $schedule, Carbon $now)
 	{
-		$logdir = "./storage/logs/recordstats";
+		$logdir = storage_path("logs/recordstats");
 		
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);

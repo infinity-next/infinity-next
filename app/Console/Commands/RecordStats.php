@@ -33,4 +33,5 @@ class RecordStats extends Command {
 		// Generate an activity snapshot.
 		Board::createStatsSnapshots();
 	}
+	
 }

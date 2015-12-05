@@ -1508,9 +1508,10 @@ class Post extends Model {
 	
 	public function scopeForIndex($query)
 	{
-		return $query->withEverything()
-			->orderBy('post_id', 'desc');
-			//->take( $this->stickied_at ? 1 : 5 );
+		return $query->withEverythingForReplies()
+			->orderBy('post_id', 'desc')
+			->skip(0)
+			->take(5);
 	}
 	
 	public function scopeReplyTo($query, $replies = false)
