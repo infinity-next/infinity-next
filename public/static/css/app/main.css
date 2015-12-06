@@ -2519,7 +2519,7 @@ main.index-threaded {
 				color: #789922;
 			}
 			
-			a.cite::after {
+			a.cite-you::after {
 				display: 'inline';
 				content: ' (You)';
 			}

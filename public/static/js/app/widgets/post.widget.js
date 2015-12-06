@@ -214,6 +214,8 @@ ib.widget("post", function(window, $, undefined) {
 					}
 				}
 				
+				console.log( cites[board].indexOf(post) >= 0 );
+				
 				if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
 				{
 					this.className += " " + widget.options.classname['cite-you'];
