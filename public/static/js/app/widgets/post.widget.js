@@ -186,7 +186,7 @@ ib.widget("post", function(window, $, undefined) {
 				widget.$cite.remove();
 			}
 			
-			$(widget.options.classname['post-hover']).remove();
+			$("."+widget.options.classname['post-hover']).remove();
 			
 			widget.$cite    = null;
 			widget.citeLoad = null;
@@ -569,6 +569,8 @@ ib.widget("post", function(window, $, undefined) {
 										.data('board_id', post_board_id)
 										.attr('href', "/" + post_board_uri + "/post/" + post_board_id)
 										.appendTo($detail);
+										
+									$backlinks = $backlinks.add($backlink);
 									
 									// Believe it or not this is actually important.
 									// it adds a space after each item.
