@@ -214,8 +214,6 @@ ib.widget("post", function(window, $, undefined) {
 					}
 				}
 				
-				console.log( cites[board].indexOf(post) >= 0 );
-				
 				if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
 				{
 					this.className += " " + widget.options.classname['cite-you'];
@@ -566,6 +564,7 @@ ib.widget("post", function(window, $, undefined) {
 				// Data of our widget, the item we are hoping to insert new citations into.
 				var $detail          = $(widget.options.selector['cite-slot'], widget.$widget);
 				var $backlinks       = $detail.children();
+				var backlinks        = 0;
 				var widget_board_uri = widget.$widget.attr('data-board_uri');
 				var widget_board_id  = widget.$widget.attr('data-board_id');
 				
@@ -602,6 +601,7 @@ ib.widget("post", function(window, $, undefined) {
 										.appendTo($detail);
 										
 									$backlinks = $backlinks.add($backlink);
+									++backlinks;
 									
 									// Believe it or not this is actually important.
 									// it adds a space after each item.
@@ -620,6 +620,11 @@ ib.widget("post", function(window, $, undefined) {
 						});
 					});
 				});
+				
+				if (backlinks)
+				{
+					widget.addCiteAuthorship();
+				}
 			}
 		},
 		
