@@ -309,7 +309,7 @@ class ConfigController extends PanelController {
 			$uploads = [ Input::file("new_{$input['asset_type']}") ];
 		}
 		
-		foreach( (array) $uploads as $indes => $upload )
+		foreach( (array) $uploads as $index => $upload )
 		{
 			if(file_exists($upload->getPathname()))
 			{

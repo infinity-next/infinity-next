@@ -83,7 +83,7 @@ class BoardAsset extends Model implements PseudoEnumContract {
 	{
 		return [
 			"image",
-			"image_size:8-64,16",
+			"image_size:8-64,8-21",
 			"max:16",
 		];
 	}
