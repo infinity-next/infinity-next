@@ -40,7 +40,23 @@ class Autoprune extends Command {
 			'threads' => function($query)
 			{
 				// Avoid selecting the content of a thread.
-				$query->select('reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip', 'author_ip_nulled_at');
+				$query->select(
+					'post_id',
+					'reply_to',
+					'board_id',
+					'reply_to_board_id',
+					'reply_last',
+					'bumped_last',
+					'created_at',
+					'updated_at',
+					'deleted_at',
+					'stickied_at',
+					'bumplocked_at',
+					'locked_at',
+					'body_parsed_at',
+					'author_ip',
+					'author_ip_nulled_at'
+				);
 				
 				// OPs
 				$query->whereNull('reply_to');
@@ -134,10 +150,22 @@ class Autoprune extends Command {
 		{
 			$carbonLife = Carbon::now()->subDays($postTrashedLife);
 			
+			// Find old posts.
+			$forTrash = Post::onlyTrashed()
+				->select('post_id', 'deleted_at')
+				->where('deleted_at', '<=', $carbonLife);
+			
+			// Remove relationships.
+			$forTrash->chunk(100, function($posts)
+			{
+				foreach ($posts as $post)
+				{
+					$post->attachmentLinks()->delete();
+				}
+			});
+			
 			// Destroy old, trashed posts.
-			$affected = Post::onlyTrashed()
-				->where('deleted_at', '<=', $carbonLife)
-				->forceDelete();
+			$affected = $forTrash->forceDelete();
 			
 			$this->comment("      Pruned {$affected} trashed post(s).");
 		}
