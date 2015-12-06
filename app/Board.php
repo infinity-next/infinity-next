@@ -380,7 +380,7 @@ class Board extends Model {
 			$carbon = \Carbon\Carbon::now()->subHour()->minute(0)->second(0);
 		}
 		
-		static::chunk(100, function($boards) use ($stats, $carbon)
+		static::chunk(25, function($boards) use ($stats, $carbon)
 		{
 			foreach ($boards as $board)
 			{

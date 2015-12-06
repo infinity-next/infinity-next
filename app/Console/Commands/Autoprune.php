@@ -39,6 +39,9 @@ class Autoprune extends Command {
 			'settings',
 			'threads' => function($query)
 			{
+				// Avoid selecting the content of a thread.
+				$query->select('reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip', 'author_ip_nulled_at');
+				
 				// OPs
 				$query->whereNull('reply_to');
 				// Not stickied
@@ -46,9 +49,9 @@ class Autoprune extends Command {
 				// Oldest first
 				$query->orderBy('bumped_last', 'desc');
 			},
-		])->chunk(100, function($boards) use ($carbonNow) {
+		])->chunk(25, function($boards) use ($carbonNow) {
 			
-			$this->comment("    Pruning 100 boards...");
+			$this->comment("    Pruning 25 boards...");
 			
 			// With each board, fetch their autoprune settings.
 			foreach ($boards as $board)
