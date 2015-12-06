@@ -193,7 +193,6 @@ class BoardController extends Controller {
 		$post = new Post($request->all());
 		$post->submitTo($board, $thread);
 		
-		
 		// Log staff posts.
 		if ($post->capcode_id)
 		{

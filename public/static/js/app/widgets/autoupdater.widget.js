@@ -21,6 +21,8 @@ ib.widget("autoupdater", function(window, $, undefined) {
 				'force-update'   : "#autoupdater-update",
 				'updating'       : "#autoupdater-updating",
 				
+				'cite'           : "a.cite-post",
+				
 				'thread-event-target' : ".thread:first",
 				'thread-reply'        : ".thread-reply"
 			},
@@ -90,6 +92,29 @@ ib.widget("autoupdater", function(window, $, undefined) {
 			}
 			
 			return Math.max.apply(Math, times);
+		},
+		
+		addYouPost : function(uri, id) {
+			if (typeof window.localStorage !== "object")
+			{
+				return [];
+			}
+			
+			try
+			{
+				var storage = localStorage.getItem("yourPosts."+uri).split(",");
+			}
+			catch (e)
+			{
+				var storage = [];
+			}
+			
+			storage.push(id);
+			storage = storage.filter(function(index, item, array) {
+				return array.lastIndexOf(index) === item;
+			});
+			
+			localStorage.setItem("yourPosts."+uri, storage.join(","));
 		},
 		
 		// Events
@@ -219,6 +244,13 @@ ib.widget("autoupdater", function(window, $, undefined) {
 							
 							widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
 							
+							// Push this ID into our You lists if we made it.
+							if (reply.recently_created)
+							{
+								widget.addYouPost(reply.board_uri, reply.board_id);
+							}
+							
+							// Used primarily by postbox updates to force the scroll to see our new post.
 							if (scrollIntoView === true)
 							{
 								if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined")

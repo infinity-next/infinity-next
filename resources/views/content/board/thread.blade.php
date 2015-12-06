@@ -7,7 +7,13 @@
 @spaceless
 <ul class="thread-replies">
 	@if ($thread->reply_count > count($thread->replies) && !$thread->reply_to)
-	<div class="thread-replies-omitted">{{ Lang::get('board.omitted_text_only', ['text_posts' => $thread->reply_count - count($thread->replies)]) }}</div>
+	<div class="thread-replies-omitted">{{ Lang::get(
+		$thread->reply_file_count > 0 ? 'board.omitted_text_both' : 'board.omitted_text_only',
+		[
+			'text_posts' => Lang::choice('board.omitted_replies', $thread->reply_count - $thread->getReplyCount(), [ 'count' => $thread->reply_count - $thread->getReplyCount() ]),
+			'text_files' => Lang::choice('board.omitted_file', $thread->reply_file_count - $thread->getReplyFileCount(), [ 'count' => $thread->reply_file_count - $thread->getReplyFileCount() ]),
+		]
+	) }}</div>
 	@endif
 	
 	@foreach ($thread->getReplies() as $reply)

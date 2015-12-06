@@ -11,7 +11,8 @@ ib.widget("post", function(window, $, undefined) {
 		// The default values that are set behind init values.
 		defaults : {
 			classname : {
-				'post-hover'  : "post-hover"
+				'post-hover'  : "post-hover",
+				'cite-you'    : "cite-you"
 			},
 			
 			// Selectors for finding and binding elements.
@@ -190,6 +191,34 @@ ib.widget("post", function(window, $, undefined) {
 			
 			widget.$cite    = null;
 			widget.citeLoad = null;
+		},
+		
+		addCiteAuthorship : function() {
+			var cites = [];
+			
+			// Loop through each citation.
+			$(widget.options.selector['cite'], widget.$widget).each(function() {
+				var board = this.dataset.board_uri;
+				var post  = this.dataset.board_id.toString();
+				
+				// Check and see if we have an item for this citation's board.
+				if (typeof cites[board] === "undefined")
+				{
+					if (localStorage.getItem("yourPosts."+board) !== null)
+					{
+						cites[board] = localStorage.getItem("yourPosts."+board).split(",");
+					}
+					else
+					{
+						cites[board] = [];
+					}
+				}
+				
+				if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
+				{
+					this.className += " " + widget.options.classname['cite-you'];
+				}
+			});
 		},
 		
 		// Events
@@ -621,6 +650,7 @@ ib.widget("post", function(window, $, undefined) {
 				;
 				
 				widget.cachePost();
+				widget.addCiteAuthorship();
 			}
 		},
 		

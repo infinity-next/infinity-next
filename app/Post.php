@@ -112,7 +112,7 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['content_raw', 'content_html'];
+	protected $appends = ['content_raw', 'content_html', 'recently_created'];
 	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
@@ -120,13 +120,6 @@ class Post extends Model {
 	 * @var array
 	 */
 	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip_nulled_at'];
-	
-	/**
-	 * Indicates if this model is currently being prepared for update or insert.
-	 *
-	 * @var boolean
-	 */
-	public $saving = false;
 	
 	
 	public function attachments()
@@ -192,6 +185,11 @@ class Post extends Model {
 	public function replies()
 	{
 		return $this->hasMany('\App\Post', 'reply_to', 'post_id');
+	}
+	
+	public function replyFiles()
+	{
+		return $this->hasManyThrough('App\FileAttachment', 'App\Post', 'reply_to', 'post_id');
 	}
 	
 	public function reports()
@@ -668,6 +666,64 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Returns the fully rendered HTML of a post in the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getHtmlAttribute()
+	{
+		if (!$this->trashed())
+		{
+			return \View::make('content.board.post', [
+					'board'    => $this->board,
+					'post'     => $this,
+					'op'       => false,
+					'reply_to' => $this->reply_to ?: $this->board_id,
+					'preview'  => false,
+			])->render();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the recently created flag for the JSON output.
+	 *
+	 * @return string
+	 */
+	public function getRecentlyCreatedAttribute()
+	{
+		return $this->wasRecentlyCreated;
+	}
+	
+	/**
+	 * Returns a count of current reply relationships.
+	 *
+	 * @return int
+	 */
+	public function getReplyCount()
+	{
+		return $this->getRelation('replies')->count();
+	}
+	
+	/**
+	 * Returns a count of current reply relationships.
+	 *
+	 * @return int
+	 */
+	public function getReplyFileCount()
+	{
+		$files = 0;
+		
+		foreach ($this->getRelation('replies') as $reply)
+		{
+			$files += $reply->getRelation('attachments')->count();
+		}
+		
+		return $this->reply_file_count < $files ? $this->reply_file_count : max(0, $files);
+	}
+	
+	/**
 	 * Returns a splice of the replies based on the 2channel style input.
 	 *
 	 * @param  string  $uri
@@ -771,27 +827,6 @@ class Post extends Model {
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Returns the fully rendered HTML of a post in the JSON output.
-	 *
-	 * @return string
-	 */
-	public function getHtmlAttribute()
-	{
-		if (!$this->trashed())
-		{
-			return \View::make('content.board.post', [
-					'board'    => $this->board,
-					'post'     => $this,
-					'op'       => false,
-					'reply_to' => $this->reply_to ?: $this->board_id,
-					'preview'  => false,
-			])->render();
-		}
-		
-		return null;
 	}
 	
 	/**
@@ -1866,9 +1901,10 @@ class Post extends Model {
 				// We're not using the Model for this because it fails under high volume.
 				
 				$threadNewValues = [
-					'updated_at'  => $thread->updated_at,
-					'reply_last'  => $this->created_at,
-					'reply_count' => $thread->replies()->count(),
+					'updated_at'       => $thread->updated_at,
+					'reply_last'       => $this->created_at,
+					'reply_count'      => $thread->replies()->count(),
+					'reply_file_count' => $thread->replyFiles()->count(),
 				];
 				
 				if (!$this->isBumpless() && !$thread->isBumplocked())

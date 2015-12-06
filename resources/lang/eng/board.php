@@ -178,8 +178,8 @@ return [
 	// with pluralized localizations.
 	'omitted_text_only' => 'Omitted :text_posts',
 	'omitted_text_both' => 'Omitted :text_posts with :text_files',
-	'omitted_replies'   => '{0}No posts|{1}:number_posts post|[2,Inf]:number_posts posts', // :text_posts
-	'omitted_file'      => '{0}No files|{1}:number_files file|[2,Inf]:number_files files', // :text_files
+	'omitted_replies'   => '{0}No posts|{1}:count post|[2,Inf]:count posts', // :text_posts
+	'omitted_file'      => '{0}No files|{1}:count file|[2,Inf]:count files', // :text_files
 	
 	'preview_see_more'  => "Post was truncated. <a href=\":url\">Click here</a> to view the full text.",
 	

@@ -2518,11 +2518,14 @@ main.index-threaded {
 			.post p.line.quote {
 				color: #789922;
 			}
+			
+			a.cite::after {
+				display: 'inline';
+				content: ' (You)';
+			}
 		
 		
 		.thread-replies-omitted {
-			color: #ccc;
-			font-size: 90%;
 			margin: 0.25em 0.5em;
 		}
 		

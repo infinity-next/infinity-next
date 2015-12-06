@@ -134,9 +134,14 @@ class BoardController extends ParentController implements ApiContract {
 		}
 		else
 		{
-			$response = $response->unique(function ($post) {
-				return $post->post_id;
-			});
+			$response = $response
+				->sortByDesc('recently_created')
+				->unique(function($post) {
+					return $post->post_id;
+				})
+				->sortBy('post_id');
+			
+			$response = array_values( $response->toArray() );
 		}
 		
 		return $this->apiResponse($response);
