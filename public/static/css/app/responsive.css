@@ -36,8 +36,6 @@
 	 */
 	div.attachment-wrapper {
 		width: 125px;
-		height: 125px;
-		line-height: 125px;
 	}
 	img.attachment-img {
 		max-width: 125px;
@@ -123,8 +121,6 @@
 	 */
 	div.attachment-wrapper {
 		width: 150px;
-		height: 150px;
-		line-height: 150px;
 	}
 	img.attachment-img {
 		max-width: 150px;
@@ -303,8 +299,6 @@
 	 */
 	div.attachment-wrapper {
 		width: 200px;
-		height: 200px;
-		line-height: 200px;
 	}
 	img.attachment-img {
 		max-width: 200px;
