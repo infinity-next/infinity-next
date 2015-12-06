@@ -167,6 +167,20 @@ ib.widget("postbox", function(window, $, undefined) {
 					widget.$widget.trigger('fileFailed', [ file ]);
 				},
 				
+				removedfile : function(file) {
+					var _ref;
+					
+					if (file.previewElement) {
+						if ((_ref = file.previewElement) != null) {
+							_ref.parentNode.removeChild(file.previewElement);
+						}
+					}
+					
+					$(window).trigger('resize');
+					
+					return this._updateMaxFilesReachedClass();
+				},
+				
 				success : function(file, response, xhr) {
 					if (typeof response !== "object")
 					{
