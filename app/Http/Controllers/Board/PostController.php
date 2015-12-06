@@ -114,8 +114,6 @@ class PostController extends Controller {
 				{
 					Event::fire(new PostWasModerated($post, $this->user));
 				}
-				
-				return redirect($board->board_uri);
 			}
 			else
 			{
@@ -144,8 +142,6 @@ class PostController extends Controller {
 					{
 						Event::fire(new PostWasModerated($post, $this->user));
 					}
-					
-					return redirect($board->board_uri);
 				}
 				else
 				{
@@ -173,16 +169,10 @@ class PostController extends Controller {
 					
 					Event::fire(new PostWasModerated($post, $this->user));
 					
-					if ($post->reply_to)
-					{
-						return redirect("{$post->board_uri}/thread/{$post->op->board_id}");
-					}
-					else
-					{
-						return redirect($board->board_uri);
-					}
 				}
 			}
+			
+			return back();
 		}
 		
 		return abort(403);
@@ -367,15 +357,6 @@ class PostController extends Controller {
 					]);
 					
 					$post->delete();
-					
-					if ($post->reply_to)
-					{
-						return redirect("{$post->board_uri}/thread/{$post->op->board_id}");
-					}
-					else
-					{
-						return redirect($board->board_uri);
-					}
 				}
 			}
 		}
@@ -383,14 +364,7 @@ class PostController extends Controller {
 		Event::fire(new PostWasBanned($post));
 		Event::fire(new PostWasModerated($post, $this->user));
 		
-		if ($post->reply_to)
-		{
-			return redirect("{$post->board_uri}/thread/{$post->op->board_id}#{$post->board_id}");
-		}
-		else
-		{
-			return redirect("{$post->board_uri}/thread/{$post->board_id}");
-		}
+		return back();
 	}
 	
 	/**

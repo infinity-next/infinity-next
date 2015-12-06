@@ -4055,9 +4055,15 @@ body.error::before {
 			max-width: 960px;
 		}
 	
-	main#adventure {
+	main#adventure,
+	main#landing {
 		position: absolute;
 		top: 50%;
+		left: 0;
+		width: 100%;
+		text-align: center;
+	}
+	main#adventure {
 		left: 50%;
 		height: 320px;
 		width: 320px;
@@ -4082,6 +4088,7 @@ body.error::before {
 			figure.adventure-figure i.fa {
 				font-size: 240px;
 			}
+			p.landing-message,
 			figure.adventure-figure figcaption.adventure-caption {
 				display: block;
 				height: 2em;

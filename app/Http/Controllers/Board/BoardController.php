@@ -33,6 +33,7 @@ class BoardController extends Controller {
 	const VIEW_BOARD   = "board";
 	const VIEW_CATALOG = "catalog";
 	const VIEW_CONFIG  = "board.config";
+	const VIEW_LANDING = "board.landing";
 	const VIEW_THREAD  = "board";
 	const VIEW_LOGS    = "board.logs";
 	
@@ -163,6 +164,22 @@ class BoardController extends Controller {
 	}
 	
 	/**
+	 * Handles a redirect landing page.
+	 *
+	 * @param  Board  $board
+	 * @param  Post   $thread
+	 * @return Response
+	 */
+	public function getThreadRedirect(Board $board, Post $thread)
+	{
+		return $this->view(static::VIEW_LANDING, [
+			'board'   => $board,
+			'url'     => $thread->getURL(),
+			'message' => trans( $thread->reply_to_board_id ? "board.landing.reply_submitted" : "board.landing.thread_submitted" ),
+		]);
+	}
+	
+	/**
 	 * Handles the creation of a new thread or reply.
 	 *
 	 * @param  \App\Http\Requests\PostRequest  $request
@@ -210,15 +227,8 @@ class BoardController extends Controller {
 			}
 		}
 		
-		// Redirect to the new post or thread.
-		if ($post->reply_to_board_id)
-		{
-			return redirect("{$board->board_uri}/thread/{$post->reply_to_board_id}#{$post->board_id}");
-		}
-		else
-		{
-			return redirect("{$board->board_uri}/thread/{$post->board_id}#{$post->board_id}");
-		}
+		// Redirect to splash page.
+		return redirect("/{$board->board_uri}/redirect/{$post->board_id}");
 	}
 	
 	/**

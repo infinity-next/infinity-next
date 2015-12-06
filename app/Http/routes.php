@@ -354,6 +354,7 @@ Route::group([
 			Route::get('thread/{post_id}/{splice}', 'BoardController@getThread');
 			
 			// Redirect to a post.
+			Route::get('redirect/{post_id}', 'BoardController@getThreadRedirect');
 			Route::get('post/{post_id}', 'BoardController@getThread');
 			
 			// Put reply to thread.

@@ -131,7 +131,6 @@ return [
 		'adventurer' => "They came from outer space!",
 	],
 	
-	
 	// Post Actions
 	'action'            => [
 		'view'              => "Open", // Open a thread in the catalog
@@ -234,4 +233,9 @@ return [
 	 */
 	'overboard'  => "Overboard",
 	'multiboard' => "Multiboard",
+	
+	'landing'    => [
+		'thread_submitted' => "Thread submitted! Redirecting ...",
+		'reply_submitted'  => "Reply submitted! Redirecting ...",
+	],
 ];

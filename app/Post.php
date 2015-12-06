@@ -336,6 +336,19 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Checks a supplied password against the set one.
+	 *
+	 * @param  string  $password
+	 * @return bool
+	 */
+	public function checkPassword($password)
+	{
+		$hash = $this->makePassword($password);
+		
+		return (!is_null($hash) && !is_null($this->password) && $this->password === $hash);
+	}
+	
+	/**
 	 * Removes thread caches containing this post.
 	 *
 	 * @return void
@@ -437,6 +450,31 @@ class Post extends Model {
 		
 		return $checksum;
 	}
+	
+	/**
+	 * Bcrypts a password using relative information.
+	 *
+	 * @param  string  $password  The password to be set. If empty password is given, no password will be set.
+	 * @return string
+	 */
+	public function makePassword($password = null)
+	{
+		$hash = null;
+		
+		if (!!$password)
+		{
+			$hashParts = [];
+			$hashParts[] = env('APP_KEY');
+			$hashParts[] = $this->board_uri;
+			$hashParts[] = $this->reply_to_board_id ?: $this->board_id;
+			$hashParts[] = $this->password;
+			
+			$hash = bcrypt(implode($hashParts, "|"));
+		}
+		
+		return $hash;
+	}
+	
 	
 	/**
 	 * Turns the author id into a consistent color.
@@ -1819,6 +1857,7 @@ class Post extends Model {
 			// We set our board_id and save the post.
 			$this->board_id  = $posts_total;
 			$this->author_id = $this->makeAuthorId();
+			$this->password  = $this->makePassword($this->password);
 			$this->save();
 			
 			// Optionally, the OP of this thread needs a +1 to reply count.
