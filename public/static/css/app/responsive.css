@@ -313,9 +313,9 @@
 }
 
 /**
- * 1040px width and 480px height
+ * 1440px width and 480px height
  */
-@media (min-width: 1040px) and (min-height: 480px) {
+@media (min-width: 1440px) and (min-height: 480px) {
 	
 	/**
 	 * Sidebar
