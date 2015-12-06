@@ -176,7 +176,7 @@ ib.widget("postbox", function(window, $, undefined) {
 						}
 					}
 					
-					$(window).trigger('resize');
+					widget.resizePostbox();
 					
 					return this._updateMaxFilesReachedClass();
 				},
@@ -251,6 +251,38 @@ ib.widget("postbox", function(window, $, undefined) {
 		
 		hasCaptcha : function() {
 			return $(widget.options.selector['captcha-row'], widget.$widget).is(":visible");
+		},
+		
+		resizePostbox : function() {
+			if (widget.resizable)
+			{
+				if (window.innerHeight < 480 || window.innerWidth < 1028)
+				{
+					widget.unbind.draggable();
+					widget.unbind.resize();
+				}
+				else
+				{
+					// Trigger resize on the post body.
+					// Forces the post box to obey new window constraints.
+					var $post    = $(widget.options.selector['form-body'], widget.$widget);
+					var uiWidget = $post.data('ui-resizable');
+					
+					// Widget is bound and we have data
+					if (uiWidget && !jQuery.isEmptyObject(uiWidget.prevPosition))
+					{
+						// This is copy+pasted from the source code because there is no polite way
+						// to handle it otherwise.
+						uiWidget._updatePrevProperties();
+						uiWidget._trigger( "resize", event, uiWidget.ui() );
+						uiWidget._applyChanges();
+					}
+				}
+			}
+			else if (window.innerHeight >= 480 && window.innerWidth >= 1028)
+			{
+				widget.bind.resize();
+			}
 		},
 		
 		// Events
@@ -554,8 +586,9 @@ ib.widget("postbox", function(window, $, undefined) {
 						this.style.top = 45 + "px";
 					}
 					
-					this.style.left = "auto";
-					this.style.right = right + "px";
+					this.style.height = "auto";
+					this.style.left   = "auto";
+					this.style.right  = right + "px";
 				}
 			},
 			
@@ -573,17 +606,16 @@ ib.widget("postbox", function(window, $, undefined) {
 			
 			postResize    : function(event, ui) {
 				var $post = $(this);
-				var $form = $post.resizable( "option", "alsoResize" );
 				
 				ui.position.top  = 0;
 				ui.position.left = 0;
 				
-				var formHangY   = window.innerHeight - ($form.position().top + $form.outerHeight());
-				ui.size.width   = Math.min(ui.size.width, $form.width());
+				var formHangY   = window.innerHeight - (widget.$widget.position().top + widget.$widget.outerHeight());
+				ui.size.width   = Math.min(ui.size.width, widget.$widget.width());
 				ui.size.height += Math.min(0, formHangY);
 				
-				$form.css({
-					'height' : formHangY > 0 ? "auto" : window.innerHeight - $form.position().top
+				widget.$widget.css({
+					'height' : formHangY > 0 ? "auto" : window.innerHeight - widget.$widget.position().top
 				});
 				
 				$post.css('width', ui.size.width);
@@ -637,35 +669,7 @@ ib.widget("postbox", function(window, $, undefined) {
 				// also bubble up to the window, so this gets called when the post box resizes too.
 				if (event.target === window)
 				{
-					if (widget.resizable)
-					{
-						if (window.innerHeight < 480 || window.innerWidth < 1028)
-						{
-							widget.unbind.draggable();
-							widget.unbind.resize();
-						}
-						else
-						{
-							// Trigger resize on the post body.
-							// Forces the post box to obey new window constraints.
-							var $post    = $(widget.options.selector['form-body'], widget.$widget);
-							var uiWidget = $post.data('ui-resizable');
-							
-							// Widget is bound and we have data
-							if (uiWidget && !jQuery.isEmptyObject(uiWidget.prevPosition))
-							{
-								// This is copy+pasted from the source code because there is no polite way
-								// to handle it otherwise.
-								uiWidget._updatePrevProperties();
-								uiWidget._trigger( "resize", event, uiWidget.ui() );
-								uiWidget._applyChanges();
-							}
-						}
-					}
-					else if (window.innerHeight >= 480 && window.innerWidth >= 1028)
-					{
-						widget.bind.resize();
-					}
+					widget.resizePostbox();
 				}
 			}
 		},
@@ -715,6 +719,8 @@ ib.widget("postbox", function(window, $, undefined) {
 						widget.$widget.resizable({
 							handles:  null,
 							minWidth: 300
+						}).css({
+							height: "auto"
 						});
 						
 						widget.resizable = true;
@@ -752,7 +758,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('keydown.ib-postbox', widget.events.postKeyDown)
 					
 					// Watch for form size clicks
-					.on('click.ib-postbox',                                             widget.events.formClick)
+					//.on('click.ib-postbox',                                             widget.events.formClick)
 					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
 					.on('click.ib-postbox', widget.options.selector['button-maximize'], widget.events.maximizeClick)
 					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
