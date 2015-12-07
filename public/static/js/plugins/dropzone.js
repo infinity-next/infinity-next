@@ -541,10 +541,12 @@
       if (this.clickableElements.length) {
         setupHiddenFileInput = (function(_this) {
           return function() {
-            if (_this.hiddenFileInput) {
+            if (_this.hiddenFileInput && _this.hiddenFileInput.tagName !== "input") {
               _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
             }
-            _this.hiddenFileInput = document.createElement("input");
+            if (!_this.hiddenFileInput) {
+              _this.hiddenFileInput = document.createElement("input");
+            }
             _this.hiddenFileInput.setAttribute("type", "file");
             if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
               _this.hiddenFileInput.setAttribute("multiple", "multiple");
