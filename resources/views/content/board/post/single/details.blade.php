@@ -5,11 +5,13 @@
 	
 	@if ($post->subject)
 	<li class="post-detail post-subject">
-		@if ($catalog)
-		<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>
+		<h3 class="post-detail-item subject ugc">
+		@if (!$catalog)
+		{{ $post->subject }}
 		@else
-		<a href="{{ $post->getURL() }}" class="post-detail-item subject ugc">{{ $post->subject }}</a>
+		<a href="{{ $post->getURL() }}" class="subject-link">{{ $post->subject }}</a>
 		@endif
+		</h3>
 	</li>
 	@endif
 	
