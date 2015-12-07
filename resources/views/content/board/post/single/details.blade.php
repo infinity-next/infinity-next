@@ -1,7 +1,17 @@
 <ul class="post-details">
+	@set('catalog', isset($catalog) && $catalog)
+	
 	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
 	
-	<li class="post-detail post-subject">@if ($post->subject)<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>@endif</li>
+	@if ($post->subject)
+	<li class="post-detail post-subject">
+		@if ($catalog)
+		<h3 class="post-detail-item subject ugc">{{ $post->subject }}</h3>
+		@else
+		<a href="{{ $post->getURL() }}" class="post-detail-item subject ugc">{{ $post->subject }}</a>
+		@endif
+	</li>
+	@endif
 	
 	<li class="post-detail post-author">
 		<strong class="post-detail-item author ugc">
@@ -28,7 +38,7 @@
 	
 	<li class="post-detail post-postedon"><time class="post-detail-item postedon" title="{{ $post->created_at->diffForHumans() }}">{{ $post->created_at }}</time></li>
 	
-	@if (!isset($catalog) || !$catalog)
+	@if (!$catalog)
 		@if ($board->getConfig('postsThreadId', false))
 		<li class="post-detail post-authorid" id="{{ $post->board_id}}">
 			<span class="post-detail-item authorid authorid-colorized" style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
@@ -63,5 +73,7 @@
 	
 	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
 	
-	<li class="post-detail detail-cites" data-no-instant>@include('content.board.post.single.cites')</li>
+	@if (!$catalog)
+		<li class="post-detail detail-cites" data-no-instant>@include('content.board.post.single.cites')</li>
+	@endif
 </ul>

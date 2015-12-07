@@ -2142,6 +2142,7 @@ section.index-form {
 						position: absolute;
 						top: 0.25em;
 						left: 0.5em;
+						right: 0.5em;
 						z-index: 20;
 					}
 						.dz-container .dz-preview .dz-actions .dz-remove,
@@ -2150,12 +2151,14 @@ section.index-form {
 							zoom: 1;
 							
 							height: 18px;
+							line-height: 18px;
+							text-indent: 0;
 							min-width: 18px;
 							
 							border-radius: 5px;
 							font-size: 12px;
-							line-height: 30px;
-							margin: 0.25em auto 0.25em 0;
+							line-height: 18px;
+							margin: 0.25em 0 0.25em 0;
 							padding: 0 0 1px 0;
 							outline: none;
 							
@@ -2166,7 +2169,6 @@ section.index-form {
 							
 							color: #C40000;
 							font-size: 11px;
-							line-height: 18px;
 							text-align: center;
 							vertical-align: text-bottom;
 							
@@ -2175,9 +2177,11 @@ section.index-form {
 						}
 						.dz-container .dz-preview .dz-actions .dz-remove {
 							display: inline-block;
+							float: left;
 						}
 						.dz-container .dz-preview .dz-actions .dz-spoiler {
-							text-align: left;
+							text-align: right;
+							float: right;
 						}
 							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
 								display: inline-block;
@@ -2186,20 +2190,24 @@ section.index-form {
 								margin: 2px 0 3px 2px;
 								width: 13px;
 								height: 13px;
+								transform: scale(0.75, 0.75);
+								float: left;
 							}
 							.dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-desc {
 								display: none;
 								padding-right: 0.5em;
-								margin-left: 0.25em;
-								vertical-align: text-bottom;
+								margin-left: 0.1em;
+								vertical-align: middle;
 								line-height: 18px;
 								color: black;
+								float: left;
 							}
 								.dz-container .dz-preview:hover .dz-actions .dz-spoiler .dz-spoiler-desc {
 									display: inline-block;
 								}
 					
 					.dz-container .dz-preview .dz-details {
+						display: block;
 						z-index: 20;
 						position: absolute;
 						bottom: 0;
@@ -2266,10 +2274,8 @@ section.index-form {
 						z-index: 500;
 						position: absolute;
 						display: block;
-						top: 50%;
-						left: 50%;
-						margin-left: -27px;
-						margin-top: -27px;
+						bottom: 2px;
+						right: 2px;
 					}
 						.dz-container .dz-preview.dz-success .dz-success-mark {
 							opacity: 1;
@@ -2283,8 +2289,8 @@ section.index-form {
 						.dz-container .dz-preview .dz-success-mark svg,
 						.dz-container .dz-preview .dz-error-mark svg {
 							display: block;
-							width: 54px;
-							height: 54px;
+							width: 26px;
+							height: 26px;
 						}
 					
 					.dz-container .dz-preview .dz-progress {
@@ -2623,6 +2629,7 @@ main.index-threaded {
 							margin: 0;
 							font-size: 1em;
 						}
+						
 						.author {
 							display: inline-block;
 							color: #117743;
@@ -3116,6 +3123,9 @@ main.index-threaded {
 								margin: 0;
 								min-height: 1.5em;
 							}
+								main.index-catalog .post-details {
+									white-space: normal;
+								}
 								main.index-catalog .post-detail {
 									display: none;
 									margin: 0;
@@ -3142,7 +3152,7 @@ main.index-threaded {
 										display: block;
 										padding: 0.2em 0.5em 0 0.5em;
 										font-size: 140%;
-										line-height: 1.2m;
+										line-height: 1.2em;
 									}
 										main.index-catalog .post-detail-item.subject {
 											display: inline;
