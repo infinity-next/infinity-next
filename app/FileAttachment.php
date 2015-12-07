@@ -87,7 +87,7 @@ class FileAttachment extends Model {
 			})
 			->with('storage')
 			->with('post.board')
-			->limit(20);
+			->take($number);
 		
 		if ($query->getQuery()->getConnection() instanceof \Illuminate\Database\PostgresConnection)
 		{
