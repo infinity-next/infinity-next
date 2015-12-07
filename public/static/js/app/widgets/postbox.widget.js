@@ -758,7 +758,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					.on('keydown.ib-postbox', widget.events.postKeyDown)
 					
 					// Watch for form size clicks
-					//.on('click.ib-postbox',                                             widget.events.formClick)
+					.on('click.ib-postbox',                                             widget.events.formClick)
 					.on('click.ib-postbox', widget.options.selector['button-close'],    widget.events.closeClick)
 					.on('click.ib-postbox', widget.options.selector['button-maximize'], widget.events.maximizeClick)
 					.on('click.ib-postbox', widget.options.selector['button-minimize'], widget.events.minimizeClick)
