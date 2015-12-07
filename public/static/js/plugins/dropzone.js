@@ -541,42 +541,41 @@
       if (this.clickableElements.length) {
         setupHiddenFileInput = (function(_this) {
           return function() {
-            if (_this.hiddenFileInput && _this.hiddenFileInput.tagName !== "input") {
-              _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
-            }
             if (!_this.hiddenFileInput) {
               _this.hiddenFileInput = document.createElement("input");
-            }
-            _this.hiddenFileInput.setAttribute("type", "file");
-            if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
-              _this.hiddenFileInput.setAttribute("multiple", "multiple");
-            }
-            _this.hiddenFileInput.className = "dz-hidden-input";
-            if (_this.options.acceptedFiles != null) {
-              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
-            }
-            if (_this.options.capture != null) {
-              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
-            }
-            _this.hiddenFileInput.style.visibility = "hidden";
-            _this.hiddenFileInput.style.position = "absolute";
-            _this.hiddenFileInput.style.top = "0";
-            _this.hiddenFileInput.style.left = "0";
-            _this.hiddenFileInput.style.height = "0";
-            _this.hiddenFileInput.style.width = "0";
-            document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
-            return _this.hiddenFileInput.addEventListener("change", function() {
-              var file, files, _i, _len;
-              files = _this.hiddenFileInput.files;
-              if (files.length) {
-                for (_i = 0, _len = files.length; _i < _len; _i++) {
-                  file = files[_i];
-                  _this.addFile(file);
-                }
+              _this.hiddenFileInput.setAttribute("type", "file");
+              if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
+                _this.hiddenFileInput.setAttribute("multiple", "multiple");
               }
-              _this.emit("addedfiles", files);
-              return setupHiddenFileInput();
-            });
+              _this.hiddenFileInput.className = "dz-hidden-input";
+              if (_this.options.acceptedFiles != null) {
+                _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+              }
+              if (_this.options.capture != null) {
+                _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
+              }
+              _this.hiddenFileInput.style.visibility = "hidden";
+              _this.hiddenFileInput.style.position = "absolute";
+              _this.hiddenFileInput.style.top = "0";
+              _this.hiddenFileInput.style.left = "0";
+              _this.hiddenFileInput.style.height = "0";
+              _this.hiddenFileInput.style.width = "0";
+              document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
+              _this.hiddenFileInput.addEventListener("change", function() {
+                var file, files, _i, _len;
+                files = _this.hiddenFileInput.files;
+                if (files.length) {
+                  for (_i = 0, _len = files.length; _i < _len; _i++) {
+                    file = files[_i];
+                    _this.addFile(file);
+                  }
+                }
+                _this.emit("addedfiles", files);
+                return setupHiddenFileInput();
+              });
+            }
+            
+            return _this.hiddenFileInput;
           };
         })(this);
         setupHiddenFileInput();
