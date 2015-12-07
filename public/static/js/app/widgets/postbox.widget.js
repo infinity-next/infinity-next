@@ -263,7 +263,7 @@ ib.widget("postbox", function(window, $, undefined) {
 		resizePostbox : function() {
 			if (widget.resizable)
 			{
-				if (window.innerHeight < 480 || window.innerWidth < 1028)
+				if (window.innerHeight < 480 || window.innerWidth < 728)
 				{
 					widget.unbind.draggable();
 					widget.unbind.resize();
@@ -286,7 +286,7 @@ ib.widget("postbox", function(window, $, undefined) {
 					}
 				}
 			}
-			else if (window.innerHeight >= 480 && window.innerWidth >= 1028)
+			else if (window.innerHeight >= 480 && window.innerWidth >= 728)
 			{
 				widget.bind.resize();
 			}
@@ -693,7 +693,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			draggable : function() {
-				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
+				if (window.innerHeight >= 480 && window.innerWidth >= 728)
 				{
 					widget.$widget.draggable({
 						containment : "window",
@@ -706,7 +706,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			},
 			
 			resize    : function() {
-				if (window.innerHeight >= 480 && window.innerWidth >= 1028)
+				if (window.innerHeight >= 480 && window.innerWidth >= 728)
 				{
 					// Bind resizability onto the post area.
 					var $body   = $(widget.options.selector['form-body'], widget.$widget);
