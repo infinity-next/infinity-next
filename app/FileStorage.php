@@ -516,8 +516,10 @@ class FileStorage extends Model {
 		}
 		else
 		{
-			$oHeight = Settings::get('attachmentThumbnailSize');
-			$oWidth = Settings::get('attachmentThumbnailSize');
+			$oHeight = Settings::get('attachmentThumbnailSize') . "px";
+			$oWidth  = $oHeight;
+			$width   = $oHeight;
+			$height  = $oWidth;
 		}
 		
 		
