@@ -25,6 +25,12 @@ class ContentFormatter {
 	 */
 	protected $options;
 	
+	/**
+	 * Censor terms (xxx => zzz)
+	 *
+	 * @var array
+	 */
+	protected $wordfilters = [];
 	
 	/**
 	 * Builds an array of attributes for the Parsedown engine.
@@ -95,6 +101,7 @@ class ContentFormatter {
 		{
 			$this->post	= $post;
 			$body = (string) $post->body;
+			$this->wordfilters = $post->board->getWordfilters();
 		}
 		else
 		{
@@ -151,6 +158,34 @@ class ContentFormatter {
 	}
 	
 	/**
+	 * Censors content.
+	 *
+	 * @return string
+	 */
+	protected function formatCensors($content)
+	{
+		foreach ($this->wordfilters as $find => $replace)
+		{
+			// Matches |bad| but not |<span class="censored">bad</span>|.
+			$pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/";
+			
+			$content = preg_replace_callback($pattern, function ($matches) use ($replace) {
+				if (isset($matches['match']))
+				{
+					$randBool = mt_rand(0, 1) ? "odd" : "even";
+					$randTens = mt_rand(1, 10);
+					
+					return "<span class=\"censored rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
+				}
+				
+				return $matches[0];
+			}, $content);
+		}
+		
+		return $content;
+	}
+	
+	/**
 	 * Parses an entire block of text.
 	 *
 	 * @param  string  $content
@@ -158,11 +193,10 @@ class ContentFormatter {
 	 */
 	protected function formatContent($content)
 	{
-		$html = "";
+		$content = $this->formatMarkdown($content);
+		$content = $this->formatCensors($content);
 		
-		$html = $this->formatMarkdown($content);
-		
-		return $html;
+		return $content;
 	}
 	
 	/**

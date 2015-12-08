@@ -161,7 +161,14 @@ class Option extends Model implements PseudoEnumContract {
 	 */
 	public function getOptionValueAttribute($value)
 	{
-		return binary_unsql($value);
+		$value = binary_unsql($value);
+		
+		if ($this->attributes['data_type'] == "array")
+		{
+			$value = json_decode($value, true);
+		}
+		
+		return $value;
 	}
 	
 	
@@ -312,6 +319,11 @@ class Option extends Model implements PseudoEnumContract {
 	 */
 	public function setOptionValueAttribute($value)
 	{
+		if (is_array($value))
+		{
+			$value = json_encode($value);
+		}
+		
 		$this->attributes['option_value'] = binary_sql($value);
 	}
 	
@@ -337,7 +349,7 @@ class Option extends Model implements PseudoEnumContract {
 			'board_settings.is_locked as is_locked'
 		);
 		
-		// $query->orderBy('display_order', 'asc');
+		$query->orderBy('display_order', 'asc');
 		
 		return $query;
 	}

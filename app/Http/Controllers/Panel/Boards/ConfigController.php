@@ -395,6 +395,7 @@ class ConfigController extends PanelController {
 					'board_uri'    => $board->board_uri,
 				]);
 				
+				// Skip locked items unless we can edit them.
 				$locking = isset($input['lock'][$option->option_name]) && !!$input['lock'][$option->option_name];
 				
 				if ($setting->isLocked() && !$this->user->canEditSettingLock($board, $option))
@@ -402,6 +403,7 @@ class ConfigController extends PanelController {
 					continue;
 				}
 				
+				// Save the value.
 				if (isset($input[$option->option_name]))
 				{
 					$setting->option_value = $input[$option->option_name];
@@ -412,6 +414,7 @@ class ConfigController extends PanelController {
 				}
 				else if (!$locking)
 				{
+					// Delete it if we have no value and aren't saving.
 					$setting->delete();
 					continue;
 				}
@@ -420,6 +423,7 @@ class ConfigController extends PanelController {
 					$setting->option_value = null;
 				}
 				
+				// Set our locked status.
 				if ($locking)
 				{
 					$setting->is_locked = !!$input['lock'][$option->option_name];

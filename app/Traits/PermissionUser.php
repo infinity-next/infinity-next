@@ -75,7 +75,7 @@ trait PermissionUser {
 	 * combination against the user's permission mask.
 	 *
 	 * @param  string  $permission  The permission ID we're checking for.
-	 * @param  \App\Board|string|null  Optional. Board, board_uri string, or NULL. If NULL, checks only global permissions.
+	 * @param  \App\Board|\App\Post|string|null  Optional. Board, Post, board_uri string, or NULL. If NULL, checks only global permissions.
 	 * @return boolean
 	 */
 	public function can($permission, $board = null)
@@ -85,11 +85,11 @@ trait PermissionUser {
 			$permission = $permission->permission_id;
 		}
 		
-		if ($board instanceof Board)
+		if ($board instanceof Board || $board instanceof Post)
 		{
 			$board = $board->board_uri;
 		}
-		else if (!is_string($board) && !is_null($board))
+		else if (!is_string($board))
 		{
 			$board = null;
 		}

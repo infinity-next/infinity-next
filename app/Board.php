@@ -641,6 +641,7 @@ class Board extends Model {
 				{
 					if ($setting->option_name === $option->option_name)
 					{
+						$setting->data_type   = $option->data_type;
 						$option->option_value = $setting->option_value;
 						break;
 					}
@@ -964,6 +965,40 @@ class Board extends Model {
 	public function getURLForStaff($route = "add")
 	{
 		return url("/cp/board/{$this->board_uri}/staff/{$route}");
+	}
+	
+	/**
+	 * Returns a find->replace array for board wordfilters.
+	 *
+	 * @return array
+	 */
+	public function getWordfilters()
+	{
+		$filters = $this->getConfig('boardWordFilter', []);
+		$find    = [];
+		$replace = [];
+		
+		if (isset($filters['find']))
+		{
+			$find = (array) $filters['find'];
+		}
+		
+		if (isset($filters['replace']))
+		{
+			$replace = (array) $filters['replace'];
+		}
+		
+		$filters = array_combine($find, $replace);
+		
+		foreach ($filters as $fFind => $fReplace)
+		{
+			if ($fFind === "")
+			{
+				unset($filters[$fFind]);
+			}
+		}
+		
+		return $filters;
 	}
 	
 	/**

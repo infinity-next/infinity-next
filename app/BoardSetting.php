@@ -63,9 +63,15 @@ class BoardSetting extends Model {
 	 */
 	public function getOptionValueAttribute($value)
 	{
-		return binary_unsql($value);
+		$value = binary_unsql($value);
+		
+		if ($this->attributes['data_type'] == "array")
+		{
+			$value = json_decode($value, true);
+		}
+		
+		return $value;
 	}
-	
 	
 	/**
 	 * Sets our option value and encodes it if required.
@@ -75,6 +81,11 @@ class BoardSetting extends Model {
 	 */
 	public function setOptionValueAttribute($value)
 	{
+		if (is_array($value))
+		{
+			$value = json_encode($value);
+		}
+		
 		$this->attributes['option_value'] = binary_sql($value);
 	}
 	

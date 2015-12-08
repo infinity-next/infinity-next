@@ -731,6 +731,9 @@ main.cp form.form-config {
 					li.option-item-template {
 						margin-top: 1.5em;
 					}
+						li.option-item .field-control {
+							display: inline-block;
+						}
 				
 				label.option-permission {
 					display: inline-block;

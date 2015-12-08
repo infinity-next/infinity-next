@@ -34,7 +34,6 @@
 			'option_name'  => "boardBasicIndexed",
 			'option_value' => $board->is_indexed,
 		])
-		
 		@include("widgets.config.option.onoff", [
 			'option_name'  => "boardBasicWorksafe",
 			'option_value' => $board->is_worksafe,
@@ -42,7 +41,7 @@
 	</fieldset>
 	
 	{{-- Config Options --}}
-	@foreach ($groups as $group)
+	@foreach ($groups as $groupIndex => $group)
 		@include('widgets.config.group')
 	@endforeach
 	

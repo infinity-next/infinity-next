@@ -221,6 +221,7 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "string",
 					'validation_parameters' => "min:\$min|max:\$max",
 				],
+				
 			],
 			
 			'board' => [
@@ -476,6 +477,16 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "string",
 					'validation_parameters' => "string|in:\$choices",
 				],
+				
+				[
+					'option_name'           => "boardWordFilter",
+					'default_value'         => "",
+					'format'                => "template",
+					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 50 ] ),
+					'data_type'             => "array",
+					'validation_parameters' => "array|min:\$min|max:\$max",
+				],
+				
 			],
 		];
 	}
@@ -639,6 +650,7 @@ class OptionGroupSeeder extends Seeder {
 					"postAnonymousName",
 					"postsAllowAuthor",
 					"postsAllowSubject",
+					"boardWordFilter",
 				],
 			],
 			[

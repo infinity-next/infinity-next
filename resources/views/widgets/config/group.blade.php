@@ -2,7 +2,7 @@
 <fieldset class="form-fields group-{{{ $group->group_name }}}">
 	<legend class="form-legend">{{ trans("config.legend.{$group->group_name}") }}</legend>
 	
-	@foreach ($group->options as $option)
+	@foreach ($group->options as $optionIndex => $option)
 		@include($option->getTemplate($controller), [
 			'option'            => $option,
 			'option_name'       => $option->option_name,
