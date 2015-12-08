@@ -502,6 +502,9 @@ class FileStorage extends Model {
 		
 		if ($this->has_thumbnail)
 		{
+			$oHeight = $this->thumbnail_width;
+			$oWidth  = $this->thumbnailWidth;
+			
 			if ($this->thumbnail_width > $this->thumbnail_height)
 			{
 				$width = $this->thumbnail_width . "px";
@@ -511,9 +514,14 @@ class FileStorage extends Model {
 				$height = $this->thumbnail_height . "px";
 			}
 		}
+		else
+		{
+			$oHeight = Settings::get('attachmentThumbnailSize');
+			$oWidth = Settings::get('attachmentThumbnailSize');
+		}
 		
 		
-		return "<div class=\"attachment-wrapper\" style=\"height: {$this->thumbnail_height}; width: {$this->thumbnail_width};\">" .
+		return "<div class=\"attachment-wrapper\" style=\"height: {$oHeight}; width: {$oWidth};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}
