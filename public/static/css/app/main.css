@@ -1049,7 +1049,8 @@ figure.error {
 					#site-recent-posts .recent-post-bg {
 						background-repeat: no-repeat;
 						background-position: center center;
-						opacity: 0.5;
+						background-size: 32px;
+						opacity: 0.33;
 						
 						position: absolute;
 						top: 0;
