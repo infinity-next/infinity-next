@@ -24,6 +24,6 @@
 		</section>
 	</div>
 	
-	@include('content.index.activity')	
+	@include('content.index.activity')
 </main>
 @endsection

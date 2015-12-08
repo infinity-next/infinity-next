@@ -29,7 +29,7 @@
 		@if ($preview || $post->bans->count() || $post->updated_by)
 		<ul class="post-metas">
 			@if ($preview)
-			<li class="post-meta meta-ban_reason">@lang('board.preview_see_more', [
+			<li class="post-meta meta-see_more">@lang('board.preview_see_more', [
 				'url' => $post->getURL(),
 			])</li>
 			@endif
