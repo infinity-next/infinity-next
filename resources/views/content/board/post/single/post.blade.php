@@ -1,4 +1,3 @@
-@spaceless
 @if ($preview)
 <blockquote class="post post-preview ugc">
 	{!! $post->getBodyPreview() !!}
@@ -8,4 +7,3 @@
 	{!! $post->getBodyFormatted() !!}
 </blockquote>
 @endif
-@endspaceless
