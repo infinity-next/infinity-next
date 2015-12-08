@@ -1179,6 +1179,9 @@ class Post extends Model {
 				}
 			})
 			->with('board')
+			->with(['board.assets' => function($query) {
+				$query->whereBoardIcon();
+			}])
 			->limit($number)
 			->orderBy('post_id', 'desc')
 			->get();

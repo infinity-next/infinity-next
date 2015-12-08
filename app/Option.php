@@ -233,7 +233,9 @@ class Option extends Model implements PseudoEnumContract {
 	
 	public function getValidation()
 	{
+		$requirements = [];
 		$requirement = "";
+		
 		switch ($this->data_type)
 		{
 			case "unsigned_integer" :
@@ -246,6 +248,39 @@ class Option extends Model implements PseudoEnumContract {
 			
 			case "boolean" :
 				$requirement = "boolean";
+				break;
+			
+			case "array"   :
+				$requirement = "array";
+				break;
+		}
+		
+		switch ($this->option_name)
+		{
+			case "boardWordFilter" :
+				$requirements['boardWordFilter.find'] = [
+					"array",
+					"between:0,50",
+				];
+				$requirements['boardWordFilter.replace'] = [
+					"array",
+					"between:0,50",
+				];
+				
+				## TODO ##
+				// For Larael 5.2, replace this with the * rule.
+				for ($i = 0; $i <= 50; ++$i)
+				{
+					$requirements["boardWordFilter.find.{$i}"] = [
+						"string",
+						"between:1,256",
+					];
+					$requirements["boardWordFilter.replace.{$i}"] = [
+						"string",
+						"between:0,256",
+					];
+				}
+				
 				break;
 		}
 		
@@ -282,7 +317,8 @@ class Option extends Model implements PseudoEnumContract {
 			}
 		}
 		
-		return $requirement;
+		$requirements[$this->option_name] = $requirement;
+		return $requirements;
 	}
 	
 	/**

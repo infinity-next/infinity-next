@@ -175,7 +175,10 @@ class ContentFormatter {
 					$randBool = mt_rand(0, 1) ? "odd" : "even";
 					$randTens = mt_rand(1, 10);
 					
-					return "<span class=\"censored rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
+					$censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", "", $replace));
+					$censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : "";
+					
+					return "<span class=\"censored {$censoredWord} rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
 				}
 				
 				return $matches[0];

@@ -506,14 +506,14 @@ class FileStorage extends Model {
 			{
 				$width = $this->thumbnail_width . "px";
 			}
-			else
+			else if ($this->thumbnail_width < $this->thumbnail_height)
 			{
 				$height = $this->thumbnail_height . "px";
 			}
 		}
 		
 		
-		return "<div class=\"attachment-wrapper\">" .
+		return "<div class=\"attachment-wrapper\" style=\"height: {$this->thumbnail_height}; width: {$this->thumbnail_width};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}

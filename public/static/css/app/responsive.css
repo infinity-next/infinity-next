@@ -298,11 +298,11 @@
 	 * Thumbnailing
 	 */
 	div.attachment-wrapper {
-		width: 200px;
+		width: auto;
 	}
 	img.attachment-img {
-		max-width: 200px;
-		max-height: 200px;
+		max-width: none;
+		max-height: none;
 	}
 }
 

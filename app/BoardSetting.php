@@ -65,7 +65,7 @@ class BoardSetting extends Model {
 	{
 		$value = binary_unsql($value);
 		
-		if ($this->attributes['data_type'] == "array")
+		if (isset($this->attributes['data_type']) && $this->attributes['data_type'] == "array")
 		{
 			$value = json_decode($value, true);
 		}

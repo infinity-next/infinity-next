@@ -87,4 +87,9 @@ class BoardAsset extends Model implements PseudoEnumContract {
 			"max:16",
 		];
 	}
+	
+	public function scopeWhereBoardIcon($query)
+	{
+		return $query->where('asset_type', "board_icon");
+	}
 }

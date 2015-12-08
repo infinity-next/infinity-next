@@ -1046,6 +1046,19 @@ figure.error {
 						background-color: #FFFFCC;
 					}
 					
+					#site-recent-posts .recent-post-bg {
+						background-repeat: no-repeat;
+						background-position: center center;
+						opacity: 0.5;
+						
+						position: absolute;
+						top: 0;
+						right: 0;
+						left: 0;
+						bottom: 0;
+						z-index: 1;
+					}
+					
 					#site-recent-posts .recent-post-link {
 						background-image: linear-gradient( to bottom, transparent 0%, white 100% );
 						background-size: 100% 2em;
@@ -1056,7 +1069,7 @@ figure.error {
 						top: 0;
 						right: 0;
 						left: 0;
-						bottom: 0	;
+						bottom: 0;
 						z-index: 2;
 					}
 						#site-recent-posts .recent-post-link.recent-post-op {
@@ -2631,11 +2644,13 @@ main.index-threaded {
 							display: inline-block;
 							margin: 0;
 							font-size: 1em;
+							white-space: normal;
 						}
 						
 						.author {
 							display: inline-block;
 							color: #117743;
+							white-space: normal;
 						}
 							.author .email {
 								text-decoration: underline;

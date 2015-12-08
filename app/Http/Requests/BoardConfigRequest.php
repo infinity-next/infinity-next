@@ -89,7 +89,7 @@ class BoardConfigRequest extends Request {
 		{
 			foreach ($optionGroup->options as $option)
 			{
-				$rules[$option->option_name] = $option->getValidation();
+				$rules = array_merge($rules, $option->getValidation());
 			}
 		}
 		

@@ -35,13 +35,13 @@
 			<li class="option-item option-item-template">
 				{!! Form::text(
 					$option_name . "[find][]",
-					null,
+					"",
 					[
 						'class'     => "field-control",
 				]) !!}
 				{!! Form::text(
 					$option_name . "[replace][]",
-					null,
+					"",
 					[
 						'class'     => "field-control",
 				]) !!}
