@@ -107,10 +107,18 @@
 			throw "ib.option :: type \"" + type + "\" not valid.";
 		}
 		
+		var setting  = this;
 		this.name    = name;
-		this.storage = "ib." + widget + "." + name;
+		this.storage = "ib.setting." + widget + "." + name;
 		this.type    = type;
 		this.widget  = widget;
+		
+		// Synchronize widgets on update
+		this.onUpdate(function() {
+			$("#js-config-"+setting.widget+"-"+setting.name).val(
+				setting.get()
+			);
+		});
 	};
 	
 	ib.option.prototype.get = function() {
@@ -126,7 +134,7 @@
 	};
 	
 	ib.option.prototype.onChange = function(event) {
-		console.log(event);
+		event.data.setting.set(this.value);
 	};
 	
 	ib.option.prototype.onUpdate = function(closure) {
@@ -144,7 +152,7 @@
 	ib.option.prototype.toHTML = function() {
 		var $html = $("<input />");
 		
-		switch (type)
+		switch (this.type)
 		{
 			case 'bool'   :
 				$html.attr('type', "checkbox");
@@ -163,7 +171,9 @@
 				break;
 		}
 		
-		$html.attr('val', this.get());
+		$html.attr('id',    "js-config-"+this.widget+"-"+this.name);
+		$html.attr('class', "config-option");
+		$html.attr('val',   this.get());
 		$html.on(
 			'change',
 			{ 'setting' : this },
@@ -202,7 +212,7 @@
 	
 	
 	// Setup new Widget class.
-	ib.widget = function(name, widget, blueprint) {
+	ib.widget = function(name, widget, config) {
 		console.log("Declaring widget \""+name+"\".");
 		
 		if (ib.widgets[name] !== undefined)
@@ -212,6 +222,21 @@
 		}
 		
 		ib.widgets[name] = widget;
+		
+		if (typeof config === "object")
+		{
+			if (typeof ib.settings[name] === "undefined")
+			{
+				ib.settings[name] = {};
+			}
+			
+			jQuery.each(config, function(optionName, optionType)
+			{
+				var option = new ib.option(name, optionName, optionType);
+				ib.settings[name][optionName] = option;
+			});
+		}
+		
 		return true;
 	};
 	
