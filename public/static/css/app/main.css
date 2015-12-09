@@ -41,14 +41,14 @@ body {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d1d5ee), color-stop(40px, #d1d5ee), color-stop(240px, #EEF2FF), color-stop(100, #EEF2FF));
 	background-image: -webkit-linear-gradient(top, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
 	background-image: linear-gradient(to bottom, #d1d5ee 0%, #d1d5ee 40px, #EEF2FF 240px, #EEF2FF 100%);
-	
+
 	box-sizing: border-box;
 	min-width: 300px;
 	min-height: 100vh;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	
+
 	-webkit-text-size-adjust: 100%
 }
 
@@ -60,13 +60,13 @@ body {
 #page-container {
 	position: relative;
 	flex: 1;
-	
-	/* 
+
+	/*
 		Microsoft is a piece of shit and I hope they all get ass cancer.
 		For whatever reason, flex items in MS11 do not have a height.
 		Instead, the main body gets a height of 0, and the footer appears
 		right below the header.
-		
+
 		I've tried many other alternatives to this but there doesn't seem
 		to be a way to have a flexible height sticky footer.
 		The only solution is to use the easy layout for all modern browsers
@@ -100,15 +100,15 @@ a.button {
 	display: inline-block;
 	padding: 0.2em 1em 0.25em;
 	margin-bottom: 0;
-	
+
 	background: rgba(255, 255, 255, 0.35);
 	border: 1px solid #34345C;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	outline: 0;
-	
+
 	cursor: pointer;
-	
+
 	color: #34345C;
 	font-size: 1em;
 	font-size: 1.07142857142857rem;
@@ -123,7 +123,7 @@ a.button {
 		background: #34345C;
 		color: #FFFFFF;
 	}
-	
+
 	button:disabled,
 	a.button.disabled {
 		background: #ffffff;
@@ -137,7 +137,7 @@ a.button {
 			border: 1px solid #ccc;
 			color: #ccc;
 		}
-	
+
 	button.field-delete,
 	button.reject,
 	button.delete {
@@ -150,7 +150,7 @@ a.button {
 			background: #5C3434;
 			color: #FFF;
 		}
-	
+
 	button.approve {
 		border-color: #4F9E2E;
 		color: #4F9E2E;
@@ -193,7 +193,7 @@ table {
 			text-align: left;
 			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 		}
-	
+
 	table tbody {
 	}
 		table tbody tr.row-inactive {
@@ -202,7 +202,7 @@ table {
 			table tbody tr.row-inactive:hover {
 				opacity: 1;
 			}
-			
+
 		table tbody tr:nth-child(even) {
 			background: rgba(0,0,0,0.05);
 		}
@@ -220,7 +220,7 @@ table {
 	/*
 		DO NOT PUT THIS HERE
 		It stops post bodies from wrapping their images!
-		
+
 		overflow: hidden;
 	*/
 }
@@ -241,7 +241,7 @@ table {
 	overflow: hidden;
 }
 	.smooth-box .box-title {
-		
+
 	}
 
 .infobox {
@@ -282,7 +282,7 @@ html.js	.no-js {
 
 .tablet-or-larger {
 	display: none;
-	
+
 }
 
 /* Forms */
@@ -299,7 +299,7 @@ form {
 			border-radius: 1.5em;
 			padding: 0.25em 1em;
 			margin: 0.2em 0;
-			
+
 			border: 1px solid #7f7f7f;
 			background: #d5d5d5;
 			color: #7f7f7f;
@@ -319,7 +319,7 @@ form {
 				text-rendering: auto;
 				-webkit-font-smoothing: antialiased;
 				-moz-osx-font-smoothing: grayscale;
-				
+
 				content: "\f10c";
 				margin: 0 0.5em 0 -0.25em;
 			}
@@ -350,8 +350,8 @@ form {
 			.form-message.message-error::before {
 				content: "\f071";
 			}
-		
-	
+
+
 	.form-fields {
 		border: none;
 		padding: 0 0 1em 0;
@@ -362,12 +362,12 @@ form {
 			margin: 0;
 			padding: 0;
 		}
-	
+
 	.field {
 		margin: 1em 0;
 		position: relative;
 	}
-	
+
 	.field-label,
 	.field-lock {
 		display: inline;
@@ -376,11 +376,11 @@ form {
 		.label-inline .field-label {
 			background: none;
 			padding: 0.2em 0.4em;
-			
+
 			color: #dee0df;
 			line-height: 1.4em;
 			font-size: 120%;
-			
+
 			position: absolute;
 			width: auto;
 			top: 1px;
@@ -392,28 +392,28 @@ form {
 			font-size: 0.8em;
 			margin: 0.1em 0 0.25em 0;
 		}
-		
+
 	.field-lock {
 		padding-left: 0.5em;
 	}
 		.field-lockbox {
 			vertical-align: text-bottom;
 		}
-	
+
 	.row-inline {
 		display: inline-block;
 		margin: 0 1em 0 0;
 	}
-	
+
 	.field-control {
 		display: block;
 		border: 1px solid #ccc;
-		
+
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0.2em 0.4em;
 		width: 100%;
-		
+
 		font-size: 120%;
 		line-height: 1.4545em;
 	}
@@ -430,12 +430,12 @@ form {
 			margin: 0 0.5em 0 0;
 			width: auto;
 		}
-		
+
 		.row-inline .field-control {
 			display: inline-block;
 			width: auto;
 		}
-		
+
 		.label-inline .field-control {
 			padding-left: 5em;
 		}
@@ -443,7 +443,7 @@ form {
 			/* border: 1px solid #34345C;
 			color: #d6daf0; */
 		}
-		
+
 		.field-control.control-valid {
 			background: #c5e6cd;
 			border: 1px solid #4cb266;
@@ -454,7 +454,7 @@ form {
 			border: 1px solid #B74B47;
 			color: #B74B47;
 		}
-	
+
 	.row-associate {
 		padding-top: 0.75em;
 		border-top: 1px dashed rgba(0,0,0,0.2);
@@ -464,12 +464,12 @@ form {
 			vertical-align: top;
 			line-height: 1.2;
 		}
-	
+
 	.row-captcha {
 		background: #ffffff center 4px url('../../img/assets/infinity.gif') no-repeat;
 		border: 1px solid rgb(169, 169, 169);
 		width: 280px;
-		
+
 		margin-left: auto;
 		margin-right: auto;
 	}
@@ -485,7 +485,7 @@ form {
 				width: 280px;
 				height: 80px;
 			}
-		
+
 		.row-captcha .captcha-loading {
 			padding-top: 80px;
 			background: center 4px url('../../img/assets/infinity.gif') no-repeat;
@@ -539,12 +539,12 @@ main.cp .filterlist {
 					font-size: 90%;
 					color: #ccc;
 				}
-			
+
 			main.cp .filterlist-secondary {
 				float: right;
 				padding-right: 0.5em;
 				padding-left: 0.5em;
-				
+
 				background: #f0f7fc;
 				border-left: 1px solid #d7edfc;
 				color: #176093;
@@ -565,13 +565,13 @@ main.cp form.form-config {
 	form.form-config#config-site {
 		max-width: none;
 	}
-	
+
 	div.panel-actions {
 		float: right;
 	}
 		div.panel-actions .panel-action {
 			display: inline-block;
-			
+
 			background: #e0e0e0;
 			border-radius: 4px;
 			padding: 0.5em;
@@ -581,18 +581,18 @@ main.cp form.form-config {
 			min-width: 4em;
 			text-align: center;
 		}
-	
+
 	h3.panel-title {
 		font-size: 1.17em;
 		margin: 0 0 0.5em 0;
 	}
-	
+
 	form.form-config fieldset.form-fields {
 	}
 		form.form-config fieldset.form-fields:last-child {
 			border-bottom: none;
 		}
-	
+
 	.form-select-group {
 		margin: 0.5em 0;
 	}
@@ -626,11 +626,11 @@ main.cp form.form-config {
 		input.form-selection:checked ~ .form-selectable {
 			display: block;
 		}
-	
+
 	.form-selectable {
 		display: none;
 	}
-	
+
 	main.cp fieldset {
 		width: 40%;
 		min-width: 300px;
@@ -640,7 +640,7 @@ main.cp form.form-config {
 		.form-config .form-fields {
 			width: auto;
 		}
-	
+
 	main.cp form.form-config legend.form-legend {
 		display: block;
 		font-size: 110%;
@@ -660,7 +660,7 @@ main.cp form.form-config {
 		}
 			dl.option-asset {
 				display: inline-block;
-				
+
 				box-sizing: border-box;
 				max-width: 33%;
 			}
@@ -668,11 +668,11 @@ main.cp form.form-config {
 					max-width: 90%;
 					vertical-align: middle;
 				}
-			
+
 			#config-permissions dl.option {
 				margin: 0;
 			}
-			
+
 			dt.option-term {
 				display: inline-block;
 				margin: 0 1em 0 0;
@@ -686,7 +686,7 @@ main.cp form.form-config {
 				dl.option-asset dt.option-term {
 					display: none;
 				}
-			
+
 			dd.option-definition {
 				display: inline-block;
 				margin: 0 0 0 1em;
@@ -721,9 +721,9 @@ main.cp form.form-config {
 						color: rgb(150,150,150);
 						margin: 0.25em 0 0 0;
 					}
-				
+
 				ul.option-list {
-					
+
 				}
 					li.option-item {
 						margin-bottom: 0.5em;
@@ -734,22 +734,22 @@ main.cp form.form-config {
 						li.option-item .field-control {
 							display: inline-block;
 						}
-				
+
 				label.option-permission {
 					display: inline-block;
 					float: left;
-					
+
 					background-image: url('../../img/backgrounds/permission-highlight.png');
 					background-position: top left;
 					background-repeat: repeat-x;
-					
+
 					height: 2.4em;
 					line-height: 2.4em;
 					text-align: center;
-					
+
 					padding: 0 2em;
 					margin: 0;
-					
+
 					box-sizing: border-box;
 					width: 5em;
 					text-align: center;
@@ -757,7 +757,7 @@ main.cp form.form-config {
 					dl.option-asset input.field-control {
 						margin: 0 0.25em;
 					}
-					
+
 					label.option-permission .field-control {
 						height: 2em;
 						width: auto;
@@ -776,18 +776,18 @@ main.cp form.form-config {
 					label.option-permission-deny {
 						background-color: #C11 ;
 					}
-					
+
 					label.option-master {
 						border-radius: 4px;
 						font-size: 80%;
 						padding: 0;
 						width: 6.25em;
 					}
-		
+
 		form.form-staff .row-castes .field-label {
 			display: inline-block;
 		}
-		
+
 		form.form-config .row-submit,
 		form.form-config .row-delete {
 			margin-left: 32%;
@@ -797,7 +797,7 @@ main.cp form.form-config {
 				display: block;
 				margin: 0 0 0.5em 0;
 			}
-	
+
 	form.form-asset {
 		border-bottom: 1px solid #EEF2FF;
 		text-align: center;
@@ -823,14 +823,14 @@ main.cp form.form-config {
 /*
  * Errors
  */
- 
+
 /* Partial */
 figure.error {
 	display: block;
 	margin: 0 auto 2em 0;
 	padding: 0;
 	width: 82.5%;
-	
+
 	text-align: center;
 }
 	figure.error i.error-icon {
@@ -844,7 +844,7 @@ figure.error {
 			margin: 0;
 		}
 		figcaption.error-caption span.error-desc {
-			
+
 		}
 
 
@@ -855,7 +855,7 @@ figure.error {
 
 /* Main Page */
 #frontpage {
-	
+
 }
 	#site-warning {
 		display: block;
@@ -890,7 +890,7 @@ figure.error {
 				width: auto;
 				max-width: 100%;
 			}
-		
+
 		#site-description,
 		#site-statistics {
 			margin-bottom: 1em;
@@ -899,27 +899,27 @@ figure.error {
 			#site-statistics .infobox-info {
 				text-align: center;
 			}
-	
+
 	#site-highlights {
-		
+
 	}
 		#site-highlights .index-highlights {
 			display: block;
 			margin: 0;
 			padding: 0;
-			
+
 			font-size: 110%;
 		}
 			#site-highlights .index-highlight {
 				display: inline-block;
 				padding: 0.1em 1em 0.25em 0;
 			}
-	
+
 	#index-boardlist {
 		clear: both;
 		margin: 1em 0 0 0;
 	}
-	
+
 	#frontpage .smooth-box {
 		margin: 0 0 1em 0;
 	}
@@ -932,7 +932,7 @@ figure.error {
 	#site-intro p {
 		margin: 0 0 1em 0;
 	}
-	
+
 	/* Featured */
 	#site-featured-post {
 		margin-bottom: 1em;
@@ -952,10 +952,10 @@ figure.error {
 			width: 100%;
 			margin: 0;
 		}
-	
+
 	/* Activity */
 	#site-recent-images {
-		
+
 	}
 		#site-recent-images h2 {
 			margin: 0;
@@ -966,7 +966,7 @@ figure.error {
 		#site-recent-images .smooth-box {
 			padding: 0;
 		}
-		
+
 		#site-recent-images .recent-images {
 			text-align: center;
 			font-size: 0;
@@ -1003,7 +1003,7 @@ figure.error {
 							max-height: 100%;
 							width: auto;
 							height: auto;
-							
+
 							display: block;
 							position: absolute;
 							margin: auto;
@@ -1012,9 +1012,9 @@ figure.error {
 							right: 0;
 							left: 0;
 						}
-	
+
 	#site-recent-posts {
-		
+
 	}
 		#site-recent-posts h2 {
 			margin: 0 0 -2px 0;
@@ -1022,11 +1022,11 @@ figure.error {
 			padding-bottom: 0.5em;
 			border-bottom: 1px solid #d6daf0;
 		}
-		
+
 		#site-recent-posts .grid-container {
 			padding: 0;
 		}
-		
+
 		#site-recent-posts .smooth-box {
 			padding: 0;
 		}
@@ -1034,24 +1034,24 @@ figure.error {
 			}
 				#site-recent-posts .recent-post {
 					position: relative;
-					
+
 					box-sizing: border-box;
 					padding: 0.5em;
 					margin: 2px 0 -2px 0;
-					
+
 					overflow: hidden;
 					height: 116px;
 				}
 					#site-recent-posts .recent-post:hover {
 						background-color: #FFFFCC;
 					}
-					
+
 					#site-recent-posts .recent-post-bg {
 						background-repeat: no-repeat;
 						background-position: center center;
 						background-size: 32px;
 						opacity: 0.33;
-						
+
 						position: absolute;
 						top: 0;
 						right: 0;
@@ -1059,13 +1059,13 @@ figure.error {
 						bottom: 0;
 						z-index: 1;
 					}
-					
+
 					#site-recent-posts .recent-post-link {
 						background-image: linear-gradient( to bottom, transparent 0%, white 100% );
 						background-size: 100% 2em;
 						background-repeat: no-repeat;
 						background-position: center bottom;
-						
+
 						position: absolute;
 						top: 0;
 						right: 0;
@@ -1076,20 +1076,20 @@ figure.error {
 						#site-recent-posts .recent-post-link.recent-post-op {
 							border-top: 0.25em solid rgba(0,0,255,0.25);
 						}
-						
+
 						#site-recent-posts .recent-post:hover .recent-post-link {
 							background-image: linear-gradient( to bottom, transparent 0%, #FFFFCC 100% );
 						}
-					
+
 					#site-recent-posts .recent-post .post {
 						pointer-events: none;
-						
+
 						font-size: 90%;
 						min-width: 0px;
 						height: 100%;
 						box-sizing: border-box;
 						overflow: hidden;
-						
+
 						margin-left: 0;
 						padding-bottom: 1px;
 						border-bottom: 1px solid #d6daf0;
@@ -1106,7 +1106,7 @@ figure.error {
 
 /* Board Directory / Board List */
 #boardlist {
-	
+
 }
 	#boardlist section.board-list .smooth-box {
 		padding: 0;
@@ -1133,8 +1133,8 @@ table.board-list-table {
 			content: ' ';
 			clear: both;
 		}
-	
-	
+
+
 	table.board-list-table .board-meta {
 		display: none;
 		padding-right: 4px;
@@ -1148,7 +1148,7 @@ table.board-list-table {
 			display: inline-block;
 			float: left;
 		}
-		
+
 		table.board-list-table .board-uri .board-nsfw {
 			color: rgb(230,0,0);
 			margin: 0 0 0 0.6em;
@@ -1188,12 +1188,12 @@ table.board-list-table {
 			bottom: 0;
 			width: 310px;
 		}
-	
+
 	table.board-list-table div.board-cell {
 		max-width: 100%;
 		overflow: hidden;
 	}
-	
+
 	table.board-list-table th.sortable {
 		position: relative;
 		padding-right: 1.6em;
@@ -1215,12 +1215,12 @@ table.board-list-table {
 		table.board-list-table th.sorting-by-desc .fa::before {
 			content: "\f161";
 		}
-	
+
 	tr.board-list-loading {
 		display: none;
 		width: 100%;
 	}
-	
+
 	tr.board-list-omitted td {
 		padding: 0;
 	}
@@ -1244,14 +1244,14 @@ table.board-list-table {
 			tr.board-list-omitted .board-list-hasmore .board-page-loadmore {
 				display: inline;
 			}
-	
+
 	aside.search-container {
 		margin-bottom: 12px;
 	}
 		aside.search-container .box {
 			margin-right: 12px;
 		}
-	
+
 	#search-form {
 		padding: 0;
 	}
@@ -1297,7 +1297,7 @@ table.board-list-table {
 			display: inline-block;
 			vertical-align: bottom;
 		}
-	
+
 	ul.tag-list {
 		display: block;
 		list-style: none;
@@ -1310,7 +1310,7 @@ table.board-list-table {
 			display: block;
 			clear: both;
 		}
-		
+
 		li.tag-item {
 			display: inline-block;
 			float: left;
@@ -1326,9 +1326,9 @@ table.board-list-table {
 					overflow: hidden;
 					white-space: nowrap;
 				}
-				
+
 				li.tag-item a.tag-link {
-					
+
 				}
 				td.board-tags a.tag-link {
 					display: inline-block;
@@ -1348,7 +1348,7 @@ header.contrib-header {
 		}
 		main.contrib section:last-child {
 		}
-	
+
 	main.contrib section.contrib-howto {
 		margin: 0 auto 1em auto;
 	}
@@ -1386,7 +1386,7 @@ header.contrib-header {
 				blockquote.option-desc {
 					margin: 0;
 				}
-	
+
 	main.contrib section.contrib-shekel {
 		display: block;
 		background: rgba(255,255,255,0.5);
@@ -1412,7 +1412,7 @@ header.contrib-header {
 		blockquote.shekel-explainer {
 			margin: 0;
 		}
-	
+
 	main.contrib section.contrib-goals {
 		margin: 1em auto;
 	}
@@ -1447,11 +1447,11 @@ header.contrib-header {
 					border-top: 1px dashed rgba(0, 0, 0, 0.1);
 					margin: 0.5em 0 0 0;
 					padding: 0.5em 0 0 0;
-					
+
 					color: #666;
 					font-size: 0.9em;
 				}
-				
+
 				section.contrib-goals .goal-figure {
 					text-align: center;
 				}
@@ -1464,7 +1464,7 @@ header.contrib-header {
 					margin: 0 auto;
 					max-width: 600px;
 				}
-	
+
 	main.contrib section.contrib-donorlist {
 		margin: 0 0 -1em 0;
 	}
@@ -1486,13 +1486,13 @@ header.contrib-header {
 			section.contrib-donorlist div.donors-bronze {
 				background: #d7ad9b;
 			}
-		
+
 		section.contrib-donorlist ul.donors {
 			padding-top: 0;
 			padding-bottom: 1em;
 			text-align: center;
 		}
-			
+
 		section.contrib-donorlist li.donor {
 			display: inline-block;
 			overflow: hidden;
@@ -1518,7 +1518,7 @@ header.contrib-header {
 				font-weight: bold;
 				vertical-align: bottom;
 			}
-			
+
 			section.contrib-donorlist ul.donors-uber li.donor {
 				background: #e0f4eb;
 				background-image: linear-gradient(to bottom, rgba(224,244,234,0.5), rgba(168,225,200,0.5));
@@ -1560,7 +1560,7 @@ header.contrib-header {
 				section.contrib-donorlist .donors-bronze .donor-desc {
 					font-size: 0.8em;
 				}
-	
+
 	main.contrib section.section-me {
 		background: #333;
 		color: white;
@@ -1576,7 +1576,7 @@ header.contrib-header {
 			}
 			.skill-desc {
 			}
-	
+
 	main.contrib section.contrib-donate {
 		background: #EEFFF2;
 	}
@@ -1591,18 +1591,18 @@ header.contrib-header {
 nav.gnav {
 	background: #EEF2FF;
 	border-bottom: 1px solid #dedede;
-	
+
 	/*
 		white-space: nowrap;
 		overflow: hidden;
 	 */
-	
+
 	padding: 0;
 	margin: 0;
-	
+
 	height: 39px;
 	width: 100%;
-	
+
 	position: relative;
 	z-index: 1000;
 }
@@ -1620,7 +1620,7 @@ nav.gnav {
 		overflow: hidden;
 		height: 40px;
 	}
-	
+
 	nav.gnav li.gnav-item {
 		display: inline-block;
 		padding: 0;
@@ -1638,14 +1638,14 @@ nav.gnav {
 			padding-bottom: 8px;
 			color: #AF0A0F;
 		}
-	
+
 	nav.gnav .flyout {
 		display: none;
-		
+
 		position: absolute;
 		left: -20px;
 		top: 0;
-		
+
 		box-sizing: border-box;
 		width: 100vw;
 		max-width: 100vw;
@@ -1653,29 +1653,29 @@ nav.gnav {
 		height: auto;
 		max-height: none;
 		min-height: 200px;
-		
+
 		margin: 40px 0 0 0;
 		padding: 0 20px;
-		
+
 		pointer-events: none;
 		overflow: hidden;
 	}
 		nav.gnav .flyout.flyout-open {
 			display: block;
 		}
-		
+
 		nav.gnav .flyout-container {
 			box-sizing: border-box;
 			max-width: 100%;
-			
+
 			background: #EEF2FF;
 			border-radius: 0 0 4px 4px;
 			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 			border-right: 1px solid #dedede;
 			border-bottom: 1px solid #dedede;
-			
+
 		}
-		
+
 		nav.gnav .flyout-header {
 			display: block;
 			font-size: 1.3em;
@@ -1687,11 +1687,11 @@ nav.gnav {
 			nav.gnav .flyout-headlink {
 				display: block;
 			}
-		
+
 		nav.gnav .flyout-cols {
 			display: block;
 			width: 100%;
-			
+
 			pointer-events: all;
 			white-space: nowrap;
 			overflow: hidden;
@@ -1702,11 +1702,11 @@ nav.gnav {
 				display: block;
 				clear: both;
 			}
-			
+
 			#favorite-boards {
 				display: none;
 			}
-			
+
 		nav.gnav .flyout-col-title {
 			font-size: 1.3em;
 			font-weight: bold;
@@ -1715,10 +1715,10 @@ nav.gnav {
 		nav.gnav .flyout-col {
 			display: block;
 			vertical-align: top;
-			
+
 			width: 100%;
 			height: 100%;
-			
+
 			border-left: 1px solid #dedede;
 			border-right: 1px solid transparent;
 			padding: 0 1px 12px 1px;
@@ -1741,7 +1741,7 @@ nav.gnav {
 					nav.gnav .flyout-item:hover {
 						background-color: rgba(255,255,255,0.5);
 					}
-					
+
 					nav.gnav .flyout-uri {
 						font-weight: bold;
 					}
@@ -1751,17 +1751,17 @@ nav.gnav {
 							display: inline;
 							content: ' - ';
 						}
-	
+
 	header nav.boardlist {
 		display: none;
-		
+
 		background: #d6daf0;
 		color: #34345C;
 		vertical-align: baseline;
-		
+
 		box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 		-webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-		
+
 		/*
 		top: 0;
 		left: 0;
@@ -1773,8 +1773,8 @@ nav.gnav {
 	header nav.boardlist .boardlist-link {
 		color: #34345C;
 	}
-	
-	
+
+
 	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
@@ -1796,7 +1796,7 @@ main {
 
 /* Board Index */
 section.index-form {
-	
+
 }
 	form.form-post {
 		background: #d6daf0;
@@ -1820,14 +1820,14 @@ section.index-form {
 				html.js li.menu-icon-minimize {
 					visibility: hidden;
 				}
-				
+
 				html.js form.postbox-maximized li.menu-icon-minimize {
 					visibility: visible;
 				}
 				html.js form.postbox-maximized li.menu-icon-maximize {
 					visibility: hidden;
 				}
-				
+
 				html.js form.postbox-closed {
 					cursor: pointer;
 				}
@@ -1839,7 +1839,7 @@ section.index-form {
 				html.js form.postbox-closed div.field {
 					display: none !important;
 				}
-				
+
 				html.js body.responsive  form.form-post.postbox-maximized {
 					box-sizing: border-box;
 					max-width: none;
@@ -1851,7 +1851,7 @@ section.index-form {
 					position: fixed;
 					height: 100vh;
 				}
-				
+
 				form.form-post .menu-icon {
 					display: inline-block;
 					cursor: pointer;
@@ -1864,7 +1864,7 @@ section.index-form {
 						background-color: rgba(255,255,255,0.4);
 						border-color: rgba(255,255,255,0.8);
 					}
-					
+
 					form.form-post .menu-icon .menu-icon-text {
 						display: inline-block;
 						display: none;
@@ -1886,7 +1886,7 @@ section.index-form {
 					form.form-post .menu-icon.menu-icon-close .menu-icon-button {
 						background-position: -96px -128px;
 					}
-			
+
 			form.form-post legend.form-legend .fa {
 				display: none;
 				margin: 0 0.25em 0 0;
@@ -1895,13 +1895,13 @@ section.index-form {
 					display: inline;
 				}
 				.mode-reply form.form-post legend.form-legend {
-					
+
 				}
-		
+
 		form.form-post fieldset.form-fields {
 			padding: 0.75em 0;
 		}
-		
+
 		html.js form.form-post .form-legend {
 			display: block;
 			padding: 0.75em 0 0 0;
@@ -1912,12 +1912,12 @@ section.index-form {
 			vertical-align: middle;
 			width: 100%;
 		}
-		
+
 		form.form-post .field {
 			margin: 0.5em 0;
-			
+
 		}
-		
+
 		/* Text area */
 		form.form-post .row-post {
 			background: #fff;
@@ -1931,7 +1931,7 @@ section.index-form {
 			form.form-post .ui-resizable-handle {
 				background-image: url('../../img/backgrounds/ui-icons_000000_256x240.png');
 				background-position: -64px -224px;
-				
+
 				width:  16px;
 				height: 16px;
 			}
@@ -1944,12 +1944,12 @@ section.index-form {
 				cursor: sw-resize;
 				left:    0px;
 				bottom:  0px;
-				
+
 				-ms-transform: rotate(90deg); /* IE 9 */
 				-webkit-transform: rotate(90deg); /* Safari */
 				transform: rotate(90deg);
 			}
-			
+
 			/* Counter */
 			#body-counter {
 				line-height: 16px;
@@ -1976,7 +1976,7 @@ section.index-form {
 				#body-counter.counter-invalid {
 					color: #C00;
 				}
-		
+
 		/* Dropzone */
 		form.form-post div.row-file {
 			box-sizing: border-box;
@@ -1992,26 +1992,26 @@ section.index-form {
 				color: rgb(34,34,34);
 				text-align: center;
 			}
-			
+
 			form.form-post button.field-submit:hover,
 			form.form-post div.row-file:hover {
 				background-color: #F1EFEF;
 			}
-			
+
 			html.js form.form-post div.dz-container {
 			}
 				html.js form.form-post div.dz-container input {
 					display: none;
 				}
-			
+
 			form.form-post div.row-file .fallback {
 				text-align: left;
 			}
-		
+
 		form.form-post .field-control {
 			outline: none;
 		}
-		
+
 		form.form-post .row-captcha {
 			border: 1px solid #ccc;
 			box-sizing: border-box;
@@ -2023,7 +2023,7 @@ section.index-form {
 			form.form-post .row-captcha .field-control {
 				border-color: #ccc;
 			}
-		
+
 		form.form-post .row-post .field-control {
 			height: 6.25em;
 			font-size: 90%;
@@ -2032,7 +2032,7 @@ section.index-form {
 			form.form-post .row-post .ui-wrapper .field-control {
 				max-height: none;
 			}
-			
+
 			form.form-post .row-double #email {
 				width: 60%;
 			}
@@ -2041,7 +2041,7 @@ section.index-form {
 				border-left: none;
 				width: 40%;
 			}
-			
+
 			form.form-post button.field-submit {
 				box-sizing: border-box;
 				margin: 0;
@@ -2052,7 +2052,7 @@ section.index-form {
 				form.form-post .row-double button.field-submit {
 					width: 50%;
 				}
-			
+
 			form.form-post select.field-capcode {
 				box-sizing: border-box;
 				border: 1px solid #ccc;
@@ -2067,24 +2067,24 @@ section.index-form {
 		.dz-container * {
 			box-sizing: border-box;
 		}
-		
+
 		.dz-container {
 			min-height: 2em;
 			line-height: 2em;
-			
+
 			margin: 0;
 			padding: 0;
-			
+
 			min-width: 100%;
 			max-width: 100%;
 			width: 300px;
-			
+
 			white-space: nowrap;
-			
+
 			overflow: auto;
 			overflow-y: hidden;
 			overflow-x: auto;
-			
+
 			border: 1px solid #ccc;
 		}
 			.dz-container.dz-clickable {
@@ -2109,7 +2109,7 @@ section.index-form {
 				text-align: center;
 				margin: 2em 0;
 			}
-			
+
 			html.js .dz-container .dz-instructions {
 				display: block;
 				min-width: 100%;
@@ -2122,7 +2122,7 @@ section.index-form {
 			html.js .dz-container .fallback {
 				display: none;
 			}
-			
+
 			.dz-container .dz-preview {
 				position: relative;
 				display: inline-block;
@@ -2135,7 +2135,7 @@ section.index-form {
 				width: 100px;
 				max-width: 100px;
 			}
-				
+
 				.dz-container .dz-preview:hover {
 					z-index: 1000;
 				}
@@ -2166,29 +2166,29 @@ section.index-form {
 						.dz-container .dz-preview .dz-actions .dz-spoiler {
 							display: block;
 							zoom: 1;
-							
+
 							height: 18px;
 							line-height: 18px;
 							text-indent: 0;
 							min-width: 18px;
-							
+
 							border-radius: 5px;
 							font-size: 12px;
 							line-height: 18px;
 							margin: 0.25em 0 0.25em 0;
 							padding: 0 0 1px 0;
 							outline: none;
-							
+
 							border-radius: 9px;
 							background-image: linear-gradient(#FFFFFF 0%, #E1E1E1 100%);
-							
+
 							border: 1px solid #AEBDC4;
-							
+
 							color: #C40000;
 							font-size: 11px;
 							text-align: center;
 							vertical-align: text-bottom;
-							
+
 							-moz-box-sizing: border-box;
 							box-sizing: border-box;
 						}
@@ -2222,7 +2222,7 @@ section.index-form {
 								.dz-container .dz-preview:hover .dz-actions .dz-spoiler .dz-spoiler-desc {
 									display: inline-block;
 								}
-					
+
 					.dz-container .dz-preview .dz-details {
 						display: block;
 						z-index: 20;
@@ -2241,7 +2241,7 @@ section.index-form {
 						.dz-container .dz-preview:hover .dz-details {
 							opacity: 1;
 						}
-						
+
 						.dz-container .dz-preview .dz-details .dz-size {
 							margin-bottom: 0.25em;
 							font-size: 16px;
@@ -2265,7 +2265,7 @@ section.index-form {
 								padding: 0 0.4em;
 								border-radius: 3px;
 							}
-					
+
 					.dz-container .dz-preview:hover .dz-image img {
 					}
 					.dz-container .dz-preview .dz-image {
@@ -2283,7 +2283,7 @@ section.index-form {
 							max-height: 100%;
 							margin: 0 auto;
 						}
-					
+
 					.dz-container .dz-preview .dz-success-mark,
 					.dz-container .dz-preview .dz-error-mark {
 						pointer-events: none;
@@ -2309,7 +2309,7 @@ section.index-form {
 							width: 26px;
 							height: 26px;
 						}
-					
+
 					.dz-container .dz-preview .dz-progress {
 						opacity: 1;
 						z-index: 1000;
@@ -2346,7 +2346,7 @@ section.index-form {
 						.dz-container .dz-preview.dz-error .dz-error-message {
 							display: block;
 						}
-					
+
 					.dz-container .dz-preview.dz-error:hover .dz-error-message {
 						opacity: 1;
 						pointer-events: auto;
@@ -2419,9 +2419,9 @@ main.index-threaded {
 			box-sizing: border-box;
 			text-align: center;
 			width: 100%;
-			
+
 			padding: 0;
-			
+
 			/* position: absolute; */
 			bottom: 0;
 		}
@@ -2429,16 +2429,16 @@ main.index-threaded {
 				display: inline-block;
 				margin: 1em 0;
 			}
-		
+
 		aside.advertiser.top-left {
 		}
-		
+
 		/* Threads */
 		main.index-threaded .thread,
 		aside.advertiser.top-left {
 			padding: 1em;
 		}
-		
+
 		main.index-threaded .thread-item {
 			/*
 			border-top:    1px solid rgba(0, 0, 255, 0.1);
@@ -2451,7 +2451,7 @@ main.index-threaded {
 		main.index-threaded .thread-item:last-child {
 			border-bottom: none;
 		}
-		
+
 		main.multiboard-index .post-crown {
 			margin: 0;
 			padding: 0;
@@ -2459,7 +2459,7 @@ main.index-threaded {
 			main.multiboard-index .crown-figure {
 				margin: 0 -1px 0 0;
 				padding: 0 0.75em;
-				
+
 				line-height: 42px;
 				vertical-align: middle;
 			}
@@ -2481,13 +2481,13 @@ main.index-threaded {
 				main.multiboard-index .crown-link {
 					line-height: 42px;
 				}
-		
+
 		li.thread-last-reply {
 			margin-bottom: 0.5em;
 			padding-bottom: 0.5em;
 			border-bottom: 2px dotted #B7C5D9;
 		}
-		
+
 		#autoupdater {
 			margin: 1em 0;
 			padding: 0 0 0 1.5em;
@@ -2501,7 +2501,7 @@ main.index-threaded {
 					list-style: none;
 					margin: 0 0.5em;
 				}
-		
+
 		.reply {
 			padding: 0;
 			margin: 0.25em 0 0.25em 1.5em;
@@ -2522,7 +2522,7 @@ main.index-threaded {
 				clear: both;
 				content: ' ';
 			}
-		
+
 		.post {
 			position: relative;
 			font-size: 105%;
@@ -2541,32 +2541,32 @@ main.index-threaded {
 			.post p.line.quote {
 				color: #789922;
 			}
-			
+
 			a.cite-you::after {
 				display: 'inline';
 				content: ' (You)';
 			}
-		
-		
+
+
 		.thread-replies-omitted {
 			margin: 0.25em 0.5em;
 		}
-		
+
 		.post-container {
 			display: inline-block;
-			
+
 			margin: 0;
 			max-width: 100%;
-			
+
 			/* background: #fff;
 			border-radius: 4px;
 			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); */
-			
+
 			background: #D6DAF0;
 			border-color: #B7C5D9;
 			border-width: 1px;
 			border-style: none solid solid none;
-			
+
 			border-left: none;
 			border-top: none;
 		}
@@ -2593,7 +2593,7 @@ main.index-threaded {
 					.post-content-wrapper .post {
 						padding-top: 0;
 					}
-			
+
 			.post-content {
 				padding: 0;
 			}
@@ -2622,32 +2622,32 @@ main.index-threaded {
 						.post-container.post-deleted .post-detail.post-deleted {
 							display: inline-block;
 						}
-						
+
 						.post-detail.post-country {
 							line-height: 1em;
 							vertical-align: middle;
 						}
-						
+
 						.post-detail-item {
 							box-sizing: border-box;
 							max-width: 100%;
-							
+
 							overflow: hidden;
 							text-overflow: ellipsis;
 							vertical-align: top;
 						}
-						
+
 							.post-select-input {
 								vertical-align: text-bottom;
 							}
-						
+
 						.subject {
 							display: inline-block;
 							margin: 0;
 							font-size: 1em;
 							white-space: normal;
 						}
-						
+
 						.author {
 							display: inline-block;
 							color: #117743;
@@ -2656,18 +2656,18 @@ main.index-threaded {
 							.author .email {
 								text-decoration: underline;
 							}
-						
+
 						.insecure-tripcode {
 							color: #117743;
 						}
 						.insecure-tripcode:before {
 							content: '!';
 						}
-						
+
 						.createdon {
 							display: inline-block;
 						}
-						
+
 						.authorid {
 							display: inline-block;
 						}
@@ -2685,11 +2685,11 @@ main.index-threaded {
 							.authorid.authorid-colorized::before {
 								display: none;
 							}
-						
+
 						.postid {
 							display: inline-block;
 						}
-						
+
 						.capcode {
 							display: inline-block;
 							vertical-align: top;
@@ -2702,7 +2702,7 @@ main.index-threaded {
 							.capcode-admin .capcode {
 								color: red;
 							}
-						
+
 						.post-detail.detail-cites {
 							display: inline;
 							white-space: normal;
@@ -2712,7 +2712,7 @@ main.index-threaded {
 								text-decoration: underline;
 								white-space: nowrap;
 							}
-				
+
 				ul.post-attachments {
 					display: block;
 				}
@@ -2731,7 +2731,7 @@ main.index-threaded {
 							content: ' ';
 							clear: both;
 						}
-					
+
 					li.post-attachment {
 						display: block;
 						float: left;
@@ -2744,7 +2744,7 @@ main.index-threaded {
 								margin: 0;
 								width: 100%;
 							}
-						
+
 						a.attachment-link {
 							display: inline;
 							outline: none;
@@ -2757,7 +2757,7 @@ main.index-threaded {
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
-							
+
 							figure.attachment {
 								display: block;
 								margin: 0;
@@ -2767,7 +2767,7 @@ main.index-threaded {
 								figure.attachment-type-audio {
 									margin-right: 2em;
 								}
-								
+
 								li.post-attachment.attachment-expanded figure.attachment {
 									/* min-width: 100%; */
 									max-width: 100%;
@@ -2776,7 +2776,7 @@ main.index-threaded {
 									/* min-width: 100%; */
 									max-width: 100%;
 								}
-								
+
 								li.post-attachment img.lazy-load {
 									/*
 										The other metrics will constrain these to something sensible.
@@ -2786,7 +2786,7 @@ main.index-threaded {
 									height: 200px;
 									width:  200px;
 								}
-								
+
 								.post-content div.attachment-wrapper {
 									position: relative;
 									padding: 0;
@@ -2804,20 +2804,20 @@ main.index-threaded {
 										width: 98%;
 										padding: 0;
 										pointer-events: none;
-										
+
 										position: absolute;
 										top: 1%;
 										left: auto;
 										right: -1em;
 										bottom: 1%;
 										z-index: 1;
-										
+
 										background-position: center center;
 										background-image: url('../../img/backgrounds/vinyl.svg');
 										background-repeat: no-repeat;
 										background-size: contain;
 									}
-									
+
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper,
 									.post-content li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
 										margin: 0 0 0 0;
@@ -2827,30 +2827,30 @@ main.index-threaded {
 										right: -20%;
 										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
 									}
-								
+
 								img.attachment-img {
 									display: inline-block;
 									margin: 0 auto;
 									max-width: 125px;
 									max-height: 125px;
-									
+
 									vertical-align: middle;
 									position: relative;
 									z-index: 2;
 								}
-								
+
 								html.js a.attachment-link img.attachment-type-img {
 									cursor: zoom-in;
 								}
 								html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
 									cursor: zoom-out;
 								}
-								
+
 								html a.attachment-link img.attachment-type-video {
 									box-sizing: border-box;
 									border-style: solid;
 									border-width: 17px;
-									
+
 									-moz-border-image:    url('../../img/backgrounds/film.png') 27 fill stretch repeat;
 									-webkit-border-image: url('../../img/backgrounds/film.png') 27 fill stretch repeat;
 									-o-border-image:      url('../../img/backgrounds/film.png') 27 fill stretch repeat;
@@ -2885,7 +2885,7 @@ main.index-threaded {
 										min-height: 150px;
 										min-width: 150px;
 									}
-								
+
 								li.post-attachment audio.attachment-inline {
 									display: block;
 									width: 100%;
@@ -2897,11 +2897,11 @@ main.index-threaded {
 									max-width: 100%;
 									margin: 0 auto 0.5em auto;
 								}
-								
+
 								figcaption.attachment-details {
 									display: block;
 									max-width: 100%;
-									
+
 									position: relative;
 									padding: 0 1em;
 									text-align: center;
@@ -2913,12 +2913,12 @@ main.index-threaded {
 										color: rgba(0,0,0,0.75);
 										text-align: center;
 										font-size: 90%;
-										
+
 										height: 1em;
 										line-height: 1em;
 										margin: 0.5em auto;
 										padding: 0;
-										
+
 										max-width: 100%;
 										overflow: hidden;
 										text-overflow: ellipsis;
@@ -2926,8 +2926,8 @@ main.index-threaded {
 									p.attachment-detail:last-child {
 										margin-bottom: 0px;
 									}
-			
-			
+
+
 			ul.post-metas {
 				border-top: 1px solid #D6DAF0;
 			}
@@ -2943,20 +2943,20 @@ main.index-threaded {
 					font-size: 95%;
 					padding: 0.2em 0.6em;
 				}
-			
+
 			div.post-action-bar {
 			}
 				div.post-action-tab {
 					display: inline-block;
 					cursor: default;
 					position: relative;
-					
+
 					border: 1px solid rgba(0,0,0,0.25);
 					border-radius: 2px;
-					
+
 					line-height: 1em;
 					height: 1em;
-					
+
 					padding: 0.25em;
 					margin-left: 0.25em;
 				}
@@ -2966,7 +2966,7 @@ main.index-threaded {
 						div.action-tab-actions span.post-action-text {
 							display: none;
 						}
-					
+
 					div.post-action-tab.action-tab-reply {
 						position: absolute;
 						top: 0;
@@ -2993,16 +2993,16 @@ main.index-threaded {
 						div.op-container a.post-action-reply {
 							border-color: transparent rgba(0,0,255,0.25) transparent transparent;
 						}
-					
+
 					ul.post-action-groups {
 						display: none;
 						max-width: 100vw;
-						
+
 						position: absolute;
 						top: 1.5em;
 						left: 0px;
 						z-index: 10;
-						
+
 						list-style: none;
 						padding: 0 0 0 0;
 						margin: 0 0 0 -1px;
@@ -3011,7 +3011,7 @@ main.index-threaded {
 						ul.post-action-groups.open {
 							display: block;
 						}
-						
+
 						li.post-action-group {
 							background-color: #D6DAF0;
 							border: 1px solid rgba(0,0,0,0.25);
@@ -3033,20 +3033,20 @@ main.index-threaded {
 								}
 									a.post-action-link {
 										display: block;
-										
+
 										color: #34345C;
 										vertical-align: middle;
 										white-space: nowrap;
-										
+
 										line-height: 1.4;
-										
+
 										padding: 0.25em 1em 0.25em;
 									}
 									a.post-action-link:hover{
 										color: #dee0df;
 										background: #34345C;
 									}
-		
+
 		/* Catalog View */
 		main.index-catalog {
 			text-align: left;
@@ -3054,31 +3054,31 @@ main.index-threaded {
 			main.index-catalog .index-threads {
 				margin: 1em 0 0 0;
 			}
-			
+
 			main.index-catalog .thread-list {
 				text-align: center;
 			}
-			
+
 			main.index-catalog .thread-item {
 				display: inline-block;
 				margin: 0 0.25em 0.25em 0;
-				
+
 				width: 180px;
 			}
 				main.index-catalog .thread {
 					position: relative;
-					
+
 					background: rgba(182, 182, 182, 0.12);
 					border: 1px solid rgba(111, 111, 111, 0.34);
-					
+
 					padding: 2px;
 					margin: 0;
-					
+
 					vertical-align: top;
 					text-align: left;
 					font-weight: normal;
 					font-size: 11px;
-					
+
 					height: 25em;
 				}
 					main.index-catalog .post-container {
@@ -3087,7 +3087,7 @@ main.index-threaded {
 						left: 0;
 						right: 0;
 						bottom: 0;
-						
+
 						border: none;
 						padding-top: 0;
 						overflow: visible
@@ -3095,16 +3095,16 @@ main.index-threaded {
 						main.index-catalog .post-container:hover {
 							box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
 							border-radius: 4px;
-							
+
 							min-width: 150%;
 							min-height: 100%;
 							overflow: visible;
-							
+
 							left: -25%;
 							bottom: auto;
 							z-index: 6;
 						}
-						
+
 						main.index-catalog .post-content {
 							padding: 0;
 							height: 100%;
@@ -3113,7 +3113,7 @@ main.index-threaded {
 							main.index-catalog .post-container:hover .post-content {
 								overflow: visible;
 							}
-							
+
 							main.index-catalog .post-attachments {
 								background: rgba(255,255,255,0.6);
 								padding: 0;
@@ -3137,7 +3137,7 @@ main.index-threaded {
 											max-height: 150px;
 											max-width: 100%;
 										}
-							
+
 							main.index-catalog .post-details {
 								margin: 0;
 								min-height: 1.5em;
@@ -3182,15 +3182,15 @@ main.index-threaded {
 										main.index-catalog .post-detail-item.capcode {
 											padding-left: 0;
 										}
-							
-			
+
+
 			main.index-catalog blockquote.post {
 				box-sizing: border-box;
 				display: block;
 				width: 100%;
 				min-width: 0px;
 				max-width: none;
-				
+
 				text-align: left;
 				margin-top: 0.4em;
 				margin-left: 0;
@@ -3202,40 +3202,40 @@ main.index-threaded {
 				main.index-catalog blockquote.post p.line {
 					max-width: 100%;
 				}
-			
+
 			main.index-catalog div.post-action-bar {
 				display: inline;
-				
+
 				top: 0;
 				left: 0;
 				right: 0;
-				
+
 				margin: 0;
 			}
 				main.index-catalog div.post-action-tab,
 				main.index-catalog div.post-action-tab.action-tab-actions {
 					display: inline-block;
-					
+
 					position: relative;
 					top: 0.25em;
 					left: 0.25em;
 					float: left;
-					
+
 					border: none;
 					padding: 0;
 					margin: 0;
 					text-align: left;
-					
+
 					font-size: 140%;
 				}
-				
+
 				main.index-catalog ul.post-action-groups {
 					position: absolute;
 					top: 0;
 					left: 0;
 					font-size: 72%;
 				}
-			
+
 			main.index-catalog div.post-action-bar.action-bar-open {
 				position: absolute;
 				z-index: 5;
@@ -3255,7 +3255,7 @@ main.index-threaded {
 aside.index-sidebar {
 	display: block;
 	z-index: 0;
-	
+
 	margin: 0;
 	padding-bottom: 1em;
 }
@@ -3276,7 +3276,7 @@ blockquote.ugc {
 		color: #AF0A0F;
 		padding: 0;
 	}
-	
+
 	blockquote.ugc a {
 		text-decoration: underline;
 	}
@@ -3284,18 +3284,18 @@ blockquote.ugc {
 		blockquote.ugc a.cite {
 			color: #D00;
 		}
-	
+
 	blockquote.ugc hr {
 		border-top: 2px groove rgba(255, 255, 255, 1);
 	}
-	
+
 	blockquote.ugc pre {
 		clear: both;
 		background-color: rgba(255, 255, 255, 0.35);
 		color: #111111;
-		
+
 		margin: 1em -0.75em;
-		
+
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
@@ -3305,7 +3305,7 @@ blockquote.ugc {
 			padding: 1em;
 			white-space: pre-wrap;
 		}
-		
+
 		blockquote.ugc pre code.language-aa,
 		blockquote.ugc pre code.language-AA {
 			font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
@@ -3313,11 +3313,11 @@ blockquote.ugc {
 			font-size: 12pt;
 			line-height: 1.1;
 		}
-	
+
 	blockquote.ugc blockquote {
 		margin-left: 0;
 		margin-right: 0;
-		
+
 		color: #789922;
 	}
 		blockquote.ugc blockquote.spoiler {
@@ -3327,11 +3327,11 @@ blockquote.ugc {
 		/* blockquote.ugc blockquote + p {
 			margin-top: -1em;
 		} */
-	
+
 	blockquote.ugc .spoiler {
 		box-sizing: border-box;
 		padding: 1px 0.5em;
-		
+
 		color: black;
 		background: black;
 	}
@@ -3339,7 +3339,7 @@ blockquote.ugc {
 			color: white;
 			background: black;
 		}
-	
+
 	blockquote.ugc p {
 		margin-left: 0;
 		margin-right: 0;
@@ -3351,20 +3351,20 @@ blockquote.ugc {
 		blockquote.ugc :last-child {
 			margin-bottom: 0;
 		}
-	
+
 	blockquote.ugc ol,
 	blockquote.ugc ul {
 		display: block;
 		margin: 1em;
 		padding: 0 0 0 2em;
-		
+
 		list-style-type: decimal;
 		list-style-position: inside;
 	}
 		blockquote.ugc ul {
 			list-style-type: disc;
 		}
-	
+
 	blockquote.ugc table {
 		border-spacing: 0.25em;
 		margin: 1em 0;
@@ -3374,25 +3374,25 @@ blockquote.ugc {
 		blockquote.ugc tbody tr:nth-of-type(even) {
 			background-color: rgba(0, 0, 100, 0.1);
 		}
-		
+
 		blockquote.ugc tbody {
-			
+
 		}
 			blockquote.ugc tr {
-				
+
 			}
 			blockquote.ugc td {
 				padding: 0.25em;
 			}
-		
+
 		blockquote.ugc thead {
-			
+
 		}
 			blockquote.ugc th {
 				padding: 0.25em;
 			}
 		blockquote.ugc tfoot {
-			
+
 		}
 
 section.auth-form {
@@ -3408,13 +3408,13 @@ nav.pagination {
 		background: none;
 		margin: 1em 0;
 	}
-	
+
 	nav.pagination::after {
 		display: block;
 		content: ' ';
 		clear: both;
 	}
-	
+
 	div.pagination-buttons {
 		float: left;
 		margin: 0 1em;
@@ -3428,7 +3428,7 @@ nav.pagination {
 			margin: 0.2em 0;
 			padding: 0.15em 0.75em 0.25em;
 		}
-	
+
 	ul.pagination-pages::before,
 	ul.pagination-pages::after,
 	li.pagination-page::after {
@@ -3437,7 +3437,7 @@ nav.pagination {
 		padding: 0.25em 0.1em;
 		color: #34345C;
 	}
-	
+
 	ul.pagination-pages {
 		font-size: 110%;
 		margin: 0 -0.1em;
@@ -3481,7 +3481,7 @@ div.cp-box {
 	position: relative;
 	padding: 3.1em 0 0 0;
 }
-	
+
 	div.cp-frame {
 		margin-top: -1px;
 		border-right: 1px solid #e0e0e0;
@@ -3494,13 +3494,13 @@ div.cp-box {
 		padding-top: 1em;
 		padding-bottom: 1em;
 	}
-	
+
 	nav.cp-top {
 		background: #333;
 		padding: 0.5em 0.5em;
 		margin: 0;
 		line-height: 1.0em;
-		
+
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -3513,7 +3513,7 @@ div.cp-box {
 			clear: both;
 			display: block;
 		}
-		
+
 		nav.cp-top ul.cp-linkgroups {
 			display: block;
 			float: left;
@@ -3554,7 +3554,7 @@ nav.cp-side {
 		clear: both;
 		display: block;
 	}
-	
+
 	nav.cp-side ul.cp-linkgroups {
 		display: block;
 	}
@@ -3585,7 +3585,7 @@ nav.cp-side {
 					nav.cp-side a.linkitem-name {
 						line-height: 1.6;
 					}
-					
+
 					nav.cp-side a.linkitem-name-createboard {
 						color: #525252;
 						font-size: 18px;
@@ -3599,7 +3599,7 @@ nav.cp-inner {
 }
 	nav.cp-tabs section.cp-linklists {
 	}
-	
+
 	nav.cp-inner ul.cp-linkgroups {
 		margin-bottom: 1em;
 	}
@@ -3608,7 +3608,7 @@ nav.cp-inner {
 			nav.cp-inner a.linkgroup-name {
 				/* Usually not set. */
 			}
-			
+
 			nav.cp-inner ul.cp-linkitems {
 				display: block;
 				display: table;
@@ -3616,7 +3616,7 @@ nav.cp-inner {
 				width: 100%;
 				min-height: 23px;
 				_height: 23px;
-				
+
 				font-size: 11px;
 				padding: 1em 1.5em 0 1.5em;
 				border-bottom: 1px solid #e0e0e0;
@@ -3627,14 +3627,14 @@ nav.cp-inner {
 					nav.cp-inner a.linkitem-name {
 						display: inline-block;
 						cursor: pointer;
-						
+
 						background: none;
 						border: 1px solid #e0e0e0;
 						border-radius: 5px 5px 0 0;
 						outline: 0 none;
 						padding: 0 1em;
 						margin: 0 -1px -1px 0;
-						
+
 						color: #525252;
 						text-decoration: none;
 						line-height: 22px;
@@ -3662,7 +3662,7 @@ nav.cp-inner {
 	.reports .report-board-desc {
 		margin: 0.5em 0;
 	}
-	
+
 	.reports .reported-post {
 		clear: both;
 		padding: 1em 0;
@@ -3679,7 +3679,7 @@ nav.cp-inner {
 			background: #FFC4C4;
 			border-color: #F88;
 		}
-	
+
 	.reports .report-actions.actions-post li.report-action {
 		display: inline-block;
 		position: relative;
@@ -3691,7 +3691,7 @@ nav.cp-inner {
 		margin-right: 0.25em;
 		margin-bottom: 0.5em;
 	}
-	
+
 	.reports .post-report {
 		float: left;
 		margin: 1em 1em 0 0;
@@ -3706,7 +3706,7 @@ nav.cp-inner {
 					display: inline-block;
 					margin-right: 0.25em;
 				}
-			
+
 			.reports .report-reason {
 				margin: 0 0 0.5em 0;
 				padding: 0 0 0.5em 0;
@@ -3734,7 +3734,7 @@ nav.cp-inner {
 			margin: 0;
 			padding: 1em;
 			max-width: 100%;
-			
+
 			background: #fff;
 			border-radius: 4px;
 			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -3742,7 +3742,7 @@ nav.cp-inner {
 			border-width: 1px;
 			border-style: solid;
 		}
-		
+
 		.ban-appeal-submit {
 			text-align: right;
 		}
@@ -3751,7 +3751,7 @@ nav.cp-inner {
 	margin: 0 0 1em 0;
 }
 	#card-details {
-		
+
 	}
 	#payment-form::after {
 		clear: both;
@@ -3785,7 +3785,7 @@ nav.cp-inner {
 				background-size: 128px 152px;
 				padding-top: 160px;
 			}
-		
+
 		#payment-form fieldset.form-fields {
 			box-sizing: border-box;
 			padding: 0 1em 0 0;
@@ -3848,7 +3848,7 @@ nav.cp-inner {
 				width: 100%;
 				margin-right: 0;
 			}
-			
+
 			#donate-details .donate-options {
 				display: block;
 				margin: 0 -2px;
@@ -3877,7 +3877,7 @@ nav.cp-inner {
 					#donate-details .donate-cycle-input {
 						vertical-align: text-bottom;
 					}
-					
+
 					#donate-details .donate-option-input {
 						position: absolute;
 						width: 1px;
@@ -3900,7 +3900,7 @@ nav.cp-inner {
 						box-sizing: border-box;
 						transition: all 0.2s ease 0s;
 					}
-					
+
 					#donate-details .donate-option-label:active,
 					#donate-details .donate-option-input:checked + .donate-option-label,
 					#donate-details .donate-option-label.checked {
@@ -4006,7 +4006,7 @@ nav.cp-inner {
 				margin: 0.4em 0 0 0;
 				text-align: center;
 			}
-			
+
 			#ccn {
 					background-image: url('../../img/assets/providers.png'), url('../../img/assets/providers.png');
 					background-position: 2px -121px;
@@ -4037,12 +4037,12 @@ body.error::before {
 	right: 0;
 	bottom: 0;
 	z-index: 0;
-	
+
 	display: block;
 	content: ' ';
 	pointer-events: none;
 	opacity: 0.2;
-	
+
 	background-image: url('../../img/errors/whitenoise.gif');
 }
 	main#error {
@@ -4051,7 +4051,7 @@ body.error::before {
 			padding: 0;
 			margin-left: auto;
 			margin-right: auto;
-			
+
 			overflow: hidden;
 			max-width: 500px;
 			max-height: 500px;
@@ -4069,10 +4069,10 @@ body.error::before {
 				display: block;
 				height: 1em;
 				text-indent: 1em;
-				
+
 				position: absolute;
 				bottom: 1em;
-				
+
 				text-align: right;
 			}
 				figure.error-figure a.error-credit {
@@ -4080,13 +4080,13 @@ body.error::before {
 					text-shadow: 1px black;
 					text-align: right;
 				}
-		
+
 		main#error .error-trace {
 			display: block;
 			margin: 0 auto;
 			max-width: 960px;
 		}
-	
+
 	main#adventure,
 	main#landing {
 		position: absolute;
@@ -4106,7 +4106,7 @@ body.error::before {
 			padding: 0;
 			margin-left: auto;
 			margin-right: auto;
-			
+
 			overflow: hidden;
 			max-width: 320px;
 			max-height: 320px;
@@ -4125,7 +4125,7 @@ body.error::before {
 				display: block;
 				height: 2em;
 				line-height: 2em;
-				
+
 				font-size: 2em;
 				font-weight: bold;
 				text-align: center;
@@ -4142,9 +4142,9 @@ body.error::before {
 				a.adventure-link:hover {
 					color: #f00;
 				}
-	
+
 	main#banned {
-		
+
 	}
 		main#banned figure.error-figure {
 			margin-left: 1em;
@@ -4193,7 +4193,7 @@ figcaption.page-details {
 			color: #aaa;
 			cursor: pointer;
 		}
-		
+
 		html.js .board-list .board-favorite {
 			display: block;
 			float: left;
@@ -4218,14 +4218,14 @@ figcaption.page-details {
 				font-size: 1.2em;
 				font-weight: bold;
 			}
-	
+
 	h2.page-desc {
 		color: #333;
 		margin: 0;
 		font-size: 1em;
 		font-weight: normal;
 	}
-	
+
 	ul.page-links {
 		display: block;
 		margin: 0.5em 0 0 0;
@@ -4252,7 +4252,7 @@ footer {
 	#footnotes {
 		background: #333;
 		padding: 0.5em 0;
-		
+
 		color: #ffffff;
 		font-size: 16px;
 		text-align: center;
