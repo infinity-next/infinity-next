@@ -43,7 +43,16 @@ class Post extends Model {
 	 * @var string
 	 */
 	protected $primaryKey = 'post_id';
-
+	
+	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'author_ip' => 'ip',
+	];
+	
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -56,13 +65,13 @@ class Post extends Model {
 		'reply_to_board_id',
 		'reply_last',
 		'bumped_last',
-
+		
 		'stickied',
 		'stickied_at',
 		'bumplocked_at',
 		'locked_at',
 		'featured_at',
-
+		
 		'author_ip',
 		'author_ip_nulled_at',
 		'author_id',
@@ -73,7 +82,7 @@ class Post extends Model {
 		'email',
 		'password',
 		'flag_id',
-
+		
 		'body',
 		'body_too_long',
 		'body_parsed',
@@ -95,7 +104,7 @@ class Post extends Model {
 		'body_parsed',
 		'body_parsed_at',
 		'body_html',
-
+		
 		// Relationships
 		'bans',
 		'board',
@@ -112,14 +121,29 @@ class Post extends Model {
 	 *
 	 * @var array
 	 */
-	protected $appends = ['content_raw', 'content_html', 'recently_created'];
+	protected $appends = [
+		'content_raw',
+		'content_html',
+		'recently_created',
+	];
 
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
 	 *
 	 * @var array
 	 */
-	protected $dates = ['reply_last', 'bumped_last', 'created_at', 'updated_at', 'deleted_at', 'stickied_at', 'bumplocked_at', 'locked_at', 'body_parsed_at', 'author_ip_nulled_at'];
+	protected $dates = [
+		'reply_last',
+		'bumped_last',
+		'created_at',
+		'updated_at',
+		'deleted_at',
+		'stickied_at',
+		'bumplocked_at',
+		'locked_at',
+		'body_parsed_at',
+		'author_ip_nulled_at',
+	];
 
 
 	public function attachments()
@@ -747,7 +771,7 @@ class Post extends Model {
 			$between = isset($m['between']) && $m['between'] == "-"  ? true : false;
 			$end     = isset($m['end']) && $m['end'] != ""           ? (int) $m['end']   : false;
 			$length  = null;
-
+			
 			// Fetching last posts?
 			if ($last === true)
 			{
@@ -773,7 +797,7 @@ class Post extends Model {
 					{
 						return false;
 					}
-
+					
 					$start -= 2;
 					$length = $end - $start - 1;
 				}
@@ -782,7 +806,7 @@ class Post extends Model {
 				{
 					$start = 0;
 					$length = $end - 1;
-
+					
 					if ($length < 0)
 					{
 						return false;
@@ -820,15 +844,15 @@ class Post extends Model {
 			{
 				return false;
 			}
-
+			
 			$start = max($start, 0);
-
+			
 			return $this->setRelation('replies', $this->replies->splice($start, $length));
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Returns a relative URL for opening this post.
 	 *
@@ -858,8 +882,7 @@ class Post extends Model {
 		
 		return url("/{$this->board_uri}/thread/{$url_id}{$splice}#{$url_hash}");
 	}
-
-
+	
 	/**
 	 * Determines if the post is made from the client's remote address.
 	 *
@@ -949,7 +972,7 @@ class Post extends Model {
 	{
 		return !is_null($this->stickied_at);
 	}
-
+	
 	/**
 	 * Returns the author IP in a human-readable format.
 	 *
@@ -961,35 +984,31 @@ class Post extends Model {
 		{
 			return$this->author_ip->toText();
 		}
-
+		
 		return false;
 	}
-
+	
 	public function getAuthorIpAttribute()
 	{
 		if ($this->attributes['author_ip'] instanceof IP)
 		{
 			return $this->attributes['author_ip'];
 		}
-
-		return new IP($this->attributes['author_ip']);
+		
+		$this->attributes['author_ip'] = new IP($this->attributes['author_ip']);
+		return $this->attributes['author_ip'];
 	}
-
+	
 	public function setAuthorIpAttribute($value)
 	{
-		if ($value === null)
+		if (!is_null($value) && !is_binary($value))
 		{
-			$alue = null;
+			$value = new IP($value);
 		}
-		else if (!is_binary($value))
-		{
-			$ip = new IP($value);
-			$value = $ip->getStart(true);
-		}
-
+		
 		return $this->attributes['author_ip'] = $value;
 	}
-
+	
 	/**
 	 * Returns the bit size of the IP.
 	 *
@@ -1001,10 +1020,10 @@ class Post extends Model {
 		{
 			return strpos($this->getAuthorIpAsString(), ":") === false ? 32 : 128;
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Returns a user-friendly list of ranges available for this IP.
 	 *
@@ -1015,7 +1034,7 @@ class Post extends Model {
 		$bitsize = $this->getAuthorIpBitSize();
 		$range   = range(0, $bitsize);
 		$masks   = [];
-
+		
 		foreach ($range as $mask)
 		{
 			$affectedIps  = number_format(pow(2, $bitsize - $mask), 0);
@@ -1024,10 +1043,10 @@ class Post extends Model {
 				'ips'  => $affectedIps
 			]);
 		}
-
+		
 		return $masks;
 	}
-
+	
 	/**
 	 * Returns the board model for this post.
 	 *
@@ -1039,7 +1058,7 @@ class Post extends Model {
 			->get()
 			->first();
 	}
-
+	
 	/**
 	 * Returns a human-readable capcode string.
 	 *
@@ -1055,10 +1074,10 @@ class Post extends Model {
 		{
 			return $this->capcode->getCapcodeName();
 		}
-
+		
 		return "";
 	}
-
+	
 	/**
 	 * Parses the post text for citations.
 	 *
@@ -1068,7 +1087,7 @@ class Post extends Model {
 	{
 		return ContentFormatter::getCites($this);
 	}
-
+	
 	/**
 	 * Returns a SHA1 checksum for this post's text.
 	 *
@@ -1079,7 +1098,7 @@ class Post extends Model {
 	{
 		return $this->makeChecksum($this->body, $binary);
 	}
-
+	
 	/**
 	 * Returns the last post made by this user across the entire site.
 	 *
@@ -1093,14 +1112,14 @@ class Post extends Model {
 		{
 			$ip = new IP;
 		}
-
+		
 		return Post::whereAuthorIP($ip)
 			->orderBy('created_at', 'desc')
 			->take(1)
 			->get()
 			->first();
 	}
-
+	
 	/**
 	 * Returns the page on which this thread appears.
 	 * If the post is a reply, it will return the page it appears on in the thread, which is always 1.
@@ -1114,13 +1133,13 @@ class Post extends Model {
 			$board          = $this->board()->with('settings')->get()->first();
 			$visibleThreads = $board->threads()->op()->where('bumped_last', '>=', $this->bumped_last)->count();
 			$threadsPerPage = (int) $board->getConfig('postsPerPage', 10);
-
+			
 			return floor(($visibleThreads - 1) / $threadsPerPage) + 1;
 		}
-
+		
 		return 1;
 	}
-
+	
 	/**
 	 * Returns the post model for the most recently featured post.
 	 *
@@ -1131,13 +1150,13 @@ class Post extends Model {
 	public static function getPostFeatured($dayRange = 3)
 	{
 		$oldestPossible = \Carbon\Carbon::now()->subDays($dayRange);
-
+		
 		return static::where('featured_at', '>=', $oldestPossible)
 			->withEverything()
 			->orderBy('featured_at', 'desc')
 			->first();
 	}
-
+	
 	/**
 	 * Returns the post model using the board's URI and the post's local board ID.
 	 *
@@ -1154,7 +1173,7 @@ class Post extends Model {
 			])
 			->first();
 	}
-
+	
 	/**
 	 * Returns the model for this post's original post (what it is a reply to).
 	 *
@@ -1166,7 +1185,7 @@ class Post extends Model {
 			->get()
 			->first();
 	}
-
+	
 	/**
 	 * Returns a few posts for the front page.
 	 *
@@ -1181,7 +1200,7 @@ class Post extends Model {
 			->whereHas('board', function($query) use ($sfwOnly) {
 				$query->where('is_indexed', '=', true);
 				$query->where('is_overboard', '=', true);
-
+				
 				if ($sfwOnly)
 				{
 					$query->where('is_worksafe', '=', true);
@@ -1195,7 +1214,7 @@ class Post extends Model {
 			->orderBy('post_id', 'desc')
 			->get();
 	}
-
+	
 	/**
 	 * Returns the latest reply to a post.
 	 *
@@ -1209,7 +1228,7 @@ class Post extends Model {
 			->get()
 			->first();
 	}
-
+	
 	/**
 	 * Returns all replies to a post.
 	 *
@@ -1221,13 +1240,13 @@ class Post extends Model {
 		{
 			return $this->replies;
 		}
-
+		
 		return $this->replies()
 			->withEverything()
 			->orderBy('post_id', 'asc')
 			->get();
 	}
-
+	
 	/**
 	 * Returns the last few replies to a thread for index views.
 	 *
@@ -1240,7 +1259,7 @@ class Post extends Model {
 			->get()
 			->reverse();
 	}
-
+	
 	/**
 	 * Returns a set of posts for an update request.
 	 *
@@ -1254,7 +1273,7 @@ class Post extends Model {
 	public static function getUpdates($sinceTime, Board $board, Post $thread, $includeHTML = false)
 	{
 		$posts = static::whereInUpdate($sinceTime, $board, $thread)->get();
-
+		
 		if ($includeHTML)
 		{
 			foreach ($posts as $post)
@@ -1262,10 +1281,10 @@ class Post extends Model {
 				$post->setAppendHTML(true);
 			}
 		};
-
+		
 		return $posts;
 	}
-
+	
 	/**
 	 * Returns if this post has an attached IP address.
 	 *
@@ -1275,7 +1294,7 @@ class Post extends Model {
 	{
 		return $this->author_ip !== null;
 	}
-
+	
 	/**
 	 * Determines if this post has a body message.
 	 *
@@ -1285,7 +1304,7 @@ class Post extends Model {
 	{
 		return strlen( trim( (string) $this->attributes['body'] ) ) > 0;
 	}
-
+	
 	/**
 	 * Get the appends attribute.
 	 * Not normally available to models, but required for API responses.
@@ -1297,7 +1316,7 @@ class Post extends Model {
 	{
 		return $this->appends;
 	}
-
+	
 	/**
 	 * Pull threads for the overboard.
 	 *
@@ -1308,7 +1327,7 @@ class Post extends Model {
 	public static function getThreadsForOverboard($page = 0)
 	{
 		$postsPerPage    = 10;
-
+		
 		$rememberTags    = ["site.overboard.pages"];
 		$rememberTimer   = 30;
 		$rememberKey     = "site.overboard.page.{$page}";
@@ -1327,37 +1346,37 @@ class Post extends Model {
 				->skip($postsPerPage * ( $page - 1 ))
 				->take($postsPerPage)
 				->get();
-
+			
 			// The way that replies are fetched forIndex pulls them in reverse order.
 			// Fix that.
 			foreach ($threads as $thread)
 			{
 				$replyTake = $thread->stickied_at ? 1 : 5;
-
+				
 				$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->replies     = $thread->replies
 					->reverse()
 					->splice(-$replyTake, $replyTake);
 			}
-
+			
 			return $threads;
 		};
-
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
 			case "database" :
 				$threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
-
+				
 			default :
 				$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
-
+		
 		return $threads;
 	}
-
+	
 	/**
 	 * Sets the value of $this->appends to the input.
 	 * Not normally available to models, but required for API responses.
@@ -1369,7 +1388,7 @@ class Post extends Model {
 	{
 		return $this->appends = $appends;
 	}
-
+	
 	/**
 	 * Quickly add html to the append list for this model.
 	 *
@@ -1379,7 +1398,7 @@ class Post extends Model {
 	public function setAppendHTML($add = true)
 	{
 		$appends   = $this->getAppends();
-
+		
 		if ($add)
 		{
 			$appends[] = "html";
@@ -1388,11 +1407,11 @@ class Post extends Model {
 		{
 			unset($appends[$key]);
 		}
-
+		
 		$this->setAppends($appends);
 		return $this;
 	}
-
+	
 	/**
 	 * Sets the bumplock property timestamp.
 	 *
@@ -1409,7 +1428,7 @@ class Post extends Model {
 		{
 			$this->bumplocked_at = null;
 		}
-
+		
 		return $this;
 	}
 
@@ -1429,7 +1448,7 @@ class Post extends Model {
 		{
 			$this->deleted_at = null;
 		}
-
+		
 		return $this;
 	}
 
@@ -1449,10 +1468,10 @@ class Post extends Model {
 		{
 			$this->locked_at = null;
 		}
-
+		
 		return $this;
 	}
-
+	
 	/**
 	 * Sets the sticky property of a post and updates relevant timestamps.
 	 *
@@ -1471,16 +1490,15 @@ class Post extends Model {
 			$this->stickied = false;
 			$this->stickied_at = null;
 		}
-
+		
 		return $this;
 	}
-
-
+	
 	public function scopeAndAttachments($query)
 	{
 		return $query->with('attachments');
 	}
-
+	
 	public function scopeAndBacklinks($query)
 	{
 		return $query->with([
@@ -1492,12 +1510,12 @@ class Post extends Model {
 			},
 		]);
 	}
-
+	
 	public function scopeAndBoard($query)
 	{
 		return $query->with('board');
 	}
-
+	
 	public function scopeAndBans($query)
 	{
 		return $query->with(['bans' => function($query)
@@ -1505,7 +1523,7 @@ class Post extends Model {
 			$query->orderBy('created_at', 'asc');
 		}]);
 	}
-
+	
 	public function scopeAndCapcode($query)
 	{
 		return $query
@@ -1520,12 +1538,12 @@ class Post extends Model {
 				'roles.name as capcode_name'
 			);
 	}
-
+	
 	public function scopeAndCites($query)
 	{
 		return $query->with('cites', 'cites.cite');
 	}
-
+	
 	public function scopeAndEditor($query)
 	{
 		return $query
@@ -1538,12 +1556,12 @@ class Post extends Model {
 				'users.username as updated_by_username'
 			);
 	}
-
+	
 	public function scopeAndFlag($query)
 	{
 		return $query->with('flag');
 	}
-
+	
 	public function scopeAndFirstAttachment($query)
 	{
 		return $query->with(['attachments' => function($query)
@@ -1551,14 +1569,14 @@ class Post extends Model {
 			$query->limit(1);
 		}]);
 	}
-
+	
 	public function scopeAndReplies($query)
 	{
 		return $query->with(['replies' => function($query) {
 			$query->withEverything();
 		}]);
 	}
-
+	
 	public function scopeAndPromotedReports($query)
 	{
 		return $query->with(['reports' => function($query) {
@@ -1566,51 +1584,51 @@ class Post extends Model {
 			$query->wherePromoted();
 		}]);
 	}
-
+	
 	public function scopeWhereAuthorIP($query, $ip)
 	{
 		$ip = new IP($ip);
 		return $query->where('author_ip', $ip->toSQL());
 	}
-
+	
 	public function scopeIpString($query, $ip)
 	{
 		return $query->whereAuthorIP($ip);
 	}
-
+	
 	public function scopeIpBinary($query, $ip)
 	{
 		return $query->whereAuthorIP($ip);
 	}
-
+	
 	public function scopeOp($query)
 	{
 		return $query->where('reply_to', null);
 	}
-
+	
 	public function scopeRecent($query)
 	{
 		return $query->where('created_at', '>=', static::freshTimestamp()->subHour());
 	}
-
+	
 	public function scopeForIndex($query)
 	{
 		return $query->withEverythingForReplies()
 			->orderBy('post_id', 'desc')
 			->takePerGroup('reply_to', 5);
 	}
-
+	
 	public function scopeReplyTo($query, $replies = false)
 	{
 		if ($replies instanceof \Illuminate\Database\Eloquent\Collection)
 		{
 			$thread_ids = [];
-
+			
 			foreach ($replies as $thread)
 			{
 				$thread_ids[] = (int) $thread->post_id;
 			}
-
+			
 			return $query->whereIn('reply_to', $thread_ids);
 		}
 		else if (is_numeric($replies))
@@ -1622,14 +1640,14 @@ class Post extends Model {
 			return $query->where('reply_to', 'not', null);
 		}
 	}
-
+	
 	public function scopeWithEverything($query)
 	{
 		return $query
 			->withEverythingForReplies()
 			->andBoard();
 	}
-
+	
 	public function scopeWithEverythingAndReplies($query)
 	{
 		return $query
@@ -1639,7 +1657,7 @@ class Post extends Model {
 				$query->orderBy('board_id', 'asc');
 			}]);
 	}
-
+	
 	public function scopeWithEverythingForReplies($query)
 	{
 		return $query
@@ -1652,7 +1670,7 @@ class Post extends Model {
 			->andFlag()
 			->andPromotedReports();
 	}
-
+	
 	public function scopeWhereHasReports($query)
 	{
 		return $query->whereHas('reports', function($query)
@@ -1660,7 +1678,7 @@ class Post extends Model {
 				$query->whereOpen();
 			});
 	}
-
+	
 	public function scopeWhereHasReportsFor($query, PermissionUser $user)
 	{
 		return $query->whereHas('reports', function($query) use ($user)
@@ -1673,7 +1691,7 @@ class Post extends Model {
 				$query->whereResponsibleFor($user);
 			}]);
 	}
-
+	
 	public function scopeWhereInThread($query, Post $thread)
 	{
 		if ($thread->attributes['reply_to_board_id'])
@@ -1691,7 +1709,7 @@ class Post extends Model {
 			});
 		}
 	}
-
+	
 	/**
 	 * Logic for pulling posts for API updates.
 	 *
@@ -1722,8 +1740,7 @@ class Post extends Model {
 			// Order by board id in reverse order (so they appear in the thread right).
 			->orderBy('posts.board_id', 'asc');
 	}
-
-
+	
 	/**
 	 * Fetches a URL for either this thread or an action.
 	 *
@@ -1733,7 +1750,7 @@ class Post extends Model {
 	public function url($action = null)
 	{
 		$url = "";
-
+		
 		if (is_null($action))
 		{
 			if ($this->reply_to_board_id)
@@ -1749,10 +1766,10 @@ class Post extends Model {
 		{
 			$url = "/{$this->board_uri}/post/{$this->board_id}/{$action}";
 		}
-
+		
 		return $url;
 	}
-
+	
 	/**
 	 * Fetches a URL for JSON requests that will update this thread or post.
 	 *
@@ -1762,7 +1779,7 @@ class Post extends Model {
 	public function urlJson($thread = true)
 	{
 		$url = "";
-
+		
 		if ($thread)
 		{
 			if ($this->reply_to_board_id)
@@ -1778,10 +1795,10 @@ class Post extends Model {
 		{
 			$url = "/{$this->board_uri}/post/{$this->board_id}.json";
 		}
-
+		
 		return $url;
 	}
-
+	
 	/**
 	 * Fetches a URL for this post, with the reply-to hash.
 	 *
@@ -1790,7 +1807,7 @@ class Post extends Model {
 	public function urlReply()
 	{
 		$url = "";
-
+		
 		if ($this->reply_to_board_id)
 		{
 			$url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}#reply-{$this->board_id}";
@@ -1799,10 +1816,10 @@ class Post extends Model {
 		{
 			$url = "/{$this->board_uri}/thread/{$this->board_id}#reply-{$this->board_id}";
 		}
-
+		
 		return $url;
 	}
-
+	
 	/**
 	 * Sends a redirect to the post's page.
 	 *
@@ -1813,7 +1830,7 @@ class Post extends Model {
 	{
 		return redirect($this->url($action));
 	}
-
+	
 	/**
 	 * Pushes the post to the specified board, as a new thread or as a reply.
 	 * This autoatically handles concurrency issues. Creating a new reply without
@@ -1833,18 +1850,18 @@ class Post extends Model {
 		$this->bumped_last    = $this->reply_last;
 		$this->setCreatedAt($this->reply_last);
 		$this->setUpdatedAt($this->reply_last);
-
+		
 		if (!is_null($thread) && !($thread instanceof Post))
 		{
 			$thread = $board->getLocalThread($thread);
 		}
-
+		
 		if ($thread instanceof Post)
 		{
 			$this->reply_to = $thread->post_id;
 			$this->reply_to_board_id = $thread->board_id;
 		}
-
+		
 		// Handle tripcode, if any.
 		if (preg_match('/^([^#]+)?(##|#)(.+)$/', $this->author, $match))
 		{
@@ -1855,90 +1872,90 @@ class Post extends Model {
 			// Convert password to tripcode, store tripcode hash in DB.
 			$this->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
 		}
-
+		
 		// Ensure we're using a valid flag.
 		if (!$this->flag_id || !$board->hasFlag($this->flag_id))
 		{
 			$this->flag_id = null;
 		}
-
+		
 		// Store the post in the database.
 		DB::transaction(function() use ($board, $thread)
 		{
 			// The objective of this transaction is to prevent concurrency issues in the database
 			// on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
 			// alongside the primary autoincrement column `post_id`.
-
+			
 			// First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
 			DB::table('boards')
 				->where('board_uri', $this->board_uri)
 				->increment('posts_total', 1, [
 					'last_post_at' => $this->reply_last,
 				]);
-
+				
 			// Second, we record this value and lock the table.
 			$boards = DB::table('boards')
 				->where('board_uri', $this->board_uri)
 				->lockForUpdate()
 				->select('posts_total')
 				->get();
-
+				
 			$posts_total = $boards[0]->posts_total;
-
+			
 			// Third, we store a unique checksum for this post for duplicate tracking.
 			$board->checksums()->create([
 				'checksum' => $this->getChecksum(),
 			]);
-
+			
 			// Optionally, we also expend the adventure.
 			$adventure = BoardAdventure::getAdventure($board);
-
+			
 			if ($adventure)
 			{
 				$this->adventure_id = $adventure->adventure_id;
 				$adventure->expended_at = $this->created_at;
 				$adventure->save();
 			}
-
+			
 			// We set our board_id and save the post.
 			$this->board_id  = $posts_total;
 			$this->author_id = $this->makeAuthorId();
 			$this->password  = $this->makePassword($this->password);
 			$this->save();
-
+			
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($thread instanceof static)
 			{
 				// We're not using the Model for this because it fails under high volume.
-
+				
 				$threadNewValues = [
 					'updated_at'       => $thread->updated_at,
 					'reply_last'       => $this->created_at,
 					'reply_count'      => $thread->replies()->count(),
 					'reply_file_count' => $thread->replyFiles()->count(),
 				];
-
+				
 				if (!$this->isBumpless() && !$thread->isBumplocked())
 				{
 					$threadNewValues['bumped_last'] = $this->created_at;
 				}
-
+				
 				DB::table('posts')
 					->where('post_id', $thread->post_id)
 					->update($threadNewValues);
 			}
-
+			
 			// Queries and locks are handled automatically after this closure ends.
 		});
-
+		
 		// Process uploads.
 		$uploads = [];
-
+		
 		// Check file uploads.
 		if (is_array($files = Input::file('files')))
 		{
 			$uploads = array_filter($files);
-
+			
 			if (count($uploads) > 0)
 			{
 				foreach ($uploads as $uploadIndex => $upload)
@@ -1956,43 +1973,42 @@ class Post extends Model {
 			$hashes   = $files['hash'];
 			$names    = $files['name'];
 			$spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
-
+			
 			$storages = FileStorage::whereIn('hash', $hashes)->get();
-
+			
 			foreach ($hashes as $index => $hash)
 			{
 				if (!isset($uniques[$hash]))
 				{
 					$uniques[$hash] = true;
 					$storage = $storages->where('hash', $hash)->first();
-
+					
 					if ($storage && !$storage->banned)
 					{
 						$spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
-
+						
 						$upload = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
 						$upload->position = $index;
 						$uploads[] = $upload;
 					}
 				}
 			}
-
+			
 			$this->attachmentLinks()->saveMany($uploads);
 			FileStorage::whereIn('hash', $hashes)->increment('upload_count');
 		}
-
-
+		
+		
 		// Finally fire event on OP, if it exists.
 		if ($thread instanceof Post)
 		{
 			$thread->setRelation('board', $board);
 			Event::fire(new ThreadNewReply($thread));
 		}
-
+		
 		return $this;
 	}
-
-
+	
 	/**
 	 * Returns a thread with its replies for a thread view and leverages cache.
 	 *
@@ -2008,13 +2024,26 @@ class Post extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$board_uri}.thread.{$board_id}";
 		$rememberClosure = function() use ($board_uri, $board_id) {
-			return static::where([
+			$thread = static::where([
 				'posts.board_uri' => $board_uri,
 				'posts.board_id'  => $board_id,
 			])->withEverythingAndReplies()->first();
+			
+			
+			## TODO ##
+			// Find a better way to do this.
+			// Call these methods so we typecast the IP as an IP class before
+			// we invoke memory caching.
+			$thread->author_ip;
+			
+			foreach ($thread->replies as $reply)
+			{
+				$reply->author_ip;
+			}
+			
+			return $thread;
 		};
-
-
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -2026,13 +2055,14 @@ class Post extends Model {
 				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
-
-
+		
+		
 		if (!is_null($uri))
 		{
 			return $thread->getReplySplice($uri);
 		}
-
+		
 		return $thread;
 	}
+	
 }

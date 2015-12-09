@@ -378,7 +378,7 @@ trait PermissionUser {
 			return true;
 		}
 		// If the author and our current user share an IP ...
-		else if (!is_null($post->author_ip) && $post->author_ip->intersects(Request::ip()))
+		else if (!is_null($post->author_ip) && $post->author_ip->is(Request::ip()))
 		{
 			// Allow post edit, if the masks allows it.
 			return $this->can("board.post.edit.self", $post->board_uri);

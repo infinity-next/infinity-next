@@ -145,6 +145,25 @@ class IP extends CIDR {
 	}
 	
 	/**
+	 * Quickly determines if the supplied CIDR is the same as this CIDR.
+	 *
+	 * @return boolean
+	 */
+	 public function is($ip)
+	 {
+		 if ($ip instanceof static)
+		 {
+			 return $ip->getStart() === $this->start && $ip->getEnd() === $this->end;
+		 }
+		 else if (is_string($ip))
+		 {
+			 return $this->start === $ip && $this->end === $ip;
+		 }
+		 
+		 return false;
+	 }
+	
+	/**
 	 * Converts an IPv4 or IPv6 CIDR block into its range.
 	 *
 	 * @static
