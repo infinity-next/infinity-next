@@ -1631,7 +1631,11 @@ nav.gnav {
 		display: inline-block;
 		padding: 0;
 	}
-	nav.gnav li.gnav-item  a.gnav-link {
+		nav.gnav li.gnav-item.item-config {
+			float: right;
+		}
+	
+	nav.gnav li.gnav-item  .gnav-link {
 		display: inline-block;
 		font-size: 14px;
 		margin: 0 7px;
@@ -1639,7 +1643,7 @@ nav.gnav {
 		text-decoration: none;
 		vertical-align: top;
 	}
-		nav.gnav li.gnav-item.gnav-active a.gnav-link {
+		nav.gnav li.gnav-item.gnav-active .gnav-link {
 			border-bottom: 3px solid #AF0A0F;
 			padding-bottom: 8px;
 			color: #AF0A0F;

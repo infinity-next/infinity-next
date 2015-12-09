@@ -29,6 +29,7 @@ return [
 		'contribute'   => "Contribute",
 		'donate'       => "Fund Us",
 		'adventure'    => "Adventure",
+		'options'      => "Options",
 		
 		// Translators:
 		// 'Overboard' has a specific meaning to English IB users.
