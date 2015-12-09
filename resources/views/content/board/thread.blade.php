@@ -3,20 +3,42 @@
 	'post'  => $thread,
 ])
 
+@set('catalog', isset($catalog) && catalog)
+@set('reply_to', isset($reply_to) && $reply_to)
+
 @if (!$thread->reply_to)
 @spaceless
+@if ($thread->reply_count > count($thread->replies) && !$thread->reply_to)
+<div class="thread-replies-omitted">
+{{-- Normal Reply Count --}}
+<span class="thread-replies-count">{{ Lang::get(
+	$thread->reply_file_count > 0 ? 'board.omitted.text.both' : 'board.omitted.text.only',
+	[
+		'text_posts' => Lang::choice(
+			'board.omitted.count.replies',
+			$thread->reply_count - $thread->getReplyCount(),
+			[
+				'count' => $thread->reply_count - $thread->getReplyCount()
+			]
+		),
+		'text_files' => Lang::choice(
+			'board.omitted.count.files',
+			$thread->reply_file_count - $thread->getReplyFileCount(),
+			[
+				'count' => $thread->reply_file_count - $thread->getReplyFileCount()
+			]
+		),
+	]
+) }}</span>
+{{-- JavaScript Expand Inline --}}
+<a class="thread-replies-expand no-mobile require-js" href="#">{{ Lang::get(
+	'board.omitted.show.inline'
+) }}</a>
+</div>
+@endif
+
 <ul class="thread-replies">
-	@if ($thread->reply_count > count($thread->replies) && !$thread->reply_to)
-	<div class="thread-replies-omitted">{{ Lang::get(
-		$thread->reply_file_count > 0 ? 'board.omitted_text_both' : 'board.omitted_text_only',
-		[
-			'text_posts' => Lang::choice('board.omitted_replies', $thread->reply_count - $thread->getReplyCount(), [ 'count' => $thread->reply_count - $thread->getReplyCount() ]),
-			'text_files' => Lang::choice('board.omitted_file', $thread->reply_file_count - $thread->getReplyFileCount(), [ 'count' => $thread->reply_file_count - $thread->getReplyFileCount() ]),
-		]
-	) }}</div>
-	@endif
-	
-	@foreach ($thread->getReplies() as $reply)
+@foreach ($thread->getReplies() as $reply)
 	<li class="thread-reply">
 		<article class="reply">
 			@endspaceless

@@ -79,23 +79,23 @@ return [
 		
 		'desc-local'  => "Board staff guidelines for reports ...",
 		'local'       => "You are reporting a post to the local board management. " .
-		                 "This usually means that the post is in violation of board-specific rules, " .
-		                 "disparages the spirit of the board, or disrupts conversation.",
+			"This usually means that the post is in violation of board-specific rules, " .
+			"disparages the spirit of the board, or disrupts conversation.",
 		
 		
 		'desc-global' => "Guidelines for global reports ...",
 		'global'      => "You are reporting this post to <strong>global management</strong>. " .
-		                 "If a post is in violation of a rule applied to all boards on a site, this is the appropriate action. " .
-		                 "More frivilous or board-specific rule violations should be handled by board staff.",
+			"If a post is in violation of a rule applied to all boards on a site, this is the appropriate action. " .
+			"More frivilous or board-specific rule violations should be handled by board staff.",
 		
 		'associate'            => "Associate report with your account",
 		'associate-no-acct'    => "Register an account to take credit for your reports",
 		'associate-disclaimer' => "<p>Any reports associated with your account will follow you. " .
-		                          "Whether the report results in action will become available information to board owners or administrators if you apply for staff positions. " .
-		                          "This success ratio may increase (or decrease) the likelihood of you being accepted into that role.</p>" .
-		                          "<p>Your reports are not public information. Your identity will not be shown alongside your report. " .
-		                          "Your report history will not become available unless you apply for a staff position and opt in to have it displayed.</p>" .
-		                          "<p>If you do not want to have this report associated with your account, do not check the checkbox.</p>",
+			"Whether the report results in action will become available information to board owners or administrators if you apply for staff positions. " .
+			"This success ratio may increase (or decrease) the likelihood of you being accepted into that role.</p>" .
+			"<p>Your reports are not public information. Your identity will not be shown alongside your report. " .
+			"Your report history will not become available unless you apply for a staff position and opt in to have it displayed.</p>" .
+			"<p>If you do not want to have this report associated with your account, do not check the checkbox.</p>",
 		
 		'is_not_associated'    => "Anonymous report",
 		'is_associated'        => "User associated report",
@@ -173,15 +173,26 @@ return [
 	/**
 	 * Thread View
 	 */
+ 	// These fit together as "Omitted 3 posts" or "Omitted 3 posts with 2 files"
+ 	// with pluralized localizations.
+	'omitted'           => [
+		'text' => [
+			'only' => "Omitted :text_posts",
+			'both' => "Omitted :text_posts with :text_files",
+		],
+		
+		'count' => [
+			'replies' => "{0}unknown posts|{1}:count post|[2,Inf]:count posts",
+			'files'   => "{0}unknown files|{1}:count file|[2,Inf]:count files",
+		],
+		
+		'show' => [
+			'inline' => "Click to expand",
+			'open'   => "Last :count",
+		]
+	],
 	
-	// These fit together as "Omitted 3 posts" or "Omitted 3 posts with 2 files"
-	// with pluralized localizations.
-	'omitted_text_only' => 'Omitted :text_posts',
-	'omitted_text_both' => 'Omitted :text_posts with :text_files',
-	'omitted_replies'   => '{0}No posts|{1}:count post|[2,Inf]:count posts', // :text_posts
-	'omitted_file'      => '{0}No files|{1}:count file|[2,Inf]:count files', // :text_files
-	
-	'preview_see_more'  => "Post was truncated. <a href=\":url\">Click here</a> to view the full text.",
+	'preview_see_more'  => "Post was truncated. <a href=\":url\">Click here</a> to view the full text",
 	
 	
 	/**

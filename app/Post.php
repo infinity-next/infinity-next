@@ -834,20 +834,29 @@ class Post extends Model {
 	 *
 	 * @return string
 	 */
-	public function getURL()
+	public function getURL($splice = null)
 	{
-		$url = "/{$this->board_uri}/thread/";
-
 		if ($this->reply_to_board_id)
 		{
-			$url .= "{$this->reply_to_board_id}#{$this->board_id}";
+			$url_id   = $this->reply_to_board_id;
+			$url_hash = $this->board_id;
 		}
 		else
 		{
-			$url .= "{$this->board_id}#{$this->board_id}";
+			$url_id   = $this->board_id;
+			$url_hash = $this->board_id;
 		}
-
-		return url($url);
+		
+		if (is_string($splice))
+		{
+			$splice = "/{$splice}";
+		}
+		else
+		{
+			$splice = "";
+		}
+		
+		return url("/{$this->board_uri}/thread/{$url_id}{$splice}#{$url_hash}");
 	}
 
 

@@ -28,7 +28,6 @@
 						@include('content.board.thread', [
 							'board'   => $board,
 							'thread'  => $thread,
-							'updater' => !!$reply_to,
 						])
 					</div>
 				</article>

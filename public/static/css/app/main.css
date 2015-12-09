@@ -273,13 +273,19 @@ table {
  */
 html.no-js .no-js,
 html.js	.require-js {
-	display: block;
+	display: initial;
 }
 html.no-js .require-js,
 html.js	.no-js {
 	display: none;
 }
 
+.no-mobile {
+	display: none;
+}
+.only-mobile {
+	display: initial;
+}
 .tablet-or-larger {
 	display: none;
 
@@ -2488,15 +2494,15 @@ main.index-threaded {
 			border-bottom: 2px dotted #B7C5D9;
 		}
 
-		#autoupdater {
+		.autoupdater {
 			margin: 1em 0;
 			padding: 0 0 0 1.5em;
 			white-space: nowrap;
 		}
-			#autoupdater .autoupdater-items {
+			.autoupdater .autoupdater-items {
 				margin: 0 0 0 -0.5em;
 			}
-				#autoupdater .autoupdater-item {
+				.autoupdater .autoupdater-item {
 					display: inline-block;
 					list-style: none;
 					margin: 0 0.5em;
@@ -2549,8 +2555,24 @@ main.index-threaded {
 
 
 		.thread-replies-omitted {
-			margin: 0.25em 0.5em;
+			margin: 0.25em 0 0.5em 0.25em;
 		}
+			.thread-replies-count,
+			.thread-replies-expand,
+			.thread-replies-open {
+				display: inline;
+				margin-right: 0.25em;
+			}
+				.thread-replies-expand::after,
+				.thread-replies-open::after {
+					display: inline;
+					content: ']';
+				}
+				.thread-replies-expand::before,
+				.thread-replies-open::before {
+					display: inline;
+					content: '[';
+				}
 
 		.post-container {
 			display: inline-block;
