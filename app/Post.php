@@ -988,6 +988,11 @@ class Post extends Model {
 		return false;
 	}
 	
+	/**
+	 * Returns author_ip as an instance of the support class.
+	 *
+	 * @return \App\Support\IP|null
+	 */
 	public function getAuthorIpAttribute()
 	{
 		if ($this->attributes['author_ip'] instanceof IP)
@@ -997,16 +1002,6 @@ class Post extends Model {
 		
 		$this->attributes['author_ip'] = new IP($this->attributes['author_ip']);
 		return $this->attributes['author_ip'];
-	}
-	
-	public function setAuthorIpAttribute($value)
-	{
-		if (!is_null($value) && !is_binary($value))
-		{
-			$value = new IP($value);
-		}
-		
-		return $this->attributes['author_ip'] = $value;
 	}
 	
 	/**
@@ -1410,6 +1405,22 @@ class Post extends Model {
 		
 		$this->setAppends($appends);
 		return $this;
+	}
+	
+	/**
+	 * Stores author_ip as an instance of the support class.
+	 *
+	 * @param  \App\Support\IP|string|null  $value  The IP to store.
+	 * @return \App\Support\IP|null
+	 */
+	public function setAuthorIpAttribute($value)
+	{
+		if (!is_null($value) && !is_binary($value))
+		{
+			$value = new IP($value);
+		}
+		
+		return $this->attributes['author_ip'] = $value;
 	}
 	
 	/**
