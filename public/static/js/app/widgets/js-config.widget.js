@@ -1,13 +1,17 @@
 // ===========================================================================
-// Purpose          : JavaScript Configuration
+// Purpose          : JavaScript Configuration UI Dialog
 // Contributors     : jaw-sh
-// Notes            : This is a attempt at a new Widget format. It makes ample
-//                    use of JS's prototyping, which may offer a
-//                    serious speed advantage.
+// Widget Version   : 2
 // ===========================================================================
 
 (function(window, $, undefined) {
+	// Widget blueprint
 	var blueprint = function() {};
+	
+	// Configuration options
+	var options = {
+		
+	};
 	
 	// Main Widget Initialization Binding
 	blueprint.prototype.bind = function() {
@@ -74,6 +78,7 @@
 		var widget     = this;
 		var $dialog    = $(widget.options.template.panel);
 		
+		// Begin putting together the dialog.
 		var $container = $(widget.options.template.legend);
 		$container.appendTo($dialog);
 		
@@ -89,21 +94,26 @@
 		var $navlist   = $(widget.options.template.navlist);
 		$navlist.appendTo($navcell);
 		
+		// Loop through each widget and pluck their settings.
 		jQuery.each(ib.settings, function(widgetName, settings) {
-			var $fieldset = $(widget.options.template.fieldset);
-			$fieldset.appendTo($fieldcell);
-			
-			$(widget.options.template.legend)
-				.append(widgetName)
-				.appendTo($fieldset);
-			
-			$(widget.options.template.navitem)
-				.append(widgetName)
-				.appendTo($navlist);
-			
-			jQuery.each(settings, function(settingName, setting) {
-				setting.toHTML().appendTo($fieldset);
-			});
+			// Ensure there are options for this group.
+			if (Object.keys(settings).length)
+			{
+				var $fieldset = $(widget.options.template.fieldset);
+				$fieldset.appendTo($fieldcell);
+				
+				$(widget.options.template.legend)
+					.append(widgetName)
+					.appendTo($fieldset);
+				
+				$(widget.options.template.navitem)
+					.append(widgetName)
+					.appendTo($navlist);
+				
+				jQuery.each(settings, function(settingName, setting) {
+					setting.toHTML().appendTo($fieldset);
+				});
+			}
 		});
 		
 		// Blocks out the screen with an interruptable dialog.
@@ -114,10 +124,5 @@
 		$('.blockOverlay').one('click', $.unblockUI);
 	};
 	
-	// Configuration options
-	var config = {
-		
-	};
-	
-	ib.widget("js-config", blueprint, config);
+	ib.widget("js-config", blueprint, options);
 })(window, window.jQuery);

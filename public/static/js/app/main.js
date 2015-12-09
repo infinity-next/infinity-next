@@ -201,7 +201,7 @@
 	};
 	
 	ib.option.prototype.validateWidget = function(widget) {
-		return typeof ib.widgets[widget] === "object" || widget === "main";
+		return typeof ib.widgets[widget] === "function" || widget === "main";
 	};
 	
 	ib.settings = {
@@ -230,8 +230,17 @@
 				ib.settings[name] = {};
 			}
 			
-			jQuery.each(config, function(optionName, optionType)
+			jQuery.each(config, function(optionName, optionParams)
 			{
+				var optionDefault = null;
+				var optionType    = optionParams;
+				
+				if (typeof optionParams === "object")
+				{
+					optionDefault = optionParams.default;
+					optionType    = optionParams.type;
+				}
+				
 				var option = new ib.option(name, optionName, optionType);
 				ib.settings[name][optionName] = option;
 			});
