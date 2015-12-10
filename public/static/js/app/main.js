@@ -150,30 +150,45 @@
 	};
 	
 	ib.option.prototype.toHTML = function() {
-		var $html = $("<input />");
+		var $html;
 		
 		switch (this.type)
 		{
 			case 'bool'   :
+				$html = $("<input />");
 				$html.attr('type', "checkbox");
 				break;
 			
-			case 'array'  :
-				// Not supported yet.
+			case 'int'    :
+				$html = $("<input />");
+				$html.attr('type', "number");
+				break;
+			
+			case 'select' :
+				$html = $("<select></select>");
+				
 				break;
 			
 			case 'string' :
+			case 'text'   :
+				$html = $("<input />");
 				$html.attr('type', "text");
 				break;
 			
-			case 'int'    :
-				$html.attr('type', "number");
+			case 'textarea' :
+				$html = $("<textarea></textarea>");
 				break;
+			
+			default         :
+			//case 'array'  :
+				$html = $("<span></span>")
+				break;
+			
 		}
 		
 		$html.attr('id',    "js-config-"+this.widget+"-"+this.name);
 		$html.attr('class', "config-option");
-		$html.attr('val',   this.get());
+		$html.val(this.get());
 		$html.on(
 			'change',
 			{ 'setting' : this },
@@ -190,10 +205,13 @@
 	ib.option.prototype.validateType = function(type) {
 		switch (type)
 		{
-			case 'string' :
-			case 'array'  :
-			case 'int'    :
-			case 'bool'   :
+			case 'array'    :
+			case 'bool'     :
+			case 'int'      :
+			case 'select'   :
+			case 'string'   :
+			case 'text'     :
+			case 'textarea' :
 				return true;
 		}
 		
@@ -212,7 +230,7 @@
 	
 	
 	// Setup new Widget class.
-	ib.widget = function(name, widget, config) {
+	ib.widget = function(name, widget, options) {
 		console.log("Declaring widget \""+name+"\".");
 		
 		if (ib.widgets[name] !== undefined)
@@ -223,14 +241,14 @@
 		
 		ib.widgets[name] = widget;
 		
-		if (typeof config === "object")
+		if (typeof options === "object")
 		{
 			if (typeof ib.settings[name] === "undefined")
 			{
 				ib.settings[name] = {};
 			}
 			
-			jQuery.each(config, function(optionName, optionParams)
+			jQuery.each(options, function(optionName, optionParams)
 			{
 				var optionDefault = null;
 				var optionType    = optionParams;
