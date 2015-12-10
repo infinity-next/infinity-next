@@ -6,11 +6,11 @@
 
 (function(window, $, undefined) {
 	// Widget blueprint
-	var blueprint = function() {};
+	var blueprint = ib.getBlueprint();
 	
 	// Configuration options
 	var options = {
-		enabled : {
+		enable : {
 			default : false,
 			type    : "bool"
 		}
@@ -18,6 +18,11 @@
 	
 	// Main Widget Initialization Binding
 	blueprint.prototype.bind = function() {
+		if (!this.is('enable'))
+		{
+			return false;
+		}
+		
 		var widget  = this;
 		var $widget = this.$widget;
 		var data    = {
@@ -34,6 +39,8 @@
 		
 		$widget.on('lazywake.ib-lazymg',  data, widget.events.imageLazyWake);
 		$(window).on('scroll.ib-lazyimg', data, widget.events.windowScroll);
+		
+		return true;
 	};
 	
 	// The default values that are set behind init values.

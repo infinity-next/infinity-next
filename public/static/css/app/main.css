@@ -1627,6 +1627,7 @@ nav.gnav {
 		}
 			nav.gnav li.gnav-item.item-config {
 				float: right;
+				cursor: pointer;
 			}
 		
 		nav.gnav li.gnav-item  .gnav-link {
@@ -1795,14 +1796,20 @@ nav.gnav {
 	display: block;
 	cursor: default;
 	
-	margin: 1px 1px 0 1px;
-	min-height: 47px;
+	margin: 0 auto;
+	padding: 0;
 	
 	background: #F5F5F7;
+	border: 1px solid #333;
+	
+	max-width: 840px;
+	width: 100%;
+	
+	height: auto;
+	max-height: 80vh;
 	
 	overflow: hidden;
 	border-radius: 7px;
-	box-shadow: 0 1px 0 #fff;
 }
 	#js-config .config-title {
 		color: #000;
@@ -1836,11 +1843,11 @@ nav.gnav {
 	}
 	#js-config .config-cell.cell-nav {
 		border-right: 1px solid #d3d3d4;
-		width: 7.5em;
+		width: 10em;
 	}
 	#js-config .config-cell.cell-fields {
 		width: auto;
-		padding: 0.25em;
+		padding: 0.75em 0.5em 0.5em 0.5em;
 	}
 	#js-config .config-nav-list {
 		display: block;
@@ -1851,14 +1858,25 @@ nav.gnav {
 		display: block;
 		border-bottom: 1px solid #d7d7d9;
 		cursor: pointer;
-		padding: 0.5em;
+		padding: 0.75em;
 		margin: 0;
-		text-indent: 0.5em;
 	}
-	#js-config .config-nav-active,
-	#js-config .config-nav-item:hover {
-		background: rgba(255, 255, 255, 0.5);
-	}
+		#js-config .config-nav-active,
+		#js-config .config-nav-item:hover {
+			background: rgba(255, 255, 255, 0.5);
+		}
+			#js-config .config-nav-item .fa {
+				width: 1.5em;
+			}
+			#js-config .config-nav-item.item-main .fa::before {
+				content: "\f015";
+			}
+			#js-config .config-nav-item.item-lazyimg .fa::before {
+				content: "\f03e";
+			}
+			#js-config .config-nav-item.item-stylist .fa::before {
+				content: "\f1fc";
+			}
 	#js-config .config-group {
 		display: none;
 		
@@ -1867,6 +1885,25 @@ nav.gnav {
 		padding: 0;
 	}
 	#js-config .config-legend {
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+	#js-config .config-desc {
+		margin: 0.5em 0 0 0;
+		font-size: 90%;
+	}
+	#js-config .config-row {
+		display: block;
+	}
+	#js-config .config-row-name {
+		display: inline-block;
+		width: 40%;
+		margin-right: 1em;
+		line-height: 3em;
+		vertical-align: middle;
+	}
+	#js-config .config-option {
+		vertical-align: middle;
 	}
 
 /* Main Content */

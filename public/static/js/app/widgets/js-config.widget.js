@@ -7,6 +7,7 @@
 (function(window, $, undefined) {
 	// Widget blueprint
 	var blueprint = function() {};
+	blueprint.prototype = ib.blueprint.prototype;
 	
 	// Configuration options
 	var options = {
@@ -69,8 +70,14 @@
 			// Widget fieldset legend
 			legend    : "<legend class=\"config-legend\"></legend>",
 			
+			// Fieldset description
+			fielddesc : "<p class=\"config-desc\"></p>",
+			
 			// Row for the fields.
-			row       : "<label class=\"confg-row\"></label>"
+			row       : "<label class=\"config-row\"></label>",
+			
+			// Text container for field labels.
+			rowname   : "<span class=\"config-row-name\"></span>"
 		}
 	};
 	
@@ -139,6 +146,10 @@
 			// Ensure there are options for this group.
 			if (Object.keys(settings).length)
 			{
+				// Translate our widget name to a title.
+				var widgetTitle = ib.trans(widgetName + ".title");
+				var widgetDesc  = ib.trans(widgetName + ".desc");
+				
 				// Add a fieldset.
 				var $fieldset = $(widget.options.template.fieldset)
 					.data('fieldset', widgetName)
@@ -147,18 +158,37 @@
 				
 				// Append its legend.
 				$(widget.options.template.legend)
-					.append(widgetName)
+					.append(widgetTitle)
 					.appendTo($fieldset);
+				
+				// Append an optional description.
+				if (widgetDesc.length > 0)
+				{
+					console.log("aaaa");
+					$(widget.options.template.fielddesc)
+						.append(widgetDesc)
+						.appendTo($fieldset);
+				}
 				
 				// Add a navigation item.
 				$(widget.options.template.navitem)
+					.addClass('item-'+widgetName)
 					.data('fieldset', widgetName)
 					.attr('data-fieldset', widgetName)
-					.append(widgetName)
+					.append(widgetTitle)
 					.appendTo($navlist);
 				
 				jQuery.each(settings, function(settingName, setting) {
-					setting.toHTML().appendTo($fieldset);
+					// Turn a setting into a row.
+					var $name = $(widget.options.template.rowname)
+						.append(setting.getLabel());
+					
+					var $field = setting.toHTML();
+					
+					$(widget.options.template.row)
+						.append($name)
+						.append($field)
+						.appendTo($fieldset);
 				});
 				
 				if (firstFieldset)
@@ -178,7 +208,10 @@
 				padding    : 0,
 				margin     : 0,
 				textAlign  : "left",
-				cursor     : "normal"
+				cursor     : "normal",
+				top        : "10vh",
+				left       : "0",
+				width      : "100%"
 			},
 			overlayCSS : {
 				border     : "none",

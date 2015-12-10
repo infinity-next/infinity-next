@@ -93,6 +93,34 @@
 		return configDefault;
 	};
 	
+	// Translate a phrase.
+	ib.trans = function(phrase) {
+		// Split a 'x.y.z' string into ['x','y','z']
+		var items = phrase instanceof Array ? phrase : phrase.split(".");
+		// Point to the application language object-array.
+		var traverse = window.app.lang;
+		
+		// For each item in our phrase key, traverse down.
+		for (var i = 0; i < items.length; ++i)
+		{
+			traverse = traverse[items[i]];
+			
+			// If we've hit an undefined point, bail out with an empty string.
+			if (traverse === undefined)
+			{
+				return "";
+			}
+		}
+		
+		// If we didn't come up with a string, bail out.
+		if (typeof traverse !== "string")
+		{
+			return "";
+		}
+		
+		return traverse;
+	};
+	
 	/**
 	 * Options and Settings
 	 */
@@ -114,15 +142,48 @@
 		this.widget  = widget;
 		
 		// Synchronize widgets on update
-		this.onUpdate(function() {
-			$("#js-config-"+setting.widget+"-"+setting.name).val(
-				setting.get()
-			);
-		});
+		this.onUpdate(this.eventStorageUpdate);
+	};
+
+	ib.option.prototype.eventInputChanged = function(event) {
+		switch (event.data.setting.type)
+		{
+			case 'bool':
+				var checked = $(this).prop('checked');
+				event.data.setting.set(checked == "on" ? 1 : 0);
+				break;
+			
+			default:
+				event.data.setting.set(this.value);
+				break;
+		}
 	};
 	
+	ib.option.prototype.eventStorageUpdate = function(event) {
+		if (event.originalEvent.key === event.data.setting.storage)
+		{
+			var setting = event.data.setting;
+			var $input  = $("#js-config-"+setting.widget+"-"+setting.name);
+			
+			switch (setting.type)
+			{
+				case 'bool':
+					$input.prop('checked', setting.get() == "1");
+					break;
+				
+				default:
+					$input.val(setting.get());
+					break;
+			}
+		}
+	};
+		
 	ib.option.prototype.get = function() {
 		return localStorage.getItem(this.storage);
+	};
+	
+	ib.option.prototype.getLabel = function() {
+		return ib.trans(this.widget + ".option." + this.name);
 	};
 	
 	ib.option.prototype.getName = function() {
@@ -133,16 +194,12 @@
 		return this.type;
 	};
 	
-	ib.option.prototype.onChange = function(event) {
-		event.data.setting.set(this.value);
-	};
-	
 	ib.option.prototype.onUpdate = function(closure) {
 		if (typeof closure !== "function") {
 			throw "ib.option :: onUpdate not supplied a closure."
 		}
 		
-		window.addEventListener('storage', closure, false);
+		$(window).on('storage', { setting : this }, closure);
 	};
 	
 	ib.option.prototype.set = function(value) {
@@ -151,36 +208,39 @@
 	
 	ib.option.prototype.toHTML = function() {
 		var $html;
+		var value = this.get();
 		
 		switch (this.type)
 		{
-			case 'bool'   :
+			case 'bool':
 				$html = $("<input />");
 				$html.attr('type', "checkbox");
+				$html.prop('checked', !!value);
+				value = 1;
 				break;
 			
-			case 'int'    :
+			case 'int':
 				$html = $("<input />");
 				$html.attr('type', "number");
 				break;
 			
-			case 'select' :
+			case 'select':
 				$html = $("<select></select>");
 				
 				break;
 			
-			case 'string' :
-			case 'text'   :
+			case 'string':
+			case 'text':
 				$html = $("<input />");
 				$html.attr('type', "text");
 				break;
 			
-			case 'textarea' :
+			case 'textarea':
 				$html = $("<textarea></textarea>");
 				break;
 			
-			default         :
-			//case 'array'  :
+			default:
+			//case 'array':
 				$html = $("<span></span>")
 				break;
 			
@@ -188,11 +248,11 @@
 		
 		$html.attr('id',    "js-config-"+this.widget+"-"+this.name);
 		$html.attr('class', "config-option");
-		$html.val(this.get());
+		$html.val(value);
 		$html.on(
 			'change',
 			{ 'setting' : this },
-			this.onChange
+			this.eventInputChanged
 		);
 		
 		return $html;
@@ -239,6 +299,7 @@
 			return false;
 		}
 		
+		widget.prototype.name = name;
 		ib.widgets[name] = widget;
 		
 		if (typeof options === "object")
@@ -266,6 +327,32 @@
 		
 		return true;
 	};
+	
+	// Widget blueprint for instance extension.
+	ib.blueprint = function() { };
+	
+	ib.blueprint.prototype.is = function(item) {
+		// Does this widget have settings?
+		if (typeof ib.settings[this.name] === "undefined")
+		{
+			return false;
+		}
+		
+		// Does this setting instance our option prototype?
+		if (!(ib.settings[this.name][item] instanceof ib.option))
+		{
+			return false;
+		}
+		
+		return !!ib.settings[this.name][item].get();
+	};
+	
+	// This returns a non-referential copy of the blueprint for widget building.
+	ib.getBlueprint = function() {
+		var blueprint = function() { };
+		blueprint.prototype = jQuery.extend(true, {}, ib.blueprint.prototype);
+		return blueprint;
+	}
 	
 	ib.widgetArguments  = function(args) {
 		var widget  = this;

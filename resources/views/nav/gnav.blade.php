@@ -4,15 +4,15 @@
 			<ul class="gnav-groups">
 				<li class="gnav-group">
 					<ul class="gnav-items">
+						<li class="gnav-item item-config require-js">
+							<span class="gnav-link" data-widget="js-config">{{ trans("nav.global.options") }}</a>
+						</li>
+						
 						@foreach (Settings::getNavigationPrimary() as $navItem => $navUrl)
 						<li class="gnav-item item-{{ $navItem }} {{ false ? 'gnav-active' : '' }}">
 							<a href="{!! $navUrl !!}" class="gnav-link" data-item="{{ $navItem }}">{{ trans("nav.global.{$navItem}") }}</a>
 						</li>
 						@endforeach
-						
-						<li class="gnav-item item-config require-js">
-							<span class="gnav-link" data-widget="js-config">{{ trans("nav.global.options") }}</a>
-						</li>
 					</ul>
 				</li>
 			</ul>

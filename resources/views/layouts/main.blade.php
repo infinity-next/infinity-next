@@ -7,7 +7,7 @@
 		document.getElementsByTagName('html')[0].class = "js";
 		
 		window.app = {
-			'lang'     : {!! json_encode( Lang::parseKey('board') ) !!},
+			'lang'     : {!! json_encode( Lang::get('widget') ) !!},
 			
 			'merchant' : "{{ env('CASHIER_SERVICE') }}",
 			
