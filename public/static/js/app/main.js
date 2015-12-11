@@ -328,7 +328,7 @@
 	
 	ib.settings = {
 		// 'main' : {
-		// 	'test' : new ib.option("main", "test", "string")
+		// 	'widgets' : new ib.option("main", 'widgets', "bool")
 		// }
 	};
 	

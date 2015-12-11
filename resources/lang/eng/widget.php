@@ -15,7 +15,13 @@ return [
 	 * Main JavaScript Widget Master
 	 */
 	'main' => [
-		'title' => "Main",
+		'title' => "Main Configuration",
+		
+		'desc' => "These options are for core components of the website.",
+		
+		'option' => [
+			'widget' => "Enable widgets",
+		], 
 	],
 	
 	/**
@@ -41,6 +47,20 @@ return [
 		'option' => [
 			'enable' => "Lazy load thumbnails",
 		], 
+	],
+	
+	/**
+	 * Posts
+	 */
+	'post' => [
+		'title' => "Posts",
+		
+		'desc' => "The post widget is very large and incorporates many " .
+			"fundamental aspects to how an imageboard looks and feels.",
+		
+		'option' => [
+			'enable' => "Enable post responsiveness",
+		],
 	],
 	
 	/**

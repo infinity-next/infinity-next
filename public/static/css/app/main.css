@@ -1882,6 +1882,9 @@ nav.gnav {
 			#js-config .config-nav-item.item-time .fa::before {
 				content: "\f017";
 			}
+			#js-config .config-nav-item.item-post .fa::before {
+				content: "\f0f6";
+			}
 	#js-config .config-group {
 		display: none;
 		
