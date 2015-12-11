@@ -19,6 +19,16 @@
 @endif
 	@if (!isset($post))
 	<ul class="post-menu">
+		<li class="menu-input menu-password">
+			{!! Form::password(
+				'password',
+				[
+					'id'          => "password",
+					'class'       => "field-control",
+					'maxlength'   => 255,
+					'placeholder' => trans('board.field.password'),
+			]) !!}
+		</li>
 		<li class="menu-icon menu-icon-minimize">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Minimize</span>

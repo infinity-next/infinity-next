@@ -41,7 +41,7 @@ return [
 		'capcode'         => "No capcode",
 		'download'        => "Download",
 		'flag'            => "Flag",
-		'password'        => "Flag",
+		'password'        => "Password",
 		
 		'file-dz'         => "Click or drag files here to upload",
 		'spoilers'        => "Spoilers",

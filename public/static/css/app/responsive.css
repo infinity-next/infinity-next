@@ -238,11 +238,11 @@
 			border-radius: 0px;
 			margin: 0;
 		}
-
-		html.js body.responsive main.index-threaded form.form-post .post-menu {
-			display: block;
+		
+		html.js body.responsive main.index-threaded form.form-post .menu-icon {
+			display: inline-block;
 		}
-
+		
 		html.js body.responsive main.index-threaded form.form-post .form-fields {
 			display: block;
 			border-bottom: 1px solid #ccc;
@@ -254,7 +254,7 @@
 			html.js body.responsive main.index-threaded form.form-post .form-legend {
 				margin: 0;
 				padding: 0;
-
+				
 				background: #E04000;
 				color: white;
 				text-indent: 4px;
@@ -272,7 +272,7 @@
 			html.js body.responsive main.index-threaded form.form-post .field {
 				margin: 0;
 			}
-				html.js body.responsive main.index-threaded form.form-post .field-control {
+				html.js body.responsive main.index-threaded fieldset.form-fields .field-control {
 					border-bottom: none;
 					resize: none;
 				}

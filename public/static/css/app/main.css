@@ -1934,7 +1934,7 @@ section.index-form {
 		padding: 0 0.75em;
 	}
 		form.form-post .post-menu {
-			display: none;
+			
 		}
 			html.js form.form-post .post-menu {
 				position: absolute;
@@ -1943,6 +1943,35 @@ section.index-form {
 				padding: 4px 4px 0 0;
 				margin: -1px -1px 0 0;
 			}
+				form.form-post .post-menu .field-control {
+					display: inline-block;
+					border: none;
+					border-bottom: 1px solid rgba(255,255,255,0.4);
+					background: none;
+					color: #eee;
+					
+					padding: 0;
+					margin: 0 0.3em 0 0;
+					width: 5em;
+					height: 16px;
+					line-height: 16px;
+				}
+					form.form-post .post-menu .field-control:placeholder {
+						color: #eee;
+					}
+				
+				html.js li.menu-input {
+					display: inline-block;
+					vertical-align: middle;
+				}
+				
+				html.js li.menu-icon {
+					display: none;
+					vertical-align: middle;
+				}
+				html.js li.menu-icon-maximize {
+					display: none;
+				}
 				html.js li.menu-icon-minimize {
 					visibility: hidden;
 				}

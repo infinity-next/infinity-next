@@ -60,6 +60,7 @@ return [
 		
 		'option' => [
 			'author_id' => "Display Author IDs when available",
+			'password'  => "Default post deletion password",
 		],
 	],
 	
