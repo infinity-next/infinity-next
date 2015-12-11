@@ -8,11 +8,22 @@
 	// Widget blueprint
 	var blueprint = ib.getBlueprint();
 	
+	var events = {
+		doContentUpdate : function(event) {
+			// On setting update, trigger reformating..
+			var setting = event.data.setting;
+			var widget  = setting.widget;
+			ib.getInstances(widget).trigger('contentUpdate');
+		}
+	};
+	
 	// Configuration options
 	var options = {
-		enable : {
+		author_id : {
 			default : true,
-			type    : "bool"
+			type    : "bool",
+			onChange : events.doContentUpdate,
+			onUpdate : events.doContentUpdate
 		}
 	};
 	
@@ -34,6 +45,8 @@
 			
 			'elementCode'    : "pre code",
 			'elementQuote'   : "blockquote",
+			
+			'author_id'      : ".authorid",
 			
 			'cite-slot'      : "li.detail-cites",
 			'cite'           : "a.cite-post",
@@ -188,6 +201,11 @@
 		
 		$widget
 			.on(
+				'contentUpdate.ib-post',
+				data,
+				widget.events.postContentUpdate
+			)
+			.on(
 				'click.ib-post',
 				widget.options.selector['post-reply'],
 				data,
@@ -239,6 +257,7 @@
 			)
 		;
 		
+		$widget.trigger('contentUpdate');
 		widget.cachePosts($widget);
 		widget.addCiteAuthorship();
 	};
@@ -665,6 +684,14 @@
 			}
 			
 			return true;
+		},
+		
+		postContentUpdate : function(event) {
+			var widget  = event.data.widget;
+			var $widget =  event.data.$widget;
+			
+			$(widget.options.selector.author_id, $widget)
+				.toggle(widget.is('author_id'));
 		},
 		
 		threadNewPosts : function(event, posts) {

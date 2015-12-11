@@ -52,6 +52,7 @@ ib.widget("instantclick", function(window, $, undefined) {
 		bind     : {
 			widget : function() {
 				console.log("InstantClick init");
+				
 				InstantClick.init(widget.options.wait);
 				
 				if (typeof window.InstantClick === "object") {

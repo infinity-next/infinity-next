@@ -59,7 +59,7 @@ return [
 			"fundamental aspects to how an imageboard looks and feels.",
 		
 		'option' => [
-			'enable' => "Enable post responsiveness",
+			'author_id' => "Display Author IDs when available",
 		],
 	],
 	

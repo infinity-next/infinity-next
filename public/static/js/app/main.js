@@ -169,7 +169,7 @@
 		{
 			case 'bool':
 				var checked = $(this).prop('checked');
-				value = checked == "on" ? 1 : 0;
+				value = checked === "on" || checked == true ? 1 : 0;
 				break;
 			
 			default:
@@ -208,7 +208,16 @@
 	};
 		
 	ib.option.prototype.get = function() {
-		return localStorage.getItem(this.storage);
+		var value = localStorage.getItem(this.storage);
+		
+		switch (this.type)
+		{
+			case 'bool' :
+				return value === "1" || value === 1 || value === true;
+				break;
+		}
+		
+		return value;
 	};
 	
 	ib.option.prototype.getLabel = function() {
@@ -244,7 +253,7 @@
 			case 'bool':
 				$html = $("<input />");
 				$html.attr('type', "checkbox");
-				$html.prop('checked', !!value);
+				$html.prop('checked', value);
 				value = 1;
 				break;
 			
@@ -499,8 +508,39 @@
 		return false;
 	};
 	
-	// Bind widgets on read.
-	$(document).on('ready', ib.bindAll);
+	// We handle widget binding in two ways.
+	// If the newer MutationObserver object exists, we can watch the DOM tree
+	// for new elmeents and bind widgets immediately as they're conceived.
+	if (typeof MutationObserver === "function")
+	{
+		ib.observeMutation = function(records) {
+			for (var x = 0; x < records.length; ++x)
+			{
+				var nodes = records[x].addedNodes;
+				
+				for (var y = 0; y < nodes.length; ++y)
+				{
+					var node = nodes[y];
+					
+					if (node.attributes && node.attributes['data-widget'])
+					{
+						ib.bindElement(node)
+					}
+				}
+			}
+		};
+		
+		ib.mutationObserver = new MutationObserver(ib.observeMutation);
+		ib.mutationObserver.observe(document.documentElement, {
+			childList : true,
+			subtree : true
+		});
+	}
+	else
+	{
+		// Otherwise, we must use jQuery after the document has loaded.
+		$(document).on('ready', ib.bindAll);
+	}
 	
 	return ib;
 })(window, jQuery);
