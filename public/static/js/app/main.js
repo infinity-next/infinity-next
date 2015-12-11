@@ -67,6 +67,8 @@
 			dom.widget = new widget(window, jQuery);
 			dom.widget.initOnce = false;
 			
+			widget.instances.push(dom.widget);
+			
 			if (typeof dom.widget.init === "function")
 			{
 				dom.widget.init(dom);
@@ -121,10 +123,23 @@
 		return traverse;
 	};
 	
+	// Lpad 5 into "05".
+	ib.lpad = function(n, width, z) {
+		z = z || '0';
+		n = n + '';
+		
+		if (n.length >= width)
+		{
+			return n;
+		}
+		
+		return new Array(width - n.length + 1).join(z) + n;
+	};
+	
 	/**
 	 * Options and Settings
 	 */
-	ib.option = function(widget, name, type) {
+	ib.option = function(widget, name, type, values) {
 		if (!this.validateWidget(widget)) {
 			throw "ib.option :: widget \"" + widget + "\" not defined.";
 		}
@@ -139,6 +154,7 @@
 		this.name    = name;
 		this.storage = "ib.setting." + widget + "." + name;
 		this.type    = type;
+		this.values  = values;
 		this.widget  = widget;
 		
 		// Synchronize widgets on update
@@ -146,17 +162,30 @@
 	};
 
 	ib.option.prototype.eventInputChanged = function(event) {
+		var setting = event.data.setting;
+		var value;
+		
 		switch (event.data.setting.type)
 		{
 			case 'bool':
 				var checked = $(this).prop('checked');
-				event.data.setting.set(checked == "on" ? 1 : 0);
+				value = checked == "on" ? 1 : 0;
 				break;
 			
 			default:
-				event.data.setting.set(this.value);
+				value = this.value;
 				break;
 		}
+		
+		// Enforce data integrity if we have a whitelist.
+		if (setting.values instanceof Array
+			&& setting.values.indexOf(value) < 0)
+		{
+			event.preventDefault();
+			return false;
+		}
+		
+		setting.set(value);
 	};
 	
 	ib.option.prototype.eventStorageUpdate = function(event) {
@@ -227,6 +256,12 @@
 			case 'select':
 				$html = $("<select></select>");
 				
+				for (var i = 0; i < this.values.length; ++i)
+				{
+					var option = this.values[i];
+					option = "<option value=\""+option+"\">"+option+"</option>";
+					$html.append(option);
+				}
 				break;
 			
 			case 'string':
@@ -254,6 +289,15 @@
 			{ 'setting' : this },
 			this.eventInputChanged
 		);
+		
+		if (typeof this.eventCustomInputChanged === "function")
+		{
+			$html.on(
+				'change',
+				{ 'setting' : this },
+				this.eventCustomInputChanged
+			);
+		}
 		
 		return $html;
 	};
@@ -283,9 +327,9 @@
 	};
 	
 	ib.settings = {
-		'main' : {
-			'test' : new ib.option("main", "test", "string")
-		}
+		// 'main' : {
+		// 	'test' : new ib.option("main", "test", "string")
+		// }
 	};
 	
 	
@@ -299,6 +343,7 @@
 			return false;
 		}
 		
+		widget.instances = [];
 		widget.prototype.name = name;
 		ib.widgets[name] = widget;
 		
@@ -313,15 +358,40 @@
 			{
 				var optionDefault = null;
 				var optionType    = optionParams;
+				var optionValues  = null;
 				
 				if (typeof optionParams === "object")
 				{
 					optionDefault = optionParams.default;
 					optionType    = optionParams.type;
+					
+					switch (optionType)
+					{
+						case "select" :
+							optionValues = optionParams.values;
+							break;
+					}
 				}
 				
-				var option = new ib.option(name, optionName, optionType);
+				// Declare new option instance.
+				var option = new ib.option(
+					name,
+					optionName,
+					optionType,
+					optionValues
+				);
+				
 				ib.settings[name][optionName] = option;
+				
+				if (typeof optionParams.onChange === "function")
+				{
+					option.eventCustomInputChanged = optionParams.onChange;
+				}
+				
+				if (typeof optionParams.onUpdate === "function")
+				{
+					option.onUpdate(optionParams.onUpdate);
+				}
 			});
 		}
 		
@@ -331,7 +401,7 @@
 	// Widget blueprint for instance extension.
 	ib.blueprint = function() { };
 	
-	ib.blueprint.prototype.is = function(item) {
+	ib.blueprint.prototype.get = function(item) {
 		// Does this widget have settings?
 		if (typeof ib.settings[this.name] === "undefined")
 		{
@@ -344,7 +414,11 @@
 			return false;
 		}
 		
-		return !!ib.settings[this.name][item].get();
+		return ib.settings[this.name][item].get();
+	};
+	
+	ib.blueprint.prototype.is = function(item) {
+		return !!this.get(item);
 	};
 	
 	// This returns a non-referential copy of the blueprint for widget building.
@@ -353,6 +427,19 @@
 		blueprint.prototype = jQuery.extend(true, {}, ib.blueprint.prototype);
 		return blueprint;
 	}
+	
+	// Returns all instances of a widget as jQuery.
+	ib.getInstances = function(widget) {
+		var instances  = ib.widgets[widget].instances;
+		var $instances = $();
+		
+		for (var i = 0; i < instances.length; ++i)
+		{
+			$instances = $instances.add(instances[i].$widget);
+		}
+		
+		return $instances;
+	};
 	
 	ib.widgetArguments  = function(args) {
 		var widget  = this;

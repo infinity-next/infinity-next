@@ -1,10 +1,8 @@
 @include('content.board.post', [
 	'board' => $board,
 	'post'  => $thread,
+	'multiboard' => isset($multiboard) ? $multiboard : false,
 ])
-
-@set('catalog', isset($catalog) && catalog)
-@set('reply_to', isset($reply_to) && $reply_to)
 
 @if (!$thread->reply_to)
 @spaceless
@@ -45,7 +43,8 @@
 			@include('content.board.post', [
 				'board'      => $board,
 				'post'       => $reply,
-				'multiboard' => false,
+				'reply_to'   => $thread,
+				'multiboard' => isset($multiboard) ? $multiboard : false,
 			])
 			@spaceless
 		</article>

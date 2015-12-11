@@ -1,5 +1,5 @@
-<time data-widget="time" datetime="{{ $carbon->timestamp }}" title="{{
-	(string) $carbon->formatLocalized( trans('widget.time') )
+<time data-widget="time" datetime="{{ $carbon->toAtomString() }}" title="{{
+	$post->created_at->diffForHumans()
 }}">{{
-	(string) $carbon->formatLocalized( trans('widget.time') )
+	$carbon->formatLocalized( trans('widget.time.format') )
 }}</time>

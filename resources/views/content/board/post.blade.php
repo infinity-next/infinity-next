@@ -8,10 +8,12 @@
 	data-capcode="{{ $post->capcode_capcode ? $post->capcode_role : '' }}"
 	id="post-{{$post->board_uri}}-{{$post->board_id}}"
 >
+	@set('catalog',    isset($catalog) && $catalog ? true : false)
 	@set('multiboard', isset($multiboard) ? $multiboard : false)
 	@set('preview',    isset($preview)    ? $preview    : (!isset($updater) || !$updater) && $post->body_too_long )
+	@set('reply_to',   isset($reply_to) && $reply_to ? $reply_to : false)
 	
-	@if ($multiboard)
+	@if ($multiboard && !$reply_to)
 	@include('content.board.crown', [
 		'board'  => $post->board,
 	])

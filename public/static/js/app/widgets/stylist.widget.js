@@ -6,8 +6,7 @@
 
 (function(window, $, undefined) {
 	// Widget blueprint
-	var blueprint = function() {};
-	blueprint.prototype = ib.blueprint.prototype;
+	var blueprint = ib.getBlueprint();
 	
 	// Configuration options
 	var options = {

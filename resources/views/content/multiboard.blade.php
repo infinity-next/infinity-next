@@ -13,7 +13,6 @@
 					@include('content.board.post', [
 						'board'      => $post->board,
 						'thread'     => $post->op ?: $post,
-						'multiboard' => isset($multiboard) ? !!$multiboard : true,
 					])
 				</article>
 			</li>

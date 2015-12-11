@@ -6,8 +6,7 @@
 
 (function(window, $, undefined) {
 	// Widget blueprint
-	var blueprint = function() {};
-	blueprint.prototype = ib.blueprint.prototype;
+	var blueprint = ib.getBlueprint();
 	
 	// Configuration options
 	var options = {
@@ -164,7 +163,6 @@
 				// Append an optional description.
 				if (widgetDesc.length > 0)
 				{
-					console.log("aaaa");
 					$(widget.options.template.fielddesc)
 						.append(widgetDesc)
 						.appendTo($fieldset);
@@ -211,7 +209,8 @@
 				cursor     : "normal",
 				top        : "10vh",
 				left       : "0",
-				width      : "100%"
+				width      : "100%",
+				'pointer-events' : "none"
 			},
 			overlayCSS : {
 				border     : "none",

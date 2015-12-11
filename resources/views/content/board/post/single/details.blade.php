@@ -38,7 +38,11 @@
 		<li class="post-detail post-country" title="{{ trans('country.' . $post->getCountryCode()) }}"><span class="flag flag-{{ $post->getCountryCode() }}"></span></li>
 	@endif
 	
-	<li class="post-detail post-postedon"><time class="post-detail-item postedon" title="{{ $post->created_at->diffForHumans() }}">{{ $post->created_at }}</time></li>
+	<li class="post-detail post-postedon">
+		<span class="post-detail-item postedon">
+			@include('widgets.time', [ 'carbon' => $post->created_at ])
+		</span>
+	</li>
 	
 	@if (!$catalog)
 		@if ($board->getConfig('postsThreadId', false))
