@@ -13,7 +13,7 @@
 		// Date Format
 		format : {
 			type : "select",
-			default : "YYYY-MMM-DD HH:MM:SS",
+			initial : "YYYY-MMM-DD HH:MM:SS",
 			values : [
 				'YYYY-MMM-DD HH:MM:SS',
 				'MM/DD/YY(DDD)HH:MM:SS'

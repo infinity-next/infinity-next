@@ -8,7 +8,7 @@
 	ib.widgets = {};
 	
 	// Setup directional logic
-	ib.rtl = $("body").hasClass("rtl");
+	ib.rtl = true;
 	ib.ltr = !ib.rtl;
 	
 	// Binding Widgets to DOM.
@@ -136,10 +136,33 @@
 		return new Array(width - n.length + 1).join(z) + n;
 	};
 	
+	// Generates a random string with alternating case.
+	ib.randomString = function(length) {
+		length = length || 8;
+		
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+			"abcdefghijklmnopqrstuvwxyz" +
+			"0123456789!@#$%^&*()";
+		
+		for (var i = 0; i < length; ++i)
+		{
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		
+		return text;
+	};
+	
 	/**
 	 * Options and Settings
 	 */
-	ib.option = function(widget, name, type, values) {
+	ib.option = function(widget, params) {
+		var widget  = widget;
+		var name    = params.name;
+		var type    = params.type;
+		var initial = params.initial;
+		var values  = params.values;
+		
 		if (!this.validateWidget(widget)) {
 			throw "ib.option :: widget \"" + widget + "\" not defined.";
 		}
@@ -152,6 +175,7 @@
 		
 		var setting  = this;
 		this.name    = name;
+		this.initial = initial;
 		this.storage = "ib.setting." + widget + "." + name;
 		this.type    = type;
 		this.values  = values;
@@ -210,6 +234,11 @@
 	ib.option.prototype.get = function() {
 		var value = localStorage.getItem(this.storage);
 		
+		if ((typeof value === "undefined" || value === null) && this.initial)
+		{
+			value = this.initial;
+		}
+		
 		switch (this.type)
 		{
 			case 'bool' :
@@ -242,6 +271,21 @@
 	
 	ib.option.prototype.set = function(value) {
 		return localStorage.setItem(this.storage, value);
+	};
+	
+	ib.option.prototype.setInitial = function(overwrite) {
+		var value = localStorage.getItem(this.storage);
+		var isUndefined = (typeof value === "undefined" || value === null);
+		
+		if (overwrite === true || (isUndefined && this.initial))
+		{
+			value = this.initial;
+			localStorage.setItem(this.storage, value);
+			console.log("option.setInitial force writing " + this.widget +
+				"." + this.name + " to \"" + value + "\".");
+		}
+		
+		return value;
 	};
 	
 	ib.option.prototype.toHTML = function() {
@@ -365,38 +409,36 @@
 			
 			jQuery.each(options, function(optionName, optionParams)
 			{
-				var optionDefault = null;
-				var optionType    = optionParams;
-				var optionValues  = null;
+				var optionData = {
+					widget : name,
+					name : optionName,
+					type : null,
+					initial : null,
+					onChange : null,
+					onUpdate : null
+				};
 				
 				if (typeof optionParams === "object")
 				{
-					optionDefault = optionParams.default;
-					optionType    = optionParams.type;
-					
-					switch (optionType)
-					{
-						case "select" :
-							optionValues = optionParams.values;
-							break;
-					}
+					optionData = jQuery.extend(true, optionData, optionParams);
+				}
+				else
+				{
+					optionData.type = optionParams;
 				}
 				
 				// Declare new option instance.
-				var option = new ib.option(
-					name,
-					optionName,
-					optionType,
-					optionValues
-				);
+				var option = new ib.option(name, optionData);
 				
 				ib.settings[name][optionName] = option;
 				
+				// On HTML input change
 				if (typeof optionParams.onChange === "function")
 				{
 					option.eventCustomInputChanged = optionParams.onChange;
 				}
 				
+				// On option change in another tab
 				if (typeof optionParams.onUpdate === "function")
 				{
 					option.onUpdate(optionParams.onUpdate);

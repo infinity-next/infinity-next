@@ -11,8 +11,8 @@
 	// Configuration options
 	var options = {
 		enable : {
-			default : false,
-			type    : "bool"
+			type : "bool",
+			initial : false
 		}
 	};
 	
@@ -22,7 +22,6 @@
 		{
 			return false;
 		}
-		
 		var widget  = this;
 		var $widget = this.$widget;
 		var data    = {
