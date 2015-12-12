@@ -277,7 +277,7 @@
 		$element.on(
 			'ended.ib-post',
 			data,
-			widget.events.attachmentMediaEnded
+			this.events.attachmentMediaEnded
 		);
 	};
 
