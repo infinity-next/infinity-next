@@ -24,10 +24,6 @@
 			initial : true,
 			onChange : events.doContentUpdate,
 			onUpdate : events.doContentUpdate
-		},
-		password : {
-			type : "text",
-			initial : ib.randomString(8),
 		}
 	};
 	
@@ -792,5 +788,4 @@
 	};
 	
 	ib.widget("post", blueprint, options);
-	ib.settings.post.password.setInitial(false);
 })(window, window.jQuery);

@@ -19,6 +19,7 @@
 @endif
 	@if (!isset($post))
 	<ul class="post-menu">
+		@if (false)
 		<li class="menu-input menu-password">
 			{!! Form::password(
 				'password',
@@ -29,6 +30,7 @@
 					'placeholder' => trans('board.field.password'),
 			]) !!}
 		</li>
+		@endif
 		<li class="menu-icon menu-icon-minimize">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Minimize</span>

@@ -8,7 +8,12 @@
 	// Widget blueprint
 	var blueprint = ib.getBlueprint();
 	
-	var options = {};
+	var options = {
+		password : {
+			type : "text",
+			initial : ib.randomString(8),
+		}
+	};
 		
 	// Dropzone instance.
 	blueprint.prototype.dropzone = null;
@@ -38,6 +43,8 @@
 			'dropzone'        : ".dz-container",
 			
 			'submit-post'     : "#submit-post",
+			
+			'password'        : "#password",
 			
 			'form-fields'     : ".form-fields",
 			'form-body'       : "#body",
@@ -765,6 +772,9 @@
 			$widget : $widget
 		};
 		
+		$(widget.options.selector['password'], $widget)
+			.val(ib.settings.postbox.password.get());
+		
 		// Force the notices widget to be bound, and then record it.
 		// We have to do this because the notices widget is a child within this widget.
 		// The parent is bound first.
@@ -776,7 +786,6 @@
 			dropzoneOptions.widget  = widget;
 			dropzoneOptions.$widget = $widget;
 			
-			console.log(dropzoneOptions);
 			$(widget.options.selector['dropzone'], $widget)
 				.dropzone(dropzoneOptions);
 		}
@@ -982,4 +991,5 @@
 	};
 	
 	ib.widget("postbox", blueprint, options);
+	ib.settings.postbox.password.setInitial(false);
 })(window, window.jQuery);

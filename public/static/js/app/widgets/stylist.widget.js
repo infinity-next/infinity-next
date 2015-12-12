@@ -10,22 +10,22 @@
 	
 	// Configuration options
 	var options = {
-		theme : {
-			default : "next.css",
-			type    : "select",
-			values  : [
-				"next.css",
-				"next-yotsuba.css",
-				"day-after-tomorrow.css",
-				"kappa.css",
-				"tomorrow-kappa.css",
-			]
-		},
-		
-		css : {
-			default : "",
-			type    : "textarea"
-		}
+		// theme : {
+		// 	default : "next.css",
+		// 	type    : "select",
+		// 	values  : [
+		// 		"next.css",
+		// 		"next-yotsuba.css",
+		// 		"day-after-tomorrow.css",
+		// 		"kappa.css",
+		// 		"tomorrow-kappa.css",
+		// 	]
+		// },
+		// 
+		// css : {
+		// 	default : "",
+		// 	type    : "textarea"
+		// }
 	};
 	
 	ib.widget("stylist", blueprint, options);

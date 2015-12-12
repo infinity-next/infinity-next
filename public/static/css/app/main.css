@@ -1885,6 +1885,9 @@ nav.gnav {
 			#js-config .config-nav-item.item-post .fa::before {
 				content: "\f0f6";
 			}
+			#js-config .config-nav-item.item-postbox .fa::before {
+				content: "\f040";
+			}
 			#js-config .config-nav-item.item-instantclick  .fa::before {
 				content: "\f0d0";
 			}

@@ -78,6 +78,17 @@ return [
 		
 		'option' => [
 			'author_id' => "Display Author IDs when available",
+		],
+	],
+	
+	
+	/**
+	 * Postbox
+	 */
+	'postbox' => [
+		'title' => "Post Form",
+		
+		'option' => [
 			'password'  => "Default post deletion password",
 		],
 	],
