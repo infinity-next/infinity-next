@@ -160,7 +160,8 @@
 	
 	// Includes (You) classes on posts that we think we own.
 	blueprint.prototype.addCiteAuthorship = function() {
-		var cites = [];
+		var widget = this;
+		var cites  = [];
 		
 		// Loop through each citation.
 		$(this.options.selector['cite'], this.$widget).each(function() {
@@ -543,7 +544,7 @@
 						.appendTo($audio);
 					
 					$audio.insertBefore($link);
-					widget.bind.mediaEvents($audio);
+					widget.bindMediaEvents($audio);
 					
 					$audio.parent().addClass('attachment-grow');
 					
@@ -577,7 +578,7 @@
 					
 					$img.toggle(false);
 					
-					widget.bind.mediaEvents($video);
+					widget.bindMediaEvents($video);
 					$video.insertBefore($link);
 					
 					event.preventDefault();

@@ -757,7 +757,7 @@
 			// also bubble up to the window, so this gets called when the post box resizes too.
 			if (event.target === window)
 			{
-				widget.resizePostbox();
+				event.data.widget.resizePostbox();
 			}
 		}
 	},
