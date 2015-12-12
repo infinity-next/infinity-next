@@ -28,10 +28,10 @@
 		),
 	]
 ) }}</span>
-{{-- JavaScript Expand Inline --}}
+{{-- JavaScript Expand Inline
 <a class="thread-replies-expand no-mobile require-js" href="#">{{ Lang::get(
 	'board.omitted.show.inline'
-) }}</a>
+) }}</a> --}}
 </div>
 @endif
 
