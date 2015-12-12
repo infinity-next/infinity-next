@@ -1,5 +1,7 @@
 <?php namespace App\Support;
 
+use App\Contracts\PermissionUser;
+use App;
 use Request;
 
 class Geolocation {
@@ -56,9 +58,13 @@ class Geolocation {
 	{
 		$cc = "";
 		
+		if (!\App::make(PermissionUser::class)->isAccountable())
+		{
+			return "tor";
+		}
 		// This checks for the CloudFlare country code provided for any service hidden behind Cloudflare.
 		// It's probably the easiest, fastest, and most reliable way to achieve this.
-		if (isset($_SERVER['HTTP_CF_IPCOUNTRY']))
+		else if (isset($_SERVER['HTTP_CF_IPCOUNTRY']))
 		{
 			return strtolower($_SERVER["HTTP_CF_IPCOUNTRY"]);
 		}
