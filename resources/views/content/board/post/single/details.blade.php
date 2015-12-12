@@ -83,7 +83,7 @@
 		@if (!$reply_to && $post->isOP())
 		<li class="post-detail detail-open">
 			{{-- Mobile Last 50 Open --}}
-			<a class="thread-replies-open only-mobile" href="{{ $thread->getURL('l50')}}">
+			<a class="thread-replies-open only-mobile" href="{{ $post->getURL('l50')}}">
 				{{ Lang::choice(
 					'board.omitted.show.open',
 					50,
@@ -94,7 +94,7 @@
 			</a>
 			
 			{{-- Desktop Last 350 Open --}}
-			<a class="thread-replies-open no-mobile" href="{{ $thread->getURL('l350')}}">
+			<a class="thread-replies-open no-mobile" href="{{ $post->getURL('l350')}}">
 				{{ Lang::choice(
 					'board.omitted.show.open',
 					350,
