@@ -538,8 +538,6 @@ class Board extends Model {
 	 */
 	public function getBannedImages()
 	{
-		$this->load('assets', 'assets.storage');
-		
 		return $this->assets
 			->where('asset_type', "board_banned");
 	}
@@ -593,8 +591,6 @@ class Board extends Model {
 	 */
 	public function getBanners()
 	{
-		$this->load('assets', 'assets.storage');
-		
 		return $this->assets
 			->where('asset_type', "board_banner");
 	}
@@ -691,8 +687,6 @@ class Board extends Model {
 	 */
 	public function getFlags()
 	{
-		$this->load('assets', 'assets.storage');
-		
 		return $this->assets
 			->where('asset_type', "board_flags")
 			->sortBy('asset_name');
@@ -1324,7 +1318,7 @@ class Board extends Model {
 	
 	public function scopeAndAssets($query)
 	{
-		return $query->with('assets');
+		return $query->with('assets', 'assets.storage');
 	}
 	
 	public function scopeAndCreator($query)
