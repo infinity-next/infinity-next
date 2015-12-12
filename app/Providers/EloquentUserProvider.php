@@ -40,7 +40,7 @@ class EloquentUserProvider extends LaravelEloquentUserProvider {
 				return false;
 			}
 			
-			$user->password         = $this->hasher->make($plain);
+			$user->password = $this->hasher->make($plain);
 			$user->password_legacy = null;
 			$user->save();
 			

@@ -1,6 +1,7 @@
 <?php namespace App\Services;
 
-use App\Support\Anonymous;
+use App;
+use App\Contracts\PermissionUser;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 
@@ -18,15 +19,17 @@ class UserManager {
 	{
 		$this->auth      = $auth;
 		$this->registrar = $registrar;
-		
-		if ($auth->guest())
-		{
-			$this->user  = new Anonymous;
-		}
-		else
-		{
-			$this->user  = $auth->user();
-		}
+		$this->user      = App::make(PermissionUser::class);
+	}
+	
+	/**
+	 * Returns our user object.
+	 *
+	 * @return \App\Contracts\PermissionUser
+	 */
+	public function user()
+	{
+		return $this->user;
 	}
 	
 };

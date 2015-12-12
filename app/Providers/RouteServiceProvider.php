@@ -66,7 +66,6 @@ class RouteServiceProvider extends ServiceProvider {
 			}
 		});
 		
-		
 		// Binds a matched instance of a {board} as a singleton instance.
 		$router->matched(function($route, $request) {
 			// Binds the board to the application if it exists.

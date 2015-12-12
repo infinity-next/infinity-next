@@ -44,14 +44,9 @@ trait PermissionUser {
 	 */
 	public function isAccountable()
 	{
-		if (config('tor.request'))
-		{
-			dd("Tor.");
-		}
-		
 		if (!is_bool($this->accountable))
 		{
-			$this->accountable = !config('tor.request');
+			$this->accountable = true;
 		}
 		
 		return $this->accountable;
@@ -1170,4 +1165,15 @@ trait PermissionUser {
 		
 		return ip_less($ip);
 	}
+	
+	/**
+	 * Setter for the accountable mask.
+	 *
+	 * @param  bool  $accountable
+	 * @return bool
+	 */
+	 public function setAccountable($accountable)
+	 {
+		$this->accountable = !!$accountable;
+	 }
 }

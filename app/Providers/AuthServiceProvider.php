@@ -1,7 +1,10 @@
 <?php namespace App\Providers;
 
+use App\Contracts\PermissionUser;
 use App\Providers\EloquentUserProvider;
 use App\Services\AuthManager;
+use App\Services\UserManager;
+use App\Support\Anonymous;
 use Illuminate\Auth\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider {
@@ -36,5 +39,24 @@ class AuthServiceProvider extends ServiceProvider {
 		{
 			return $app['auth']->driver();
 		});
+		
+		$this->app->singleton(
+			PermissionUser::class,
+			function($app)
+			{
+				$auth = $app->make('auth');
+				
+				if ($auth->guest())
+				{
+					return new Anonymous;
+				}
+				else
+				{
+					return $auth->user();
+				}
+			}
+		);
+		
 	}
+	
 }
