@@ -77,7 +77,11 @@ class RouteServiceProvider extends ServiceProvider {
 				$board->applicationSingleton = true;
 				//$this->app->instance("\App\Board", $board);
 				$this->app->singleton("\App\Board", function($app) use ($board) {
-					return $board->load(['assets', 'assets.storage', 'settings']);
+					return $board->load([
+						'assets',
+						'assets.storage',
+						'settings'
+					]);
 				});
 			}
 			

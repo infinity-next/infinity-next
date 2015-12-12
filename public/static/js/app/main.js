@@ -8,7 +8,7 @@
 	ib.widgets = {};
 	
 	// Setup directional logic
-	ib.rtl = true;
+	ib.rtl = false;
 	ib.ltr = !ib.rtl;
 	
 	// Binding Widgets to DOM.
@@ -550,12 +550,14 @@
 		return false;
 	};
 	
-	// We handle widget binding in two ways.
-	// If the newer MutationObserver object exists, we can watch the DOM tree
-	// for new elmeents and bind widgets immediately as they're conceived.
+	// We handle widget binding in two ways, depending on browser support.
 	if (typeof MutationObserver === "function")
 	{
+		// If the newer MutationObserver object exists, we can watch the DOM
+		// for new elmeents and bind widgets immediately as they're conceived.
 		ib.observeMutation = function(records) {
+			// This method must be EXTREMELY FAST as it is called on every
+			// dom mutation as it happens.
 			for (var x = 0; x < records.length; ++x)
 			{
 				var nodes = records[x].addedNodes;
@@ -573,10 +575,13 @@
 		};
 		
 		ib.mutationObserver = new MutationObserver(ib.observeMutation);
-		ib.mutationObserver.observe(document.documentElement, {
-			childList : true,
-			subtree : true
-		});
+		ib.mutationObserver.observe(
+			document.documentElement,
+			{
+				childList : true,
+				subtree : true
+			}
+		);
 	}
 	else
 	{

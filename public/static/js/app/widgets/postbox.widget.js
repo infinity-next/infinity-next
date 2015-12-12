@@ -29,7 +29,7 @@ ib.widget("postbox", function(window, $, undefined) {
 			selector : {
 				'widget'          : "#post-form",
 				'notices'         : "[data-widget=notice]:first",
-				'autoupdater'     : "#autoupdater", // [data-widget=autoupdater]:first
+				'autoupdater'     : ".autoupdater:first",
 				
 				'dropzone'        : ".dz-container",
 				
@@ -511,6 +511,7 @@ ib.widget("postbox", function(window, $, undefined) {
 							
 							clearInterval(autoupdater.updateTimer);
 							
+							jqXHR.widget = autoupdater;
 							autoupdater.updating    = true;
 							autoupdater.updateTimer = false;
 							autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);

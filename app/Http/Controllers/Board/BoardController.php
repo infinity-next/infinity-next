@@ -160,6 +160,7 @@ class BoardController extends Controller {
 			'board'    => &$board,
 			'posts'    => [ $thread ],
 			'reply_to' => $thread,
+			'updater'  => true,
 		]);
 	}
 	

@@ -129,7 +129,8 @@
 		{
 			// Left side has more space than right side,
 			// and box is wider than remaining space.
-			if (linkRect.left > document.body.scrollWidth - posLeftOnRight && boxWidth > document.body.scrollWidth - posLeftOnRight)
+			if (linkRect.left > document.body.scrollWidth - posLeftOnRight
+				&& boxWidth > document.body.scrollWidth - posLeftOnRight)
 			{
 				posLeft  = posLeftOnLeft;
 				newWidth = Math.min(maxWidth, boxWidth, linkRect.left - 15);
@@ -140,7 +141,11 @@
 			else
 			{
 				posLeft  = posLeftOnRight;
-				newWidth = Math.min(maxWidth, boxWidth, document.body.scrollWidth - posLeftOnRight  - 15);
+				newWidth = Math.min(
+					maxWidth,
+					boxWidth,
+					document.body.scrollWidth - posLeftOnRight  - 15
+				);
 			}
 		}
 		else
@@ -297,37 +302,43 @@
 			
 			// We do this even with an item we pulled from AJAX to remove the ID.
 			// The HTML dom cannot have duplicate IDs, ever. It's important.
-			var $post = $post.clone();
-			var id    = $post[0].id;
-			$post.removeAttr('id');
-			var html = $post[0].outerHTML;
+			var $post = $($post[0].outerHTML); // Can't use .clone()
 			
-			// Attempt to set a new storage item.
-			// Destroy older items if we are full.
-			var setting = true;
-			
-			while (setting === true)
+			if (typeof $post[0] !== "undefined")
 			{
-				try
+				var id    = $post[0].id;
+				$post.removeAttr('id');
+				var html = $post[0].outerHTML;
+				
+				// Attempt to set a new storage item.
+				// Destroy older items if we are full.
+				var setting = true;
+				
+				while (setting === true)
 				{
-					sessionStorage.setItem( id, html );
-					break;
-				}
-				catch (e)
-				{
-					if (sessionStorage.length > 0)
+					try
 					{
-						sessionStorage.removeItem( sessionStorage.key(0) );
+						sessionStorage.setItem( id, html );
+						break;
 					}
-					else
+					catch (e)
 					{
-						setting = false;
+						if (sessionStorage.length > 0)
+						{
+							sessionStorage.removeItem( sessionStorage.key(0) );
+						}
+						else
+						{
+							setting = false;
+						}
 					}
 				}
+				
+				return $post;
 			}
-			
-			return $post;
 		}
+		
+		return null;
 	};
 	
 	// Clears existing hover-over divs created by anchorBoxToLink.
@@ -620,6 +631,17 @@
 			var post_id   = "post-"+board_uri+"-"+board_id;
 			var $post;
 			
+			// Prevent InstantClick hijacking requests we can handle without
+			// reloading the document.
+			if ($("#"+post_id).length)
+			{
+				$cite.attr('data-no-instant', "data-no-instant");
+			}
+			else
+			{
+				$cite.removeAttr('data-no-instant');
+			}
+			
 			widget.clearCites();
 			
 			if (widget.citeLoad == post_id)
@@ -646,7 +668,7 @@
 				url:         "/"+board_uri+"/post/"+board_id+".json",
 				contentType: "application/json; charset=utf-8"
 			}).done(function(response, textStatus, jqXHR) {
-				$post = widget.cachePost(response);
+				$post = widget.cachePosts(response);
 				
 				if (widget.citeLoad === post_id)
 				{
@@ -768,7 +790,6 @@
 			}
 		}
 	};
-	
 	
 	ib.widget("post", blueprint, options);
 	ib.settings.post.password.setInitial(false);

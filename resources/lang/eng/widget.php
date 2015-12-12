@@ -41,11 +41,29 @@ return [
 	'lazyimg' => [
 		'title' => "Lazy Images",
 		
-		'desc' => "Thumbnails can be set to not load until you can see them." .
+		'desc' => "Thumbnails can be set to not load until you can see them. " .
 			"This can improve your overall render times and save bandwidth.",
 		
 		'option' => [
 			'enable' => "Lazy load thumbnails",
+		], 
+	],
+	
+	/**
+	 * InstantClick One-Page Application
+	 */
+	'instantclick' => [
+		'title' => "InstantClick",
+		
+		'desc' => "InstantClick will turn the site into a one-page " .
+			"application, and most subsequent link clicks will cause the page " .
+			"to load new contents without refreshing the entire document. " .
+			"This can enable pages to load instantly, but on older machines " .
+			"it may cause resource issues and edge-case errors.<br />".
+			"<strong>Experimental, use at your own risk.</strong>",
+			
+		'option' => [
+			'enable' => "Enable InstantClick",
 		], 
 	],
 	

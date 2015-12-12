@@ -2031,10 +2031,24 @@ class Post extends Model {
 	 */
 	public static function getForThreadView($board_uri, $board_id, $uri = null)
 	{
+		// Prepare the board so that we do not have to make redundant searches.
+		$board = null;
+		
+		if ($board_uri instanceof Board)
+		{
+			$board = $board_uri;
+			$board_uri = $board->board_uri;
+		}
+		else
+		{
+			$board = Board::find($board_uri);
+		}
+		
+		// Prep the 
 		$rememberTags    = ["board.{$board_uri}", "threads"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$board_uri}.thread.{$board_id}";
-		$rememberClosure = function() use ($board_uri, $board_id) {
+		$rememberClosure = function() use ($board, $board_uri, $board_id) {
 			$thread = static::where([
 				'posts.board_uri' => $board_uri,
 				'posts.board_id'  => $board_id,
@@ -2046,10 +2060,12 @@ class Post extends Model {
 			// Call these methods so we typecast the IP as an IP class before
 			// we invoke memory caching.
 			$thread->author_ip;
+			$thread->setRelation('board', $board);
 			
 			foreach ($thread->replies as $reply)
 			{
 				$reply->author_ip;
+				$reply->setRelation('board', $board);
 			}
 			
 			return $thread;

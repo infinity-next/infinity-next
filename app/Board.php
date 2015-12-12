@@ -1148,7 +1148,7 @@ class Board extends Model {
 		}
 		else
 		{
-			return Post::getForThreadView($this->board_uri, $board_id);
+			return Post::getForThreadView($this, $board_id);
 		}
 		
 		return null;

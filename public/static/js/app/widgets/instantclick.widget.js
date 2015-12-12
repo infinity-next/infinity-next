@@ -1,72 +1,89 @@
-// ============================================================
-// Purpose                      : InstantClick Integration
-// Contributors                 : jaw-sh
-// ============================================================
+// ===========================================================================
+// Purpose          : Posts
+// Contributors     : jaw-sh
+// Widget Version   : 2
+// ===========================================================================
 
-ib.widget("instantclick", function(window, $, undefined) {
-	var widget = {
-		
-		storage : {
-			jQuery       : null,
-			ib           : null,
-			InstantClick : null,
-		},
-		
-		defaults : {
-			'wait' : 50
-		},
-		
-		// Events
-		events   : {
-			InstantClick : {
-				change : function() {
-					console.log("InstantClick change");
-					
-					// Restore our cached objects.
-					window.jQuery       = widget.storage.jQuery;
-					window.$            = window.jQuery;
-					window.ib           = widget.storage.ib;
-					window.InstantClick = widget.storage.InstantClick;
-					
-					// Insert our window.app data.
-					jQuery.globalEval( $("#js-app-data").html() );
-					
-					// Bind all widgets.
-					ib.bindAll();
-					
-					// Scroll to requested item.
-					if (window.location.hash != "")
-					{
-						var elem = document.getElementById(window.location.hash);
-						
-						if (elem && typeof elem.scrollToElement === "function")
-						{
-							elem.scrollToElement();
-						}
-					}
-				}
-			},
-		},
-		
-		// Event bindings
-		bind     : {
-			widget : function() {
-				console.log("InstantClick init");
-				
-				InstantClick.init(widget.options.wait);
-				
-				if (typeof window.InstantClick === "object") {
-					widget.storage.jQuery       = window.jQuery;
-					widget.storage.ib           = window.ib;
-					widget.storage.InstantClick = window.InstantClick;
-					
-					$.each(widget.events.InstantClick, function(eventName, eventClosure) {
-						InstantClick.on(eventName, eventClosure);
-					});
-				}
-			}
+(function(window, $, undefined) {
+	// Widget blueprint
+	var blueprint = ib.getBlueprint();
+	
+	// Configuration options
+	var options = {
+		enable : {
+			type : "bool",
+			initial : false
 		}
 	};
 	
-	return widget;
-});
+	// Event bindings
+	blueprint.prototype.bind = function() {
+		if (!this.is('enable'))
+		{
+			console.log("InstantClick ignored");
+			return false;
+		}
+		
+		console.log("InstantClick init");
+		
+		InstantClick.init(this.options.wait);
+		
+		blueprint.prototype.storage.jQuery       = window.jQuery;
+		blueprint.prototype.storage.ib           = window.ib;
+		blueprint.prototype.storage.InstantClick = window.InstantClick;
+		
+		$.each(this.events.InstantClick, function(eventName, eventClosure) {
+			InstantClick.on(eventName, eventClosure);
+		});
+	};
+	
+	blueprint.prototype.defaults = {
+		'wait' : 50
+	};
+	
+	blueprint.prototype.events = {
+		InstantClick : {
+			change : function() {
+				console.log("InstantClick change");
+				
+				this.storage;
+				// Restore our cached objects.
+				window.jQuery       = blueprint.prototype.storage.jQuery;
+				window.$            = blueprint.prototype.storage.jQuery;
+				window.ib           = blueprint.prototype.storage.ib;
+				window.InstantClick = blueprint.prototype.storage.InstantClick;
+				
+				// Insert our window.app data.
+				jQuery.globalEval( $("#js-app-data").html() );
+				
+				// Bind all widgets.
+				ib.bindAll();
+				
+				// Scroll to requested item.
+				if (window.location.hash != "")
+				{
+					var elem = document.getElementById(window.location.hash);
+					
+					if (elem && typeof elem.scrollToElement === "function")
+					{
+						elem.scrollToElement();
+					}
+				}
+			}
+		},
+	};
+	
+	// Long-term storage that the InstantCLick widget uses to preserve script
+	// items between page sessions.
+	blueprint.prototype.storage = {
+		jQuery       : null,
+		ib           : null,
+		InstantClick : null,
+	};
+	
+	ib.widget("instantclick", blueprint, options);
+	
+	$(document).one('ready', function(event) {
+		ib.bindElement(document.documentElement);
+	});
+})(window, window.jQuery);
