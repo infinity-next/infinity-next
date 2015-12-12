@@ -243,6 +243,10 @@
 			display: inline-block;
 		}
 		
+		html.js body.responsive main.index-threaded form.form-post .menu-icon-maximize {
+			display: none;
+		}
+		
 		html.js body.responsive main.index-threaded form.form-post .form-fields {
 			display: block;
 			border-bottom: 1px solid #ccc;

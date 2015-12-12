@@ -643,7 +643,8 @@
 		},
 		
 		postDragStop  : function(event, ui) {
-			var widget  = event.data.widget;
+			var widget  = this.widget;
+			var $widget = this.widget.$widget;
 			
 			if (ib.ltr && widget.axis == "sw")
 			{
@@ -685,8 +686,8 @@
 		},
 		
 		postResize    : function(event, ui) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
+			var widget  = this.widget;
+			var $widget = this.widget.$widget;
 			
 			var $post = $(this);
 			
@@ -708,10 +709,9 @@
 		},
 		
 		postResizeStart : function(event, ui) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-			
-			var axis = $(this).data('ui-resizable').axis;
+			var widget  = this.widget;
+			var $widget = this.widget.$widget;
+			var axis    = $(this).data('ui-resizable').axis;
 			
 			if (widget.axis != axis)
 			{
@@ -726,10 +726,9 @@
 		},
 		
 		postResizeStop  : function(event, ui) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-			
-			var axis = $(this).data('ui-resizable').axis;
+			var widget  = this.widget;
+			var $widget = this.widget.$widget;
+			var axis    = $(this).data('ui-resizable').axis;
 			
 			if (widget.axis != axis)
 			{
@@ -937,6 +936,11 @@
 					minWidth:    300,
 					minHeight:   26
 				});
+				
+				// This gives the jQuery UI events a scope back to the widget.
+				var jWidget = $body.resizable("widget")[0];
+				jWidget.widget  = widget;
+				jWidget.$widget = $widget;
 				
 				$widget
 					.resizable({
