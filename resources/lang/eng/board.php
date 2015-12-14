@@ -39,7 +39,6 @@ return [
 		'author'          => "Author",
 		'email'           => "Email",
 		'capcode'         => "No capcode",
-		'download'        => "Download",
 		'flag'            => "Flag",
 		'password'        => "Password",
 		
@@ -53,6 +52,17 @@ return [
 		'expires-days'    => "Days",
 		'expires-hours'   => "Hours",
 		'expires-minutes' => "Minutes",
+		
+		'expand'          => "Expand",
+		'expand-all'      => "Expand All",
+		'collapse'        => 'collapse',
+		'collapse-all'    => "Collapse All",
+		'download'        => "Download",
+		'download-all'    => "Download All",
+		'spoiler'         => "Spoiler",
+		'spoiler-all'     => "Spoiler All",
+		'remove'          => "Remove",
+		'remove-all'      => "Remove All",
 	],
 	
 	// Form Submit Buttons
@@ -225,6 +235,24 @@ return [
 		],
 	],
 	
+	/**
+	 * Post Histories
+	 */
+	'history' => [
+		'title' => "Post History for :ip",
+		
+		// Translator's Note:
+		// This is a special quote from UNIX-based operating systems.
+		// When accessing another user's account, you receive this message the
+		// first time you do so. This mesage has a sort of reverence.
+		// Please preverse whitespace (spaces) and my \n. Do not use <br />.
+		'lecture' => "We trust you have received the usual lecture from the local System" .
+			"\nAdministrator. It usually boils down to these three things:" .
+			"\n" .
+			"\n    #1) Respect the privacy of others." .
+			"\n    #2) Think before you type." .
+			"\n    #3) With great power comes great responsibility.",
+	],
 	
 	/**
 	 * Public Config
