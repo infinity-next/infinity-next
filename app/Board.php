@@ -186,7 +186,7 @@ class Board extends Model {
 	
 	public function staffAssignments()
 	{
-		return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'user_id');
+		return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'role_id');
 	}
 	
 	public function stats()
