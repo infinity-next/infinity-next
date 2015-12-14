@@ -17,7 +17,10 @@
 			<li class="filterlist-item">
 				<a class="filterlist-secondary" href="{{ $member->getURLForBoardStaff($board, 'delete') }}"><i class="fa fa-remove"></i></a>
 				<a class="filterlist-secondary" href="{{ $member->getURL() }}">@lang('panel.list.field.userinfo')</a>
-				<a class="filterlist-primary" href="{{ $member->getURLForBoardStaff($board, 'edit') }}">{{ $member->getDisplayName() }}</a>
+				<a class="filterlist-primary" href="{{ $member->getURLForBoardStaff($board, 'edit') }}">
+					<em>{{ $member->getDisplayName() }}</em>
+					<dfn>{{ $member->roles->map(function($item) { return $item->getDisplayName(); })->implode(", ") }}</dfn>
+				</a>
 			</li>
 			@endforeach
 		</ol>

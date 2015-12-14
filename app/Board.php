@@ -806,12 +806,25 @@ class Board extends Model {
 			->where('board_uri', $this->board_uri)
 			->get();
 		
+		$roles = [];
 		foreach ($this->roles as $role)
 		{
 			foreach ($role->users as $user)
 			{
 				$staff[$user->user_id] = $user;
+				
+				if (!isset($roles[$user->user_id]))
+				{
+					$roles[$user->user_id] = [];
+				}
+				
+				$roles[$user->user_id][] = $role;
 			}
+		}
+		
+		foreach ($roles as $user_id => $role)
+		{
+			$staff[$user_id]->setRelation('roles', collect($role));
 		}
 		
 		return $staff;

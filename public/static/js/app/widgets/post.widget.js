@@ -388,6 +388,15 @@
 				'min-height'       : '',
 			});
 			
+			if (event.delegateTarget === widget.$widget[0])
+			{
+				console.log('wew');
+				widget.$widget[0].scrollIntoView({
+					block    : "top",
+					behavior : "instant"
+				});
+			}
+			
 			event.preventDefault();
 			return false;
 		},

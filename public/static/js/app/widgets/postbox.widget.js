@@ -790,8 +790,8 @@
 		}
 		
 		$(window)
-			.on('messenger.ib-postbox.', widget.events.messenger)
-			.on('resize.ib-postbox',     widget.events.windowResize);
+			.on('messenger.ib-postbox.', data, widget.events.messenger)
+			.on('resize.ib-postbox',     data, widget.events.windowResize);
 		
 		// This will actually bind multiple times so make sure it only happens once.
 		if (widget.initOnce !== true)
