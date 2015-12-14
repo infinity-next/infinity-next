@@ -3552,6 +3552,9 @@ blockquote.ugc {
 		blockquote.ugc :last-child {
 			margin-bottom: 0;
 		}
+		blockquote.ugc blockquote {
+			margin-bottom: 0;
+		}
 
 	blockquote.ugc ol,
 	blockquote.ugc ul {

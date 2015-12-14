@@ -9,13 +9,6 @@
 		'header'      => true,
 	])
 	
-	<section class="index-form">
-		@include( $c->template('board.post.form'), [
-			'board'   => $board,
-			'actions' => [ $reply_to ? "reply" : "thread" ],
-		])
-	</section>
-	
 	<section class="index-threads static">
 		<ul class="thread-list">
 			@foreach ($posts as $thread)
@@ -31,6 +24,13 @@
 			</li>
 			@endforeach
 		</ul>
+	</section>
+	
+	<section class="index-form">
+		@include( $c->template('board.post.form'), [
+			'board'   => $board,
+			'actions' => [ $reply_to ? "reply" : "thread" ],
+		])
 	</section>
 	
 	@include('content.board.sidebar')

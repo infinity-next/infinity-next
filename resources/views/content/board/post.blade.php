@@ -15,7 +15,6 @@
 @set('multiboard',  isset($multiboard) ? $multiboard : false)
 @set('preview',     isset($preview)    ? $preview    : (!isset($updater) || !$updater) && $post->body_too_long )
 @set('reply_to',    isset($reply_to) && $reply_to ? $reply_to : false)
-
 <div class="post-container {{ is_null($details['reply_to']) ? 'op-container' : 'reply-container' }} {{ $post->hasBody() ? 'has-body' : 'has-no-body' }} {{ $post->attachments->count() > 1 ? 'has-files' : $post->attachments->count() > 0 ? 'has-file' : 'has-no-file' }}"
 	id="post-{{ $details['board_uri'] }}-{{ $details['board_id'] }}"
 	data-widget="post"

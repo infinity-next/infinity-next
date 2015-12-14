@@ -35,6 +35,7 @@
 </div>
 @endif
 
+@if (!isset($catalog) || !$catalog)
 <ul class="thread-replies">
 @foreach ($thread->getReplies() as $reply)
 	<li class="thread-reply">
@@ -55,5 +56,6 @@
 	@include('widgets.thread-autoupdater')
 	@endif
 </ul>
+@endif
 @endspaceless
 @endif
