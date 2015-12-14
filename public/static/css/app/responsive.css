@@ -19,7 +19,7 @@
 		padding-left: 1em;
 		padding-right: 1em;
 	}
-
+	
 	/**
 	 * Catalog
 	 */
@@ -222,6 +222,10 @@
 	/**
 	 * Posts and Threads
 	 */
+ 	.post-details {
+ 		white-space: nowrap;
+ 	}
+ 	
 	html.js body.responsive main.index-threaded form.form-post {
 		border: none;
 		position: fixed;

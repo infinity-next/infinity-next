@@ -55,6 +55,7 @@ body {
 body {
 	display: flex;
 	flex-direction: column;
+	min-width: 340px;
 }
 
 #page-container {
@@ -2665,10 +2666,10 @@ main.index-threaded {
 
 		.reply {
 			padding: 0;
-			margin: 0.25em 0 0.25em 1.5em;
+			margin: 0.25em 0 0.25em 0;
 			white-space: nowrap;
 		}
-			.reply::before {
+			/* .reply::before {
 				display: inline-block;
 				content: '>>';
 				color: #D6DAF0;
@@ -2682,8 +2683,8 @@ main.index-threaded {
 				display: block;
 				clear: both;
 				content: ' ';
-			}
-
+			} */
+		
 		.post {
 			position: relative;
 			font-size: 105%;
@@ -2784,7 +2785,8 @@ main.index-threaded {
 					padding: 0.6em 1em 0.4em 1em;
 					margin: 0;
 					line-height: 1.8em;
-					white-space: nowrap;
+					white-space: normal;
+					overflow: hidden;
 				}
 					.post-detail {
 						display: inline-block;
@@ -2799,32 +2801,32 @@ main.index-threaded {
 						.post-container.post-deleted .post-detail.post-deleted {
 							display: inline-block;
 						}
-
+						
 						.post-detail.post-country {
 							line-height: 1em;
 							vertical-align: middle;
 						}
-
+						
 						.post-detail-item {
 							box-sizing: border-box;
 							max-width: 100%;
-
+							
 							overflow: hidden;
 							text-overflow: ellipsis;
 							vertical-align: top;
 						}
-
+						
 							.post-select-input {
 								vertical-align: text-bottom;
 							}
-
+							
 						.subject {
 							display: inline-block;
 							margin: 0;
 							font-size: 1em;
 							white-space: normal;
 						}
-
+						
 						.author {
 							display: inline-block;
 							color: #117743;
