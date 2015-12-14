@@ -12,6 +12,13 @@ class FileAttachment extends Model {
 	protected $table = 'file_attachments';
 	
 	/**
+	 * The database primary key.
+	 *
+	 * @var string
+	 */
+	protected $primaryKey = 'attachment_id';
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
@@ -108,4 +115,5 @@ class FileAttachment extends Model {
 		
 		return $query->get();
 	}
+	
 }

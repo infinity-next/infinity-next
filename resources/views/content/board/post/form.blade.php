@@ -51,20 +51,6 @@
 		
 		@include('widgets.messages')
 		
-		@if ($board->canPostWithSubject($user, !!$reply_to))
-		<div class="field row-subject">
-			{!! Form::text(
-				'subject',
-				old('subject'),
-				[
-					'id'          => "subject",
-					'class'       => "field-control",
-					'maxlength'   => 255,
-					'placeholder' => trans('board.field.subject'),
-			]) !!}
-		</div>
-		@endif
-		
 		@if ($board->canPostWithAuthor($user, !!$reply_to))
 		<div class="field row-author">
 			{!! Form::text(
@@ -75,6 +61,20 @@
 					'class'       => "field-control",
 					'maxlength'   => 255,
 					'placeholder' => trans('board.field.author')
+			]) !!}
+		</div>
+		@endif
+		
+		@if ($board->canPostWithSubject($user, !!$reply_to))
+		<div class="field row-subject">
+			{!! Form::text(
+				'subject',
+				old('subject'),
+				[
+					'id'          => "subject",
+					'class'       => "field-control",
+					'maxlength'   => 255,
+					'placeholder' => trans('board.field.subject'),
 			]) !!}
 		</div>
 		@endif

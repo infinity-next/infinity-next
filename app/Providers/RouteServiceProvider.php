@@ -46,6 +46,11 @@ class RouteServiceProvider extends ServiceProvider {
 			}
 		});
 		
+		$router->bind('attachment', function($value, $route) {
+			return \App\FileAttachment::find($value)
+				->load('storage');
+		});
+		
 		$router->bind('role', function($value, $route) {
 			if (is_numeric($value))
 			{

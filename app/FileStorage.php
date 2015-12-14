@@ -274,7 +274,7 @@ class FileStorage extends Model {
 	 */
 	public function getDownloadURL(Board $board)
 	{
-		return url("/{$board->board_uri}/file/{$this->hash}/{$this->getDownloadName()}");
+		return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
 	}
 	
 	/**
@@ -425,6 +425,17 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Returns a removal URL.
+	 *
+	 * @param  \App\Board  $board
+	 * @return string
+	 */
+	public function getRemoveURL(Board $board)
+	{
+		return url("{$board->board_uri}/file/{$this->pivot->attachment_id}/remove");
+	}
+	
+	/**
 	 * Truncates the middle of a filename to show extension.
 	 *
 	 * @return string  Filename.
@@ -448,6 +459,17 @@ class FileStorage extends Model {
 		}
 		
 		return $this->getFileName();
+	}
+	
+	/**
+	 * Returns a spoiler URL.
+	 *
+	 * @param  \App\Board  $board
+	 * @return string
+	 */
+	public function getSpoilerURL(Board $board)
+	{
+		return url("{$board->board_uri}/file/{$this->pivot->attachment_id}/spoiler");
 	}
 	
 	/**
@@ -595,7 +617,7 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailURL(Board $board)
 	{
-		$baseURL = "/{$board->board_uri}/file/thumb/{$this->hash}/";
+		$baseURL = "/{$board->board_uri}/file/thumb/{$this->pivot->attachment_id}/";
 		$ext     = $this->guessExtension();
 		
 		if ($this->isSpoiler())
@@ -623,7 +645,7 @@ class FileStorage extends Model {
 		else if ($this->isImageVector())
 		{
 			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-			$baseURL ="/{$board->board_uri}/file/{$this->hash}/";
+			$baseURL ="/{$board->board_uri}/file/{$this->pivot->attachment_id}/";
 		}
 		
 		return url("{$baseURL}{$this->getFileName()}.{$ext}");
@@ -634,7 +656,6 @@ class FileStorage extends Model {
 	 * 
 	 * @return string
 	 */
-	
 	public function guessExtension()
 	{
 		$mimes = explode("/", $this->mime);

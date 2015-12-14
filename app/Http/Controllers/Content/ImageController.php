@@ -26,21 +26,21 @@ class ImageController extends Controller {
 	/**
 	 * Delivers an image.
 	 *
-	 * @param  string  $hash
+	 * @param  \App\FileAttachment  $attachment
 	 * @param  string  $filename
 	 * @param  boolean  $thumbnail
 	 * @return Response
 	 */
-	public function getImage($hash = false, $filename = false, $thumbnail = false)
+	public function getImage(FileAttachment $attachment, $filename = false, $thumbnail = false)
 	{
 		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 			header('HTTP/1.1 304 Not Modified');
 			die();
 		}
 		
-		if ($hash !== false && $filename !== false)
+		if ($attachment->exists && $filename !== false)
 		{
-			$FileStorage     = FileStorage::getHash($hash);
+			$FileStorage     = $attachment->storage;
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
@@ -198,12 +198,12 @@ class ImageController extends Controller {
 	/**
 	 * Delivers a file's thumbnail by rerouting the request to getFile with an optional parameter set.
 	 *
-	 * @param  $string  $hash
+	 * @param  \App\FileAttachment  $attachment
 	 * @param  $string  $filename
 	 * @return Response
 	 */
-	public function getThumbnail($hash = false, $filename = false)
+	public function getThumbnail(FileAttachment $attachment, $filename = false)
 	{
-		return $this->getImage($hash, $filename, true);
+		return $this->getImage($attachment, $filename, true);
 	}
 }

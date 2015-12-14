@@ -57,13 +57,13 @@
 			</div>
 			
 			<div class="attachment-action-group">
-				<span class="attachment-action attachment-spoiler" title="@lang('board.field.spoiler')">
+				<a href="{{ $attachment->getSpoilerURL($board) }}" class="attachment-action attachment-spoiler" title="@lang('board.field.spoiler')">
 					<i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
-				</span>
+				</a>
 				
-				<span class="attachment-action attachment-remove" title="@lang('board.field.remove')">
+				<a href="{{ $attachment->getRemoveURL($board) }}" class="attachment-action attachment-remove" title="@lang('board.field.remove')">
 					<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
-				</span>
+				</a>
 			</div>
 		</div>
 		@else
