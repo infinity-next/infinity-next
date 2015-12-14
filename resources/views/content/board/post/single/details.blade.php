@@ -75,7 +75,7 @@
 	
 	@if (!is_null($details['author_ip']) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
 		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
-			<a href="{{ $user->canViewGlobalHistory()
+			<a href="{{ $user->canViewGlobalHistory() && is_object($details['author_ip'])
 				? url('cp/history/' . $details['author_ip']->toText())
 				: $post->getURL('history/' . $details['board_id'])
 			}}"><i class="fa fa-server"></i></a>

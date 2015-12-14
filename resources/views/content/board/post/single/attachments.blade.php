@@ -48,7 +48,7 @@
 			</a>
 			
 			<div class="attachment-action-group">
-				<a class="attachment-action attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}">
+				<a class="attachment-action attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadURL($board) !!}">
 					<i class="fa fa-download"></i>&nbsp;<span class="detail-item detail-download">@lang('board.field.download')</span>&nbsp;<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
 				</a>
 			</div>
@@ -66,7 +66,7 @@
 		@else
 		<a href="{!! $post->getURL() !!}" data-instant>
 			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
-				{!! $attachment->getThumbnailHTML($board) !!}
+				{!! $attachment->getThumbnailHTML($board, 150) !!}
 			</figure>
 		</a>
 		@endif

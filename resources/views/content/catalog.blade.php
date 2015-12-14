@@ -23,7 +23,7 @@
 				<article class="thread">
 					@include($c->template('board.catalog'), [
 						'board'      => $board,
-						'thread'     => $thread,
+						'post'       => $thread,
 						'multiboard' => false,
 						'preview'    => false,
 					])

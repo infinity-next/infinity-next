@@ -463,9 +463,11 @@ class FileStorage extends Model {
 	/**
 	 * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
 	 *
+	 * @param  \App\Board  $board  The board this thumbnail will belong to.
+	 * @param  int  $maxWidth  Optional. Maximum width constraint. Defaults null.
 	 * @return string  as HTML
 	 */
-	public function getThumbnailHTML(Board $board)
+	public function getThumbnailHTML(Board $board, $maxDimension = null)
 	{
 		$ext   = $this->guessExtension();
 		$mime  = $this->mime;
@@ -497,21 +499,35 @@ class FileStorage extends Model {
 		
 		
 		// Measure dimensions.
-		$height = "auto";
-		$width  = "auto";
+		$height    = "auto";
+		$width     = "auto";
+		$maxWidth  = "none";
+		$maxHeight = "none";
+		$oHeight   = $this->thumbnail_height;
+		$oWidth    = $this->thumbnail_width;
 		
 		if ($this->has_thumbnail)
 		{
-			$height = $this->thumbnail_height . "px";
-			$width = $this->thumbnail_width . "px";
+			$height = $oHeight . "px";
+			$width  = $this->thumbnail_width . "px";
 			
-			if ($this->thumbnail_width > $this->thumbnail_height)
+			if (is_integer($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension))
 			{
-				$width = $this->thumbnail_width . "px";
-			}
-			else if ($this->thumbnail_width < $this->thumbnail_height)
-			{
-				$height = $this->thumbnail_height . "px";
+				if ($oWidth > $oHeight)
+				{
+					$height = "auto";
+					$width  = $maxDimension . "px";
+				}
+				else if ($oWidth < $oHeight)
+				{
+					$height = $maxDimension . "px";
+					$width  = "auto";
+				}
+				else
+				{
+					$height = $maxDimension;
+					$width  = $maxDimension;
+				}
 			}
 		}
 		else
@@ -520,10 +536,15 @@ class FileStorage extends Model {
 			$oWidth  = $oHeight;
 			$width   = $oHeight;
 			$height  = $oHeight;
+			
+			if (is_integer($maxDimension))
+			{
+				$maxWidth = "{$maxDimension}px";
+				$maxHeight = "{$maxDimension}px";
+			}
 		}
 		
-		
-		return "<div class=\"attachment-wrapper\" style=\"min-height: {$height}; min-width: {$width};\">" .
+		return "<div class=\"attachment-wrapper\" style=\"min-height: {$height}; min-width: {$width}; max-height: {$maxHeight}; max-width: {$maxWidth};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}

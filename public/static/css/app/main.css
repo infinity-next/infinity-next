@@ -2895,7 +2895,7 @@ main.index-threaded {
 					display: block;
 				}
 					.reply-container ul.post-attachments {
-						padding: 0 0 0 0.75em;
+						padding: 0 0 0 1em;
 					}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
@@ -3320,6 +3320,9 @@ main.index-threaded {
 									float: none;
 									text-align: center;
 									padding: 0;
+									display: block;
+									width: 100%;
+									margin: 0;
 								}
 								main.index-catalog .attachment-wrapper {
 									width: auto;
