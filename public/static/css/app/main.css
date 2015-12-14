@@ -2950,7 +2950,23 @@ main.index-threaded {
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
-
+							
+							a.attachment-download .detail-download {
+								margin-left: 0.5em;
+							}
+							a.attachment-download .detail-filesize {
+								margin-right: 0.25em;
+							}
+							a.attachment-download .detail-filesize::before {
+								display: inline;
+								content: "(";
+								margin-left: 0.4em;
+							}
+							a.attachment-download .detail-filedim::after {
+								display: inline;
+								content: ")";
+							}
+							
 							figure.attachment {
 								display: block;
 								margin: 0;

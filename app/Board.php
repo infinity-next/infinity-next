@@ -796,7 +796,7 @@ class Board extends Model {
 	
 	public function getSpoilerUrl()
 	{
-		return asset("static/img/assets/spoiler.png");
+		return $this->getAssetUrl('file_spoiler');
 	}
 	
 	public function getStaff()

@@ -48,8 +48,11 @@
 			</a>
 			
 			<div class="attachment-action-group">
-				<a class="attachment-action attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadURL($board) !!}">
-					<i class="fa fa-download"></i>&nbsp;<span class="detail-item detail-download">@lang('board.field.download')</span>&nbsp;<span class="detail-item detail-filesize">({{ $attachment->getHumanFilesize() }})</span>
+				<a class="attachment-action attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
+					<i class="fa fa-download"></i>
+					<span class="detail-item detail-download">@lang('board.field.download')</span>
+					<span class="detail-item detail-filesize">{{ $attachment->getHumanFilesize() }}</span>
+					<span class="detail-item detail-filedim" title="{{ $attachment->getFileDimensions() }}">{{ $attachment->getFileDimensions() }}</span>
 				</a>
 			</div>
 			

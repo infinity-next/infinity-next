@@ -32,7 +32,21 @@ class FileStorage extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['hash', 'banned', 'filesize', 'mime', 'meta', 'first_uploaded_at', 'last_uploaded_at', 'upload_count', 'has_thumbnail', 'thumbnail_width', 'thumbnail_height'];
+	protected $fillable = [
+		'hash',
+		'banned',
+		'filesize',
+		'file_width',
+		'file_height',
+		'mime',
+		'meta',
+		'first_uploaded_at',
+		'last_uploaded_at',
+		'upload_count',
+		'has_thumbnail',
+		'thumbnail_width',
+		'thumbnail_height'
+	];
 	
 	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
@@ -243,6 +257,16 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Supplies a download name.
+	 *
+	 * @return string
+	 */
+	public function getDownloadName()
+	{
+		return "{$this->getFileName()}.{$this->guessExtension()}";
+	}
+	
+	/**
 	 * Supplies a clean URL for downloading an attachment on a board.
 	 *
 	 * @param  App\Board  $board
@@ -250,7 +274,7 @@ class FileStorage extends Model {
 	 */
 	public function getDownloadURL(Board $board)
 	{
-		return url("/{$board->board_uri}/file/{$this->hash}/{$this->getFileName()}.{$this->guessExtension()}");
+		return url("/{$board->board_uri}/file/{$this->hash}/{$this->getDownloadName()}");
 	}
 	
 	/**
@@ -262,6 +286,21 @@ class FileStorage extends Model {
 	{
 		$pathinfo  = pathinfo($this->pivot->filename);
 		return $pathinfo['extension'];
+	}
+	
+	/**
+	 * Returns the dimensions of the thumbnail, if possible.
+	 *
+	 * @return string|null
+	 */
+	public function getFileDimensions()
+	{
+		if ($this->has_thumbnail)
+		{
+			return "{$this->file_width}x{$this->file_height}";
+		}
+		
+		return null;
 	}
 	
 	/**
