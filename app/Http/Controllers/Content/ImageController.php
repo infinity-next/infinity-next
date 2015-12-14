@@ -31,16 +31,16 @@ class ImageController extends Controller {
 	 * @param  boolean  $thumbnail
 	 * @return Response
 	 */
-	public function getImage(FileAttachment $attachment, $filename = false, $thumbnail = false)
+	public function getImage($hash = false, $filename = false, $thumbnail = false)
 	{
 		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 			header('HTTP/1.1 304 Not Modified');
 			die();
 		}
 		
-		if ($attachment->exists && $filename !== false)
+		if (is_string($hash) && is_string($filename))
 		{
-			$FileStorage     = $attachment->storage;
+			$FileStorage     = FileStorage::getHash($hash);
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
@@ -196,14 +196,48 @@ class ImageController extends Controller {
 	}
 	
 	/**
+	 * Delivers a file from an attachment.
+	 *
+	 * @param  \App\FileAttachment  $attachment
+	 * @param  string  $filename
+	 */
+	public function getImageFromAttachment(FileAttachment $attachment, $filename = false)
+	{
+		return $this->getImage($attachment->storage->hash, $filename);
+	}
+	
+	/**
+	 * Delivers a file from a hash.
+	 *
+	 * @param  string  $hash
+	 * @param  string  $filename
+	 */
+	public function getImageFromHash($hash = false, $filename = false)
+	{
+		return $this->getImage($hash, $filename, false);
+	}
+	
+	/**
 	 * Delivers a file's thumbnail by rerouting the request to getFile with an optional parameter set.
 	 *
 	 * @param  \App\FileAttachment  $attachment
 	 * @param  $string  $filename
 	 * @return Response
 	 */
-	public function getThumbnail(FileAttachment $attachment, $filename = false)
+	public function getThumbnailFromAttachment(FileAttachment $attachment, $filename = false)
 	{
 		return $this->getImage($attachment, $filename, true);
 	}
+	
+	/**
+	 * Delivers a file from a hash.
+	 *
+	 * @param  string  $hash
+	 * @param  string  $filename
+	 */
+	public function getThumbnailFromHash($hash = false, $filename = false)
+	{
+		return $this->getImage($hash, $filename, true);
+	}
+	
 }

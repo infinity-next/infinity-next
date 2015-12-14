@@ -197,15 +197,15 @@ Route::group([
 			'namespace'  => 'Content',
 		], function()
 		{
-			Route::get('{attachment}/{filename}', 'ImageController@getImage')
-				->where([
+			Route::get('{hash}/{filename}', 'ImageController@getImageFromHash')->where([
 					'hash' => "[a-f0-9]{32}",
 				]);
+			Route::get('{attachment}/{filename}', 'ImageController@getImageFromAttachment');
 			
-			Route::get('thumb/{attachment}/{filename}', 'ImageController@getThumbnail')
-				->where([
+			Route::get('thumb/{hash}/{filename}', 'ImageController@getThumbnailFromHash')->where([
 					'hash' => "[a-f0-9]{32}",
 				]);
+			Route::get('thumb/{attachment}/{filename}', 'ImageController@getThumbnailFromAttachment');
 		});
 		
 		
