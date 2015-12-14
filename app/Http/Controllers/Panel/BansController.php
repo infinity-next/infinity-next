@@ -79,6 +79,18 @@ class BansController extends PanelController {
 		]);
 	}
 	
+	public function getBoardIndex(Board $board)
+	{
+		$bans = Ban::orderBy('ban_id', 'desc')
+			->where('board_uri', $board->board_uri)
+			->paginate(15);
+		
+		return $this->view(static::VIEW_BANS, [
+			'bans'       => $bans,
+			'clientOnly' => false,
+		]);
+	}
+	
 	public function putAppeal(Board $board, Ban $ban)
 	{
 		if (!$ban->canAppeal() || !$ban->isBanForIP())
