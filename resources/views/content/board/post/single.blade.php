@@ -1,11 +1,12 @@
 {{-- Don't include this directly. Call `content.board.post`. --}}
-@include('content.board.post.single.open')
-
 <div class="post-content">
 	<a name="{!! $details['board_id'] !!}"></a>
 	<a name="reply-{!! $details['board_id'] !!}"></a>
 	
 	@if (isset($catalog) && $catalog === true)
+		@if ($post->attachments->count() === 0)
+			<a class="catalog-open" href="{!! $post->getURL() !!}" data-instant>@lang('board.action.view')</a>
+		@endif
 		@include('content.board.post.single.attachments')
 		@include('content.board.post.single.details')
 		@include('content.board.post.single.post')

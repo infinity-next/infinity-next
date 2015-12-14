@@ -1,3 +1,4 @@
+@if ($catalog)
 <div div class="post-action-bar action-bar-open">
 	@if (!isset($reply_to) || !$reply_to)
 	<div class="post-action-tab action-tab-reply">
@@ -5,3 +6,4 @@
 	</div>
 	@endif
 </div>
+@endif

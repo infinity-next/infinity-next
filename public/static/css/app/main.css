@@ -3164,34 +3164,20 @@ main.index-threaded {
 						div.action-tab-actions span.post-action-text {
 							display: none;
 						}
-
-					div.post-action-tab.action-tab-reply {
-						position: absolute;
-						top: 0;
-						right: 0;
-						border: none;
-						padding: 0;
+					
+					a.catalog-open {
+						background: rgba(255, 0, 0, 0.1);
+						border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+						text-align: center;
+						vertical-align: middle;
+						font-size: 1.2em;
+						font-weight: bold;
+						line-height: 2em;
+						height: 2em;
 						margin: 0;
+						display: block;
 					}
-						a.post-action-reply {
-							display: block;
-							height: 0;
-							width: none;
-							overflow: hidden;
-							border-style: solid;
-							border-width: 0 1.5em 1.5em 0;
-							border-color: transparent #B7C5D9 transparent transparent;
-							text-align: right;
-							line-height: 2.25em;
-							vertical-align: bottom;
-						}
-						main.multiboard-index .op-container div.action-tab-reply {
-							top: -43px;
-						}
-						div.op-container a.post-action-reply {
-							border-color: transparent rgba(0,0,255,0.25) transparent transparent;
-						}
-
+					
 					ul.post-action-groups {
 						display: none;
 						max-width: 100vw;

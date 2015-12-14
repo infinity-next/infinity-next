@@ -482,7 +482,6 @@ class FileStorage extends Model {
 		{
 			$url = $this->getDownloadURL($board);
 		}
-		
 		else if ($this->isAudio() || $this->isImage() || $this->isVideo())
 		{
 			if ($this->hasThumb())
@@ -552,7 +551,7 @@ class FileStorage extends Model {
 	/**
 	 * Supplies a clean thumbnail URL for embedding an attachment on a board.
 	 *
-	 * @param  App\Board  $board
+	 * @param  \App\Board  $board
 	 * @return string
 	 */
 	public function getThumbnailURL(Board $board)
