@@ -39,7 +39,7 @@
 							@lang( 'panel.bans.appeal_expired' )
 						@endif
 					</td>
-					<td>{!! $ban->mod->getUsernameHTML() !!}</td>
+					<td>{!! isset($ban->mod) ? $ban->mod->getUsernameHTML() : "" !!}</td>
 					<td>{{ $ban->created_at }}</td>
 					<td>{{ $ban->expires_at }}</td>
 				</tr>
