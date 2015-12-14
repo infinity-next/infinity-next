@@ -1,6 +1,6 @@
-@if (count($post->attachments))
+@if ($post->attachments->count())
 @spaceless
-<ul class="post-attachments attachment-count-{{ count($post->attachments) }} {{ count($post->attachments) > 1 ? "attachments-multi" : "attachments-single" }}">
+<ul class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
 	
 	@if ($post->attachments->count() > 1)
 	<li class="attachment-actions">

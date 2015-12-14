@@ -1184,6 +1184,8 @@ class Board extends Model {
 				//$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->setRelation('board', $this);
 				$thread->attachments = $thread->attachments->splice(0, 1);
+				
+				$thread->prepareForCache();
 			}
 			
 			return $threads;
@@ -1240,6 +1242,8 @@ class Board extends Model {
 				{
 					$reply->setRelation('board', $this);
 				}
+				
+				$thread->prepareForCache();
 			}
 			
 			return $threads;

@@ -1353,6 +1353,8 @@ class Post extends Model {
 				$thread->replies     = $thread->replies
 					->reverse()
 					->splice(-$replyTake, $replyTake);
+				
+				$thread->prepareForCache();
 			}
 			
 			return $threads;
@@ -1371,6 +1373,46 @@ class Post extends Model {
 		}
 		
 		return $threads;
+	}
+	
+	/**
+	 * Prepares a thread and its relationships for a complete cache.
+	 *
+	 * @return \App\Post
+	 */
+	public function prepareForCache($board = null)
+	{
+		## TODO ##
+		// Find a better way to do this.
+		// Call these methods so we typecast the IP as an IP class before
+		// we invoke memory caching.
+		$this->author_ip;
+		
+		$attachments = $this->getRelation('attachments' ?: collect());
+		$backlinks   = $this->getRelation('backlinks'   ?: collect());
+		$board       = $this->getRelation('board'       ?: $this->load('board'));
+		$cites       = $this->getRelation('cites'       ?: collect());
+		
+		$this->setRelation('attachments', $attachments);
+		$this->setRelation('backlinks', $backlinks);
+		$this->setRelation('board', $board);
+		$this->setRelation('cites', $cites);
+		
+		foreach ($this->replies as $reply)
+		{
+			$reply->author_ip;
+			
+			$attachments = $reply->getRelation('attachments' ?: collect());
+			$backlinks   = $reply->getRelation('backlinks'   ?: collect());
+			$cites       = $reply->getRelation('cites'       ?: collect());
+			
+			$reply->setRelation('board', $board);
+			$reply->setRelation('attachments', $attachments);
+			$reply->setRelation('backlinks', $backlinks);
+			$reply->setRelation('cites', $cites);
+		}
+		
+		return $this;
 	}
 	
 	/**
@@ -2056,19 +2098,7 @@ class Post extends Model {
 				'posts.board_id'  => $board_id,
 			])->withEverythingAndReplies()->first();
 			
-			
-			## TODO ##
-			// Find a better way to do this.
-			// Call these methods so we typecast the IP as an IP class before
-			// we invoke memory caching.
-			$thread->author_ip;
-			$thread->setRelation('board', $board);
-			
-			foreach ($thread->replies as $reply)
-			{
-				$reply->author_ip;
-				$reply->setRelation('board', $board);
-			}
+			$thread->prepareForCache();
 			
 			return $thread;
 		};
@@ -2084,7 +2114,6 @@ class Post extends Model {
 				$thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 				break;
 		}
-		
 		
 		if (!is_null($uri))
 		{

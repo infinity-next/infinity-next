@@ -3,11 +3,11 @@
 	
 	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
 	
-	@if ($post->subject)
+	@if ($details['subject'])
 	<li class="post-detail post-subject">
 		<h3 class="post-detail-item subject ugc">
 		@if (!$catalog)
-		{{ $post->subject }}
+		{{ $details['subject'] }}
 		@else
 		<a href="{{ $post->getURL() }}" class="subject-link">{{ $post->subject }}</a>
 		@endif
@@ -17,20 +17,20 @@
 	
 	<li class="post-detail post-author">
 		<strong class="post-detail-item author ugc">
-		@if ($post->email && !$catalog)<a href="mailto:{{ $post->email }}" class="post-detail-item email">@endif
+		@if ($details['email'] && !$catalog)<a href="mailto:{{ $details['email'] }}" class="post-detail-item email">@endif
 			{{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
-		@if ($post->email && !$catalog)</a>@endif
+		@if ($details['email'] && !$catalog)</a>@endif
 		</strong>
-		@if ($post->insecure_tripcode)
-		<span class="insecure-tripcode tripcode">{{ $post->insecure_tripcode }}</span>
+		@if ($details['insecure_tripcode'])
+		<span class="insecure-tripcode tripcode">{{ $details['insecure_tripcode'] }}</span>
 		@endif
 		
-		@if ($post->capcode_id > 0)
+		@if ($details['capcode_id'] > 0)
 		<strong class="post-detail-item capcode">{{ $post->getCapcodeName() }}</strong>
 		@endif
 	</li>
 	
-	@if ($post->flag_id)
+	@if (isset($details['flag']) && !!$details['flag'])
 		<li class="post-detail post-custom-flag" title="{{ $post->flag->getDisplayName() }}">{!! $post->flag->asHTML() !!}</li>
 	@endif
 	
@@ -40,20 +40,22 @@
 	
 	<li class="post-detail post-postedon">
 		<span class="post-detail-item postedon">
-			@include('widgets.time', [ 'carbon' => $post->created_at ])
+			@include('widgets.time', [
+				'carbon' => $post->created_at
+			])
 		</span>
 	</li>
 	
 	@if (!$catalog)
 		@if ($board->getConfig('postsThreadId', false))
-		<li class="post-detail post-authorid" id="{{ $post->board_id}}">
-			<span class="post-detail-item authorid authorid-colorized" style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $post->author_id }}</span>
+		<li class="post-detail post-authorid" id="{{ $details['board_id'] }}">
+			<span class="post-detail-item authorid authorid-colorized" style="background-color: {{ $post->getAuthorIdBackgroundColor() }}; color: {{ $post->getAuthorIdForegroundColor() }};">{{ $details['author_id'] }}</span>
 		</li>
 		@endif
 		
-		<li class="post-detail post-id" id="reply-{{ $post->board_id}}">
-			<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $post->board_id !!}" data-instant>@lang('board.post_number')</a>
-			<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $post->board_id !!}" {{ !$reply_to ? "data-instant" : "" }}>{!! $post->board_id !!}</a>
+		<li class="post-detail post-id" id="reply-{{ $details['board_id'] }}">
+			<a href="{!! $post->url() !!}" class="post-no" data-board_id="{!! $details['board_id'] !!}" data-instant>@lang('board.post_number')</a>
+			<a href="{!! $post->urlReply() !!}" class="post-reply" data-board_id="{!! $details['board_id'] !!}" {{ !$reply_to ? "data-instant" : "" }}>{!! $details['board_id'] !!}</a>
 		</li>
 	@endif
 	
@@ -67,13 +69,16 @@
 	<li class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
 	@endif
 	
-	@if (!is_null($post->adventure_id))
+	@if (!is_null($details['adventure_id']))
 	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
 	@endif
 	
-	@if (!is_null($post->author_ip) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
+	@if (!is_null($details['author_ip']) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
 		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
-			<a href="{{ $user->canViewGlobalHistory() ?  url('cp/history/' . $post->author_ip->toText()) : $post->getURL("history\{$post->board_id}") }}"><i class="fa fa-server"></i></a>
+			<a href="{{ $user->canViewGlobalHistory()
+				? url('cp/history/' . $details['author_ip']->toText())
+				: $post->getURL('history/' . $details['board_id'])
+			}}"><i class="fa fa-server"></i></a>
 		</li>
 	@endif
 	
