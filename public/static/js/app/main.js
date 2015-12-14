@@ -554,7 +554,7 @@
 	if (typeof MutationObserver === "function")
 	{
 		// If the newer MutationObserver object exists, we can watch the DOM
-		// for new elmeents and bind widgets immediately as they're conceived.
+		// for new elements and bind widgets immediately as they're conceived.
 		ib.observeMutation = function(records) {
 			// This method must be EXTREMELY FAST as it is called on every
 			// dom mutation as it happens.

@@ -33,7 +33,7 @@
 			
 			@section('header-inner')
 				<figure class="page-head">
-					@if ($user->isAccountable())
+					@if (user()->isAccountable())
 					<img id="logo" src="@yield('header-logo', asset('static/img/logo.png'))" alt="{{ site_setting('siteName') }}" />
 					@else
 					<img id="logo" src="@yield('header-logo', asset('static/img/logo_tor.png'))" alt="{{ site_setting('siteName') }}" />

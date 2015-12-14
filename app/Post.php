@@ -701,6 +701,7 @@ class Post extends Model {
 			return \View::make('content.board.post', [
 					'board'    => $this->board,
 					'post'     => $this,
+					'user'     => user(),
 					'op'       => false,
 					'reply_to' => $this->reply_to ?: $this->board_id,
 					'preview'  => false,
@@ -1514,6 +1515,7 @@ class Post extends Model {
 	{
 		return $query->with([
 			'backlinks' => function($query) {
+				$query->has('post');
 				$query->orderBy('post_id', 'asc');
 			},
 			'backlinks.post' => function($query) {

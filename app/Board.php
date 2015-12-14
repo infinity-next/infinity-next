@@ -572,7 +572,7 @@ class Board extends Model {
 		{
 			return $banners->random()->getURL();
 		}
-		else if (!\App::make(PermissionUser::class)->isAccountable())
+		else if (!user()->isAccountable())
 		{
 			return asset("static/img/logo_tor.png");
 		}
