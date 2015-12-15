@@ -619,8 +619,8 @@ class FileStorage extends Model {
 		{
 			$maxWidth  = Settings::get('attachmentThumbnailSize') . "px";
 			$maxHeight = $maxWidth;
-			$width   = "auto";
-			$height  = "auto";
+			$width     = $maxWidth;
+			$height    = "auto";
 			
 			if (is_integer($maxDimension))
 			{
