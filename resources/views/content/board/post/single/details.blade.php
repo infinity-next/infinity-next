@@ -30,7 +30,7 @@
 		@endif
 	</li>
 	
-	@if (isset($details['flag']) && !!$details['flag'])
+	@if (isset($details['flag_id']) && !is_null($details['flag_id']))
 		<li class="post-detail post-custom-flag" title="{{ $post->flag->getDisplayName() }}">{!! $post->flag->asHTML() !!}</li>
 	@endif
 	
