@@ -80,8 +80,8 @@ class ConfigController extends PanelController {
 				}
 				
 				// Pull the validation parameter string,
-				$requirements[$option->option_name] = $option->getValidation();
-				$input[$option->option_name]        = $option->getSanitaryInput($input[$option->option_name]);
+				$requirements                = array_merge($requirements, $option->getValidation());
+				$input[$option->option_name] = $option->getSanitaryInput($input[$option->option_name]);
 			}
 		}
 		
