@@ -558,6 +558,8 @@
 		ib.observeMutation = function(records) {
 			// This method must be EXTREMELY FAST as it is called on every
 			// dom mutation as it happens.
+			ib.bindQueued();
+
 			for (var x = 0; x < records.length; ++x)
 			{
 				var nodes = records[x].addedNodes;
@@ -568,9 +570,47 @@
 					
 					if (node.attributes && node.attributes['data-widget'])
 					{
-						ib.bindElement(node)
+						ib.bindWhenLoaded(node);
 					}
 				}
+			}
+		};
+		
+		// Widgets not fully loaded are queued for binding at a later time.
+		ib.queuedElements = [];
+		
+		ib.bindWhenLoaded = function(node) {
+			if (ib.widgetLoading(node))
+			{
+				ib.queuedElements.push(node);
+			}
+			else
+			{
+				ib.bindElement(node);
+			}
+		};
+		
+		ib.widgetLoading = function(node) {
+			if (document.readyState !== "loading")
+			{
+				return false;
+			}
+			
+			while(!node.nextSibling && node.parentNode)
+			{
+				node = node.parentNode;
+			}
+			
+			return !node.nextSibling || (node.parentNode === document.body);
+		};
+		
+		ib.bindQueued = function() {
+			var queue = ib.queuedElements;
+			ib.queuedElements = [];
+
+			for (var i = 0; i < queue.length; ++i)
+			{
+				ib.bindWhenLoaded(queue[i]);
 			}
 		};
 		
@@ -582,6 +622,7 @@
 				subtree : true
 			}
 		);
+		$(document).on('ready', ib.bindQueued);
 	}
 	else
 	{
