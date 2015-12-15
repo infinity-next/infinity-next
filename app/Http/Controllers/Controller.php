@@ -2,6 +2,7 @@
 
 use App\Board;
 use App\Log;
+use App\Http\MessengerResponse;
 use App\Services\UserManager;
 
 use Illuminate\Foundation\Bus\DispatchesCommands;
@@ -125,21 +126,6 @@ abstract class Controller extends BaseController {
 	}
 	
 	/**
-	 * Creates a View with the requested content file.
-	 *
-	 * @param  string  $template
-	 * @param  array  $options
-	 * @return View
-	 */
-	public function view($template, array $options = array())
-	{
-		return View::make(
-			$this->template($template),
-			$this->templateOptions($options)
-		);
-	}
-	
-	/**
 	 * Modifies a template path to yield the correct result.
 	 *
 	 * @param  string  $template
@@ -184,4 +170,33 @@ abstract class Controller extends BaseController {
 		
 		return $validator;
 	}
+	
+	/**
+	 * Creates a View with the requested content file.
+	 *
+	 * @param  string  $template
+	 * @param  array  $options
+	 * @return View
+	 */
+	public function view($template, array $options = array())
+	{
+		return View::make(
+			$this->template($template),
+			$this->templateOptions($options)
+		);
+	}
+	
+	/**
+	 * Creates a View with the requested content file.
+	 *
+	 * @param  string  $template
+	 * @param  array  $options
+	 * @return View
+	 */
+	public function viewAsJson($template, array $options = array())
+	{
+		$html = $this->view($template, $options);
+		return new MessengerResponse($html);
+	}
+	
 }

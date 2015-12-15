@@ -356,7 +356,7 @@ class Post extends Model {
 
 		return $count;
 	}
-
+	
 	/**
 	 * Checks a supplied password against the set one.
 	 *
@@ -365,11 +365,11 @@ class Post extends Model {
 	 */
 	public function checkPassword($password)
 	{
-		$hash = $this->makePassword($password);
-
-		return (!is_null($hash) && !is_null($this->password) && $this->password === $hash);
+		$hash = $this->makePassword($password, false);
+		
+		return !is_null($hash) && !is_null($this->password) && password_verify($hash, $this->password);
 	}
-
+	
 	/**
 	 * Removes thread caches containing this post.
 	 *
@@ -477,24 +477,28 @@ class Post extends Model {
 	 * Bcrypts a password using relative information.
 	 *
 	 * @param  string  $password  The password to be set. If empty password is given, no password will be set.
+	 * @param  boolean  $encrypt  Optional. Indicates if the hash should be bcrypted. Defaults true.
 	 * @return string
 	 */
-	public function makePassword($password = null)
+	public function makePassword($password = null, $encrypt = true)
 	{
-		$hash = null;
-
 		if (!!$password)
 		{
 			$hashParts = [];
 			$hashParts[] = env('APP_KEY');
 			$hashParts[] = $this->board_uri;
-			$hashParts[] = $this->reply_to_board_id ?: $this->board_id;
-			$hashParts[] = $this->password;
-
-			$hash = bcrypt(implode($hashParts, "|"));
+			$hashParts[] = $password;
+			$hashParts[] = $this->board_id;
 		}
-
-		return $hash;
+		
+		$parts = implode($hashParts, "|");
+		
+		if ($encrypt)
+		{
+			return bcrypt($parts);
+		}
+		
+		return $parts;
 	}
 
 

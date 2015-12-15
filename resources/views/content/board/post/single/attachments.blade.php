@@ -2,6 +2,7 @@
 @spaceless
 <ul class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
 	
+	{{--
 	@if ($post->attachments->count() > 1)
 	<li class="attachment-actions">
 		<span class="attachment-action attachment-spoiler-all" title="@lang('board.field.spoiler-all')">
@@ -21,6 +22,7 @@
 		</span>
 	</li>
 	@endif
+	--}}
 	
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">

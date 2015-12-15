@@ -30,6 +30,9 @@ return [
 		
 		'report'            => "Report post",
 		'report+global'     => "Report post to global staff",
+		
+		'verify_pass'       => "Verify Action with Password",
+		'verify_mod'        => "Verify Action as Moderator",
 	],
 	
 	// Form Fields
@@ -81,6 +84,8 @@ return [
 		
 		'report'            => "Report post",
 		'report+global'     => "Report post to global staff",
+		'verify_mod'        => "Confirm Moderator Action",
+		'verify_password'   => "Submit Password",
 	],
 	
 	/**
@@ -268,6 +273,13 @@ return [
 		],
 	],
 	
+	/**
+	 * Verification
+	 */
+	'verify'     => [
+		'title' => "Verify Action",
+		'mod'   => "Moderator actions are recorded in the logs.",
+	],
 	
 	/**
 	 * Other

@@ -203,9 +203,12 @@ Route::group([
 			Route::get('thumb/{hash}/{filename}', 'ImageController@getThumbnailFromHash')->where(['hash' => "[a-f0-9]{32}",]);
 			Route::get('thumb/{attachment}/{filename}', 'ImageController@getThumbnailFromAttachment');
 			
-			Route::get('remove/{attachment}', 'ImageController@deleteAttachment');
-			Route::get('spoiler/{attachment}', 'ImageController@patchAttachmentSpoiler');
-			Route::get('unspoiler/{attachment}', 'ImageController@patchAttachmentSpoiler');
+			Route::get('remove/{attachment}', 'ImageController@getDeleteAttachment');
+			Route::post('remove/{attachment}', 'ImageController@postDeleteAttachment');
+			Route::get('spoiler/{attachment}', 'ImageController@getSpoilerAttachment');
+			Route::post('spoiler/{attachment}', 'ImageController@postSpoilerAttachment');
+			Route::get('unspoiler/{attachment}', 'ImageController@getSpoilerAttachment');
+			Route::post('unspoiler/{attachment}', 'ImageController@postSpoilerAttachment');
 		});
 		
 		

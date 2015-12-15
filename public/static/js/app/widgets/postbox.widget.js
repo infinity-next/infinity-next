@@ -44,7 +44,10 @@
 			
 			'submit-post'     : "#submit-post",
 			
+			// This is the main postbox password.
 			'password'        : "#password",
+			// This is any field that uses the same password.
+			'post-password'   : ".post-password",
 			
 			'form-fields'     : ".form-fields",
 			'form-body'       : "#body",
@@ -996,4 +999,12 @@
 	
 	ib.widget("postbox", blueprint, options);
 	ib.settings.postbox.password.setInitial(false);
+	
+	$(document).on('ready.ib-postbox', function(event) {
+		// Bit of a hack.
+		// Sets form values to our password by default even outside
+		// of the scope of a thread.
+		$(blueprint.prototype.defaults.selector['post-password'])
+			.val(ib.settings['postbox']['password'].get());
+	});
 })(window, window.jQuery);

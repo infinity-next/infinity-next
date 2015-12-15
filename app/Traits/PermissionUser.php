@@ -615,6 +615,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user delete on this board?
+	 *
+	 * @return boolean
+	 */
+	public function canSpoilerAttachmentLocally(Board $board)
+	{
+		return $this->can("board.image.spoiler.other", $board);
+	}
+	
+	/**
 	 * Can spoiler/unspoiler attachments from post with password?
 	 *
 	 * @param  \App\Board  $board
@@ -623,6 +633,16 @@ trait PermissionUser {
 	public function canSpoilerAttachmentWithPassword(Board $board)
 	{
 		return $this->can("board.image.spoiler.self", $board);
+	}
+	
+	/**
+	 * Can this user delete posts across the entire site?
+	 *
+	 * @return boolean
+	 */
+	public function canSpoilerAttachmentGlobally()
+	{
+		return $this->can("board.image.spoiler.other");
 	}
 	
 	/**

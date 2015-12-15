@@ -21,11 +21,11 @@
 			{{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
 		@if ($details['email'] && !$catalog)</a>@endif
 		</strong>
-		@if ($details['insecure_tripcode'])
+		@if (isset($details['insecure_tripcode']))
 		<span class="insecure-tripcode tripcode">{{ $details['insecure_tripcode'] }}</span>
 		@endif
 		
-		@if ($details['capcode_id'] > 0)
+		@if (isset($details['capcode_id']) && $details['capcode_id'] > 0)
 		<strong class="post-detail-item capcode">{{ $post->getCapcodeName() }}</strong>
 		@endif
 	</li>
@@ -69,7 +69,7 @@
 	<li class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></li>
 	@endif
 	
-	@if (!is_null($details['adventure_id']))
+	@if (isset($details['adventure_id']) && !is_null($details['adventure_id']))
 	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
 	@endif
 	

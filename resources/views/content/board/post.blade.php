@@ -23,7 +23,7 @@
 	data-board_id="{{ $details['board_id'] }}"
 	data-created-at="{{ $post->created_at->timestamp }}"
 	data-updated-at="{{ $post->updated_at->timestamp }}"
-	data-capcode="{{ $details['capcode_capcode'] ?: '' }}"
+	data-capcode="{{ isset($details['capcode_capcode']) ? $details['capcode_capcode'] : '' }}"
 >
 	{{-- The intraboard crown applied to posts in Overboard. --}}
 	@if ($multiboard && !$reply_to)
@@ -33,7 +33,7 @@
 	@endif
 	
 	<div class="post-interior">
-		@if ($post->getRelation('reports'))
+		@if (true || !isset($details['reports']))
 		@include('content.board.post.single', [
 			'board'   => $board,
 			'post'    => $post,

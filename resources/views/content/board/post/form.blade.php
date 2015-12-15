@@ -19,7 +19,7 @@
 @endif
 	@if (!isset($post))
 	<ul class="post-menu">
-		@if (false)
+		@if ($user->canUsePassword($board))
 		<li class="menu-input menu-password">
 			{!! Form::password(
 				'password',
