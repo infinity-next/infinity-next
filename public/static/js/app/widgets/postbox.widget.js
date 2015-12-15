@@ -480,7 +480,13 @@
 			var $form       = $(this).add("<input name=\"messenger\" value=\"1\" />");
 			var $updater    = $(widget.options.selector['autoupdater']);
 			var autoupdater = false;
-			
+		
+			// Temporarialy disable button to prevent double posting
+			$("#submit-post")[0].disabled = true;
+			setTimeout(function() {
+				$("#submit-post")[0].disabled = false;
+			}, 500);
+
 			// Note: serializeJSON is a plugin we use to convert form data into
 			// a multidimensional array for application/json posts.
 			
