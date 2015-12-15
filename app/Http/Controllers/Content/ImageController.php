@@ -250,7 +250,7 @@ class ImageController extends Controller {
 	 */
 	public function getThumbnailFromAttachment(FileAttachment $attachment, $filename = false)
 	{
-		return $this->getImage($attachment, $filename, true);
+		return $this->getImage($attachment->storage->hash, $filename, true);
 	}
 	
 	/**
