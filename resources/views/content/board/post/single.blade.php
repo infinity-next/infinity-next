@@ -6,8 +6,9 @@
 	@if (isset($catalog) && $catalog === true)
 		@if ($post->attachments->count() === 0)
 			<a class="catalog-open" href="{!! $post->getURL() !!}" data-instant>@lang('board.action.view')</a>
+		@else
+			@include('content.board.post.single.attachments')
 		@endif
-		@include('content.board.post.single.attachments')
 		@include('content.board.post.single.details')
 		@include('content.board.post.single.post')
 	@else
