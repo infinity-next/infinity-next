@@ -2890,9 +2890,10 @@ main.index-threaded {
 								text-decoration: underline;
 								white-space: nowrap;
 							}
-
+				
 				ul.post-attachments {
 					display: block;
+					float: left;
 				}
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
@@ -2900,6 +2901,7 @@ main.index-threaded {
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
 							padding-top: 0.75em;
+							float: none;
 						}
 						ul.post-attachments.attachments-multi + blockquote.post {
 							margin-top: 0.75em;

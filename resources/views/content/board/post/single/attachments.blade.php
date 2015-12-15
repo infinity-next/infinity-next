@@ -1,27 +1,6 @@
 @if ($post->attachments->count())
 @spaceless
 <ul class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
-	
-	@if ($post->attachments->count() > 1)
-	{{-- <li class="attachment-actions">
-		<span class="attachment-action attachment-spoiler-all" title="@lang('board.field.spoiler-all')">
-			<i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler-all')
-		</span>
-		<span class="attachment-action attachment-remove-all" title="@lang('board.field.remove-all')">
-			<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove-all')
-		</span>
-		<span class="attachment-action attachment-download-all" title="@lang('board.field.download-all')">
-			<i class="fa fa-download"></i>&nbsp;@lang('board.field.download-all')
-		</span>
-		<span class="attachment-action attachment-expand-all" title="@lang('board.field.expand-all')">
-			<i class="fa fa-search-plus"></i>&nbsp;@lang('board.field.expand-all')
-		</span>
-		<span class="attachment-action attachment-collapse-all" title="@lang('board.field.collapse-all')">
-			<i class="fa fa-search-minus"></i>&nbsp;@lang('board.field.collapse-all')
-		</span>
-	</li> --}}
-	@endif
-	
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">
 		@if (!isset($catalog) || !$catalog)
