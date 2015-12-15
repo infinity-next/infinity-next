@@ -14,6 +14,11 @@ class EventServiceProvider extends ServiceProvider {
 	 */
 	protected $listen = [
 		// Post specific events
+		'App\Events\AttachmentWasModified' => [
+			'App\Listeners\BoardRecachePages',
+			'App\Listeners\OverboardRecache',
+			'App\Listeners\ThreadRecache',
+		],
 		'App\Events\PostWasAdded' => [
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\OverboardRecache',

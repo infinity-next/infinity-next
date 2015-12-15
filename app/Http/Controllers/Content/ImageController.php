@@ -12,6 +12,9 @@ use Storage;
 use Request;
 use Response;
 
+use Event;
+use App\Events\AttachmentWasModified;
+
 class ImageController extends Controller {
 	
 	/*
@@ -22,6 +25,27 @@ class ImageController extends Controller {
 	| Handles requests for static image content.
 	| 
 	*/
+	
+	/**
+	 * Delete a post's attachment.
+	 *
+	 * @param  \App\FileAttachment  $attachment
+	 * @return Response
+	 */
+	public function deleteAttachment(FileAttachment $attachment)
+	{
+		if (!$attachment->exists)
+		{
+			return abort(404);
+		}
+		
+		$attachment->is_deleted = true;
+		$attachment->save();
+		
+		Event::fire(new AttachmentWasModified($attachment));
+		
+		return redirect()->back();
+	}
 	
 	/**
 	 * Delivers an image.
@@ -238,6 +262,22 @@ class ImageController extends Controller {
 	public function getThumbnailFromHash($hash = false, $filename = false)
 	{
 		return $this->getImage($hash, $filename, true);
+	}
+	
+	/**
+	 * Toggle a post's spoiler status.
+	 *
+	 * @param  \App\FileAttachment  $attachment
+	 * @return Response
+	 */
+	public function patchAttachmentSpoiler(FileAttachment $attachment)
+	{
+		$attachment->is_spoiler = !$attachment->is_spoiler;
+		$attachment->save();
+		
+		Event::fire(new AttachmentWasModified($attachment));
+		
+		return redirect()->back();
 	}
 	
 }

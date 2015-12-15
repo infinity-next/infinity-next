@@ -148,7 +148,7 @@ class Post extends Model {
 
 	public function attachments()
 	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('attachment_id', 'filename', 'is_spoiler', 'position');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');
 	}
 
 	public function attachmentLinks()

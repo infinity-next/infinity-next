@@ -405,6 +405,21 @@ class FileStorage extends Model {
 	}
 	
 	/**
+	 * Returns a URL part based on available information.
+	 *
+	 * @return string|int
+	 */
+	public function getIdentifier()
+	{
+		if (isset($this->pivot))
+		{
+			return $this->pivot->attachment_id;
+		}
+		
+		return $this->hash;
+	}
+	
+	/**
 	 * Returns the relative internal file path.
 	 *
 	 * @return string
@@ -432,7 +447,7 @@ class FileStorage extends Model {
 	 */
 	public function getRemoveURL(Board $board)
 	{
-		return url("{$board->board_uri}/file/{$this->pivot->attachment_id}/remove");
+		return url("{$board->board_uri}/file/remove/{$this->pivot->attachment_id}");
 	}
 	
 	/**
@@ -469,7 +484,7 @@ class FileStorage extends Model {
 	 */
 	public function getSpoilerURL(Board $board)
 	{
-		return url("{$board->board_uri}/file/{$this->pivot->attachment_id}/spoiler");
+		return url("{$board->board_uri}/file/spoiler/{$this->pivot->attachment_id}");
 	}
 	
 	/**
@@ -530,12 +545,17 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailHTML(Board $board, $maxDimension = null)
 	{
-		$ext   = $this->guessExtension();
-		$mime  = $this->mime;
-		$url   = asset("static/img/filetypes/{$ext}.svg");
-		$spoil = $this->isSpoiler();
+		$ext     = $this->guessExtension();
+		$mime    = $this->mime;
+		$url     = asset("static/img/filetypes/{$ext}.svg");
+		$spoil   = $this->isSpoiler();
+		$deleted = $this->isDeleted();
 		
-		if ($spoil)
+		if ($deleted)
+		{
+			$url = $board->getAssetUrl('file_deleted');
+		}
+		else if ($spoil)
 		{
 			$url = $board->getAssetUrl('file_spoiler');
 		}
@@ -563,10 +583,12 @@ class FileStorage extends Model {
 		$width     = "auto";
 		$maxWidth  = "none";
 		$maxHeight = "none";
+		$minWidth  = "none";
+		$minHeight = "none";
 		$oHeight   = $this->thumbnail_height;
 		$oWidth    = $this->thumbnail_width;
 		
-		if ($this->has_thumbnail)
+		if ($this->has_thumbnail && !$this->isSpoiler() && !$this->isDeleted())
 		{
 			$height = $oHeight . "px";
 			$width  = $this->thumbnail_width . "px";
@@ -589,22 +611,32 @@ class FileStorage extends Model {
 					$width  = $maxDimension;
 				}
 			}
+			
+			$minWidth = $width;
+			$minHeight = $height;
 		}
 		else
 		{
-			$oHeight = Settings::get('attachmentThumbnailSize') . "px";
-			$oWidth  = $oHeight;
-			$width   = $oHeight;
-			$height  = $oHeight;
+			$maxWidth  = Settings::get('attachmentThumbnailSize') . "px";
+			$maxHeight = $maxWidth;
+			$width   = "auto";
+			$height  = "auto";
 			
 			if (is_integer($maxDimension))
 			{
 				$maxWidth = "{$maxDimension}px";
 				$maxHeight = "{$maxDimension}px";
 			}
+			
+			if ($this->isSpoiler() || $this->isDeleted())
+			{
+				$minHeight = "none";
+				$minWidth = "none";
+				$width = $maxWidth;
+			}
 		}
 		
-		return "<div class=\"attachment-wrapper\" style=\"min-height: {$height}; min-width: {$width}; max-height: {$maxHeight}; max-width: {$maxWidth};\">" .
+		return "<div class=\"attachment-wrapper\" style=\"min-height: {$minHeight}; min-width: {$minWidth}; max-height: {$maxHeight}; max-width: {$maxWidth};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}
@@ -617,7 +649,7 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailURL(Board $board)
 	{
-		$baseURL = "/{$board->board_uri}/file/thumb/{$this->pivot->attachment_id}/";
+		$baseURL = "/{$board->board_uri}/file/thumb/{$this->getIdentifier()}/";
 		$ext     = $this->guessExtension();
 		
 		if ($this->isSpoiler())
@@ -649,6 +681,17 @@ class FileStorage extends Model {
 		}
 		
 		return url("{$baseURL}{$this->getFileName()}.{$ext}");
+	}
+	
+	/**
+	 * Returns an unspoiler URL.
+	 *
+	 * @param  \App\Board  $board
+	 * @return string
+	 */
+	public function getUnspoilerURL(Board $board)
+	{
+		return url("{$board->board_uri}/file/unspoiler/{$this->pivot->attachment_id}");
 	}
 	
 	/**
@@ -783,6 +826,18 @@ class FileStorage extends Model {
 		return false;
 	}
 	
+	/**
+	 * Returns if our pivot is deleted.
+	 *
+	 * @return boolean
+	 */
+	public function isDeleted()
+	{
+		return isset($this->pivot)
+			&& isset($this->pivot->is_deleted)
+			&& !!$this->pivot->is_deleted;
+	}
+
 	/**
 	 * Is this attachment an image?
 	 *

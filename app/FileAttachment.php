@@ -23,7 +23,14 @@ class FileAttachment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['post_id', 'file_id', 'filename', 'is_spoiler', 'position'];
+	protected $fillable = [
+		'post_id',
+		'file_id',
+		'filename',
+		'is_spoiler',
+		'is_deleted',
+		'position'
+	];
 	
 	/**
 	 * Indicates if Laravel should set created_at and updated_at timestamps.
@@ -80,6 +87,7 @@ class FileAttachment extends Model {
 	public static function getRecentImages($number = 16, $sfwOnly = true)
 	{
 		$query = static::where('is_spoiler', false)
+			->where('is_deleted', false)
 			->whereHas('storage', function($query) {
 				$query->where('has_thumbnail', true);
 			})

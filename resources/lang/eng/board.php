@@ -59,6 +59,8 @@ return [
 		'collapse-all'    => "Collapse All",
 		'download'        => "Download",
 		'download-all'    => "Download All",
+		'unspoiler'       => "Unspoiler",
+		'unspoiler-all'   => "Unspoiler All",
 		'spoiler'         => "Spoiler",
 		'spoiler-all'     => "Spoiler All",
 		'remove'          => "Remove",

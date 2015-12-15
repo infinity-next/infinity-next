@@ -26,14 +26,16 @@ class RouteServiceProvider extends ServiceProvider {
 	public function boot(Router $router)
 	{
 		// Sets up our routing tokens.
-		$router->pattern('board', Board::URI_PATTERN);
-		$router->pattern('id',   '[0-9]\d*');
+		$router->pattern('attachment', '[0-9]\d*');
+		$router->pattern('board',      Board::URI_PATTERN);
+		$router->pattern('id',         '[0-9]\d*');
 		
-		$router->model('ban',    '\App\Ban');
-		$router->model('board',  '\App\Board');
-		$router->model('post',   '\App\Post');
-		$router->model('report', '\App\Report');
-		$router->model('role',   '\App\Role');
+		$router->model('attachment', '\App\FileAttachment');
+		$router->model('ban',        '\App\Ban');
+		$router->model('board',      '\App\Board');
+		$router->model('post',       '\App\Post');
+		$router->model('report',     '\App\Report');
+		$router->model('role',       '\App\Role');
 		
 		$router->bind('user', function($value, $route) {
 			if (is_numeric($value))
@@ -47,8 +49,9 @@ class RouteServiceProvider extends ServiceProvider {
 		});
 		
 		$router->bind('attachment', function($value, $route) {
-			return \App\FileAttachment::find($value)
-				->load('storage');
+			return \App\FileAttachment::where('is_deleted', false)
+				->with('storage')
+				->find($value);
 		});
 		
 		$router->bind('role', function($value, $route) {
