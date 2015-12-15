@@ -350,6 +350,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user delete on this board with a password?
+	 *
+	 * @return boolean
+	 */
+	public function canDeletePostWithPassword(Board $board)
+	{
+		return $this->can("board.post.delete.self", $board);
+	}
+	
+	/**
 	 * Can this user delete posts across the entire site?
 	 *
 	 * @return boolean
@@ -383,6 +393,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user edit any board's config?
+	 *
+	 * @return boolean
+	 */
+	public function canEditAnyConfig()
+	{
+		return $this->canAny("board.config");
+	}
+	
+	/**
 	 * Can this user edit this board's config?
 	 *
 	 * @return boolean
@@ -393,13 +413,14 @@ trait PermissionUser {
 	}
 	
 	/**
-	 * Can this user edit any board's config?
+	 * Can edit a post with a password?
 	 *
-	 * @return boolean
+	 * @param  \App\Board  $board
+	 * @return bool
 	 */
-	public function canEditAnyConfig()
+	public function canEditPostWithPassword(Board $board)
 	{
-		return $this->canAny("board.config");
+		return $this->can("board.post.edit.self", $board);
 	}
 	
 	/**
@@ -475,7 +496,6 @@ trait PermissionUser {
 	{
 		return $this->can('sys.config');
 	}
-	
 	
 	/**
 	 * Can this user lock this thread to replies?
@@ -564,6 +584,17 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can remove attachments from post with password?
+	 *
+	 * @param  \App\Board  $board
+	 * @return bool
+	 */
+	public function canRemoveAttachmentWithPassword(Board $board)
+	{
+		return $this->can("board.image.delete.self", $board);
+	}
+	
+	/**
 	 * Can this user report this post?
 	 *
 	 * @return boolean
@@ -584,6 +615,17 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can spoiler/unspoiler attachments from post with password?
+	 *
+	 * @param  \App\Board  $board
+	 * @return bool
+	 */
+	public function canSpoilerAttachmentWithPassword(Board $board)
+	{
+		return $this->can("board.image.spoiler.self", $board);
+	}
+	
+	/**
 	 * Can this user sticky a thread?
 	 *
 	 * @return boolean
@@ -594,6 +636,37 @@ trait PermissionUser {
 		if (is_null($post->reply_to))
 		{
 			return $this->can("board.post.sticky", $post->board_uri);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Can this user supply a password for any purpose?
+	 *
+	 * @param  \App\Board  $board
+	 * @return boolean
+	 */
+	public function canUsePassword(Board $board)
+	{
+		if ($this->canDeletePostWithPassword($board))
+		{
+			return true;
+		}
+		
+		if ($this->canEditPostWithPassword($board))
+		{
+			return true;
+		}
+		
+		if ($this->canRemoveAttachmentWithPassword($board))
+		{
+			return true;
+		}
+		
+		if ($this->canSpoilerAttachmentWithPassword($board))
+		{
+			return true;
 		}
 		
 		return false;

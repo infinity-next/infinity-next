@@ -76,10 +76,21 @@ class Option extends Model implements PseudoEnumContract {
 	public $timestamps = false;
 	
 	
+	public function boardSetting()
+	{
+		return $this->hasOne('\App\BoardSetting', 'option_name');
+	}
+	
 	public function groups()
 	{
 		return $this->belongsToMany("\App\OptionGroup", 'option_group_assignments', 'option_name', 'option_group_id');
 	}
+	
+	public function siteSetting()
+	{
+		return $this->hasOne('\App\SiteSetting', 'option_name');
+	}
+	
 	
 	/**
 	 * Gets choices for this select box.

@@ -127,3 +127,10 @@ a.post-action-link:hover {
 	color: #FFFFEE;
 	background: #800000;
 }
+
+
+@media (min-width: 728px) and (min-height: 480px) {
+	html.js body.responsive main.index-threaded form.form-post .form-legend {
+		background: #b74b47;
+	}
+}

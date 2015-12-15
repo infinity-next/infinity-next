@@ -27,15 +27,16 @@ if (!class_exists("DatabaseSeeder"))
 			$this->call('UserSeeder');
 			$this->call('BoardSeeder');
 			
+			$this->call('RoleSeeder');
+			$this->call('UserRoleSeeder');
 			$this->call('PermissionSeeder');
 			$this->call('PermissionGroupSeeder');
-			
-			// $this->call('RoleSeeder');
-			// $this->call('UserRoleSeeder');
 			$this->call('RolePermissionSeeder');
 			
 			$this->call('OptionSeeder');
 			$this->call('OptionGroupSeeder');
+			
+			echo \Artisan::call('cache:clear');
 		}
 	}
 }

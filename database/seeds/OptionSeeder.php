@@ -26,6 +26,14 @@ class OptionSeeder extends Seeder {
 				$option = Option::updateOrCreate([
 					'option_name' => $slug['option_name'],
 				], $slug);
+				
+				// Insert a default site setting.
+				if ($option->wasRecentlyCreated && $slugType == "site")
+				{
+					$option->siteSetting()->create([
+						'option_value' => $slug['default_value'],
+					]);
+				}
 			}
 		}
 		

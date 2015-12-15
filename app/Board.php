@@ -164,9 +164,9 @@ class Board extends Model {
 		return $this->belongsTo('\App\User', 'operated_by', 'user_id');
 	}
 	
-	public function owner()
+	public function creator()
 	{
-		return $this->belongsTo('\App\User', 'owned_by', 'user_id');
+		return $this->belongsTo('\App\User', 'created_by', 'user_id');
 	}
 	
 	public function threads()

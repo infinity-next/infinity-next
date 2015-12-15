@@ -22,6 +22,12 @@ class RoleSeeder extends Seeder {
 		
 		$this->runBoards();
 		
+		$deleted = UserRole::whereDoesntHave('role')->forceDelete();
+		
+		if ($deleted > 0)
+		{
+			$this->command->warn("Dropped {$deleted} user roles where the role did not exist.");
+		}
 		
 		Schema::table('posts', function(Blueprint $table)
 		{
@@ -245,22 +251,24 @@ class UserRoleSeeder extends Seeder {
 			];
 		}
 		
-		foreach (Board::get() as $board)
+		Board::with('operator', 'roles')->has('operator')->chunk(50, function($boards) use (&$userRoles)
 		{
-			$ownerRole = $board->getOwnerRole();
-			
-			if ($ownerRole)
+			foreach ($boards as $board)
 			{
+				$ownerRole = $board->getOwnerRole();
+				
+				if (!$ownerRole)
+				{
+					$ownerRole = Role::getOwnerRoleForBoard($board);
+					$this->command->line("\t/{$board->board_uri}/ has no owner role.");
+				}
+				
 				$userRoles[] = [
 					'user_id' => $board->operated_by,
 					'role_id' => $ownerRole->role_id,
 				];
 			}
-			else
-			{
-				$this->command->line("\t/{$board->board_uri}/ has no owner role.");
-			}
-		}
+		});
 		
 		foreach ($userRoles as $userRole)
 		{
