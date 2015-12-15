@@ -481,12 +481,6 @@
 			var $updater    = $(widget.options.selector['autoupdater']);
 			var autoupdater = false;
 		
-			// Temporarialy disable button to prevent double posting
-			$("#submit-post")[0].disabled = true;
-			setTimeout(function() {
-				$("#submit-post")[0].disabled = false;
-			}, 500);
-
 			// Note: serializeJSON is a plugin we use to convert form data into
 			// a multidimensional array for application/json posts.
 			
@@ -509,7 +503,9 @@
 			// Indicate we want a full messenger response.
 			data.messenger = true;
 			
+			// Temporarialy disable form and submit button to prevent double posting
 			$form.prop('disabled', true);
+			$(widget.options.selector['submit']).prop('disabled', true);
 			
 			jQuery.ajax({
 				type:        "POST",
@@ -521,7 +517,7 @@
 			})
 				.done(function(response, textStatus, jqXHR) {
 					$form.prop('disabled', false);
-					
+					$(widget.options.selector['submit']).prop('disabled', false);
 					
 					if (typeof response !== "object")
 					{
