@@ -211,7 +211,6 @@ class ContentFormatter {
 	protected function formatMarkdown($content)
 	{
 		$content = Markdown::config($this->options)
-			->extendBlockComplete('Quote', $this->getQuoteParser())
 			->addInlineType('>', 'Cite')
 			->addInlineType('&', 'Cite')
 			->extendInline('Cite', $this->getCiteParser())
@@ -425,41 +424,6 @@ class ContentFormatter {
 			'boards' => $boards,
 			'posts'  => $posts,
 		];
-	}
-	
-	/**
-	 * Provides a closure for the Eightdown API to deal with spoilers after a quote block is complete.
-	 *
-	 * @return Closure
-	 */
-	protected function getQuoteParser()
-	{
-		$parser = $this;
-		
-		return function($Block) use ($parser)
-		{
-			$spoiler = null;
-			
-			foreach ($Block['element']['text'] as &$text)
-			{
-				// $text = str_replace(">", "&gt;", $text);
-				
-				$spoiler = (($spoiler === true || is_null($spoiler)) && preg_match('/^&gt;![ ]?(.*)/', $text, $matches));
-				
-			}
-			
-			if ($spoiler === true)
-			{
-				$Block['element']['attributes']['class'] = "spoiler";
-				
-				foreach ($Block['element']['text'] as &$text)
-				{
-					$text = preg_replace('/^&gt;!/', "", $text, 1);
-				}
-			}
-			
-			return $Block;
-		};
 	}
 	
 }
