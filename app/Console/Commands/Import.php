@@ -319,6 +319,10 @@ class Import extends Command {
 				file_put_contents($file, "posts");
 				$this->importInfinityPosts();
 			
+			case "attachments" :
+				file_put_contents($file, "attachments");
+				
+			
 			break;
 			default :
 				$this->error("Import state \"{$state}\" invalid.");
@@ -601,6 +605,15 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			DB::statement("TRUNCATE \"posts\" CASCADE");
+		}
+		else
+		{
+			Post::truncate();
+		}
+		
 		Board::chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
@@ -611,17 +624,15 @@ class Import extends Command {
 				$validThreads = [];
 				
 				// Threads first, replies by id.
-				$board->posts()->forceDelete();
-				$tTable->orderByRaw('thread asc, id asc')->chunk(50, function($posts) use (&$validThreads, &$board, &$postsMade)
+				$tTable->orderByRaw('thread asc, id asc')->chunk(200, function($posts) use (&$validThreads, &$board, &$postsMade)
 				{
-					$this->line("\t\t\tImporting 50 more posts ...");
 					$models = [];
+					$this->line("\t\t\tImporting 200 more posts ...");
 					
 					// thread, subject, email, name, trip, capcode, body, body_nomarkup, time, bump, files, num_files, filehash, password, ip, sticky, locked, cycle, sage, embed, edited_at
 					// post_id | board_uri | board_id | reply_to | reply_to_board_id | reply_count | reply_last | bumped_last | created_at | updated_at | updated_by | deleted_at | stickied | stickied_at | bumplocked_at | locked_at | author_ip | author_id | author_country | author_ip_nulled_at | author | insecure_tripcode | capcode_id | adventure_id | subject | email | password | body | body_parsed | body_parsed_at | body_html | featured_at | body_too_long | body_parsed_preview | flag_id | reply_file_count
 					foreach ($posts as $post)
 					{
-						$model = new Post;
 						$thread = null;
 						
 						if (!$post->thread)
@@ -634,51 +645,78 @@ class Import extends Command {
 						}
 						else
 						{
-							dd($validThreads);
 							continue;
 						}
 						
-						$model->board_uri = $board->board_uri;
-						$model->board_id = $post->id;
-						$model->reply_to = $thread ? $thread->post_id : null;
-						$model->reply_to_board_id = $thread ? $thread->board_id : null;
+						$createdAt  = Carbon::now();
+						$editedAt   = $createdAt;
+						$bumpedLast = $createdAt;
 						
-						$model->created_at = Carbon::now()->setTimestamp($post->time);
-						$model->updated_at = $model->edited_at ? Carbon::now()->setTimestamp($post->edited_at) : $model->created_at;
-						$model->updated_by = null;
-						$model->deleted_at = null;
-						$model->bumped_last = $post->bump;
-						
-						$model->stickied_at = $post->thread || !$post->sticky ? null : $model->created_at;
-						$model->locked_at = $post->thread || !$post->locked ? null : $model->created_at;
-						
-						$model->body = null;
-						$model->body_parsed = null;
-						$model->body_parsed_at = null;
-						$model->body_html = $post->body;
-						$model->body_too_long = null;
-						$model->body_parsed_preview = null;
-						
-						$model->author = $post->name;
-						$model->author_ip = $post->ip ? new IP($post->ip) : null;
-						$model->email = $post->email;
-						$model->insecure_tripcode = $post->trip ?: null;
-						$model->password = $post->password ? $model->makePassword( $post->password ) : null;
-						
-						if ($model->save())
-						{
-							++$postsMade;
-							
-							if (!$post->thread)
+						// Yes. Vichan database records for time can be malformed.
+						// Handle them carefully.
+						try {
+							$createdAt = Carbon::now()->setTimestamp($post->time);
+						} catch (\Exception $e) { }
+						try {
+							if ($post->edited_at)
 							{
-								$validThreads[$post->id] = $model;
+								$editedAt = Carbon::now()->setTimestamp($post->edited_at);
 							}
+						} catch (\Exception $e) { }
+						try {
+							if ($post->bump)
+							{
+								$bumpedLast = Carbon::now()->setTimestamp($post->bump);
+							}
+						} catch (\Exception $e) { }
+						
+						$model = [
+							'board_uri'           => $board->board_uri,
+							'board_id'            => (int) $post->id,
+							'reply_to'            => $thread ? (int) $thread->post_id : null,
+							'reply_to_board_id'   => $thread ? (int) $thread->board_id : null,
+							
+							'created_at'          => $createdAt,
+							'updated_at'          => $editedAt,
+							'updated_by'          => null,
+							'deleted_at'          => null,
+							'bumped_last'         => $bumpedLast,
+							
+							'stickied'            => !($post->thread || !$post->sticky),
+							'stickied_at'         => $post->thread || !$post->sticky ? null : $createdAt,
+							'locked_at'           => $post->thread || !$post->locked ? null : $createdAt,
+							
+							'body'                => null,
+							'body_parsed'         => null,
+							'body_parsed_at'      => null,
+							'body_html'           => (string) $post->body,
+							'body_too_long'       => null,
+							'body_parsed_preview' => null,
+							
+							'author'              => (string) $post->name,
+							'author_id'           => null,
+							'author_ip'           => $post->ip ? new IP($post->ip) : null,
+							'email'               => (string) $post->email,
+							'insecure_tripcode'   => $post->trip ?: null,
+							'password'            => null,
+						];
+						
+						++$postsMade;
+						
+						// Have to save threads so we have a post_id.
+						if (!$post->thread)
+						{
+							$model = new Post($model);
+							$model->save();
+							$validThreads[$post->id] = $model;
 						}
 						else
 						{
-							$this->warn("\t\t\t\t/{$board->board_uri}/{$post->id} failed to save.");
+							$models[] = $model;
 						}
 					}
+					
+					Post::insert($models);
 				});
 				
 				$this->line("\t\t\tMade {$postsMade} post(s) for /{$board->board_uri}/.");

@@ -390,9 +390,8 @@
 			
 			if (event.delegateTarget === widget.$widget[0])
 			{
-				console.log('wew');
 				widget.$widget[0].scrollIntoView({
-					block    : "top",
+					block    : "start",
 					behavior : "instant"
 				});
 			}
