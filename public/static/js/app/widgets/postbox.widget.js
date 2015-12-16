@@ -483,7 +483,7 @@
 			var $form       = $(this).add("<input name=\"messenger\" value=\"1\" />");
 			var $updater    = $(widget.options.selector['autoupdater']);
 			var autoupdater = false;
-			
+		
 			// Note: serializeJSON is a plugin we use to convert form data into
 			// a multidimensional array for application/json posts.
 			
@@ -506,7 +506,9 @@
 			// Indicate we want a full messenger response.
 			data.messenger = true;
 			
+			// Temporarialy disable form and submit button to prevent double posting
 			$form.prop('disabled', true);
+			$(widget.options.selector['submit']).prop('disabled', true);
 			
 			jQuery.ajax({
 				type:        "POST",
@@ -518,7 +520,7 @@
 			})
 				.done(function(response, textStatus, jqXHR) {
 					$form.prop('disabled', false);
-					
+					$(widget.options.selector['submit']).prop('disabled', false);
 					
 					if (typeof response !== "object")
 					{
