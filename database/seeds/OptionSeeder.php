@@ -30,7 +30,14 @@ class OptionSeeder extends Seeder {
 				// Insert a default site setting.
 				if ($option->wasRecentlyCreated && $slugType == "site")
 				{
+					if ($option->option_anem == "0")
+					{
+						$this->command->error("Option is invalid.");
+						dd($option);
+					}
+					
 					$option->siteSetting()->create([
+						'option_name'  => $slug['option_name'],
 						'option_value' => $slug['default_value'],
 					]);
 				}
