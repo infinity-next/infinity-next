@@ -1,11 +1,15 @@
 <?php namespace App\Console\Commands;
 
 use App\Board;
+use App\BoardTag;
+use App\FileAttachment;
+use App\Post;
 use App\Role;
 use App\RolePermission;
 use App\User;
 use App\UserRole;
 
+use App\Support\IP;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -179,12 +183,35 @@ class Import extends Command {
 		return !!$this->tcon;
 	}
 	
+	public function getImportState()
+	{
+		$file = storage_path("infinity.import");
+		
+		try
+		{
+			$state = file_get_contents($file);
+		}
+		catch (\Exception $e)
+		{
+			$state = null;
+		}
+		
+		return $state;
+	}
 	
 	public function importPrepare()
 	{
+		if ($this->getImportState() != "")
+		{
+			$this->line("\tSkipping database prep.");
+			return false;
+		}
+		
 		$this->line("\tPrepping database.");
 		
 		# OUR TABLES
+		$attachmentsTable    = $this->hcon->table( with(new FileAttachment)->getTable() );
+		$postTable           = $this->hcon->table( with(new Post)->getTable() );
 		$boardTable          = $this->hcon->table( with(new Board)->getTable() );
 		$roleTable           = $this->hcon->table( with(new Role)->getTable() );
 		$rolePermissionTable = $this->hcon->table( with(new RolePermission)->getTable() );
@@ -192,6 +219,8 @@ class Import extends Command {
 		$userRoleTable       = $this->hcon->table( with(new UserRole)->getTable() );
 		
 		# DESTROY OUR EXISTING INFORMATION
+		$attachmentsTable->delete();
+		$postTable->delete();
 		$boardTable->delete();
 		$userRoleTable->delete();
 		$userTable->delete();
@@ -230,10 +259,17 @@ class Import extends Command {
 	{
 		$this->comment("\tCleaning up.");
 		
-		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		try
 		{
-			DB::statement("CREATE SEQUENCE roles_role_id_seq OWNED BY \"roles\".\"role_id\";");
-			DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
+			if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+			{
+				DB::statement("CREATE SEQUENCE roles_role_id_seq OWNED BY \"roles\".\"role_id\";");
+				DB::statement("SELECT setval('roles_role_id_seq', COALESCE((SELECT MAX(role_id)+1 FROM roles), 1), false);");
+			}
+		}
+		catch (\Exception $e)
+		{
+			$this->info("\t\tPostgreSQL did not need role sequencing.");
 		}
 		
 		Schema::table('posts', function(Blueprint $table)
@@ -257,16 +293,51 @@ class Import extends Command {
 	}
 	
 	/**
-	 * Imports users and creates roles based on addition data in that row.
+	 * Imports the Infinity database.
 	 *
-	 * @return integer  Number of users.
+	 * @return void
 	 */
 	public function importInfinity()
+	{
+		$file = storage_path("infinity.import");
+		$state = $this->getImportState();
+		
+		switch ($state)
+		{
+			case null :
+			case "" :
+			case "boards" :
+			case "users" :
+				file_put_contents($file, "boards");
+				$this->importInfinityRolesAndBoards();
+			
+			case "tags" :
+				file_put_contents($file, "tags");
+				$this->importInfinityBoardTags();
+			
+			case "posts" :
+				file_put_contents($file, "posts");
+				$this->importInfinityPosts();
+			
+			break;
+			default :
+				$this->error("Import state \"{$state}\" invalid.");
+		}
+		
+	}
+	
+	/**
+	 * Imports users and creates roles based on addition data in that row.
+	 *
+	 * @return void
+	 */
+	public function importInfinityRolesAndBoards()
 	{
 		# BORROW A SEEDER
 		require base_path() . "/database/seeds/RoleSeeder.php";
 		
 		$RoleSeeder = new \RoleSeeder;
+		$RoleSeeder->setCommand($this);
 		$RoleSeeder->runMaster();
 		
 		# REPAIR SEQUENCE
@@ -280,8 +351,10 @@ class Import extends Command {
 		}
 		
 		# THEIR TABLES
-		$tBoardsTable         = $this->tcon->table("boards")->join('board_create', 'boards.uri', '=', 'board_create.uri')->select('boards.*', 'board_create.time');
-		$tModsTable           = $this->tcon->table("mods");
+		$tBoardsTable = $this->tcon->table("boards")
+			->join('board_create', 'boards.uri', '=', 'board_create.uri')
+			->select('boards.*', 'board_create.time');
+		$tModsTable   = $this->tcon->table("mods");
 		
 		
 		# BEGIN USER IMPORT
@@ -435,6 +508,10 @@ class Import extends Command {
 				{
 					++$boardsImported;
 				}
+				else
+				{
+					$this->error("Failed to save /{$hBoard->board_uri}/.");
+				}
 			}
 		});
 		
@@ -513,5 +590,156 @@ class Import extends Command {
 		$this->info("\t\tPulled roles from " . count($userBoardRelationships) . " boards with relationships.");
 		
 		unset($board, $roles, $mod, $role, $userRole, $janitorRole, $ownerRole);
+	}
+	
+	/**
+	 * Imports board stats.
+	 *
+	 * @return void
+	 */
+	public function importInfinityPosts()
+	{
+		$this->info("\tImporting posts ...");
+		
+		Board::chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting posts from /{$board->board_uri}/");
+				$tTable = $this->tcon->table("posts_{$board->board_uri}");
+				$postsMade = 0;
+				$validThreads = [];
+				
+				// Threads first, replies by id.
+				$board->posts()->forceDelete();
+				$tTable->orderByRaw('thread asc, id asc')->chunk(50, function($posts) use (&$validThreads, &$board, &$postsMade)
+				{
+					$this->line("\t\t\tImporting 50 more posts ...");
+					$models = [];
+					
+					// thread, subject, email, name, trip, capcode, body, body_nomarkup, time, bump, files, num_files, filehash, password, ip, sticky, locked, cycle, sage, embed, edited_at
+					// post_id | board_uri | board_id | reply_to | reply_to_board_id | reply_count | reply_last | bumped_last | created_at | updated_at | updated_by | deleted_at | stickied | stickied_at | bumplocked_at | locked_at | author_ip | author_id | author_country | author_ip_nulled_at | author | insecure_tripcode | capcode_id | adventure_id | subject | email | password | body | body_parsed | body_parsed_at | body_html | featured_at | body_too_long | body_parsed_preview | flag_id | reply_file_count
+					foreach ($posts as $post)
+					{
+						$model = new Post;
+						$thread = null;
+						
+						if (!$post->thread)
+						{
+							$thread = null;
+						}
+						else if (isset($validThreads[$post->thread]))
+						{
+							$thread = $validThreads[$post->thread];
+						}
+						else
+						{
+							dd($validThreads);
+							continue;
+						}
+						
+						$model->board_uri = $board->board_uri;
+						$model->board_id = $post->id;
+						$model->reply_to = $thread ? $thread->post_id : null;
+						$model->reply_to_board_id = $thread ? $thread->board_id : null;
+						
+						$model->created_at = Carbon::now()->setTimestamp($post->time);
+						$model->updated_at = $model->edited_at ? Carbon::now()->setTimestamp($post->edited_at) : $model->created_at;
+						$model->updated_by = null;
+						$model->deleted_at = null;
+						$model->bumped_last = $post->bump;
+						
+						$model->stickied_at = $post->thread || !$post->sticky ? null : $model->created_at;
+						$model->locked_at = $post->thread || !$post->locked ? null : $model->created_at;
+						
+						$model->body = null;
+						$model->body_parsed = null;
+						$model->body_parsed_at = null;
+						$model->body_html = $post->body;
+						$model->body_too_long = null;
+						$model->body_parsed_preview = null;
+						
+						$model->author = $post->name;
+						$model->author_ip = $post->ip ? new IP($post->ip) : null;
+						$model->email = $post->email;
+						$model->insecure_tripcode = $post->trip ?: null;
+						$model->password = $post->password ? $model->makePassword( $post->password ) : null;
+						
+						if ($model->save())
+						{
+							++$postsMade;
+							
+							if (!$post->thread)
+							{
+								$validThreads[$post->id] = $model;
+							}
+						}
+						else
+						{
+							$this->warn("\t\t\t\t/{$board->board_uri}/{$post->id} failed to save.");
+						}
+					}
+				});
+				
+				$this->line("\t\t\tMade {$postsMade} post(s) for /{$board->board_uri}/.");
+			}
+		});
+	}
+	
+	/**
+	 * Imports board tags.
+	 *
+	 * @return void
+	 */
+	public function importInfinityBoardTags()
+	{
+		# THEIR TABLES
+		$tTagsTable = $this->tcon->table("board_tags");
+		
+		# BEGIN USER IMPORT
+		$this->info("\tImporting Tags ...");
+		
+		
+		$tTagsTable->chunk(100, function($tags)
+		{
+			$this->line("\t\tImporting 100 tags.");
+			
+			$boardTags = [];
+			$tagModels = [];
+			
+			foreach ($tags as $tag)
+			{
+				if (!isset($boardTags[$tag->uri]))
+				{
+					$boardTags[$tag->uri] = [];
+				}
+				
+				if (!isset($tagModels[$tag->tag]))
+				{
+					$tagModels[$tag->tag] = BoardTag::firstOrCreate([
+						'tag' => $tag->tag,
+					]);
+				}
+				
+				$boardTags[$tag->uri] = $tagModels[$tag->tag];
+			}
+			
+			foreach ($boardTags as $board_uri => $tags)
+			{
+				$board = Board::find($board_uri);
+				
+				if ($board)
+				{
+					$board->tags()->attach($tags);
+				}
+				else
+				{
+					$this->warn("\t\t\tBoard \"{$board_uri}\" could not be found to add tags to.");
+				}
+			}
+			
+			
+			unset($tag, $tagModel, $tagModels, $boardTags);
+		});
 	}
 }

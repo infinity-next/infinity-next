@@ -577,33 +577,33 @@ class Post extends Model {
 			// Markdown parsed content
 			if (!is_null($this->body_html))
 			{
-				if (mb_check_encoding($this->body_html, 'UTF-8'))
+				if (!mb_check_encoding($this->body_html, 'UTF-8'))
 				{
 					return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
 				}
-
+				
 				return $this->body_html;
 			}
-
+			
 			// Raw HTML input
 			if (!is_null($this->body_parsed))
 			{
 				return $this->body_parsed;
 			}
 		}
-
+		
 		$ContentFormatter          = new ContentFormatter();
 		$this->body_too_long       = false;
 		$this->body_parsed         = $ContentFormatter->formatPost($this);
 		$this->body_parsed_preview = null;
 		$this->body_parsed_at      = $this->freshTimestamp();
-
+		
 		if (!mb_check_encoding($this->body_parsed, 'UTF-8'))
 		{
 			return "<tt style=\"color:red;\">Invalid encoding. This should never happen!</tt>";
 		}
-
-
+		
+		
 		// If our body is too long, we need to pull the first X characters and do that instead.
 		// We also set a token indicating this post has hidden content.
 		if (strlen($this->body) > 1200)
@@ -611,7 +611,7 @@ class Post extends Model {
 			$this->body_too_long = true;
 			$this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
 		}
-
+		
 		// We use an update here instead of just saving $post because, in this method
 		// there will frequently be additional properties on this object that cannot
 		// be saved. To make life easier, we just touch the object.
@@ -621,7 +621,7 @@ class Post extends Model {
 			'body_parsed_preview' => $this->body_parsed_preview,
 			'body_parsed_at'      => $this->body_parsed_at,
 		]);
-
+		
 		return $this->body_parsed;
 	}
 
@@ -1302,7 +1302,9 @@ class Post extends Model {
 	 */
 	public function hasBody()
 	{
-		return strlen( trim( (string) $this->attributes['body'] ) ) > 0;
+		$body = strlen( trim( (string) $this->attributes['body'] ) ) > 0;
+		$body_html = strlen( trim( (string) $this->attributes['body_html'] ) ) > 0;
+		return $body || $body_html;
 	}
 	
 	/**
@@ -1684,7 +1686,6 @@ class Post extends Model {
 	public function scopeWithEverything($query)
 	{
 		return $query
-			->addSelect("posts.*")
 			->withEverythingForReplies()
 			->andBoard();
 	}
@@ -1702,6 +1703,7 @@ class Post extends Model {
 	public function scopeWithEverythingForReplies($query)
 	{
 		return $query
+			->addSelect("posts.*")
 			->andAttachments()
 			->andBans()
 			->andBacklinks()

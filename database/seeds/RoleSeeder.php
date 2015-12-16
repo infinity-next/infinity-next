@@ -106,7 +106,7 @@ class RoleSeeder extends Seeder {
 				'system'     => true,
 			])->first();
 			
-			if (!$role->exists || $role->role_id != $slug['role_id'])
+			if (!$role || !$role->exists || $role->role_id != $slug['role_id'])
 			{
 				if ($role)
 				{

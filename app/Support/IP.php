@@ -119,7 +119,7 @@ class IP extends CIDR {
 	
 	public function toSQL($start = true)
 	{
-		$ip = $start ? $this->getStart() : $this->getEnd() ;
+		$ip = $start ? $this->getStart() : $this->getEnd();
 		
 		return binary_sql(inet_pton($ip));
 	}
