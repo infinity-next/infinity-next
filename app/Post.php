@@ -1000,6 +1000,11 @@ class Post extends Model {
 	 */
 	public function getAuthorIpAttribute()
 	{
+		if (!isset($this->attributes['author_ip']))
+		{
+			return null;
+		}
+		
 		if ($this->attributes['author_ip'] instanceof IP)
 		{
 			return $this->attributes['author_ip'];
