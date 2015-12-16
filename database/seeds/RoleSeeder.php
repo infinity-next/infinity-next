@@ -106,14 +106,18 @@ class RoleSeeder extends Seeder {
 				'system'     => true,
 			])->first();
 			
-			if ($role)
+			if (!$role->exists || $role->role_id != $slug['role_id'])
 			{
-				$role->forceDelete();
+				if ($role)
+				{
+					$role->forceDelete();
+					Role::forceDelete($slug['role_id']);
+				}
+				
+				$role = new Role($slug);
+				$role->role_id = $slug['role_id'];
+				$role->save();
 			}
-			
-			$role = new Role($slug);
-			$role->role_id = $slug['role_id'];
-			$role->save();
 		}
 	}
 	
@@ -122,20 +126,36 @@ class RoleSeeder extends Seeder {
 		$this->command->comment("\tInserting board owner roles.");
 		$boardRole = $this->slugs()[Role::ID_OWNER];
 		
-		foreach (Board::get() as $board)
+		Board::chunk(50, function($boards)
 		{
-			$roleModel = Role::updateOrCreate([
-				'role'       => $boardRole['role'],
-				'board_uri'  => $board->board_uri,
-				'caste'      => $boardRole['caste'],
-			], [
-				'name'       => $boardRole['name'],
-				'capcode'    => $boardRole['capcode'],
-				'inherit_id' => Role::ID_OWNER,
-				'system'     => false,
-				'weight'     => $boardRole['weight'] + 5,
-			]);
-		}
+			foreach ($boards as $board)
+			{
+				$boardRole = $board->getOwnerRole();
+				
+				if (!$boardRole)
+				{
+					$boardRole = Role::getOwnerRoleForBoard($board);
+					$this->command->line("\t/{$board->board_uri}/ has no owner role.");
+				}
+				
+				$roleModel = Role::firstOrCreate([
+					'role'       => $boardRole['role'],
+					'board_uri'  => $board->board_uri,
+					'caste'      => $boardRole['caste'],
+				]);
+				
+				if ($roleModel->wasRecentlyCreated)
+				{
+					$roleModel->fill([
+						'name'       => $boardRole['name'],
+						'capcode'    => $boardRole['capcode'],
+						'inherit_id' => Role::ID_OWNER,
+						'system'     => false,
+						'weight'     => $boardRole['weight'] + 5,
+					])->save();
+				}
+			}
+		});
 	}
 	
 	private function slugs()
@@ -255,17 +275,25 @@ class UserRoleSeeder extends Seeder {
 		{
 			foreach ($boards as $board)
 			{
-				$ownerRole = $board->getOwnerRole();
+				$boardRole = $board->getOwnerRole();
 				
-				if (!$ownerRole)
+				// Drops all board owner user roles where the user isn't a board operator.
+				$removed = UserRole::whereHas('role', function($query) use ($boardRole) {
+						$query->where('role_id', $boardRole->role_id);
+					})
+					->whereHas('user', function($query) use ($board) {
+						$query->where('user_id', "<>", $board->operated_by);
+					})
+					->forceDelete();
+				
+				if ($removed > 0)
 				{
-					$ownerRole = Role::getOwnerRoleForBoard($board);
-					$this->command->line("\t/{$board->board_uri}/ has no owner role.");
+					$this->command->line("\tRemoved {$removed} pretenders from /{$board->board_uri}/.");
 				}
 				
 				$userRoles[] = [
 					'user_id' => $board->operated_by,
-					'role_id' => $ownerRole->role_id,
+					'role_id' => $boardRole->role_id,
 				];
 			}
 		});
