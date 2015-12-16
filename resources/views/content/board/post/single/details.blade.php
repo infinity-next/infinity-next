@@ -73,7 +73,7 @@
 	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
 	@endif
 	
-	@if (!is_null($details['author_ip']) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
+	@if (isset($details['author_ip']) && !is_null($details['author_ip']) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
 		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
 			<a href="{{ $user->canViewGlobalHistory() && is_object($details['author_ip'])
 				? url('cp/history/' . $details['author_ip']->toText())
