@@ -69,6 +69,13 @@ class Option extends Model implements PseudoEnumContract {
 	];
 	
 	/**
+	 * Denotes our primary key is not an autoincrementing integer.
+	 *
+	 * @var string
+	 */
+	public $incrementing = false;
+	
+	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
 	 *
 	 * @var array
