@@ -1307,8 +1307,19 @@ class Post extends Model {
 	 */
 	public function hasBody()
 	{
-		$body = strlen( trim( (string) $this->attributes['body'] ) ) > 0;
-		$body_html = strlen( trim( (string) $this->attributes['body_html'] ) ) > 0;
+		$body = false;
+		$body_html = false;
+		
+		if (isset($this->attributes['body']))
+		{
+			$body = strlen( trim( (string) $this->attributes['body'] ) ) > 0;
+		}
+		
+		if (isset($this->attributes['body_html']))
+		{
+			$body_html = strlen( trim( (string) $this->attributes['body_html'] ) ) > 0;
+		}
+		
 		return $body || $body_html;
 	}
 	
