@@ -1182,9 +1182,7 @@ class Board extends Model {
 		$rememberClosure = function() use ($page, $postsPerPage) {
 			$threads = $this->threads()
 				->op()
-				->andAttachments()
-				->andCapcode()
-				->andCites()
+				->withEverythingForReplies()
 				->orderBy('stickied', 'desc')
 				->orderBy('bumped_last', 'desc')
 				->skip($postsPerPage * ( $page - 1 ))
