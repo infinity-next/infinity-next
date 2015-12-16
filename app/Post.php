@@ -1574,7 +1574,6 @@ class Post extends Model {
 				$join->on('roles.role_id', '=', 'posts.capcode_id');
 			})
 			->addSelect(
-				'posts.*',
 				'roles.capcode as capcode_capcode',
 				'roles.role as capcode_role',
 				'roles.name as capcode_name'
@@ -1594,7 +1593,6 @@ class Post extends Model {
 				$join->on('users.user_id', '=', 'posts.updated_by');
 			})
 			->addSelect(
-				'posts.*',
 				'users.username as updated_by_username'
 			);
 	}
@@ -1686,6 +1684,7 @@ class Post extends Model {
 	public function scopeWithEverything($query)
 	{
 		return $query
+			->addSelect("posts.*")
 			->withEverythingForReplies()
 			->andBoard();
 	}
