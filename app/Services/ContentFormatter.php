@@ -121,12 +121,14 @@ class ContentFormatter {
 			],
 			
 			'disable' => [
+				"Emphasis",
 				"Image",
 				"Link",
 			],
 			
 			'enable' => [
 				"Spoiler",
+				"underline_emphasis",
 			],
 			
 			'markup' => [
@@ -235,12 +237,14 @@ class ContentFormatter {
 			],
 			
 			'disable' => [
+				"Emphasis",
 				"Image",
 				"Link",
 			],
 			
 			'enable' => [
 				"Spoiler",
+				"underline_emphasis",
 			],
 			
 			'markup' => [
