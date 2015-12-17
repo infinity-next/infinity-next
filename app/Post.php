@@ -2102,7 +2102,10 @@ class Post extends Model {
 				'posts.board_id'  => $board_id,
 			])->withEverythingAndReplies()->first();
 			
-			$thread->prepareForCache();
+			if ($thread)
+			{
+				$thread->prepareForCache();
+			}
 			
 			return $thread;
 		};

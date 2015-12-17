@@ -269,11 +269,27 @@ class ImageController extends Controller {
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
 			
-			if ($FileStorage instanceof FileStorage && Storage::exists($storagePath))
+			if (is_link($storagePathFull))
+			{
+				if (!is_readable($storagePathFull))
+				{
+					abort(500, "Symlink file is unreadable.");
+				}
+				
+				$storageExists = file_exists($storagePathFull);
+				$storageSize = filesize($storagePathFull);
+			}
+			else
+			{
+				$storageExists = Storage::exists($storagePath);
+				$storageSize = filesize($storagePath);
+			}
+			
+			if ($FileStorage instanceof FileStorage && $storageExists)
 			{
 				ini_set("zlib.output_compression", "Off");
 				
-				$responseSize    = Storage::size($storagePath);
+				$responseSize    = $storageSize;
 				$responseCode    = 200;
 				$responseHeaders = [
 					'Cache-Control'        => "public, max-age={$cacheTime}, pre-check={$cacheTime}",

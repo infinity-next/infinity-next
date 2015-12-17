@@ -911,7 +911,6 @@ class FileStorage extends Model {
 		// Not counting uploads unless it ends up on a post.
 		// $this->upload_count    += 1;
 		
-		
 		$this->processThumb();
 		$this->save();
 		

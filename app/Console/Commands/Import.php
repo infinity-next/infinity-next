@@ -2,6 +2,7 @@
 
 use App\Board;
 use App\BoardTag;
+use App\FileStorage;
 use App\FileAttachment;
 use App\Post;
 use App\Role;
@@ -21,6 +22,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use DB;
 use Config;
 use Schema;
+use Storage;
 
 class Import extends Command {
 	
@@ -132,7 +134,7 @@ class Import extends Command {
 		$this->targetPass     = $this->option('password') ?: env('DB_PASSWORD');
 		$this->targetSystem   = $this->option('system')   ?: env('DB_SYSTEM');
 		
-		$this->targetLocation = $this->option('location') ?: null;
+		$this->targetLocation = $this->option('location') ? rtrim($this->option('location'), '/') : null;
 		
 		// if (!$this->confirm("Import {$this->targetSystem} database `{$this->targetDatabase}` on {$this->targetHost} as '{$this->targetUser}'@<PASS:".($this->targetPass?"YES":"NO").">"))
 		// {
@@ -189,7 +191,7 @@ class Import extends Command {
 		
 		try
 		{
-			$state = file_get_contents($file);
+			$state = trim(file_get_contents($file));
 		}
 		catch (\Exception $e)
 		{
@@ -219,13 +221,13 @@ class Import extends Command {
 		$userRoleTable       = $this->hcon->table( with(new UserRole)->getTable() );
 		
 		# DESTROY OUR EXISTING INFORMATION
-		$attachmentsTable->delete();
-		$postTable->delete();
-		$boardTable->delete();
-		$userRoleTable->delete();
-		$userTable->delete();
-		$rolePermissionTable->delete();
-		$roleTable->delete();
+		$attachmentsTable->forceDelete();
+		$postTable->forceDelete();
+		$boardTable->forceDelete();
+		$userRoleTable->forceDelete();
+		$userTable->forceDelete();
+		$rolePermissionTable->forceDelete();
+		$roleTable->forceDelete();
 		
 		# Yes, we are required to drop and recreate these FKs to get ID reassignment working.
 		# This is for PostgreSQL.
@@ -321,13 +323,337 @@ class Import extends Command {
 			
 			case "attachments" :
 				file_put_contents($file, "attachments");
-				
+				$this->importInfinityAttachments();
 			
 			break;
 			default :
 				$this->error("Import state \"{$state}\" invalid.");
 		}
 		
+	}
+	
+	/**
+	 * Imports board attachments.
+	 *
+	 * @return void
+	 */
+	public function importInfinityAttachments()
+	{
+		$this->info("\tImporting attachments ...");
+		
+		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting attachments from /{$board->board_uri}/");
+				$tTable = $this->tcon->table("posts_{$board->board_uri}");
+				$attachmentsMade = 0;
+				
+				// Threads first, replies by id.
+				$tTable
+					->where('num_files', '>', 0)
+					->orderByRaw('thread asc, id asc')
+					->chunk(200, function($posts) use (&$board, &$attachmentsMade)
+				{
+					$this->line("\t\t\tImporting 200 more posts's attachments ...");
+					$aModels = [];
+					$fModels = [];
+					$skips   = 0;
+					
+					// [{
+					// 	"name":"1417727856564.png",
+					// 	"type":"image\/png",
+					// 	"tmp_name":"\/tmp\/php05oN25",
+					// 	"error":0,
+					// 	"size":13034,
+					// 	"filename":"1417727856564.png",
+					// 	"extension":"png",
+					// 	"file_id":"1423141860833",
+					// 	"file":"1423141860833.png",
+					// 	"thumb":"1423141860833.jpg",
+					// 	"is_an_image":true,
+					// 	"hash":"8c63f0b812657c38966ddc7d387a9a4b",
+					// 	"width":223,
+					// 	"height":200,
+					// 	"thumbwidth":223,
+					// 	"thumbheight":200,
+					// 	"file_path":"b\/src\/1423141860833.png",
+					// 	"thumb_path":"b\/thumb\/1423141860833.jpg"
+					// }]
+					
+					// files, num_files, filehash
+					foreach ($posts as $post)
+					{
+						$post_id = $board->posts()->where('board_id', $post->id)->pluck('post_id');
+						
+						if (!$post_id)
+						{
+							continue;
+						}
+						
+						$attachments = json_decode($post->files, true);
+						
+						foreach ($attachments as $aIndex => $attachment)
+						{
+							if (isset($attachment['error']) && $attachment['error'])
+							{
+								continue;
+							}
+							
+							$storage = null;
+							$path    = "{$this->targetLocation}/{$attachment['file_path']}";
+							$thumb   = "{$this->targetLocation}/{$attachment['thumb_path']}";
+							
+							if (file_exists($path))
+							{
+								if (isset($fModels[$attachment['hash']]))
+								{
+									$storage = $fModels[$attachment['hash']];
+								}
+								else
+								{
+									$storage = FileStorage::getHash($attachment['hash']);
+								}
+								
+								if (!$storage)
+								{
+									$storage = new FileStorage([
+										'hash'              => $attachment['hash'],
+										'banned'            => false,
+										'filesize'          => $attachment['size'],
+										'file_width'        => $attachment['width'],
+										'file_height'       => $attachment['height'],
+										'mime'              => $attachment['type'],
+										'meta'              => null,
+										'first_uploaded_at' => Carbon::now(),
+										'last_uploaded_at'  => Carbon::now(),
+										'upload_count'      => 1,
+									]);
+									
+									Storage::makeDirectory($storage->getDirectory());
+									symlink($path, $storage->getFullPath());
+									
+									if ($attachment['thumbwidth'] && file_exists($thumb))
+									{
+										$storage->has_thumbnail    = true;
+										$storage->thumbnail_width  = $attachment['thumbwidth'];
+										$storage->thumbnail_height = $attachment['thumbheight'];
+										
+										Storage::makeDirectory($storage->getDirectoryThumb());
+										symlink($thumb, $storage->getFullPathThumb());
+									}
+									
+									$storage->save();
+									$fModels[$attachment['hash']] = $storage;
+								}
+								
+								if ($storage && $storage->exists)
+								{
+									$aModel = new FileAttachment([
+										'post_id'    => $post_id,
+										'file_id'    => $storage->file_id,
+										'filename'   => $attachment['filename'],
+										'is_spoiler' => false,
+										'is_deleted' => false,
+										'position'   => $aIndex,
+									]);
+									
+									$aModel->save();
+									$aModels[] = $aModel;
+								}
+							}
+						}
+					}
+					
+					$this->line("\t\tImported ".count($fModels)." file(s), ".count($aModels)." attachment(s), but skipped {$skips} attachments.");
+				});
+			}
+		});
+	}
+	
+	/**
+	 * Imports board tags.
+	 *
+	 * @return void
+	 */
+	public function importInfinityBoardTags()
+	{
+		# THEIR TABLES
+		$tTagsTable = $this->tcon->table("board_tags");
+		
+		# BEGIN USER IMPORT
+		$this->info("\tImporting Tags ...");
+		
+		
+		$tTagsTable->chunk(100, function($tags)
+		{
+			$this->line("\t\tImporting 100 tags.");
+			
+			$boardTags = [];
+			$tagModels = [];
+			
+			foreach ($tags as $tag)
+			{
+				if (!isset($boardTags[$tag->uri]))
+				{
+					$boardTags[$tag->uri] = [];
+				}
+				
+				if (!isset($tagModels[$tag->tag]))
+				{
+					$tagModels[$tag->tag] = BoardTag::firstOrCreate([
+						'tag' => $tag->tag,
+					]);
+				}
+				
+				$boardTags[$tag->uri] = $tagModels[$tag->tag];
+			}
+			
+			foreach ($boardTags as $board_uri => $tags)
+			{
+				$board = Board::find($board_uri);
+				
+				if ($board)
+				{
+					$board->tags()->attach($tags);
+				}
+				else
+				{
+					$this->warn("\t\t\tBoard \"{$board_uri}\" could not be found to add tags to.");
+				}
+			}
+			
+			
+			unset($tag, $tagModel, $tagModels, $boardTags);
+		});
+	}
+	
+	/**
+	 * Imports board stats.
+	 *
+	 * @return void
+	 */
+	public function importInfinityPosts()
+	{
+		$this->info("\tImporting posts ...");
+		
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			DB::statement("TRUNCATE \"posts\" CASCADE");
+		}
+		else
+		{
+			Post::truncate();
+		}
+		
+		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting posts from /{$board->board_uri}/");
+				$tTable = $this->tcon->table("posts_{$board->board_uri}");
+				$postsMade = 0;
+				$validThreads = [];
+				
+				// Threads first, replies by id.
+				$tTable->orderByRaw('thread asc, id asc')->chunk(200, function($posts) use (&$validThreads, &$board, &$postsMade)
+				{
+					$models = [];
+					$this->line("\t\t\tImporting 200 more posts ...");
+					
+					// thread, subject, email, name, trip, capcode, body, body_nomarkup, time, bump, files, num_files, filehash, password, ip, sticky, locked, cycle, sage, embed, edited_at
+					// post_id | board_uri | board_id | reply_to | reply_to_board_id | reply_count | reply_last | bumped_last | created_at | updated_at | updated_by | deleted_at | stickied | stickied_at | bumplocked_at | locked_at | author_ip | author_id | author_country | author_ip_nulled_at | author | insecure_tripcode | capcode_id | adventure_id | subject | email | password | body | body_parsed | body_parsed_at | body_html | featured_at | body_too_long | body_parsed_preview | flag_id | reply_file_count
+					foreach ($posts as $post)
+					{
+						$thread = null;
+						
+						if (!$post->thread)
+						{
+							$thread = null;
+						}
+						else if (isset($validThreads[$post->thread]))
+						{
+							$thread = $validThreads[$post->thread];
+						}
+						else
+						{
+							continue;
+						}
+						
+						$createdAt  = Carbon::now();
+						$editedAt   = $createdAt;
+						$bumpedLast = $createdAt;
+						
+						// Yes. Vichan database records for time can be malformed.
+						// Handle them carefully.
+						try {
+							$createdAt = Carbon::now()->setTimestamp($post->time);
+						} catch (\Exception $e) { }
+						try {
+							if ($post->edited_at)
+							{
+								$editedAt = Carbon::now()->setTimestamp($post->edited_at);
+							}
+						} catch (\Exception $e) { }
+						try {
+							if ($post->bump)
+							{
+								$bumpedLast = Carbon::now()->setTimestamp($post->bump);
+							}
+						} catch (\Exception $e) { }
+						
+						$model = [
+							'board_uri'           => $board->board_uri,
+							'board_id'            => (int) $post->id,
+							'reply_to'            => $thread ? (int) $thread->post_id : null,
+							'reply_to_board_id'   => $thread ? (int) $thread->board_id : null,
+							
+							'created_at'          => $createdAt,
+							'updated_at'          => $editedAt,
+							'updated_by'          => null,
+							'deleted_at'          => null,
+							'bumped_last'         => $bumpedLast,
+							
+							'stickied'            => !($post->thread || !$post->sticky),
+							'stickied_at'         => $post->thread || !$post->sticky ? null : $createdAt,
+							'locked_at'           => $post->thread || !$post->locked ? null : $createdAt,
+							
+							'body'                => null,
+							'body_parsed'         => null,
+							'body_parsed_at'      => null,
+							'body_html'           => (string) $post->body,
+							'body_too_long'       => null,
+							'body_parsed_preview' => null,
+							
+							'author'              => (string) $post->name,
+							'author_id'           => null,
+							'author_ip'           => $post->ip ? new IP($post->ip) : null,
+							'email'               => (string) $post->email,
+							'insecure_tripcode'   => $post->trip ?: null,
+							'password'            => null,
+						];
+						
+						++$postsMade;
+						
+						// Have to save threads so we have a post_id.
+						if (!$post->thread)
+						{
+							$model = new Post($model);
+							$model->save();
+							$validThreads[$post->id] = $model;
+						}
+						else
+						{
+							$models[] = $model;
+						}
+					}
+					
+					Post::insert($models);
+				});
+				
+				$this->line("\t\t\tMade {$postsMade} post(s) for /{$board->board_uri}/.");
+			}
+		});
 	}
 	
 	/**
@@ -596,188 +922,4 @@ class Import extends Command {
 		unset($board, $roles, $mod, $role, $userRole, $janitorRole, $ownerRole);
 	}
 	
-	/**
-	 * Imports board stats.
-	 *
-	 * @return void
-	 */
-	public function importInfinityPosts()
-	{
-		$this->info("\tImporting posts ...");
-		
-		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
-		{
-			DB::statement("TRUNCATE \"posts\" CASCADE");
-		}
-		else
-		{
-			Post::truncate();
-		}
-		
-		Board::chunk(1, function($boards)
-		{
-			foreach ($boards as $board)
-			{
-				$this->line("\t\tImporting posts from /{$board->board_uri}/");
-				$tTable = $this->tcon->table("posts_{$board->board_uri}");
-				$postsMade = 0;
-				$validThreads = [];
-				
-				// Threads first, replies by id.
-				$tTable->orderByRaw('thread asc, id asc')->chunk(200, function($posts) use (&$validThreads, &$board, &$postsMade)
-				{
-					$models = [];
-					$this->line("\t\t\tImporting 200 more posts ...");
-					
-					// thread, subject, email, name, trip, capcode, body, body_nomarkup, time, bump, files, num_files, filehash, password, ip, sticky, locked, cycle, sage, embed, edited_at
-					// post_id | board_uri | board_id | reply_to | reply_to_board_id | reply_count | reply_last | bumped_last | created_at | updated_at | updated_by | deleted_at | stickied | stickied_at | bumplocked_at | locked_at | author_ip | author_id | author_country | author_ip_nulled_at | author | insecure_tripcode | capcode_id | adventure_id | subject | email | password | body | body_parsed | body_parsed_at | body_html | featured_at | body_too_long | body_parsed_preview | flag_id | reply_file_count
-					foreach ($posts as $post)
-					{
-						$thread = null;
-						
-						if (!$post->thread)
-						{
-							$thread = null;
-						}
-						else if (isset($validThreads[$post->thread]))
-						{
-							$thread = $validThreads[$post->thread];
-						}
-						else
-						{
-							continue;
-						}
-						
-						$createdAt  = Carbon::now();
-						$editedAt   = $createdAt;
-						$bumpedLast = $createdAt;
-						
-						// Yes. Vichan database records for time can be malformed.
-						// Handle them carefully.
-						try {
-							$createdAt = Carbon::now()->setTimestamp($post->time);
-						} catch (\Exception $e) { }
-						try {
-							if ($post->edited_at)
-							{
-								$editedAt = Carbon::now()->setTimestamp($post->edited_at);
-							}
-						} catch (\Exception $e) { }
-						try {
-							if ($post->bump)
-							{
-								$bumpedLast = Carbon::now()->setTimestamp($post->bump);
-							}
-						} catch (\Exception $e) { }
-						
-						$model = [
-							'board_uri'           => $board->board_uri,
-							'board_id'            => (int) $post->id,
-							'reply_to'            => $thread ? (int) $thread->post_id : null,
-							'reply_to_board_id'   => $thread ? (int) $thread->board_id : null,
-							
-							'created_at'          => $createdAt,
-							'updated_at'          => $editedAt,
-							'updated_by'          => null,
-							'deleted_at'          => null,
-							'bumped_last'         => $bumpedLast,
-							
-							'stickied'            => !($post->thread || !$post->sticky),
-							'stickied_at'         => $post->thread || !$post->sticky ? null : $createdAt,
-							'locked_at'           => $post->thread || !$post->locked ? null : $createdAt,
-							
-							'body'                => null,
-							'body_parsed'         => null,
-							'body_parsed_at'      => null,
-							'body_html'           => (string) $post->body,
-							'body_too_long'       => null,
-							'body_parsed_preview' => null,
-							
-							'author'              => (string) $post->name,
-							'author_id'           => null,
-							'author_ip'           => $post->ip ? new IP($post->ip) : null,
-							'email'               => (string) $post->email,
-							'insecure_tripcode'   => $post->trip ?: null,
-							'password'            => null,
-						];
-						
-						++$postsMade;
-						
-						// Have to save threads so we have a post_id.
-						if (!$post->thread)
-						{
-							$model = new Post($model);
-							$model->save();
-							$validThreads[$post->id] = $model;
-						}
-						else
-						{
-							$models[] = $model;
-						}
-					}
-					
-					Post::insert($models);
-				});
-				
-				$this->line("\t\t\tMade {$postsMade} post(s) for /{$board->board_uri}/.");
-			}
-		});
-	}
-	
-	/**
-	 * Imports board tags.
-	 *
-	 * @return void
-	 */
-	public function importInfinityBoardTags()
-	{
-		# THEIR TABLES
-		$tTagsTable = $this->tcon->table("board_tags");
-		
-		# BEGIN USER IMPORT
-		$this->info("\tImporting Tags ...");
-		
-		
-		$tTagsTable->chunk(100, function($tags)
-		{
-			$this->line("\t\tImporting 100 tags.");
-			
-			$boardTags = [];
-			$tagModels = [];
-			
-			foreach ($tags as $tag)
-			{
-				if (!isset($boardTags[$tag->uri]))
-				{
-					$boardTags[$tag->uri] = [];
-				}
-				
-				if (!isset($tagModels[$tag->tag]))
-				{
-					$tagModels[$tag->tag] = BoardTag::firstOrCreate([
-						'tag' => $tag->tag,
-					]);
-				}
-				
-				$boardTags[$tag->uri] = $tagModels[$tag->tag];
-			}
-			
-			foreach ($boardTags as $board_uri => $tags)
-			{
-				$board = Board::find($board_uri);
-				
-				if ($board)
-				{
-					$board->tags()->attach($tags);
-				}
-				else
-				{
-					$this->warn("\t\t\tBoard \"{$board_uri}\" could not be found to add tags to.");
-				}
-			}
-			
-			
-			unset($tag, $tagModel, $tagModels, $boardTags);
-		});
-	}
 }

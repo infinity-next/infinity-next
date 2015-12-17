@@ -72,7 +72,10 @@ class FileAttachment extends Model {
 		
 		// Fire events on post created.
 		static::created(function(FileAttachment $attachment) {
-			$attachment->storage->processAttachment($attachment);
+			if (!is_link($attachment->storage->getFullPath()))
+			{
+				$attachment->storage->processAttachment($attachment);
+			}
 		});
 	}
 	
