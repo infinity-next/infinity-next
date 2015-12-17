@@ -790,7 +790,7 @@ class FileStorage extends Model {
 	 */
 	public function hasFile()
 	{
-		return Storage::exists($this->getPath());
+		return is_link($this->getPath()) || Storage::exists($this->getPath());
 	}
 	
 	/**
@@ -800,7 +800,7 @@ class FileStorage extends Model {
 	 */
 	public function hasThumb()
 	{
-		return Storage::exists($this->getPathThumb());
+		return is_link($this->getPathThumb()) || Storage::exists($this->getPathThumb());
 	}
 	
 	/**

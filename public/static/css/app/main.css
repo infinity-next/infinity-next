@@ -2782,7 +2782,7 @@ main.index-threaded {
 			}
 				.post-details {
 					clear: both;
-					padding: 0.6em 1em 0.4em 1em;
+					padding: 0.6em 1em 0.4em 0;
 					margin: 0;
 					line-height: 1.8em;
 					white-space: normal;
@@ -2898,10 +2898,12 @@ main.index-threaded {
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
 					}
-						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
-							background: rgba(0,0,155,0.1);
+						main.index-threaded ul.post-attachments.attachments-multi {
 							padding-top: 0.75em;
 							float: none;
+						}
+						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
+							background: rgba(0,0,155,0.1);
 						}
 						ul.post-attachments.attachments-multi + blockquote.post {
 							margin-top: 0.75em;

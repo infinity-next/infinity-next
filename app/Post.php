@@ -66,6 +66,8 @@ class Post extends Model {
 		'reply_last',
 		'bumped_last',
 		
+		'created_at',
+		'updated_at',
 		'stickied',
 		'stickied_at',
 		'bumplocked_at',
@@ -79,6 +81,7 @@ class Post extends Model {
 		'capcode_id',
 		'subject',
 		'author',
+		'insecure_tripcode',
 		'email',
 		'password',
 		'flag_id',

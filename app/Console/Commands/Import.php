@@ -274,24 +274,35 @@ class Import extends Command {
 			$this->info("\t\tPostgreSQL did not need role sequencing.");
 		}
 		
-		Schema::table('posts', function(Blueprint $table)
-		{
-			$table->foreign('capcode_id')
-				->references('role_id')->on('roles')
-				->onDelete('set null')->onUpdate('cascade');
-		});
-		Schema::table('role_permissions', function(Blueprint $table)
-		{
-			$table->foreign('role_id')
-				->references('role_id')->on('roles')
-				->onDelete('cascade')->onUpdate('cascade');
-		});
-		Schema::table('user_roles', function(Blueprint $table)
-		{
-			$table->foreign('role_id')
-				->references('role_id')->on('roles')
-				->onDelete('cascade')->onUpdate('cascade');
-		});
+		try {
+			Schema::table('posts', function(Blueprint $table)
+			{
+				$table->foreign('capcode_id')
+					->references('role_id')->on('roles')
+					->onDelete('set null')->onUpdate('cascade');
+			});
+		}
+		catch (\Exception $e) { }
+		
+		try {
+			Schema::table('role_permissions', function(Blueprint $table)
+			{
+				$table->foreign('role_id')
+					->references('role_id')->on('roles')
+					->onDelete('cascade')->onUpdate('cascade');
+			});
+		}
+		catch (\Exception $e) { }
+		
+		try {
+			Schema::table('user_roles', function(Blueprint $table)
+			{
+				$table->foreign('role_id')
+					->references('role_id')->on('roles')
+					->onDelete('cascade')->onUpdate('cascade');
+			});
+		}
+		catch (\Exception $e) { }
 	}
 	
 	/**
@@ -431,7 +442,11 @@ class Import extends Command {
 									]);
 									
 									Storage::makeDirectory($storage->getDirectory());
-									symlink($path, $storage->getFullPath());
+									
+									if (!$storage->hasFile())
+									{
+										symlink($path, $storage->getFullPath());
+									}
 									
 									if ($attachment['thumbwidth'] && file_exists($thumb))
 									{
@@ -440,7 +455,11 @@ class Import extends Command {
 										$storage->thumbnail_height = $attachment['thumbheight'];
 										
 										Storage::makeDirectory($storage->getDirectoryThumb());
-										symlink($thumb, $storage->getFullPathThumb());
+										
+										if (!$storage->hasThumb())
+										{
+											symlink($thumb, $storage->getFullPathThumb());
+										}
 									}
 									
 									$storage->save();
@@ -587,18 +606,18 @@ class Import extends Command {
 						// Yes. Vichan database records for time can be malformed.
 						// Handle them carefully.
 						try {
-							$createdAt = Carbon::now()->setTimestamp($post->time);
+							$createdAt = Carbon::createFromTimestampUTC($post->time);
 						} catch (\Exception $e) { }
 						try {
 							if ($post->edited_at)
 							{
-								$editedAt = Carbon::now()->setTimestamp($post->edited_at);
+								$editedAt = Carbon::createFromTimestampUTC($post->edited_at);
 							}
 						} catch (\Exception $e) { }
 						try {
 							if ($post->bump)
 							{
-								$bumpedLast = Carbon::now()->setTimestamp($post->bump);
+								$bumpedLast = Carbon::createFromTimestampUTC($post->bump);
 							}
 						} catch (\Exception $e) { }
 						
@@ -625,11 +644,12 @@ class Import extends Command {
 							'body_too_long'       => null,
 							'body_parsed_preview' => null,
 							
-							'author'              => (string) $post->name,
+							'subject'             => $post->subject ?: null,
+							'author'              => $post->name ?: null,
 							'author_id'           => null,
 							'author_ip'           => $post->ip ? new IP($post->ip) : null,
 							'email'               => (string) $post->email,
-							'insecure_tripcode'   => $post->trip ?: null,
+							'insecure_tripcode'   => $post->trip ? "~infinity{$post->trip}": null,
 							'password'            => null,
 						];
 						
