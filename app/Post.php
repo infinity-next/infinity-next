@@ -485,9 +485,10 @@ class Post extends Model {
 	 */
 	public function makePassword($password = null, $encrypt = true)
 	{
+		$hashParts = [];
+		
 		if (!!$password)
 		{
-			$hashParts = [];
 			$hashParts[] = env('APP_KEY');
 			$hashParts[] = $this->board_uri;
 			$hashParts[] = $password;

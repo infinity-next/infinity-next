@@ -372,11 +372,12 @@ class Import extends Command {
 	{
 		$this->info("\tImporting attachments ...");
 		
-		Board::where('board_uri', '>=', "homosuck")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::where('board_uri', '>=', "jonimu")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
-				$board->posts()->attachments()->detach();
+				FileAttachment::whereForBoard($board)->forceDelete();
+				
 				$this->line("\t\tImporting attachments from /{$board->board_uri}/");
 				
 				$tTable = $this->tcon->table("posts_{$board->board_uri}");

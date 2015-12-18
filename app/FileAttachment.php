@@ -127,4 +127,10 @@ class FileAttachment extends Model {
 		return $query->get();
 	}
 	
+	public function scopeWhereForBoard($query, Board $board)
+	{
+		return $query->whereHas('post.board', function($query) use ($board) {
+			$query->where('board_uri', $board->board_uri);
+		});
+	}
 }
