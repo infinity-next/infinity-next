@@ -376,7 +376,7 @@ class Import extends Command {
 		{
 			foreach ($boards as $board)
 			{
-				FileAttachment::where('board_uri', $board->board_uri)->forceDelete();
+				$board->posts()->attachments()->detach();
 				$this->line("\t\tImporting attachments from /{$board->board_uri}/");
 				
 				$tTable = $this->tcon->table("posts_{$board->board_uri}");
