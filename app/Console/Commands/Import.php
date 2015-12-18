@@ -8,6 +8,7 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\Page;
 use App\Post;
+use App\PostAttachment;
 use App\Role;
 use App\RolePermission;
 use App\User;
@@ -372,19 +373,22 @@ class Import extends Command {
 	{
 		$this->info("\tImporting attachments ...");
 		
-		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::where('board_uri', '>=', "homosuck")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
+				PostAttachment::where('board_uri', $board->board_uri)->forceRemove();
 				$this->line("\t\tImporting attachments from /{$board->board_uri}/");
+				
 				$tTable = $this->tcon->table("posts_{$board->board_uri}");
+				$storageLinked = 0;
 				$attachmentsMade = 0;
 				
 				// Threads first, replies by id.
 				$tTable
 					->where('num_files', '>', 0)
 					->orderByRaw('thread asc, id asc')
-					->chunk(200, function($posts) use (&$board, &$attachmentsMade)
+					->chunk(200, function($posts) use (&$board, &$attachmentsMade, &$storageLinked)
 				{
 					$this->line("\t\t\tImporting 200 more posts's attachments ...");
 					$aModels = [];
@@ -508,20 +512,20 @@ class Import extends Command {
 									
 									$storage->save();
 									$fModels[$attachment['hash']] = $storage;
+									++$storageLinked;
 								}
 								
 								if ($storage && $storage->exists)
 								{
-									$aModel = new FileAttachment([
+									$aModel = [
 										'post_id'    => $post_id,
 										'file_id'    => $storage->file_id,
 										'filename'   => $attachment['filename'],
 										'is_spoiler' => false,
 										'is_deleted' => false,
 										'position'   => $aIndex,
-									]);
+									];
 									
-									$aModel->save();
 									$aModels[] = $aModel;
 								}
 								else
@@ -532,8 +536,13 @@ class Import extends Command {
 						}
 					}
 					
-					$this->line("\t\t\tImported ".count($fModels)." file(s), ".count($aModels)." attachment(s), but skipped {$skips} attachments.");
+					if (PostAttachment::insert($aModels))
+					{
+						$attachmentsMade += count($aModels);
+					}
 				});
+				
+				$this->line("\t\t\tImported {$storageLinked} files with {$attachmentsMade} attachments.");
 			}
 		});
 	}
