@@ -886,7 +886,7 @@ class Import extends Command {
 					]);
 				}
 				
-				$boardTags[$tag->uri] = $tagModels[$tag->tag];
+				$boardTags[$tag->uri] = $tagModels[$tagTxt];
 			}
 			
 			foreach ($boardTags as $board_uri => $tags)
