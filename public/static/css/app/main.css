@@ -48,7 +48,8 @@ body {
 
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-
+	
+	color: rgb(0, 0, 0);
 	-webkit-text-size-adjust: 100%
 }
 
@@ -2151,7 +2152,7 @@ section.index-form {
 			form.form-post div.row-file {
 				border: none;
 				background: #E4E4E4;
-				color: rgb(34,34,34);
+				color: rgb(0, 0, 0);
 				text-align: center;
 			}
 

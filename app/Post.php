@@ -129,7 +129,7 @@ class Post extends Model {
 		'content_html',
 		'recently_created',
 	];
-
+	
 	/**
 	 * Attributes which are automatically sent through a Carbon instance on load.
 	 *
@@ -147,8 +147,8 @@ class Post extends Model {
 		'body_parsed_at',
 		'author_ip_nulled_at',
 	];
-
-
+	
+	
 	public function attachments()
 	{
 		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');

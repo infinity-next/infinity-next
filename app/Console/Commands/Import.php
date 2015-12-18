@@ -931,7 +931,7 @@ class Import extends Command {
 							'author_id'           => null,
 							'author_ip'           => $post->ip ? new IP($post->ip) : null,
 							'email'               => (string) $post->email,
-							'insecure_tripcode'   => $post->trip ? "~infinity{$post->trip}": null,
+							'insecure_tripcode'   => $post->trip ? ltrim("{$post->trip}", "!") : null,
 							'password'            => null,
 						];
 						
