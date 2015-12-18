@@ -879,8 +879,9 @@ class Import extends Command {
 				
 				if (!isset($tagModels[$tag->tag]))
 				{
-					$tagModels[$tag->tag] = BoardTag::firstOrCreate([
-						'tag' => $tag->tag,
+					$tagTxt = substr((string)$tag->tag, 0, 32);
+					$tagModels[$tagTxt] = BoardTag::firstOrCreate([
+						'tag' => $tagTxt,
 					]);
 				}
 				
