@@ -24,6 +24,9 @@ class Page extends Model {
 	 * @var array
 	 */
 	protected $fillable = [
+		'created_at',
+		'updated_at',
+		'deleted_at',
 		'board_uri',
 		'name',
 		'title',
@@ -43,7 +46,7 @@ class Page extends Model {
 		'deleted_at',
 		'body_parsed_at',
 	];
-	
+		
 	public function board()
 	{
 		return $this->belongsTo('\App\Board', 'board_uri');

@@ -1,4 +1,4 @@
-<?php namespace App\Console\Commands;
+<?php namespace App\Console\Commands {
 
 use App\Board;
 use App\BoardAsset;
@@ -6,6 +6,7 @@ use App\BoardTag;
 use App\BoardSetting;
 use App\FileStorage;
 use App\FileAttachment;
+use App\Page;
 use App\Post;
 use App\Role;
 use App\RolePermission;
@@ -224,13 +225,13 @@ class Import extends Command {
 		$userRoleTable       = $this->hcon->table( with(new UserRole)->getTable() );
 		
 		# DESTROY OUR EXISTING INFORMATION
-		$attachmentsTable->forceDelete();
-		$postTable->forceDelete();
-		$boardTable->forceDelete();
-		$userRoleTable->forceDelete();
-		$userTable->forceDelete();
-		$rolePermissionTable->forceDelete();
-		$roleTable->forceDelete();
+		$attachmentsTable->delete();
+		$postTable->delete();
+		$boardTable->delete();
+		$userRoleTable->delete();
+		$userTable->delete();
+		$rolePermissionTable->delete();
+		$roleTable->delete();
 		
 		# Yes, we are required to drop and recreate these FKs to get ID reassignment working.
 		# This is for PostgreSQL.
@@ -253,11 +254,6 @@ class Import extends Command {
 		{
 			$this->comment("\tSkipping FK drops. Probably already missing.");
 		}
-		
-		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
-		{
-			DB::statement("DROP SEQUENCE IF EXISTS roles_role_id_seq CASCADE;");
-		}
 	}
 	
 	public function importCleanup()
@@ -277,6 +273,7 @@ class Import extends Command {
 			$this->info("\t\tPostgreSQL did not need role sequencing.");
 		}
 		
+		$this->info("\t\t\FKing `posts`.");
 		try {
 			Schema::table('posts', function(Blueprint $table)
 			{
@@ -285,8 +282,11 @@ class Import extends Command {
 					->onDelete('set null')->onUpdate('cascade');
 			});
 		}
-		catch (\Exception $e) { }
+		catch (\Exception $e) {
+			$this->line("\t\t\t`posts` did not need FKing.");
+		}
 		
+		$this->info("\t\t\FKing `role_permissions`.");
 		try {
 			Schema::table('role_permissions', function(Blueprint $table)
 			{
@@ -295,8 +295,11 @@ class Import extends Command {
 					->onDelete('cascade')->onUpdate('cascade');
 			});
 		}
-		catch (\Exception $e) { }
+		catch (\Exception $e) {
+			$this->line("\t\t\t`role_permissions` did not need FKing.");
+		}
 		
+		$this->info("\t\t\FKing `user_roles`.");
 		try {
 			Schema::table('user_roles', function(Blueprint $table)
 			{
@@ -305,7 +308,9 @@ class Import extends Command {
 					->onDelete('cascade')->onUpdate('cascade');
 			});
 		}
-		catch (\Exception $e) { }
+		catch (\Exception $e) {
+			$this->line("\t\t\t`user_roles` did not need FKing.");
+		}
 	}
 	
 	/**
@@ -342,10 +347,14 @@ class Import extends Command {
 			case "assets" :
 				file_put_contents($file, "assets");
 				$this->importInfinityBoardAssets();
-				
+			
 			case "config" :
 				file_put_contents($file, "config");
 				$this->importInfinityBoardConfig();
+			
+			case "pages" :
+				file_put_contents($file, "pages");
+				$this->importInfinityBoardPages();
 			
 			break;
 			default :
@@ -363,7 +372,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting attachments ...");
 		
-		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -413,11 +422,21 @@ class Import extends Command {
 							continue;
 						}
 						
-						$attachments = json_decode($post->files, true);
+						$attachments = @json_decode($post->files, true);
+						
+						if (!is_array($attachments))
+						{
+							continue;
+						}
 						
 						foreach ($attachments as $aIndex => $attachment)
 						{
 							if (isset($attachment['error']) && $attachment['error'])
+							{
+								continue;
+							}
+							
+							if (!isset($attachment['file_path']) || !isset($attachment['thumb_path']))
 							{
 								continue;
 							}
@@ -491,11 +510,15 @@ class Import extends Command {
 									$aModel->save();
 									$aModels[] = $aModel;
 								}
+								else
+								{
+									++$skips;
+								}
 							}
 						}
 					}
 					
-					$this->line("\t\tImported ".count($fModels)." file(s), ".count($aModels)." attachment(s), but skipped {$skips} attachments.");
+					$this->line("\t\t\tImported ".count($fModels)." file(s), ".count($aModels)." attachment(s), but skipped {$skips} attachments.");
 				});
 			}
 		});
@@ -512,7 +535,7 @@ class Import extends Command {
 		
 		BoardAsset::whereDoesntHave('flagPosts')->forceDelete();
 		
-		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -529,17 +552,15 @@ class Import extends Command {
 				{
 					try
 					{
-						$flags = unserialize(file_get_contents("{$this->targetLocation}/{$board->board_uri}/flags.ser"));
+						$flags = @unserialize(@file_get_contents("{$this->targetLocation}/{$board->board_uri}/flags.ser"));
 					}
 					catch (\Exception $e)
 					{
 						$this->warn("\t\t\tFailed to unserialize flags.ser");
 					}
 					
-					if (count($flags))
+					if (is_array($flags) && count($flags))
 					{
-						$this->line("\t\tImporting " . count($flags) . " custom flags");
-						
 						foreach ($flags as $flagFile => $flagName)
 						{
 							$flag = new File("{$flagsPath}{$flagFile}.png", false);
@@ -562,25 +583,29 @@ class Import extends Command {
 				
 				# BANNERS
 				$bannersPath = "{$this->targetLocation}/static/banners/{$board->board_uri}/";
-				$banners = array_filter(scandir($bannersPath), function($item) use ($bannersPath) {
-					return !is_dir("{$bannersPath}{$item}");
-				});
 				
-				foreach ($banners as $bannerName)
+				if (is_readable($bannersPath))
 				{
-					$banner = new File("{$bannersPath}{$bannerName}", false);
+					$banners = array_filter(scandir($bannersPath), function($item) use ($bannersPath) {
+						return !is_dir("{$bannersPath}{$item}");
+					});
 					
-					if ($banner->isReadable())
+					foreach ($banners as $bannerName)
 					{
-						$storage = FileStorage::storeUpload($banner);
+						$banner = new File("{$bannersPath}{$bannerName}", false);
 						
-						$asset = $board->assets()->create([
-							'file_id'    => $storage->file_id,
-							'asset_type' => "board_banner",
-							'asset_name' => null,
-						]);
-						
-						++$bannersMade;
+						if ($banner->isReadable())
+						{
+							$storage = FileStorage::storeUpload($banner);
+							
+							$asset = $board->assets()->create([
+								'file_id'    => $storage->file_id,
+								'asset_type' => "board_banner",
+								'asset_name' => null,
+							]);
+							
+							++$bannersMade;
+						}
 					}
 				}
 				
@@ -598,7 +623,7 @@ class Import extends Command {
 		
 		BoardSetting::truncate();
 		
-		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -612,7 +637,14 @@ class Import extends Command {
 				
 				if (is_readable($configPath))
 				{
-					include($configPath);
+					try
+					{
+						include($configPath);
+					}
+					catch (\Exception $e)
+					{
+						$this->warn("\t\tBAD CONFIG!");
+					}
 				}
 				
 				foreach ($config as $configName => $configValue)
@@ -773,6 +805,51 @@ class Import extends Command {
 	}
 	
 	/**
+	 * Imports board pages.
+	 *
+	 * @return void
+	 */
+	public function importInfinityBoardPages()
+	{
+		$this->info("\tImporting board pages ...");
+		
+		Page::truncate();
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting pages from /{$board->board_uri}/");
+				$tPages = $this->tcon->table("pages")->where('board', $board->board_uri)->get();
+				$pagesMade = 0;
+				$pages = [];
+				$now = Carbon::now();
+				
+				foreach ($tPages as $tPage)
+				{
+					if (!$tPage->content)
+					{
+						continue;
+					}
+					
+					$pages[] = [
+						'created_at' => $now,
+						'updated_at' => $now,
+						'board_uri' => $board->board_uri,
+						'name'  => $tPage->name,
+						'title' => $tPage->title,
+						'body'  => $tPage->content,
+					];
+					
+					++$pagesMade;
+				}
+				
+				Page::insert($pages);
+				$this->line("\t\tCreated {$pagesMade} pages.");
+			}
+		});
+	}
+	
+	/**
 	 * Imports board tags.
 	 *
 	 * @return void
@@ -847,7 +924,7 @@ class Import extends Command {
 			Post::truncate();
 		}
 		
-		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -965,12 +1042,43 @@ class Import extends Command {
 	 */
 	public function importInfinityRolesAndBoards()
 	{
-		# BORROW A SEEDER
+		# BORROW SEEDERS
+		require base_path() . "/database/seeds/OptionSeeder.php";
+		require base_path() . "/database/seeds/PermissionSeeder.php";
 		require base_path() . "/database/seeds/RoleSeeder.php";
+		
+		# DESTROY SEQUENCE
+		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
+		{
+			$this->comment("\tDropping role sequence.");
+			DB::statement("DROP SEQUENCE IF EXISTS roles_role_id_seq CASCADE;");
+		}
+		
+		$PermissionSeeder = new \PermissionSeeder;
+		$PermissionSeeder->setCommand($this);
+		$PermissionSeeder->run();
+		
+		$PermissionGroupSeeder  = new \PermissionGroupSeeder;
+		$PermissionGroupSeeder->setCommand($this);
+		$PermissionGroupSeeder->run();
+		
+		$OptionSeeder = new \OptionSeeder;
+		$OptionSeeder->setCommand($this);
+		$OptionSeeder->run();
+		
+		$OptionGroupSeeder  = new \OptionGroupSeeder;
+		$OptionGroupSeeder->setCommand($this);
+		$OptionGroupSeeder->run();
 		
 		$RoleSeeder = new \RoleSeeder;
 		$RoleSeeder->setCommand($this);
 		$RoleSeeder->runMaster();
+		
+		$RolePermissionSeeder = new \RolePermissionSeeder;
+		$RolePermissionSeeder->setCommand($this);
+		$RolePermissionSeeder->run();
+		
+		\Artisan::call('cache:clear');
 		
 		# REPAIR SEQUENCE
 		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
@@ -1142,7 +1250,7 @@ class Import extends Command {
 					
 					if (!$tBoard->public_bans || !$tBoard->public_logs || $tBoard->public_logs == 2)
 					{
-						$role = Role::getAnonymousRoleForBoard($board);
+						$role = Role::getAnonymousRoleForBoard($hBoard);
 						$perms = [];
 						
 						if (!$tBoard->public_bans)
@@ -1161,7 +1269,7 @@ class Import extends Command {
 							];
 						}
 						
-						$role->permissions()->create($perms);
+						$role->permissionAssignments()->createMany($perms);
 					}
 				}
 				else
@@ -1248,4 +1356,17 @@ class Import extends Command {
 		unset($board, $roles, $mod, $role, $userRole, $janitorRole, $ownerRole);
 	}
 	
+}
+
+}
+
+namespace {
+	define("JANITOR",  10);
+	define("MOD",      20);
+	define("ADMIN",    30);
+	define("DISABLED", 9);
+
+	function event_handler() {
+		// Nothing. Vichan issue.
+	}
 }

@@ -30,7 +30,14 @@ class Option extends Model implements PseudoEnumContract {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['option_name', 'default_value', 'format', 'format_parameters', 'data_type'];
+	protected $fillable = [
+		'option_name',
+		'default_value',
+		'format',
+		'format_parameters',
+		'data_type',
+		'validation_parameters',
+	];
 	
 	/**
 	 * Psuedo-enum attributes and their permissable values.
