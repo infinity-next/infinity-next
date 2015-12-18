@@ -95,6 +95,11 @@ class Role extends Model {
 		return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
 	}
 	
+	public function permissionAssignments()
+	{
+		return $this->hasMany("\App\RolePermission", 'role_id');
+	}
+	
 	public function users()
 	{
 		return $this->belongsToMany('\App\User', 'user_roles', 'role_id', 'user_id');
@@ -194,6 +199,83 @@ class Role extends Model {
 	public function getDisplayWeight()
 	{
 		return "{$this->weight} kg";
+	}
+	
+	/**
+	 * Returns anonymous (found or created) for a specific board.
+	 *
+	 * @param  \App\Board|string  $board
+	 * @return \App\Role
+	 */
+	public static function getAnonymousRoleForBoard($board)
+	{
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		else
+		{
+			$board_uri = (string) $board;
+		}
+		
+		$role = static::firstOrNew([
+			'role'       => "anonymous",
+			'board_uri'  => $board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::ID_ANONYMOUS,
+		]);
+		
+		if (!$role->exists)
+		{
+			$role->fill([
+				'name'       => "user.role.anonymous",
+				'capcode'    => "user.role.anonymous",
+				'system'     => false,
+				'weight'     => Role::WEIGHT_ANONYMOUS + 5,
+			]);
+			$role->save();
+		}
+		
+		return $role;
+	}
+	
+	
+	/**
+	 * Returns Tor / Unaccountable (found or created) for a specific board.
+	 *
+	 * @param  \App\Board|string  $board
+	 * @return \App\Role
+	 */
+	public static function getUnaccountableRoleForBoard($board)
+	{
+		if ($board instanceof Board)
+		{
+			$board_uri = $board->board_uri;
+		}
+		else
+		{
+			$board_uri = (string) $board;
+		}
+		
+		$role = static::firstOrNew([
+			'role'       => "unaccountable",
+			'board_uri'  => $board_uri,
+			'caste'      => NULL,
+			'inherit_id' => Role::ID_UNACCOUNTABLE,
+		]);
+		
+		if (!$role->exists)
+		{
+			$role->fill([
+				'name'       => "user.role.unaccountable",
+				'capcode'    => "user.role.unaccountable",
+				'system'     => false,
+				'weight'     => Role::WEIGHT_UNACCOUNTABLE + 5,
+			]);
+			$role->save();
+		}
+		
+		return $role;
 	}
 	
 	/**

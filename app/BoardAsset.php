@@ -52,6 +52,12 @@ class BoardAsset extends Model implements PseudoEnumContract {
 		return $this->belongsTo('\App\Board', 'board_uri');
 	}
 	
+	
+	public function flagPosts()
+	{
+		return $this->hasMany('\App\Post', 'flag_id', 'file_id');
+	}
+	
 	public function storage()
 	{
 		return $this->belongsTo('\App\FileStorage', 'file_id');

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Image\ImageManager;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use File;
@@ -1094,13 +1095,26 @@ class FileStorage extends Model {
 	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
-	 * @param  UploadedFile  $upload
+	 * @static
+	 * @param  UploadedFile|File  $file
 	 * @return FileStorage
 	 */
-	public static function storeUpload(UploadedFile $upload)
+	public static function storeUpload($file)
 	{
-		$fileContent  = File::get($upload);
-		$fileMD5      = md5((string) File::get($upload));
+		$clientUpload = false;
+		
+		if ( !($file instanceof SymfonyFile) && !($file instanceof UploadedFile) )
+		{
+			throw new \InvalidArgumentException("First argument for FileStorage::storeUpload is not a File or UploadedFile.");
+			return false;
+		}
+		else if ($file instanceof UploadedFile)
+		{
+			$clientUpload = true;
+		}
+		
+		$fileContent  = File::get($file);
+		$fileMD5      = md5((string) File::get($file));
 		$storage      = static::getHash($fileMD5);
 		
 		if (!($storage instanceof static))
@@ -1110,30 +1124,30 @@ class FileStorage extends Model {
 			
 			$storage->hash     = $fileMD5;
 			$storage->banned   = false;
-			$storage->filesize = $upload->getSize();
-			$storage->mime     = $upload->getClientMimeType();
+			$storage->filesize = $file->getSize();
+			$storage->mime     = $clientUpload ? $file->getClientMimeType() : $file->getMimeType();
 			$storage->first_uploaded_at = $fileTime;
 			$storage->upload_count = 0;
 			
-			if (!isset($upload->case))
+			if (!isset($file->case))
 			{
-				$ext = $upload->guessExtension();
+				$ext = $file->guessExtension();
 				
-				$upload->case = Sleuth::check($upload->getRealPath(), $ext);
+				$file->case = Sleuth::check($file->getRealPath(), $ext);
 				
-				if (!$upload->case)
+				if (!$file->case)
 				{
-					$upload->case = Sleuth::check($upload->getRealPath());
+					$file->case = Sleuth::check($file->getRealPath());
 				}
 			}
 			
-			if (is_object($upload->case))
+			if (is_object($file->case))
 			{
-				$storage->mime = $upload->case->getMimeType();
+				$storage->mime = $file->case->getMimeType();
 				
-				if ($upload->case->getMetaData())
+				if ($file->case->getMetaData())
 				{
-					$storage->meta = json_encode($upload->case->getMetaData());
+					$storage->meta = json_encode($file->case->getMetaData());
 				}
 			}
 		}

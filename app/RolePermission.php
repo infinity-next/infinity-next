@@ -16,7 +16,11 @@ class RolePermission extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['role_id', 'permission_id', 'value'];
+	protected $fillable = [
+		'role_id',
+		'permission_id',
+		'value',
+	];
 	
 	/**
 	 * Indicates if Laravel should set created_at and updated_at timestamps.

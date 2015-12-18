@@ -1,7 +1,9 @@
 <?php namespace App\Console\Commands;
 
 use App\Board;
+use App\BoardAsset;
 use App\BoardTag;
+use App\BoardSetting;
 use App\FileStorage;
 use App\FileAttachment;
 use App\Post;
@@ -18,6 +20,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Inspiring;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\HttpFoundation\File\File;
 
 use DB;
 use Config;
@@ -336,6 +339,14 @@ class Import extends Command {
 				file_put_contents($file, "attachments");
 				$this->importInfinityAttachments();
 			
+			case "assets" :
+				file_put_contents($file, "assets");
+				$this->importInfinityBoardAssets();
+				
+			case "config" :
+				file_put_contents($file, "config");
+				$this->importInfinityBoardConfig();
+			
 			break;
 			default :
 				$this->error("Import state \"{$state}\" invalid.");
@@ -491,6 +502,277 @@ class Import extends Command {
 	}
 	
 	/**
+	 * Imports board attachments.
+	 *
+	 * @return void
+	 */
+	public function importInfinityBoardAssets()
+	{
+		$this->info("\tImporting board assets ...");
+		
+		BoardAsset::whereDoesntHave('flagPosts')->forceDelete();
+		
+		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting assets from /{$board->board_uri}/");
+				$flagsMade = 0;
+				$bannersMade = 0;
+				
+				# FLAGS
+				$flagsPath   = "{$this->targetLocation}/static/custom-flags/{$board->board_uri}/";
+				$flagSerPath = "{$this->targetLocation}/{$board->board_uri}/flags.ser";
+				$flags       = [];
+				
+				if (file_exists($flagSerPath))
+				{
+					try
+					{
+						$flags = unserialize(file_get_contents("{$this->targetLocation}/{$board->board_uri}/flags.ser"));
+					}
+					catch (\Exception $e)
+					{
+						$this->warn("\t\t\tFailed to unserialize flags.ser");
+					}
+					
+					if (count($flags))
+					{
+						$this->line("\t\tImporting " . count($flags) . " custom flags");
+						
+						foreach ($flags as $flagFile => $flagName)
+						{
+							$flag = new File("{$flagsPath}{$flagFile}.png", false);
+							
+							if ($flag->isReadable())
+							{
+								$storage = FileStorage::storeUpload($flag);
+								
+								$asset = $board->assets()->create([
+									'file_id'    => $storage->file_id,
+									'asset_type' => "board_flags",
+									'asset_name' => $flagName,
+								]);
+								
+								++$flagsMade;
+							}
+						}
+					}
+				}
+				
+				# BANNERS
+				$bannersPath = "{$this->targetLocation}/static/banners/{$board->board_uri}/";
+				$banners = array_filter(scandir($bannersPath), function($item) use ($bannersPath) {
+					return !is_dir("{$bannersPath}{$item}");
+				});
+				
+				foreach ($banners as $bannerName)
+				{
+					$banner = new File("{$bannersPath}{$bannerName}", false);
+					
+					if ($banner->isReadable())
+					{
+						$storage = FileStorage::storeUpload($banner);
+						
+						$asset = $board->assets()->create([
+							'file_id'    => $storage->file_id,
+							'asset_type' => "board_banner",
+							'asset_name' => null,
+						]);
+						
+						++$bannersMade;
+					}
+				}
+				
+				$this->line("\t\tImported {$flagsMade} flags and {$bannersMade} banners.");
+			}
+		});
+	}
+	
+	/**
+	 * Imports configuration files.
+	 */
+	public function importInfinityBoardConfig()
+	{
+		$this->info("\tImporting board assets ...");
+		
+		BoardSetting::truncate();
+		
+		Board::where('board_uri', '0')->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$this->line("\t\tImporting config from /{$board->board_uri}/");
+				
+				# CONFIG
+				$config      = [];
+				$configPath  = "{$this->targetLocation}/{$board->board_uri}/config.php";
+				$settings    = [];
+				$permissions = [];
+				
+				if (is_readable($configPath))
+				{
+					include($configPath);
+				}
+				
+				foreach ($config as $configName => $configValue)
+				{
+					$optionName = null;
+					$optionValue = null;
+					
+					switch ($configName)
+					{
+						# CONTENT RESTRICTIONS
+						case "field_disable_name" :
+							$optionName  = "postsAllowAuthor";
+							$optionValue = !!$configValue;
+							break;
+						
+						case "force_image_op" :
+							$optionName  = "threadAttachmentsMin";
+							$optionValue = $configValue ? 1 : 0;
+							break;
+						
+						case "force_subject_op" :
+							$optionName  = "threadRequireSubject";
+							$optionValue = !!$configValue;
+							break;
+						
+						case "max_newlines" :
+							$optionName  = "postNewLines";
+							$optionValue = max( (int) $configValue, 0 );
+							break;
+						
+						case "min_body" :
+							$optionName  = "postMinLength";
+							$optionValue = max( (int) $configValue, 0 );
+							break;
+						
+						# POST META
+						case "anonymous" :
+							$optionName  = "postAnonymousName";
+							$optionValue = $configValue ?: null;
+							break;
+						
+						case "country_flags" :
+							$optionName  = "postsAuthorCountry";
+							$optionValue = !!$configValue;
+							break;
+						
+						case "poster_ids" :
+							$optionName  = "postsThreadId";
+							$optionValue = !!$configValue;
+							break;
+						
+						# ORIGINALITY ENFORCEMENT
+						case "robot_enable" :
+							$optionName  = "originalityPosts";
+							$optionValue = $configValue ? "boardr9k" : "";
+							break;
+						
+						case "disable_images" :
+							$optionName  = "postAttachmentsMax";
+							$optionValue = $configValue ? 0 : 5;
+							break;
+						
+						case "image_reject_repost" :
+						case "image_reject_repost_in_thread" :
+							$optionName  = "originalityImages";
+							
+							if (isset($config['image_reject_repost']) && $config['image_reject_repost'])
+							{
+								$optionValue = "board";
+							}
+							else if (isset($config['image_reject_repost_in_thread']) && $config['image_reject_repost_in_thread'])
+							{
+								$optionValue = "thread";
+							}
+							else
+							{
+								$optionValue = "";
+							}
+							break;
+						
+						# EPHEMERALITY
+						case "max_pages" :
+							$optionName  = "epheDeleteThreadPage";
+							$optionValue = max( (int) $configValue, 1 );
+							break;
+						
+						case "reply_limit" :
+							$optionName  = "epheLockThreadReply";
+							$optionValue = max( (int) $configValue, 1 );
+							break;
+						
+						# PERMISSIONS
+						case "tor_posting" :
+							$permissions[] = [
+								'permission_id' => "board.post.create.thread",
+								'value'         => !!$configValue,
+							];
+							$permissions[] = [
+								'permission_id' => "board.post.create.reply",
+								'value'         => !!$configValue,
+							];
+							continue;
+						
+						case "tor_image_posting" :
+							$permissions[] = [
+								'permission_id' => "board.image.upload.new",
+								'value'         => !!$configValue,
+							];
+							$permissions[] = [
+								'permission_id' => "board.image.upload.old",
+								'value'         => true,
+							];
+							continue;
+						
+						# CSS
+						case "stylesheets" :
+							if (is_array($configValue))
+							{
+								$optionName = "boardCustomCSS";
+								$optionValue = "/* Styling imported from Infinity. ~ xoxo Josh */\n\n";
+								$cssPath = "{$this->targetLocation}/stylesheets/";
+								
+								foreach ($configValue as $stylesheet)
+								{
+									if (is_readable("{$cssPath}{$stylesheet}"))
+									{
+										$optionValue .= file_get_contents("{$cssPath}{$stylesheet}");
+									}
+								}
+							}
+							break;
+					}
+					
+					if (!is_null($optionName))
+					{
+						$settings[$optionName] = [
+							'board_uri'    => $board->board_uri,
+							'option_name'  => $optionName,
+							'option_value' => $optionValue,
+							'is_locked'    => false,
+						];
+					}
+				}
+				
+				if (count($settings))
+				{
+					$board->settings()->createMany($settings);
+				}
+				
+				if (count($permissions))
+				{
+					$role = Role::getUnaccountableRoleForBoard($board);
+					$role->permissions()->detach();
+					$role->permissionAssignments()->createMany($permissions);
+				}
+			}
+		});
+	}
+	
+	/**
 	 * Imports board tags.
 	 *
 	 * @return void
@@ -548,7 +830,7 @@ class Import extends Command {
 	}
 	
 	/**
-	 * Imports board stats.
+	 * Imports posts.
 	 *
 	 * @return void
 	 */
@@ -857,6 +1139,30 @@ class Import extends Command {
 				if ($hBoard->save())
 				{
 					++$boardsImported;
+					
+					if (!$tBoard->public_bans || !$tBoard->public_logs || $tBoard->public_logs == 2)
+					{
+						$role = Role::getAnonymousRoleForBoard($board);
+						$perms = [];
+						
+						if (!$tBoard->public_bans)
+						{
+							$perms[] = [
+								'permission_id' => "board.bans",
+								'value'         => false,
+							];
+						}
+						
+						if (!$tBoard->public_logs || $tBoard->public_logs == 2)
+						{
+							$perms[] = [
+								'permission_id' => "board.logs",
+								'value'         => false,
+							];
+						}
+						
+						$role->permissions()->create($perms);
+					}
 				}
 				else
 				{

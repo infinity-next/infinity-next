@@ -18,7 +18,13 @@ class BoardSetting extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_setting_id', 'option_name', 'board_uri', 'option_value', 'is_locked'];
+	protected $fillable = [
+		'board_setting_id', 
+		'option_name', 
+		'board_uri', 
+		'option_value', 
+		'is_locked',
+	];
 	
 	/**
 	 * The primary key that is used by ::get()

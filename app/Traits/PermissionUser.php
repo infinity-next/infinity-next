@@ -715,6 +715,17 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user view moderator logs?
+	 *
+	 * @param  \App\Board
+	 * @return boolean
+	 */
+	public function canViewLogs(Board $board)
+	{
+		return $this->can('board.logs', $board);
+	}
+	
+	/**
 	 * Can this user view an addresses's global history?
 	 *
 	 * @return boolean
@@ -1086,15 +1097,16 @@ trait PermissionUser {
 						{
 							if ((string) $board_uri != "")
 							{
-								foreach ($boardPermissions as $boardPermission)
+								foreach ($role->permissions as $permission)
 								{
-									unset($permissions[$branch][$boardPermission]);
+									unset($permissions[$branch][$board_uri][$permission->permission_id]);
 								}
 							}
 						}
 					}
 				}
 			}
+			
 			// Clean up the permission mask and remove empty rulesets.
 			foreach ($permissions[$branch] as $board_uri => $boardPermissions)
 			{

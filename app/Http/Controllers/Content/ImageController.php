@@ -268,6 +268,7 @@ class ImageController extends Controller {
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
+			$storageSize     = filesize($storagePathFull);
 			
 			if (is_link($storagePathFull))
 			{
@@ -277,12 +278,10 @@ class ImageController extends Controller {
 				}
 				
 				$storageExists = file_exists($storagePathFull);
-				$storageSize = filesize($storagePathFull);
 			}
 			else
 			{
 				$storageExists = Storage::exists($storagePath);
-				$storageSize = filesize($storagePath);
 			}
 			
 			if ($FileStorage instanceof FileStorage && $storageExists)

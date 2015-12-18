@@ -8,7 +8,9 @@
 		<a class="button pagination-button" href="{{ $board->getUrl('catalog') }}" data-instant>Catalog</a>
 		@endif
 		
+		@if ($user->canViewLogs($board))
 		<a class="button pagination-button" href="{{ $board->getUrl('logs') }}">Logs</a>
+		@endif
 		
 		@if (isset($header))
 		@if (!$header)
