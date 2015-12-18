@@ -441,6 +441,11 @@ class Import extends Command {
 								continue;
 							}
 							
+							if (!isset($attachment['hash']))
+							{
+								continue;
+							}
+							
 							$storage = null;
 							$path    = "{$this->targetLocation}/{$attachment['file_path']}";
 							$thumb   = "{$this->targetLocation}/{$attachment['thumb_path']}";
