@@ -8,7 +8,7 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\Page;
 use App\Post;
-use App\PostAttachment;
+use App\FileAttachment;
 use App\Role;
 use App\RolePermission;
 use App\User;
@@ -377,7 +377,7 @@ class Import extends Command {
 		{
 			foreach ($boards as $board)
 			{
-				PostAttachment::where('board_uri', $board->board_uri)->forceRemove();
+				FileAttachment::where('board_uri', $board->board_uri)->forceRemove();
 				$this->line("\t\tImporting attachments from /{$board->board_uri}/");
 				
 				$tTable = $this->tcon->table("posts_{$board->board_uri}");
@@ -536,7 +536,7 @@ class Import extends Command {
 						}
 					}
 					
-					if (PostAttachment::insert($aModels))
+					if (FileAttachment::insert($aModels))
 					{
 						$attachmentsMade += count($aModels);
 					}
@@ -726,7 +726,7 @@ class Import extends Command {
 							break;
 						
 						case "disable_images" :
-							$optionName  = "postAttachmentsMax";
+							$optionName  = "FileAttachmentsMax";
 							$optionValue = $configValue ? 0 : 5;
 							break;
 						
