@@ -458,12 +458,21 @@ class Import extends Command {
 								
 								if (!$storage)
 								{
+									$height = null;
+									$width = null;
+									
+									if (isset($attachment['width']) && isset($attachment['height']))
+									{
+										$height = $attachment['height'];
+										$width = $attachment['width'];
+									}
+									
 									$storage = new FileStorage([
 										'hash'              => $attachment['hash'],
 										'banned'            => false,
 										'filesize'          => $attachment['size'],
-										'file_width'        => $attachment['width'],
-										'file_height'       => $attachment['height'],
+										'file_width'        => $width,
+										'file_height'       => $height,
 										'mime'              => $attachment['type'],
 										'meta'              => null,
 										'first_uploaded_at' => Carbon::now(),
