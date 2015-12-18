@@ -872,14 +872,15 @@ class Import extends Command {
 			
 			foreach ($tags as $tag)
 			{
+				$tagTxt = substr((string)$tag->tag, 0, 32);
+				
 				if (!isset($boardTags[$tag->uri]))
 				{
 					$boardTags[$tag->uri] = [];
 				}
 				
-				if (!isset($tagModels[$tag->tag]))
+				if (!isset($tagModels[$tagTxt]))
 				{
-					$tagTxt = substr((string)$tag->tag, 0, 32);
 					$tagModels[$tagTxt] = BoardTag::firstOrCreate([
 						'tag' => $tagTxt,
 					]);
