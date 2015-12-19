@@ -501,13 +501,17 @@ class Board extends Model {
 		{
 			foreach ($boards as $board)
 			{
-				$last_post     = $board->posts()->select('board_id')->withTrashed()->orderBy('board_id', 'desc')->take(1)->first();
-				$last_board_id = $last_post ? (int) $last_post->pluck('board_id') : 0;
+				$last_post     = Post::where('board_uri', $board->board_uri)->select('board_id')->withTrashed()->orderBy('board_id', 'desc')->first();
+				$last_board_id = $last_post ? (int) $last_post->board_id: 0;
 				$posts_total   = (int) $board->posts_total;
 				
 				if (max( (int) $posts_total, (int) $last_board_id ) > $posts_total)
 				{
-					echo $board->board_uri;
+					echo "\n{$board->board_uri} -- {$posts_total} < {$last_board_id}!!!!!!!!!\n\n";
+				}
+				else
+				{
+					echo $board->board_uri . " -- {$posts_total} >= {$last_board_id}\n";
 				}
 				
 				$board->posts_total = max( (int) $posts_total, (int) $last_board_id );
