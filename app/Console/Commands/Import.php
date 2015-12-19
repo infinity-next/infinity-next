@@ -727,7 +727,7 @@ class Import extends Command {
 							break;
 						
 						case "disable_images" :
-							$optionName  = "fileAttachmentsMax";
+							$optionName  = "postAttachmentsMax";
 							$optionValue = $configValue ? 0 : 5;
 							break;
 						
