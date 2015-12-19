@@ -354,7 +354,8 @@ class FileStorage extends Model {
 	 */
 	public function getFullPath()
 	{
-		return storage_path() . "/app/" . $this->getPath();
+		$storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
+		return "{$storagePath}/{$this->getPath()}";
 	}
 	
 	/**
@@ -364,7 +365,8 @@ class FileStorage extends Model {
 	 */
 	public function getFullPathThumb()
 	{
-		return storage_path() . "/app/" . $this->getPathThumb();
+		$storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
+		return "{$storagePath}/{$this->getPathThumb()}";
 	}
 	
 	/**
