@@ -345,10 +345,6 @@ class Import extends Command {
 				file_put_contents($file, "attachments");
 				$this->importInfinityAttachments();
 			
-			case "assets" :
-				file_put_contents($file, "assets");
-				$this->importInfinityBoardAssets();
-			
 			case "config" :
 				file_put_contents($file, "config");
 				$this->importInfinityBoardConfig();
@@ -356,6 +352,10 @@ class Import extends Command {
 			case "pages" :
 				file_put_contents($file, "pages");
 				$this->importInfinityBoardPages();
+			
+			case "assets" :
+				file_put_contents($file, "assets");
+				$this->importInfinityBoardAssets();
 			
 			break;
 			default :
@@ -727,7 +727,7 @@ class Import extends Command {
 							break;
 						
 						case "disable_images" :
-							$optionName  = "FileAttachmentsMax";
+							$optionName  = "fileAttachmentsMax";
 							$optionValue = $configValue ? 0 : 5;
 							break;
 						
