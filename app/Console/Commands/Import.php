@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\File;
 
 use DB;
 use Config;
-use File;
+use File as FileFacade;
 use Schema;
 use Storage;
 
@@ -618,7 +618,7 @@ class Import extends Command {
 					{
 						$banner = new File("{$bannersPath}{$bannerName}", false);
 						
-						if ($banner->isReadable() && !!File::get($banner))
+						if ($banner->isReadable() && !!FileFacade::get($banner))
 						{
 							$storage = FileStorage::storeUpload($banner);
 							
