@@ -1677,7 +1677,8 @@ class Post extends Model {
 	{
 		return $query->withEverythingForReplies()
 			->orderBy('post_id', 'desc')
-			->takePerGroup('reply_to', 5);
+			//->takePerGroup('reply_to', 5)
+			->take(5);
 	}
 	
 	public function scopeReplyTo($query, $replies = false)
