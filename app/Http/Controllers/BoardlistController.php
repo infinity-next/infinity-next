@@ -238,7 +238,7 @@ class BoardlistController extends Controller {
 			'boards',
 			'boards.stats',
 			'boards.stats.uniques',
-		])->get();
+		])->limit(50)->get();
 		
 		$tagWeight = [];
 		
