@@ -617,7 +617,7 @@ class Import extends Command {
 					{
 						$banner = new File("{$bannersPath}{$bannerName}", false);
 						
-						if ($banner->isReadable())
+						if ($banner->isReadable() && !!File::get($banner))
 						{
 							$storage = FileStorage::storeUpload($banner);
 							
