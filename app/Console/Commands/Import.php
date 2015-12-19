@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\File\File;
 
 use DB;
 use Config;
+use File;
 use Schema;
 use Storage;
 
