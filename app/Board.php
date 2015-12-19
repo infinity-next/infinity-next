@@ -490,6 +490,27 @@ class Board extends Model {
 	}
 	
 	/**
+	 * Fixes post totals on all boards.
+	 *
+	 * @static
+	 * @return void
+	 */
+	public static function fixPostsTotal()
+	{
+		static::chunk(50, function($boards)
+		{
+			foreach ($boards as $board)
+			{
+				$last_post     = $board->posts()->select('board_id')->withTrashed()->orderBy('board_id', 'desc')->take(1)->first();
+				$last_board_id = $last_post ? $last_post->pluck('board_id') : 0;
+				$posts_total   = $board->posts_total;
+				
+				$board->posts_total = max( (int) $posts_total, (int) $last_board_id );
+			}
+		});
+	}
+	
+	/**
 	 * Gets the default album art for an audio file.
 	 *
 	 * @return string  url
