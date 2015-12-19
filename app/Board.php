@@ -506,6 +506,7 @@ class Board extends Model {
 				$posts_total   = $board->posts_total;
 				
 				$board->posts_total = max( (int) $posts_total, (int) $last_board_id );
+				$board->save();
 			}
 		});
 	}
