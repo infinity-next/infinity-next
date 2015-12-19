@@ -1158,7 +1158,15 @@ class FileStorage extends Model {
 		
 		if (!Storage::exists($storage->getPath()))
 		{
-			Storage::put($storage->getPath(), $fileContent);
+			try
+			{
+				Storage::put($storage->getPath(), $fileContent);
+			}
+			catch (\Exception $e)
+			{
+				Log::error("Storage {$storage->file_id} did not save to \"{$storage->getPath()}\" because of locking isses.");
+			}
+			
 			Storage::makeDirectory($storage->getDirectoryThumb());
 		}
 		
