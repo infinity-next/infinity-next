@@ -801,7 +801,8 @@ class FileStorage extends Model {
 	 */
 	public function hasThumb()
 	{
-		return is_link($this->getPathThumb()) || Storage::exists($this->getPathThumb());
+		return !!$this->has_thumbnail;
+		//return is_link($this->getPathThumb()) || Storage::exists($this->getPathThumb());
 	}
 	
 	/**
