@@ -1112,9 +1112,9 @@ trait PermissionUser {
 							}
 						}
 					}
-					
-					return false;
 				}
+				
+				return false;
 			}
 		});
 		

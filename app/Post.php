@@ -1636,14 +1636,16 @@ class Post extends Model {
 	
 	public function scopeAndReplies($query)
 	{
-		return $query->with(['replies' => function($query) {
+		return $query->with(['replies' => function($query)
+		{
 			$query->withEverything();
 		}]);
 	}
 	
 	public function scopeAndPromotedReports($query)
 	{
-		return $query->with(['reports' => function($query) {
+		return $query->with(['reports' => function($query)
+		{
 			$query->whereOpen();
 			$query->wherePromoted();
 		}]);

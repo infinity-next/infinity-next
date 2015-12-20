@@ -51,6 +51,9 @@ class Handler extends ExceptionHandler {
 			case "ErrorException" :
 				$errorView = "errors.500";
 				break;
+				
+			case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException" :
+				return abort(400);
 			
 			default :
 				$errorView = false;

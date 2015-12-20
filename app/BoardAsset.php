@@ -25,11 +25,25 @@ class BoardAsset extends Model implements PseudoEnumContract {
 	protected $primaryKey = 'board_asset_id';
 	
 	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'board_asset_id'  => 'int',
+	];
+	
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['board_uri', 'file_id', 'asset_type', 'asset_name'];
+	protected $fillable = [
+		'board_uri',
+		'file_id',
+		'asset_type',
+		'asset_name'
+	];
 	
 	/**
 	 * Psuedo-enum attributes and their permissable values.
