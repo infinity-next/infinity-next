@@ -994,8 +994,13 @@ trait PermissionUser {
 	 */
 	protected function getPermissionMasks()
 	{
-		$permissions = [];
-		$routes      = $this->getPermissionRoutes();
+		// Get our routes.
+		$routes = $this->getPermissionRoutes();
+		
+		// Build a route name to empty array relationship.
+		$permissions = array_combine(array_keys($routes), array_map(function($n) {
+			return [];
+		}, $routes));
 		
 		// There are two kinds of permission assignments.
 		// 1. Permissions that belong to the route.
@@ -1018,96 +1023,104 @@ trait PermissionUser {
 		// We only want uniques.
 		$allGroups = array_unique($allGroups);
 		
-		// Write out a monster query to pull precisely what we need to build our permission masks.
-		$allRoles = Role::where(function($query) use ($allGroups)
-			{
-				// Pull any role that belongs to our masks's route.
-				$query->whereIn('role', $allGroups);
-				
-				// If we're not anonymous, we also need directly assigned roles.
-				if (!$this->isAnonymous())
-				{
-					$query->orWhereHas('users', function($query) {
-						//$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
-						$query->where("user_roles.user_id", $this->user_id);
-					});
-				}
-			})
-			// Gather our inherited roles, their permissions, and our permissions.
-			->with('inherits')
-			->with('permissions')
-			->with('inherits.permissions')
-			// Execute query
-			->get()
-			// Remove redundant roles, in case they exist.
-			->unique(function($role) {
-				return $role->{$role->getKeyName()};
-			})
-			// Finally, sort by weight, ascending.
-			->sortBy(function($role) {
-				return $role->weight;
-			});
-		
 		// In order to determine if we want to include a role in a specific mask,
 		// we must also pull a user's roles to see what is directly applied to them.
 		$userRoles = $this->getRoles()->modelKeys();
 		
-		// Okay!
-		// With our roles fresh off out the db, we can now begin to assemble the masks.
-		// Loop through each route again.
-		foreach ($routes as $branch => $roleGroups)
+		// Write out a monster query to pull precisely what we need to build our permission masks.
+		$query = Role::where(function($query) use ($allGroups)
 		{
-			$permissions[$branch] = [];
+			// Pull any role that belongs to our masks's route.
+			$query->whereIn('roles.role', $allGroups);
 			
-			// Loop through each role.
-			foreach ($allRoles as $roleIndex => $role)
+			// If we're not anonymous, we also need directly assigned roles.
+			if (!$this->isAnonymous())
 			{
-				// Check to see if it's either directly assigned to us or in the mask's route.
-				if (in_array($role->role, $roleGroups) || in_array($role->role_id, $userRoles))
+				$query->orWhereHas('users', function($query) {
+					//$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
+					$query->where("user_roles.user_id", $this->user_id);
+				});
+			}
+			else
+			{
+				$query->whereDoesntHave('users');
+			}
+		});
+		
+		$query->orderBy('weight');
+		
+		// Gather our inherited roles, their permissions, and our permissions.
+		// Execute query
+		$query->chunk(100, function($roles) use ($routes, &$permissions) {
+			// With our roles fresh off out the db, we can now begin to assemble the masks.
+			// Loop through each route again.
+			foreach ($routes as $branch => $roleGroups)
+			{
+				// Loop through each role.
+				foreach ($roles as $roleIndex => $role)
 				{
-					// This role IS applicable to this branch.
-					
-					// Create a new array for this board if required.
-					if (!isset($permissions[$branch][$role->board_uri]))
+					// Check to see if it's either directly assigned to us or in the mask's route.
+					if (in_array($role->role, $roleGroups) || in_array($role->role_id, $userRoles))
 					{
-						$permissions[$branch][$role->board_uri] = [];
-					}
-					
-					// Loop through each inherited permission and add them to the pot.
-					// Note: It may be a good idea to instead fetch this and inline it by weight.
-					if ($role->inherit_id)
-					{
-						foreach ($role->inherits->permissions as $permission)
+						// This role IS applicable to this branch.
+						
+						// Create a new array for this board if required.
+						if (!isset($permissions[$branch][$role->board_uri]))
 						{
-							$permissions[$branch][$role->board_uri][$permission->permission_id] = !!$permission->pivot->value;
+							$permissions[$branch][$role->board_uri] = [];
 						}
-					}
-					
-					// Loop through each role's permission and set them on the respective jurisdiction.
-					foreach ($role->permissions as $permission)
-					{
-						$permissions[$branch][$role->board_uri][$permission->permission_id] = !!$permission->pivot->value;
-					}
-					
-					// Additionally, if our permission is set on the global level, we must also go into each
-					// lesser jurisdiction and unset their rule because it no longer matters.
-					if (is_null($role->board_uri))
-					{
-						foreach ($permissions[$branch] as $board_uri => $boardPermissions)
+						
+						
+						// Create a new array for this board if required.
+						if (!isset($permissions[$branch][$role->board_uri][$role->weight]))
 						{
-							if ((string) $board_uri != "")
+							$permissions[$branch][$role->board_uri][$role->weight] = [];
+						}
+						
+						// Loop through each inherited permission and add them to the pot.
+						// Note: It may be a good idea to instead fetch this and inline it by weight.
+						if ($role->inherit_id)
+						{
+							foreach ($role->inherits->permissions as $permission)
 							{
-								foreach ($role->permissions as $permission)
+								$permissions[$branch][$role->board_uri][$role->weight][$permission->permission_id] = !!$permission->pivot->value;
+							}
+						}
+						
+						// Loop through each role's permission and set them on the respective jurisdiction.
+						foreach ($role->permissions as $permission)
+						{
+							$permissions[$branch][$role->board_uri][$role->weight][$permission->permission_id] = !!$permission->pivot->value;
+						}
+						
+						// Additionally, if our permission is set on the global level, we must also go into each
+						// lesser jurisdiction and unset their rule because it no longer matters.
+						if (is_null($role->board_uri))
+						{
+							foreach ($permissions[$branch] as $board_uri => $boardWeights)
+							{
+								if ((string) $board_uri != "")
 								{
-									unset($permissions[$branch][$board_uri][$permission->permission_id]);
+									foreach ($boardWeights as $weight => $boardPermissions)
+									{
+										foreach ($role->permissions as $permission)
+										{
+											unset($permissions[$branch][$board_uri][$weight][$permission->permission_id]);
+										}
+									}
 								}
 							}
 						}
 					}
+					
+					return false;
 				}
 			}
-			
-			// Clean up the permission mask and remove empty rulesets.
+		});
+		
+		// Clean up the permission mask and remove empty rulesets.
+		foreach ($routes as $branch => $roleGroups)
+		{
 			foreach ($permissions[$branch] as $board_uri => $boardPermissions)
 			{
 				if (!count($boardPermissions))
@@ -1277,8 +1290,9 @@ trait PermissionUser {
 	 * @param  bool  $accountable
 	 * @return bool
 	 */
-	 public function setAccountable($accountable)
-	 {
+	public function setAccountable($accountable)
+	{
 		$this->accountable = !!$accountable;
-	 }
+	}
+	
 }

@@ -50,6 +50,8 @@ class Post extends Model {
 	 * @var array
 	 */
 	protected $casts = [
+		'board_id'  => 'int',
+		'reply_to'  => 'int',
 		'author_ip' => 'ip',
 	];
 	
@@ -1677,7 +1679,6 @@ class Post extends Model {
 	{
 		return $query->withEverythingForReplies()
 			->orderBy('post_id', 'desc')
-			//->takePerGroup('reply_to', 5)
 			->take(5);
 	}
 	
