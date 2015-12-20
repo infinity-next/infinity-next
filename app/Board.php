@@ -1291,6 +1291,8 @@ class Board extends Model {
 			return $threads;
 		};
 		
+		return $rememberClosure();
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :

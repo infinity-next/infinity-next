@@ -14,9 +14,16 @@
 		}
 	],
 	
+	"repositories": [
+		{
+			"type": "vcs",
+			"url":  "git@github.com:infinity-next/framework.git"
+		}
+	],
+	
 	"require": {
 		"php": ">=5.5.9",
-		"laravel/framework": "5.1.*",
+		"laravel/framework": "5.1.*@dev",
 		"doctrine/dbal": "~2.3",
 		
 		"stripe/stripe-php": "2.*",

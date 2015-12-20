@@ -24,6 +24,11 @@ Route::group([
 	
 	Route::get('overboard.html', 'MultiboardController@getOverboard');
 	
+	Route::get('query.test', function()
+	{
+		\App\Board::find('b')->getThreadsForIndex(0);
+		return "Hello.";
+	});
 	
 	/*
 	| Control Panel (cp)
