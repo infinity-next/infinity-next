@@ -574,6 +574,11 @@
 					}
 				}
 			}
+
+			if (document.readyState !== "loading")
+			{
+				ib.mutationObserver.disconnect();
+			}
 		};
 		
 		// Widgets not fully loaded are queued for binding at a later time.
