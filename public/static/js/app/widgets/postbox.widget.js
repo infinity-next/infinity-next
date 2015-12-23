@@ -232,8 +232,8 @@
 					
 					$preview
 						.addClass('dz-success')
-						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[hash][]\" value=\""+file.hash+"\" />")
-						.append("<input type=\"hidden\" name=\""+widget.options.dropzone.paramName+"[name][]\" value=\""+file.name+"\" />")
+						.append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[hash][]").val(file.hash))
+						.append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[name][]").val(file.name))
 					;
 					
 					$("[data-dz-spoiler]", $preview)
