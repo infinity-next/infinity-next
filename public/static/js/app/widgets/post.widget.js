@@ -92,6 +92,7 @@
 			$box.appendTo("body")
 				.addClass(this.options.classname['post-hover'])
 				.css('position', "absolute");
+			ib.bindAll($box);
 		}
 		
 		var boxHeight = $box.outerHeight();

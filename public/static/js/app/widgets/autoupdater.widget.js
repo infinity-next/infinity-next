@@ -259,7 +259,7 @@
 								console.log("Autoupdater: Replacing " + reply.post_id);
 								
 								$existingPost.replaceWith($newPost);
-								ib.bindElement($newPost[0]);
+								ib.bindAll($newPost[0]);
 								
 								updatedPosts.push($newPost);
 								
