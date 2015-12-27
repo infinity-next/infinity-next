@@ -206,15 +206,11 @@ return [
 			 */
 			'flourishes_min' => 1,
 
-			'flourishes_max' => 2,
-			
 			/**
 			 * Maximum number of lines or circles to draw per letter blocking.
 			 *
 			 * @var int
 			 */
-			'flourishes_min' => 1,
-
 			'flourishes_max' => 2,
 			
 		],
