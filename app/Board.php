@@ -1156,7 +1156,11 @@ class Board extends Model {
 			return static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
 				->with([
 					'tags',
-					'settings',
+					'settings' => function($query) {
+						$query->whereIn('option_name', [
+							"boardLanguage",
+						]);
+					},
 					'stats' => function($query) {
 						$query->where('stats_time', '>=', Carbon::now()->minute(0)->second(0)->subDays(7));
 					},
@@ -1172,7 +1176,7 @@ class Board extends Model {
 				->toArray();
 		};
 		
-		$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		$boards = $rememberClosure();//Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
 		
 		if (is_null($length))
 		{

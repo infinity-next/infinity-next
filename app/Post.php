@@ -36,7 +36,7 @@ class Post extends Model {
 	 * @var string
 	 */
 	protected $table = 'posts';
-
+	
 	/**
 	 * The primary key that is used by ::get()
 	 *
@@ -89,6 +89,7 @@ class Post extends Model {
 		'flag_id',
 		
 		'body',
+		'body_has_content',
 		'body_too_long',
 		'body_parsed',
 		'body_parsed_preview',
@@ -603,6 +604,7 @@ class Post extends Model {
 		$this->body_parsed         = $ContentFormatter->formatPost($this);
 		$this->body_parsed_preview = null;
 		$this->body_parsed_at      = $this->freshTimestamp();
+		$this->body_has_content    = $ContentFormatter->hasContent();
 		
 		if (!mb_check_encoding($this->body_parsed, 'UTF-8'))
 		{
@@ -612,7 +614,7 @@ class Post extends Model {
 		
 		// If our body is too long, we need to pull the first X characters and do that instead.
 		// We also set a token indicating this post has hidden content.
-		if (strlen($this->body) > 1200)
+		if (mb_strlen($this->body) > 1200)
 		{
 			$this->body_too_long = true;
 			$this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
@@ -622,6 +624,7 @@ class Post extends Model {
 		// there will frequently be additional properties on this object that cannot
 		// be saved. To make life easier, we just touch the object.
 		static::where(['post_id' => $this->post_id])->update([
+			'body_has_content'    => $this->body_has_content,
 			'body_too_long'       => $this->body_too_long,
 			'body_parsed'         => $this->body_parsed,
 			'body_parsed_preview' => $this->body_parsed_preview,
@@ -1207,7 +1210,7 @@ class Post extends Model {
 	 */
 	public static function getRecentPosts($number = 16, $sfwOnly = true)
 	{
-		return static::where('body', '<>', "")
+		return static::where('body_has_content', true)
 			->whereHas('board', function($query) use ($sfwOnly) {
 				$query->where('is_indexed', '=', true);
 				$query->where('is_overboard', '=', true);

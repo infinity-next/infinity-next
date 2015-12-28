@@ -12,6 +12,13 @@ use Markdown;
 class ContentFormatter {
 	
 	/**
+	 * Is set to true if non-citation text is detected.
+	 *
+	 * @var bool
+	 */
+	protected $hasContent = false;
+	
+	/**
 	 * The post being parsed.
 	 *
 	 * @var \App\Post $post
@@ -200,6 +207,11 @@ class ContentFormatter {
 		$content = $this->formatMarkdown($content);
 		$content = $this->formatCensors($content);
 		
+		// Determines, after parsing, if any non-citation text exists.
+		$citelessContent  = preg_replace("/(<a(?: \w+=\"[^\"]+\")* class=\"cite([^\"])*\"(?: \w+=\"[^\"]+\")*>([^<]*)<\/a>)/", "", $content);
+		$citelessContent  = trim($citelessContent);
+		$this->hasContent = strlen($citelessContent) > 0;
+		
 		return $content;
 	}
 	
@@ -252,6 +264,16 @@ class ContentFormatter {
 		];
 		
 		return $this->formatContent($text);
+	}
+	
+	/**
+	 * Gets the hasContent property.
+	 *
+	 * @return bool
+	 */
+	public function hasContent()
+	{
+		return $this->hasContent;
 	}
 	
 	/**
