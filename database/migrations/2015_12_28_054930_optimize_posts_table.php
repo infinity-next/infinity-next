@@ -20,7 +20,6 @@ class OptimizePostsTable extends Migration
 		
 		Schema::table('posts', function(Blueprint $table)
 		{
-			$table->index('author_ip');
 			$table->index('bumped_last');
 			$table->index('created_at');
 			$table->index('deleted_at');
