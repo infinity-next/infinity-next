@@ -1176,7 +1176,7 @@ class Board extends Model {
 				->toArray();
 		};
 		
-		$boards = $rememberClosure();//Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
 		
 		if (is_null($length))
 		{
