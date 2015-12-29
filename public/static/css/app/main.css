@@ -4472,6 +4472,23 @@ footer {
 	padding: 0;
 	margin: 0;
 }
+	#canary {
+		height: 0;
+		width: 0;
+		margin: 0;
+		overflow: visible;
+	}
+		#canary-img {
+			position: absolute;
+			bottom: auto;
+			right: 1em;
+			
+			height: auto;
+			width: auto;
+			
+			max-width: 3em;
+			max-height: 3em;
+		}
 	#footnotes {
 		background: #333;
 		padding: 0.5em 0;

@@ -148,8 +148,16 @@ class OptionSeeder extends Seeder {
 				],
 				
 				[
-					'option_name'           => "captchaEnabled",
-					'default_value'         => true,
+					'option_name'           => "attachmentThumbnailJpeg",
+					'default_value'         => 0,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => 'boolean'
+				],
+				
+				[
+					'option_name'           => "canary",
+					'default_value'         => false,
 					'format'                => "onoff",
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
@@ -553,6 +561,7 @@ class OptionGroupSeeder extends Seeder {
 				
 				'options' => [
 					'siteName',
+					'canary',
 				],
 			],
 			

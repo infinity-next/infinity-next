@@ -17,6 +17,7 @@ return [
 	'delete'       => "Delete",
 	'submit'       => "Save Changes",
 	'any_language' => "International",
+	'canary'       => ":site_name has not been served any secret court orders and is not under any gag orders.",
 	
 	'locked'       => "This setting has been locked by an admin.",
 	'locking'      => "Locks this setting value to users without special permissions.",
@@ -69,6 +70,8 @@ return [
 	
 	'option' => [
 		'siteName'                 => "Site Name",
+		'canary'                   => "Show cute bird",
+		
 		'board_uri'                => "URI",
 		'title'                    => "Title",
 		'description'              => "Subtitle",
@@ -157,6 +160,7 @@ return [
 		'boardBacklinksWhitelist'  => "Always allow these boards to backlink",
 		
 		'desc' => [
+			'canary'                   => "Displays a cute bird on each page.<br />This may have significance to your users.",
 			'board_uri'                => "Part of the URL used to open your board. Cannot be changed.",
 			
 			'attachmentName'           => "<tt>%t</tt> for the UNIX timestamp of post creation.<br />" .
