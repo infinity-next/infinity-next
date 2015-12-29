@@ -1390,7 +1390,7 @@ class Post extends Model {
 			
 			return $threads;
 		};
-		
+		return $rememberClosure();
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -1684,7 +1684,7 @@ class Post extends Model {
 	{
 		return $query->withEverythingForReplies()
 			->orderBy('post_id', 'desc')
-			->take(5);
+			->takePerGroup('reply_to', 5);
 	}
 	
 	public function scopeReplyTo($query, $replies = false)

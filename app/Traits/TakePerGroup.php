@@ -56,7 +56,24 @@ trait TakePerGroup {
 		}
 		else if ($this->getConnection() instanceof \Illuminate\Database\PostgresConnection)
 		{
-			$query->from(DB::raw("(select (row_number() over (partition by \"{$group}\" order by \"{$key}\" desc)) as \"take_per_group_number\", \"{$table}\".* FROM \"{$table}\" ) as \"{$table}\""));
+			$newBuilder = $query->newQuery();
+			$newQuery   = clone $newBuilder->getQuery();
+			
+			$newQuery->select(
+				DB::raw("(rank() over (partition by \"{$group}\" order by \"{$key}\" desc)) as \"take_per_group_number\""),
+				"{$table}.*"
+			);
+			$newQuery->joins = null;
+			$newQuery->orders = null;
+			
+			$queryString = $newQuery->toSql();
+			
+			foreach ($newQuery->getBindings() as $binding)
+			{
+				$queryString = preg_replace('/\?/', $binding, $queryString, 1);
+			}
+			
+			$query->from(DB::raw("({$queryString}) as \"{$table}\""));
 			$query->where("{$table}.take_per_group_number", "<=", $n);
 		}
 		else
