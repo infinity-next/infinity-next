@@ -17,6 +17,7 @@ class CreatePermissionCache extends Migration
 			$table->increments('role_cache_id');
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->string('board_uri', 32)->nullable();
+			$table->longtext('value');
 			
 			// Foreigns and Indexes
 			$table->index(['user_id', 'board_uri']);
