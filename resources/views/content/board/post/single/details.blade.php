@@ -77,7 +77,7 @@
 		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
 			<a href="{{ $user->canViewGlobalHistory() && is_object($details['author_ip'])
 				? url('cp/history/' . $details['author_ip']->toText())
-				: $post->getURL('history/' . $details['board_id'])
+				: $board->getURL('history/' . $details['board_id'])
 			}}"><i class="fa fa-server"></i></a>
 		</li>
 	@endif

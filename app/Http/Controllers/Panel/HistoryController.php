@@ -57,7 +57,7 @@ class HistoryController extends PanelController {
 		
 		return $this->view(static::VIEW_HISTORY, [
 			'posts' => $posts,
-			'ip'    => ip_less($ip->toText()),
+			'ip'    => $ip->toText(),
 		]);
 	}
 	
@@ -78,7 +78,7 @@ class HistoryController extends PanelController {
 		return $this->view(static::VIEW_HISTORY, [
 			'posts'      => $posts,
 			'multiboard' => false,
-			'ip'         => ip_less($ip->toText()),
+			'ip'         => ip_less($post->author_ip->toText()),
 		]);
 	}
 	
