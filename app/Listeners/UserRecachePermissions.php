@@ -1,6 +1,7 @@
 <?php namespace App\Listeners;
 
 use App\Role;
+use App\RoleCache;
 use App\Listeners\Listener;
 use App\Contracts\PermissionUser;
 
@@ -40,22 +41,7 @@ class UserRecachePermissions extends Listener
 		}
 		else
 		{
-			switch (env('CACHE_DRIVER'))
-			{
-				case "file" :
-					Cache::flush();
-					break;
-				
-				case "database" :
-					DB::table('cache')
-						->where('key', 'like', "%user.%.permissions")
-						->delete();
-					break;
-				
-				default :
-					Cache::tags("permissions")->flush();
-					break;
-			}
+			RoleCache::delete();
 		}
 	}
 }

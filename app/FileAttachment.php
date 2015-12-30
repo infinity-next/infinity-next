@@ -110,10 +110,10 @@ class FileAttachment extends Model {
 		if ($query->getQuery()->getConnection() instanceof \Illuminate\Database\PostgresConnection)
 		{
 			// PostgreSQL does not support the MySQL standards non-compliant group_by syntax.
-			// DISTINCT itself selects distinct combinations [attachment_id,file_idd, not just file_id.
+			// DISTINCT itself selects distinct combinations [attachment_id,file_id], not just file_id.
 			// We have to use raw SQL to accomplish this.
 			$query->select(
-				\DB::raw("DISTINCT ON (file_id) *")
+				\DB::raw("distinct on (file_id) *")
 			);
 			
 			$query->orderBy('file_id', 'desc');

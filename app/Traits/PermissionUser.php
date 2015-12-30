@@ -800,6 +800,9 @@ trait PermissionUser {
 	 */
 	public function forgetPermissions()
 	{
+		RoleCache::where('user_id', $this->isAnonymous() ? null : $this->user_id)
+			->delete();
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
