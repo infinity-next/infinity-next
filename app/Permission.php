@@ -43,7 +43,11 @@ class Permission extends Model {
 	 */
 	public function getBoardsWithPermissions(PermissionUser $user = null, $anonymous = true)
 	{
-		$userRoles = UserRole::where(function($query) use ($user, $anonymous) {
+		// Identify roles which affect this user.
+		// Sometimes we will only want direct assignments.
+		// This includes null user_id assignments for anonymouse users.
+		$userRoles = UserRole::select('role_id')
+			->where(function($query) use ($user, $anonymous) {
 				if ($anonymous)
 				{
 					$query->whereNull('user_id');
@@ -66,7 +70,25 @@ class Permission extends Model {
 			return collect();
 		}
 		
-		$validRoles = RolePermission::whereIn('role_id', $userRoles)
+		$inheritRoles = Role::select('role_id', 'inherit_id')
+			->whereIn('role_id', $userRoles)
+			->get()
+			->pluck('inherit_id')
+			->filter(function($item) {
+				return !is_null($item);
+			});
+		
+		// Identify roles which use this permission,
+		// or which borrow inherited roles.
+		$validRoles = RolePermission::select('role_id', 'permission_id')
+			->where(function($query) use ($userRoles, $inheritRoles) {
+				$query->orWhereIn('role_id', $userRoles);
+				
+				if ($inheritRoles)
+				{
+					$query->orWhereIn('role_id', $inheritRoles);
+				}
+			})
 			->where('permission_id', $this->permission_id)
 			->get()
 			->pluck('role_id');
@@ -76,9 +98,32 @@ class Permission extends Model {
 			return collect();
 		}
 		
-		return Role::whereIn('role_id', $validRoles)
-			->get()
-			->pluck('board_uri');
+		// Find the intersection of roles we have and roles we want.
+		$intersectIdents = collect($userRoles)->intersect(collect($validRoles));
+		$inheritIdents = collect($inheritRoles)->intersect(collect($validRoles));
+		$intersectRoles = collect();
+		
+		if ($intersectIdents)
+		{
+			// These are only roles which are directly assigned to us with
+			// this permission.
+			$intersectRoles = collect(Role::select('role_id', 'board_uri')
+				->whereIn('role_id', $intersectIdents)
+				->get()
+				->pluck('board_uri'));
+		}
+		
+		if ($inheritIdents)
+		{
+			$intersectRoles = collect(Role::select('role_id', 'board_uri')
+				->whereIn('inherit_id', $inheritIdents)
+				->whereIn('role_id', $userRoles)
+				->get()
+				->pluck('board_uri'))
+				->merge($intersectRoles);
+		}
+		
+		return $intersectRoles;
 	}
 	
 }
