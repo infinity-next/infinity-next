@@ -8,6 +8,7 @@ use App\Post;
 use App\Role;
 use App\RoleCache;
 use App\RolePermission;
+use App\UserRole;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Support\IP\CIDR;
 
@@ -100,12 +101,14 @@ trait PermissionUser {
 	 */
 	public function canAny($permission)
 	{
-		if ($permission instanceof Permission)
+		if (!($permission instanceof Permission))
 		{
-			$permission = $permission->permission_id;
+			$permission = Permission::findOrFail($permission);
 		}
 		
-		foreach ($this->getPermissions() as $board_uri => $board_permissions)
+		$boards = $permission->getBoardsWithPermissions($this, true);
+		
+		foreach ($boards as $board_uri)
 		{
 			if ($this->getPermission($permission, $board_uri))
 			{
@@ -126,12 +129,14 @@ trait PermissionUser {
 	{
 		$boards = [];
 		
-		if ($permission instanceof Permission)
+		if (!($permission instanceof Permission))
 		{
-			$permission = $permission->permission_id;
+			$permission = Permission::findOrFail($permission);
 		}
 		
-		foreach ($this->getPermissions() as $board_uri => $board_permissions)
+		$boards = $permission->getBoardsWithPermissions($this, false);
+		
+		foreach ($boards as $board_uri)
 		{
 			if (strlen($board_uri) === 0)
 			{
@@ -869,24 +874,25 @@ trait PermissionUser {
 			$whitelist = false;
 		}
 		
-		foreach ($this->getPermissions() as $board_uri => $permission)
-		{
-			if ($this->canEditConfig($board_uri) === $whitelist)
-			{
-				$boardlist[] = $board_uri;
-			}
-		}
-		
+		$boardlist = $this->canInBoards('board.config')->toArray();
 		$boardlist = array_unique($boardlist);
 		
+		if (empty($boardlist))
+		{
+			return collect();
+		}
+		
 		return Board::where(function($query) use ($whitelist, $boardlist) {
-				if ($whitelist)
+				if (!in_array(null, $boardlist))
 				{
-					$query->whereIn('board_uri', $boardlist);
-				}
-				else
-				{
-					$query->whereNotIn('board_uri', $boardlist);
+					if ($whitelist)
+					{
+						$query->whereIn('board_uri', $boardlist);
+					}
+					else
+					{
+						$query->whereNotIn('board_uri', $boardlist);
+					}
 				}
 			})
 			->andAssets()
@@ -954,6 +960,11 @@ trait PermissionUser {
 	 */
 	protected function getPermission($permission, $board_uri = null)
 	{
+		if ($permission instanceof Permission)
+		{
+			$permission = $permission->permission_id;
+		}
+		
 		$boardPermissions  = $this->getPermissionsForBoard($board_uri);
 		$globalPermissions = $this->getPermissionsForBoard();
 		
