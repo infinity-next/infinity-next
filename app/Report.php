@@ -215,8 +215,6 @@ class Report extends Model {
 	public function scopeWhereResponsibleFor($query, PermissionUser $user)
 	{
 		return $query->where(function($query) use ($user) {
-				$query->whereIn('board_uri', $user->canInBoards('board.reports'));
-				
 				if (!$user->can('site.reports'))
 				{
 					$query->where('global', false);
@@ -225,6 +223,8 @@ class Report extends Model {
 				{
 					$query->orWhere('global', true);
 				}
+				
+				$query->whereIn('board_uri', $user->canInBoards('board.reports'));
 			});
 	}
 	

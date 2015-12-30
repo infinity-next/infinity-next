@@ -134,11 +134,12 @@ trait PermissionUser {
 			$permission = Permission::findOrFail($permission);
 		}
 		
-		$boards = $permission->getBoardsWithPermissions($this, false);
+		$boardsWithRights = $permission->getBoardsWithPermissions($this, false);
+		$boards = [];
 		
-		foreach ($boards as $board_uri)
+		foreach ($boardsWithRights as $board_uri)
 		{
-			if (strlen($board_uri) === 0)
+			if (is_null($board_uri) || strlen($board_uri) === 0)
 			{
 				continue;
 			}
