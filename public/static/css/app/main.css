@@ -2766,6 +2766,9 @@ main.index-threaded {
 				.post-content-wrapper {
 					overflow: hidden;
 				}
+				#frontpage .post-details {
+					padding-left: 0.7em;
+				}
 				#frontpage .post-content-wrapper {
 					padding: 0 0.7em 0 1em;
 				}
