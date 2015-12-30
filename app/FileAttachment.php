@@ -91,18 +91,6 @@ class FileAttachment extends Model {
 	{
 		$query = static::where('is_spoiler', false)
 			->where('is_deleted', false)
-			->whereHas('storage', function($query) {
-				$query->where('has_thumbnail', true);
-			})
-			->whereHas('post.board', function($query) use ($sfwOnly) {
-				$query->where('is_indexed', true);
-				$query->where('is_overboard', true);
-				
-				if ($sfwOnly)
-				{
-					$query->where('is_worksafe', '=', true);
-				}
-			})
 			->with('storage')
 			->with('post.board')
 			->take($number);
@@ -117,9 +105,24 @@ class FileAttachment extends Model {
 			);
 			
 			$query->orderBy('file_id', 'desc');
+			
+			$query->where(\DB::raw("SELECT \"reltuples\"::BIGINT FROM \"pg_class\" WHERE \"relname\" = 'tenk1';"))
 		}
 		else
 		{
+			$query->whereHas('storage', function($query) {
+				$query->where('has_thumbnail', true);
+			});
+			
+			$query->whereHas('post.board', function($query) use ($sfwOnly) {
+				$query->where('is_indexed', true);
+				$query->where('is_overboard', true);
+				
+				if ($sfwOnly)
+				{
+					$query->where('is_worksafe', '=', true);
+				}
+			});
 			$query->orderBy('attachment_id', 'desc');
 			$query->groupBy('file_id');
 		}
