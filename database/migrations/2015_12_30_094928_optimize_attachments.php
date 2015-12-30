@@ -18,6 +18,11 @@ class OptimizeAttachments extends Migration
 			$table->index('is_spoiler');
 			$table->index('is_deleted');
 		});
+		
+		Schema::table('files', function(Blueprint $table)
+		{
+			$table->index('has_thumbnail');
+		});
 	}
 	
 	/**
