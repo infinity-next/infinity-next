@@ -875,7 +875,7 @@ trait PermissionUser {
 			$whitelist = false;
 		}
 		
-		$boardlist = $this->canInBoards('board.config')->toArray();
+		$boardlist = $this->canInBoards('board.config');
 		$boardlist = array_unique($boardlist);
 		
 		if (empty($boardlist))
