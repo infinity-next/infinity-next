@@ -825,7 +825,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::where('board_uri', '<>', "cow")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::where('board_uri', '<>', "cow")->where('board_uri', '>=', "italia")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -1021,6 +1021,11 @@ class Import extends Command {
 			
 			if (file_exists($path))
 			{
+				if (!isset($attachment['type']))
+				{
+					continue;
+				}
+				
 				if (!isset($attachment['hash']))
 				{
 					$attachment['hash'] = md5(file_get_contents($path));
