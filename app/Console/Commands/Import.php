@@ -835,14 +835,13 @@ class Import extends Command {
 				if ($tCount <= $board->posts_total)
 				{
 					$this->line("\t\tSkipping. /{$board->board_uri}/");
+					continue;
 				}
 				else
 				{
 					$this->line("\t\tWould import /{$board->board_uri}/");
 					continue;
 				}
-				
-				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				$post_ids = $board->posts()->withTrashed()->lists('post_id');
@@ -853,7 +852,7 @@ class Import extends Command {
 				
 				$this->line("\t\tLocking Next posts for /{$board->board_uri}/");
 				$this->tcon->unprepared(DB::raw("LOCK TABLES posts_{$board->board_uri} WRITE"));
-				file_get_contents("http://banners.8ch.net/status/{$board->board_uri}/migrating");
+				@file_get_contents("http://banners.8ch.net/status/{$board->board_uri}/migrating");
 				
 				$this->line("\t\tImporting posts from /{$board->board_uri}/");
 				
@@ -902,7 +901,7 @@ class Import extends Command {
 				});
 				
 				$this->tcon->unprepared(DB::raw("UNLOCK TABLES"));
-				file_get_contents("https://banners.8ch.net/status/{$board->board_uri}/horizon");
+				@file_get_contents("https://banners.8ch.net/status/{$board->board_uri}/horizon");
 				
 				$this->line("\n\t\t\tMade {$postsMade} posts with {$attachmentsMade} attachments for /{$board->board_uri}/.");
 			}
