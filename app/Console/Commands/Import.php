@@ -874,7 +874,7 @@ class Import extends Command {
 							$validThreads[$post->id] = $model;
 						}
 						
-						$attachmentsMade += $this->importInfinityPostAttachments($model, $board);
+						$attachmentsMade += $this->importInfinityPostAttachments($model, $board, $post);
 					}
 					
 					$bar->advance( count($posts) );
@@ -962,9 +962,9 @@ class Import extends Command {
 		];
 	}
 	
-	public function importInfinityPostAttachments($post, Board &$board)
+	public function importInfinityPostAttachments(Post $model, Board &$board, $post)
 	{
-		$post_id = $post->post_id;
+		$post_id = $model->post_id;
 		
 		if (!$post_id)
 		{
