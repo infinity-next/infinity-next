@@ -883,6 +883,7 @@ class Import extends Command {
 					foreach ($validThreads as $validThread)
 					{
 						$validThread->reply_count = $validThread->replies()->count();
+						$validThread->save();
 					}
 				});
 				
