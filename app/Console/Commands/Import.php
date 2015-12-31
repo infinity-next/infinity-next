@@ -836,8 +836,7 @@ class Import extends Command {
 				}
 				catch (\Illuminate\Database\QueryException $e)
 				{
-					$this->warn("\t\tDeleting /{$board->board_uri}/");
-					$board->forceDelete();
+					$this->warn("\t\tMissing board /{$board->board_uri}/");
 					continue;
 				}
 				
