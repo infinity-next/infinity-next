@@ -908,7 +908,7 @@ class Import extends Command {
 		}
 		else
 		{
-			continue;
+			return false;
 		}
 		
 		$createdAt  = Carbon::now();
