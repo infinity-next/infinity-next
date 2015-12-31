@@ -880,7 +880,8 @@ class Import extends Command {
 					
 					foreach ($models as $model)
 					{
-						$post = new Post($model)->save();
+						$post = new Post($model);
+						$post->save();
 						$attachmentsMade += $this->importInfinityPostAttachments($model, $board);
 					}
 					
