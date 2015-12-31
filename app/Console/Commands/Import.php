@@ -845,11 +845,6 @@ class Import extends Command {
 					$this->line("\t\tSkipping /{$board->board_uri}/");
 					continue;
 				}
-				else
-				{
-					$this->line("\t\tWould import /{$board->board_uri}/");
-					continue;
-				}
 				
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				$post_ids = $board->posts()->withTrashed()->lists('post_id');
