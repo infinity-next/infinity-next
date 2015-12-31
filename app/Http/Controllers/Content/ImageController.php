@@ -274,8 +274,6 @@ class ImageController extends Controller {
 				$FileStorage->processThumb();
 			}
 			
-			$storageSize     = filesize($storagePathFull);
-			
 			if (is_link($storagePathFull))
 			{
 				if (!is_readable($storagePathFull))
@@ -289,6 +287,8 @@ class ImageController extends Controller {
 			{
 				$storageExists = Storage::exists($storagePath);
 			}
+			
+			$storageSize = filesize($storagePathFull);
 			
 			if ($FileStorage instanceof FileStorage && $storageExists)
 			{

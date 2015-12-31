@@ -1054,7 +1054,7 @@ class Import extends Command {
 						
 						Storage::makeDirectory($storage->getDirectoryThumb());
 						
-						if (!$storage->hasThumb())
+						if (!file_exists($storage->getFullPathThumb()))
 						{
 							symlink($thumb, $storage->getFullPathThumb());
 						}
