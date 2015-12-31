@@ -824,7 +824,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::whereIn('board_uri', ['next'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::whereIn('board_uri', ['cow'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -863,26 +863,18 @@ class Import extends Command {
 					{
 						$model = $this->importInfinityPost($post, $board, $validThreads);
 						
+						$model = new Post($model);
+						$model->save();
+						
 						++$postsMade;
 						
 						// Have to save threads so we have a post_id.
 						if (!$post->thread)
 						{
-							$model = new Post($model);
-							$model->save();
 							$validThreads[$post->id] = $model;
 						}
-						else
-						{
-							$models[] = $model;
-						}
-					}
-					
-					foreach ($models as $model)
-					{
-						$post = new Post($model);
-						$post->save();
-						$attachmentsMade += $this->importInfinityPostAttachments($post, $board);
+						
+						$attachmentsMade += $this->importInfinityPostAttachments($model, $board);
 					}
 					
 					$bar->advance( count($posts) );
