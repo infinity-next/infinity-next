@@ -1052,7 +1052,6 @@ class Import extends Command {
 					}
 					
 					$storage->save();
-					++$storageLinked;
 				}
 				
 				if ($storage && $storage->exists)
