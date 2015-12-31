@@ -835,6 +835,7 @@ class Import extends Command {
 				$board->posts_total = 0;
 				$board->save();
 				
+				$this->line("\t\tLocking Next posts for /{$board->board_uri}/");
 				$this->tcon->unprepared(DB::raw("LOCK TABLES posts_{$board->board_uri} WRITE"));
 				file_get_contents("http://banners.8ch.net/status/{$board->board_uri}/migrating");
 				
@@ -852,7 +853,7 @@ class Import extends Command {
 				
 				// Threads first, replies by id.
 				$query = $tTable->orderByRaw('thread asc, id asc');
-				$bar = $this->output->createProgressBar( $tTable->orderByRaw('thread asc, id asc')->count() );
+				$bar = $this->output->createProgressBar( $query->count() );
 				$query->chunk(200, function($posts) use (&$bar, &$validThreads, &$board, &$postsMade, &$attachmentsMade)
 				{
 					$models = [];
