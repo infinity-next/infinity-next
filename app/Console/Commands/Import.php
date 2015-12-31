@@ -1017,18 +1017,21 @@ class Import extends Command {
 						$width = $attachment['width'];
 					}
 					
-					$storage = new FileStorage([
-						'hash'              => $attachment['hash'],
-						'banned'            => false,
-						'filesize'          => $attachment['size'],
-						'file_width'        => $width,
-						'file_height'       => $height,
-						'mime'              => $attachment['type'],
-						'meta'              => null,
-						'first_uploaded_at' => Carbon::now(),
-						'last_uploaded_at'  => Carbon::now(),
-						'upload_count'      => 1,
-					]);
+					if (!$storage)
+					{
+						$storage = new FileStorage([
+							'hash'              => $attachment['hash'],
+							'banned'            => false,
+							'filesize'          => $attachment['size'],
+							'file_width'        => $width,
+							'file_height'       => $height,
+							'mime'              => $attachment['type'],
+							'meta'              => null,
+							'first_uploaded_at' => Carbon::now(),
+							'last_uploaded_at'  => Carbon::now(),
+							'upload_count'      => 1,
+						]);
+					}
 					
 					Storage::makeDirectory($storage->getDirectory());
 					
