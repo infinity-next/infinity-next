@@ -154,6 +154,11 @@ class Board extends Model {
 		return $this->hasMany('\App\Post', 'board_uri');
 	}
 	
+	public function attachments()
+	{
+		return $this->hasManyThrough('App\FileAttachment', 'App\Post', 'board_uri', 'post_id');
+	}
+	
 	public function logs()
 	{
 		return $this->hasMany('\App\Log', 'board_uri');

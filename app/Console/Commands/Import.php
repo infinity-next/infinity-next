@@ -829,7 +829,7 @@ class Import extends Command {
 			foreach ($boards as $board)
 			{
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
-				$board->posts()->attachments()->withTrashed()->forceDelete();
+				$board->attachments()->withTrashed()->forceDelete();
 				$board->posts()->withTrashed()->forceDelete();
 				$board->posts_total = 0;
 				$board->save();
