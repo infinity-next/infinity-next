@@ -879,6 +879,11 @@ class Import extends Command {
 					}
 					
 					$bar->advance( count($posts) );
+					
+					foreach ($validThreads as $validThread)
+					{
+						$validThread->reply_count = $validThread->replies()->count();
+					}
 				});
 				
 				$this->tcon->unprepared(DB::raw("UNLOCK TABLES"));
