@@ -1032,6 +1032,15 @@ class Import extends Command {
 					
 					Storage::makeDirectory($storage->getDirectory());
 					
+					if (is_link($storage->getFullPath()) && !file_exists($storage->getFullPath()))
+					{
+						unlink($storage->getFullPath());
+					}
+					if (is_link($storage->getFullPathThumb()) && !file_exists($storage->getFullPathThumb()))
+					{
+						unlink($storage->getFullPathThumb());
+					}
+					
 					if (!$storage->hasFile())
 					{
 						symlink($path, $storage->getFullPath());
@@ -1039,18 +1048,16 @@ class Import extends Command {
 					
 					if ($attachment['thumbwidth'] && file_exists($thumb))
 					{
-						// $storage->has_thumbnail    = true;
-						// $storage->thumbnail_width  = $attachment['thumbwidth'];
-						// $storage->thumbnail_height = $attachment['thumbheight'];
-						// 
-						// Storage::makeDirectory($storage->getDirectoryThumb());
-						// 
-						// if (!$storage->hasThumb())
-						// {
-						// 	symlink($thumb, $storage->getFullPathThumb());
-						// }
+						$storage->has_thumbnail    = true;
+						$storage->thumbnail_width  = $attachment['thumbwidth'];
+						$storage->thumbnail_height = $attachment['thumbheight'];
 						
-						$storage->processThumb();
+						Storage::makeDirectory($storage->getDirectoryThumb());
+						
+						if (!$storage->hasThumb())
+						{
+							symlink($thumb, $storage->getFullPathThumb());
+						}
 					}
 					
 					$storage->save();
