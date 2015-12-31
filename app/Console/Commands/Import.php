@@ -824,7 +824,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::whereIn('board_uri', ['cow'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::whereIn('board_uri', ['next'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
