@@ -882,7 +882,7 @@ class Import extends Command {
 					{
 						$post = new Post($model);
 						$post->save();
-						$attachmentsMade += $this->importInfinityPostAttachments($model, $board);
+						$attachmentsMade += $this->importInfinityPostAttachments($post, $board);
 					}
 					
 					$bar->advance( count($posts) );
