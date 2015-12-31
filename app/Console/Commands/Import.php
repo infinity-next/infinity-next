@@ -829,12 +829,21 @@ class Import extends Command {
 		{
 			foreach ($boards as $board)
 			{
-				$tTable = $this->tcon->table("posts_{$board->board_uri}");
-				$tCount = $tTable->count();
+				try
+				{
+					$tTable = $this->tcon->table("posts_{$board->board_uri}");
+					$tCount = $tTable->count();
+				}
+				catch (\Illuminate\Database\QueryException $e)
+				{
+					$this->warn("\t\tDeleting /{$board->board_uri}/");
+					$board->forceDelete();
+					continue;
+				}
 				
 				if ($tCount <= $board->posts_total)
 				{
-					$this->line("\t\tSkipping. /{$board->board_uri}/");
+					$this->line("\t\tSkipping /{$board->board_uri}/");
 					continue;
 				}
 				else
