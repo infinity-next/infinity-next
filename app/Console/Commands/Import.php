@@ -830,7 +830,7 @@ class Import extends Command {
 			{
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				$post_ids = $board->posts()->withTrashed()->select('post_id')->get()->pluck('post_id');
-				FileAttachment::whereIn('post_id', $post_ids);
+				FileAttachment::whereIn('post_id', $post_ids)->forceDelete();
 				$board->posts()->withTrashed()->forceDelete();
 				$board->posts_total = 0;
 				$board->save();
@@ -878,11 +878,10 @@ class Import extends Command {
 						}
 					}
 					
-					Post::insert($models);
-					
 					foreach ($models as $model)
 					{
-						$attachmentsMade += $this->importInfinityPostAttachments($post, $board);
+						$post = new Post($model)->save();
+						$attachmentsMade += $this->importInfinityPostAttachments($model, $board);
 					}
 					
 					$bar->advance( count($posts) );
@@ -891,7 +890,7 @@ class Import extends Command {
 				$this->tcon->unprepared(DB::raw("UNLOCK TABLES"));
 				file_get_contents("https://banners.8ch.net/status/{$board->board_uri}/horizon");
 				
-				$this->line("\t\t\tMade {$postsMade} posts with {$attachmentsMade} attachments for /{$board->board_uri}/.");
+				$this->line("\n\t\t\tMade {$postsMade} posts with {$attachmentsMade} attachments for /{$board->board_uri}/.");
 			}
 		});
 	}
