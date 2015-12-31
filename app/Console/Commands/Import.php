@@ -972,7 +972,7 @@ class Import extends Command {
 	
 	public function importInfinityPostAttachments($post, Board &$board)
 	{
-		$post_id = $board->posts()->where('board_id', $post->id)->pluck('post_id');
+		$post_id = $post->post_Id;
 		
 		if (!$post_id)
 		{
