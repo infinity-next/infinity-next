@@ -835,7 +835,7 @@ class Import extends Command {
 				$board->save();
 				
 				$this->tcon->unprepared(DB::raw("LOCK TABLES posts_{$board->board_uri} WRITE"));
-				Request::create("http://banners.8ch.net/status/{$board->board_uri}/migrating");
+				file_get_contents("http://banners.8ch.net/status/{$board->board_uri}/migrating");
 				
 				$this->line("\t\tImporting posts from /{$board->board_uri}/");
 				
@@ -888,7 +888,7 @@ class Import extends Command {
 				});
 				
 				$this->tcon->unprepared(DB::raw("UNLOCK TABLES"));
-				Request::create("http://banners.8ch.net/status/{$board->board_uri}/horizon");
+				file_get_contents("https://banners.8ch.net/status/{$board->board_uri}/horizon");
 				
 				$this->line("\t\t\tMade {$postsMade} posts with {$attachmentsMade} attachments for /{$board->board_uri}/.");
 			}
