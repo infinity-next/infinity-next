@@ -829,7 +829,7 @@ class Import extends Command {
 			foreach ($boards as $board)
 			{
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
-				$post_ids = $board->posts()->withTrashed()->select('post_id')->get()->pluck('post_id');
+				$post_ids = $board->posts()->withTrashed()->lists('post_id');
 				FileAttachment::whereIn('post_id', $post_ids)->forceDelete();
 				$board->posts()->withTrashed()->forceDelete();
 				$board->posts_total = 0;
