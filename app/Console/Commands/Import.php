@@ -1006,7 +1006,7 @@ class Import extends Command {
 				
 				$storage = FileStorage::getHash($attachment['hash']);
 				
-				if (!$storage)
+				if (!$storage || (!file_exists($storage->getFullPath()) || !file_exists($storage->getFullPathThumb())))
 				{
 					$height = null;
 					$width = null;
@@ -1032,17 +1032,13 @@ class Import extends Command {
 					
 					Storage::makeDirectory($storage->getDirectory());
 					
-					if (is_link($storage->getFullPath()) && !file_exists($storage->getFullPath()))
+					if (!file_exists($storage->getFullPath()))
 					{
-						unlink($storage->getFullPath());
-					}
-					if (is_link($storage->getFullPathThumb()) && !file_exists($storage->getFullPathThumb()))
-					{
-						unlink($storage->getFullPathThumb());
-					}
-					
-					if (!$storage->hasFile())
-					{
+						if (is_link($storage->getFullPath()))
+						{
+							unlink($storage->getFullPath());
+						}
+						
 						symlink($path, $storage->getFullPath());
 					}
 					
@@ -1056,6 +1052,11 @@ class Import extends Command {
 						
 						if (!file_exists($storage->getFullPathThumb()))
 						{
+							if (is_link($storage->getFullPathThumb()))
+							{
+								unlink($storage->getFullPathThumb());
+							}
+							
 							symlink($thumb, $storage->getFullPathThumb());
 						}
 					}
