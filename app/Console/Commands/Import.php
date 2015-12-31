@@ -359,6 +359,7 @@ class Import extends Command {
 				$this->error("Import state \"{$state}\" invalid.");
 		}
 		
+		Board::fixPostsTotal();
 	}
 	
 	/**
@@ -824,10 +825,25 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::whereIn('board_uri', ['next'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::where('board_uri', '<>', "cow")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
+				$tTable = $this->tcon->table("posts_{$board->board_uri}");
+				$tCount = $tTable->count();
+				
+				if ($tCount <= $board->posts_total)
+				{
+					$this->line("\t\tSkipping. /{$board->board_uri}/");
+				}
+				else
+				{
+					$this->line("\t\tWould import /{$board->board_uri}/");
+					continue;
+				}
+				
+				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
+				
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				$post_ids = $board->posts()->withTrashed()->lists('post_id');
 				FileAttachment::whereIn('post_id', $post_ids)->forceDelete();
@@ -841,8 +857,6 @@ class Import extends Command {
 				
 				$this->line("\t\tImporting posts from /{$board->board_uri}/");
 				
-				$tTable       = $this->tcon->table("posts_{$board->board_uri}");
-				
 				// Post Info
 				$postsMade    = 0;
 				$validThreads = [];
@@ -853,8 +867,8 @@ class Import extends Command {
 				
 				// Threads first, replies by id.
 				$query = $tTable->orderByRaw('thread asc, id asc');
-				$bar = $this->output->createProgressBar( $query->count() );
-				$query->chunk(200, function($posts) use (&$bar, &$validThreads, &$board, &$postsMade, &$attachmentsMade)
+				$bar = $this->output->createProgressBar( $tCount );
+				$query->chunk(50, function($posts) use (&$bar, &$validThreads, &$board, &$postsMade, &$attachmentsMade)
 				{
 					$models = [];
 					
