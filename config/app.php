@@ -235,6 +235,7 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 		
+		'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 		'Settings'  => 'App\Support\Facades\Settings',
 		
 		/*

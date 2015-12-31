@@ -20,6 +20,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Http\Request;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -333,17 +334,9 @@ class Import extends Command {
 				file_put_contents($file, "boards");
 				$this->importInfinityRolesAndBoards();
 			
-			case "tags" :
-				file_put_contents($file, "tags");
-				$this->importInfinityBoardTags();
-			
-			case "posts" :
-				file_put_contents($file, "posts");
-				$this->importInfinityPosts();
-			
-			case "attachments" :
-				file_put_contents($file, "attachments");
-				$this->importInfinityAttachments();
+			case "assets" :
+				file_put_contents($file, "assets");
+				$this->importInfinityBoardAssets();
 			
 			case "config" :
 				file_put_contents($file, "config");
@@ -353,9 +346,13 @@ class Import extends Command {
 				file_put_contents($file, "pages");
 				$this->importInfinityBoardPages();
 			
-			case "assets" :
-				file_put_contents($file, "assets");
-				$this->importInfinityBoardAssets();
+			case "tags" :
+				file_put_contents($file, "tags");
+				$this->importInfinityBoardTags();
+			
+			case "posts" :
+				file_put_contents($file, "posts");
+				$this->importInfinityBoardPosts();
 			
 			break;
 			default :
@@ -420,121 +417,7 @@ class Import extends Command {
 					// files, num_files, filehash
 					foreach ($posts as $post)
 					{
-						$post_id = $board->posts()->where('board_id', $post->id)->pluck('post_id');
 						
-						if (!$post_id)
-						{
-							continue;
-						}
-						
-						$attachments = @json_decode($post->files, true);
-						
-						if (!is_array($attachments))
-						{
-							continue;
-						}
-						
-						foreach ($attachments as $aIndex => $attachment)
-						{
-							if (isset($attachment['error']) && $attachment['error'])
-							{
-								continue;
-							}
-							
-							if (!isset($attachment['file_path']) || !isset($attachment['thumb_path']))
-							{
-								continue;
-							}
-							
-							if (!isset($attachment['hash']))
-							{
-								continue;
-							}
-							
-							$storage = null;
-							$path    = "{$this->targetLocation}/{$attachment['file_path']}";
-							$thumb   = "{$this->targetLocation}/{$attachment['thumb_path']}";
-							
-							if (file_exists($path))
-							{
-								if (isset($fModels[$attachment['hash']]))
-								{
-									$storage = $fModels[$attachment['hash']];
-								}
-								else
-								{
-									$storage = FileStorage::getHash($attachment['hash']);
-								}
-								
-								if (!$storage)
-								{
-									$height = null;
-									$width = null;
-									
-									if (isset($attachment['width']) && isset($attachment['height']))
-									{
-										$height = $attachment['height'];
-										$width = $attachment['width'];
-									}
-									
-									$storage = new FileStorage([
-										'hash'              => $attachment['hash'],
-										'banned'            => false,
-										'filesize'          => $attachment['size'],
-										'file_width'        => $width,
-										'file_height'       => $height,
-										'mime'              => $attachment['type'],
-										'meta'              => null,
-										'first_uploaded_at' => Carbon::now(),
-										'last_uploaded_at'  => Carbon::now(),
-										'upload_count'      => 1,
-									]);
-									
-									Storage::makeDirectory($storage->getDirectory());
-									
-									if (!$storage->hasFile())
-									{
-										symlink($path, $storage->getFullPath());
-									}
-									
-									if ($attachment['thumbwidth'] && file_exists($thumb))
-									{
-										$storage->has_thumbnail    = true;
-										$storage->thumbnail_width  = $attachment['thumbwidth'];
-										$storage->thumbnail_height = $attachment['thumbheight'];
-										
-										Storage::makeDirectory($storage->getDirectoryThumb());
-										
-										if (!$storage->hasThumb())
-										{
-											symlink($thumb, $storage->getFullPathThumb());
-										}
-									}
-									
-									$storage->save();
-									$fModels[$attachment['hash']] = $storage;
-									++$storageLinked;
-								}
-								
-								if ($storage && $storage->exists)
-								{
-									$aModel = [
-										'post_id'    => $post_id,
-										'file_id'    => $storage->file_id,
-										'filename'   => $attachment['filename'],
-										'is_spoiler' => false,
-										'is_deleted' => false,
-										'position'   => $aIndex,
-									];
-									
-									$aModels[] = $aModel;
-								}
-								else
-								{
-									++$skips;
-								}
-							}
-						}
 					}
 					
 					if (FileAttachment::insert($aModels))
@@ -937,106 +820,46 @@ class Import extends Command {
 	 *
 	 * @return void
 	 */
-	public function importInfinityPosts()
+	public function importInfinityBoardPosts()
 	{
 		$this->info("\tImporting posts ...");
 		
-		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
-		{
-			DB::statement("TRUNCATE \"posts\" CASCADE");
-		}
-		else
-		{
-			Post::truncate();
-		}
-		
-		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::whereIn('board_uri', ['cow'])->orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
+				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
+				$board->posts()->withTrashed()->forceDelete();
+				$board->posts_total = 0;
+				$board->save();
+				
+				$this->tcon->unprepared(DB::raw("LOCK TABLES posts_{$board->board_uri} WRITE"));
+				Request::create("http://banners.8ch.net/status/{$board->board_uri}/migrating");
+				
 				$this->line("\t\tImporting posts from /{$board->board_uri}/");
-				$tTable = $this->tcon->table("posts_{$board->board_uri}");
-				$postsMade = 0;
+				
+				$tTable       = $this->tcon->table("posts_{$board->board_uri}");
+				
+				// Post Info
+				$postsMade    = 0;
 				$validThreads = [];
 				
+				// Attachment Info
+				$storageLinked   = 0;
+				$attachmentsMade = 0;
+				
 				// Threads first, replies by id.
-				$tTable->orderByRaw('thread asc, id asc')->chunk(200, function($posts) use (&$validThreads, &$board, &$postsMade)
+				$query = $tTable->orderByRaw('thread asc, id asc');
+				$bar = $this->output->createProgressBar( $tTable->orderByRaw('thread asc, id asc')->count() );
+				$query->chunk(200, function($posts) use (&$bar, &$validThreads, &$board, &$postsMade, &$attachmentsMade)
 				{
 					$models = [];
-					$this->line("\t\t\tImporting 200 more posts ...");
 					
 					// thread, subject, email, name, trip, capcode, body, body_nomarkup, time, bump, files, num_files, filehash, password, ip, sticky, locked, cycle, sage, embed, edited_at
 					// post_id | board_uri | board_id | reply_to | reply_to_board_id | reply_count | reply_last | bumped_last | created_at | updated_at | updated_by | deleted_at | stickied | stickied_at | bumplocked_at | locked_at | author_ip | author_id | author_country | author_ip_nulled_at | author | insecure_tripcode | capcode_id | adventure_id | subject | email | password | body | body_parsed | body_parsed_at | body_html | featured_at | body_too_long | body_parsed_preview | flag_id | reply_file_count
 					foreach ($posts as $post)
 					{
-						$thread = null;
-						
-						if (!$post->thread)
-						{
-							$thread = null;
-						}
-						else if (isset($validThreads[$post->thread]))
-						{
-							$thread = $validThreads[$post->thread];
-						}
-						else
-						{
-							continue;
-						}
-						
-						$createdAt  = Carbon::now();
-						$editedAt   = $createdAt;
-						$bumpedLast = $createdAt;
-						
-						// Yes. Vichan database records for time can be malformed.
-						// Handle them carefully.
-						try {
-							$createdAt = Carbon::createFromTimestampUTC($post->time);
-						} catch (\Exception $e) { }
-						try {
-							if ($post->edited_at)
-							{
-								$editedAt = Carbon::createFromTimestampUTC($post->edited_at);
-							}
-						} catch (\Exception $e) { }
-						try {
-							if ($post->bump)
-							{
-								$bumpedLast = Carbon::createFromTimestampUTC($post->bump);
-							}
-						} catch (\Exception $e) { }
-						
-						$model = [
-							'board_uri'           => $board->board_uri,
-							'board_id'            => (int) $post->id,
-							'reply_to'            => $thread ? (int) $thread->post_id : null,
-							'reply_to_board_id'   => $thread ? (int) $thread->board_id : null,
-							
-							'created_at'          => $createdAt,
-							'updated_at'          => $editedAt,
-							'updated_by'          => null,
-							'deleted_at'          => null,
-							'bumped_last'         => $bumpedLast,
-							
-							'stickied'            => !($post->thread || !$post->sticky),
-							'stickied_at'         => $post->thread || !$post->sticky ? null : $createdAt,
-							'locked_at'           => $post->thread || !$post->locked ? null : $createdAt,
-							
-							'body'                => null,
-							'body_parsed'         => null,
-							'body_parsed_at'      => null,
-							'body_html'           => (string) $post->body,
-							'body_too_long'       => null,
-							'body_parsed_preview' => null,
-							
-							'subject'             => $post->subject ?: null,
-							'author'              => $post->name ?: null,
-							'author_id'           => null,
-							'author_ip'           => $post->ip ? new IP($post->ip) : null,
-							'email'               => (string) $post->email,
-							'insecure_tripcode'   => $post->trip ? ltrim("{$post->trip}", "!") : null,
-							'password'            => null,
-						];
+						$model = $this->importInfinityPost($post, $board, $validThreads);
 						
 						++$postsMade;
 						
@@ -1054,11 +877,211 @@ class Import extends Command {
 					}
 					
 					Post::insert($models);
+					
+					foreach ($models as $model)
+					{
+						$attachmentsMade += $this->importInfinityPostAttachments($post, $board);
+					}
+					
+					$bar->advance( count($posts) );
 				});
 				
-				$this->line("\t\t\tMade {$postsMade} post(s) for /{$board->board_uri}/.");
+				$this->tcon->unprepared(DB::raw("UNLOCK TABLES"));
+				Request::create("http://banners.8ch.net/status/{$board->board_uri}/horizon");
+				
+				$this->line("\t\t\tMade {$postsMade} posts with {$attachmentsMade} attachments for /{$board->board_uri}/.");
 			}
 		});
+	}
+	
+	public function importInfinityPost($post, Board &$board, &$threads)
+	{
+		$thread = null;
+		
+		if (!$post->thread)
+		{
+			$thread = null;
+		}
+		else if (isset($threads[$post->thread]))
+		{
+			$thread = $threads[$post->thread];
+		}
+		else
+		{
+			continue;
+		}
+		
+		$createdAt  = Carbon::now();
+		$editedAt   = $createdAt;
+		$bumpedLast = $createdAt;
+		
+		// Yes. Vichan database records for time can be malformed.
+		// Handle them carefully.
+		try {
+			$createdAt = Carbon::createFromTimestampUTC($post->time);
+		} catch (\Exception $e) { }
+		
+		try {
+			if ($post->edited_at)
+			{
+				$editedAt = Carbon::createFromTimestampUTC($post->edited_at);
+			}
+		} catch (\Exception $e) { }
+		
+		try {
+			if ($post->bump)
+			{
+				$bumpedLast = Carbon::createFromTimestampUTC($post->bump);
+			}
+		} catch (\Exception $e) { }
+		
+		return [
+			'board_uri'           => $board->board_uri,
+			'board_id'            => (int) $post->id,
+			'reply_to'            => $thread ? (int) $thread->post_id : null,
+			'reply_to_board_id'   => $thread ? (int) $thread->board_id : null,
+			
+			'created_at'          => $createdAt,
+			'updated_at'          => $editedAt,
+			'updated_by'          => null,
+			'deleted_at'          => null,
+			'bumped_last'         => $bumpedLast,
+			
+			'stickied'            => !($post->thread || !$post->sticky),
+			'stickied_at'         => $post->thread || !$post->sticky ? null : $createdAt,
+			'locked_at'           => $post->thread || !$post->locked ? null : $createdAt,
+			
+			'body'                => null,
+			'body_parsed'         => null,
+			'body_parsed_at'      => null,
+			'body_html'           => (string) $post->body,
+			'body_too_long'       => null,
+			'body_parsed_preview' => null,
+			
+			'subject'             => $post->subject ?: null,
+			'author'              => $post->name ?: null,
+			'author_id'           => null,
+			'author_ip'           => $post->ip ? new IP($post->ip) : null,
+			'email'               => (string) $post->email,
+			'insecure_tripcode'   => $post->trip ? ltrim("{$post->trip}", "!") : null,
+			'password'            => null,
+		];
+	}
+	
+	public function importInfinityPostAttachments($post, Board &$board)
+	{
+		$post_id = $board->posts()->where('board_id', $post->id)->pluck('post_id');
+		
+		if (!$post_id)
+		{
+			return 0;
+		}
+		
+		$attachments = @json_decode($post->files, true);
+		
+		if (!is_array($attachments))
+		{
+			return 0;
+		}
+		
+		$aModels = [];
+		
+		foreach ($attachments as $aIndex => $attachment)
+		{
+			if (isset($attachment['error']) && $attachment['error'])
+			{
+				continue;
+			}
+			
+			if (!isset($attachment['file_path']) || !isset($attachment['thumb_path']))
+			{
+				continue;
+			}
+			
+			$storage = null;
+			$path    = "{$this->targetLocation}/{$attachment['file_path']}";
+			$thumb   = "{$this->targetLocation}/{$attachment['thumb_path']}";
+			
+			if (file_exists($path))
+			{
+				if (!isset($attachment['hash']))
+				{
+					$attachment['hash'] = md5(file_get_contents($path));
+				}
+				
+				$storage = FileStorage::getHash($attachment['hash']);
+				
+				if (!$storage)
+				{
+					$height = null;
+					$width = null;
+					
+					if (isset($attachment['width']) && isset($attachment['height']))
+					{
+						$height = $attachment['height'];
+						$width = $attachment['width'];
+					}
+					
+					$storage = new FileStorage([
+						'hash'              => $attachment['hash'],
+						'banned'            => false,
+						'filesize'          => $attachment['size'],
+						'file_width'        => $width,
+						'file_height'       => $height,
+						'mime'              => $attachment['type'],
+						'meta'              => null,
+						'first_uploaded_at' => Carbon::now(),
+						'last_uploaded_at'  => Carbon::now(),
+						'upload_count'      => 1,
+					]);
+					
+					Storage::makeDirectory($storage->getDirectory());
+					
+					if (!$storage->hasFile())
+					{
+						symlink($path, $storage->getFullPath());
+					}
+					
+					if ($attachment['thumbwidth'] && file_exists($thumb))
+					{
+						$storage->has_thumbnail    = true;
+						$storage->thumbnail_width  = $attachment['thumbwidth'];
+						$storage->thumbnail_height = $attachment['thumbheight'];
+						
+						Storage::makeDirectory($storage->getDirectoryThumb());
+						
+						if (!$storage->hasThumb())
+						{
+							symlink($thumb, $storage->getFullPathThumb());
+						}
+					}
+					
+					$storage->save();
+					++$storageLinked;
+				}
+				
+				if ($storage && $storage->exists)
+				{
+					$aModel = [
+						'post_id'    => $post_id,
+						'file_id'    => $storage->file_id,
+						'filename'   => $attachment['filename'],
+						'is_spoiler' => false,
+						'is_deleted' => false,
+						'position'   => $aIndex,
+					];
+					
+					$aModels[] = $aModel;
+				}
+				else
+				{
+					++$skips;
+				}
+			}
+		}
+		
+		FileAttachment::insert($aModels);
+		return count($aModels);
 	}
 	
 	/**

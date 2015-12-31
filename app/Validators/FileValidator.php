@@ -6,6 +6,7 @@ use Sleuth;
 
 class FileValidator
 {
+	
 	public function validateMd5($attribute, $value, $parameters)
 	{
 		return !!preg_match('/^[a-f0-9]{32}$/i', $value);
@@ -13,7 +14,8 @@ class FileValidator
 	
 	public function validateFileName($attribute, $value, $parameters)
 	{
-		return preg_match("/^[^\/\?\*:;{}\\\]+\.[^\/\?\*:;{}\\\]+$/", $value) && !preg_match("/^(nul|prn|con|lpt[0-9]|com[0-9])(\.|$)/i", $value);
+		return preg_match("/^[^\/\?\*;{}\\\]+\.[^\/\?\*;{}\\\]+$/", $value)
+			&& !preg_match("/^(nul|prn|con|lpt[0-9]|com[0-9])(\.|$)/i", $value);
 	}
 	
 	public function validateFileIntegrity($attribute, $file, $parameters)
@@ -41,11 +43,16 @@ class FileValidator
 	
 	public function validateFileNew($attribute, $value, $parameters)
 	{
-		return (int) DB::table( with(new FileStorage)->getTable() )->where('hash', $value)->pluck('upload_count') == 0;
+		return (int) DB::table( with(new FileStorage)->getTable() )
+			->where('hash', $value)
+			->pluck('upload_count') == 0;
 	}
 	
 	public function validateFileOld($attribute, $value, $parameters)
 	{
-		return (int) DB::table( with(new FileStorage)->getTable() )->where('hash', $value)->pluck('upload_count') > 0;
+		return (int) DB::table( with(new FileStorage)->getTable() )
+			->where('hash', $value)
+			->pluck('upload_count') > 0;
 	}
+	
 }
