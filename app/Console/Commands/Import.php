@@ -825,7 +825,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::where('board_uri', '<>', "cow")->where('board_uri', '>=', "italia")->orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -840,7 +840,7 @@ class Import extends Command {
 					continue;
 				}
 				
-				if ($tCount <= $board->posts_total)
+				if ($tCount >= $board->posts_total && $board->board_uri != "cow")
 				{
 					$this->line("\t\tSkipping /{$board->board_uri}/");
 					continue;
