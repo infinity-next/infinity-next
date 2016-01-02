@@ -1933,8 +1933,12 @@ main {
 section.index-form {
 
 }
-	form.form-post {
+	form.form-post,
+	form.form-post .row-double {
 		background: #d6daf0;
+	}
+	
+	form.form-post {
 		border: 1px solid #ccc;
 		position: relative;
 		overflow: hidden;
@@ -2156,7 +2160,13 @@ section.index-form {
 				color: rgb(17, 17, 17);
 				text-align: center;
 			}
-
+			
+			form.form-post .row-submit::after {
+				display: block;
+				clear: both;
+				content: ' ';
+			}
+			
 			form.form-post button.field-submit:hover,
 			form.form-post div.row-file:hover {
 				background-color: #F1EFEF;

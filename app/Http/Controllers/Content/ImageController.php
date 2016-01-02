@@ -262,9 +262,15 @@ class ImageController extends Controller {
 			die();
 		}
 		
+		$FileStorage = null;
+		
 		if (is_string($hash) && is_string($filename))
 		{
-			$FileStorage     = FileStorage::getHash($hash);
+			$FileStorage = FileStorage::getHash($hash);
+		}
+		
+		if ($FileStorage instanceof FileStorage)
+		{
 			$storagePath     = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
@@ -295,7 +301,7 @@ class ImageController extends Controller {
 			
 			$storageSize = filesize($storagePathFull);
 			
-			if ($FileStorage instanceof FileStorage && $storageExists)
+			if ($storageExists)
 			{
 				ini_set("zlib.output_compression", "Off");
 				

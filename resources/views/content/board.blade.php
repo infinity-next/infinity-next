@@ -36,6 +36,13 @@
 		</ul>
 	</section>
 	
+	{{-- TODO: Remove this later ~ --}}
+	@if ($board->board_uri === "v")
+	<audio id="embedded-music" autoplay>
+		<source src="/v/file/16b7b13e98e09884d8b0b69538f65bf1/ambient.ogg" type="audio/ogg" />
+	</audio>
+	@endif
+	
 	@include('content.board.sidebar')
 </main>
 @stop
