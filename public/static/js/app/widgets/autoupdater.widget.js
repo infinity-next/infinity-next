@@ -18,12 +18,10 @@
 		
 		// Selectors for finding and binding elements.
 		selector : {
-			'widget'         : "#autoupdater",
-			
-			'enabled'        : "#autoupdater-enabled",
-			'timer'          : "#autoupdater-timer",
-			'force-update'   : "#autoupdater-update",
-			'updating'       : "#autoupdater-updating",
+			'enabled'        : ".autoupdater-enabled",
+			'timer'          : ".autoupdater-timer",
+			'force-update'   : ".autoupdater-update",
+			'updating'       : ".autoupdater-updating",
 			
 			'cite'           : "a.cite-post",
 			
@@ -150,19 +148,20 @@
 				'blur.ib-au',
 				data,
 				widget.events.windowUnfocus
-			);
+			)
+		;
 		
 		$widget
-			.on(
-				'au-update.ib-au',
-				data,
-				widget.events.update
-			)
 			.on(
 				'click.ib-au',
 				widget.options.selector['force-update'],
 				data,
 				widget.events.updaterUpdateClick
+			)
+			.on(
+				'au-update.ib-au',
+				data,
+				widget.events.update
 			)
 		;
 		
@@ -357,6 +356,8 @@
 			var widget  = event.data.widget;
 			var $widget = event.data.$widget;
 			var $timer  = $(widget.options.selector['timer'], $widget);
+			
+			console.log("wew");
 			
 			widget.updateMisses = 0;
 			$timer.attr('data-time', 5);
