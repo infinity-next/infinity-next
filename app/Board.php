@@ -1234,7 +1234,7 @@ class Board extends Model {
 			{
 				//$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->setRelation('board', $this);
-				$thread->attachments = $thread->attachments->splice(0, 1);
+				$thread->setRelation('replies', collect());
 				
 				$thread->prepareForCache();
 			}
@@ -1292,6 +1292,7 @@ class Board extends Model {
 				foreach($thread->replies as $reply)
 				{
 					$reply->setRelation('board', $this);
+					$thread->attachments = $thread->attachments->splice(0, 1);
 				}
 				
 				$thread->prepareForCache();

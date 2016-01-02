@@ -825,7 +825,7 @@ class Import extends Command {
 	{
 		$this->info("\tImporting posts ...");
 		
-		Board::orderBy('board_uri', 'asc')->chunk(1, function($boards)
+		Board::orderBy('board_uri', 'desc')->chunk(1, function($boards)
 		{
 			foreach ($boards as $board)
 			{
@@ -848,6 +848,7 @@ class Import extends Command {
 				
 				$this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
 				$post_ids = $board->posts()->withTrashed()->lists('post_id');
+				
 				FileAttachment::whereIn('post_id', $post_ids)->forceDelete();
 				$board->posts()->withTrashed()->forceDelete();
 				$board->posts_total = 0;
@@ -879,6 +880,11 @@ class Import extends Command {
 					foreach ($posts as $post)
 					{
 						$model = $this->importInfinityPost($post, $board, $validThreads);
+						
+						if (!is_array($model))
+						{
+							continue;
+						}
 						
 						$model = new Post($model);
 						$model->save();

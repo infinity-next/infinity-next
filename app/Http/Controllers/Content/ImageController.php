@@ -269,8 +269,13 @@ class ImageController extends Controller {
 			$storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
 			$cacheTime       =  31536000; /// 1 year
 			
-			if ($thumbnail && !file_exists($storagePathFull))
+			if ($thumbnail && (!file_exists($storagePathFull) || is_dir($storagePathFull)))
 			{
+				if (is_dir($storagePathFull))
+				{
+					unlink($storagePathFull);
+				}
+				
 				$FileStorage->processThumb();
 			}
 			
