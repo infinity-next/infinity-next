@@ -482,7 +482,7 @@ class PostRequest extends Request implements ApiContract {
 			
 			if ($nextPostTime->isFuture())
 			{
-				$timeDiff = ($floodTime - $nextPostTime->diffInSeconds()) + 1;
+				$timeDiff = $nextPostTime->diffInSeconds() + 1;
 				
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
 						'time_left' => $timeDiff,

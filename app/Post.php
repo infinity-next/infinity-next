@@ -1926,7 +1926,13 @@ class Post extends Model {
 			$thread = $board->getLocalThread($thread);
 		}
 		
+		if (Cache::has('posting_now_' . $this->author_ip->toLong()))
+		{
+			return abort(429);
+		}
+		
 		// Cache what time we're submitting our post for flood checks.
+		Cache::put('posting_now_' . $this->author_ip->toLong(), true, 1);
 		Cache::put('last_post_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
 		
 		if ($thread instanceof Post)
@@ -2070,6 +2076,8 @@ class Post extends Model {
 			
 			$this->attachmentLinks()->saveMany($uploads);
 			FileStorage::whereIn('hash', $hashes)->increment('upload_count');
+			
+			Cache::forget('posting_now_' . $this->author_ip->toLong());
 		}
 		
 		
