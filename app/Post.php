@@ -2076,8 +2076,6 @@ class Post extends Model {
 			
 			$this->attachmentLinks()->saveMany($uploads);
 			FileStorage::whereIn('hash', $hashes)->increment('upload_count');
-			
-			Cache::forget('posting_now_' . $this->author_ip->toLong());
 		}
 		
 		
@@ -2088,6 +2086,7 @@ class Post extends Model {
 			Event::fire(new ThreadNewReply($thread));
 		}
 		
+		Cache::forget('posting_now_' . $this->author_ip->toLong());
 		return $this;
 	}
 	
