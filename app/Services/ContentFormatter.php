@@ -177,20 +177,30 @@ class ContentFormatter {
 			// Matches |bad| but not |<span class="censored">bad</span>|.
 			$pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/";
 			
-			$content = preg_replace_callback($pattern, function ($matches) use ($replace) {
-				if (isset($matches['match']))
-				{
-					$randBool = mt_rand(0, 1) ? "odd" : "even";
-					$randTens = mt_rand(1, 10);
+			try
+			{
+				$newContent = preg_replace_callback($pattern, function ($matches) use ($replace) {
+					if (isset($matches['match']))
+					{
+						$randBool = mt_rand(0, 1) ? "odd" : "even";
+						$randTens = mt_rand(1, 10);
+						
+						$censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", "", $replace));
+						$censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : "";
+						
+						return "<span class=\"censored {$censoredWord} rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
+					}
 					
-					$censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", "", $replace));
-					$censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : "";
-					
-					return "<span class=\"censored {$censoredWord} rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
-				}
+					return $matches[0];
+				}, $content);
 				
-				return $matches[0];
-			}, $content);
+				$content = $newContent;
+			}
+			// RegEx error
+			catch (\ErrorException $e)
+			{
+				// RegEx is malformed.
+			}
 		}
 		
 		return $content;
