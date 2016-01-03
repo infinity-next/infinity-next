@@ -488,6 +488,7 @@ class PostRequest extends Request implements ApiContract {
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
 						'time_left' => $timeDiff,
 				]));
+				
 				$this->failedValidation($validator);
 				return;
 			}
@@ -520,9 +521,12 @@ class PostRequest extends Request implements ApiContract {
 						
 						if ($floodTimer->isFuture())
 						{
-							$messages->add("body", trans("validation.custom.post_flood", [
+							$messages->add("flood", trans("validation.custom.post_flood", [
 								'time_left' => $floodTimer->diffInSeconds(),
 							]));
+							
+							$this->failedValidation($validator);
+							return;
 						}
 					}
 				}
