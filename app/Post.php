@@ -1926,6 +1926,7 @@ class Post extends Model {
 			$thread = $board->getLocalThread($thread);
 		}
 		
+		// Cache what time we're submitting our post for flood checks.
 		Cache::put('last_post_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
 		
 		if ($thread instanceof Post)
