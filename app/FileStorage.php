@@ -783,7 +783,17 @@ class FileStorage extends Model {
 				return "mkv";
 		}
 		
-		return $mimes[1];
+		
+		if (count($mimes) > 1)
+		{
+			return $mimes[1];
+		}
+		else if (count($mimes) === 1)
+		{
+			return $mimes[0];
+		}
+		
+		return "UNKNOWN";
 	}
 	
 	/**
