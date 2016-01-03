@@ -8,9 +8,12 @@ use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\UserManager;
+use App\Support\IP;
+use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Auth;
+use Cache;
 use Validator;
 use View;
 
@@ -444,6 +447,9 @@ class PostRequest extends Request implements ApiContract {
 		$thread    = $this->thread;
 		$user      = $this->user;
 		
+		$ip        = new IP($this->ip());
+		$carbon    = new \Carbon\Carbon;
+		
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
 		$isReply   = $this->thread instanceof Post;
@@ -453,14 +459,11 @@ class PostRequest extends Request implements ApiContract {
 			$floodTime = site_setting('postFloodTime');
 			
 			// Check global flood.
-			$lastPost = Post::select('created_at')
-				->whereAuthorIP($this->ip())
-				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds($floodTime))
-				->first();
+			$nextPostTime = Carbon::createFromTimestamp(Cache::get('last_post_for_' . $ip->toLong(), 0) + $floodTime);
 			
-			if ($lastPost instanceof Post)
+			if ($nextPostTime->isFuture())
 			{
-				$timeDiff = ($floodTime - $lastPost->created_at->diffInSeconds()) + 1;
+				$timeDiff = ($floodTime - $nextPostTime->diffInSeconds()) + 1;
 				
 				$messages->add("flood", trans_choice("validation.custom.post_flood", $timeDiff, [
 						'time_left' => $timeDiff,
@@ -475,15 +478,11 @@ class PostRequest extends Request implements ApiContract {
 			$floodTime = site_setting('threadFloodTime');
 			
 			// Check global flood.
-			$lastThread = Post::select('created_at')
-				->whereAuthorIP($this->ip())
-				->where('created_at', '>=', \Carbon\Carbon::now()->subSeconds($floodTime))
-				->op()
-				->first();
+			$nextPostTime = Carbon::createFromTimestamp(Cache::get('last_thread_for_' . $ip->toLong(), 0) + $floodTime);
 			
-			if ($lastThread instanceof Post)
+			if ($nextPostTime->isFuture())
 			{
-				$timeDiff = ($floodTime - $lastThread->created_at->diffInSeconds()) + 1;
+				$timeDiff = ($floodTime - $nextPostTime->diffInSeconds()) + 1;
 				
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
 						'time_left' => $timeDiff,

@@ -1993,10 +1993,13 @@ class Post extends Model {
 			$this->password  = $this->makePassword($this->password);
 			$this->save();
 			
+			Cache::put('last_post_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
+			
 			// Optionally, the OP of this thread needs a +1 to reply count.
 			if ($thread instanceof static)
 			{
 				// We're not using the Model for this because it fails under high volume.
+				Cache::put('last_thread_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
 				
 				$threadNewValues = [
 					'updated_at'       => $thread->updated_at,

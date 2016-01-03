@@ -126,7 +126,7 @@ class IP extends CIDR {
 	
 	public function toLong()
 	{
-		return ip2long(parent::__toString());
+		return sprintf('%u', ip2long(parent::__toString()));
 	}
 	
 	public function toText()
