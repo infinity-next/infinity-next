@@ -498,6 +498,8 @@
 						// 'background-position' : 'center center',
 						'min-width'           : $img.width() + 'px',
 						'min-height'          : $img.height() + 'px',
+						'height'              : "auto",
+						'width'               : "auto",
 						'opacity'             : 0.5,
 					});
 				
