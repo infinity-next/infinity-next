@@ -1214,22 +1214,23 @@ class Board extends Model {
 	
 	public function getThreadsForCatalog($page = 0)
 	{
-		$postsPerPage    = 150;
+		$postsPerCatalog = 150;
+		$postsPerPage    = $this->getConfig('postsPerPage', 10);
 		
 		$rememberTags    = ["board.{$this->board_uri}.pages"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board_uri}.catalog";
-		$rememberClosure = function() use ($page, $postsPerPage) {
+		$rememberClosure = function() use ($page, $postsPerCatalog, $postsPerPage) {
 			$threads = $this->threads()
 				->op()
 				->withEverythingForReplies()
 				->orderBy('stickied', 'desc')
 				->orderBy('bumped_last', 'desc')
-				->skip($postsPerPage * ( $page - 1 ))
-				->take($postsPerPage)
+				->skip($postsPerCatalog * ( $page - 1 ))
+				->take($postsPerCatalog)
 				->get();
 			
-			foreach ($threads as $thread)
+			foreach ($threads as $threadIndex => $thread)
 			{
 				//$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->setRelation('board', $this);
@@ -1240,6 +1241,9 @@ class Board extends Model {
 					? $thread->attachments->splice(0, 1)
 					: collect()
 				);
+				
+				$thread->page_number = floor($threadIndex / $postsPerPage) + 1;
+				$thread->reply_files = "?";
 				
 				$thread->prepareForCache();
 			}
