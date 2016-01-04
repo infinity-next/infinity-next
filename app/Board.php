@@ -1236,12 +1236,6 @@ class Board extends Model {
 				$thread->setRelation('board', $this);
 				$thread->setRelation('replies', collect());
 				
-				// Limit the number of attachments to one.
-				$thread->setRelation('attachments', $thread->attachments !== null
-					? $thread->attachments->splice(0, 1)
-					: collect()
-				);
-				
 				$thread->page_number = floor($threadIndex / $postsPerPage) + 1;
 				$thread->reply_files = "?";
 				

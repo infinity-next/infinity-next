@@ -1,16 +1,6 @@
 <ul class="post-details">
 	@set('catalog', isset($catalog) && $catalog)
 	
-	@if ($catalog)
-	<li class="post-detail post-stats">
-		{{ Lang::trans('board.detail.catalog_stats', [
-			'reply_count' => $post->reply_count,
-			'file_count'  => $post->reply_files,
-			'page'        => $post->page_number,
-		]) }}
-	</li>
-	@endif
-	
 	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
 	
 	@if ($details['subject'])

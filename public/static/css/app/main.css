@@ -3352,6 +3352,7 @@ main.index-threaded {
 									width: auto;
 									height: auto;
 									line-height: normal;
+									margin: 0 auto;
 								}
 									main.index-catalog .attachment {
 										display: inline;
