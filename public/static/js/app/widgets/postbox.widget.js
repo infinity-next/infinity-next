@@ -319,7 +319,18 @@
 		}
 		else if (window.innerHeight >= 480 && window.innerWidth >= 728)
 		{
-			widget.bindResize();
+			var isClosed = $widget.hasClass("postbox-closed");
+			var isMaximized = $widget.hasClass("postbox-maximized");
+			
+			if (!isMaximized && !isClosed)
+			{
+				widget.bindResize();
+			}
+			
+			if (!isMaximized)
+			{
+				widget.bindDraggable();
+			}
 		}
 	};
 	
