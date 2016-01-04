@@ -3336,8 +3336,10 @@ main.index-threaded {
 							}
 
 							main.index-catalog .post-attachments {
+								display: block;
 								background: rgba(255,255,255,0.6);
 								padding: 0;
+								float: none;
 							}
 								main.index-catalog .post-attachment {
 									float: none;

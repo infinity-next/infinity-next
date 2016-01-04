@@ -1214,7 +1214,7 @@ class Board extends Model {
 	
 	public function getThreadsForCatalog($page = 0)
 	{
-		$postsPerPage    = 100;
+		$postsPerPage    = 150;
 		
 		$rememberTags    = ["board.{$this->board_uri}.pages"];
 		$rememberTimer   = 30;
@@ -1229,12 +1229,17 @@ class Board extends Model {
 				->take($postsPerPage)
 				->get();
 			
-			// Limit the number of attachments to one.
 			foreach ($threads as $thread)
 			{
 				//$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->setRelation('board', $this);
 				$thread->setRelation('replies', collect());
+				
+				// Limit the number of attachments to one.
+				$thread->setRelation('attachments', $thread->attachments !== null
+					? $thread->attachments->splice(0, 1)
+					: collect()
+				);
 				
 				$thread->prepareForCache();
 			}
