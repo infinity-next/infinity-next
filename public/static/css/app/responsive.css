@@ -132,7 +132,7 @@
  * 728px width and 480px height
  * Anything bigger
  */
-@media (min-width: 728px) and (min-height: 480px) {
+@media (min-width: 728px) {
 	/**
 	 * Helpers
 	 */
@@ -326,7 +326,7 @@
 /**
  * 1440px width and 480px height
  */
-@media (min-width: 1440px) and (min-height: 480px) {
+@media (min-width: 1440px) {
 
 	/**
 	 * Sidebar

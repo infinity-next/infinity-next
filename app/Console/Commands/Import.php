@@ -354,6 +354,11 @@ class Import extends Command {
 				file_put_contents($file, "posts");
 				$this->importInfinityBoardPosts();
 			
+			
+			case "passwords" :
+				file_put_contents($file, "passwords");
+				$this->importInfinityPasswords();
+			
 			break;
 			default :
 				$this->error("Import state \"{$state}\" invalid.");
@@ -1122,6 +1127,42 @@ class Import extends Command {
 		
 		FileAttachment::insert($aModels);
 		return count($aModels);
+	}
+	
+	/**
+	 * Imports only user passwords.
+	 *
+	 * @return void
+	 */
+	public function importInfinityPasswords()
+	{
+		$this->info("\tImporting user passwords ...");
+		
+		$hUserTable = User::whereNotNull('password_legacy');
+		$tModsTable = $this->tcon->table("mods");
+		
+		$bar = $this->output->createProgressBar( $hUserTable->count() );
+		
+		$hUserTable->chunk(100, function($users) use (&$tModsTable, &$bar)
+		{
+			foreach ($users as $user)
+			{
+				$mod = $tModsTable->where('username', $user->username)->first();
+				
+				if ($mod)
+				{
+					$user->password_legacy = json_encode([
+						'hasher' => "Vichan",
+						'hash'   => $mod->password,
+						'salt'   => $mod->salt,
+					]);
+					
+					$user->save();
+				}
+			}
+			
+			$bar->advance( count($users) );
+		});
 	}
 	
 	/**

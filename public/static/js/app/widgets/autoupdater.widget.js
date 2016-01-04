@@ -357,8 +357,6 @@
 			var $widget = event.data.$widget;
 			var $timer  = $(widget.options.selector['timer'], $widget);
 			
-			console.log("wew");
-			
 			widget.updateMisses = 0;
 			$timer.attr('data-time', 5);
 			widget.update();
