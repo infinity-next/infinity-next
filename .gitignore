@@ -4,3 +4,5 @@
 /storage/infinity.import
 .env
 composer.lock
+dump.rdb
+
