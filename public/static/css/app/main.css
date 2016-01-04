@@ -2911,6 +2911,7 @@ main.index-threaded {
 				ul.post-attachments {
 					display: block;
 					float: left;
+					overflow-x: auto;
 				}
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
@@ -3061,8 +3062,6 @@ main.index-threaded {
 								img.attachment-img {
 									display: inline-block;
 									margin: 0 auto;
-									max-width: 125px;
-									max-height: 125px;
 									
 									vertical-align: middle;
 									position: relative;

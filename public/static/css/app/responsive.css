@@ -30,17 +30,6 @@
 			max-width: 150px;
 			min-width: 100px;
 		}
-
-	/**
-	 * Thumbnailing
-	 */
-	div.attachment-wrapper {
-		width: 125px;
-	}
-	img.attachment-img {
-		max-width: 125px;
-		max-height: 125px;
-	}
 }
 
 /**
@@ -114,17 +103,6 @@
 	body.responsive section.index-threads aside.advertiser.top-left {
 		display: block;
 		text-align: center;
-	}
-
-	/**
-	 * Thumbnailing
-	 */
-	div.attachment-wrapper {
-		width: 150px;
-	}
-	img.attachment-img {
-		max-width: 150px;
-		max-height: 150px;
 	}
 }
 
@@ -310,17 +288,6 @@
 		body.responsive main.index-catalog .thread-item {
 			max-width: 180px;
 		}
-
-	/**
-	 * Thumbnailing
-	 */
-	div.attachment-wrapper {
-		width: auto;
-	}
-	img.attachment-img {
-		max-width: none;
-		max-height: none;
-	}
 }
 
 /**

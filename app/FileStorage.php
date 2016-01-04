@@ -639,7 +639,7 @@ class FileStorage extends Model {
 			}
 		}
 		
-		return "<div class=\"attachment-wrapper\" style=\"min-height: {$minHeight}; min-width: {$minWidth}; max-height: {$maxHeight}; max-width: {$maxWidth};\">" .
+		return "<div class=\"attachment-wrapper\" style=\"height: {$height}; width: {$width};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}
