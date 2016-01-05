@@ -261,9 +261,10 @@ class BoardController extends Controller {
 			return abort(404);
 		}
 		
-		return response($stylesheet, $statusCode)
-			->header('Content-Type', $contentType)
-			->header('Cache-Control', "public, max-age={$cacheTime}, pre-check={$cacheTime}");
+		return response($stylesheet, $statusCode)->header([
+			'Content-Type'  => $contentType,
+			'Cache-Control' => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
+		]);
 	}
 	
 	/**
