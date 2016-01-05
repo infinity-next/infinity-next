@@ -65,11 +65,11 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 		'email_verified',
 		'password',
 		'password_legacy',
-		'remember_token'
-		'stripe_active'
+		'remember_token',
+		'stripe_active',
 		'stripe_id',
-		'stripe_subscription'
-		'stripe_plan'
+		'stripe_subscription',
+		'stripe_plan',
 		'last_four',
 		'trial_ends_at',
 		'subscription_ends_at',
