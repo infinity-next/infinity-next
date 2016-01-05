@@ -4,7 +4,7 @@ use App\Post;
 use App\Listeners\Listener;
 use Cache;
 
-class ThreadRecache extends Listener
+class PostHTMLRecache extends Listener
 {
 	
 	/**
@@ -17,7 +17,7 @@ class ThreadRecache extends Listener
 	{
 		if ($event->post instanceof Post)
 		{
-			$event->post->clearThreadCache();
+			$event->post->clearPostHTMLCache();
 		}
 	}
 	

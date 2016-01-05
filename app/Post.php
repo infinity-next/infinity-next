@@ -377,6 +377,26 @@ class Post extends Model {
 	}
 	
 	/**
+	 * Removes post HTML caches..
+	 *
+	 * @return void
+	 */
+	public function clearPostHTMLCache()
+	{
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				break;
+
+			default :
+				Cache::tags(["post_{$this->post_id}"])->flush();
+				break;
+		}
+	}
+	
+	/**
 	 * Removes thread caches containing this post.
 	 *
 	 * @return void
@@ -398,7 +418,7 @@ class Post extends Model {
 					break;
 			}
 		}
-
+		
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -411,7 +431,7 @@ class Post extends Model {
 				break;
 		}
 	}
-
+	
 	/**
 	 * Returns backlinks for this post which are permitted by board config.
 	 *
@@ -1811,19 +1831,23 @@ class Post extends Model {
 	 */
 	public function toHTML($catalog, $multiboard, $preview)
 	{
-		$rememberTags    = ["board.{$this->board->board_uri}", "post_html"];
+		$rememberTags    = [
+			"board.{$this->board->board_uri}",
+			"post_{$this->post_id}",
+			"post_html",
+		];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
 		$rememberClosure = function() use ($catalog, $multiboard, $preview) {
 			return \View::make('content.board.post', [
 				// Models
-				'board'    => $this->board,
-				'post'     => $this,
-				'user'     => user(),
+				'board'      => $this->board,
+				'post'       => $this,
+				'user'       => user(),
 				
 				// Statuses
 				'catalog'    => $catalog,
-				'reply_to'   => $this->reply_to ?: $this->board_id,
+				'reply_to'   => $this->reply_to ?: false,
 				'multiboard' => $multiboard,
 				'preview'    => $preview,
 			])->render();
@@ -1834,6 +1858,24 @@ class Post extends Model {
 			return $rememberClosure();
 		}
 		
+		if ($catalog)
+		{
+			$rememberTags[] = "catalog_post";
+			$rememberTimer += 30;
+		}
+		
+		if ($multiboard)
+		{
+			$rememberTags[] = "multiboard_post";
+			$rememberTimer -= 20;
+		}
+		
+		if ($preview)
+		{
+			$rememberTags[] = "preview_post";
+			$rememberTimer -= 20;
+			
+		}
 		switch (env('CACHE_DRIVER'))
 		{
 			case "file" :
@@ -2163,6 +2205,11 @@ class Post extends Model {
 			if ($thread)
 			{
 				$thread->prepareForCache();
+				
+				foreach($thread->replies as $reply)
+				{
+					$thread->attachments = $thread->attachments->reverse();
+				}
 			}
 			
 			return $thread;

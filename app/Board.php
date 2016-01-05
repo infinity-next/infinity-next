@@ -1331,7 +1331,7 @@ class Board extends Model {
 				foreach($thread->replies as $reply)
 				{
 					$reply->setRelation('board', $this);
-					$thread->attachments = $thread->attachments->splice(0, 1);
+					$thread->attachments = $thread->attachments->reverse();
 				}
 				
 				$thread->prepareForCache();

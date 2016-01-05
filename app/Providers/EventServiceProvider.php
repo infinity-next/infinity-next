@@ -22,6 +22,7 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\PostWasAdded' => [
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\OverboardRecache',
+			'App\Listeners\PostHTMLRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasBanned' => [
@@ -37,6 +38,7 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\PostWasModified' => [
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\OverboardRecache',
+			'App\Listeners\PostHTMLRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		'App\Events\PostWasModerated' => [
@@ -44,6 +46,7 @@ class EventServiceProvider extends ServiceProvider {
 			
 			'App\Listeners\BoardRecachePages',
 			'App\Listeners\OverboardRecache',
+			'App\Listeners\PostHTMLRecache',
 			'App\Listeners\ThreadRecache',
 		],
 		
