@@ -47,14 +47,36 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['username', 'email', 'password', 'password_legacy'];
+	protected $fillable = [
+		'username',
+		'email',
+		'password',
+		'password_legacy',
+	];
 	
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['email', 'password', 'remember_token'];
+	protected $hidden = [
+		'username',
+		'email',
+		'email_verified',
+		'password',
+		'password_legacy',
+		'remember_token'
+		'stripe_active'
+		'stripe_id',
+		'stripe_subscription'
+		'stripe_plan'
+		'last_four',
+		'trial_ends_at',
+		'subscription_ends_at',
+		'subscription_kill_token',
+		'braintree_active',
+		'braintree_id',
+	];
 	
 	/**
 	 * Ties database triggers to the model.
