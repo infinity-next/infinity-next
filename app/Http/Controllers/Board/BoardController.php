@@ -254,14 +254,17 @@ class BoardController extends Controller {
 		$stylesheet  = $board->getStylesheet();
 		$statusCode  = 200;
 		$contentType = "text/css";
+		$cacheTime   =  86400; // 1 day
 		
 		if (strlen((string) $stylesheet) == 0)
 		{
 			return abort(404);
 		}
 		
-		return response($stylesheet, $statusCode)
-			->header('Content-Type', $contentType);
+		return response($stylesheet, $statusCode)->header([
+			'Content-Type'  => $contentType,
+			'Cache-Control' => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
+		]);
 	}
 	
 	/**
