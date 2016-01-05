@@ -32,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider {
 		
 		$router->model('attachment', '\App\FileAttachment');
 		$router->model('ban',        '\App\Ban');
-		//$router->model('board',      '\App\Board');
+		$router->model('board',      '\App\Board');
 		$router->model('post',       '\App\Post');
 		$router->model('report',     '\App\Report');
 		$router->model('role',       '\App\Role');
@@ -48,15 +48,19 @@ class RouteServiceProvider extends ServiceProvider {
 			}
 		});
 		
-		
 		$router->bind('board', function($value, $route) {
 			$board = Board::getBoardForRouter(
 				$this->app,
 				$value
 			);
 			
-			$board->applicationSingleton = true;
-			return $board;
+			if ($board)
+			{
+				$board->applicationSingleton = true;
+				return $board;
+			}
+			
+			return abort(404);
 		});
 		
 		$router->bind('attachment', function($value, $route) {

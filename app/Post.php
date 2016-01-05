@@ -1359,7 +1359,7 @@ class Post extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "site.overboard.page.{$page}";
 		$rememberClosure = function() use ($page, $postsPerPage) {
-			$threads = static::with('board', 'board.settings')
+			$threads = static::with('board', 'board.settings', 'board.assets')
 				->op()
 				->withEverything()
 				->with(['replies' => function($query) {
