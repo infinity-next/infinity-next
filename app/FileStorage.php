@@ -1020,6 +1020,7 @@ class FileStorage extends Model {
 							"-t 1 " . // Duration in seconds.
 							"-r 1 " . // FPS, 1 for 1 frame.
 							"-y " . // Overwrite file if it already exists.
+							"-threads 1 " .
 							"{$image} 2>&1";
 					
 					$output = "";
