@@ -32,7 +32,7 @@
 		
 		// The default values that are set behind init values.
 	blueprint.prototype.defaults = {
-		checkFileUrl  : window.app.board_url + "check-file",
+		checkFileUrl  : window.app.board_url + "/check-file",
 		
 		// Selectors for finding and binding elements.
 		selector : {
@@ -85,7 +85,7 @@
 			paramName      : "files",
 			
 			// File upload URL
-			url            : window.app.board_url + "upload-file",
+			url            : window.app.board_url + "/upload-file",
 			
 			// Allow multiple uploads.
 			uploadMultiple : true,
