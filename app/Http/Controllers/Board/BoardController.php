@@ -6,11 +6,13 @@ use App\OptionGroup;
 use App\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Support\IP;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
+use Cache;
 use Input;
 use File;
 use Response;
@@ -323,8 +325,22 @@ class BoardController extends Controller {
 		
 		foreach ($input['files'] as $file)
 		{
-			$newStorage = FileStorage::storeUpload($file);
-			$storage[$newStorage->hash] = $newStorage;
+			$ip = new IP( $request->ip() );
+			$uploadSize = (int) Cache::get("upstream_data_for_" . $ip->toLong(), 0);
+			
+			if ($uploadSize <= 52430000)
+			{
+				Cache::increment("upstream_data_for_" . $ip->toLong(), $file->getSize(), 2);
+				
+				$newStorage = FileStorage::storeUpload($file);
+				$storage[$newStorage->hash] = $newStorage;
+				
+				Cache::decrement("upstream_data_for_" . $ip->toLong(), $file->getSize());
+			}
+			else
+			{
+				return abort(429);
+			}
 		}
 		
 		return $storage;

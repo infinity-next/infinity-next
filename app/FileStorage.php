@@ -5,12 +5,14 @@ use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use Cache;
 use File;
 use Input;
 use Log;
 use Settings;
 use Sleuth;
 use Storage;
+use Request;
 
 class FileStorage extends Model {
 	
