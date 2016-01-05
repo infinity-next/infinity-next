@@ -2204,14 +2204,10 @@ class Post extends Model {
 			
 			if ($thread)
 			{
+				$thread->setRelation('attachments' ,$thread->attachments->reverse());
 				$thread->prepareForCache();
-				
-				foreach($thread->replies as $reply)
-				{
-					$thread->attachments = $thread->attachments->reverse();
-				}
 			}
-			
+			 
 			return $thread;
 		};
 		
