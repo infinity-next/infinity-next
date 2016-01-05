@@ -323,6 +323,10 @@ class Board extends Model {
 		return $user->canPostInLockedThreads($this);
 	}
 	
+	public function clearCachedModel()
+	{
+		return Cache::forget("board.{$this->board_uri}");
+	}
 	
 	public function clearCachedThreads()
 	{
@@ -1140,6 +1144,38 @@ class Board extends Model {
 	public function getStylesheetUrl()
 	{
 		return $this->getUrl("style.css");
+	}
+	
+	/**
+	 * Returns a single board with all data, using the cache if possible.
+	 *
+	 * @static
+	 * @param  App       $app
+	 * @param  string    $board_ur
+	 * @return \App\Board
+	 */
+	public static function getBoardForRouter($app, $board_uri)
+	{
+		$rememberTimer   = 60;
+		$rememberKey     = "board.{$board_uri}";
+		$rememberClosure = function() use ($app, $board_uri) {
+			$board = static::find($board_uri);
+			
+			if ($board instanceof Board && $board->exists)
+			{
+				return $board->load([
+					'assets',
+					'assets.storage',
+					'settings'
+				]);
+			}
+			
+			return null;
+		};
+		
+		$board = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		
+		return $board;
 	}
 	
 	/**

@@ -61,6 +61,7 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Listeners\UserRecachePermissions',
 		],
 		'App\Events\BoardWasModified' => [
+			'App\Listeners\BoardModelRecache',
 			'App\Listeners\BoardListRecache',
 			'App\Listeners\BoardStyleRecache',
 			'App\Listeners\OverboardRecache',

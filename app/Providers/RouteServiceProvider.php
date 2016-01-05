@@ -32,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider {
 		
 		$router->model('attachment', '\App\FileAttachment');
 		$router->model('ban',        '\App\Ban');
-		$router->model('board',      '\App\Board');
+		//$router->model('board',      '\App\Board');
 		$router->model('post',       '\App\Post');
 		$router->model('report',     '\App\Report');
 		$router->model('role',       '\App\Role');
@@ -46,6 +46,17 @@ class RouteServiceProvider extends ServiceProvider {
 			{
 				return \App\User::find($matches['id']);
 			}
+		});
+		
+		
+		$router->bind('board', function($value, $route) {
+			$board = Board::getBoardForRouter(
+				$this->app,
+				$value
+			);
+			
+			$board->applicationSingleton = true;
+			return $board;
 		});
 		
 		$router->bind('attachment', function($value, $route) {
@@ -68,6 +79,11 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->bind('post_id', function($value, $route) {
 			$board = $route->getParameter('board');
 			
+			if (!($board instanceof Board))
+			{
+				$board = $this->app->make("\App\Board");
+			}
+			
 			if (is_numeric($value) && $board instanceof Board)
 			{
 				return $board->getThreadByBoardId($value);
@@ -76,19 +92,13 @@ class RouteServiceProvider extends ServiceProvider {
 		
 		// Binds a matched instance of a {board} as a singleton instance.
 		$router->matched(function($route, $request) {
-			// Binds the board to the application if it exists.
 			$board = $route->getParameter('board');
 			
 			if ($board instanceof Board && $board->exists)
 			{
-				$board->applicationSingleton = true;
-				//$this->app->instance("\App\Board", $board);
+				// Binds the board to the application if it exists.
 				$this->app->singleton("\App\Board", function($app) use ($board) {
-					return $board->load([
-						'assets',
-						'assets.storage',
-						'settings'
-					]);
+					return $board;
 				});
 			}
 			
