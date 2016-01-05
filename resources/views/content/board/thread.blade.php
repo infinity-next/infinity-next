@@ -1,8 +1,8 @@
-@include('content.board.post', [
-	'board' => $board,
-	'post'  => $thread,
-	'multiboard' => isset($multiboard) ? $multiboard : false,
-])
+{!! $thread->toHTML(
+		false,
+		isset($multiboard) ? $multiboard : false,
+		false
+) !!}
 
 @if (!$thread->reply_to)
 @spaceless
@@ -41,12 +41,11 @@
 	<li class="thread-reply">
 		<article class="reply">
 			@endspaceless
-			@include('content.board.post', [
-				'board'      => $board,
-				'post'       => $reply,
-				'reply_to'   => $thread,
-				'multiboard' => isset($multiboard) ? $multiboard : false,
-			])
+			{!! $reply->toHTML(
+					false,
+					isset($multiboard) ? $multiboard : false,
+					false
+			) !!}
 			@spaceless
 		</article>
 	</li>

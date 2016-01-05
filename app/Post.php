@@ -711,14 +711,7 @@ class Post extends Model {
 	{
 		if (!$this->trashed())
 		{
-			return \View::make('content.board.post', [
-					'board'    => $this->board,
-					'post'     => $this,
-					'user'     => user(),
-					'op'       => false,
-					'reply_to' => $this->reply_to ?: $this->board_id,
-					'preview'  => false,
-			])->render();
+			return $this->toHTML(false, false, false);
 		}
 
 		return null;
@@ -1812,6 +1805,50 @@ class Post extends Model {
 	}
 	
 	/**
+	  *Renders a single post.
+	 *
+	 * @return string  HTML
+	 */
+	public function toHTML($catalog, $multiboard, $preview)
+	{
+		$rememberTags    = ["board.{$this->board->board_uri}", "post_html"];
+		$rememberTimer   = 30;
+		$rememberKey     = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
+		$rememberClosure = function() use ($catalog, $multiboard, $preview) {
+			return \View::make('content.board.post', [
+				// Models
+				'board'    => $this->board,
+				'post'     => $this,
+				'user'     => user(),
+				
+				// Statuses
+				'catalog'    => $catalog,
+				'reply_to'   => $this->reply_to ?: $this->board_id,
+				'multiboard' => $multiboard,
+				'preview'    => $preview,
+			])->render();
+		};
+		
+		if (!user()->isAnonymous())
+		{
+			return $rememberClosure();
+		}
+		
+		switch (env('CACHE_DRIVER'))
+		{
+			case "file" :
+			case "database" :
+				break;
+			
+			default :
+				return Cache::tags($rememberTags)
+					->remember($rememberKey, $rememberTimer, $rememberClosure);
+		}
+		
+		return $rememberClosure();
+	}
+	
+	/**
 	 * Fetches a URL for either this thread or an action.
 	 *
 	 * @param  string  $action
@@ -2114,7 +2151,6 @@ class Post extends Model {
 			$board = Board::find($board_uri);
 		}
 		
-		// Prep the 
 		$rememberTags    = ["board.{$board_uri}", "threads"];
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$board_uri}.thread.{$board_id}";
