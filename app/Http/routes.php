@@ -13,6 +13,13 @@
 
 Route::group([
 	'prefix' => '/',
+	'middleware' => [
+		'Illuminate\Cookie\Middleware\EncryptCookies',
+		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
+		'Illuminate\Session\Middleware\StartSession',
+		'Illuminate\View\Middleware\ShareErrorsFromSession',
+		'App\Http\Middleware\LocalizedSubdomains',
+	]
 ], function () {
 	
 	/*
@@ -23,12 +30,6 @@ Route::group([
 	Route::controller('boards.html',    'BoardlistController');
 	
 	Route::get('overboard.html', 'MultiboardController@getOverboard');
-	
-	Route::get('query.test', function()
-	{
-		\App\Board::find('b')->getThreadsForIndex(0);
-		return "Hello.";
-	});
 	
 	/*
 	| Control Panel (cp)
@@ -372,24 +373,34 @@ Route::group([
 	
 });
 
+/*
+| Board Attachment Routes (Files)
+*/
 Route::group([
-	'domain'     => 'static.{domain}.{tld}',
+	'domain'     => env('APP_URL_MEDIA', 'static.{domain}.{tld}'),
+	'prefix'     => 'file',
+	'middleware' => 'App\Http\Middleware\FileFilter',
 	'namespace'  => 'Content',
 ], function() {
 	
-	Route::group([
-		'prefix' => "image",
-	], function()
-	{
-		Route::get('{hash}/{filename}', 'ImageController@getImage')
-			->where([
-				'hash' => "[a-f0-9]{32}",
-			]);
-		
-		Route::get('thumb/{hash}/{filename}', 'ImageController@getThumbnail')
-			->where([
-				'hash' => "[a-f0-9]{32}",
-			]);
-	});
+	Route::get('{hash}/{filename}', [
+		'as'   => 'static.file.hash',
+		'uses' => 'ImageController@getImageFromHash',
+	])->where(['hash' => "[a-f0-9]{32}",]);
+	
+	Route::get('{attachment}/{filename}', [
+		'as'   => 'static.file.attachment',
+		'uses' => 'ImageController@getImageFromAttachment',
+	]);
+	
+	Route::get('thumb/{hash}/{filename}', [
+		'as'   => 'static.thumb.hash',
+		'uses' => 'ImageController@getThumbnailFromHash',
+	])->where(['hash' => "[a-f0-9]{32}",]);
+	
+	Route::get('thumb/{attachment}/{filename}', [
+		'as'   => 'static.thumb.attachment',
+		'uses' => 'ImageController@getThumbnailFromAttachment',
+	]);
 	
 });

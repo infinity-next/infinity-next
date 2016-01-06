@@ -277,7 +277,11 @@ class FileStorage extends Model {
 	 */
 	public function getDownloadURL(Board $board)
 	{
-		return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
+		//return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
+		return route('static.file.attachment', [
+			'attachment' => $this->pivot->attachment_id,
+			'filename'   => $this->getDownloadName(),
+		]);
 	}
 	
 	/**
@@ -654,8 +658,7 @@ class FileStorage extends Model {
 	 */
 	public function getThumbnailURL(Board $board)
 	{
-		$baseURL = "/{$board->board_uri}/file/thumb/{$this->getIdentifier()}/";
-		$ext     = $this->guessExtension();
+		$ext = $this->guessExtension();
 		
 		if ($this->isSpoiler())
 		{
@@ -682,10 +685,13 @@ class FileStorage extends Model {
 		else if ($this->isImageVector())
 		{
 			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-			$baseURL ="/{$board->board_uri}/file/{$this->pivot->attachment_id}/";
+			return $this->getDownloadURL();
 		}
 		
-		return url("{$baseURL}{$this->getFileName()}.{$ext}");
+		return route('static.thumb.attachment', [
+			'attachment' => $this->getIdentifier(),
+			'filename'   => "{$this->getFileName()}.{$ext}",
+		]);
 	}
 	
 	/**
