@@ -91,6 +91,7 @@ class BoardAsset extends Model implements PseudoEnumContract {
 	public function getURL()
 	{
 		return route('static.file.hash', [
+			'board'    => $this->board,
 			'hash'     => $this->storage->hash,
 			'filename' => "banner.png"
 		]);

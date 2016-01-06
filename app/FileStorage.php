@@ -279,6 +279,7 @@ class FileStorage extends Model {
 	{
 		//return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
 		return route('static.file.attachment', [
+			'board'      => $board,
 			'attachment' => $this->pivot->attachment_id,
 			'filename'   => $this->getDownloadName(),
 		]);
@@ -689,6 +690,7 @@ class FileStorage extends Model {
 		}
 		
 		return route('static.thumb.attachment', [
+			'board'      => $board,
 			'attachment' => $this->getIdentifier(),
 			'filename'   => "{$this->getFileName()}.{$ext}",
 		]);
