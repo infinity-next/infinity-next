@@ -1409,13 +1409,18 @@ class Board extends Model {
 		
 		$role = Role::getOwnerRoleForBoard($this);
 		
+		if (!$role->wasRecentlyCreated)
+		{
+			UserRole::where('role_id', $role->role_id)->delete();
+		}
+		
+		$board->operated_by = $user->user_id;
+		$board->save();
+		
 		return UserRole::create([
 			'user_id' => $user->user_id,
 			'role_id' => $role->role_id,
 		]);
-		
-		$board->operated_by = $user->user_id;
-		$board->save();
 	}
 	
 	public function scopeAndAssets($query)
