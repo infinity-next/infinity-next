@@ -1414,8 +1414,8 @@ class Board extends Model {
 			UserRole::where('role_id', $role->role_id)->delete();
 		}
 		
-		$board->operated_by = $user->user_id;
-		$board->save();
+		$this->operated_by = $user->user_id;
+		$this->save();
 		
 		return UserRole::create([
 			'user_id' => $user->user_id,
