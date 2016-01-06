@@ -565,7 +565,6 @@ class PostRequest extends Request implements ApiContract {
 			
 			if(count($uploads) > 0)
 			{
-				
 				// Standard upload originality and integrity checks.
 				if (!$this->dropzone)
 				{
@@ -580,77 +579,62 @@ class PostRequest extends Request implements ApiContract {
 							]));
 						}
 					}
-				}
-				
-				if ($board->getConfig('originalityImages'))
-				{
-					foreach ($uploads as $uploadIndex => $upload)
+					
+					if ($board->getConfig('originalityImages'))
 					{
-						if (!($upload instanceof UploadedFile))
+						foreach ($uploads as $uploadIndex => $upload)
 						{
-							continue;
-						}
-						
-						if ($board->getConfig('originalityImages') == "thread")
-						{
-							if ($thread instanceof Post && $originalPost = FileStorage::checkUploadExists($upload, $board, $thread))
+							if (!($upload instanceof UploadedFile))
+							{
+								continue;
+							}
+							
+							if ($board->getConfig('originalityImages') == "thread")
+							{
+								if ($thread instanceof Post && $originalPost = FileStorage::checkUploadExists($upload, $board, $thread))
+								{
+									$validated = false;
+									$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
+										"filename" => $upload->getClientOriginalName(),
+										"url"      => $originalPost->getURL(),
+									]));
+								}
+							}
+							else if ($originalPost = FileStorage::checkUploadExists($upload, $board))
 							{
 								$validated = false;
-								$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
+								$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_board", [
 									"filename" => $upload->getClientOriginalName(),
 									"url"      => $originalPost->getURL(),
 								]));
 							}
 						}
-						else if ($originalPost = FileStorage::checkUploadExists($upload, $board))
+					}
+				}
+				// Dropzone hash checks.
+				else if ($board->getConfig('originalityImages'))
+				{
+					foreach ($uploads['hash'] as $uploadIndex => $upload)
+					{
+						if ($board->getConfig('originalityImages') == "thread")
+						{
+							if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread))
+							{
+								$validated = false;
+								$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
+									"filename" => $uploads['name'][$uploadIndex],
+									"url"      => $originalPost->getURL(),
+								]));
+							}
+						}
+						else if ($originalPost = FileStorage::checkHashExists($upload, $board))
 						{
 							$validated = false;
 							$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_board", [
-								"filename" => $upload->getClientOriginalName(),
-								"url"      => $originalPost->getURL(),
-							]));
-						}
-					}
-				}
-			}
-			// Dropzone hash checks.
-			else if ($board->getConfig('originalityImages'))
-			{
-				$uploadsToCheck = false;
-				
-				if (isset($uploads['hash']))
-				{
-					$hashes = true;
-					$uploadsToCheck = $uploads['hash'];
-				}
-				else if (isset($uploads['files']))
-				{
-					$hashes = false;
-					$uploadsToCheck = $input['files']
-				}
-				
-				foreach ($uploadsToCheck as $uploadIndex => $upload)
-				{
-					
-					
-					if ($board->getConfig('originalityImages') == "thread")
-					{
-						if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($hash, $board, $thread))
-						{
-							$validated = false;
-							$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
 								"filename" => $uploads['name'][$uploadIndex],
 								"url"      => $originalPost->getURL(),
 							]));
 						}
-					}
-					else if ($originalPost = FileStorage::checkHashExists($upload, $board))
-					{
-						$validated = false;
-						$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_board", [
-							"filename" => $uploads['name'][$uploadIndex],
-							"url"      => $originalPost->getURL(),
-						]));
 					}
 				}
 			}
