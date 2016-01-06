@@ -63,6 +63,11 @@ class HistoryController extends PanelController {
 	
 	public function getBoardHistory(Board $board, Post $post)
 	{
+		if (!$this->user->canViewHistory())
+		{
+			return abort(403);
+		}
+		
 		$posts = $board->posts()
 			->with('op')
 			->withEverything()
