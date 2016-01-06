@@ -14,12 +14,9 @@
 Route::group([
 	'prefix' => '/',
 	'middleware' => [
-		'Illuminate\Cookie\Middleware\EncryptCookies',
-		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
-		'Illuminate\Session\Middleware\StartSession',
-		'Illuminate\View\Middleware\ShareErrorsFromSession',
-		'App\Http\Middleware\LocalizedSubdomains',
-	]
+		\App\Http\Middleware\LocalizedSubdomains::class,
+		//\App\Http\Middleware\VerifyCsrfToken::class,
+	],
 ], function () {
 	
 	/*
@@ -379,7 +376,9 @@ Route::group([
 Route::group([
 	'domain'     => env('APP_URL_MEDIA', 'static.{domain}.{tld}'),
 	'prefix'     => 'file',
-	'middleware' => 'App\Http\Middleware\FileFilter',
+	'middleware' => [
+		\App\Http\Middleware\FileFilter::class,
+	],
 	'namespace'  => 'Content',
 ], function() {
 	
