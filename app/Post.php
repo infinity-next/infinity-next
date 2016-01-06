@@ -112,14 +112,14 @@ class Post extends Model {
 		'body_html',
 		
 		// Relationships
-		'bans',
+		// 'bans',
 		'board',
-		'citedBy',
-		'citedPosts',
-		'editor',
+		// 'citedBy',
+		// 'citedPosts',
+		// 'editor',
 		'op',
-		'replies',
-		'reports',
+		// 'replies',
+		// 'reports',
 	];
 
 	/**

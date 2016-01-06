@@ -616,11 +616,26 @@ class PostRequest extends Request implements ApiContract {
 			// Dropzone hash checks.
 			else if ($board->getConfig('originalityImages'))
 			{
-				foreach ($uploads['hash'] as $uploadIndex => $upload)
+				$uploadsToCheck = false;
+				
+				if (isset($uploads['hash']))
 				{
+					$hashes = true;
+					$uploadsToCheck = $uploads['hash'];
+				}
+				else if (isset($uploads['files']))
+				{
+					$hashes = false;
+					$uploadsToCheck = $input['files']
+				}
+				
+				foreach ($uploadsToCheck as $uploadIndex => $upload)
+				{
+					
+					
 					if ($board->getConfig('originalityImages') == "thread")
 					{
-						if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread))
+						if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($hash, $board, $thread))
 						{
 							$validated = false;
 							$messages->add("files.{$uploadIndex}", trans("validation.custom.unoriginal_image_thread", [
