@@ -63,7 +63,7 @@ class HistoryController extends PanelController {
 	
 	public function getBoardHistory(Board $board, Post $post)
 	{
-		if (!$this->user->canViewHistory())
+		if (!$this->user->canViewHistory($post))
 		{
 			return abort(403);
 		}
