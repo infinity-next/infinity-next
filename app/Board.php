@@ -1413,6 +1413,9 @@ class Board extends Model {
 			'user_id' => $user->user_id,
 			'role_id' => $role->role_id,
 		]);
+		
+		$board->operated_by = $user->user_id;
+		$board->save();
 	}
 	
 	public function scopeAndAssets($query)
