@@ -373,7 +373,7 @@
 			widget.$lastPost  = null;
 			widget.newReplies = 0;
 			
-			document.title = window.app.title;
+			document.title = $('<div/>').html(window.app.title).text();
 			$("#favicon").attr('href', window.app.favicon.normal);
 		},
 		
@@ -502,12 +502,12 @@
 		if (widget.newReplies > 0)
 		{
 			$("#favicon").attr('href', window.app.favicon.alert);
-			document.title = "(" + widget.newReplies + ") " + window.app.title;
+			document.title = "(" + widget.newReplies + ") " + $('<div/>').html(window.app.title).text();
 		}
 		else
 		{
 			$("#favicon").attr('href', window.app.favicon.normal);
-			document.title = window.app.title;
+			document.title = $('<div/>').html(window.app.title).text();
 		}
 	};
 	
