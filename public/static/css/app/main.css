@@ -2927,7 +2927,6 @@ main.index-threaded {
 				ul.post-attachments {
 					display: block;
 					float: left;
-					overflow-x: auto;
 				}
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
@@ -2935,6 +2934,7 @@ main.index-threaded {
 						main.index-threaded ul.post-attachments.attachments-multi {
 							padding-top: 0.75em;
 							float: none;
+							overflow-x: auto;
 						}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
