@@ -284,7 +284,7 @@ class FileStorage extends Model {
 			'filename'   => $this->getDownloadName(),
 		];
 		
-		if (env('APP_MEDIA_URL', false))
+		if (!env('APP_MEDIA_URL', false))
 		{
 			$params['board'] = $board;
 		}
@@ -693,7 +693,7 @@ class FileStorage extends Model {
 		else if ($this->isImageVector())
 		{
 			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-			return $this->getDownloadURL();
+			return $this->getDownloadURL($board);
 		}
 		
 		$params = [
@@ -701,7 +701,7 @@ class FileStorage extends Model {
 			'filename'   => $this->getDownloadName(),
 		];
 		
-		if (env('APP_MEDIA_URL', false))
+		if (!env('APP_MEDIA_URL', false))
 		{
 			$params['board'] = $board;
 		}
