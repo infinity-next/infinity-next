@@ -813,7 +813,7 @@ class FileStorage extends Model {
 	 */
 	public function hasFile()
 	{
-		return (is_link($this->getPath()) && is_readable($this->getPath())) || Storage::exists($this->getPath());
+		return is_readable($this->getFullPath()) && Storage::exists($this->getPath());
 	}
 	
 	/**
