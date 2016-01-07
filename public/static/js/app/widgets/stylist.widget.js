@@ -18,6 +18,7 @@
 				"next-yotsuba.css",
 				"next-dark.css",
 				"next-tomorrow.css",
+				"kappa-burichan.css",
 			],
 			onChange : function(event) {
 				var setting = event.data.setting.get();
