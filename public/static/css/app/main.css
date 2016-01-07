@@ -3131,7 +3131,7 @@ main.index-threaded {
 										min-height: 150px;
 										min-width: 150px;
 									}
-
+								
 								li.post-attachment audio.attachment-inline {
 									display: block;
 									width: 100%;
@@ -3143,11 +3143,15 @@ main.index-threaded {
 									max-width: 100%;
 									margin: 0 auto 0.5em auto;
 								}
-
+								
+								attachment-inline + .attachment-link .attachment-wrapper {
+									display: none;
+								}
+								
 								figcaption.attachment-details {
 									display: block;
 									max-width: 100%;
-
+									
 									position: relative;
 									padding: 0 1em;
 									text-align: center;
