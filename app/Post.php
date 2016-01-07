@@ -1839,6 +1839,8 @@ class Post extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
 		$rememberClosure = function() use ($catalog, $multiboard, $preview) {
+			$this->setRelation('attachments', $this->attachments->reverse());
+			
 			return \View::make('content.board.post', [
 				// Models
 				'board'      => $this->board,
@@ -2204,7 +2206,7 @@ class Post extends Model {
 			
 			if ($thread)
 			{
-				$thread->setRelation('attachments' ,$thread->attachments->reverse());
+				$thread->setRelation('attachments', $thread->attachments->reverse());
 				$thread->prepareForCache();
 			}
 			 
