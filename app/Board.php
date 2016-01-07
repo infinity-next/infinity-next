@@ -1127,7 +1127,7 @@ class Board extends Model {
 			
 			$style = $this->getConfig('boardCustomCSS', "");
 			
-			if ($this->getConfig('boardCustomCSSEnable', false) && $style == "" && !$this->isWorksafe())
+			if ($style == "" && !$this->isWorksafe())
 			{
 				$style = file_get_contents(public_path() . "/static/css/skins/next-yotsuba.css");
 			}
