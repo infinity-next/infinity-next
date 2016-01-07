@@ -2929,6 +2929,7 @@ main.index-threaded {
 					float: left;
 					overflow-x: auto;
 					max-width: 99%;
+					max-width: calc(100% - 1em);
 				}
 					div.op-container ul.post-attachments {
 						max-width: 100%;
