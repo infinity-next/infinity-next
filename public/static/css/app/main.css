@@ -279,7 +279,7 @@ html.js	.require-js {
 }
 html.no-js .require-js,
 html.js	.no-js {
-	display: none;
+	display: none !important;
 }
 
 .no-mobile {
