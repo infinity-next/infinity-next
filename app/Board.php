@@ -1129,7 +1129,7 @@ class Board extends Model {
 			
 			if ($this->getConfig('boardCustomCSSEnable', false) && $style == "" && !$this->isWorksafe())
 			{
-				$style = file_get_contents(public_path() . "/static/css/skins/yotsuba.css");
+				$style = file_get_contents(public_path() . "/static/css/skins/next-yotsuba.css");
 			}
 			
 			return $style;
