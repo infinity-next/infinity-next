@@ -339,8 +339,8 @@ Route::group([
 			| These are greedy and will redirect before others, so make sure they stay last.
 			*/
 			// Get stylesheet
-			Route::get('style.css', 'BoardController@getStylesheet');
-			Route::get('style.txt', 'BoardController@getStylesheetAsText');
+			Route::get('{style}.css', 'BoardController@getStylesheet');
+			Route::get('{style}.txt', 'BoardController@getStylesheetAsText');
 			
 			// Pushes simple /board/ requests to their index page.
 			Route::any('/', 'BoardController@getIndex');

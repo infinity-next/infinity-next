@@ -97,7 +97,12 @@ return [
 	 * Stylist
 	 */
 	'stylist' => [
-		'title' => "Stylist",
+		'title'  => "Stylist",
+		'option' => [
+			'board' => "Prioritize Board CSS",
+			'theme' => "Theme Base",
+			'css'   => "Custom Styling",
+		],
 	],
 	
 	/**

@@ -1798,6 +1798,7 @@ nav.gnav {
 #js-config {
 	display: block;
 	cursor: default;
+	position: relative;
 	
 	margin: 0 auto;
 	padding: 0;
@@ -1809,13 +1810,23 @@ nav.gnav {
 	width: 100%;
 	
 	height: auto;
-	max-height: 80vh;
+	max-height: 100vh;
 	
 	overflow: hidden;
 	border-radius: 7px;
 	
 	pointer-events: all;
 }
+	#js-config-close {
+		position: absolute;
+		top: 0.25em;
+		right: 0.5em;
+		
+		cursor: pointer;
+		font-size: 2em;
+		line-height: 1;
+		vertical-align: middle;
+	}
 	#js-config .config-title {
 		color: #000;
 		font-size: 1.4em;
@@ -1921,6 +1932,16 @@ nav.gnav {
 	}
 	#js-config .config-option {
 		vertical-align: middle;
+	}
+	
+	/* Specific JS Config Items */
+	#js-config-row-stylist-css .config-row-name {
+		display: none;
+	}
+	#js-config-stylist-css {
+		display: block;
+		width: 100%;
+		min-height: 250px;
 	}
 
 /* Main Content */

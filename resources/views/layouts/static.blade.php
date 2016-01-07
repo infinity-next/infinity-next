@@ -12,6 +12,9 @@
 		@section('page-css')
 			<link id="page-stylesheet" rel="stylesheet" data-instant-track />
 		@show
+		
+		<link id="theme-stylesheet" rel="stylesheet" data-instant-track />
+		<style id="user-css" type="text/css"></style>
 	@show
 	
 	@yield('js')

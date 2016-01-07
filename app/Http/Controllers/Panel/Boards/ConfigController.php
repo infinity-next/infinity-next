@@ -11,6 +11,7 @@ use App\Http\Requests\BoardConfigRequest;
 use App\Http\Controllers\Panel\PanelController;
 use App\Validators\ComparisonValidator;
 
+use Carbon\Carbon;
 use DB;
 use Input;
 use Request;
@@ -441,6 +442,7 @@ class ConfigController extends PanelController {
 		$board->is_indexed   = isset($input['boardBasicIndexed']) && !!$input['boardBasicIndexed'];
 		$board->is_worksafe  = isset($input['boardBasicWorksafe']) && !!$input['boardBasicWorksafe'];
 		$board->setRelation('settings', $settings);
+		$board->updated_at   = Carbon::now();
 		$board->save();
 		
 		Event::fire(new BoardWasModified($board));

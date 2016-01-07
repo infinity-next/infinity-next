@@ -1143,7 +1143,7 @@ class Board extends Model {
 	 */
 	public function getStylesheetUrl()
 	{
-		return $this->getUrl("style.css");
+		return $this->getUrl("style_{$this->updated_at->timestamp}.css");
 	}
 	
 	/**

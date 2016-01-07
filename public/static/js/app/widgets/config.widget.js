@@ -45,4 +45,3 @@ ib.widget("config", function(window, $, undefined) {
 	
 	return widget;
 });
-

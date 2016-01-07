@@ -1,8 +1,6 @@
 @extends('layouts.static')
 
 @section('js')
-	@yield('required-js')
-	
 	<script type="text/javascript" id="js-app-data">
 		document.getElementsByTagName('html')[0].class = "js";
 		
@@ -50,6 +48,30 @@
 			'version'    : 0
 		};
 	</script>
+	
+	<script type="text/javascript">
+		{{--
+			IMPORTANT
+			This relies on information setup by js/app/widgets/stylist.widget.js
+			However, this particular script exists outside of the scope of the
+			widget framework so that the styling is injected before any document
+			rendering happens.
+		--}}
+		var theme = localStorage.getItem('ib.setting.stylist.theme') || false;
+		var css   = localStorage.getItem('ib.setting.stylist.css') || false;
+		
+		if (theme)
+		{
+			document.getElementById('theme-stylesheet').href = window.app.url + "/static/css/skins/" + theme;
+		}
+		
+		if (css && css.length > 0)
+		{
+			document.getElementById('user-css').innerHTML = css;
+		}
+	</script>
+	
+	@yield('required-js')
 	
 	{!! Minify::javascriptDir('/static/vendor/',     ['data-no-instant'])->withFullUrl() !!}
 	{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}

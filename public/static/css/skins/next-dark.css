@@ -1,0 +1,304 @@
+html, body{
+    background-color: #000;
+    background-image: linear-gradient(to bottom, #000 0%, #000 1em, #222 200px, #222 100%);
+    color:#ccc;
+}
+/* navig */
+header nav.gnav {
+    background: #333;
+	color:#eee;
+    border-color: #444;
+}
+header nav.gnav .flyout-container {
+    background: #333;
+	color:#aaa;
+    border-color: #555;
+}
+nav.gnav .flyout-header {
+    border-color: #555;
+}
+nav.gnav .flyout-col {
+    border-color: #555;
+}
+header nav.boardlist {
+    background: #111;
+	color:#ddd;
+}
+/* body */
+h1.page-title {
+    color: #ccc;
+}
+h2.page-desc {
+    color: #888;
+}
+aside.advertiser.top-left {
+	text-align: center!important;
+}
+main.index-threaded .post-container.op-container {
+    border-color: #555;
+}
+footer nav.boardlist {
+    background: #1a1a1a;
+	color:#ddd;
+    padding-top:6px;
+    margin-top:0.5em;
+}
+#footnotes {
+    background: #1a1a1a;
+    color: #ccc;
+}
+#footnotes .agpl-compliance {
+    color: #ccc;;
+}
+
+
+/* posts */
+.post-container.reply-container {
+    background: #333;
+    border: 1px solid #444;
+    padding: 0 0 4px 0;
+    border-radius:3px;
+}
+
+.post-hover{
+    border: none;
+}
+.post-hover .post-content{
+    background: #333;
+    border: 1px solid #444;
+}
+
+div.post-action-tab {
+    border: none;
+}
+div.op-container a.post-action-reply {
+    border-color: transparent #555 transparent transparent;
+}
+li.post-action-group {
+    background-color: #1a1a1a;
+    border-color: #555;
+}
+li.post-action {
+    border-color: #555;
+}
+a.post-action-link:hover {
+    background-color: #444;
+}
+.author {
+    color: #6a0;
+}
+ul.post-metas {
+    border-top: 1px solid #444;
+}
+li.post-meta {
+	color:#777;
+}
+
+main.index-catalog .post-container {
+    background: #333;
+}
+
+/* new reply line */
+li.thread-last-reply {
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+    border-color: #bbb;
+}
+
+
+/* attachments */
+a.attachment-download, p.attachment-detail {
+    color: #888;
+}
+main.index-catalog .post-attachments {
+    background: rgba(0,0,0, 0.3);
+}
+.reply-container ul.post-attachments.attachments-multi {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* thingies */
+blockquote.ugc h1, blockquote.ugc h2, blockquote.ugc h3, blockquote.ugc h4, blockquote.ugc h5, blockquote.ugc h6 {
+    color: #a33;
+}
+blockquote.ugc thead tr, blockquote.ugc tbody tr:nth-of-type(2n) {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* post form */
+form.form-post, form.form-post .row-double {
+    background: none;
+}
+form.form-post {
+    background: #111;
+    border:none;
+}
+form.form-post .form-fields {
+    border-color: #555 !important;
+}
+form.form-post .form-legend {
+    background: #a44 !important;
+}
+input, textarea, select {
+    background: #111;
+    color:#ccc;
+}
+.field-control {
+    border-color: #444;
+}
+form.form-post .row-post {
+    background: #111;
+    border-color: #444;
+}
+form.form-post button.field-submit, form.form-post div.row-file {
+    background: #333;
+    color:#ddd;
+}
+form.form-post button.field-submit:hover, form.form-post div.row-file:hover {
+    background: #444;
+}
+.dz-container {
+    border-color: #555;
+}
+form.form-post .row-captcha {
+    border-color: #444;
+}
+form.form-post button.field-submit {
+    border-color: #555;
+}
+form.form-post select.field-capcode {
+    border-color: #555;
+}
+form.form-post .ui-resizable-handle {
+    background-color: #666;
+}
+
+main.index-catalog form.form-post {
+    background: none;
+}
+main.index-catalog form.form-post .field {
+    margin: 0;
+}
+main.index-catalog form.form-post .form-legend {
+    padding: 0.25em 1em 0.5em;
+	box-sizing: border-box;
+}
+/* sidebar appears */
+@media screen and (min-width: 1440px){
+	figure.page-head {
+		padding-right:320px;
+	}
+	main:not(.index-catalog) aside.advertiser.top-left {
+		padding-right:320px;
+	}
+	main:not(.index-catalog) aside.index-sidebar {
+		background-color: #111;
+	}
+}
+
+/* options panel */
+#js-config {
+    background: #222;
+	color: #fff;
+}
+#js-config .config-title {
+    color: #eee;
+    text-shadow: 0px 1px 0px #000;
+    border-bottom: 1px solid #000;
+    background: #222 linear-gradient(#333, #222);
+}
+#js-config .config-cell.cell-nav {
+    border-right: 1px solid #444;
+}
+#js-config .config-nav-item {
+    border-bottom: 1px solid #444;
+}
+
+
+/* links */
+a, a:link, a:visited, blockquote.ugc a.cite{
+    color: #f66;
+}
+header nav.boardlist .boardlist-link, footer nav.boardlist .boardlist-link {
+    color: #a44;
+}
+a:hover, blockquote.ugc a.cite:hover, header nav.boardlist .boardlist-link:hover, footer nav.boardlist .boardlist-link:hover {
+    color: #fff;
+}
+button, a.button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #444;
+    color: #aaa;
+    border-radius:2px;
+}
+button:hover, a.button:hover {
+    background: #611;
+    border: 1px solid #666;
+}
+button:disabled, a.button.disabled {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    color: #555;
+}
+button:disabled:hover, a.button.disabled:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #444;
+    color: #555;
+}
+
+
+/* ???? */
+*::-moz-selection {
+    background: rgba(255,255,255,0.25) !important;
+}
+*::selection {
+    background: rgba(255,255,255,0.25) !important;
+}
+
+
+.ad-field{
+    opacity:0.2;
+}
+
+
+
+/* stylish */
+#site-warning {
+    text-shadow: none;
+}
+.infobox,
+.smooth-box {
+    background: #333;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+}
+.infobox .infobox-title {
+    border-bottom: 1px solid #666;
+    color: #fff;
+}
+#site-recent-images h2,
+#site-recent-posts h2 {
+    border-bottom: 1px solid #666;
+}
+#site-recent-images .recent-images {
+    background: #333;
+}
+#site-recent-posts .recent-post:hover {
+    background-color: #222;
+}
+#site-recent-posts .recent-post-link {
+    background-image: linear-gradient(to bottom, transparent 0%, #111 100%);
+}
+#site-recent-posts .recent-post:hover .recent-post-link {
+    background-image: linear-gradient(to bottom, transparent 0%, #000 100%);
+}
+#site-recent-posts .recent-post .post {
+    border-bottom: 1px solid #888;
+}
+
+#search-form .box-title {
+    border-bottom: 1px solid #666;
+    color: #fff;
+}
+table.board-list-table .board-uri .board-sfw {
+    color: #aaa;
+}

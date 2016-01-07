@@ -33,6 +33,7 @@
 		
 		// jQuery Selectors
 		selector : {
+			close     : "#js-config-close",
 			menuitems : ".config-nav-item",
 			fieldsets : ".config-group"
 		},
@@ -41,6 +42,9 @@
 		template : {
 			// The outer panel.
 			panel     : "<form id=\"js-config\"></form>",
+			
+			// Close button
+			close     : "<div id=\"js-config-close\"><i class=\"fa fa-close\"></i></div>",
 			
 			// Config title
 			title     : "<h1 class=\"config-title\">Infinity Next User Options</h1>",
@@ -119,6 +123,9 @@
 		var $dialog    = $(widget.options.template.panel);
 		
 		// Begin putting together the dialog.
+		var $close = $(widget.options.template.close);
+		$close.appendTo($dialog);
+		
 		var $title = $(widget.options.template.title);
 		$title.appendTo($dialog);
 		
@@ -186,7 +193,8 @@
 					$(widget.options.template.row)
 						.append($name)
 						.append($field)
-						.appendTo($fieldset);
+						.appendTo($fieldset)
+						.attr('id', "js-config-row-"+widgetName+"-"+settingName);
 				});
 				
 				if (firstFieldset)
@@ -222,7 +230,9 @@
 		});
 		
 		// Bind fade event.
-		$(".blockOverlay").one('click', $.unblockUI);
+		$(".blockOverlay").one('click.ib-js-config', $.unblockUI);
+		$(widget.options.selector.close)
+			.one('click.ib-js-config', $.unblockUI);
 		
 		// Bind menu toggle items
 		$dialog.on(
