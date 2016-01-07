@@ -278,11 +278,18 @@ class FileStorage extends Model {
 	public function getDownloadURL(Board $board)
 	{
 		//return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
-		return route('static.file.attachment', [
-			'board'      => $board,
+		
+		$params = [
 			'attachment' => $this->pivot->attachment_id,
 			'filename'   => $this->getDownloadName(),
-		]);
+		];
+		
+		if (env('APP_MEDIA_URL', false))
+		{
+			$params['board'] = $board;
+		}
+		
+		return route('static.file.attachment', $params);
 	}
 	
 	/**
@@ -689,11 +696,17 @@ class FileStorage extends Model {
 			return $this->getDownloadURL();
 		}
 		
-		return route('static.thumb.attachment', [
-			'board'      => $board,
+		$params = [
 			'attachment' => $this->getIdentifier(),
-			'filename'   => "{$this->getFileName()}.{$ext}",
-		]);
+			'filename'   => $this->getDownloadName(),
+		];
+		
+		if (env('APP_MEDIA_URL', false))
+		{
+			$params['board'] = $board;
+		}
+		
+		return route('static.thumb.attachment', $params);
 	}
 	
 	/**
