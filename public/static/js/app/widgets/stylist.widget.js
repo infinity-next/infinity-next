@@ -29,7 +29,7 @@
 				}
 				else
 				{
-					domObj.innerHTML = css;
+					domObj.href = "";
 				}
 			},
 			onUpdate : function(event) {
@@ -42,7 +42,7 @@
 				}
 				else
 				{
-					domObj.innerHTML = css;
+					domObj.href = "";
 				}
 			}
 		},
