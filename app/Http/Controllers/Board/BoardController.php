@@ -294,8 +294,8 @@ class BoardController extends Controller {
 		{
 			if (!is_null($storage))
 			{
-				unlink($storage->getPath());
-				unlink($storage->getThumbPath());
+				unlink($storage->getFullPath());
+				unlink($storage->getFullPathThumb());
 			}
 			
 			return [ $hash => null ];
