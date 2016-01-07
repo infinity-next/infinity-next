@@ -39,7 +39,10 @@ header nav.boardlist {
 }
 nav.gnav li.gnav-item .gnav-link{
     color:#81a2be;
-}    
+}
+nav.gnav li.gnav-item .gnav-link:hover{
+    color:#FFF;
+} 
     /* Header */
 figure.page-head {
     margin: 3em auto 1em auto;
@@ -270,6 +273,18 @@ body.responsive .index-threaded {
     color: #C5C8C6;
 }
 
+#search-title-input{
+    background: #282A2E;
+    color: #FFF;
+}
+#search-lang-input{
+    background: #282A2E;
+    color: #FFF;
+}
+#search-tag-input{
+    background: #282A2E;
+    color: #FFF;
+}
 table.board-list-table .board-uri .board-sfw {
     color: #C5C8C6;
 }
@@ -463,8 +478,8 @@ blockquote.ugc {
     blockquote.ugc a.cite {
         color: #81a2be;
     }
-    blockquote.ugc a:hover, blockquote.ugc a.cite {
-        color: #81a2be;
+    blockquote.ugc a:hover, blockquote.ugc a.cite:hover {
+        color: #FFF;
     }
 h1 {
     margin: 0;
@@ -619,6 +634,10 @@ button:disabled, a.button.disabled {
 }
 #js-config .config-nav-item {
     border-bottom: 1px solid #444;
+}
+#js-config .config-option {
+	background: #282A2E;
+    color: #FFF;
 }
 /*Panel*/
     nav.cp-inner a.linkitem-name {
