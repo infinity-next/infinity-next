@@ -3075,7 +3075,7 @@ main.index-threaded {
 
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
 										margin: 0 0 0 0;
-										padding: 0 7.5em 0 0;
+										padding: 0 7em 0 0;
 									}
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
 										right: -20%;
