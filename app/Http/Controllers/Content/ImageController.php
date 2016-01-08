@@ -338,7 +338,7 @@ class ImageController extends Controller {
 				
 				// Determine if we can skip PHP content distribution.
 				// This is hugely important.
-				$xSendFile = false;
+				$xSendFile = true;
 				
 				// APACHE
 				// Relies on the mod_xsendfile module.

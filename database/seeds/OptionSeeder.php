@@ -162,6 +162,14 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
 				],
+				
+				[
+					'option_name'           => "captchaEnabled",
+					'default_value'         => false,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				[
 					'option_name'           => "captchaLifespanTime",
 					'default_value'         => 60,
