@@ -542,6 +542,8 @@ button:disabled, a.button.disabled {
         }
             footer nav.boardlist .boardlist-link {
                 color: #81a2be;
+            }footer nav.boardlist .boardlist-link:hover {
+                color: #FFF;
             }
         #footnotes {
             background: none;
@@ -552,7 +554,11 @@ button:disabled, a.button.disabled {
             #footnotes .agpl-compliance {
                 color: #81a2be;
                 text-decoration: none;
-            }   
+            } 
+    #footnotes .agpl-compliance:hover {
+                color: #FFF;
+                text-decoration: none;
+            } 
     
     /**/
 
