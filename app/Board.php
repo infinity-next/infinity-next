@@ -97,10 +97,9 @@ class Board extends Model {
 	/**
 	 * A cache of compiled board settings.
 	 *
-	 * @static
-	 * @var array  of arrays which contain Options with BoardSetting.option_value pivot keys
+	 * @var array  which contains Options with BoardSetting.option_value pivot keys
 	 */
-	protected static $config = [];
+	protected $compiledSettings;
 	
 	/**
 	 * Ties database triggers to the model.
@@ -662,7 +661,7 @@ class Board extends Model {
 	 */
 	public function getConfig($option_name = null, $fallback = null)
 	{
-		$config =& static::$config[$this->board_uri];
+		$config =& $this->compiledSettings;
 		
 		if (!is_array($config))
 		{
@@ -693,7 +692,7 @@ class Board extends Model {
 		{
 			foreach ($config as $setting)
 			{
-				if ($setting->option_name == $option_name)
+				if ($setting->attributes['option_name'] == $option_name)
 				{
 					$value = $setting->getDisplayValue();
 					
@@ -1163,11 +1162,15 @@ class Board extends Model {
 			
 			if ($board instanceof Board && $board->exists)
 			{
-				return $board->load([
+				$board->load([
 					'assets',
 					'assets.storage',
 					'settings'
 				]);
+				
+				$board->getConfig();
+				
+				return $board;
 			}
 			
 			return null;
