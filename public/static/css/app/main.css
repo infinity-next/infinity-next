@@ -3027,10 +3027,6 @@ main.index-threaded {
 									max-width: 100%;
 								}
 
-								li.post-attachment.attachment-expanded figure.attachment-type-audio {
-									padding-right: 4em;
-								}
-
 								li.post-attachment.attachment-expanded img.attachment-img {
 									/* min-width: 100%; */
 									max-width: 100%;
@@ -3079,6 +3075,7 @@ main.index-threaded {
 
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
 										margin: 0 0 0 0;
+										padding: 0 7.5em 0 0;
 									}
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
 										right: -20%;
@@ -3140,6 +3137,7 @@ main.index-threaded {
 									}
 										li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
 											max-width: 350px;
+											padding-right: 3em;
 										}
 									.thumbnail-stock img.attachment-img {
 										min-height: 150px;
@@ -3179,7 +3177,7 @@ main.index-threaded {
 									}
 									li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
 										padding: 0 1em;
-										margin-right: -4em;
+										margin-right: -3em;
 									}
 									
 									div.attachment-action-group,
@@ -3197,6 +3195,9 @@ main.index-threaded {
 										max-width: 100%;
 										overflow: hidden;
 										text-overflow: ellipsis;
+									}
+									figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
+										margin-bottom: 0px;
 									}
 									div.attachment-container:last-child {
 										margin-bottom: 0px;
