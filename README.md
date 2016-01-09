@@ -17,6 +17,10 @@ Larachan runs on Laravel 5 and has the same requirements.
   * `php5-curl` for Stripe.
   * `php5-gd` for captcha codes and other image manipulation.
 
+You may also need the following because not all PHP packages include them:
+  * `mbstring` for Lavarel.
+  * `fileinfo` for Composer requirement.
+
 When installing from source,
 * `composer`
 
