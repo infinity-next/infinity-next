@@ -3079,7 +3079,7 @@ main.index-threaded {
 									}
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
 										right: -20%;
-										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
+										animation: fa-spin 1.304s infinite linear;
 									}
 
 									.post-content li.attachment-expanded figure.attachment-type-video div.attachment-wrapper {
