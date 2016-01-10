@@ -33,11 +33,6 @@ class RecordStats extends Command {
 	{
 		// Generate an activity snapshot.
 		Board::createStatsSnapshots();
-		
-		// Compiling a large board list require sa lot of resources.
-		ini_set('memory_limit', '512M');
-		ini_set('max_execution_time', 60);
-		
 		Board::getBoardsForBoardlist(0, null, true);
 	}
 	

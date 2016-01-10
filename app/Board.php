@@ -1192,6 +1192,10 @@ class Board extends Model {
 	 */
 	public static function getBoardsForBoardlist($start = 0, $length = null, $force = false)
 	{
+		// Compiling a large board list require sa lot of resources.
+		ini_set('memory_limit', '512M');
+		ini_set('max_execution_time', 60);
+		
 		// This timer is very precisely set to be a minute after the turn of the next hour.
 		// Laravel's CRON system will add new stat rows and we will be free to recache
 		// with the up-to-date information.
