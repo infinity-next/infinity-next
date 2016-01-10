@@ -1223,8 +1223,10 @@ class Board extends Model {
 		
 		if ($force)
 		{
+			$boards = $rememberClosure();
+			
 			Cache::forget($rememberKey);
-			$boards = Cache::put($rememberKey, $rememberTimer, $rememberClosure);
+			Cache::put($rememberKey, $boards, $rememberTimer);
 		}
 		else
 		{
