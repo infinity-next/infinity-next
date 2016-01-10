@@ -1185,11 +1185,12 @@ class Board extends Model {
 	 * Returns the entire board list and all associative boards by levying the cache.
 	 *
 	 * @static
-	 * @param  int   $start  Optional. Splice start position. Defaults 0.
-	 * @param  int   $length Optional. Splice length. Defaults null (return all).
+	 * @param  int   $start   Optional. Splice start position. Defaults 0.
+	 * @param  int   $length  Optional. Splice length. Defaults null (return all).
+	 * @param  bool  $force   Optional. Forces a recache. Defaults false.
 	 * @return array
 	 */
-	public static function getBoardsForBoardlist($start = 0, $length = null)
+	public static function getBoardsForBoardlist($start = 0, $length = null, $force = false)
 	{
 		// This timer is very precisely set to be a minute after the turn of the next hour.
 		// Laravel's CRON system will add new stat rows and we will be free to recache
@@ -1220,7 +1221,15 @@ class Board extends Model {
 				->toArray();
 		};
 		
-		$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		if ($force)
+		{
+			Cache::forget($rememberKey);
+			$boards = Cache::put($rememberKey, $rememberTimer, $rememberClosure);
+		}
+		else
+		{
+			$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		}
 		
 		if (is_null($length))
 		{

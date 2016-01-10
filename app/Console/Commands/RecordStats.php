@@ -5,6 +5,7 @@ use App\Board;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
+use Cache;
 use Settings;
 
 class RecordStats extends Command {
@@ -32,6 +33,12 @@ class RecordStats extends Command {
 	{
 		// Generate an activity snapshot.
 		Board::createStatsSnapshots();
+		
+		// Compiling a large board list require sa lot of resources.
+		ini_set('memory_limit', '512M');
+		ini_set('max_execution_time', 60);
+		
+		Board::getBoardsForBoardlist(0, null, true);
 	}
 	
 }
