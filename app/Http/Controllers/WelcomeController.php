@@ -33,15 +33,18 @@ class WelcomeController extends Controller {
 	 */
 	public function getIndex()
 	{
-		if ($featured = Post::getPostFeatured())
+		return \Cache::remember('page.site.index', 5, function()
 		{
-			$featured->setRelation('replies', []);
-		}
-		
-		return $this->view(static::VIEW_INDEX, [
-			'featured' => $featured,
-			'stats'    => $this->boardStats(),
-		]);
+			if ($featured = Post::getPostFeatured())
+			{
+				$featured->setRelation('replies', []);
+			}
+			
+			return $this->view(static::VIEW_INDEX, [
+				'featured' => $featured,
+				'stats'    => $this->boardStats(),
+			])->render();
+		});
 	}
 	
 }
