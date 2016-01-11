@@ -3,7 +3,7 @@
 		<h2 class="index-title">@lang('index.title.recent_posts')</h2>
 		<div class="grid-container">
 			<ul class="recent-posts">
-				@foreach (App\Post::getRecentPosts(24, false) as $post)
+				@foreach (\App\Post::getRecentPosts(24, false) as $post)
 					@if ($post->board)
 						@set('board_icon', "url('".$post->board->getAssetURL('board_icon')."')")
 					@else

@@ -24,9 +24,23 @@ Route::group([
 	*/
 	Route::get('/', 'WelcomeController@getIndex');
 	
-	Route::controller('boards.html',    'BoardlistController');
+	Route::controller('boards.html', 'BoardlistController');
 	
 	Route::get('overboard.html', 'MultiboardController@getOverboard');
+	
+	/*
+	| Internal requests used by ESI to retrieve partial templates.
+	*/
+	Route::group([
+		'namespace' => "Internal",
+		'prefix'    => ".internal",
+	], function() {
+		
+		Route::get('site/global-nav',    'SiteController@getGlobalNavigation');
+		Route::get('site/recent-images', 'SiteController@getRecentImages');
+		Route::get('site/recent-posts',  'SiteController@getRecentPosts');
+		
+	});
 	
 	/*
 	| Control Panel (cp)
@@ -39,7 +53,7 @@ Route::group([
 	*/
 	Route::group([
 		'namespace'  => 'Panel',
-		'middleware' => 'App\Http\Middleware\VerifyCsrfToken',
+		'middleware' => \App\Http\Middleware\VerifyCsrfToken::class,
 		'prefix'     => 'cp',
 	], function()
 	{
@@ -160,7 +174,6 @@ Route::group([
 		
 	});
 	
-	
 	/*
 	| Page Controllers
 	| Catches specific strings to route to static content.
@@ -181,7 +194,6 @@ Route::group([
 		Route::get('board-details.json',  'BoardlistController@getDetails');
 		Route::post('board-details.json', 'BoardlistController@getDetails');
 	});
-	
 	
 	/*
 	| Board (/anything/)

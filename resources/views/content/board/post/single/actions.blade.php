@@ -24,6 +24,21 @@
 					</li>
 					@endif
 					
+					@if (isset($details['author_ip']) && !is_null($details['author_ip']))
+					@if ($user->canViewHistory($post))
+					@set('postActions', true)
+					<li class="post-action">
+						<a class="post-action-link action-link-report" href="{!! $board->getURL('history/' . $details['board_id']) !!}">@lang('board.action.history', [ 'board_uri' => $details['board_uri'] ])</a>
+					</li>
+					@endif
+					@if ($user->canViewGlobalHistory())
+					@set('postActions', true)
+					<li class="post-action">
+						<a class="post-action-link action-link-report" href="{!! url('cp/history/' . $details['author_ip']->toText()) !!}">@lang('board.action.history_global')</a>
+					</li>
+					@endif
+					@endif
+					
 					@if ($post->canEdit($user))
 					@set('postActions', true)
 					<li class="post-action">
