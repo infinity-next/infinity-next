@@ -1,4 +1,4 @@
-<form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate" data-widget="donate">
+<form action="{!! url('/cp/donate/') !!}" method="POST" id="payment-form" class="form-donate">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 	
 	@if (env('APP_DEBUG'))

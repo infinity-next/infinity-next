@@ -12,17 +12,29 @@ class SiteController extends InternalController {
 	
 	public function getGlobalNavigation()
 	{
-		return Response::make(View::make(static::VIEW_GLOBAL_NAV))->setTtl(60);
+		$partial = View::make(static::VIEW_GLOBAL_NAV);
+		$partial .= "<!-- ESI " . date('r') . "-->";
+		
+		return Response::make($partial)
+			->setTtl(60);
 	}
 	
 	public function getRecentImages()
 	{
-		return Response::make(View::make(static::VIEW_RECENT_IMAGES))->setTtl(60);
+		$partial = View::make(static::VIEW_RECENT_IMAGES);
+		$partial .= "<!-- ESI " . date('r') . "-->";
+		
+		return Response::make($partial)
+			->setTtl(60);
 	}
 	
 	public function getRecentPosts()
 	{
-		return Response::make(View::make(static::VIEW_RECENT_POSTS))->setTtl(60);
+		$partial = View::make(static::VIEW_RECENT_POSTS);
+		$partial .= "<!-- ESI " . date('r') . "-->";
+		
+		return Response::make($partial)
+			->setTtl(60);
 	}
 	
 }

@@ -13,7 +13,7 @@ return [
 	|
 	*/
 	'enabled'   => env('APP_ESI', false),
-	'esi     '  => env('APP_ESI', fasle),
+	'esi     '  => env('APP_ESI', false),
 	'cache_dir' => storage_path('httpcache'),
 	
 	/*

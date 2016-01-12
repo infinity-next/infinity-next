@@ -39,6 +39,10 @@
 			$scope = $(document);
 		}
 		
+		if ($scope.is("[data-widget]")) {
+			ib.bindElement($scope[0]);
+		}
+		
 		$("[data-widget]", $scope).each(function() {
 			ib.bindElement(this);
 		});
