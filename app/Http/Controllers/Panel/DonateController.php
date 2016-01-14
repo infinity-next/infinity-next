@@ -68,7 +68,7 @@ class DonateController extends PanelController {
 		$payment = [
 			'customer'     => $user->user_id,
 			'attribution'  => $input['attribution'],
-			'payment_ip'   => inet_pton($request->getClientIp()),
+			'payment_ip'   => $request->getClientIp(),
 			'amount'       => $input['amount'] * 100,
 			'currency'     => "usd",
 			'subscription' => NULL,

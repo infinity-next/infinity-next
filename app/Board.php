@@ -97,10 +97,9 @@ class Board extends Model {
 	/**
 	 * A cache of compiled board settings.
 	 *
-	 * @static
-	 * @var array  of arrays which contain Options with BoardSetting.option_value pivot keys
+	 * @var array  which contains Options with BoardSetting.option_value pivot keys
 	 */
-	protected static $config = [];
+	protected $compiledSettings;
 	
 	/**
 	 * Ties database triggers to the model.
@@ -662,7 +661,7 @@ class Board extends Model {
 	 */
 	public function getConfig($option_name = null, $fallback = null)
 	{
-		$config =& static::$config[$this->board_uri];
+		$config =& $this->compiledSettings;
 		
 		if (!is_array($config))
 		{
@@ -693,7 +692,7 @@ class Board extends Model {
 		{
 			foreach ($config as $setting)
 			{
-				if ($setting->option_name == $option_name)
+				if ($setting->attributes['option_name'] == $option_name)
 				{
 					$value = $setting->getDisplayValue();
 					
@@ -1163,11 +1162,15 @@ class Board extends Model {
 			
 			if ($board instanceof Board && $board->exists)
 			{
-				return $board->load([
+				$board->load([
 					'assets',
 					'assets.storage',
 					'settings'
 				]);
+				
+				$board->getConfig();
+				
+				return $board;
 			}
 			
 			return null;
@@ -1182,12 +1185,17 @@ class Board extends Model {
 	 * Returns the entire board list and all associative boards by levying the cache.
 	 *
 	 * @static
-	 * @param  int   $start  Optional. Splice start position. Defaults 0.
-	 * @param  int   $length Optional. Splice length. Defaults null (return all).
+	 * @param  int   $start   Optional. Splice start position. Defaults 0.
+	 * @param  int   $length  Optional. Splice length. Defaults null (return all).
+	 * @param  bool  $force   Optional. Forces a recache. Defaults false.
 	 * @return array
 	 */
-	public static function getBoardsForBoardlist($start = 0, $length = null)
+	public static function getBoardsForBoardlist($start = 0, $length = null, $force = false)
 	{
+		// Compiling a large board list require sa lot of resources.
+		ini_set('memory_limit', '512M');
+		ini_set('max_execution_time', 60);
+		
 		// This timer is very precisely set to be a minute after the turn of the next hour.
 		// Laravel's CRON system will add new stat rows and we will be free to recache
 		// with the up-to-date information.
@@ -1217,7 +1225,17 @@ class Board extends Model {
 				->toArray();
 		};
 		
-		$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		if ($force)
+		{
+			$boards = $rememberClosure();
+			
+			Cache::forget($rememberKey);
+			Cache::put($rememberKey, $boards, $rememberTimer);
+		}
+		else
+		{
+			$boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
+		}
 		
 		if (is_null($length))
 		{

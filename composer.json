@@ -45,6 +45,7 @@
 		"james-heinrich/getid3" : "1.9.*",
 		
 		"devfactory/minify" : "1.0.*",
+		"barryvdh/laravel-httpcache": "0.2.x@dev",
 		
 		"infinity-next/braintree":       "*@dev",
 		"infinity-next/brennan-captcha": "*@dev",

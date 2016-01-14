@@ -73,15 +73,6 @@
 	<li class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></li>
 	@endif
 	
-	@if (isset($details['author_ip']) && !is_null($details['author_ip']) && ($user->canViewGlobalHistory() || $user->canViewHistory($post)))
-		<li class="post-detail detail-icon post-logged" title="@lang('board.detail.history')">
-			<a href="{{ $user->canViewGlobalHistory() && is_object($details['author_ip'])
-				? url('cp/history/' . $details['author_ip']->toText())
-				: $board->getURL('history/' . $details['board_id'])
-			}}"><i class="fa fa-server"></i></a>
-		</li>
-	@endif
-	
 	<li class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></li>
 	
 	@if (!$catalog)

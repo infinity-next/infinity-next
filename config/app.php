@@ -160,6 +160,11 @@ return [
 		'App\Providers\ValidationExtensionServiceProvider',
 		
 		/*
+		 * HttpCache...
+		 */
+		'Barryvdh\HttpCache\ServiceProvider',
+		
+		/*
 		 * Forms...
 		 */
 		'Collective\Html\HtmlServiceProvider',

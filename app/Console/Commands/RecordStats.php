@@ -5,6 +5,7 @@ use App\Board;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
+use Cache;
 use Settings;
 
 class RecordStats extends Command {
@@ -32,6 +33,7 @@ class RecordStats extends Command {
 	{
 		// Generate an activity snapshot.
 		Board::createStatsSnapshots();
+		Board::getBoardsForBoardlist(0, null, true);
 	}
 	
 }

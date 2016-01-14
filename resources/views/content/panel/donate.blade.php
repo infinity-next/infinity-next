@@ -12,6 +12,10 @@
 				@parent
 				
 				<script type="text/javascript" src="https://js.braintreegateway.com/v2/braintree.js"></script>
+				<script type="text/javascript">
+					$("#payment-form").attr('data-widget', "donate");
+					window.ib.bindAll($("#payment-form"));
+				</script>
 			@stop
 		@endif
 		

@@ -172,6 +172,8 @@ return [
 		'unsticky'          => "Unsticky",
 		'report'            => "Report",
 		'report_global'     => "Report Globally",
+		'history'           => "Post History on /:board_uri/",
+		'history_global'    => "Post History Site-Wide"
 	],
 	
 	'ban'               => [

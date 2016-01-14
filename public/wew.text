@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="no-js" data-widget="instantclick">
+<head>
+	<title data-original=" - Infinity Next">Infinity Next</title>
+	<link rel="shortcut icon" id="favicon" href="https://larachan.foo/static/img/assets/Favicon_Vivian.ico"
+		data-normal="https://larachan.foo/static/img/assets/Favicon_Vivian.ico" data-alert="https://larachan.foo/static/img/assets/Favicon_Vivian_new.ico" />
+	
+			<link href="//larachan.foo/static/vendor/20-jquery-ui/jquery-ui.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/20-jquery-ui/jquery-ui.structure.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/20-jquery-ui/jquery-ui.theme.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/50-boilerplate/css/main.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/50-boilerplate/css/normalize.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/60-unsemantic/unsemantic.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/80-highlight/default.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/vendor/font-awesome/css/font-awesome.css" rel="stylesheet" data-no-instant="data-no-instant">
+
+		<link href="//larachan.foo/static/css/app/flags.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/css/app/main.css" rel="stylesheet" data-no-instant="data-no-instant">
+<link href="//larachan.foo/static/css/app/responsive.css" rel="stylesheet" data-no-instant="data-no-instant">
+
+		
+					<link id="page-stylesheet" rel="stylesheet" data-instant-track />
+				
+		<link id="theme-stylesheet" rel="stylesheet" data-instant-track />
+		<style id="user-css" type="text/css"></style>
+		
+		<script type="text/javascript" id="js-app-data">
+		document.getElementsByTagName('html')[0].class = "js";
+		
+		window.app = {
+			'lang'     : {"main":{"title":"Main Configuration","desc":"These options are for core components of the website.","option":{"widget":"Enable widgets"}},"autoupdater":{"title":"Thread Autoupdater","enable":"Stream new replies","update":"Update","updating":"Updating ..."},"lazyimg":{"title":"Lazy Images","desc":"Thumbnails can be set to not load until you can see them. This can improve your overall render times and save bandwidth.","option":{"enable":"Lazy load thumbnails"}},"instantclick":{"title":"InstantClick","desc":"InstantClick will turn the site into a one-page application, and most subsequent link clicks will cause the page to load new contents without refreshing the entire document. This can enable pages to load instantly, but on older machines it may cause resource issues and edge-case errors.<br \/><strong>Experimental, use at your own risk.<\/strong>","option":{"enable":"Enable InstantClick"}},"post":{"title":"Posts","desc":"The post widget is very large and incorporates many fundamental aspects to how an imageboard looks and feels.","option":{"author_id":"Display Author IDs when available"}},"postbox":{"title":"Post Form","option":{"password":"Default post deletion password"}},"stylist":{"title":"Stylist","option":{"board":"Prioritize Board CSS","theme":"Theme Base","css":"Custom Styling"}},"time":{"title":"Timestamps","option":{"format":"Timestamp Format"},"format":"%Y-%b-%d %H:%M:%S","calendar":{"months":["January","February","March","April","May","June","July","August","September","October","November","December"],"abbrevmonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"abbrevdays":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]}}},
+			
+			'merchant' : "",
+			
+					'debug'      : false,
+			
+						
+								
+			'favicon'    : {
+				'normal' : "https://larachan.foo/static/img/assets/Favicon_Vivian.ico",
+				'alert'  : "https://larachan.foo/static/img/assets/Favicon_Vivian_new.ico"
+			},
+			
+			'title'      : "Infinity Next",
+			
+			'url'        : "//larachan.foo",
+			
+						
+			'settings'   : {"attachmentFilesize":"1024","postFloodTime":"5","threadFloodTime":"30"},
+			
+			'version'    : 0
+		};
+	</script>
+	
+	<script type="text/javascript">
+				var theme = localStorage.getItem('ib.setting.stylist.theme') || false;
+		var css   = localStorage.getItem('ib.setting.stylist.css') || false;
+		
+		if (theme)
+		{
+			document.getElementById('theme-stylesheet').href = window.app.url + "/static/css/skins/" + theme;
+		}
+		
+		if (css && css.length > 0)
+		{
+			document.getElementById('user-css').innerHTML = css;
+		}
+	</script>
+	
+		
+	<script src="//larachan.foo/static/vendor/10-jquery/jquery-2.1.4.min.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/vendor/20-jquery-ui/jquery-ui.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/vendor/50-modernizr/modernizr.custom.32208.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/vendor/80-highlight/highlight.pack.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/vendor/80-instaclick/instaclick-3.1.0.js" data-no-instant="data-no-instant"></script>
+
+	<script src="//larachan.foo/static/js/plugins/dropzone.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/plugins/jquery.blockUI.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/plugins/jquery.creditCardValidator.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/plugins/jquery.serialize-object.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/plugins/md5.js" data-no-instant="data-no-instant"></script>
+
+	<script src="//larachan.foo/static/js/app/main.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/autoupdater.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/board-favorite.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/boardlist.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/captcha.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/config.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/donate.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/gnav.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/instantclick.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/js-config.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/lazyimg.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/notice.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/permissions.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/post.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/postbox.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/stylist.widget.js" data-no-instant="data-no-instant"></script>
+<script src="//larachan.foo/static/js/app/widgets/time.widget.js" data-no-instant="data-no-instant"></script>
+
+	
+	
+	
+			<meta name="viewport" content="width=device-width" />
+		
+	</head>
+
+<body class="infinity-next responsive ltr " id="top">
+	<div id="page-container">
+				<header class="board-header header-height-1">
+												<esi:include src="https://larachan.foo/.internal/site/global-nav" />
+										
+						</header>
+				
+		<main id="frontpage">
+	<div class="grid-container">
+		<p id="site-warning">
+	Warning: Some boards on this site might contain content of an adult or offensive nature.<wbr />
+	Please cease use of this site if it is illegal for you to view such content.<wbr />
+	The boards on this site are made entirely by the users and do not represent the opinions of the administration of Infinity.<wbr />
+	In the interest of free speech, only content that directly violates the DMCA or other US laws is deleted.<wbr />
+</p>		
+		<section id="site-info">
+			<div class="grid-20 tablet-grid-100 mobile-grid-100">
+				<figure id="site-logo">
+		<img id="site-logo-img" src="https://larachan.foo/static/img/logo.png" alt="Infinity Next" />
+	</figure>
+			</div>
+			
+			<div class="grid-40">
+				<div class="infobox" id="site-description">
+	<div class="infobox-title">Infinity</div>
+	<div class="infobox-info">
+		<p>Welcome to Infinity, the live development environment for the Infinity Imageboard Software.</p>
+		<p>Feel free to <a href="https://larachan.foo/test">try it</a> out and consider <a href="https://larachan.foo/contribute">contributing</a>.</p>
+	</div>
+</div>			</div>
+			
+			<div class="grid-40">
+				<div class="infobox" id="site-statistics">
+	<div class="infobox-title">Global Statistics</div>
+	<div class="infobox-info">
+		<p>There are currently
+			<strong>1</strong> public board,
+			<strong>1</strong> total.
+			Site-wide, <strong>0</strong> posts have been made in the last hour,
+			with <strong>1</strong> being made on all active boards since March 1st, 2015.</p>
+	</div>
+</div>			</div>
+		</section>
+	</div>
+	
+	<div class="grid-container">
+	<ul class="form-messages" data-widget="notice">
+		
+			
+		
+		
+		
+			</ul>	
+		
+			<esi:include src="https://larachan.foo/.internal/site/recent-images" />
+		<esi:include src="https://larachan.foo/.internal/site/recent-posts" />
+	</div>
+</main>
+	</div>
+	
+	<footer>
+		
+			<!-- Yes, this is only here so you can style it back into existance. -->
+<nav class="boardlist" data-instant>
+	
+	<div class="boardlist-row row-links">
+		<ul class="boardlist-categories">
+			<li class="boardlist-category">
+				<ul class="boardlist-items">
+										<li class="boardlist-item">
+						<a href="https://larachan.foo" class="boardlist-link">Home</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/boards.html" class="boardlist-link">Boards</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/overboard.html" class="boardlist-link">Overboard</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/cp" class="boardlist-link">Panel</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/cp/boards/create" class="boardlist-link">Create Board</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/contribute" class="boardlist-link">Contribute</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/cp/donate" class="boardlist-link">Fund Us</a>
+					</li>
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/cp/adventure" class="boardlist-link">Adventure</a>
+					</li>
+									</ul>
+			</li>
+		</ul>
+	</div>
+	
+		<div class="boardlist-row row-boards">
+		<ul class="boardlist-categories">
+					<li class="boardlist-category">
+				<ul class="boardlist-items">
+										<li class="boardlist-item">
+						<a href="https://larachan.foo/test" class="boardlist-link">test</a>
+					</li>
+									</ul>
+			</li>
+					<li class="boardlist-category">
+				<ul class="boardlist-items">
+									</ul>
+			</li>
+				</ul>
+	</div>
+		
+</nav>		
+		
+	<section id="footnotes">
+		<!-- Infinity Next is licensed under AGPL 3.0 and any modifications to this software must link to its source code which can be downloaded in a traditional format, such as a repository. -->
+		<div class="copyright"><a class="agpl-compliance" href="https://github.com/infinity-next/infinity-next">Infinity Next</a> &copy; <a class="agpl-compliance" href="https://infinitydev.org">Infinity Next Development Group</a> 2015</div>
+	</section>
+	
+	<div id="bottom"></div>
+</footer>
+</body>
+</html>
