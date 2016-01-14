@@ -1,7 +1,0 @@
-### Laravel Scheduler ###
-
-# Here is the only Cron entry you need to add to your server:
-
-*/5 * * * * /path/to/artisan schedule:run >> /dev/null 2>&1
-
-# This commend will call the Laravel command scheduler every 5 minutes but you can change to suit your needs. 
