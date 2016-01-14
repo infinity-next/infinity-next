@@ -2966,7 +2966,7 @@ main.index-threaded {
 					
 					li.post-attachment {
 						display: inline-block;
-						vertical-align: bottom;
+						vertical-align: text-bottom;
 						padding: 0 0.75em 0.75em 0;
 					}
 						div.attachment-container {
