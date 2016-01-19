@@ -9,6 +9,8 @@ return [
 	 */
 	'table'      => "captcha",
 	
+	'escapeInet' => false,
+	
 	/**
 	 * Route hooked by the captcha service.
 	 * If "captcha", image URL will be:

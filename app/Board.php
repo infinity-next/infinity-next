@@ -282,7 +282,7 @@ class Board extends Model {
 		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
 			->where(function($query) use ($ip) {
 				// Find captchas answered by this user.
-				$query->where('client_ip', $ip);
+				$query->where('client_ip', $ip->toText());
 				
 				// Pull the lifespan of a captcha.
 				// This is the number of minutes between successful entries.
@@ -306,7 +306,7 @@ class Board extends Model {
 			if ($captchaLifespan > 0)
 			{
 				$postsWithCaptcha = Post::select('created_at')
-					->where('author_ip', $ip)
+					->where('author_ip', $ip->toText())
 					->where('created_at', '>=', $lastCaptcha->created_at)
 					->count();
 				

@@ -293,12 +293,6 @@ class BoardController extends Controller {
 		
 		if (is_null($storage) || !$storage->hasFile())
 		{
-			if (!is_null($storage))
-			{
-				unlink($storage->getFullPath());
-				unlink($storage->getFullPathThumb());
-			}
-			
 			return [ $hash => null ];
 		}
 		
