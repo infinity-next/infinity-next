@@ -32,7 +32,7 @@
 		<header class="board-header header-height-1">
 			@section('nav-header')
 				@if (env('APP_ESI', false))
-					<esi:include src="{{ url('.internal/site/global-nav') }}" />
+					<esi:include src="{{ url('.internal/site/global-nav', [], false) }}" />
 				@else
 					@include('nav.gnav')
 				@endif
