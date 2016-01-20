@@ -1,4 +1,4 @@
-    html, body {
+html, body {
     background-color: #1d1f21;
     background-image: none;
     color: #C5C8C6;
@@ -42,7 +42,7 @@ nav.gnav li.gnav-item .gnav-link{
 }
 nav.gnav li.gnav-item .gnav-link:hover{
     color:#FFF;
-} 
+}
     /* Header */
 figure.page-head {
     margin: 3em auto 1em auto;
@@ -111,7 +111,6 @@ form.form-post {
         border-bottom: 1px solid #222;
         box-sizing: border-box;
         color: #222;
-        /*text-align: center;*/
         text-indent: 4px;
         line-height: 21px;
         font-size: 13px;
@@ -213,9 +212,6 @@ body.responsive .index-threaded {
                     ul.thread-replies {
                         display: inline;
                     }
-                        li.thread-reply:first-of-type {
-                            overflow: hidden;
-                        }
 
 #autoupdater {
     clear: both;
@@ -338,9 +334,6 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
             .reply::before {
                 display: none;
             }
-li.thread-reply:first-of-type {
-  overflow: hidden !important;
-}
 .insecure-tripcode {
 	color: #228854;
 }
@@ -353,7 +346,6 @@ li.thread-reply:first-of-type {
 }
 div.post-action-tab.action-tab-actions {
     border: none;
-    /*padding: 0;*/
     margin-right: 2px;
     vertical-align: top;
     font-size: 13px;
@@ -634,7 +626,7 @@ button:disabled, a.button.disabled {
     color: #C5C8C6;
     text-shadow: 0px 1px 0px #000;
     border-bottom: 1px solid #000;
-    background: #1d1f21/*#333 linear-gradient(#333, #222);*/
+    background: #1d1f21;
 }
 #js-config .config-cell.cell-nav {
     border-right: 1px solid #444;
