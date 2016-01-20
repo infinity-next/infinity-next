@@ -42,9 +42,6 @@ nav.gnav li.gnav-item .gnav-link{
 }
 nav.gnav li.gnav-item .gnav-link:hover{
     color:#FFF;
-} 
-nav.gnav .flyout-link:hover {
-	color: #FFF;
 }
     /* Header */
 figure.page-head {
