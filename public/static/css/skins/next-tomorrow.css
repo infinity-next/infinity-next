@@ -346,7 +346,6 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 }
 div.post-action-tab.action-tab-actions {
     border: none;
-    /*padding: 0;*/
     margin-right: 2px;
     vertical-align: top;
     font-size: 13px;
