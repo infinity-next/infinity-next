@@ -299,7 +299,6 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 
 .post-container {
     background: #282a2e;
-    /*border-color: #101112;*/
     border: none;
     box-sizing: border-box;
 }
@@ -406,11 +405,13 @@ div.post-action-tab.action-tab-actions {
         color: #b294bb;
     }
     .author {
-        /*color: #81A2BE;*/
         color: #C5C8C6 !important;
     }
     .post-no, .post-reply {
         color: #C5C8C6 !important;
+    }
+    .post-no:hover, .post-reply:hover {
+        color: #FFF !important;
     }
 
 div.attachment-wrapper {
@@ -542,6 +543,8 @@ button:disabled, a.button.disabled {
         }
             footer nav.boardlist .boardlist-link {
                 color: #81a2be;
+            }footer nav.boardlist .boardlist-link:hover {
+                color: #FFF;
             }
         #footnotes {
             background: none;
@@ -552,7 +555,11 @@ button:disabled, a.button.disabled {
             #footnotes .agpl-compliance {
                 color: #81a2be;
                 text-decoration: none;
-            }   
+            } 
+    #footnotes .agpl-compliance:hover {
+                color: #FFF;
+                text-decoration: none;
+            } 
     
     /**/
 
