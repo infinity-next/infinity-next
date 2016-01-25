@@ -1,4 +1,4 @@
-html, body {
+    html, body {
     background-color: #1d1f21;
     background-image: none;
     color: #C5C8C6;
@@ -483,7 +483,8 @@ ul.post-metas {
     margin: 0;
 }
     li.post-meta.meta-updated_by {
-        display: none;
+        display: block;
+        color: #C5C8C6;
     }
     
 /* Footer */
@@ -552,7 +553,9 @@ button:disabled, a.button.disabled {
                 color: #FFF;
                 text-decoration: none;
             } 
-    
+    nav.boardlist .boardlist-row li.boardlist-category:nth-of-type(2) {
+        display: none;
+    }
     /**/
 
 @media (min-height: 480px) and (min-width: 1028px) {
