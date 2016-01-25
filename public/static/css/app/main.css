@@ -2927,14 +2927,19 @@ main.index-threaded {
 				ul.post-attachments {
 					display: block;
 					float: left;
+					overflow-x: auto;
+					max-width: 99%;
+					max-width: calc(100% - 1em);
 				}
+					div.op-container ul.post-attachments {
+						max-width: 100%;
+					}
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
 					}
 						main.index-threaded ul.post-attachments.attachments-multi {
 							padding-top: 0.75em;
 							float: none;
-							overflow-x: auto;
 						}
 						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
@@ -2961,14 +2966,15 @@ main.index-threaded {
 					
 					li.post-attachment {
 						display: inline-block;
-						vertical-align: bottom;
+						vertical-align: text-bottom;
 						padding: 0 0.75em 0.75em 0;
 					}
 						div.attachment-container {
 							display: block;
 						}
 							li.attachment-expanded div.attachment-container {
-								display: inline-block
+								display: inline-block;
+								max-width: 100%;
 							}
 						}
 							div.attachment-container.attachment-grow {
@@ -3012,13 +3018,15 @@ main.index-threaded {
 								z-index: 3;
 							}
 								figure.attachment-type-audio {
-									margin-right: 2em;
+									overflow: hidden;
+									padding-right: 2em;
 								}
 
 								li.post-attachment.attachment-expanded figure.attachment {
 									/* min-width: 100%; */
 									max-width: 100%;
 								}
+
 								li.post-attachment.attachment-expanded img.attachment-img {
 									/* min-width: 100%; */
 									max-width: 100%;
@@ -3065,14 +3073,17 @@ main.index-threaded {
 										background-size: contain;
 									}
 
-									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper,
-									.post-content li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
+									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
 										margin: 0 0 0 0;
-										padding: 0 25% 0 0;
+										padding: 0 7em 0 0;
 									}
 									.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
 										right: -20%;
-										animation: 1.304s steps(60, end) 0s normal none infinite running fa-spin;
+										animation: fa-spin 1.304s infinite linear;
+									}
+
+									.post-content li.attachment-expanded figure.attachment-type-video div.attachment-wrapper {
+										height: inherit !important;
 									}
 
 								img.attachment-img {
@@ -3126,6 +3137,7 @@ main.index-threaded {
 									}
 										li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
 											max-width: 350px;
+											padding-right: 3em;
 										}
 									.thumbnail-stock img.attachment-img {
 										min-height: 150px;
@@ -3136,6 +3148,7 @@ main.index-threaded {
 									display: block;
 									width: 100%;
 									margin: 0 auto 0.5em 0;
+									padding-top: 0.75em;
 									max-width: 400px;
 								}
 								li.post-attachment video.attachment-inline {
@@ -3158,6 +3171,15 @@ main.index-threaded {
 									white-space: nowrap;
 								}
 								
+									figure.attachment-type-audio figcaption.attachment-details {
+										max-width: none;
+										margin-right: -2em;
+									}
+									li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
+										padding: 0 1em;
+										margin-right: -3em;
+									}
+									
 									div.attachment-action-group,
 									p.attachment-detail {
 										display: block;
@@ -3173,6 +3195,9 @@ main.index-threaded {
 										max-width: 100%;
 										overflow: hidden;
 										text-overflow: ellipsis;
+									}
+									figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
+										margin-bottom: 0px;
 									}
 									div.attachment-container:last-child {
 										margin-bottom: 0px;
