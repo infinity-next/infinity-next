@@ -54,7 +54,7 @@ However, you also agree that:
 
 The AGPL3 license is designed to protect the end user by keeping modified copies of the source open and free.
 
-While not binding, I do ask that users link back to this git repository or to https://infinitydev.org on their website. Sharing is caring. ♥
+While not binding, I do ask that users link back to this git repository on their website. Sharing is caring. ♥
 
 # Contributing
 Everyone is welcome to contribute, but please follow repository etiquette.
