@@ -25,7 +25,7 @@
 	
 	@if (!isset($captchaless) || !$captchaless)
 	<div class="field row-captcha">
-		<label class="field-label" for="captcha">
+		<label class="field-label" for="captcha" data-widget="captcha">
 			{!! captcha() !!}
 		</label>
 		<input class="field-control" id="captcha" name="captcha" type="text" />

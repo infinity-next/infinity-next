@@ -45,7 +45,7 @@ ib.widget("captcha", function(window, $, undefined) {
 			captchaReload : function() {
 				var $captcha = $(widget.options.selector['captcha'], widget.$widget),
 					$parent  = $captcha.parent(),
-					$field   = $captcha.parents(widget.options.selector['captcha-row']).children(widget.options.selector['captcha-field']);
+					$field   = $captcha.parent().children("input");
 				
 				$parent.addClass("captcha-loading");
 				$field.val("").focus();

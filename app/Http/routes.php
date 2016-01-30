@@ -102,14 +102,13 @@ Route::group([
 		{
 			Route::get('/', 'BoardsController@getIndex');
 			
+			Route::get('create', 'BoardsController@getCreate');
+			Route::put('create', 'BoardsController@putCreate');
+			
 			Route::get('assets', 'BoardsController@getAssets');
 			Route::get('config', 'BoardsController@getConfig');
 			Route::get('staff',  'BoardsController@getStaff');
 			Route::get('tags',   'BoardsController@getTags');
-			
-			Route::get('create', 'BoardsController@getCreate');
-			Route::put('create', 'BoardsController@putCreate');
-			
 			
 			Route::controller('appeals', 'AppealsController');
 			Route::controller('reports', 'ReportsController');

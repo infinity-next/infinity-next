@@ -184,7 +184,9 @@ class BoardsController extends PanelController {
 		
 		if (count($configErrors))
 		{
-			return redirect()->back()->withInput()->withErrors($configErrors);
+			return redirect()->back()
+				->withInput()
+				->withErrors($configErrors);
 		}
 		
 		
@@ -198,7 +200,7 @@ class BoardsController extends PanelController {
 			
 			if ($validator->fails())
 			{
-				return $this->throwValidationException(
+				$this->throwValidationException(
 					$request,
 					$validator
 				);
@@ -245,7 +247,7 @@ class BoardsController extends PanelController {
 		
 		if ($validator->fails())
 		{
-			return $this->throwValidationException(
+			$this->throwValidationException(
 				$request,
 				$validator
 			);

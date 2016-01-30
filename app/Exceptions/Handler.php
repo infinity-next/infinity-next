@@ -41,6 +41,11 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
+		if (env('APP_DEBUG', false))
+		{
+			return parent::render($request, $e);
+		}
+		
 		switch (get_class($e))
 		{
 			case "Swift_TransportException" :
