@@ -424,7 +424,7 @@ class ImageController extends Controller {
 				{
 					// No.
 					// Get our hands dirty and stream the file.
-					return Response::stream(function() use ($storagePathFull, $responseStart, $responseEnd) {
+					return Response::make(function() use ($storagePathFull, $responseStart, $responseEnd) {
 						if (!($responseStream = fopen($storagePathFull, 'rb'))) {
 							abort(500, "Could not open requested file.");
 						}

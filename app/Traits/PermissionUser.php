@@ -314,6 +314,16 @@ trait PermissionUser {
 	}
 	
 	/**
+	 * Can this user create a board with a banned URI?
+	 *
+	 * @return boolean
+	 */
+	public function canCreateBoardWithBannedUri()
+	{
+		return $this->can("board.create.banned");
+	}
+	
+	/**
 	 * Can this user create a user?
 	 *
 	 * @return boolean

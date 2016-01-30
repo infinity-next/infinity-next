@@ -23,6 +23,7 @@ use InfinityNext\BrennanCaptcha\Captcha;
 use DB;
 use Cache;
 use Request;
+use Settings;
 
 use Event;
 use App\Events\BoardWasCreated;
@@ -1049,6 +1050,22 @@ class Board extends Model {
 		}
 		
 		return $filters;
+	}
+	
+	public function hasBannedUri()
+	{
+		$bannedUris = (string) Settings::get('boardUriBanned');
+		$bannedUris = explode('\n', $bannedUris);
+		
+		foreach ($bannedUris as $bannedUri)
+		{
+			if (preg_match("/{$bannedUri}/i", $this->board_uri))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

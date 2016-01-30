@@ -198,7 +198,7 @@ class BoardsController extends PanelController {
 			
 			if ($validator->fails())
 			{
-				$this->throwValidationException(
+				return $this->throwValidationException(
 					$request,
 					$validator
 				);
@@ -216,7 +216,6 @@ class BoardsController extends PanelController {
 			'board_uri'   => [
 				"required",
 				"unique:boards,board_uri",
-				"not_in:{$bannedUris}",
 				"string",
 				"regex:(" . Board::URI_PATTERN . ")",
 			],
@@ -230,21 +229,7 @@ class BoardsController extends PanelController {
 			return !$this->user->isAnonymous();
 		});
 		
-		if ($validator->fails())
-		{
-			$this->throwValidationException(
-				$request,
-				$validator
-			);
-		}
-		
-		if ($this->user->isAnonymous())
-		{
-			$this->auth->login($this->registrar->create($request->all()));
-			$this->user = $this->auth->user();
-		}
-		
-		// Create the board.
+		// Create the board model.
 		$board = new Board([
 			'board_uri'   => $input['board_uri'],
 			'title'       => $input['title'],
@@ -252,6 +237,28 @@ class BoardsController extends PanelController {
 			'created_by'  => $this->user->user_id,
 			'operated_by' => $this->user->user_id,
 		]);
+		
+		if (!$this->user->canCreateBoardWithBannedUri() && $board->hasBannedUri())
+		{
+			$validator->errors()->add('board_uri', 'validation.custom.board_uri_banned');
+		}
+		
+		if ($validator->fails())
+		{
+			return $this->throwValidationException(
+				$request,
+				$validator
+			);
+		}
+		
+		// Create user if we have to.
+		if ($this->user->isAnonymous())
+		{
+			$this->auth->login($this->registrar->create($request->all()));
+			$this->user = $this->auth->user();
+		}
+		
+		// Save the board.
 		$board->save();
 		
 		// Seed board ownership permissions.

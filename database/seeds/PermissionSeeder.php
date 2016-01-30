@@ -221,6 +221,7 @@ class PermissionGroupSeeder extends Seeder {
 				
 				'permissions'   => [
 					"board.create",
+					"board.create.banned",
 					"site.board.view_unindexed",
 					"site.image.ban",
 					"site.pm",
