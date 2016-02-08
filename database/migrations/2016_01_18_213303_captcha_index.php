@@ -21,8 +21,11 @@ class CaptchaIndex extends Migration
 		Schema::table('captcha', function(Blueprint $table)
 		{
 			$table->inet('client_ip')->after('hash')->nullable();
-			$table->index('client_ip');
-			$table->index('hash');
+			if (!(DB::connection() instanceof \Illuminate\Database\MySqlConnection))
+			{
+				$table->index('client_ip');
+				$table->index('hash');
+			}
 		});
 	}
 	
@@ -35,8 +38,11 @@ class CaptchaIndex extends Migration
 	{
 		Schema::table('captcha', function(Blueprint $table)
 		{
-			$table->dropIndex('captcha_client_ip_index');
-			$table->dropIndex('captcha_hash_index');
+			if (!(DB::connection() instanceof \Illuminate\Database\MySqlConnection))
+			{
+				$table->dropIndex('captcha_client_ip_index');
+				$table->dropIndex('captcha_hash_index');
+			}
 			$table->dropColumn('client_ip');
 			$table->binary('client_ip')->after('hash')->nullable();
 		});
