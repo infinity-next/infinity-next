@@ -48,6 +48,7 @@ class PermissionSeeder extends Seeder {
 			"board.bans",
 			"board.logs",
 			"board.create",
+			"board.create.banned",
 			"board.delete",
 			"board.history",
 			"board.reassign",
