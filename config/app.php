@@ -144,7 +144,7 @@ return [
 		/*
 		 * Captcha...
 		 */
-		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
+		'InfinityNext\LaravelCaptcha\CaptchaServiceProvider',
 		
 		/*
 		 * Application Service Providers...
@@ -257,7 +257,7 @@ return [
 		/*
 		 * Captcha
 		 */
-		'Captcha'   => 'InfinityNext\BrennanCaptcha\Facades\Captcha',
+		'Captcha'   => 'InfinityNext\LaravelCaptcha\Facades\Captcha',
 		
 		/*
 		 * File Validation

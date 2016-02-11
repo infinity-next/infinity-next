@@ -1,6 +1,6 @@
 <?php
 
-use \InfinityNext\BrennanCaptcha\Captcha;
+use \InfinityNext\LaravelCaptcha\Captcha;
 
 if (!function_exists('captcha'))
 {

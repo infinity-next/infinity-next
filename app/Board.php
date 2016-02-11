@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-use InfinityNext\BrennanCaptcha\Captcha;
+use InfinityNext\LaravelCaptcha\Captcha;
 
 use DB;
 use Cache;

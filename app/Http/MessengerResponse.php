@@ -1,6 +1,6 @@
 <?php namespace App\Http;
 
-use InfinityNext\BrennanCaptcha\Captcha;
+use InfinityNext\LaravelCaptcha\Captcha;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\ResponseTrait;
 use App;

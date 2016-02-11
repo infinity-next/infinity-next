@@ -48,7 +48,7 @@
 		"barryvdh/laravel-httpcache": "0.2.x@dev",
 		
 		"infinity-next/braintree":       "*@dev",
-		"infinity-next/brennan-captcha": "*@dev",
+		"infinity-next/laravel-captcha": "*@dev",
 		"infinity-next/eightdown":       "*@dev",
 		"infinity-next/sleuth":          "*@dev"
 	},
