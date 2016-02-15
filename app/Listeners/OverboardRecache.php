@@ -1,5 +1,6 @@
 <?php namespace App\Listeners;
 
+use Acetone;
 use App\Listeners\Listener;
 use Cache;
 
@@ -32,6 +33,11 @@ class OverboardRecache extends Listener
 			default :
 				Cache::tags("site.overboard.pages")->flush();
 				break;
+		}
+
+		if (env('APP_VARNISH'))
+		{
+			Acetone::purge("/overboard.html");
 		}
 	}
 	
