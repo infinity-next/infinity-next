@@ -117,7 +117,7 @@ class PostRequest extends Request implements ApiContract {
 			
 			if ($user && !$user->isAnonymous())
 			{
-				$role = $user->roles->where('role_id', (int) $input['capcode'])->first();
+				$role = $user->roles->find( (int) $input['capcode']) );
 				
 				if ($role && $role->capcode != "")
 				{
