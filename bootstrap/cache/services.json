@@ -18,8 +18,8 @@
         "Illuminate\\Pipeline\\PipelineServiceProvider",
         "Illuminate\\Queue\\QueueServiceProvider",
         "Illuminate\\Redis\\RedisServiceProvider",
-        "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "Illuminate\\Session\\SessionServiceProvider",
+        "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "Illuminate\\Translation\\TranslationServiceProvider",
         "Illuminate\\Validation\\ValidationServiceProvider",
         "Illuminate\\View\\ViewServiceProvider",
@@ -31,6 +31,7 @@
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\HelperServiceProvider",
         "App\\Providers\\RouteServiceProvider",
+        "App\\Providers\\SessionServiceProvider",
         "App\\Providers\\SettingsServiceProvider",
         "App\\Providers\\ValidationExtensionServiceProvider",
         "Barryvdh\\HttpCache\\ServiceProvider",
@@ -39,7 +40,8 @@
         "InfinityNext\\Sleuth\\Providers\\SleuthServiceProvider",
         "InfinityNext\\Eightdown\\EightdownServiceProvider",
         "InfinityNext\\Braintree\\BraintreeServiceProvider",
-        "Devfactory\\Minify\\MinifyServiceProvider"
+        "Devfactory\\Minify\\MinifyServiceProvider",
+        "JDare\\Acetone\\AcetoneServiceProvider"
     ],
     "eager": [
         "Barryvdh\\Debugbar\\ServiceProvider",
@@ -61,13 +63,15 @@
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\HelperServiceProvider",
         "App\\Providers\\RouteServiceProvider",
+        "App\\Providers\\SessionServiceProvider",
         "App\\Providers\\SettingsServiceProvider",
         "App\\Providers\\ValidationExtensionServiceProvider",
         "Barryvdh\\HttpCache\\ServiceProvider",
         "Cviebrock\\ImageValidator\\ImageValidatorServiceProvider",
         "InfinityNext\\Eightdown\\EightdownServiceProvider",
         "InfinityNext\\Braintree\\BraintreeServiceProvider",
-        "Devfactory\\Minify\\MinifyServiceProvider"
+        "Devfactory\\Minify\\MinifyServiceProvider",
+        "JDare\\Acetone\\AcetoneServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",

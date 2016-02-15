@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use Acetone;
 use App\BoardAdventure;
 use App\FileStorage;
 use App\FileAttachment;
@@ -429,6 +430,11 @@ class Post extends Model {
 			default :
 				Cache::tags(["board.{$this->board_uri}", "threads"])->forget("board.{$this->board_uri}.thread.{$this->board_id}");
 				break;
+		}
+
+		if (env('APP_VARNISH'))
+		{
+			Acetone::purge("/{$this->board_uri}/thread/{$this->reply_to_board_id}");
 		}
 	}
 	
