@@ -15,7 +15,6 @@ Route::group([
 	'prefix' => '/',
 	'middleware' => [
 		\App\Http\Middleware\LocalizedSubdomains::class,
-		//\App\Http\Middleware\VerifyCsrfToken::class,
 	],
 ], function () {
 	
@@ -53,10 +52,13 @@ Route::group([
 	*/
 	Route::group([
 		'namespace'  => 'Panel',
-		'middleware' => \App\Http\Middleware\VerifyCsrfToken::class,
 		'prefix'     => 'cp',
 	], function()
 	{
+		Route::group([
+			'middleware' => 'csrf'
+		], function()
+		{
 		// Simple /cp/ requests go directly to /cp/home
 		Route::get('/', 'HomeController@getIndex');
 		
@@ -75,9 +77,6 @@ Route::group([
 			Route::controller('donate', 'DonateController');
 		}
 		
-		
-		// /cp/adventure forwards you to a random board.
-		Route::controller('adventure', 'AdventureController');
 		
 		// /cp/histoy/ip will show you post history for an address.
 		Route::get('history/{ip}', 'HistoryController@getHistory');
@@ -170,6 +169,10 @@ Route::group([
 			Route::controller('permissions/{role}', 'PermissionsController');
 			Route::get('permissions', 'RolesController@getPermissions');
 		});
+		});
+
+		// /cp/adventure forwards you to a random board.
+		Route::controller('adventure', 'AdventureController');
 		
 	});
 	

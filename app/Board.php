@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use Acetone;
 use App\BoardSetting;
 use App\Post;
 use App\PostCite;
@@ -370,6 +371,17 @@ class Board extends Model {
 			default :
 				Cache::tags("board.{$this->board_uri}.pages")->flush();
 				break;
+		}
+
+		if (env('APP_VARNISH'))
+		{
+			Acetone::purge("/{$this->board_uri}");
+			Acetone::purge("/{$this->board_uri}/catalog");
+
+			for ($i = 1; $i <= $this->getPageCount() * 2; ++$i)
+			{
+				Acetone::purge("/{$this->board_uri}/{$i}");
+			}
 		}
 	}
 	

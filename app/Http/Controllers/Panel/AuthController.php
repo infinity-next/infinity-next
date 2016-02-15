@@ -2,9 +2,11 @@
 
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
+use Cookie;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Http\Request;
+use Session;
 
 class AuthController extends PanelController {
 	
@@ -158,6 +160,11 @@ class AuthController extends PanelController {
 	public function getLogout()
 	{
 		$this->auth->logout();
+
+		Session::flush();
+
+		Cookie::queue(Cookie::forget('laravel_session'));
+		Cookie::queue(Cookie::forget('XSRF-TOKEN'));
 		
 		return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
 	}

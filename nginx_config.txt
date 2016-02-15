@@ -10,6 +10,9 @@ server {
         access_log /var/log/nginx/domain.com-access.log;
         error_log /var/log/nginx/domain.com-error.log;
 
+        # server name, add your domain here
+        server_name domain.com;
+        
 	# php info
         location ~ \.php$ {
 

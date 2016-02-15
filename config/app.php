@@ -135,8 +135,8 @@ return [
 		'Illuminate\Pipeline\PipelineServiceProvider',
 		'Illuminate\Queue\QueueServiceProvider',
 		'Illuminate\Redis\RedisServiceProvider',
-		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
 		'Illuminate\Session\SessionServiceProvider',
+		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
@@ -156,6 +156,7 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'App\Providers\SessionServiceProvider',
 		'App\Providers\SettingsServiceProvider',
 		'App\Providers\ValidationExtensionServiceProvider',
 		
@@ -190,6 +191,11 @@ return [
 		 * CSS+JS Minify...
 		 */
 		'Devfactory\Minify\MinifyServiceProvider',
+
+		/*
+		 * Varnish Integration...
+		 */
+		'JDare\Acetone\AcetoneServiceProvider',
 	],
 	
 	/*
@@ -268,6 +274,11 @@ return [
 		 * CSS+JS Minify
 		 */
 		'Minify'    => 'Devfactory\Minify\Facades\MinifyFacade',
+
+		/*
+		 * Varnish Integration...
+		 */
+		'Acetone'   => 'JDare\Acetone\Acetone\Facades\Acetone',
 	],
 
 ];
