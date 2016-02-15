@@ -893,17 +893,11 @@ trait PermissionUser {
 			return collect();
 		}
 		
+		
 		return Board::where(function($query) use ($whitelist, $boardlist) {
-				if (!in_array(null, $boardlist))
+				if ($whitelist && !in_array(null, $boardlist))
 				{
-					if ($whitelist)
-					{
-						$query->whereIn('board_uri', $boardlist);
-					}
-					else
-					{
-						$query->whereNotIn('board_uri', $boardlist);
-					}
+					$query->whereIn('board_uri', $boardlist);
 				}
 			})
 			->andAssets()

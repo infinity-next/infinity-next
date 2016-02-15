@@ -227,6 +227,7 @@ class BoardsController extends PanelController {
 		
 		$validator = Validator::make($input, $requirements);
 		
+		// Hide a second captcha on registration+create combo forms.
 		$validator->sometimes('captcha', "required|captcha", function($input) {
 			return !$this->user->isAnonymous();
 		});
