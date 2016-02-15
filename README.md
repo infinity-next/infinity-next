@@ -1,4 +1,4 @@
-**Infinity Next** is an imageboard using the [Laravel Framework](https://github.com/laravel/laravel). It was conceived as a way to replace what [8chan](https://8ch.net) runs on. Its current codebase has aged poorly and I felt the world was ready for a redo.
+**[Infinity Next](https://16chan.nl)** is an imageboard using the [Laravel Framework](https://github.com/laravel/laravel). It was conceived as a way to replace existing free imageboard software that have aged poorly. Infinity Next is completely free to use, but modifications to the source code must be made open source as well.
 
 # Submitting Issues
 If you are submitting an [issue](https://github.com/infinity-next/infinity-next/issues) to developers, please supply the following:
@@ -35,7 +35,7 @@ Infinity Next is currently below its first release version. When it is finished,
 4. Issue the command `php artisan migrate` or `./artisan migrate`
 5. Issue the command `php artisan db:seed` or `./artisan db:seed`
     * Take note of the Admin account password that will be created for you.
-6. Optionally, if you would like CRON services for content pruning, add the Laravel CRON service provided in `crontab.txt`
+6. Add the Laravel crontab service provided in `crontab.txt`
 7. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
 
 You should now have a `/test/` board. The admin account will be named `Admin`.
