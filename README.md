@@ -22,7 +22,9 @@ You may also need the following because not all PHP packages include them:
   * `fileinfo` for Composer requirement.
 
 When installing from source,
-* `composer`
+  * `composer`
+
+You can also pass `--prefer-source` to `composer` to forego the Github OAuth requirement.
 
 # Installation
 Infinity Next is currently below its first release version. When it is finished, a compiled archive will be available with an installation process. Right now, however, you must build it yourself and have access to a command line interface.
