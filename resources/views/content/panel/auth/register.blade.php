@@ -4,7 +4,7 @@
 
 @section('body')
 {!! Form::open([
-	'url'    => url('/cp/auth/register),
+	'url'    => url('/cp/auth/register'),
 	'method' => "PUT",
 	'id'     => "create-form",
 	'class'  => "form-auth",

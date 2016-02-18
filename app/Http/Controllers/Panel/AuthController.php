@@ -70,7 +70,7 @@ class AuthController extends PanelController {
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postRegister(Request $request)
+	public function putRegister(Request $request)
 	{
 		if (!$this->user->canCreateUser())
 		{

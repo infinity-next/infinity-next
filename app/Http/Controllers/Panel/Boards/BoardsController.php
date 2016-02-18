@@ -237,8 +237,6 @@ class BoardsController extends PanelController {
 			'board_uri'   => $input['board_uri'],
 			'title'       => $input['title'],
 			'description' => $input['description'],
-			'created_by'  => $this->user->user_id,
-			'operated_by' => $this->user->user_id,
 		]);
 		
 		if (!$this->user->canCreateBoardWithBannedUri() && $board->hasBannedUri())
@@ -260,6 +258,9 @@ class BoardsController extends PanelController {
 			$this->auth->login($this->registrar->create($request->all()));
 			$this->user = $this->auth->user();
 		}
+		
+		$board->created_by  = $this->user->user_id;
+		$board->operated_by = $this->user->user_id;
 		
 		// Save the board.
 		$board->save();
