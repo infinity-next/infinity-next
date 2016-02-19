@@ -120,7 +120,10 @@ class AuthController extends PanelController {
 		
 		if (env('APP_NO_AUTH', false))
 		{
-			$user = User::where(['username' => $request->get('username')])->firstOrFail();
+			$user = User::where([
+				'username' => $request->get('username')
+			])->firstOrFail();
+			
 			$this->auth->login($user);
 		}
 		else if (!$this->auth->attempt($credentials, $request->has('remember')))

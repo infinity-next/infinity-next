@@ -227,10 +227,10 @@ class BoardsController extends PanelController {
 		
 		$validator = Validator::make($input, $requirements);
 		
-		// Hide a second captcha on registration+create combo forms.
-		$validator->sometimes('captcha', "required|captcha", function($input) {
-			return !$this->user->isAnonymous();
-		});
+		///// Hide a second captcha on registration+create combo forms.
+		///$validator->sometimes('captcha', "required|captcha", function($input) {
+		///	return !$this->user->isAnonymous();
+		///});
 		
 		// Create the board model.
 		$board = new Board([
@@ -239,12 +239,18 @@ class BoardsController extends PanelController {
 			'description' => $input['description'],
 		]);
 		
+		$failed = $validator->fails();
+		
 		if (!$this->user->canCreateBoardWithBannedUri() && $board->hasBannedUri())
 		{
-			$validator->errors()->add('board_uri', 'validation.custom.board_uri_banned');
+			$validator->errors()->add(
+				'board_uri',
+				trans('validation.custom.board_uri_banned')
+			);
+			$failed = true;
 		}
 		
-		if ($validator->fails())
+		if ($failed)
 		{
 			$this->throwValidationException(
 				$request,
