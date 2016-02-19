@@ -1067,10 +1067,12 @@ class Board extends Model {
 	public function hasBannedUri()
 	{
 		$bannedUris = (string) Settings::get('boardUriBanned');
-		$bannedUris = explode('\n', $bannedUris);
+		$bannedUris = explode(PHP_EOL, $bannedUris);
 		
 		foreach ($bannedUris as $bannedUri)
 		{
+			$bannedUri = str_replace(["\r\n", "\n", "\r"], " ", $bannedUri);
+			
 			if (preg_match("/{$bannedUri}/i", $this->board_uri))
 			{
 				return true;
