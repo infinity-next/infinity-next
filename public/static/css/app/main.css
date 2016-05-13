@@ -48,7 +48,7 @@ body {
 
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	
+
 	color: rgb(17, 17, 17);
 	-webkit-text-size-adjust: 100%
 }
@@ -1600,13 +1600,13 @@ header.contrib-header {
 nav.gnav {
 	background: #EEF2FF;
 	border-bottom: 1px solid #dedede;
-	
+
 	padding: 0;
 	margin: 0;
-	
+
 	height: 39px;
 	width: 100%;
-	
+
 	position: relative;
 	z-index: 1000;
 }
@@ -1632,7 +1632,7 @@ nav.gnav {
 				float: right;
 				cursor: pointer;
 			}
-		
+
 		nav.gnav li.gnav-item  .gnav-link {
 			display: inline-block;
 			font-size: 14px;
@@ -1671,7 +1671,7 @@ nav.gnav {
 			nav.gnav .flyout.flyout-open {
 				display: block;
 			}
-			
+
 			nav.gnav .flyout-container {
 				box-sizing: border-box;
 				max-width: 100%;
@@ -1683,7 +1683,7 @@ nav.gnav {
 				border-bottom: 1px solid #dedede;
 
 			}
-			
+
 			nav.gnav .flyout-header {
 				display: block;
 				font-size: 1.3em;
@@ -1695,7 +1695,7 @@ nav.gnav {
 				nav.gnav .flyout-headlink {
 					display: block;
 				}
-			
+
 			nav.gnav .flyout-cols {
 				display: block;
 				width: 100%;
@@ -1710,11 +1710,11 @@ nav.gnav {
 					display: block;
 					clear: both;
 				}
-			
+
 				#favorite-boards {
 					display: none;
 				}
-			
+
 			nav.gnav .flyout-col-title {
 				font-size: 1.3em;
 				font-weight: bold;
@@ -1749,7 +1749,7 @@ nav.gnav {
 						nav.gnav .flyout-item:hover {
 							background-color: rgba(255,255,255,0.5);
 						}
-						
+
 						nav.gnav .flyout-uri {
 							font-weight: bold;
 						}
@@ -1759,7 +1759,7 @@ nav.gnav {
 								display: inline;
 								content: ' - ';
 							}
-	
+
 	header nav.boardlist {
 		display: none;
 
@@ -1781,7 +1781,7 @@ nav.gnav {
 	header nav.boardlist .boardlist-link {
 		color: #34345C;
 	}
-	
+
 	footer nav.boardlist {
 		background: #666666;
 		color: #aeaeae;
@@ -1799,29 +1799,29 @@ nav.gnav {
 	display: block;
 	cursor: default;
 	position: relative;
-	
+
 	margin: 0 auto;
 	padding: 0;
-	
+
 	background: #F5F5F7;
 	border: 1px solid #333;
-	
+
 	max-width: 840px;
 	width: 100%;
-	
+
 	height: auto;
 	max-height: 100vh;
-	
+
 	overflow: hidden;
 	border-radius: 7px;
-	
+
 	pointer-events: all;
 }
 	#js-config-close {
 		position: absolute;
 		top: 0.25em;
 		right: 0.5em;
-		
+
 		cursor: pointer;
 		font-size: 2em;
 		line-height: 1;
@@ -1835,11 +1835,11 @@ nav.gnav {
 		text-align: center;
 		text-shadow: 0 1px 0 #fff;
 		white-space: nowrap;
-		
+
 		border-bottom: 1px solid #d3d3d4;
 		padding: 1.5em 0.75em 0.75em 0.75em;
 		margin: 0;
-		
+
 		background: #f0f0f2;
 		background-image: -webkit-linear-gradient(#f5f5f7,#e9e9ea);
 		background-image: -moz-linear-gradient(#f5f5f7,#e9e9ea);
@@ -1907,7 +1907,7 @@ nav.gnav {
 			}
 	#js-config .config-group {
 		display: none;
-		
+
 		border: none;
 		margin: 0;
 		padding: 0;
@@ -1933,7 +1933,7 @@ nav.gnav {
 	#js-config .config-option {
 		vertical-align: middle;
 	}
-	
+
 	/* Specific JS Config Items */
 	#js-config-row-stylist-css .config-row-name {
 		display: none;
@@ -1958,7 +1958,7 @@ section.index-form {
 	form.form-post .row-double {
 		background: #d6daf0;
 	}
-	
+
 	form.form-post {
 		border: 1px solid #ccc;
 		position: relative;
@@ -1968,7 +1968,7 @@ section.index-form {
 		padding: 0 0.75em;
 	}
 		form.form-post .post-menu {
-			
+
 		}
 			html.js form.form-post .post-menu {
 				position: absolute;
@@ -1983,7 +1983,7 @@ section.index-form {
 					border-bottom: 1px solid rgba(255,255,255,0.4);
 					background: none;
 					color: #eee;
-					
+
 					padding: 0;
 					margin: 0 0.3em 0 0;
 					width: 5em;
@@ -1993,12 +1993,12 @@ section.index-form {
 					form.form-post .post-menu .field-control:placeholder {
 						color: #eee;
 					}
-				
+
 				html.js li.menu-input {
 					display: inline-block;
 					vertical-align: middle;
 				}
-				
+
 				html.js li.menu-icon {
 					display: none;
 					vertical-align: middle;
@@ -2181,13 +2181,13 @@ section.index-form {
 				color: rgb(17, 17, 17);
 				text-align: center;
 			}
-			
+
 			form.form-post .row-submit::after {
 				display: block;
 				clear: both;
 				content: ' ';
 			}
-			
+
 			form.form-post button.field-submit:hover,
 			form.form-post div.row-file:hover {
 				background-color: #F1EFEF;
@@ -2635,10 +2635,8 @@ main.index-threaded {
 		}
 
 		main.index-threaded .thread-item {
-			/*
-			border-top:    1px solid rgba(0, 0, 255, 0.1);
-			border-bottom: 1px solid rgba(0, 0, 255, 0.1);
-			*/
+			border-top:    1px solid rgba(0, 0, 255, 0.5);
+			border-bottom: 1px solid rgba(0, 0, 255, 0.5);
 		}
 		main.index-threaded .thread-item:first-child {
 			border-top: none;
@@ -2716,7 +2714,7 @@ main.index-threaded {
 				clear: both;
 				content: ' ';
 			} */
-		
+
 		.post {
 			font-size: 105%;
 			margin: 0;
@@ -2833,32 +2831,32 @@ main.index-threaded {
 						.post-container.post-deleted .post-detail.post-deleted {
 							display: inline-block;
 						}
-						
+
 						.post-detail.post-country {
 							line-height: 1em;
 							vertical-align: middle;
 						}
-						
+
 						.post-detail-item {
 							box-sizing: border-box;
 							max-width: 100%;
-							
+
 							overflow: hidden;
 							text-overflow: ellipsis;
 							vertical-align: top;
 						}
-						
+
 							.post-select-input {
 								vertical-align: text-bottom;
 							}
-							
+
 						.subject {
 							display: inline-block;
 							margin: 0;
 							font-size: 1em;
 							white-space: normal;
 						}
-						
+
 						.author {
 							display: inline-block;
 							color: #117743;
@@ -2923,7 +2921,7 @@ main.index-threaded {
 								text-decoration: underline;
 								white-space: nowrap;
 							}
-				
+
 				ul.post-attachments {
 					display: block;
 					float: left;
@@ -2952,7 +2950,7 @@ main.index-threaded {
 							content: ' ';
 							clear: both;
 						}
-					
+
 					li.attachment-actions {
 						display: block;
 						margin-top: -0.50em;
@@ -2963,7 +2961,7 @@ main.index-threaded {
 							cursor: pointer;
 							margin-right: 0.75em;
 						}
-					
+
 					li.post-attachment {
 						display: inline-block;
 						vertical-align: text-bottom;
@@ -2981,7 +2979,7 @@ main.index-threaded {
 								margin: 0;
 								width: 100%;
 							}
-							
+
 						a.attachment-link {
 							display: inline;
 							outline: none;
@@ -2994,7 +2992,7 @@ main.index-threaded {
 							li.post-attachment.attachment-expanded a.attachment-link {
 								display: block;
 							}
-							
+
 							a.attachment-download .detail-download {
 								margin-left: 0.5em;
 							}
@@ -3010,7 +3008,7 @@ main.index-threaded {
 								display: inline;
 								content: ")";
 							}
-							
+
 							figure.attachment {
 								display: block;
 								margin: 0;
@@ -3089,7 +3087,7 @@ main.index-threaded {
 								img.attachment-img {
 									display: inline-block;
 									margin: 0 auto;
-									
+
 									vertical-align: middle;
 									position: relative;
 									z-index: 2;
@@ -3143,7 +3141,7 @@ main.index-threaded {
 										min-height: 150px;
 										min-width: 150px;
 									}
-								
+
 								li.post-attachment audio.attachment-inline {
 									display: block;
 									width: 100%;
@@ -3156,21 +3154,21 @@ main.index-threaded {
 									max-width: 100%;
 									margin: 0 auto 0.5em auto;
 								}
-								
+
 								attachment-inline + .attachment-link .attachment-wrapper {
 									display: none;
 								}
-								
+
 								figcaption.attachment-details {
 									display: block;
 									max-width: 100%;
-									
+
 									position: relative;
 									padding: 0 1em;
 									text-align: center;
 									white-space: nowrap;
 								}
-								
+
 									figure.attachment-type-audio figcaption.attachment-details {
 										max-width: none;
 										margin-right: -2em;
@@ -3179,7 +3177,7 @@ main.index-threaded {
 										padding: 0 1em;
 										margin-right: -3em;
 									}
-									
+
 									div.attachment-action-group,
 									p.attachment-detail {
 										display: block;
@@ -3205,8 +3203,8 @@ main.index-threaded {
 									div.attachment-action-group span.attachment-action {
 										margin: 0 0.25em;
 									}
-						
-						
+
+
 			ul.post-metas {
 				border-top: 1px solid #D6DAF0;
 			}
@@ -3245,7 +3243,7 @@ main.index-threaded {
 						div.action-tab-actions span.post-action-text {
 							display: none;
 						}
-					
+
 					a.catalog-open {
 						background: rgba(255, 0, 0, 0.1);
 						border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -3258,7 +3256,7 @@ main.index-threaded {
 						margin: 0;
 						display: block;
 					}
-					
+
 					ul.post-action-groups {
 						display: none;
 						max-width: 100vw;
@@ -4507,7 +4505,7 @@ figcaption.page-details {
 			display: block;
 			margin: 0 auto;
 			width: 450px;
-			
+
 			font-family: monospace;
 			text-align: left;
 			white-space: pre;
@@ -4546,10 +4544,10 @@ footer {
 			position: absolute;
 			bottom: auto;
 			right: 1em;
-			
+
 			height: auto;
 			width: auto;
-			
+
 			max-width: 3em;
 			max-height: 3em;
 		}
