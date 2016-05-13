@@ -3,10 +3,11 @@
 use Acetone;
 use App\Listeners\Listener;
 use Cache;
+use DB;
 
 class OverboardRecache extends Listener
 {
-	
+
 	/**
 	 * Handle the event.
 	 *
@@ -23,13 +24,13 @@ class OverboardRecache extends Listener
 					Cache::forget("site.overboard.page.{$i}");
 				}
 				break;
-			
+
 			case "database" :
 				DB::table('cache')
 					->where('key', 'like', "%site.overboard.page.%")
 					->delete();
 				break;
-			
+
 			default :
 				Cache::tags("site.overboard.pages")->flush();
 				break;
@@ -40,5 +41,5 @@ class OverboardRecache extends Listener
 			Acetone::purge("/overboard.html");
 		}
 	}
-	
+
 }
