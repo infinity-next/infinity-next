@@ -19,7 +19,7 @@
 		padding-left: 1em;
 		padding-right: 1em;
 	}
-	
+
 	/**
 	 * Catalog
 	 */
@@ -36,12 +36,21 @@
  * 640px Width
  * Horizontal phones
  */
+@media (max-width: 640px) {
+	blockquote.post {
+		clear: both;
+	}
+}
 @media (min-width: 640px) {
 	/**
 	 * Thread & Posts
 	 */
 	body.responsive section.index-threads aside.advertiser.bottom-right {
 		display: block;
+	}
+
+	blockquote.post {
+		min-width: 30em;
 	}
 }
 
@@ -120,7 +129,7 @@
 	.only-mobile {
 		display: none;
 	}
-	
+
 	/**
 	 * Primary Navigation
 	 */
@@ -203,7 +212,7 @@
  	.post-details {
  		white-space: nowrap;
  	}
- 	
+
 	html.js body.responsive main.index-threaded form.form-post {
 		border: none;
 		position: fixed;
@@ -220,15 +229,15 @@
 			border-radius: 0px;
 			margin: 0;
 		}
-		
+
 		html.js body.responsive main.index-threaded form.form-post .menu-icon {
 			display: inline-block;
 		}
-		
+
 		html.js body.responsive main.index-threaded form.form-post .menu-icon-maximize {
 			display: none;
 		}
-		
+
 		html.js body.responsive main.index-threaded form.form-post .form-fields {
 			display: block;
 			border-bottom: 1px solid #ccc;
@@ -240,7 +249,7 @@
 			html.js body.responsive main.index-threaded form.form-post .form-legend {
 				margin: 0;
 				padding: 0;
-				
+
 				background: #5c58ff;
 				color: #FEFEFE;
 				text-indent: 4px;
@@ -336,6 +345,9 @@
 			width: 310px;
 		}
 
+	blockquote.post {
+		min-width: 50em;
+	}
 }
 
 
