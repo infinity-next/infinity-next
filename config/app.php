@@ -12,9 +12,9 @@ return [
 	| application. If disabled, a simple generic error page is shown.
 	|
 	*/
-	
-	'debug' => env('APP_DEBUG'),
-	
+
+	'debug' => env('APP_ROOT_IP', false) === $_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application URL
@@ -25,9 +25,9 @@ return [
 	| your application so that it is used when running Artisan tasks.
 	|
 	*/
-	
+
 	'url' => env('APP_URL', 'http://localhost'),
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Timezone
@@ -38,9 +38,9 @@ return [
 	| ahead and set this to a sensible default for you out of the box.
 	|
 	*/
-	
+
 	'timezone' => 'UTC',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Locale Configuration
@@ -51,9 +51,9 @@ return [
 	| to any of the locales which will be supported by the application.
 	|
 	*/
-	
+
 	'locale' => 'eng',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Fallback Locale
@@ -64,9 +64,9 @@ return [
 	| the language folders that are provided through your application.
 	|
 	*/
-	
+
 	'fallback_locale' => '',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Encryption Key
@@ -77,11 +77,11 @@ return [
 	| will not be safe. Please do this before deploying an application!
 	|
 	*/
-	
+
 	'key' => env('APP_KEY', 'SomeRandomString'),
-	
+
 	'cipher' => MCRYPT_RIJNDAEL_128,
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Logging Configuration
@@ -94,9 +94,9 @@ return [
 	| Available Settings: "single", "daily", "syslog", "errorlog"
 	|
 	*/
-	
+
 	'log' => 'errorlog',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Autoloaded Service Providers
@@ -109,12 +109,12 @@ return [
 	*/
 
 	'providers' => [
-		
+
 		/*
 		 * Debugging tools...
 		 */
 		'Barryvdh\Debugbar\ServiceProvider',
-		
+
 		/*
 		 * Laravel Framework Service Providers...
 		 */
@@ -140,12 +140,12 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-		
+
 		/*
 		 * Captcha...
 		 */
 		'InfinityNext\LaravelCaptcha\CaptchaServiceProvider',
-		
+
 		/*
 		 * Application Service Providers...
 		 */
@@ -159,34 +159,34 @@ return [
 		'App\Providers\SessionServiceProvider',
 		'App\Providers\SettingsServiceProvider',
 		'App\Providers\ValidationExtensionServiceProvider',
-		
+
 		/*
 		 * HttpCache...
 		 */
 		'Barryvdh\HttpCache\ServiceProvider',
-		
+
 		/*
 		 * Forms...
 		 */
 		'Collective\Html\HtmlServiceProvider',
-		
+
 		/*
 		 * Files and Validation...
 		 */
 		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
-		
+
 		/*
 		 * Content Formatting...
 		 */
 		'InfinityNext\Eightdown\EightdownServiceProvider',
-		
+
 		/*
 		 * Money...
 		 */
 		//'Laravel\Cashier\CashierServiceProvider',
 		'InfinityNext\Braintree\BraintreeServiceProvider',
-		
+
 		/*
 		 * CSS+JS Minify...
 		 */
@@ -197,7 +197,7 @@ return [
 		 */
 		'JDare\Acetone\AcetoneServiceProvider',
 	],
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Class Aliases
@@ -245,31 +245,31 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-		
+
 		'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 		'Settings'  => 'App\Support\Facades\Settings',
-		
+
 		/*
 		 * Forms
 		 */
 		'Form'      => 'Collective\Html\FormFacade',
 		'Html'      => 'Collective\Html\HtmlFacade',
-		
+
 		/*
 		 * Markdown
 		 */
 		'Markdown'  => 'InfinityNext\Eightdown\Facades\EightdownFacade',
-		
+
 		/*
 		 * Captcha
 		 */
 		'Captcha'   => 'InfinityNext\LaravelCaptcha\Facades\Captcha',
-		
+
 		/*
 		 * File Validation
 		 */
 		'Sleuth'   => 'InfinityNext\Sleuth\Facades\Sleuth',
-		
+
 		/*
 		 * CSS+JS Minify
 		 */
