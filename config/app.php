@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'debug' => env('APP_ROOT_IP', false) === $_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
+	'debug' => env('APP_ROOT_IP', false) === @$_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
 
 	/*
 	|--------------------------------------------------------------------------

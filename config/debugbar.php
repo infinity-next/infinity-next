@@ -12,7 +12,7 @@ return array(
      |
      */
 
-    'debug' => env('APP_ROOT_IP', false) === $_SERVER['REMOTE_ADDR'] ?: null,
+    'debug' => env('APP_ROOT_IP', false) === @$_SERVER['REMOTE_ADDR'] ?: null,
 
     /*
      |--------------------------------------------------------------------------
