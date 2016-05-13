@@ -3228,8 +3228,8 @@ main.index-threaded {
 					cursor: default;
 					position: relative;
 
-					border: 1px solid rgba(0,0,0,0.25);
-					border-radius: 2px;
+					/* border: 1px solid rgba(0,0,0,0.25);
+					border-radius: 2px; */
 
 					line-height: 1em;
 					height: 1em;
