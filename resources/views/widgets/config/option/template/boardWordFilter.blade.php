@@ -11,7 +11,7 @@
 	<dd class="option-definition">
 		<ul class="option-list">
 			@set('option_value', $board->getWordfilters())
-			
+
 			@foreach ($option_value as $option_find => $option_replace)
 			<li class="option-item">
 				{!! Form::text(
@@ -30,16 +30,16 @@
 				]) !!}
 			</li>
 			@endforeach
-			
+
 			@if (!$option->isLocked())
 			<li class="option-item option-item-template">
-				{!! Form::text(
+				{!! @Form::text(
 					$option_name . "[find][]",
 					"",
 					[
 						'class'     => "field-control",
 				]) !!}
-				{!! Form::text(
+				{!! @Form::text(
 					$option_name . "[replace][]",
 					"",
 					[
@@ -48,7 +48,7 @@
 			</li>
 			@endif
 		</ul>
-		
+
 		@include('widgets.config.helper')
 	</dd>
 </dl>
