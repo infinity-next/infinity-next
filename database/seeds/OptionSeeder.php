@@ -133,6 +133,20 @@ class OptionSeeder extends Seeder {
 					'validation_parameters' => "required|min:\$min",
 				],
 				[
+					'option_name'           => "boardCustomCSSUrlWhitelist",
+					'default_value'         => "https://i.imgur.com\nhttps://my.mixtape.moe\nhttps://a.cocaine.ninja",
+					'format'                => "textbox",
+					'data_type'             => "string",
+					'validation_parameters' => "string",
+				],
+				[
+					'option_name'           => "boardCustomCSSImportBlacklist",
+					'default_value'         => "https://my.mixtape.moe\nhttps://a.cocaine.ninja",
+					'format'                => "textbox",
+					'data_type'             => "string",
+					'validation_parameters' => "string",
+				],
+				[
 					'option_name'           => "boardListShow",
 					'default_value'         => 1,
 					'format'                => "onoff",
@@ -246,6 +260,7 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "string",
 					'validation_parameters' => "min:\$min|max:\$max",
 				],
+
 				
 			],
 			
@@ -271,7 +286,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max",
+					'validation_parameters' => "min:\$min|max:\$max|css",
 				],
 				[
 					'option_name'           => "boardLanguage",
@@ -717,9 +732,14 @@ class OptionGroupSeeder extends Seeder {
 				'display_order' => 1000,
 				
 				'options'       => [
+					// Board Settings
 					"boardCustomCSSEnable",
 					"boardCustomCSSSteal",
 					"boardCustomCSS",
+					
+					// Site Settings
+					"boardCustomCSSUrlWhitelist",
+					"boardCustomCSSImportBlacklist",
 				],
 			],
 			[
