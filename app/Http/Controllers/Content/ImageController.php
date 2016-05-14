@@ -392,8 +392,6 @@ class ImageController extends Controller {
 							$responseEnd = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $responseEnd;
 						}
 						
-						$responseEnd = ($responseEnd > $responseEnd) ? $responseEnd : $responseEnd;
-						
 						if ($responseStart > $responseEnd || $responseStart > $responseSize - 1 || $responseEnd >= $responseSize)
 						{
 							return Response::make("Requested Range Not Satisfiable", 416, [

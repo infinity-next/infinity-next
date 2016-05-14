@@ -45,6 +45,8 @@
 		"james-heinrich/getid3" : "1.9.*",
 		
 		"devfactory/minify" : "1.0.*",
+		"sabberworm/PHP-CSS-Parser": "7.0.*",
+		
 		"barryvdh/laravel-httpcache": "0.2.x@dev",
 
 		"ademes/acetone": "dev-master",

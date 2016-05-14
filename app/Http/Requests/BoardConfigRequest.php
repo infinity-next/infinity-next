@@ -78,6 +78,8 @@ class BoardConfigRequest extends Request {
 	 */
 	public function rules()
 	{
+		$this->sanitize();
+		
 		$rules = [
 			'boardBasicTitle'    => "required|string|between:1,255",
 			'boardBasicDesc'     => "string|between:1,255",
@@ -94,6 +96,23 @@ class BoardConfigRequest extends Request {
 		}
 		
 		return $rules;
+	}
+	
+	/**
+	 * Sanitizes input.
+	 *
+	 * @return array
+	 */
+	public function sanitize()
+	{
+		$input = $this->all();
+		
+		$parser = new \Sabberworm\CSS\Parser($input['boardCustomCSS']);
+		$style  = $parser->parse()->render(\Sabberworm\CSS\OutputFormat::createPretty());
+		
+		$input['boardCustomCSS'] = $style;
+		
+		$this->replace($input);
 	}
 	
 	/**
