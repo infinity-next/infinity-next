@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" data-widget="instantclick">
 <head>
-	<title data-original="@yield('title') - {{ site_setting('siteName') }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
+	<title data-original="@yield('title') - {{ site_setting('siteName', env('SITE_NAME')) }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
 	<link rel="shortcut icon" id="favicon" href="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
 		data-normal="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
 		data-alert="{{ asset('static/img/assets/Favicon_Vivian_new.ico') }}" />
@@ -9,7 +9,6 @@
 	{{-- Prevents any foreign URLs from loading. They must come in LEGALLY. --}}
 	<meta http-equiv="Content-Security-Policy"
 		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:;" />
-
 
 	@section('css')
 		{!! Minify::stylesheetDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}

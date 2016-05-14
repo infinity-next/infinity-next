@@ -17,16 +17,16 @@ use Settings;
 use View;
 
 abstract class Controller extends BaseController {
-	
+
 	use DispatchesCommands, ValidatesRequests;
-	
+
 	/**
 	 * Cache of the system's options
 	 *
 	 * @var array
 	 */
 	protected $options;
-	
+
 	/**
 	 * @return void
 	 */
@@ -36,12 +36,12 @@ abstract class Controller extends BaseController {
 		$this->auth        = $manager->auth;
 		$this->registrar   = $manager->registrar;
 		$this->user        = $manager->user;
-		
+
 		View::share('user', $this->user);
-		
+
 		$this->boot();
 	}
-	
+
 	/**
 	 * Hook called immediately after __construct.
 	 *
@@ -51,7 +51,7 @@ abstract class Controller extends BaseController {
 	{
 		// Nothing!
 	}
-	
+
 	/**
 	 * Logs an action.
 	 *
@@ -64,7 +64,7 @@ abstract class Controller extends BaseController {
 	{
 		$board_uri      = null;
 		$action_details = null;
-		
+
 		if ($board instanceof \App\Board)
 		{
 			$board_uri      = $board->board_uri;
@@ -85,17 +85,17 @@ abstract class Controller extends BaseController {
 			$board_uri      = null;
 			$action_details = $board;
 		}
-		
+
 		if (!is_null($action_details) && !is_array($action_details))
 		{
 			$action_details = [ $action_details ];
 		}
-		
+
 		if (!is_null($action_details))
 		{
 			$action_details = json_encode( $action_details );
 		}
-		
+
 		$log = new Log([
 			'action_name'    => $action,
 			'action_details' => $action_details,
@@ -103,10 +103,10 @@ abstract class Controller extends BaseController {
 			'user_ip'        => inet_pton(Request::getClientIp()),
 			'board_uri'      => $board_uri,
 		]);
-		
+
 		return $log->save();
 	}
-	
+
 	/**
 	 * Returns an system option's value.
 	 *
@@ -116,15 +116,15 @@ abstract class Controller extends BaseController {
 	public function option($option_name)
 	{
 		global $app;
-		
+
 		if (is_null($app['settings']))
 		{
 			return null;
 		}
-		
+
 		return $app['settings']($option_name);
 	}
-	
+
 	/**
 	 * Modifies a template path to yield the correct result.
 	 *
@@ -135,7 +135,7 @@ abstract class Controller extends BaseController {
 	{
 		return "content.{$template}";
 	}
-	
+
 	/**
 	 * Modifies template arguments to include required information.
 	 *
@@ -149,7 +149,7 @@ abstract class Controller extends BaseController {
 			'controller' => &$this,
 		], $options);
 	}
-	
+
 	/**
 	 * Returns a validator that can be used to check registration details.
 	 *
@@ -159,18 +159,18 @@ abstract class Controller extends BaseController {
 	{
 		$validator = $this->registrar->validator(Request::all());
 		$rules     = $validator->getRules();
-		
+
 		$rules['username'][] = "alpha_num";
 		$rules['username'][] = "unique:users,username";
 		$rules['username'][] = "unique:users,email";
-		
+
 		$rules['captcha'] = "required|captcha";
-		
+
 		$validator->setRules($rules);
-		
+
 		return $validator;
 	}
-	
+
 	/**
 	 * Creates a View with the requested content file.
 	 *
@@ -185,7 +185,7 @@ abstract class Controller extends BaseController {
 			$this->templateOptions($options)
 		);
 	}
-	
+
 	/**
 	 * Creates a View with the requested content file.
 	 *
@@ -198,5 +198,5 @@ abstract class Controller extends BaseController {
 		$html = $this->view($template, $options);
 		return new MessengerResponse($html);
 	}
-	
+
 }

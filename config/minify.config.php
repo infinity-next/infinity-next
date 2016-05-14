@@ -1,7 +1,7 @@
 <?php
 
 return [
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Sort Direction
@@ -11,9 +11,9 @@ return [
 	| minifying full directories.
 	|
 	*/
-	
+
 	'reverse_sort' => false,
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| App environments to not minify
@@ -23,11 +23,11 @@ return [
 	| returned
 	|
 	*/
-	
+
 	'ignore_environments' => [
 		'local',
 	],
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| CSS build path
@@ -39,9 +39,9 @@ return [
 	| Note that this directory must be writeable.
 	|
 	*/
-	
+
 	'css_build_path' => '/static/css/builds/',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| JS build path
@@ -53,18 +53,18 @@ return [
 	| Note that this directory must be writeable.
 	|
 	*/
-	
+
 	'js_build_path' => '/static/js/builds/',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Base URL
 	|--------------------------------------------------------------------------
 	|
-	| You can set the base URL for the links generated with the configuration 
+	| You can set the base URL for the links generated with the configuration
 	| value. By default if empty HTTP_HOST would be used.
 	|
 	*/
 	'base_url' => env('APP_URL'),
-	
+
 ];
