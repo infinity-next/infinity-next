@@ -20,6 +20,7 @@
 					[
 						'class'     => "field-control",
 						isset($board) && isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
+						'placeholder' => \Lang::trans('config.option.boardWordFilterFind'),
 				]) !!}
 				{!! Form::text(
 					$option_name . "[replace][]",
@@ -27,6 +28,7 @@
 					[
 						'class'     => "field-control",
 						isset($board) && isset($option) && !$user->canEditSetting($board, $option) ? 'disabled' : 'data-enabled',
+						'placeholder' => \Lang::trans('config.option.boardWordFilterReplace'),
 				]) !!}
 			</li>
 			@endforeach
@@ -38,12 +40,14 @@
 					"",
 					[
 						'class'     => "field-control",
+						'placeholder' => \Lang::trans('config.option.boardWordFilterFind'),
 				]) !!}
 				{!! @Form::text(
 					$option_name . "[replace][]",
 					"",
 					[
 						'class'     => "field-control",
+						'placeholder' => \Lang::trans('config.option.boardWordFilterReplace'),
 				]) !!}
 			</li>
 			@endif

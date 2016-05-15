@@ -1,7 +1,7 @@
 <?php
 
 return [
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Validation Language Lines
@@ -12,7 +12,7 @@ return [
 	| as the size rules. Feel free to tweak each of these messages here.
 	|
 	*/
-	
+
 	"accepted"             => "The :attribute must be accepted.",
 	"active_url"           => "The :attribute is not a valid URL.",
 	"after"                => "The :attribute must be a date after :date.",
@@ -80,7 +80,9 @@ return [
 	"url"                  => "The :attribute format is invalid.",
 	"timezone"             => "The :attribute must be a valid zone.",
 	"password"             => "The :attribute is incorrect.",
-	
+
+	'css'                  => "The CSS you've supplied contains references that are not allowed.",
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines
@@ -91,25 +93,25 @@ return [
 	| specify a specific custom language line for a given attribute rule.
 	|
 	*/
-	
+
 	'custom' => [
 		'file_corrupt'   => "<tt>:filename</tt> is corrupt or has an invalid file name.",
 		'file_generic'   => "Your file could not be uploaded",
 		'post_flood'     => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
 		'thread_flood'   => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
-		
+
 		'banned'         => "You are banned!",
 		'banned_for'     => "Reason: <em>:reason</em>",
-		
+
 		'integrity'      => "Your file's integrity cannot be verified.",
-		
+
 		'unoriginal_content'      => "Unoriginal content!",
 		'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
 		'unoriginal_image_board'  => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
-		
+
 		'board_uri_banned' => "The requested URI is reserved by administration.",
 	],
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Form Specific Language
@@ -118,26 +120,26 @@ return [
 	| These lines are particular to a single, unique instance of a form.
 	|
 	*/
-	
+
 	'form' => [
-		
+
 		/**
 		 * Post Form
 		 */
 		'post' => [
-			
+
 			// Body content.
 			'body' => [
-				
+
 				// Newline requirement
 				'newlines' => "[0,1]Post body must be exactly :count line.|[2,Inf]Post body must have fewer than :count lines.",
-				
+
 			],
-			
+
 		],
-		
+
 	],
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Attributes
@@ -148,7 +150,7 @@ return [
 	| of "email". This simply helps us make messages a little cleaner.
 	|
 	*/
-	
+
 	'attributes' => [],
-	
+
 ];
