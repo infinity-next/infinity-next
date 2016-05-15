@@ -1,0 +1,270 @@
+/* Control Panel */
+div.cp-box {
+	position: relative;
+	padding: 3.1em 0 0 0;
+}
+
+	div.cp-frame {
+		margin-top: -1px;
+		border-right: 1px solid #e0e0e0;
+		/* overflow: hidden; */
+	}
+	div.cp-frame:last-child {
+		border-left: 1px solid #e0e0e0;
+		border-right: none;
+		margin-left: -1px;
+		padding-top: 1em;
+		padding-bottom: 1em;
+	}
+
+	nav.cp-top {
+		background: #333;
+		padding: 0.5em 0.5em;
+		margin: 0;
+		line-height: 1.0em;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+		nav.cp-top section.cp-linklists {
+		}
+		nav.cp-top section.cp-linklists::after {
+			content: ' ';
+			clear: both;
+			display: block;
+		}
+
+		nav.cp-top ul.cp-linkgroups {
+			display: block;
+			float: left;
+		}
+		nav.cp-top ul.cp-linkgroups.linkgroups-user {
+			float: right;
+		}
+			nav.cp-top li.cp-linkgroup {
+				display: inline-block;
+				color: #e0e0e0;
+			}
+				nav.cp-top a.linkgroup-name,
+				nav.cp-top a.linkitem-name {
+					display: inline-block;
+					background: #222;
+					border-radius: 4px;
+					padding: 0.5em;
+					color: #e0e0e0;
+					font-weight: bold;
+					line-height: 1em;
+					min-width: 4em;
+					text-align: center;
+				}
+				nav.cp-top ul.cp-linkitems {
+					display: none;
+				}
+					nav.cp-top li.cp-linkitem {
+					}
+
+nav.cp-side {
+	box-sizing: border-box;
+	padding: 0.5em 0;
+}
+	nav.cp-side section.cp-linklists {
+	}
+	nav.cp-side section.cp-linklists::after {
+		content: ' ';
+		clear: both;
+		display: block;
+	}
+
+	nav.cp-side ul.cp-linkgroups {
+		display: block;
+	}
+		nav.cp-side li.cp-linkgroup {
+			display: block;
+		}
+			nav.cp-side a.linkgroup-name {
+				color: #525252;
+				font-size: 18px;
+			}
+			nav.cp-side ul.cp-linkitems {
+				display: block;
+				margin: 0.2em 0 0.6em 0;
+				padding: 0.2em 0 0 0;
+			}
+				nav.cp-side li.cp-linkitem {
+					display: block;
+					margin: 0.2em 0 0 0;
+				}
+					nav.cp-side a.linkgroup-name {
+						border-bottom: 1px dashed #e0e0e0;
+					}
+					nav.cp-side a.linkgroup-name,
+					nav.cp-side a.linkitem-name {
+						display: block;
+						padding: 0.2em 0;
+					}
+					nav.cp-side a.linkitem-name {
+						line-height: 1.6;
+					}
+
+					nav.cp-side a.linkitem-name-createboard {
+						color: #525252;
+						font-size: 18px;
+						padding: 0.2em 0;
+					}
+
+nav.cp-inner {
+	display: block;
+	padding: 0;
+	margin: -0.25em -12px 0 -10px
+}
+	nav.cp-tabs section.cp-linklists {
+	}
+
+	nav.cp-inner ul.cp-linkgroups {
+		margin-bottom: 1em;
+	}
+		nav.cp-inner li.cp-linkgroup {
+		}
+			nav.cp-inner a.linkgroup-name {
+				/* Usually not set. */
+			}
+
+			nav.cp-inner ul.cp-linkitems {
+				display: block;
+				display: table;
+				box-sizing: border-box;
+				width: 100%;
+				min-height: 23px;
+				_height: 23px;
+
+				font-size: 11px;
+				padding: 1em 1.5em 0 1.5em;
+				border-bottom: 1px solid #e0e0e0;
+				word-wrap: normal;
+			}
+				nav.cp-inner li.cp-linkitem {
+				}
+					nav.cp-inner a.linkitem-name {
+						display: inline-block;
+						cursor: pointer;
+
+						background: none;
+						border: 1px solid #e0e0e0;
+						border-radius: 5px 5px 0 0;
+						outline: 0 none;
+						padding: 0 1em;
+						margin: 0 -1px -1px 0;
+
+						color: #525252;
+						text-decoration: none;
+						line-height: 22px;
+						height: 22px;
+						white-space: nowrap;
+						word-wrap: normal;
+					}
+					nav.cp-inner a.linkitem-name.linkitem-active {
+						border-bottom: 1px solid white;
+					}
+
+/* Reports */
+.reports .post-container,
+.reports .report-container {
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	border-color: rgba(0, 0, 0, 0.2);
+	border-width: 1px;
+	border-style: solid;
+}
+	.reports .report-board {
+		margin: 0 0 0.4em 0;
+	}
+	.reports .report-board-desc {
+		margin: 0.5em 0;
+	}
+
+	.reports .reported-post {
+		clear: both;
+		padding: 1em 0;
+		margin: 1em 0;
+		border-bottom: 1px solid #e0e0e0;
+	}
+		.reports .reported-post::after {
+			clear: both;
+			content: ' ';
+			display: block;
+		}
+		.reports .post-container {
+			/* Colors courtesty of the /ebola/ board on 8ch. I miss you, Ebolachan. ;~; */
+			background: #FFC4C4;
+			border-color: #F88;
+		}
+
+	.reports .report-actions.actions-post li.report-action {
+		display: inline-block;
+		position: relative;
+		border: 1px solid rgba(0,0,0,0.25);
+		border-radius: 2px;
+		line-height: 1em;
+		height: 1em;
+		padding: 0.25em;
+		margin-right: 0.25em;
+		margin-bottom: 0.5em;
+	}
+
+	.reports .post-report {
+		float: left;
+		margin: 1em 1em 0 0;
+	}
+		.reports .report-container {
+			padding: 1em;
+		}
+			.reports .report-actions.actions-report {
+				margin-bottom: 0.5em;
+			}
+				.reports .report-actions.actions-report .report-action {
+					display: inline-block;
+					margin-right: 0.25em;
+				}
+
+			.reports .report-reason {
+				margin: 0 0 0.5em 0;
+				padding: 0 0 0.5em 0;
+				border-bottom: 1px solid rgba(0,0,0,0.2);
+			}
+
+/* Ban Appeals */
+.ban-appeals {
+	display: block;
+	clear: both;
+}
+	.ban-appeal {
+		padding: 1em 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	}
+	.ban-appeal:last-child {
+		border-bottom: none;
+	}
+		#submit-ban-appeal,
+		.ban-appeal-container {
+			display: inline-block;
+			position: relative;
+			overflow: hidden;
+			margin: 0;
+			padding: 1em;
+			max-width: 100%;
+
+			background: #fff;
+			border-radius: 4px;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+			border-color: rgba(0, 0, 0, 0.2);
+			border-width: 1px;
+			border-style: solid;
+		}
+
+		.ban-appeal-submit {
+			text-align: right;
+		}

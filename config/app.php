@@ -26,7 +26,9 @@ return [
 	|
 	*/
 
-	'url' => env('APP_URL', 'http://localhost'),
+	'url' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', '')
+		? env('APP_URL_HS')
+		: env('APP_URL', 'http://localhost'),
 
 	/*
 	|--------------------------------------------------------------------------

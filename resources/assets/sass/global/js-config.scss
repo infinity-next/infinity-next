@@ -1,0 +1,149 @@
+/* JavaScript Options Menu */
+#js-config {
+	display: block;
+	cursor: default;
+	position: relative;
+
+	margin: 0 auto;
+	padding: 0;
+
+	background: #F5F5F7;
+	border: 1px solid #333;
+
+	max-width: 840px;
+	width: 100%;
+
+	height: auto;
+	max-height: 100vh;
+
+	overflow: hidden;
+	border-radius: 7px;
+
+	pointer-events: all;
+}
+	#js-config-close {
+		position: absolute;
+		top: 0.25em;
+		right: 0.5em;
+
+		cursor: pointer;
+		font-size: 2em;
+		line-height: 1;
+		vertical-align: middle;
+	}
+	#js-config .config-title {
+		color: #000;
+		font-size: 1.4em;
+		line-height: 1.42em;
+		font-weight: bold;
+		text-align: center;
+		text-shadow: 0 1px 0 #fff;
+		white-space: nowrap;
+
+		border-bottom: 1px solid #d3d3d4;
+		padding: 1.5em 0.75em 0.75em 0.75em;
+		margin: 0;
+
+		background: #f0f0f2;
+		background-image: -webkit-linear-gradient(#f5f5f7,#e9e9ea);
+		background-image: -moz-linear-gradient(#f5f5f7,#e9e9ea);
+		background-image: -ms-linear-gradient(#f5f5f7,#e9e9ea);
+		background-image: -o-linear-gradient(#f5f5f7,#e9e9ea);
+		background-image: linear-gradient(#f5f5f7,#e9e9ea);
+	}
+	#js-config .config-table {
+		font-size: 1.2em;
+		line-height: 1.2em;
+	}
+	#js-config .config-cell {
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+		vertical-align: top;
+	}
+	#js-config .config-cell.cell-nav {
+		border-right: 1px solid #d3d3d4;
+		width: 10em;
+	}
+	#js-config .config-cell.cell-fields {
+		width: auto;
+		padding: 0.75em 0.5em 0.5em 0.5em;
+	}
+	#js-config .config-nav-list {
+		display: block;
+		padding: 0;
+		margin: 0;
+	}
+	#js-config .config-nav-item {
+		display: block;
+		border-bottom: 1px solid #d7d7d9;
+		cursor: pointer;
+		padding: 0.75em;
+		margin: 0;
+	}
+		#js-config .config-nav-active,
+		#js-config .config-nav-item:hover {
+			background: rgba(255, 255, 255, 0.5);
+		}
+			#js-config .config-nav-item .fa {
+				width: 1.5em;
+			}
+			#js-config .config-nav-item.item-main .fa::before {
+				content: "\f015";
+			}
+			#js-config .config-nav-item.item-lazyimg .fa::before {
+				content: "\f03e";
+			}
+			#js-config .config-nav-item.item-stylist .fa::before {
+				content: "\f1fc";
+			}
+			#js-config .config-nav-item.item-time .fa::before {
+				content: "\f017";
+			}
+			#js-config .config-nav-item.item-post .fa::before {
+				content: "\f0f6";
+			}
+			#js-config .config-nav-item.item-postbox .fa::before {
+				content: "\f040";
+			}
+			#js-config .config-nav-item.item-instantclick  .fa::before {
+				content: "\f0d0";
+			}
+	#js-config .config-group {
+		display: none;
+
+		border: none;
+		margin: 0;
+		padding: 0;
+	}
+	#js-config .config-legend {
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+	#js-config .config-desc {
+		margin: 0.5em 0 0 0;
+		font-size: 90%;
+	}
+	#js-config .config-row {
+		display: block;
+	}
+	#js-config .config-row-name {
+		display: inline-block;
+		width: 15em;
+		margin-right: 1em;
+		line-height: 3em;
+		vertical-align: middle;
+	}
+	#js-config .config-option {
+		vertical-align: middle;
+	}
+
+	/* Specific JS Config Items */
+	#js-config-row-stylist-css .config-row-name {
+		display: none;
+	}
+	#js-config-stylist-css {
+		display: block;
+		width: 100%;
+		min-height: 250px;
+	}

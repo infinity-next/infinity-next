@@ -49,7 +49,7 @@
 		display: block;
 	}
 
-	blockquote.post {
+	ul.attachments-single + blockquote.post {
 		min-width: 30em;
 	}
 }

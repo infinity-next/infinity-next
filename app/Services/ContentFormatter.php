@@ -10,35 +10,35 @@ use DB;
 use Markdown;
 
 class ContentFormatter {
-	
+
 	/**
 	 * Is set to true if non-citation text is detected.
 	 *
 	 * @var bool
 	 */
 	protected $hasContent = false;
-	
+
 	/**
 	 * The post being parsed.
 	 *
 	 * @var \App\Post $post
 	 */
 	protected $post;
-	
+
 	/**
 	 * Markdown options
 	 *
 	 * @var array
 	 */
 	protected $options;
-	
+
 	/**
 	 * Censor terms (xxx => zzz)
 	 *
 	 * @var array
 	 */
 	protected $wordfilters = [];
-	
+
 	/**
 	 * Builds an array of attributes for the Parsedown engine.
 	 *
@@ -61,7 +61,7 @@ class ContentFormatter {
 				{
 					$url = url("/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}");
 				}
-				
+
 				if ($remote)
 				{
 					return [
@@ -86,7 +86,7 @@ class ContentFormatter {
 		else
 		{
 			$url = url("/{$cite->cite_board_uri}/");
-			
+
 			return [
 				'href'           => $url,
 				'class'          => "cite cite-board cite-remote",
@@ -94,7 +94,7 @@ class ContentFormatter {
 			];
 		}
 	}
-	
+
 	/**
 	 * Returns a formatted post.
 	 *
@@ -114,36 +114,36 @@ class ContentFormatter {
 		{
 			$body = (string) $post;
 		}
-		
+
 		if (!is_null($splice))
 		{
 			$body = mb_substr($body, 0, (int) $splice);
 		}
-		
+
 		$this->options = [
 			'general' => [
 				'keepLineBreaks' => true,
 				'parseHTML'      => false,
 				'parseURL'       => true,
 			],
-			
+
 			'disable' => [
 				"Image",
 				"Link",
 			],
-			
+
 			'enable' => [
 				"Spoiler",
 				"Underline",
 			],
-			
+
 			'markup' => [
 				'quote'   => [
 					'keepSigns' => true,
 				],
 			],
 		];
-		
+
 		return $this->formatContent($body);
 	}
 
@@ -164,7 +164,7 @@ class ContentFormatter {
 		$trip = substr(crypt($trip, $salt), -10);
 		return $trip;
 	}
-	
+
 	/**
 	 * Censors content.
 	 *
@@ -176,7 +176,7 @@ class ContentFormatter {
 		{
 			// Matches |bad| but not |<span class="censored">bad</span>|.
 			$pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/";
-			
+
 			try
 			{
 				$newContent = preg_replace_callback($pattern, function ($matches) use ($replace) {
@@ -184,16 +184,16 @@ class ContentFormatter {
 					{
 						$randBool = mt_rand(0, 1) ? "odd" : "even";
 						$randTens = mt_rand(1, 10);
-						
+
 						$censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", "", $replace));
 						$censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : "";
-						
+
 						return "<span class=\"censored {$censoredWord} rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
 					}
-					
+
 					return $matches[0];
 				}, $content);
-				
+
 				$content = $newContent;
 			}
 			// RegEx error
@@ -202,10 +202,10 @@ class ContentFormatter {
 				// RegEx is malformed.
 			}
 		}
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * Parses an entire block of text.
 	 *
@@ -216,15 +216,19 @@ class ContentFormatter {
 	{
 		$content = $this->formatMarkdown($content);
 		$content = $this->formatCensors($content);
-		
-		// Determines, after parsing, if any non-citation text exists.
-		$citelessContent  = preg_replace("/(<a(?: \w+=\"[^\"]+\")* class=\"cite([^\"])*\"(?: \w+=\"[^\"]+\")*>([^<]*)<\/a>)/", "", $content);
-		$citelessContent  = trim($citelessContent);
-		$this->hasContent = strlen($citelessContent) > 0;
-		
+
+		// Removes any citations.
+		$citelessContent  = preg_replace("/(<a(?: \w+=\"[^\"].+\")* class=\"cite(?:[^\"].*)\"(?: \w+=\"[^\"]+\")*>(?:[^<].*)<\/a>)/im", "", $content);
+		// Removes any other tags.
+		$citelessContent  = preg_replace("/(<(?:[^\>]*)>)/", "", $citelessContent);
+		// Removes all whitespace.
+		$citelessContent  = preg_replace("/\s/", "", $citelessContent);
+		// If anything is left, we have content.
+		$this->hasContent = (strlen($citelessContent) > 0);
+
 		return $content;
 	}
-	
+
 	/**
 	 * Santizes user input for a single line.
 	 *
@@ -238,10 +242,10 @@ class ContentFormatter {
 			->addInlineType('&', 'Cite')
 			->extendInline('Cite', $this->getCiteParser())
 			->parse($content);
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * Returns a formatted report rule text.
 	 *
@@ -256,26 +260,26 @@ class ContentFormatter {
 				'parseHTML'      => false,
 				'parseURL'       => true,
 			],
-			
+
 			'disable' => [
 				"Image",
 				"Link",
 			],
-			
+
 			'enable' => [
 				"Spoiler",
 			],
-			
+
 			'markup' => [
 				'quote'   => [
 					'keepSigns' => true,
 				],
 			],
 		];
-		
+
 		return $this->formatContent($text);
 	}
-	
+
 	/**
 	 * Gets the hasContent property.
 	 *
@@ -285,7 +289,7 @@ class ContentFormatter {
 	{
 		return $this->hasContent;
 	}
-	
+
 	/**
 	 * Provides a closure for the Eightdown API that adds citations inline.
 	 *
@@ -294,7 +298,7 @@ class ContentFormatter {
 	protected function getCiteParser()
 	{
 		$parser = $this;
-		
+
 		return function($Excerpt) use ($parser)
 		{
 			$Element = [
@@ -306,36 +310,36 @@ class ContentFormatter {
 					'title'     => null,
 				],
 			];
-			
+
 			$extent = 0;
-			
+
 			$remainder = $Excerpt['text'];
-			
+
 			if (preg_match('/^((?:(&gt;)|>)>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi', $Excerpt['text'], $matches))
 			{
 				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
-				
+
 				$extent += strlen($matches[0]);
 			}
 			else if (preg_match('/((?:(&gt;)|>)>(?P<board_id>\d+))(?!>)/us', $Excerpt['text'], $matches))
 			{
 				$Element['text'] = str_replace("&gt;", ">", $matches[0]);
-				
+
 				$extent += strlen($matches[0]);
 			}
 			else
 			{
 				return;
 			}
-			
+
 			$replaced = false;
-			
+
 			if (isset($parser->post) && $parser->post instanceof Post)
 			{
 				foreach ($parser->post->cites as $cite)
 				{
 					$replacements = [];
-					
+
 					if ($cite->cite_board_id)
 					{
 						$replacements["/^>>>\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
@@ -345,7 +349,7 @@ class ContentFormatter {
 					{
 						$replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
 					}
-					
+
 					foreach ($replacements as $pattern => $replacement)
 					{
 						if (preg_match($pattern, $Element['text']))
@@ -357,11 +361,11 @@ class ContentFormatter {
 					}
 				}
 			}
-			
+
 			if ($replaced)
 			{
-				$Element['text']       = str_replace(">", "&gt;", $Element['text']); 
-				
+				$Element['text']       = str_replace(">", "&gt;", $Element['text']);
+
 				return [
 					'extent'   => $extent,
 					'element'  => $Element,
@@ -369,7 +373,7 @@ class ContentFormatter {
 			}
 		};
 	}
-	
+
 	/**
 	 * Returns a collection of posts as cited in a post's text body.
 	 *
@@ -381,17 +385,17 @@ class ContentFormatter {
 		$postCites  = [];
 		$boardCites = [];
 		$lines = explode("\n", $post->body);
-		
+
 		$relative = "/\s?&gt;&gt;(?P<board_id>\d+)\s?/";
 		$global   = "/\s?&gt;&gt;&gt;\/(?P<board_uri>" . Board::URI_PATTERN_INNER . ")\/(?P<board_id>\d+)?\s?/";
-		
+
 		foreach ($lines as $line)
 		{
 			$line = str_replace(">", "&gt;", $line);
-			
+
 			preg_match_all($relative, $line, $relativeMatch);
 			preg_match_all($global, $line, $globalMatch);
-			
+
 			if (isset($relativeMatch['board_id']))
 			{
 				foreach($relativeMatch['board_id'] as $matchIndex => $matchBoardId)
@@ -402,13 +406,13 @@ class ContentFormatter {
 					];
 				}
 			}
-			
+
 			if (isset($globalMatch['board_uri']))
 			{
 				foreach($globalMatch['board_uri'] as $matchIndex => $matchBoardUri)
 				{
 					$matchBoardId = $globalMatch['board_id'][$matchIndex];
-					
+
 					if ($matchBoardId != "")
 					{
 						$postCites[] = [
@@ -423,7 +427,7 @@ class ContentFormatter {
 				}
 			}
 		}
-		
+
 		// Fetch all the boards and relevant content.
 		if (count($boardCites))
 		{
@@ -433,7 +437,7 @@ class ContentFormatter {
 		{
 			$boards = new Collection;
 		}
-		
+
 		if (count($postCites))
 		{
 			$posts = Post::where(function($query) use ($postCites)
@@ -452,11 +456,11 @@ class ContentFormatter {
 		{
 			$posts = new Collection;
 		}
-		
+
 		return [
 			'boards' => $boards,
 			'posts'  => $posts,
 		];
 	}
-	
+
 }

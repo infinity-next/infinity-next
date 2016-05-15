@@ -1,0 +1,320 @@
+/**
+ * Based on Dropzone.js CSS provided under the MIT License
+ * Copyright (c) 2012 Matias Meno <m@tias.me>
+ */
+.dz-container,
+.dz-container * {
+    box-sizing: border-box;
+    }
+
+    .dz-container {
+    min-height: 2em;
+    line-height: 2em;
+
+    margin: 0;
+    padding: 0;
+
+    min-width: 100%;
+    max-width: 100%;
+    width: 300px;
+
+    white-space: nowrap;
+
+    overflow: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    border: 1px solid #ccc;
+}
+.dz-container.dz-clickable {
+    cursor: pointer;
+}
+.dz-container.dz-clickable * {
+    cursor: default;
+}
+.dz-container.dz-clickable .dz-message {
+    cursor: pointer;
+}
+.dz-container.dz-started .dz-message {
+    display: none;
+}
+.dz-container.dz-drag-hover {
+    border-style: solid;
+}
+.dz-container.dz-drag-hover .dz-message {
+    opacity: 0.5;
+}
+.dz-container .dz-message {
+    text-align: center;
+    margin: 2em 0;
+}
+
+html.js .dz-container .dz-instructions {
+    display: block;
+    min-width: 100%;
+    padding: 0.25em 0.75em;
+    pointer-events: none;
+}
+html.no-js .dz-container .dz-instructions {
+    display: none;
+}
+html.js .dz-container .fallback {
+    display: none;
+}
+
+.dz-container .dz-preview {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    vertical-align: top;
+    margin: 0;
+    height: auto;
+    min-height: 100px;
+    max-height: 100px;
+    width: 100px;
+    max-width: 100px;
+}
+
+    .dz-container .dz-preview:hover {
+        z-index: 1000;
+    }
+    .dz-container .dz-preview:hover .dz-details {
+        opacity: 1;
+    }
+    .dz-container .dz-preview.dz-file-preview .dz-image {
+        border-radius: 0;
+        background: #999;
+        background: linear-gradient(to bottom, #eee, #ddd);
+    }
+    .dz-container .dz-preview.dz-file-preview .dz-details {
+        opacity: 1;
+    }
+    .dz-container .dz-preview.dz-image-preview {
+        background: white;
+    }
+    .dz-container .dz-preview.dz-image-preview .dz-details {
+    }
+        .dz-container .dz-preview .dz-actions {
+            position: absolute;
+            top: 0.25em;
+            left: 0.5em;
+            right: 0.5em;
+            z-index: 20;
+        }
+            .dz-container .dz-preview .dz-actions .dz-remove,
+            .dz-container .dz-preview .dz-actions .dz-spoiler {
+                display: block;
+                zoom: 1;
+
+                height: 18px;
+                line-height: 18px;
+                text-indent: 0;
+                min-width: 18px;
+
+                border-radius: 5px;
+                font-size: 12px;
+                line-height: 18px;
+                margin: 0.25em 0 0.25em 0;
+                padding: 0 0 1px 0;
+                outline: none;
+
+                border-radius: 9px;
+                background-image: linear-gradient(#FFFFFF 0%, #E1E1E1 100%);
+
+                border: 1px solid #AEBDC4;
+
+                color: #C40000;
+                font-size: 11px;
+                text-align: center;
+                vertical-align: text-bottom;
+
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+            .dz-container .dz-preview .dz-actions .dz-remove {
+                display: inline-block;
+                float: left;
+            }
+            .dz-container .dz-preview .dz-actions .dz-spoiler {
+                text-align: right;
+                float: right;
+            }
+                .dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-check {
+                    display: inline-block;
+                    border-radius: 2px;
+                    vertical-align: text-bottom;
+                    margin: 2px 0 3px 2px;
+                    width: 13px;
+                    height: 13px;
+                    transform: scale(0.75, 0.75);
+                    float: left;
+                }
+                .dz-container .dz-preview .dz-actions .dz-spoiler .dz-spoiler-desc {
+                    display: none;
+                    padding-right: 0.5em;
+                    margin-left: 0.1em;
+                    vertical-align: middle;
+                    line-height: 18px;
+                    color: black;
+                    float: left;
+                }
+                    .dz-container .dz-preview:hover .dz-actions .dz-spoiler .dz-spoiler-desc {
+                        display: inline-block;
+                    }
+
+        .dz-container .dz-preview .dz-details {
+            display: block;
+            z-index: 20;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            min-width: 100%;
+            max-width: 100%;
+            padding: 0.50em;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.9);
+            line-height: 125%;
+            pointer-events: none;
+        }
+            .dz-container .dz-preview:hover .dz-details {
+                opacity: 1;
+            }
+
+            .dz-container .dz-preview .dz-details .dz-size {
+                margin-bottom: 0.25em;
+                font-size: 16px;
+            }
+                .dz-container .dz-preview .dz-details .dz-filename {
+                white-space: nowrap;
+            }
+                .dz-container .dz-preview .dz-details .dz-filename:hover span {
+                    border: 1px solid rgba(200, 200, 200, 0.8);
+                    background-color: rgba(255, 255, 255, 0.8);
+                }
+                .dz-container .dz-preview .dz-details .dz-filename:not(:hover) {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                    .dz-container .dz-preview .dz-details .dz-filename:not(:hover) span {
+                        border: 1px solid transparent;
+                    }
+                .dz-container .dz-preview .dz-details .dz-filename span, .dz-container .dz-preview .dz-details .dz-size span {
+                    background-color: rgba(255, 255, 255, 0.6);
+                    padding: 0 0.4em;
+                    border-radius: 3px;
+                }
+
+        .dz-container .dz-preview:hover .dz-image img {
+        }
+        .dz-container .dz-preview .dz-image {
+            border-radius: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: block;
+            z-index: 10;
+        }
+            .dz-container .dz-preview .dz-image img {
+                display: block;
+                max-width: 100%;
+                max-height: 100%;
+                margin: 0 auto;
+            }
+
+        .dz-container .dz-preview .dz-success-mark,
+        .dz-container .dz-preview .dz-error-mark {
+            pointer-events: none;
+            opacity: 0;
+            z-index: 500;
+            position: absolute;
+            display: block;
+            bottom: 2px;
+            right: 2px;
+        }
+            .dz-container .dz-preview.dz-success .dz-success-mark {
+                opacity: 1;
+            }
+                .dz-container .dz-preview.dz-success:hover .dz-success-mark {
+                    display: none;
+                }
+            .dz-container .dz-preview.dz-error .dz-error-mark {
+                opacity: 1;
+            }
+            .dz-container .dz-preview .dz-success-mark svg,
+            .dz-container .dz-preview .dz-error-mark svg {
+                display: block;
+                width: 26px;
+                height: 26px;
+            }
+
+        .dz-container .dz-preview .dz-progress {
+            opacity: 1;
+            z-index: 1000;
+            pointer-events: none;
+            position: absolute;
+            height: 16px;
+            left: 50%;
+            top: 50%;
+            margin-top: -8px;
+            width: 80px;
+            margin-left: -40px;
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-transform: scale(1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+            .dz-container .dz-preview .dz-progress .dz-upload {
+                background: #333;
+                background: linear-gradient(to bottom, #666, #444);
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 0;
+            }
+            .dz-container .dz-preview.dz-processing .dz-progress {
+                opacity: 1;
+            }
+            .dz-container .dz-preview.dz-complete .dz-progress {
+                opacity: 0;
+            }
+            .dz-container .dz-preview:not(.dz-processing) .dz-progress {
+            }
+            .dz-container .dz-preview.dz-error .dz-error-message {
+                display: block;
+            }
+
+        .dz-container .dz-preview.dz-error:hover .dz-error-message {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .dz-container .dz-preview .dz-error-message {
+            pointer-events: none;
+            z-index: 1000;
+            position: absolute;
+            display: block;
+            display: none;
+            opacity: 0;
+            border-radius: 8px;
+            font-size: 13px;
+            top: 130px;
+            left: -10px;
+            width: 140px;
+            background: #be2626;
+            background: linear-gradient(to bottom, #be2626, #a92222);
+            padding: 0.5em 1.2em;
+            color: white;
+        }
+            .dz-container .dz-preview .dz-error-message:after {
+                content: '';
+                position: absolute;
+                top: -6px;
+                left: 64px;
+                width: 0;
+                height: 0;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-bottom: 6px solid #be2626;
+            }

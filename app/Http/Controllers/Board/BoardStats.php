@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Cache;
 
 trait BoardStats {
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Board Stats
@@ -16,19 +16,20 @@ trait BoardStats {
 	| information regrding posts and activities made around the site.
 	|
 	*/
-	
+
 	/**
 	 * What information we're after.
 	 *
 	 * @var array
 	 */
 	protected $boardStats = [
-			'boardCount',
 			'boardIndexedCount',
+			'boardTotalCount',
 			'postCount',
 			'postRecentCount',
+			'startDate',
 		];
-	
+
 	/**
 	 * Returns the information specified by boardStats
 	 *
@@ -37,36 +38,40 @@ trait BoardStats {
 	protected function boardStats()
 	{
 		$controller = &$this;
-		
+
 		$stats = Cache::remember('index.boardstats', 60, function() use ($controller)
 		{
 			$stats = [];
-			
+
 			foreach ($controller->boardStats as $boardStat)
 			{
 				switch ($boardStat)
 				{
-					case "boardCount" :
+					case "boardIndexedCount" :
 						$stats[$boardStat] = Board::whereIndexed()->count();
 						break;
-					
-					case "boardIndexedCount" :
+
+					case "startDate" :
+						$stats[$boardStat] = Board::orderBy('created_at', 'desc')->take(1)->pluck('created_at');
+						break;
+
+					case "boardTotalCount" :
 						$stats[$boardStat] = Board::count();
 						break;
-					
+
 					case "postCount" :
 						$stats[$boardStat] = Board::sum('posts_total');
 						break;
-					
+
 					case "postRecentCount" :
 						$stats[$boardStat] = Post::recent()->count();
 						break;
 				}
 			}
-			
+
 			return $stats;
 		});
-		
+
 		return $stats;
 	}
 }

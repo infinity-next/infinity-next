@@ -1,6 +1,6 @@
 .flag {
 	display: block;
-	background-image: url('../../img/backgrounds/flags.png');
+	background-image: url("#{$base-url}img/backgrounds/flags.png");
 	background-repeat: no-repeat;
 	image-rendering: pixelated;
 }

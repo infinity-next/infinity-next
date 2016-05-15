@@ -1,0 +1,40 @@
+@import "variables.scss";
+
+/**
+ * Elements
+ */
+@import "global/global.scss";
+@import "global/form.scss";
+
+/**
+ * Page Construction
+ */
+@import "global/header.scss";
+@import "global/footer.scss";
+
+/**
+ * Vendor
+ */
+@import "global/instantclick.scss";
+
+/**
+ * Nav
+ */
+@import "global/nav-global.scss";
+@import "global/nav-pagination.scss";
+@import "global/js-config.scss";
+
+/**
+ * Specific Pages
+ */
+@import "global/error-page.scss";
+
+/**
+ * UGC
+ */
+@import "global/post.scss";
+
+/**
+ * Deprecated -- should be merged in
+ */
+@import "global/responsive.scss";

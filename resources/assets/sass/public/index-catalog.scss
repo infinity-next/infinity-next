@@ -1,0 +1,212 @@
+/* Catalog View */
+main.index-catalog {
+	text-align: left;
+}
+	main.index-catalog .index-threads {
+		margin: 1em 0 0 0;
+	}
+
+	main.index-catalog .thread-list {
+		text-align: center;
+	}
+
+	main.index-catalog .thread-item {
+		display: inline-block;
+		margin: 0 0.25em 0.25em 0;
+
+		width: 180px;
+	}
+		main.index-catalog .thread {
+			position: relative;
+
+			background: rgba(182, 182, 182, 0.12);
+			border: 1px solid rgba(111, 111, 111, 0.34);
+
+			padding: 2px;
+			margin: 0;
+
+			vertical-align: top;
+			text-align: left;
+			font-weight: normal;
+			font-size: 11px;
+
+			height: 25em;
+		}
+			main.index-catalog .post-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+
+				border: none;
+				padding-top: 0;
+				overflow: visible
+			}
+				main.index-catalog .post-container:hover {
+					box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
+					border-radius: 4px;
+
+					min-width: 150%;
+					min-height: 100%;
+					overflow: visible;
+
+					left: -25%;
+					bottom: auto;
+					z-index: 6;
+				}
+
+				main.index-catalog .post-content {
+					padding: 0;
+					height: 100%;
+					overflow: hidden;
+				}
+					main.index-catalog .post-container:hover .post-content {
+						overflow: visible;
+					}
+
+					main.index-catalog .post-attachments {
+						display: block;
+						background: rgba(255,255,255,0.6);
+						padding: 0;
+						float: none;
+					}
+						main.index-catalog .post-attachment {
+							float: none;
+							text-align: center;
+							padding: 0;
+							display: block;
+							width: 100%;
+							margin: 0;
+						}
+						main.index-catalog .attachment-wrapper {
+							width: auto;
+							height: auto;
+							line-height: normal;
+							margin: 0 auto;
+						}
+							main.index-catalog .attachment {
+								display: inline;
+								margin: 0;
+							}
+								main.index-catalog .attachment-img {
+									display: inline-block;
+									max-height: 150px;
+									max-width: 100%;
+								}
+
+					main.index-catalog .post-details {
+						margin: 0;
+						min-height: 1.5em;
+					}
+						main.index-catalog .post-details {
+							white-space: normal;
+						}
+						main.index-catalog .post-detail {
+							display: none;
+							margin: 0;
+							padding: 0 0.5em;
+							line-height: 1.2;
+						}
+							main.index-catalog .post-detail.post-stats,
+							main.index-catalog .post-detail.post-actions,
+							main.index-catalog .post-detail.post-subject {
+								display: block;
+								margin: 2px 0 0;
+							}
+							main.index-catalog .post-detail.post-stats {
+								text-align: center;
+							}
+							main.index-catalog .post-detail.post-actions {
+								display: inline;
+								padding: 0px 0.75em 0 0.25em;
+								float: left;
+							}
+							main.index-catalog .post-detail.post-author {
+								display: none;
+							}
+								main.index-catalog .post-detail-item.author {
+									padding-right: 0;
+								}
+							main.index-catalog .post-detail.post-subject {
+								display: block;
+								padding: 0.2em 0.5em 0 0.5em;
+								font-size: 140%;
+								line-height: 1.2em;
+							}
+								main.index-catalog .post-detail-item.subject {
+									display: inline;
+								}
+							main.index-catalog .post-detail.post-capcode {
+								display: inline-block;
+							}
+								main.index-catalog .post-detail-item.capcode {
+									padding-left: 0;
+								}
+
+
+	main.index-catalog blockquote.post {
+		box-sizing: border-box;
+		display: block;
+		width: 100%;
+		min-width: 0px;
+		max-width: none;
+
+		text-align: left;
+		margin-top: 0.4em;
+		margin-left: 0;
+		padding: 0 0.5em;
+	}
+		main.index-catalog blockquote.post pre {
+			margin: 1em 0;
+		}
+		main.index-catalog blockquote.post p.line {
+			max-width: 100%;
+		}
+
+	main.index-catalog div.post-action-bar {
+		display: inline;
+
+		top: 0;
+		left: 0;
+		right: 0;
+
+		margin: 0;
+	}
+		main.index-catalog div.post-action-tab,
+		main.index-catalog div.post-action-tab.action-tab-actions {
+			display: inline-block;
+
+			position: relative;
+			top: 0.25em;
+			left: 0.25em;
+			float: left;
+
+			border: none;
+			padding: 0;
+			margin: 0;
+			text-align: left;
+
+			font-size: 140%;
+		}
+
+		main.index-catalog ul.post-action-groups {
+			position: absolute;
+			top: 0;
+			left: 0;
+			font-size: 72%;
+		}
+
+	main.index-catalog div.post-action-bar.action-bar-open {
+		position: absolute;
+		z-index: 5;
+	}
+		main.index-catalog div.post-action-tab.action-tab-reply {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: auto;
+		}
+			main.index-catalog div.op-container a.post-action-reply {
+				border-width: 0 1.5em 1.5em 0;
+			}

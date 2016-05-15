@@ -11,8 +11,12 @@
 		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:;" />
 
 	@section('css')
-		{!! Minify::stylesheetDir('/static/vendor/', ['data-no-instant'])->withFullUrl() !!}
-		{!! Minify::stylesheetDir('/static/css/app/', ['data-no-instant'])->withFullUrl() !!}
+		<link rel="stylesheet" href="{{ elixir('static/builds/vendor.css') }}" />
+		<link rel="stylesheet" href="{{ elixir('static/builds/global.css') }}" />
+
+		@section('area-css')
+			<link rel="stylesheet" href="{{ elixir('static/builds/public.css') }}" />
+		@show
 
 		@section('page-css')
 			<link id="page-stylesheet" rel="stylesheet" data-instant-track />

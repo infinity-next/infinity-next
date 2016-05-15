@@ -1,10 +1,24 @@
 <div class="infobox" id="site-statistics">
-	<div class="infobox-title">Global Statistics</div>
+	<div class="infobox-title">@lang('index.title.statistics')</div>
 	<div class="infobox-info">
-		<p>There are currently
-			<strong>{{{ number_format($stats['boardCount']) }}}</strong> public board{{{ $stats['boardCount'] != 1 ? "s" : "" }}},
-			<strong>{{{ number_format($stats['boardIndexedCount']) }}}</strong> total.
-			Site-wide, <strong>{{{ number_format($stats['postRecentCount']) }}}</strong> post{{{ $stats['postRecentCount'] != 1 ? "s" : "" }}} have been made in the last hour,
-			with <strong>{{{ number_format($stats['postCount']) }}}</strong> being made on all active boards since March 1st, 2015.</p>
+		<p>@choice('index.info.statistic.boards', $stats['boardIndexedCount'], [
+			'boards_total' => \Lang::choice('index.info.statistic.board_count', $stats['boardIndexedCount'], [
+				'boards' => $stats['boardIndexedCount'],
+			]),
+			'boards_public' => \Lang::choice('index.info.statistic.board_count', $stats['boardTotalCount'], [
+				'boards' => $stats['boardTotalCount'],
+			]),
+		])
+		@lang('index.info.statistic.posts', [
+			'recent_posts' => \Lang::choice('index.info.statistic.post_count', $stats['postRecentCount'], [
+				'posts' => $stats['postRecentCount'],
+			]),
+		])
+		@lang('index.info.statistic.posts_all', [
+			'posts_total' => \Lang::choice('index.info.statistic.post_count', $stats['postCount'], [
+				'posts' => $stats['postCount'],
+			]),
+			'start_date' => $stats['startDate']->format("F jS, Y"),
+		])</p>
 	</div>
 </div>

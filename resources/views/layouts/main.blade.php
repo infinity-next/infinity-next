@@ -39,7 +39,7 @@
 
 			'title'      : "@yield('title', 'Infinity Next')",
 
-			'url'        : "{!! env('APP_URL', 'false') !!}",
+			'url'        : "{!! url() !!}",
 
 			@yield('app-js')
 
@@ -72,6 +72,7 @@
 	</script>
 
 	@yield('required-js')
+
 
 	{!! Minify::javascriptDir('/static/vendor/',     ['data-no-instant'])->withFullUrl() !!}
 	{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}

@@ -1,0 +1,94 @@
+/* Page Header */
+header {
+	/* background: #fff;
+	border-top: 4.5em solid rgba(0,0,0,0); */
+	color: #333;
+	padding: 0 0 0 0;
+	margin: 0 0 1em 0;
+}
+	/* header.header-height-1 {
+		border-top: 2.5em solid rgba(0,0,0,0);
+	} */
+
+figure.page-head {
+	display: block;
+	margin: 1em auto 1em auto;
+	max-width: 960px;
+	text-align: center;
+}
+
+#logo {
+	display: block;
+	margin: 0 auto;
+	max-width: 300px;
+	max-height: 100px;
+}
+
+figcaption.page-details {
+}
+	h1.page-title {
+		color: #333;
+		margin: 0.2em 0 0 0;
+	}
+		.board-favorite.fa {
+			display: none;
+			color: #aaa;
+			cursor: pointer;
+		}
+
+		html.js .board-list .board-favorite {
+			display: block;
+			float: left;
+			margin: 0 0.25em 0 0;
+			font-size: 1.2em;
+			line-height: 1.2;
+		}
+		html.js.localstorage body.view-board h1.page-title .board-favorite {
+			position: absolute;
+			display: inline;
+			line-height: 1.1em;
+			margin: 0.2em 0 0 0;
+			padding: 0 0 0 0.2em;
+		}
+		.fa.board-favorited {
+			color: #FFC800;
+		}
+			html.js body.view-board.board-int  h1.page-title .fa:before,
+			html.js body.view-board.board-ints h1.page-title .fa:before,
+			html.js body.view-board.board-intl h1.page-title .fa:before {
+				content: '✡';
+				font-size: 1.2em;
+				font-weight: bold;
+			}
+
+	h2.page-desc {
+		color: #333;
+		margin: 0;
+		font-size: 1em;
+		font-weight: normal;
+	}
+		h2.page-desc #sudo-lecture {
+			display: block;
+			margin: 0 auto;
+			width: 450px;
+
+			font-family: monospace;
+			text-align: left;
+			white-space: pre;
+		}
+
+	ul.page-links {
+		display: block;
+		margin: 0.5em 0 0 0;
+	}
+		li.page-link {
+			display: inline-block;
+		}
+			li.page-link::after {
+				display: inline-block;
+				content: '|';
+				margin: 0 0.25em;
+			}
+			li.page-link:last-child::after {
+				display: none;
+			}

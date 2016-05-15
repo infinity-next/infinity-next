@@ -1,0 +1,32 @@
+/**
+ * z-index list of importance
+ * 10000 - Laravel Debug Bar. NEVER SURPASS.
+ *  9999 - jQuery Blocker Overlay.
+ *  1100 - Hover-over posts.
+ *  1000 - Boardlist, top. Should be highest element on boards and threads.
+ *  1000 - Post form.
+ *    10 - Post action links.
+ *     5 - Post attachment.
+ *     1 - Global Footer
+ *     0 - Board Sidebar
+ */
+
+$base-url: '/static/';
+
+$content-text: #2A2A2A;
+
+$background-fade: #D1D5EE;
+$background-color: #EEF2FF;
+$background-white: #DEE0DF;
+
+$primary-darker: #34345C;
+$primary-dark: #B7C5D9;
+$primary-medium: #D6DAF0;
+$primary-lightish: ;
+$primary-light: ;
+$primary-lighter: ;
+$primary-lighter-still: ;
+$primary-lightest: ;
+
+$font-stack: Arial, Helvetica, sans-serif;
+$font-size: 13px;
