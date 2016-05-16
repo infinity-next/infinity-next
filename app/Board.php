@@ -236,6 +236,21 @@ class Board extends Model {
 		return $user->canEditConfig($this);
 	}
 
+	public function canPost(PermissionUser $user, $thread = null)
+	{
+		if ($thread instanceof Post)
+		{
+			if ($thread->isLocked())
+			{
+				return $this->canPostInLockedThreads($user);
+			}
+
+			return $this->canPostReply($user);
+		}
+
+		return $this->canPostThread($user);
+	}
+
 	public function canPostReply(PermissionUser $user)
 	{
 		return $user->canPostReply($this);
