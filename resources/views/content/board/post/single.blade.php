@@ -2,7 +2,7 @@
 <div class="post-content">
 	<a name="{!! $details['board_id'] !!}"></a>
 	<a name="reply-{!! $details['board_id'] !!}"></a>
-	
+
 	@if (isset($catalog) && $catalog === true)
 		<a class="catalog-open" href="{!! $post->getURL() !!}" data-instant>
 			{{ Lang::trans('board.detail.catalog_stats', [
@@ -10,7 +10,7 @@
 			'file_count'  => $post->reply_files,
 			'page'        => $post->page_number,
 		]) }}</a>
-		
+
 		@if ($post->attachments->count() > 0)
 			@include('content.board.post.single.attachments')
 		@endif

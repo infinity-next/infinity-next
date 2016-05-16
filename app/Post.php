@@ -913,7 +913,7 @@ class Post extends Model {
 			$splice = "";
 		}
 
-		return url("/{$this->board_uri}/thread/{$url_id}{$splice}#{$url_hash}");
+		return url("/{$this->board_uri}/thread/{$url_id}{$splice}#{$url_hash}", [], false);
 	}
 
 	/**

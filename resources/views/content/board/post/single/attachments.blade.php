@@ -18,7 +18,7 @@
 			>
 				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }} {{ $attachment->getThumbnailClasses() }}" data-widget="lazyimg">
 					{!! $attachment->getThumbnailHTML($board) !!}
-					
+
 					<figcaption class="attachment-details">
 						<p class="attachment-detail">
 							@if ($attachment->pivot->is_spoiler)
@@ -30,7 +30,7 @@
 					</figcaption>
 				</figure>
 			</a>
-			
+
 			<div class="attachment-action-group">
 				<a class="attachment-action attachment-download" target="_blank" href="{!! $attachment->getDownloadURL($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
 					<i class="fa fa-download"></i>
@@ -39,7 +39,7 @@
 					<span class="detail-item detail-filedim" title="{{ $attachment->getFileDimensions() }}">{{ $attachment->getFileDimensions() }}</span>
 				</a>
 			</div>
-			
+
 			<div class="attachment-action-group">
 				@if ($attachment->isSpoiler())
 				<a href="{{ $attachment->getUnspoilerURL($board) }}" class="attachment-action attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
@@ -50,7 +50,7 @@
 					<i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
 				</a>
 				@endif
-				
+
 				<a href="{{ $attachment->getRemoveURL($board) }}" class="attachment-action attachment-remove" title="@lang('board.field.remove')" data-no-instant>
 					<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
 				</a>

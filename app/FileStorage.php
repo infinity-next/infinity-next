@@ -15,21 +15,21 @@ use Storage;
 use Request;
 
 class FileStorage extends Model {
-	
+
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
 	protected $table = 'files';
-	
+
 	/**
 	 * The database primary key.
 	 *
 	 * @var string
 	 */
 	protected $primaryKey = 'file_id';
-	
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -50,15 +50,15 @@ class FileStorage extends Model {
 		'thumbnail_width',
 		'thumbnail_height'
 	];
-	
+
 	/**
 	 * Determines if Laravel should set created_at and updated_at timestamps.
 	 *
 	 * @var array
 	 */
 	public $timestamps = false;
-	
-	
+
+
 	/**
 	 * The \App\FileAttachment relationship.
 	 * Represents a post -> storage relationship.
@@ -69,7 +69,7 @@ class FileStorage extends Model {
 	{
 		return $this->hasMany('\App\FileAttachment', 'file_id');
 	}
-	
+
 	/**
 	 * The \App\BoardAsset relationship.
 	 * Used for multiple custom facets of a board.
@@ -80,7 +80,7 @@ class FileStorage extends Model {
 	{
 		return $this->hasMany('\App\BoardAsset', 'file_id');
 	}
-	
+
 	/**
 	 * The \App\Posts relationship.
 	 * Uses the attachments() relationship to find posts where this file is attached..
@@ -91,8 +91,8 @@ class FileStorage extends Model {
 	{
 		return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename', 'position');
 	}
-	
-	
+
+
 	/**
 	 * Will trigger a file deletion if the storage item is not used anywhere.
 	 *
@@ -101,35 +101,35 @@ class FileStorage extends Model {
 	public function challengeExistence()
 	{
 		$count = $this->assets->count() + $this->attachments->count();
-		
+
 		if ($count === 0)
 		{
 			$this->deleteFile();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public static function checkUploadExists(UploadedFile $file, Board $board, Post $thread = null)
 	{
 		return static::checkHashExists(md5((string) File::get($file)), $board, $thread);
 	}
-	
+
 	public static function checkHashExists($hash, Board $board, Post $thread = null)
 	{
 		$query = Post::where('board_uri', $board->board_uri);
-		
+
 		if (!is_null($thread))
 		{
 			$query = $query->whereInThread($thread);
 		}
-		
+
 		return $query->whereHas('attachments', function($query) use ($hash) {
 			$query->whereHash($hash);
 		})->first();
 	}
-	
+
 	/**
 	 * Creates a new FileAttachment for a post using a direct upload.
 	 *
@@ -140,30 +140,30 @@ class FileStorage extends Model {
 	public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
 	{
 		$storage     = static::storeUpload($file);
-		
+
 		$uploadName  = urlencode($file->getClientOriginalName());
 		$uploadExt   = pathinfo($uploadName, PATHINFO_EXTENSION);
-		
+
 		$fileName    = basename($uploadName, "." . $uploadExt);
 		$fileExt     = $storage->guessExtension();
-		
+
 		$attachment  = new FileAttachment();
 		$attachment->post_id    = $post->post_id;
 		$attachment->file_id    = $storage->file_id;
 		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
 		$attachment->is_spoiler = !!Input::get('spoilers');
-		
+
 		if ($autosave)
 		{
 			$attachment->save();
-			
+
 			$storage->upload_count++;
 			$storage->save();
 		}
-		
+
 		return $attachment;
 	}
-	
+
 	/**
 	 * Creates a new FileAttachment for a post using a hash.
 	 *
@@ -176,24 +176,24 @@ class FileStorage extends Model {
 	{
 		$fileName    = pathinfo($filename, PATHINFO_FILENAME);
 		$fileExt     = $this->guessExtension();
-		
+
 		$attachment  = new FileAttachment();
 		$attachment->post_id    = $post->post_id;
 		$attachment->file_id    = $this->file_id;
 		$attachment->filename   = urlencode("{$fileName}.{$fileExt}");
 		$attachment->is_spoiler = !!$spoiler;
-		
+
 		if ($autosave)
 		{
 			$attachment->save();
-			
+
 			$this->upload_count++;
 			$this->save();
 		}
-		
+
 		return $attachment;
 	}
-	
+
 	/**
 	 * Removes the associated file for this storage.
 	 *
@@ -203,7 +203,7 @@ class FileStorage extends Model {
 	{
 		return unlink($this->getFullPath()) && unlink($this->getFullPathThumb());
 	}
-	
+
 	/**
 	 * Returns the storage's file as a filesystem.
 	 *
@@ -213,7 +213,7 @@ class FileStorage extends Model {
 	{
 		return new File($this->getFullPath());
 	}
-	
+
 	/**
 	 * Returns the storage's thumbnail as a filesystem.
 	 *
@@ -223,7 +223,7 @@ class FileStorage extends Model {
 	{
 		return new File($this->getFullPathThumb());
 	}
-	
+
 	/**
 	 * Returns the attachment's base filename.
 	 *
@@ -234,7 +234,7 @@ class FileStorage extends Model {
 		$pathinfo  = pathinfo($this->pivot->filename);
 		return $pathinfo['filename'];
 	}
-	
+
 	/**
 	 * Returns the storage directory, minus the file name.
 	 *
@@ -243,10 +243,10 @@ class FileStorage extends Model {
 	public function getDirectory()
 	{
 		$prefix = $this->getHashPrefix($this->hash);
-		
+
 		return "attachments/full/{$prefix}";
 	}
-	
+
 	/**
 	 * Returns the thumbnail's storage directory, minus the file name.
 	 *
@@ -255,10 +255,10 @@ class FileStorage extends Model {
 	public function getDirectoryThumb()
 	{
 		$prefix = $this->getHashPrefix($this->hash);
-		
+
 		return "attachments/thumb/{$prefix}";
 	}
-	
+
 	/**
 	 * Supplies a download name.
 	 *
@@ -268,7 +268,7 @@ class FileStorage extends Model {
 	{
 		return "{$this->getFileName()}.{$this->guessExtension()}";
 	}
-	
+
 	/**
 	 * Supplies a clean URL for downloading an attachment on a board.
 	 *
@@ -278,20 +278,20 @@ class FileStorage extends Model {
 	public function getDownloadURL(Board $board)
 	{
 		//return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
-		
+
 		$params = [
 			'attachment' => $this->pivot->attachment_id,
 			'filename'   => $this->getDownloadName(),
 		];
-		
+
 		if (!env('APP_MEDIA_URL', false))
 		{
 			$params['board'] = $board;
 		}
-		
-		return route('static.file.attachment', $params);
+
+		return route('static.file.attachment', $params, false);
 	}
-	
+
 	/**
 	 * Returns the attachment's extension.
 	 *
@@ -302,7 +302,7 @@ class FileStorage extends Model {
 		$pathinfo  = pathinfo($this->pivot->filename);
 		return $pathinfo['extension'];
 	}
-	
+
 	/**
 	 * Returns the dimensions of the thumbnail, if possible.
 	 *
@@ -314,10 +314,10 @@ class FileStorage extends Model {
 		{
 			return "{$this->file_width}x{$this->file_height}";
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Determines and returns the "xxx" of "/url/xxx.ext" for URLs.
 	 *
@@ -331,36 +331,36 @@ class FileStorage extends Model {
 			// Build a thumbnail using the admin settings.
 			$nameFormat = Settings::get('attachmentName');
 		}
-		
+
 		$first_uploade_at = new \Carbon\Carbon($this->first_uploaded_at);
-		
+
 		$bits['t'] = $first_uploade_at->timestamp;
 		$bits['i'] = 0;
 		$bits['n'] = $bits['t'];
-		
+
 		if (isset($this->pivot))
 		{
 			if (isset($this->pivot->position))
 			{
 				$bits['i'] = $this->pivot->position;
 			}
-			
+
 			if (isset($this->pivot->filename))
 			{
 				$bits['n'] = $this->getBaseFileName();
 			}
 		}
-		
+
 		$attachmentName = $nameFormat;
-		
+
 		foreach ($bits as $bitKey => $bitVal)
 		{
 			$attachmentName = str_replace("%{$bitKey}", $bitVal, $attachmentName);
 		}
-		
+
 		return $attachmentName;
 	}
-	
+
 	/**
 	 * Returns the full internal file path.
 	 *
@@ -371,7 +371,7 @@ class FileStorage extends Model {
 		$storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
 		return "{$storagePath}{$this->getPath()}";
 	}
-	
+
 	/**
 	 * Returns the full internal file path for the thumbnail.
 	 *
@@ -382,7 +382,7 @@ class FileStorage extends Model {
 		$storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
 		return "{$storagePath}{$this->getPathThumb()}";
 	}
-	
+
 	/**
 	 * Fetch an instance of static using the checksum.
 	 *
@@ -393,7 +393,7 @@ class FileStorage extends Model {
 	{
 		return static::whereHash($hash)->get()->first();
 	}
-	
+
 	/**
 	 * Returns the skip file directoy prefix
 	 *
@@ -404,7 +404,7 @@ class FileStorage extends Model {
 	{
 		return implode(str_split(substr($hash, 0, 4)), "/");
 	}
-	
+
 	/**
 	 * Converts the byte size to a human-readable filesize.
 	 *
@@ -417,10 +417,10 @@ class FileStorage extends Model {
 		$bytes  = $this->filesize;
 		$size   = array('B', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
 		$factor = floor((strlen($bytes) - 1) / 3);
-		
+
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . " " . @$size[$factor];
 	}
-	
+
 	/**
 	 * Returns a URL part based on available information.
 	 *
@@ -432,10 +432,10 @@ class FileStorage extends Model {
 		{
 			return $this->pivot->attachment_id;
 		}
-		
+
 		return $this->hash;
 	}
-	
+
 	/**
 	 * Returns the relative internal file path.
 	 *
@@ -445,7 +445,7 @@ class FileStorage extends Model {
 	{
 		return $this->getDirectory() . "/" . $this->hash;
 	}
-	
+
 	/**
 	 * Returns the full internal file path for the thumbnail.
 	 *
@@ -455,7 +455,7 @@ class FileStorage extends Model {
 	{
 		return $this->getDirectoryThumb() . "/" . $this->hash;
 	}
-	
+
 	/**
 	 * Returns a removal URL.
 	 *
@@ -464,9 +464,9 @@ class FileStorage extends Model {
 	 */
 	public function getRemoveURL(Board $board)
 	{
-		return url("{$board->board_uri}/file/remove/{$this->pivot->attachment_id}");
+		return url("{$board->board_uri}/file/remove/{$this->pivot->attachment_id}", [], false);
 	}
-	
+
 	/**
 	 * Truncates the middle of a filename to show extension.
 	 *
@@ -477,22 +477,22 @@ class FileStorage extends Model {
 		if (isset($this->pivot) && isset($this->pivot->filename))
 		{
 			$filename = urldecode($this->pivot->filename);
-			
+
 			if (mb_strlen($filename) <= 20)
 			{
 				return $filename;
 			}
-			
+
 			$ext  = pathinfo($filename, PATHINFO_EXTENSION);
 			$name = pathinfo($filename, PATHINFO_FILENAME);
 			$name = mb_substr($name, 0, 15);
-			
+
 			return "{$name}... .{$ext}";
 		}
-		
+
 		return $this->getFileName();
 	}
-	
+
 	/**
 	 * Returns a spoiler URL.
 	 *
@@ -501,9 +501,9 @@ class FileStorage extends Model {
 	 */
 	public function getSpoilerURL(Board $board)
 	{
-		return url("{$board->board_uri}/file/spoiler/{$this->pivot->attachment_id}");
+		return url("{$board->board_uri}/file/spoiler/{$this->pivot->attachment_id}", [], false);
 	}
-	
+
 	/**
 	 * Returns a string containing class names.
 	 *
@@ -515,7 +515,7 @@ class FileStorage extends Model {
 		$type  = "other";
 		$stock = true;
 		$spoil = $this->isSpoiler();
-		
+
 		if ($this->isImageVector())
 		{
 			$stock = false;
@@ -542,17 +542,17 @@ class FileStorage extends Model {
 			$stock = false;
 			$type  = "audio";
 		}
-		
+
 		$classes = [];
 		$classes['type']  = "attachment-type-{$type}";
 		$classes['ext']   = "attachent-ext-{$ext}";
 		$classes['stock'] = $stock ? "thumbnail-stock" : "thumbnail-content";
 		$classes['spoil'] = $spoil ? "thumbnail-spoiler" : "thumbnail-not-spoiler";
 		$classHTML = implode(" ", $classes);
-		
+
 		return $classHTML;
 	}
-	
+
 	/**
 	 * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
 	 *
@@ -567,7 +567,7 @@ class FileStorage extends Model {
 		$url     = asset("static/img/filetypes/{$ext}.svg");
 		$spoil   = $this->isSpoiler();
 		$deleted = $this->isDeleted();
-		
+
 		if ($deleted)
 		{
 			$url = $board->getAssetUrl('file_deleted');
@@ -591,10 +591,10 @@ class FileStorage extends Model {
 				$url = asset("static/img/assets/audio.gif");
 			}
 		}
-		
+
 		$classHTML = $this->getThumbnailClasses();
-		
-		
+
+
 		// Measure dimensions.
 		$height    = "auto";
 		$width     = "auto";
@@ -604,12 +604,12 @@ class FileStorage extends Model {
 		$minHeight = "none";
 		$oHeight   = $this->thumbnail_height;
 		$oWidth    = $this->thumbnail_width;
-		
+
 		if ($this->has_thumbnail && !$this->isSpoiler() && !$this->isDeleted())
 		{
 			$height = $oHeight . "px";
 			$width  = $this->thumbnail_width . "px";
-			
+
 			if (is_integer($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension))
 			{
 				if ($oWidth > $oHeight)
@@ -628,7 +628,7 @@ class FileStorage extends Model {
 					$width  = $maxDimension;
 				}
 			}
-			
+
 			$minWidth = $width;
 			$minHeight = $height;
 		}
@@ -638,13 +638,13 @@ class FileStorage extends Model {
 			$maxHeight = $maxWidth;
 			$width     = $maxWidth;
 			$height    = "auto";
-			
+
 			if (is_integer($maxDimension))
 			{
 				$maxWidth = "{$maxDimension}px";
 				$maxHeight = "{$maxDimension}px";
 			}
-			
+
 			if ($this->isSpoiler() || $this->isDeleted())
 			{
 				$minHeight = "none";
@@ -652,12 +652,12 @@ class FileStorage extends Model {
 				$width = $maxWidth;
 			}
 		}
-		
+
 		return "<div class=\"attachment-wrapper\" style=\"height: {$height}; width: {$width};\">" .
 			"<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
 		"</div>";
 	}
-	
+
 	/**
 	 * Supplies a clean thumbnail URL for embedding an attachment on a board.
 	 *
@@ -667,12 +667,12 @@ class FileStorage extends Model {
 	public function getThumbnailURL(Board $board)
 	{
 		$ext = $this->guessExtension();
-		
+
 		if ($this->isSpoiler())
 		{
 			return $board->getSpoilerUrl();
 		}
-		
+
 		if ($this->isImage())
 		{
 			$ext = Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png";
@@ -687,7 +687,7 @@ class FileStorage extends Model {
 			{
 				return $board->getAudioArtURL();
 			}
-			
+
 			$ext = "png";
 		}
 		else if ($this->isImageVector())
@@ -695,20 +695,22 @@ class FileStorage extends Model {
 			// With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
 			return $this->getDownloadURL($board);
 		}
-		
+
 		$params = [
 			'attachment' => $this->getIdentifier(),
 			'filename'   => $this->getDownloadName(),
 		];
-		
+
 		if (!env('APP_MEDIA_URL', false))
 		{
 			$params['board'] = $board;
 		}
-		
-		return route('static.thumb.attachment', $params);
+
+		// "False" generates a relativel URL.
+		// Attachments get cached, so we want that.
+		return route('static.thumb.attachment', $params, false);
 	}
-	
+
 	/**
 	 * Returns an unspoiler URL.
 	 *
@@ -717,18 +719,18 @@ class FileStorage extends Model {
 	 */
 	public function getUnspoilerURL(Board $board)
 	{
-		return url("{$board->board_uri}/file/unspoiler/{$this->pivot->attachment_id}");
+		return url("{$board->board_uri}/file/unspoiler/{$this->pivot->attachment_id}", [], false);
 	}
-	
+
 	/**
 	 * A dumb way to guess the file type based on the mime
-	 * 
+	 *
 	 * @return string
 	 */
 	public function guessExtension()
 	{
 		$mimes = explode("/", $this->mime);
-		
+
 		switch ($this->mime)
 		{
 			##
@@ -736,77 +738,77 @@ class FileStorage extends Model {
 			##
 			case "image/svg+xml" :
 				return "svg";
-			
+
 			case "image/jpeg" :
 			case "image/jpg" :
 				return "jpg";
-			
+
 			case "image/gif" :
 				return "gif";
-			
+
 			case "image/png" :
 				return "png";
-			
+
 			##
 			# DOCUMENTS
 			##
 			case "text/plain" :
 				return "txt";
-			
+
 			case "application/epub+zip" :
 				return "epub";
-			
+
 			case "application/pdf" :
 				return "pdf";
-			
+
 			##
 			# AUDIO
 			##
 			case "audio/mpeg" :
 			case "audio/mp3" :
 				return "mp3";
-			
+
 			case "audio/aac" :
 				return "aac";
-			
+
 			case "audio/mp4" :
 				return "mp3";
-			
+
 			case "audio/ogg" :
 				return "ogg";
-			
+
 			case "audio/wave" :
 				return "wav";
-			
+
 			case "audio/webm" :
 				return "wav";
-			
+
 			case "audio/x-matroska" :
 				return "mka";
-			
+
 			##
 			# VIDEO
 			##
 			case "video/3gp" :
 				return "3gp";
-			
+
 			case "video/webm" :
 				return "webm";
-			
+
 			case "video/mp4" :
 				return "mp4";
-			
+
 			case "video/ogg" :
 				return "ogg";
-			
+
 			case "video/x-flv" :
 				return "flv";
-			
+
 			case "video/x-matroska" :
 				return "mkv";
 		}
-		
-		
+
+
 		if (count($mimes) > 1)
 		{
 			return $mimes[1];
@@ -815,10 +817,10 @@ class FileStorage extends Model {
 		{
 			return $mimes[0];
 		}
-		
+
 		return "UNKNOWN";
 	}
-	
+
 	/**
 	 * Returns if the file is present on the disk.
 	 *
@@ -828,7 +830,7 @@ class FileStorage extends Model {
 	{
 		return is_readable($this->getFullPath()) && Storage::exists($this->getPath());
 	}
-	
+
 	/**
 	 * Returns if a thumbnail is present on the disk.
 	 *
@@ -839,7 +841,7 @@ class FileStorage extends Model {
 		return !!$this->has_thumbnail;
 		//return is_link($this->getPathThumb()) || Storage::exists($this->getPathThumb());
 	}
-	
+
 	/**
 	 * Is this attachment audio?
 	 *
@@ -859,10 +861,10 @@ class FileStorage extends Model {
 			case "audio/x-matroska" :
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns if our pivot is deleted.
 	 *
@@ -890,10 +892,10 @@ class FileStorage extends Model {
 			case "image/png" :
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Is this attachment an image vector (SVG)?
 	 *
@@ -903,7 +905,7 @@ class FileStorage extends Model {
 	{
 		return $this->mime === "image/svg+xml";
 	}
-	
+
 	/**
 	 * Returns if our pivot is a spoiler.
 	 *
@@ -913,7 +915,7 @@ class FileStorage extends Model {
 	{
 		return isset($this->pivot) && isset($this->pivot->is_spoiler) && !!$this->pivot->is_spoiler;
 	}
-	
+
 	/**
 	 * Is this attachment a video?
 	 * Primarily used to split files on HTTP range requests.
@@ -932,10 +934,10 @@ class FileStorage extends Model {
 			case "video/x-matroska" :
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Work to be done upon creating an attachment using this storage.
 	 *
@@ -947,13 +949,13 @@ class FileStorage extends Model {
 		$this->last_uploaded_at = $this->freshTimestamp();
 		// Not counting uploads unless it ends up on a post.
 		// $this->upload_count    += 1;
-		
+
 		$this->processThumb();
 		$this->save();
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Turns an image into a thumbnail if possible, overwriting previous versions.
 	 *
@@ -967,7 +969,7 @@ class FileStorage extends Model {
 			{
 				$ID3  = new \getID3();
 				$meta = $ID3->analyze($this->getFullPath());
-				
+
 				if (isset($meta['comments']['picture']) && count($meta['comments']['picture']))
 				{
 					foreach ($meta['comments']['picture'] as $albumArt)
@@ -975,28 +977,28 @@ class FileStorage extends Model {
 						try
 						{
 							$image = (new ImageManager)->make($albumArt['data']);
-							
+
 							$this->file_height = $image->height();
 							$this->file_width  = $image->width();
-							
+
 							$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 										$constraint->aspectRatio();
 										$constraint->upsize();
 								})
 								->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 								->save($this->getFullPathThumb());
-							
+
 							$this->has_thumbnail    = true;
 							$this->thumbnail_height = $image->height();
 							$this->thumbnail_width  = $image->width();
-							
+
 							return true;
 						}
 						catch (\Exception $error)
 						{
 							// Nothing.
 						}
-						
+
 						break;
 					}
 				}
@@ -1005,31 +1007,31 @@ class FileStorage extends Model {
 			{
 				// Used for debugging.
 				$output   = "Haven't executed once yet.";
-				
+
 				try
 				{
 					Storage::makeDirectory($this->getDirectoryThumb());
-					
+
 					$video    = $this->getFullPath();
 					$image    = $this->getFullPathThumb();
 					$interval = 0;
 					$frames   = 1;
-					
+
 					// get duration
 					$time =  exec(env('LIB_FFMPEG', "ffmpeg") . " -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
-					
+
 					// duration in seconds; half the duration = middle
 					$durationBits      = explode(":", $time);
 					$durationSeconds   = (float) $durationBits[2] + ((int)$durationBits[1] * 60) + ((int)$durationBits[0] * 3600);
 					$durationMiddle    = $durationSeconds / 2;
-					
+
 					$middleHours       = str_pad(floor($durationMiddle / 3600), 2, "0", STR_PAD_LEFT);
 					$middleMinutes     = str_pad(floor($durationMiddle / 60 % 3600), 2, "0", STR_PAD_LEFT);
 					$middleSeconds     = str_pad(number_format($durationMiddle % 60, 2), 5, "0", STR_PAD_LEFT);
 					$middleTimestamp   = "{$middleHours}:{$middleMinutes}:{$middleSeconds}";
-					
+
 					// $ffmpeg -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y -s $size $image 2>&1
-					
+
 					$cmd = env('LIB_FFMPEG', "ffmpeg") . " " .
 							"-i {$video} " . // Input video.
 							//"-filter:v yadif " . // Deinterlace.
@@ -1043,29 +1045,29 @@ class FileStorage extends Model {
 							"-y " . // Overwrite file if it already exists.
 							"-threads 1 " .
 							"{$image} 2>&1";
-					
+
 					$output = "";
 					exec($cmd, $output, $returnvalue);
-					
+
 					// Constrain thumbnail to proper dimensions.
 					if (Storage::exists($this->getPathThumb()))
 					{
 						$image = (new ImageManager)->make($this->getFullPathThumb());
-						
+
 						$this->file_height = $image->height();
 						$this->file_width  = $image->width();
-						
+
 						$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 									$constraint->aspectRatio();
 									$constraint->upsize();
 							})
 							->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 							->save($this->getFullPathThumb());
-						
+
 						$this->has_thumbnail    = true;
 						$this->thumbnail_height = $image->height();
 						$this->thumbnail_width  = $image->width();
-						
+
 						return true;
 					}
 				}
@@ -1077,23 +1079,23 @@ class FileStorage extends Model {
 			else if ($this->isImage())
 			{
 				Storage::makeDirectory($this->getDirectoryThumb());
-				
+
 				$image = (new ImageManager)->make($this->getFullPath());
-				
+
 				$this->file_height = $image->height();
 				$this->file_width  = $image->width();
-				
+
 				$image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
 							$constraint->aspectRatio();
 							$constraint->upsize();
 					})
 					->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
 					->save($this->getFullPathThumb());
-				
+
 				$this->has_thumbnail    = true;
 				$this->thumbnail_height = $image->height();
 				$this->thumbnail_width  = $image->width();
-				
+
 				return true;
 			}
 		}
@@ -1101,10 +1103,10 @@ class FileStorage extends Model {
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Refines a query to an exact hash match.
 	 *
@@ -1116,7 +1118,7 @@ class FileStorage extends Model {
 	{
 		return $query->where('hash', $hash);
 	}
-	
+
 	/**
 	 * Refines a query to only storage items which are orphaned (not used anywhere).
 	 *
@@ -1128,7 +1130,7 @@ class FileStorage extends Model {
 		return $query->whereDoesntHave('attachments')
 			->whereDoesntHave('assets');
 	}
-	
+
 	/**
 	 * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
 	 *
@@ -1139,7 +1141,7 @@ class FileStorage extends Model {
 	public static function storeUpload($file)
 	{
 		$clientUpload = false;
-		
+
 		if ( !($file instanceof SymfonyFile) && !($file instanceof UploadedFile) )
 		{
 			throw new \InvalidArgumentException("First argument for FileStorage::storeUpload is not a File or UploadedFile.");
@@ -1149,39 +1151,39 @@ class FileStorage extends Model {
 		{
 			$clientUpload = true;
 		}
-		
+
 		$fileContent  = File::get($file);
 		$fileMD5      = md5((string) File::get($file));
 		$storage      = static::getHash($fileMD5);
-		
+
 		if (!($storage instanceof static))
 		{
 			$storage           = new static();
 			$fileTime          = $storage->freshTimestamp();
-			
+
 			$storage->hash     = $fileMD5;
 			$storage->banned   = false;
 			$storage->filesize = $file->getSize();
 			$storage->mime     = $clientUpload ? $file->getClientMimeType() : $file->getMimeType();
 			$storage->first_uploaded_at = $fileTime;
 			$storage->upload_count = 0;
-			
+
 			if (!isset($file->case))
 			{
 				$ext = $file->guessExtension();
-				
+
 				$file->case = Sleuth::check($file->getRealPath(), $ext);
-				
+
 				if (!$file->case)
 				{
 					$file->case = Sleuth::check($file->getRealPath());
 				}
 			}
-			
+
 			if (is_object($file->case))
 			{
 				$storage->mime = $file->case->getMimeType();
-				
+
 				if ($file->case->getMetaData())
 				{
 					$storage->meta = json_encode($file->case->getMetaData());
@@ -1192,16 +1194,16 @@ class FileStorage extends Model {
 		{
 			$fileTime = $storage->freshTimestamp();
 		}
-		
+
 		if (!Storage::exists($storage->getPath()))
 		{
 			Storage::put($storage->getPath(), $fileContent);
 			Storage::makeDirectory($storage->getDirectoryThumb());
 		}
-		
+
 		$storage->processAttachment();
-		
+
 		return $storage;
 	}
-	
+
 }

@@ -1512,15 +1512,4 @@ blockquote.ugc th {
   nav.boardlist a.boardlist-link {
     display: block; } }
 
-/**
- * 1024px Max
- * Larger Tablets
- */
-@media (max-width: 1024px) {
-  /**
-	 * Front Page
-	 */
-  #site-warning {
-    margin-left: -0.5em; } }
-
 /*# sourceMappingURL=global.css.map */
