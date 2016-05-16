@@ -471,6 +471,11 @@ class Post extends Model {
 	 */
 	public function makeAuthorId()
 	{
+		if ($this->author_ip === NULL)
+		{
+			return "000000";
+		}
+
 		$hashParts = [];
 		$hashParts[] = env('APP_KEY');
 		$hashParts[] = $this->board_uri;
@@ -2013,21 +2018,28 @@ class Post extends Model {
 			$thread = $board->getLocalThread($thread);
 		}
 
-		if (Cache::has('posting_now_' . $this->author_ip->toLong()))
+		if (user()->isAccountable())
 		{
-			return abort(429);
+			if (Cache::has('posting_now_' . $this->author_ip->toLong()))
+			{
+				return abort(429);
+			}
+
+			// Cache what time we're submitting our post for flood checks.
+			Cache::put('posting_now_' . $this->author_ip->toLong(), true, 1);
+			Cache::put('last_post_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
+
+			if ($thread instanceof Post)
+			{
+				$this->reply_to = $thread->post_id;
+				$this->reply_to_board_id = $thread->board_id;
+
+				Cache::put('last_thread_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
+			}
 		}
-
-		// Cache what time we're submitting our post for flood checks.
-		Cache::put('posting_now_' . $this->author_ip->toLong(), true, 1);
-		Cache::put('last_post_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
-
-		if ($thread instanceof Post)
+		else
 		{
-			$this->reply_to = $thread->post_id;
-			$this->reply_to_board_id = $thread->board_id;
-
-			Cache::put('last_thread_for_' . $this->author_ip->toLong(), $this->created_at->timestamp, 60);
+			$this->author_ip = NULL;
 		}
 
 		// Handle tripcode, if any.

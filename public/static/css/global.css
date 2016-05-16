@@ -964,7 +964,8 @@ section.error-flair {
   margin-right: auto;
   overflow: hidden;
   max-width: 500px;
-  max-height: 500px; }
+  height: auto;
+  line-height: 0; }
 
 figure.error-figure {
   margin: 0;

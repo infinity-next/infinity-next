@@ -12,7 +12,7 @@
 @if (isset($error_css) && $error_css != "")
 	@section('css')
 		@parent
-		
+
 		<style type="text/css">
 			{!! $error_css !!}
 		</style>
@@ -27,7 +27,8 @@
 			<figcaption class="error-caption"><a class="error-credit" href="https://twitter.com/Kuvshinov_Ilya">Ilya Kuvshinov</a></figcaption>
 		</figure>
 	</section>
-	@if ((isset($error_html) && $error_html != "") && (env('APP_DEBUG', false) === true || ($user && $user->canAdminConfig())))
+
+	@if ((isset($error_html) && $error_html != "") && (env('APP_DEBUG', false) === true || (user() && user()->canAdminConfig())))
 	<section class="error-trace">
 		{!! $error_html !!}
 	</section>

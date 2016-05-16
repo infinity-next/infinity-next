@@ -9,7 +9,7 @@ use Symfony\Component\Debug\Exception\FlattenException as FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 
 class Handler extends ExceptionHandler {
-	
+
 	/**
 	 * A list of the exception types that should not be reported.
 	 *
@@ -18,7 +18,7 @@ class Handler extends ExceptionHandler {
 	protected $dontReport = [
 		'Symfony\Component\HttpKernel\Exception\HttpException'
 	];
-	
+
 	/**
 	 * Report or log an exception.
 	 *
@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler {
 	{
 		return parent::report($e);
 	}
-	
+
 	/**
 	 * Render an exception into an HTTP response.
 	 *
@@ -45,46 +45,49 @@ class Handler extends ExceptionHandler {
 		{
 			return parent::render($request, $e);
 		}
-		
 		switch (get_class($e))
 		{
+			case "App\Exceptions\TorClearnet" :
+				$errorView = "errors.403_tor_clearnet";
+				break;
+
 			case "Swift_TransportException" :
 			case "PDOException" :
 				$errorView = "errors.500_config";
 				break;
-			
+
 			case "ErrorException" :
 				$errorView = "errors.500";
 				break;
-				
+
 			case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException" :
 				return abort(400);
-			
+
 			case "Predis\Connection\ConnectionException" :
 				$errorView = "errors.500_predis";
 				break;
-			
+
 			default :
 				$errorView = false;
 				break;
 		}
-		
+
 		if ($errorView)
 		{
 			// This makes use of a Symfony error handler to make pretty traces.
 			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
 			$FlattenException = FlattenException::create($e);
-			
+
 			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
 			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
-			
+
 			$response = response()->view($errorView, [
 				'exception'   => $e,
 				'error_class' => get_class($e),
 				'error_css'   => $SymfonyCss,
 				'error_html'  => $SymfonyHtml,
 			], 500);
-			
+
 			return $this->toIlluminateResponse($response, $e);
 		}
 		else
@@ -92,5 +95,5 @@ class Handler extends ExceptionHandler {
 			return parent::render($request, $e);
 		}
 	}
-	
+
 }
