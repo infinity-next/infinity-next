@@ -14,7 +14,7 @@ return [
 		'welcome' => "<p>This site uses <a href=\"https://github.com/infinity-next/infinity-next\">Infinity Next</a>, " .
 			"a PHP based imageboard suite on the <a href=\"https://laravel.com\">Laravel Framework</a>. " .
 			"Licensed under AGPL 3.0, anyone may download and setup an instance of Infinity Next on their own.</p>" .
-			"<p>By default, the board <a href=\"{url('test')}\">/test/</a> is installed for you to play with.</p>",
+			"<p>By default, the board <a href=\"/test/\">/test/</a> is installed for you to play with.</p>",
 
 		'statistic' => [
 			'boards' => "{1}There is a single board.|[0,Inf]There are currenctly :boards_public public and :boards_total total.",

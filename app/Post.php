@@ -2040,6 +2040,12 @@ class Post extends Model {
 		else
 		{
 			$this->author_ip = NULL;
+
+			if ($thread instanceof Post)
+			{
+				$this->reply_to = $thread->post_id;
+				$this->reply_to_board_id = $thread->board_id;
+			}
 		}
 
 		// Handle tripcode, if any.
@@ -2185,7 +2191,11 @@ class Post extends Model {
 			Event::fire(new ThreadNewReply($thread));
 		}
 
-		Cache::forget('posting_now_' . $this->author_ip->toLong());
+		if (user()->isAccountable())
+		{
+			Cache::forget('posting_now_' . $this->author_ip->toLong());
+		}
+
 		return $this;
 	}
 

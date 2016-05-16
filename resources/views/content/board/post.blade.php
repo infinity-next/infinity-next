@@ -3,7 +3,7 @@
 	This is one of the most important templates in the entire application.
 	Changes made here can break every view if not done correctly.
 	Many, many things depend on this template and its dependencies.
-	
+
 	ABOUT "$details"
 	We use $details (derived from $post->getAttributes() method) instead of
 	$post->attribute_name most of the time now because it is faster. Laravel's
@@ -31,7 +31,7 @@
 		'board'  => $post->board,
 	])
 	@endif
-	
+
 	<div class="post-interior">
 		@if (true || !isset($details['reports']))
 		@include('content.board.post.single', [
@@ -39,7 +39,7 @@
 			'post'    => $post,
 			'catalog' => isset($catalog) ? !!$catalog : false,
 		])
-		
+
 		{{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
 		@if ($preview || $post->bans->count() || !is_null($post->updated_by))
 		<ul class="post-metas">
@@ -48,7 +48,7 @@
 				'url' => $post->getURL(),
 			])</li>
 			@endif
-			
+
 			@if ($post->bans->count())
 			@foreach ($post->bans as $ban)
 			<li class="post-meta meta-ban_reason">
@@ -60,7 +60,7 @@
 			</li>
 			@endforeach
 			@endif
-			
+
 			@if (!is_null($post->updated_by))
 			<li class="post-meta meta-updated_by">
 				<i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [
