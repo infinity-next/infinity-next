@@ -8,18 +8,18 @@
 
 	{{-- Prevents any foreign URLs from loading. They must come in LEGALLY. --}}
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:;" />
+		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:; script-src 'self' 'unsafe-inline' 'unsafe-eval';" />
 
 	@section('css')
-		<link rel="stylesheet" href="{{ elixir('static/css/vendor.css') }}" />
-		<link rel="stylesheet" href="{{ elixir('static/css/global.css') }}" />
+		<link rel="stylesheet" href="{{ elixir('static/css/vendor.css') }}" data-no-instant id="style-vendor" />
+		<link rel="stylesheet" href="{{ elixir('static/css/global.css') }}" data-no-instant id="style-global" />
 
 		@section('area-css')
-			<link rel="stylesheet" href="{{ elixir('static/css/public.css') }}" />
+			<link rel="stylesheet" href="{{ elixir('static/css/public.css') }}" data-instant-track id="style-system"/>
 		@show
 
 		@section('page-css')
-			<link id="page-stylesheet" rel="stylesheet" data-instant-track />
+			<link id="page-stylesheet" rel="stylesheet" href="{{ asset('static/css/empty.css') }}" data-instant-track />
 		@show
 
 		<link id="theme-stylesheet" rel="stylesheet" data-instant-track />

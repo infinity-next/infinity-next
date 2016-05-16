@@ -49,7 +49,7 @@
 		};
 	</script>
 
-	<script type="text/javascript">
+	<script type="text/javascript" id="js-app-stylist">
 		{{--
 			IMPORTANT
 			This relies on information setup by js/app/widgets/stylist.widget.js
