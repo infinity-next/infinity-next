@@ -73,10 +73,7 @@
 
 	@yield('required-js')
 
-
-	{!! Minify::javascriptDir('/static/vendor/',     ['data-no-instant'])->withFullUrl() !!}
-	{!! Minify::javascriptDir('/static/js/plugins/', ['data-no-instant'])->withFullUrl() !!}
-	{!! Minify::javascriptDir('/static/js/app/',     ['data-no-instant'])->withFullUrl() !!}
+	<script data-no-instant src="{{ elixir('static/js/app.js') }}"></script>
 
 	@parent
 @stop

@@ -11,11 +11,11 @@
 		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:;" />
 
 	@section('css')
-		<link rel="stylesheet" href="{{ elixir('static/builds/vendor.css') }}" />
-		<link rel="stylesheet" href="{{ elixir('static/builds/global.css') }}" />
+		<link rel="stylesheet" href="{{ elixir('static/css/vendor.css') }}" />
+		<link rel="stylesheet" href="{{ elixir('static/css/global.css') }}" />
 
 		@section('area-css')
-			<link rel="stylesheet" href="{{ elixir('static/builds/public.css') }}" />
+			<link rel="stylesheet" href="{{ elixir('static/css/public.css') }}" />
 		@show
 
 		@section('page-css')

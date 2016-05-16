@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('area-css')
-	<link rel="stylesheet" href="{{ elixir('static/builds/panel.css') }}" />
+	<link rel="stylesheet" href="{{ elixir('static/css/panel.css') }}" />
 @endsection
 
 @section('content')

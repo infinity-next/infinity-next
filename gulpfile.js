@@ -22,28 +22,35 @@ elixir(function(mix) {
         // Vendor files
         .sass([
             '../../../node_modules/unsemantic/assets/sass/unsemantic-grid-responsive-tablet.scss'
-        ], 'public/static/builds/vendor.css')
+        ], 'public/static/css/vendor.css')
 
         // Global (boards + normative)
         .sass([
             'global.scss'
-        ], 'public/static/builds/global.css')
+        ], 'public/static/css/global.css')
 
         // Public (no account required, not panel)
         .sass([
             'public.scss'
-        ], 'public/static/builds/public.css')
+        ], 'public/static/css/public.css')
 
         // Panel (/cp/ only)
         .sass([
             'panel.scss'
-        ], 'public/static/builds/panel.css')
+        ], 'public/static/css/panel.css')
+
+        .scripts([
+            'vendor/**/*.js',
+            'plugins/**/*.js',
+            'app/**/*.js'
+        ], 'public/static/js/app.js')
 
         // Publishing
         .version([
-            "static/builds/vendor.css",
-            "static/builds/global.css",
-            "static/builds/public.css",
-            "static/builds/panel.css"
+            "public/static/css/vendor.css",
+            "public/static/css/global.css",
+            "public/static/css/public.css",
+            "public/static/css/panel.css",
+            "public/static/js/app.js"
         ]);
 });

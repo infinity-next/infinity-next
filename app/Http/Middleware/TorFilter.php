@@ -24,11 +24,19 @@ class TorFilter
 	{
 		$this->auth = $auth;
 	}
-	
-	
+
+
 	public function handle($request, Closure $next)
 	{
-		$accountable = !$request->header('X-TOR', false);
+		$accountable = true;
+
+		if ($request->header('X-TOR', false) || $request->server('HTTP_HOST') === env('APP_URL_HS'))
+		{
+			// Consider a user unaccountable if there's a custom X-TOR header,
+			// or if the hostname is our hidden service name.
+			$accountable = false;
+		}
+
 		$this->auth->user()->setAccountable($accountable);
 		return $next($request);
 	}
