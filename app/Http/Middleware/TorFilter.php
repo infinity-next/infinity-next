@@ -38,7 +38,7 @@ class TorFilter
 			// or if the hostname is our hidden service name.
 			$accountable = false;
 		}
-		elseif (true || env('APP_URL_HS', false) && (new Geolocation)->getCountryCode() == "tor")
+		elseif (env('APP_URL_HS', false) && (new Geolocation)->getCountryCode() == "tor")
 		{
 			throw new TorClearnet;
 		}
