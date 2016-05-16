@@ -1,9 +1,7 @@
 process.env.DISABLE_NOTIFIER = false;
 
 var elixir = require(
-    'laravel-elixir',
-    'unsemantic',
-    'react'
+    'laravel-elixir'
 );
 
 /*
@@ -20,8 +18,12 @@ var elixir = require(
 elixir(function(mix) {
     mix
         // Vendor files
+        .copy(
+            'node_modules/font-awesome/fonts',
+            'public/static/fonts/font-awesome'
+        )
         .sass([
-            '../../../node_modules/unsemantic/assets/sass/unsemantic-grid-responsive-tablet.scss'
+            'vendor.scss'
         ], 'public/static/css/vendor.css')
 
         // Global (boards + normative)
