@@ -281,8 +281,6 @@ class Board extends Model {
 
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
-		return false;
-
 		// Check if site requires captchas.
 		if (!site_setting('captchaEnabled'))
 		{
@@ -302,11 +300,12 @@ class Board extends Model {
 
 		// Begin to check captchas for last answers.
 		$ip = new IP;
+		$session_id = Session::getId();
 
 		$lastCaptcha = Captcha::select('created_at', 'cracked_at')
-			->where(function($query) use ($ip) {
+			->where(function($query) use ($ip, $session_id) {
 				// Find captchas answered by this user.
-				$query->where('client_ip', $ip->toText());
+				$query->where('client_session_id', hex2bin($session_id));
 
 				// Pull the lifespan of a captcha.
 				// This is the number of minutes between successful entries.
