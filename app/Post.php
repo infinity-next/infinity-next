@@ -909,15 +909,6 @@ class Post extends Model {
 			$url_hash = $this->board_id;
 		}
 
-		if (is_string($splice))
-		{
-			$splice = "/{$splice}";
-		}
-		else
-		{
-			$splice = "";
-		}
-
 		return route('board.thread.splice', [
 			'board_uri' => $this->board_uri,
 			'post_id'   => $url_id,
