@@ -1,6 +1,8 @@
 <?php namespace App;
 
-use Acetone;
+
+dsfjkdsfsdjkfd
+
 use App\BoardSetting;
 use App\Post;
 use App\PostCite;
@@ -21,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 use InfinityNext\LaravelCaptcha\Captcha;
 
+use Acetone;
 use DB;
 use Cache;
 use Request;

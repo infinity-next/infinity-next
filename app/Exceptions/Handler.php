@@ -2,6 +2,7 @@
 
 use Exception;
 use ErrorException;
+use Mail;
 use Response;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -41,10 +42,9 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-		if (env('APP_DEBUG', false))
-		{
-			return parent::render($request, $e);
-		}
+		$errorView = false;
+		$errorEmail = false;
+
 		switch (get_class($e))
 		{
 			case "App\Exceptions\TorClearnet" :
@@ -54,10 +54,13 @@ class Handler extends ExceptionHandler {
 			case "Swift_TransportException" :
 			case "PDOException" :
 				$errorView = "errors.500_config";
+				$errorEmail = true;
 				break;
 
 			case "ErrorException" :
+			case "Symfony\Component\Debug\Exception\FatalThrowableError" :
 				$errorView = "errors.500";
+				$errorEmail = true;
 				break;
 
 			case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException" :
@@ -65,6 +68,7 @@ class Handler extends ExceptionHandler {
 
 			case "Predis\Connection\ConnectionException" :
 				$errorView = "errors.500_predis";
+				$errorEmail = true;
 				break;
 
 			default :
@@ -72,15 +76,41 @@ class Handler extends ExceptionHandler {
 				break;
 		}
 
-		if ($errorView)
+		if (env('APP_DEBUG', false))
+		{
+			$errorView = false;
+		}
+
+		$errorEmail = $errorEmail && env('MAIL_ADDR_ADMIN', false) && env('MAIL_ADMIN_SERVER_ERRORS', false);
+
+		if ($errorEmail || $errorView)
 		{
 			// This makes use of a Symfony error handler to make pretty traces.
 			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
-			$FlattenException = FlattenException::create($e);
+			$FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
 			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
 			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
+		}
 
+		if ($errorEmail)
+		{
+			$data = [
+				'exception'   => $e,
+				'error_class' => get_class($e),
+				'error_css'   => $SymfonyCss,
+				'error_html'  => $SymfonyHtml,
+			];
+
+			Mail::send('emails.error', $data, function($message)
+			{
+				$message->to(env('MAIL_ADDR_ADMIN', false), env('SITE_NAME', 'Infinity Next') . " Webaster");
+				$message->subject(env('SITE_NAME', 'Infinity Next') . " Error");
+			});
+		}
+
+		if ($errorView)
+		{
 			$response = response()->view($errorView, [
 				'exception'   => $e,
 				'error_class' => get_class($e),
@@ -90,10 +120,7 @@ class Handler extends ExceptionHandler {
 
 			return $this->toIlluminateResponse($response, $e);
 		}
-		else
-		{
-			return parent::render($request, $e);
-		}
-	}
 
+		return parent::render($request, $e);
+	}
 }

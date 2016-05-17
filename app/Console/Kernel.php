@@ -30,58 +30,57 @@ class Kernel extends ConsoleKernel {
 	protected function schedule(Schedule $schedule)
 	{
 		$now = Carbon::now();
-		
-		$this->runInspire($schedule,     $now);
+
 		$this->runRecordStats($schedule, $now);
 		$this->runAutoprune($schedule,   $now);
 	}
-	
+
 	/**
 	 *
 	 */
 	private function runAutoprune(Schedule $schedule, Carbon $now)
 	{
 		$logdir = storage_path("logs/autoprune");
-		
+
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);
 		}
-		
+
 		$schedule->command('autoprune')
 			->hourly()
 			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
-		
+
 	}
-	
+
 	/**
 	 *
 	 */
 	private function runInspire(Schedule $schedule, Carbon $now)
 	{
 		$logdir = storage_path("logs/inspire");
-		
+
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);
 		}
-		
+
 		$schedule->command('inspire')
 			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H:m')}.txt");
 	}
-	
+
 	/**
 	 *
 	 */
 	private function runRecordStats(Schedule $schedule, Carbon $now)
 	{
 		$logdir = storage_path("logs/recordstats");
-		
+
 		if(!File::exists($logdir)) {
 			File::makeDirectory($logdir);
 		}
-		
+
 		$schedule->command('recordstats')
 			->hourly()
 			->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt.txt");
-		
+
 	}
 }

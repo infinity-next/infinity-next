@@ -55,8 +55,8 @@ return [
 	*/
 
 	'from' => [
-		'address' => env('MAIL_ADDR_ADMIN'),
-		'name'    => env('SITE_NAME', "Infinity Next"),
+		'address' => env('MAIL_USERNAME'),
+		'name'    => env('SITE_NAME', "Infinity Next") . " Mailbot",
 	],
 
 	/*
