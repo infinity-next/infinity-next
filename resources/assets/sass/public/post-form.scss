@@ -18,7 +18,7 @@ section.index-form {
 		form.form-post .post-menu {
 
 		}
-			html.js form.form-post .post-menu {
+			form.form-post .post-menu {
 				position: absolute;
 				top: 0;
 				right: 0;
@@ -38,6 +38,10 @@ section.index-form {
 					height: 16px;
 					line-height: 16px;
 				}
+					html.no-js form.form-post .post-menu .field-control {
+						color: #111111;
+						border-color: #111111;
+					}
 					form.form-post .post-menu .field-control:placeholder {
 						color: #eee;
 					}

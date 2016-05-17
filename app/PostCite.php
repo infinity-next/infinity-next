@@ -94,6 +94,9 @@ class PostCite extends Model {
 
 	public function getBacklinkURL()
 	{
-		return url("/{$this->post_board_uri}/post/{$this->post_board_id}", [], false);
+		return route('board.thread.goto', [
+			'board_uri' => $this->post_board_uri,
+			'post_id' => $this->post_board_id,
+		], false);
 	}
 }

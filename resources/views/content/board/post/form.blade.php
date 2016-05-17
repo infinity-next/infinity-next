@@ -8,14 +8,15 @@
 	'class'  => "form-mod smooth-box",
 ]) !!}
 @else
-{!! Form::open([
-	'url'    => url($board->board_uri . '/thread/' . ($reply_to ? $reply_to->board_id: "")),
-	'files'  => true,
-	'method' => "PUT",
-	'id'     => "post-form",
-	'class'  => "form-post",
-	'data-widget' => "postbox",
-]) !!}
+<form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
+	$reply_to ? 'board.thread.reply' : 'board.thread.put',
+	[
+		'board_uri' => $board->board_uri,
+		'post_id'   => $reply_to ? $reply_to->board_id : "",
+	],
+	false
+)}}" accept-charset="UTF-8" enctype="multipart/form-data">
+	<input name="_method" type="hidden" value="PUT" />
 @endif
 	@if (!isset($post))
 	<ul class="post-menu">
@@ -31,15 +32,15 @@
 			]) !!}
 		</li>
 		@endif
-		<li class="menu-icon menu-icon-minimize">
+		<li class="menu-icon menu-icon-minimize require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Minimize</span>
 		</li>
-		<li class="menu-icon menu-icon-maximize">
+		<li class="menu-icon menu-icon-maximize require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Expand</span>
 		</li>
-		<li class="menu-icon menu-icon-close">
+		<li class="menu-icon menu-icon-close require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Close</span>
 		</li>

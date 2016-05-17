@@ -3558,7 +3558,7 @@ form.form-post {
   margin: 0 auto 2em auto;
   padding: 0 0.75em; }
 
-html.js form.form-post .post-menu {
+form.form-post .post-menu {
   position: absolute;
   top: 0;
   right: 0;
@@ -3576,6 +3576,10 @@ form.form-post .post-menu .field-control {
   width: 5em;
   height: 16px;
   line-height: 16px; }
+
+html.no-js form.form-post .post-menu .field-control {
+  color: #111111;
+  border-color: #111111; }
 
 form.form-post .post-menu .field-control:placeholder {
   color: #eee; }

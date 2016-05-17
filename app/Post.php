@@ -918,7 +918,12 @@ class Post extends Model {
 			$splice = "";
 		}
 
-		return url("/{$this->board_uri}/thread/{$url_id}{$splice}#{$url_hash}", [], false);
+		return route('board.thread.splice', [
+			'board_uri' => $this->board_uri,
+			'post_id'   => $url_id,
+			'splice'    => $splice,
+		], false) . "#{$url_hash}";
+
 	}
 
 	/**

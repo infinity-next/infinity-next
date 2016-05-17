@@ -3,9 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CaptchaIndex extends Migration
+class AddCaptchaToken extends Migration
 {
-
 	/**
 	 * Run the migrations.
 	 *
@@ -17,14 +16,16 @@ class CaptchaIndex extends Migration
 		{
 			$table->dropColumn('client_ip');
 		});
-		
+
 		Schema::table('captcha', function(Blueprint $table)
 		{
-			$table->inet('client_ip')->after('hash')->nullable();
+			$table->binary('client_ip')->after('hash')->nullable();
+			$table->binary('client_session_id')->after('client_ip')->nullable();
+
 			if (!(DB::connection() instanceof \Illuminate\Database\MySqlConnection))
 			{
 				$table->index('client_ip');
-				$table->index('hash');
+				$table->index('client_session_id');
 			}
 		});
 	}
@@ -38,14 +39,9 @@ class CaptchaIndex extends Migration
 	{
 		Schema::table('captcha', function(Blueprint $table)
 		{
-			if (!(DB::connection() instanceof \Illuminate\Database\MySqlConnection))
-			{
-				$table->dropIndex('captcha_client_ip_index');
-				$table->dropIndex('captcha_hash_index');
-			}
 			$table->dropColumn('client_ip');
-			$table->binary('client_ip')->after('hash')->nullable();
+			$table->dropColumn('client_session_id');
+			$table->inet('client_ip')->after('hash')->nullable();
 		});
 	}
-
 }

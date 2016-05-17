@@ -281,6 +281,8 @@ class Board extends Model {
 
 	public function canPostWithoutCaptcha(PermissionUser $user)
 	{
+		return false;
+
 		// Check if site requires captchas.
 		if (!site_setting('captchaEnabled'))
 		{

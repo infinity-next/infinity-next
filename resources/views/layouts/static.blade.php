@@ -30,6 +30,7 @@
 
 	@section('meta')
 		<meta name="viewport" content="width=device-width" />
+		<meta name="csrf-token" content="{{ csrf_token() }}" data-instant-track />
 	@show
 
 	@yield('head')
