@@ -25,6 +25,7 @@ use DB;
 use Cache;
 use Request;
 use Settings;
+use Session;
 
 use Event;
 use App\Events\BoardWasCreated;
