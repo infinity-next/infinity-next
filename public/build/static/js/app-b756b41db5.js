@@ -21899,8 +21899,8 @@ ib.widget("permissions", function(window, $, undefined) {
 				return true;
 			}
 
-			var $media   = $(this);
-			var $link    = $(widget.options.selector['attachment-link']);
+			var $img     = $(this);
+			var $link    = $img.parents(widget.options.selector['attachment-link']).first();
 			var $preview = $(widget.options.selector['hover-box']);
 
 			$preview.children().attr('src', $link.attr('data-download-url'));
@@ -21909,8 +21909,8 @@ ib.widget("permissions", function(window, $, undefined) {
 
 		attachmentMediaMouseOut : function(event) {
 			var widget   = event.data.widget;
-			var $media   = $(this);
-			var $link    = $(widget.options.selector['attachment-link']);
+			var $img     = $(this);
+			var $link    = $img.parents(widget.options.selector['attachment-link']).first();
 			var $preview = $(widget.options.selector['hover-box']);
 
 			$preview.children().attr('src', "");
