@@ -2,10 +2,10 @@
 
 @section('content')
 <main class="multiboard-index index-threaded">
-	
+
 	<section class="index-threads">
 		@include( 'widgets.ads.board_top_left' )
-		
+
 		<ul class="thread-list">
 			@if (isset($threads) && !is_null($threads))
 			@foreach ($threads as $thread)
@@ -33,9 +33,15 @@
 			@endforeach
 			@endif
 		</ul>
-		
+
 	</section>
-	
+
 	@include('content.board.sidebar')
 </main>
+@stop
+
+@section('content-addendum')
+	<div id="attachment-preview">
+		<img id="attachment-preview-img" src="" />
+	</div>
 @stop
