@@ -11,10 +11,11 @@ class CSSValidator
 	 */
 	public function __construct()
 	{
-		$this->allowedUrls      = explode(PHP_EOL, (string) Settings::get('boardCustomCSSUrlWhitelist'));
-		$this->unsafeImportUrls = explode(PHP_EOL, (string) Settings::get('boardCustomCSSImportBlacklist'));
-		$this->allowedRules     = config('css.rules.whitelist');
-		$this->allowedMimeTypes = config('css.mime.whitelist');
+		$this->allowedRules          = config('sanitize.css.whitelist.rules');
+		$this->allowedUrls           = config('sanitize.css.whitelist.urls');
+		$this->allowedImportUrls     = config('sanitize.css.whitelist.imports');
+		$this->allowedFileExtensions = config('sanitize.css.whitelist.extensions');
+		$this->allowedMimeTypes      = config('sanitize.css.whitelist.mimetypes');
 	}
 
 
@@ -44,6 +45,31 @@ class CSSValidator
 		foreach ($this->allowedMimeTypes as $allowedMimeType)
 		{
 			if (strpos($mimeType, $allowedMimeType) !== false)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Determine if the file extension in a path is allowed to be used.
+	 *
+	 * Assumes the URLs you have whitelisted are setting the right file
+	 * extension for the Content-Type.
+	 *
+	 * @param  string $url
+	 * @return boolean
+	 */
+	protected function isAllowedExtension($url)
+	{
+		$path = pathinfo($url);
+
+		foreach ($this->allowedFileExtensions as $allowedExt)
+		{
+			if (strpos($path['extension'], $allowedExt) !== false)
 			{
 				return true;
 			}
@@ -98,6 +124,11 @@ class CSSValidator
 			return false;
 		}
 
+		if (!$this->isAllowedExtension($url))
+		{
+			return false;
+		}
+
 		foreach ($this->allowedUrls as $allowedUrl)
 		{
 			if (strpos($url, $allowedUrl) !== false)
@@ -111,7 +142,7 @@ class CSSValidator
 
 
 	/**
-	 * Determine if a URL is valid, and whether it is allowed to be used.
+	 * Determine if an import URL is valid, and whether it is allowed to be used.
 	 *
 	 * @param  string $url
 	 * @return boolean
@@ -123,15 +154,15 @@ class CSSValidator
 			return false;
 		}
 
-		foreach ($this->unsafeImportUrls as $unsafeUrl)
+		foreach ($this->allowedImportUrls as $allowedUrl)
 		{
-			if (strpos($url, $unsafeUrl) !== false)
+			if (strpos($url, $allowedUrl) !== false)
 			{
-				return false;
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 

@@ -29,6 +29,7 @@ return [
 	],
 	"boolean"              => "The :attribute field must be true or false.",
 	'captcha'              => 'The security image was not answered correctly',
+	'css'                  => 'The custom CSS did not pass validation.',
 	"confirmed"            => "The :attribute confirmation does not match.",
 	"date"                 => "The :attribute is not a valid date.",
 	"date_format"          => "The :attribute does not match the format :format.",
