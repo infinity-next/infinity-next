@@ -3,6 +3,7 @@
  * z-index list of importance
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
  *  9999 - jQuery Blocker Overlay.
+ *  1200 - Attachment previews.
  *  1100 - Hover-over posts.
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
  *  1000 - Post form.
@@ -721,6 +722,27 @@ section.moderate-post {
 section.moderate-post #mod-form {
   padding-bottom: 0;
   margin: 0 auto 1em auto; }
+
+#attachment-preview {
+  display: none;
+  content: ' ';
+  pointer-events: none;
+  z-index: 1199;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  line-height: 100vh;
+  text-align: center; }
+
+#attachment-preview-img {
+  display: inline-block;
+  max-height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  vertical-align: middle; }
 
 /**
  * Board Assets

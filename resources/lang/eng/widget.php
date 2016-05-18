@@ -78,6 +78,7 @@ return [
 
 		'option' => [
 			'author_id' => "Display Author IDs when available",
+			'attachment_preview' => "Show Image Preview on Hover"
 		],
 	],
 

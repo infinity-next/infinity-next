@@ -3,6 +3,7 @@
  * z-index list of importance
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
  *  9999 - jQuery Blocker Overlay.
+ *  1200 - Attachment previews.
  *  1100 - Hover-over posts.
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
  *  1000 - Post form.
@@ -921,7 +922,7 @@ a.pagination-link.pagination-active {
 
 #js-config .config-row-name {
   display: inline-block;
-  width: 15em;
+  min-width: 16em;
   margin-right: 1em;
   line-height: 3em;
   vertical-align: middle; }

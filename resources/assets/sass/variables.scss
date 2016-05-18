@@ -2,6 +2,7 @@
  * z-index list of importance
  * 10000 - Laravel Debug Bar. NEVER SURPASS.
  *  9999 - jQuery Blocker Overlay.
+ *  1200 - Attachment previews.
  *  1100 - Hover-over posts.
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
  *  1000 - Post form.
@@ -30,3 +31,5 @@ $primary-lightest: ;
 
 $font-stack: Arial, Helvetica, sans-serif;
 $font-size: 13px;
+
+$z-index-attachment-preview: 1200;

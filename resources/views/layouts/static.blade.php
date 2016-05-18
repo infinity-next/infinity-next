@@ -75,6 +75,7 @@
 		@show
 
 		@yield('content')
+		@yield('content-addendum')
 	</div>
 
 	@yield('footer')

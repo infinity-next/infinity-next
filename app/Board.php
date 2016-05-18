@@ -1,8 +1,5 @@
 <?php namespace App;
 
-
-dsfjkdsfsdjkfd
-
 use App\BoardSetting;
 use App\Post;
 use App\PostCite;
