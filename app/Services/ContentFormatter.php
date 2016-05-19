@@ -77,7 +77,7 @@ class ContentFormatter {
                 {
                     return [
                         'href'           => $url,
-                        'class'          => "cite cite-formattable cite-remote",
+                        'class'          => "cite cite-post cite-remote",
                         'data-board_uri' => $cite->cite_board_uri,
                         'data-board_id'  => $cite->cite_board_id,
                     ];
@@ -86,7 +86,7 @@ class ContentFormatter {
                 {
                     return [
                         'href'           => $url,
-                        'class'          => "cite cite-formattable cite-local",
+                        'class'          => "cite cite-post cite-local",
                         'data-board_uri' => $cite->cite_board_uri,
                         'data-board_id'  => $cite->cite_board_id,
                         'data-instant',

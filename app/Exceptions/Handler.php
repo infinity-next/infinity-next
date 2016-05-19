@@ -4,6 +4,7 @@ use Exception;
 use ErrorException;
 use Mail;
 use Response;
+use Request;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException as FlattenException;
@@ -101,8 +102,12 @@ class Handler extends ExceptionHandler {
 
 			Mail::send('emails.error', $data, function($message)
 			{
-				$message->to(env('MAIL_ADDR_ADMIN', false), env('SITE_NAME', 'Infinity Next') . " Webaster");
-				$message->subject(env('SITE_NAME', 'Infinity Next') . " Error");
+				$to = env('SITE_NAME', 'Infinity Next') . " Webaster";
+				$subject = env('SITE_NAME', 'Infinity Next') . " Error";
+				$subject .= " " . Request::url() ?: "";
+
+				$message->to(env('MAIL_ADDR_ADMIN', false), $to);
+				$message->subject($subject);
 			});
 		}
 
