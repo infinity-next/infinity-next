@@ -83,18 +83,15 @@ class Handler extends ExceptionHandler {
 
 		$errorEmail = $errorEmail && env('MAIL_ADDR_ADMIN', false) && env('MAIL_ADMIN_SERVER_ERRORS', false);
 
-		if ($errorEmail || $errorView)
+		if ($errorEmail)
 		{
 			// This makes use of a Symfony error handler to make pretty traces.
-			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
+			$SymfonyDisplayer = new SymfonyDisplayer(true);
 			$FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
 			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
 			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
-		}
 
-		if ($errorEmail)
-		{
 			$data = [
 				'exception'   => $e,
 				'error_class' => get_class($e),
@@ -111,6 +108,15 @@ class Handler extends ExceptionHandler {
 
 		if ($errorView)
 		{
+			// Duplicating logic in $errorEmail because output is completely
+			// diffrent without app.debug enabled. I always want a stack trace
+			// in my emails!
+			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
+			$FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
+
+			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
+			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
+
 			$response = response()->view($errorView, [
 				'exception'   => $e,
 				'error_class' => get_class($e),
