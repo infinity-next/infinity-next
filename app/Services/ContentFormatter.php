@@ -1,8 +1,8 @@
 <?php namespace App\Services;
 
 use App\Board;
-use App\formattable;
-use App\formattableCite;
+use App\Post;
+use App\PostCite;
 
 use App\Contracts\Support\Formattable as FormattableContract;
 use Illuminate\Database\Eloquent\Collection;
@@ -53,14 +53,14 @@ class ContentFormatter {
     /**
      * Builds an array of attributes for the Parsedown engine.
      *
-     * @param  \App\formattableCite  $cite
+     * @param  \App\PostCite  $cite
      * @param  boolean  $remote
-     * @param  boolean  $formattable
+     * @param  boolean  $post
      * @return string
      */
-    protected function buildCiteAttributes(formattableCite $cite, $remote = false, $formattable = false)
+    protected function buildCiteAttributes(PostCite $cite, $remote = false, $post = false)
     {
-        if ($formattable)
+        if ($post)
         {
             if ($cite->cite)
             {
@@ -109,7 +109,7 @@ class ContentFormatter {
     /**
      * Returns a formatted static page.
      *
-     * @param  \App\Page  $page
+     * @param  \App\Contacts\Support\Formattable  $formattable
      * @return string  (HTML, Formatted)
      */
     public function formatPage(FormattableContract $formattable, $formatKey)
@@ -146,21 +146,21 @@ class ContentFormatter {
     /**
      * Returns a formatted formattable.
      *
-     * @param  \App\formattable|string  $formattable
+     * @param  \App\Post|string  $post
      * @param  int|null  $splice  Optional. First number of characters to parse instead of entire formattable. Defaults to null.
      * @return string  (HTML, Formatted)
      */
-    public function formatPost($formattable, $splice = null)
+    public function formatPost($post, $splice = null)
     {
-        if ($formattable instanceof formattable)
+        if ($post instanceof FormattableContract)
         {
-            $this->formattable    = $formattable;
-            $body = (string) $formattable->body;
-            $this->wordfilters = $formattable->board->getWordfilters();
+            $this->formattable = $post;
+            $body = (string) $post->body;
+            $this->wordfilters = $post->board->getWordfilters();
         }
         else
         {
-            $body = (string) $formattable;
+            $body = (string) $post;
         }
 
         if (!is_null($splice))
@@ -382,7 +382,7 @@ class ContentFormatter {
 
             $replaced = false;
 
-            if (isset($parser->formattable) && $parser->formattable instanceof formattable)
+            if (isset($parser->formattable) && $parser->formattable instanceof FormattableContract)
             {
                 foreach ($parser->formattable->cites as $cite)
                 {
@@ -425,12 +425,12 @@ class ContentFormatter {
     /**
      * Returns a collection of formattables as cited in a formattable's text body.
      *
-     * @param  \App\formattable $formattable
+     * @param  \App\Contracts\Support\Formattable $formattable
      * @return Collection
      */
-    public static function getCites(formattable $formattable)
+    public static function getCites(FormattableContract $formattable)
     {
-        $formattableCites  = [];
+        $postCites  = [];
         $boardCites = [];
         $lines = explode("\n", $formattable->body);
 
@@ -448,7 +448,7 @@ class ContentFormatter {
             {
                 foreach($relativeMatch['board_id'] as $matchIndex => $matchBoardId)
                 {
-                    $formattableCites[] = [
+                    $postCites[] = [
                         'board_uri' => $formattable->board_uri,
                         'board_id'  => $matchBoardId,
                     ];
@@ -463,7 +463,7 @@ class ContentFormatter {
 
                     if ($matchBoardId != "")
                     {
-                        $formattableCites[] = [
+                        $postCites[] = [
                             'board_uri' => $matchBoardUri,
                             'board_id'  => $matchBoardId,
                         ];
@@ -486,28 +486,28 @@ class ContentFormatter {
             $boards = new Collection;
         }
 
-        if (count($formattableCites))
+        if (count($postCites))
         {
-            $formattables = formattable::where(function($query) use ($formattableCites)
+            $posts = Post::where(function($query) use ($postCites)
             {
-                foreach ($formattableCites as $formattableCite)
+                foreach ($postCites as $postCite)
                 {
-                    $query->orWhere(function($query) use ($formattableCite)
+                    $query->orWhere(function($query) use ($postCite)
                     {
-                        $query->where('board_uri', $formattableCite['board_uri'])
-                            ->where('board_id', $formattableCite['board_id']);
+                        $query->where('board_uri', $postCite['board_uri'])
+                            ->where('board_id', $postCite['board_id']);
                     });
                 }
             })->get();
         }
         else
         {
-            $formattables = new Collection;
+            $posts = new Collection;
         }
 
         return [
             'boards' => $boards,
-            'formattables'  => $formattables,
+            'posts'  => $posts,
         ];
     }
 

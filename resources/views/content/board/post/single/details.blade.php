@@ -3,11 +3,11 @@
 
 	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
 
-	@if ($details['subject'])
+	@if (isset($details['subject']) && $details['subject'])
 	<li class="post-detail post-subject">
 		<h3 class="post-detail-item subject ugc">
 		@if (!$catalog)
-		{{ $details['subject'] }}
+		{{ @$details['subject'] }}
 		@else
 		<a href="{{ $post->getURL() }}" class="subject-link">{{ $post->subject }}</a>
 		@endif
@@ -21,7 +21,7 @@
 			{{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
 		@if ($details['email'] && !$catalog)</a>@endif
 		</strong>
-		@if (isset($details['insecure_tripcode']))
+		@if (isset($details['insecure_tripcode']) && $details['insecure_tripcode'])
 		<span class="insecure-tripcode tripcode">{{ $details['insecure_tripcode'] }}</span>
 		@endif
 

@@ -6,11 +6,14 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\PostCite;
 use App\Contracts\PermissionUser;
+use App\Contracts\Support\Formattable as FormattableContract;
 use App\Services\ContentFormatter;
+use App\Support\Formattable;
 use App\Support\Geolocation;
 use App\Support\IP;
 use App\Traits\TakePerGroup;
 use App\Traits\EloquentBinary;
+
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -25,8 +28,9 @@ use Request;
 use Event;
 use App\Events\ThreadNewReply;
 
-class Post extends Model {
-
+class Post extends Model implements FormattableContract
+{
+	use Formattable;
 	use EloquentBinary;
 	use TakePerGroup;
 	use SoftDeletes;
