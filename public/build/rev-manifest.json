@@ -1,7 +1,8 @@
 {
-  "static/css/global.css": "static/css/global-3ff8cef101.css",
+  "static/css/global.css": "static/css/global-0888473132.css",
   "static/css/panel.css": "static/css/panel-f290e4176c.css",
-  "static/css/public.css": "static/css/public-607dca9567.css",
-  "static/css/vendor.css": "static/css/vendor-d18068c86e.css",
-  "static/js/app.js": "static/js/app-b756b41db5.js"
+  "static/css/public.css": "static/css/public-2c7ac3e4de.css",
+  "static/css/vendor.css": "static/css/vendor-c853702d4e.css",
+  "static/js/app.js": "static/js/app-b997209813.js",
+  "static/js/vendor.js": "static/js/vendor-46c53224f0.js"
 }

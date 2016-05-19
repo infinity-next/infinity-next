@@ -50,8 +50,8 @@
 
 			'post-reply'     : ".post-reply",
 
-			'elementCode'    : "pre code",
-			'elementQuote'   : "blockquote",
+			'element-code'   : "pre code",
+			'element-quote'  : "blockquote",
 
 			'author_id'      : ".authorid",
 
@@ -216,9 +216,8 @@
 			.on(
 				'ready.ib-post',
 				data,
-				widget.events.documentReady
-			)
-		;
+				widget.events.codeHighlight
+			);
 
 		$widget
 			.on(
@@ -233,7 +232,7 @@
 				widget.events.postClick
 			)
 			.on(
-				'codeHighlight.ib-post',
+				'highlight-syntax.ib-post',
 				widget.options.selector['post-reply'],
 				data,
 				widget.events.codeHighlight
@@ -291,8 +290,8 @@
 		;
 
 		$widget.trigger('contentUpdate');
-		widget.cachePosts($widget);
 		widget.addCiteAuthorship();
+		widget.cachePosts($widget);
 	};
 
 	blueprint.prototype.bindMediaEvents = function($element) {
@@ -740,17 +739,22 @@
 			event.data.widget.clearCites();
 		},
 
-		documentReady : function(event) {
-		},
-
 		// Adds HLJS syntax formatting to posts.
 		codeHighlight : function(event) {
-			var widget = event.data.widget;
+			var widget  = event.data.widget;
+			var $widget =  event.data.$widget;
 
 			// Activate code highlighting if the JS module is enabled.
 			if (typeof window.hljs === "object")
 			{
-				window.hljs.highlightBlock(this);
+				$(widget.options.selector['element-code'], $widget).each(function()
+				{
+					window.hljs.highlightBlock(this);
+				});
+			}
+			else
+			{
+				console.log("post.codeHighlight: missing hljs");
 			}
 		},
 
@@ -780,6 +784,8 @@
 
 			$(widget.options.selector.author_id, $widget)
 				.toggle(widget.is('author_id'));
+
+			$widget.trigger('highlight-syntax');
 		},
 
 		threadNewPosts : function(event, posts) {
@@ -801,7 +807,7 @@
 					var post_board_id  = $container.attr('data-board_id');
 					var $cites         = $(widget.options.selector['forwardlink'], $container);
 
-					$post.trigger('codeHighlight');
+					$post.trigger('highlight-syntax');
 
 					// Each post may have many citations.
 					$cites.each(function(index) {

@@ -1,8 +1,6 @@
 process.env.DISABLE_NOTIFIER = false;
 
-var elixir = require(
-    'laravel-elixir'
-);
+var elixir = require('laravel-elixir');
 
 /*
  |--------------------------------------------------------------------------
@@ -42,8 +40,12 @@ elixir(function(mix) {
         ], 'public/static/css/panel.css')
 
         .scripts([
-            'vendor/**/*.js',
-            'plugins/**/*.js',
+            '../../../node_modules/jquery/dist/jquery.js',
+            '../vendor/**/*.js',
+            'plugins/**/*.js'
+        ], 'public/static/js/vendor.js')
+
+        .scripts([
             'app/**/*.js'
         ], 'public/static/js/app.js')
 
@@ -53,6 +55,9 @@ elixir(function(mix) {
             "public/static/css/global.css",
             "public/static/css/public.css",
             "public/static/css/panel.css",
+            "public/static/js/vendor.js",
             "public/static/js/app.js"
-        ]);
+        ])
+
+        ;
 });

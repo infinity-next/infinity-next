@@ -711,28 +711,44 @@ header nav.boardlist {
   color: #34345C;
   vertical-align: baseline;
   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-  /*
-		top: 0;
-		left: 0;
-		right: 0;
-		position: absolute;
-		z-index: 1000;
-		*/ }
-
-header nav.boardlist .boardlist-link {
-  color: #34345C; }
+  -webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); }
+  header nav.boardlist .boardlist-link {
+    color: #34345C; }
 
 footer nav.boardlist {
   background: #666666;
   color: #aeaeae;
   position: static; }
+  footer nav.boardlist .boardlist-link {
+    color: #ffffff; }
 
 footer nav.boardlist-row.row-pages {
   display: none; }
 
-footer nav.boardlist .boardlist-link {
-  color: #ffffff; }
+@media (max-width: 840px) {
+  nav.boardlist {
+    font-size: 1.5em;
+    line-height: 2.5em; }
+  nav.boardlist div.boardlist-text {
+    display: block;
+    text-align: center; }
+  nav.boardlist div.boardlist-row {
+    display: none;
+    border-bottom: 0.2em solid rgba(0, 0, 0, 0.25); }
+  nav.boardlist li.boardlist-category {
+    clear: both;
+    display: block; }
+  nav.boardlist ul.boardlist-items {
+    display: block; }
+  nav.boardlist li.boardlist-item {
+    display: block;
+    box-sizing: border-box;
+    padding: 0 1em;
+    min-width: 300px;
+    width: 50%;
+    float: left; }
+  nav.boardlist a.boardlist-link {
+    display: block; } }
 
 nav.pagination {
   padding: 0.25em 0;
@@ -1091,22 +1107,22 @@ blockquote.ugc pre {
   clear: both;
   background-color: rgba(255, 255, 255, 0.35);
   color: #111111;
-  margin: 1em -0.75em;
+  margin: 1em -0.75em 1em -1.7em;
   overflow-x: auto;
   overflow-y: hidden; }
-
-blockquote.ugc pre code {
-  display: block;
-  margin: 0;
-  padding: 1em;
-  white-space: pre-wrap; }
-
-blockquote.ugc pre code.language-aa,
-blockquote.ugc pre code.language-AA {
-  font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
-  display: block !important;
-  font-size: 12pt;
-  line-height: 1.1; }
+  blockquote.ugc pre code {
+    display: block;
+    margin: 0;
+    padding: 1em 0.75em 1em 1.7em;
+    white-space: pre-wrap;
+    /* Very specific formatting for ASCII art. */ }
+    blockquote.ugc pre code.language-aa, blockquote.ugc pre code.language-AA {
+      font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
+      display: block !important;
+      font-size: 12pt;
+      line-height: 1.1; }
+  blockquote.ugc pre:last-child {
+    margin-bottom: -0.7em; }
 
 blockquote.ugc blockquote {
   margin-left: 0;

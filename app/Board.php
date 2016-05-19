@@ -1402,7 +1402,7 @@ class Board extends Model {
 				foreach($thread->replies as $reply)
 				{
 					$reply->setRelation('board', $this);
-					$reply->setRelation('attachments', $reply->attachments->reverse());
+					$reply->setRelation('attachments', $reply->attachments);
 				}
 
 				$thread->prepareForCache();

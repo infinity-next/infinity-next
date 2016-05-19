@@ -73,8 +73,8 @@
 
 	@yield('required-js')
 
+	<script data-no-instant src="{{ elixir('static/js/vendor.js') }}"></script>
 	<script data-no-instant src="{{ elixir('static/js/app.js') }}"></script>
-
 	@parent
 @stop
 

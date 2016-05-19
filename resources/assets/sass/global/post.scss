@@ -32,25 +32,31 @@ blockquote.ugc {
 		background-color: rgba(255, 255, 255, 0.35);
 		color: #111111;
 
-		margin: 1em -0.75em;
+		margin: 1em -0.75em 1em -1.7em;
 
 		overflow-x: auto;
 		overflow-y: hidden;
-	}
-		blockquote.ugc pre code {
+
+		& code {
 			display: block;
 			margin: 0;
-			padding: 1em;
+			padding: 1em 0.75em 1em 1.7em;
 			white-space: pre-wrap;
+
+			/* Very specific formatting for ASCII art. */
+			&.language-aa,
+			&.language-AA {
+				font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
+				display: block !important;
+				font-size: 12pt;
+				line-height: 1.1;
+			}
 		}
 
-		blockquote.ugc pre code.language-aa,
-		blockquote.ugc pre code.language-AA {
-			font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
-			display: block!important;
-			font-size: 12pt;
-			line-height: 1.1;
+		&:last-child {
+			margin-bottom: -0.7em;
 		}
+	}
 
 	blockquote.ugc blockquote {
 		margin-left: 0;

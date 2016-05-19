@@ -3,8 +3,8 @@
 @section('title', trans('board.logs.title', [ 'board_uri' => $board->board_uri ]))
 
 @section('content')
-<main class="board-logs">
-	<section class="board-logs-table grid-container">
+<main class="board-logs grid-container">
+	<section class="board-logs-table grid-100">
 		<div class="smooth-box">
 			<table class="logs-table">
 				<colgroup>
@@ -24,7 +24,7 @@
 					<tr>
 						<td><time datetime="{{ $log->created_at }}">{{ $log->created_at }}</time></td>
 						<td>{{ $log->user->getDisplayName() }}</td>
-						
+
 						@if ($log->action_details)
 						<td>@lang($log->action_name, $log->getDetails($c->user))</td>
 						@else

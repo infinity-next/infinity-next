@@ -11,27 +11,27 @@
 			<div class="grid-20">
 				@include('content.index.modules.logo')
 			</div>
-			
+
 			<div class="grid-80">
 				@include('content.index.modules.statistics')
 			</div>
 		</section>
-		
+
 		<div class="grid-100 grid-parent">
 			<div class="board-list" data-widget="boardlist">
 				<aside class="search-container grid-20">
 					<form id="search-form" class="smooth-box" method="get" action="{{ url('boards.html') }}">
 						<div class="box-title">@lang('boardlist.search.title')</div>
-						
+
 						<div class="board-search box-content">
 							<label class="search-item search-sfw">
 								<input type="checkbox" id="search-sfw-input" name="sfw" value="1" @if (Request::get('sfw', false))checked="checked"@endif />&nbsp;@lang('boardlist.search.sfw_only')
 							</label>
-							
+
 							<div class="search-item search-title">
 								<input type="text" id="search-title-input" name="title" name="title" value="{{ Request::get('titles',"") }}" placeholder="@lang('boardlist.search.titles')" />
 							</div>
-							
+
 							<div class="search-item search-lang">
 								<select id="search-lang-input" name="lang">
 									<optgroup label="@lang('boardlist.search.lang.popular')">
@@ -46,11 +46,11 @@
 									</optgroup>
 								</select>
 							</div>
-							
+
 							<div class="search-item search-tag">
 								<input type="text" id="search-tag-input" name="tags" value="{{ Request::get('tags',"") }}" placeholder="@lang('boardlist.search.tags')" />
 							</div>
-							
+
 							<div class="search-item search-submit">
 								<button id="search-submit">@lang('boardlist.search.find')</button>
 								<span id="search-loading" class="loading-small board-list-loading" style="display: none;"></span>
@@ -67,17 +67,17 @@
 								</script>
 							</div>
 						</div>
-						
+
 						<ul class="tag-list box-content">
 							@foreach ($tags as $tag => $weight)
 							<li class="tag-item">
-								<a class="tag-link" href="{{ "?tags={$tag}" }}" style="font-size: 100%;">{{ $tag }}</a> 
+								<a class="tag-link" href="{{ "?tags={$tag}" }}" style="font-size: 100%;">{{ $tag }}</a>
 							</li>
 							@endforeach
 						</ul>
 					</form>
 				</aside>
-				
+
 				<section class="board-list col grid-80">
 					<div class="smooth-box">
 						<table class="board-list-table">
@@ -100,7 +100,7 @@
 									<th class="board-max sortable"    data-column="posts_total"><i class="fa"></i>@lang('boardlist.table.total_posts')</th>
 								</tr>
 							</thead>
-							
+
 							<tbody class="board-list-tbody">
 								@foreach ($boards as $board)
 									<tr>
@@ -119,7 +119,7 @@
 									</tr>
 								@endforeach
 							</tbody>
-							
+
 							<tfoot>
 								<tr class="board-list-loading">
 									<td colspan="7" class="loading"></td>
@@ -135,7 +135,7 @@
 											<span class="board-page-loadmore">@lang('boardlist.footer.load_more')</span>
 										</a>
 									</td>
-									
+
 									@if ($boards->total() - $boards->perPage() > 0)
 									<script type="text/javascript">
 										/* Cheeky hack.

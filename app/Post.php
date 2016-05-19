@@ -155,7 +155,8 @@ class Post extends Model {
 
 	public function attachments()
 	{
-		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');
+		return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')
+			->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');
 	}
 
 	public function attachmentLinks()
@@ -1846,7 +1847,7 @@ class Post extends Model {
 		$rememberTimer   = 30;
 		$rememberKey     = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
 		$rememberClosure = function() use ($catalog, $multiboard, $preview) {
-			$this->setRelation('attachments', $this->attachments->reverse());
+			$this->setRelation('attachments', $this->attachments);
 
 			return \View::make('content.board.post', [
 				// Models
@@ -2230,7 +2231,7 @@ class Post extends Model {
 
 			if ($thread)
 			{
-				$thread->setRelation('attachments', $thread->attachments->reverse());
+				$thread->setRelation('attachments', $thread->attachments);
 				$thread->prepareForCache();
 			}
 

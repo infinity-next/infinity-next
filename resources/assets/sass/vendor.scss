@@ -1,10 +1,35 @@
 /**
+ * HTML 5 Boilerplate
+ */
+@import "resources/assets/vendor/boilerplate/css/main";
+@import "resources/assets/vendor/boilerplate/css/normalize";
+
+/**
  * Unsemantic Grid CSS
+ * Used to organize page layouts on non-board pages.
  */
 @import "node_modules/unsemantic/assets/sass/unsemantic-grid-responsive-tablet.scss";
 
+.grid-container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 /**
  * Font Awesome
+ * Used for glyph symbols across the site.
  */
 $fa-font-path: "/static/fonts/font-awesome";
 @import "node_modules/font-awesome/scss/font-awesome.scss";
+
+/**
+ * Highlight JS
+ * Used for formatting codeblocks.
+ */
+@import "resources/assets/vendor/highlight-js/styles/github-gist";
+
+/**
+ * jQuery UI
+ * Animation of form elements.
+ */
+@import "resources/assets/vendor/jquery-ui/jquery-ui";
