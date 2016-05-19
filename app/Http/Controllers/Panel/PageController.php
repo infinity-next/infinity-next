@@ -58,6 +58,15 @@ class PageController extends PanelController
         {
             $this::$navSecondary = "nav.panel.site";
             $this::$navTertiary = null;
+
+            if (!$this->user->canAdminConfig())
+            {
+                abort(403);
+            }
+        }
+        else if (!$this->user->canEditConfig($this->board))
+        {
+            return abort(403);
         }
 
         view()->share([
