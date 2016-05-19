@@ -21,6 +21,12 @@ abstract class Controller extends BaseController {
 	use DispatchesCommands, ValidatesRequests;
 
 	/**
+	 * Board model for this request.
+	 *
+	 * @var \App\Board
+	 */
+
+	/**
 	 * Cache of the system's options
 	 *
 	 * @var array
@@ -37,7 +43,13 @@ abstract class Controller extends BaseController {
 		$this->registrar   = $manager->registrar;
 		$this->user        = $manager->user;
 
-		View::share('user', $this->user);
+		$board = app(Board::class);
+		$this->board = $board->exists ? $board : null;
+
+		view()->share([
+			'board' => $board,
+			'user'  => $this->user,
+		]);
 
 		$this->boot();
 	}

@@ -1,4 +1,6 @@
-<?php namespace App\Observers;
+<?php
+
+namespace App\Observers;
 
 use App\Post;
 use App\PostChecksum;
@@ -10,7 +12,7 @@ use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;
 
 class PostObserver {
-	
+
 	/**
 	 * Handles model after create (non-existant save).
 	 *
@@ -21,10 +23,10 @@ class PostObserver {
 	{
 		// Fire event, which clears cache among other things.
 		Event::fire(new PostWasAdded($post));
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Checks if this model is allowed to create (non-existant save).
 	 *
@@ -36,7 +38,7 @@ class PostObserver {
 		// Reuire board_id to save.
 		return isset($post->board_id);
 	}
-	
+
 	/**
 	 * Handles model after delete (pre-existing hard or soft deletion).
 	 *
@@ -49,7 +51,7 @@ class PostObserver {
 		if (!is_null($post->reply_to))
 		{
 			$lastReply = $post->op->getReplyLast();
-			
+
 			if ($lastReply)
 			{
 				$post->op->reply_last = $lastReply->created_at;
@@ -58,16 +60,16 @@ class PostObserver {
 			{
 				$post->op->reply_last = $post->op->created_at;
 			}
-			
+
 			$post->op->reply_count -= 1;
 			$post->op->save();
 		}
-		
+
 		Event::fire(new PostWasDeleted($post));
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Checks if this model is allowed to delete (pre-existing deletion).
 	 *
@@ -78,15 +80,15 @@ class PostObserver {
 	{
 		// When deleting a post, delete its children.
 		Post::replyTo($post->post_id)->delete();
-		
+
 		// Clear authorshop information.
 		$post->author_ip = null;
 		$post->author_ip_nulled_at = \Carbon\Carbon::now();
 		$post->save();
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Handles model after save (pre-existing or non-existant save).
 	 *
@@ -96,14 +98,14 @@ class PostObserver {
 	public function saved(Post $post)
 	{
 		// Rebuild citation relationships.
-		
+
 		// Clear citations.
 		$post->cites()->delete();
-		
+
 		// Readd citations.
 		$cited = $post->getCitesFromText();
 		$cites = [];
-		
+
 		foreach ($cited['posts'] as $citedPost)
 		{
 			$cites[] = new PostCite([
@@ -114,7 +116,7 @@ class PostObserver {
 				'cite_board_id'  => $citedPost->board_id,
 			]);
 		}
-		
+
 		foreach ($cited['boards'] as $citedBoard)
 		{
 			$cites[] = new PostCite([
@@ -123,15 +125,15 @@ class PostObserver {
 				'cite_board_uri' => $citedBoard->board_uri,
 			]);
 		}
-		
+
 		if (count($cites) > 0)
 		{
 			$post->cites()->saveMany($cites);
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Checks if this model is allowed to save (pre-existing or non-existant save).
 	 *
@@ -143,7 +145,7 @@ class PostObserver {
 		// Reuire board_id to save.
 		return isset($post->board_id);
 	}
-	
+
 	/**
 	 * Handles model after update (pre-existing save).
 	 *
@@ -154,10 +156,10 @@ class PostObserver {
 	{
 		// Fire event, which clears cache among other things.
 		Event::fire(new PostWasModified($post));
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Checks if this model is allowed to update (pre-existing save).
 	 *
@@ -168,5 +170,5 @@ class PostObserver {
 	{
 		return true;
 	}
-	
+
 }

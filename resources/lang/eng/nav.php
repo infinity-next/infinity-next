@@ -1,7 +1,7 @@
 <?php
 
 return [
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Navigation
@@ -10,18 +10,18 @@ return [
 	| Navigation for all systems throughout the site.
 	|
 	*/
-	
+
 	'navigation'  => "<i class=\"fa fa-bars\"></i>&nbsp;Navigation",
-	
+
 	'global'      => [
 		'view_all_boards' => "View all boards",
-		
+
 		'flyout'       => [
 			'popular_boards'  => "Popular Boards",
 			'recent_boards'   => "Recently Active Boards",
 			'favorite_boards' => "Favorite Boards",
 		],
-		
+
 		'home'         => "Home",
 		'panel'        => "Panel",
 		'boards'       => "Boards",
@@ -30,13 +30,13 @@ return [
 		'donate'       => "Fund Us",
 		'adventure'    => "Adventure",
 		'options'      => "Options",
-		
+
 		// Translators:
 		// 'Overboard' has a specific meaning to English IB users.
 		// Feel free to translate to Recent Posts instead.
 		'recent_posts' => "Overboard",
 	],
-	
+
 	'panel'       => [
 		'primary' => [
 			'home'     => "Home",
@@ -47,45 +47,46 @@ return [
 			'register' => "Register",
 			'login'    => "Login",
 		],
-		
+
 		'secondary' => [
 			'home'   => [
 				'account'         => "Account",
 				'password_change' => "Change Password",
-				
+
 				'status'          => "Status",
 				'banned'          => "Am I Banned?",
 				'bans'            => "Bans",
-				
+
 				'sponsorship'     => "Sponsorship",
 				'donate'          => "Send Cash Contribution",
 			],
-			
+
 			'site'   => [
 				'setup'           => "Setup",
+				'pages'           => "Static Pages",
 				'config'          => "Config",
 			],
-			
-			
+
+
 			'board'  => [
 				'create'          => "Create a Board",
-				
+
 				'boards'          => "Boards",
 				'assets'          => "Assets",
 				'config'          => "Config",
 				'staff'           => "Staff",
-				
+
 				'discipline'      => "Discipline",
 				'appeals'         => "Appeals",
 				'reports'         => "Reports",
 			],
-			
+
 			'users'  => [
 				'permissions'     => "Permissions",
 				'role_permissions' => "Role Permissions",
 			],
 		],
-		
+
 		'tertiary' => [
 			'board_settings' => [
 				'assets'  => "Assets",
@@ -94,6 +95,7 @@ return [
 				'staff'   => "Staff",
 				'style'   => "Styling",
 				'tags'    => "Tags",
+				'pages'   => "Static Pages",
 			],
 		],
 	],

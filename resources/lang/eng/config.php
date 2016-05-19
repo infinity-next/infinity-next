@@ -61,6 +61,7 @@ return [
 		'board_threads'      => "Thread Options",
 		'board_tags'         => "Board Tags",
 		'captcha'            => "Captcha Settings",
+		'page_body'          => "Static Page",
 		'sidebar'            => "Sidebar",
 		'site'               => "Site",
 		'style'              => "Styling",
@@ -89,6 +90,8 @@ return [
 		'boardSidebarText'         => "Content",
 		'boardUriBanned'           => "Banned Board URIs",
 		'boardTags'                => "Tags",
+
+		'page_name'                => "Page Name",
 
 		'adventureEnabled'         => "Enable adventures",
 		'adventureIcons'           => "Show icons for adventure posts",

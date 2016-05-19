@@ -27,6 +27,8 @@ Route::group([
 
 	Route::get('overboard.html', 'MultiboardController@getOverboard');
 
+	Route::get('{page_title}.html', 'PageController@getPage');
+
 	/*
 	| Internal requests used by ESI to retrieve partial templates.
 	*/
@@ -53,6 +55,7 @@ Route::group([
 	Route::group([
 		'namespace'  => 'Panel',
 		'prefix'     => 'cp',
+		'as'         => 'panel.',
 	], function()
 	{
 		Route::group([
@@ -92,6 +95,49 @@ Route::group([
 			Route::get('board/{board}',       'BansController@getBoardIndex');
 			Route::get('global',              'BansController@getGlobalIndex');
 			Route::get('/',                   'BansController@getIndex');
+		});
+
+		/**
+		 *  Page Controllers (Panel / Management)
+		 */
+		Route::group([
+			'middleware' => [
+				\App\Http\Middleware\BoardAmbivilance::class,
+			],
+		], function()
+		{
+			Route::get('site/page/{page}/delete', [
+				'as' => 'page.delete',
+				'uses' => 'PageController@delete',
+			]);
+			Route::get('site/pages', 'PageController@index');
+			Route::resource('site/page', 'PageController', [
+				'names' => [
+					'index'   => 'page.index',
+					'create'  => 'page.create',
+					'store'   => 'page.store',
+					'show'    => 'page.show',
+					'edit'    => 'page.edit',
+					'update'  => 'page.update',
+					'destroy' => 'page.destroy',
+				],
+			]);
+			Route::get('board/{board}/page/{page}/delete', [
+				'as' => 'board.page.delete',
+				'uses' => 'PageController@delete',
+			]);
+			Route::get('board/{board}/pages', 'PageController@index');
+			Route::resource('board/{board}/page', 'PageController', [
+				'names' => [
+					'index'   => 'board.page.index',
+					'create'  => 'board.page.create',
+					'store'   => 'board.page.store',
+					'show'    => 'board.page.show',
+					'edit'    => 'board.page.edit',
+					'update'  => 'board.page.update',
+					'destroy' => 'board.page.destroy',
+				],
+			]);
 		});
 
 		Route::group([

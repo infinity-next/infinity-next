@@ -591,6 +591,10 @@ main.cp .filterlist-secondary .fa-remove {
   font-size: 150%;
   color: #ff0000; }
 
+#config-page textarea {
+  width: 100%;
+  min-height: 40vh; }
+
 /**
  * Deprecated -- should be merged in
  */
