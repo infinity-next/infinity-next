@@ -698,7 +698,7 @@ class FileStorage extends Model {
 
 		$params = [
 			'attachment' => $this->getIdentifier(),
-			'filename'   => $this->getDownloadName(),
+			'filename'   => $this->getDownloadName() . ".{$ext}",
 		];
 
 		if (!env('APP_MEDIA_URL', false))
