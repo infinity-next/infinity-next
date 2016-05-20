@@ -1483,12 +1483,13 @@ div.post-action-tab {
   position: relative;
   /* border: 1px solid rgba(0,0,0,0.25);
 					border-radius: 2px; */
-  line-height: 1em;
-  height: 1em;
+  line-height: 1.8em;
+  height: 1.8em;
   padding: 0 0.25em;
   margin-left: 0.25em; }
 
 span.post-action-label {
+  line-height: 1;
   vertical-align: text-top; }
 
 div.post-action-tab.action-tab-actions {
