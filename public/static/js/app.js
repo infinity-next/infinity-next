@@ -1952,7 +1952,8 @@ ib.widget("config", function(window, $, undefined) {
         var widget  = this;
 
         var sfw = widget.is('sfw');
-        $("body").toggleClass('sfw-filter', sfw);
+        $("body").toggleClass('nsfw-filtered', sfw);
+        $("body").toggleClass('nsfw-allowed', !sfw);
 
         // var $pageStylesheet = $(widget.defaults.selector['page-stylesheet']);
         // $pageStylesheet.attr('href', sfw

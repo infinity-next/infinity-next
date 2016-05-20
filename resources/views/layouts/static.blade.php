@@ -40,7 +40,7 @@
 	@yield('head')
 </head>
 
-<body class="infinity-next responsive ltr @yield('body-class')" id="top">
+<body class="infinity-next responsive ltr nsfw-allowed @yield('body-class')" id="top">
 	<div id="page-container">
 		@section('header')
 		<header class="board-header header-height-1">

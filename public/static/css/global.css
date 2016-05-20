@@ -1192,10 +1192,7 @@ blockquote.ugc th {
 /**
  * Content Preferences
  */
-body.js .nsfw {
-  display: none; }
-
-body.sfw-filter .nsfw {
+body.nsfw-filtered .nsfw {
   display: none !important; }
 
 /**

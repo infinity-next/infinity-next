@@ -1,10 +1,4 @@
-body.js {
-    .nsfw {
-        display: none;
-    }
-}
-
-body.sfw-filter {
+body.nsfw-filtered {
     .nsfw {
         display: none !important;
     }
