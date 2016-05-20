@@ -1039,7 +1039,6 @@ class FileStorage extends Model {
 							"-an " . // No audio.
 							"-ss {$middleTimestamp} " . // Timestamp for our thumbnail.
 							"-f mjpeg " . // Output format.
-							"-vcodec png " .
 							"-t 1 " . // Duration in seconds.
 							"-r 1 " . // FPS, 1 for 1 frame.
 							"-y " . // Overwrite file if it already exists.
