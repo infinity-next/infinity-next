@@ -932,7 +932,7 @@
 							return true;
 						}
 					}
-					else if(reply.html !== null)
+					else if (reply.html !== null)
 					{
 						console.log("Autoupdater: Inserting " + reply.post_id);
 
@@ -946,8 +946,6 @@
 						$article.append($newPost);
 						$li.append($article);
 						$li.insertBefore($widget);
-
-						newPosts.push($newPost);
 
 						widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
 
@@ -977,6 +975,7 @@
 						}
 
 						ib.bindAll($newPost);
+						newPosts.push($newPost);
 
 						return true;
 					}
@@ -1922,6 +1921,72 @@ ib.widget("config", function(window, $, undefined) {
 	return widget;
 });
 
+// ===========================================================================
+// Purpose          : Content
+// Contributors     : jaw-sh
+// Widget Version   : 2
+// ===========================================================================
+
+(function(window, $, undefined) {
+    // Widget blueprint
+    var blueprint = ib.getBlueprint();
+
+    // Content events
+    var events = {
+        doContentUpdate : function(event) {
+            blueprint.prototype.adjustDisplay(event.data.setting.get());
+        }
+    };
+
+    // Configuration options
+    var options = {
+        sfw : {
+            type : "bool",
+            initial : true,
+            onChange : events.doContentUpdate,
+            onUpdate : events.doContentUpdate
+        }
+    };
+
+    blueprint.prototype.adjustDisplay = function(sfw) {
+        var widget  = this;
+
+        var sfw = widget.is('sfw');
+        $("body").toggleClass('sfw-filter', sfw);
+
+        // var $pageStylesheet = $(widget.defaults.selector['page-stylesheet']);
+        // $pageStylesheet.attr('href', sfw
+        //     ? $pageStylesheet.data('empty')
+        //     : widget.defaults.nsfw_skin
+        // );
+    };
+
+    // Event bindings
+    blueprint.prototype.bind = function() {
+        var widget  = this;
+        var $widget = this.$widget;
+        var data    = {
+            widget  : widget,
+            $widget : $widget
+        };
+
+        widget.adjustDisplay(widget.is('sfw'));
+    };
+
+    blueprint.prototype.defaults = {
+        nsfw_skin : "/static/css/skins/next-yotsuba.css",
+
+        selector : {
+            'page-stylesheet' : "#page-stylesheet"
+        }
+    };
+
+    blueprint.prototype.events = {
+    };
+
+    ib.widget("content", blueprint, options);
+})(window, window.jQuery);
+
 /**
  * Stripe Cashier Form
  */
@@ -2533,7 +2598,7 @@ ib.widget("gnav", function(window, $, undefined) {
 (function(window, $, undefined) {
 	// Widget blueprint
 	var blueprint = ib.getBlueprint();
-	
+
 	// Configuration options
 	var options = {
 		enable : {
@@ -2541,7 +2606,7 @@ ib.widget("gnav", function(window, $, undefined) {
 			initial : false
 		}
 	};
-	
+
 	// Event bindings
 	blueprint.prototype.bind = function() {
 		if (!this.is('enable'))
@@ -2549,56 +2614,56 @@ ib.widget("gnav", function(window, $, undefined) {
 			console.log("InstantClick ignored");
 			return false;
 		}
-		
+
 		console.log("InstantClick init");
-		
+
 		InstantClick.init(this.options.wait);
-		
+
 		blueprint.prototype.storage.jQuery       = window.jQuery;
 		blueprint.prototype.storage.ib           = window.ib;
 		blueprint.prototype.storage.InstantClick = window.InstantClick;
-		
+
 		$.each(this.events.InstantClick, function(eventName, eventClosure) {
 			InstantClick.on(eventName, eventClosure);
 		});
 	};
-	
+
 	blueprint.prototype.defaults = {
 		'wait' : 50
 	};
-	
+
 	blueprint.prototype.events = {
 		InstantClick : {
 			change : function() {
 				console.log("InstantClick change");
-				
+
 				this.storage;
 				// Restore our cached objects.
 				window.jQuery       = blueprint.prototype.storage.jQuery;
 				window.$            = blueprint.prototype.storage.jQuery;
 				window.ib           = blueprint.prototype.storage.ib;
 				window.InstantClick = blueprint.prototype.storage.InstantClick;
-				
+
 				// Insert our window.app data.
 				jQuery.globalEval( $("#js-app-data").html() );
-				
+
 				// Bind all widgets.
 				ib.bindAll();
-				
+
 				// Scroll to requested item.
 				if (window.location.hash != "")
 				{
 					var elem = document.getElementById(window.location.hash);
-					
+
 					if (elem && typeof elem.scrollToElement === "function")
 					{
 						elem.scrollToElement();
 					}
 				}
 			}
-		},
+		}
 	};
-	
+
 	// Long-term storage that the InstantCLick widget uses to preserve script
 	// items between page sessions.
 	blueprint.prototype.storage = {
@@ -2606,9 +2671,9 @@ ib.widget("gnav", function(window, $, undefined) {
 		ib           : null,
 		InstantClick : null,
 	};
-	
+
 	ib.widget("instantclick", blueprint, options);
-	
+
 	$(document).one('ready', function(event) {
 		ib.bindElement(document.documentElement);
 	});
@@ -3129,6 +3194,8 @@ ib.widget("permissions", function(window, $, undefined) {
 	};
 
 	blueprint.prototype.defaults = {
+		preview_delay : 200,
+
 		// Important class names.
 		classname : {
 			'post-hover'  : "post-hover",
@@ -3617,7 +3684,10 @@ ib.widget("permissions", function(window, $, undefined) {
 			var $preview = $(widget.options.selector['hover-box']);
 
 			$preview.children().attr('src', $link.attr('data-download-url'));
-			$preview.show();
+
+			widget.previewTimer = setTimeout(function() {
+				$preview.show();
+			}, widget.options.preview_delay);
 		},
 
 		attachmentMediaMouseOut : function(event) {
@@ -3628,6 +3698,7 @@ ib.widget("permissions", function(window, $, undefined) {
 
 			$preview.children().attr('src', "");
 			$preview.hide();
+			clearTimeout(widget.previewTimer);
 		},
 
 		attachmentExpandClick : function(event) {
@@ -3910,10 +3981,9 @@ ib.widget("permissions", function(window, $, undefined) {
 				// Each group can have many jQuery dom elements.
 				jQuery.each(group, function(index, $post) {
 					// This information belongs to a new post.
-					var $container     = $post.find("[data-board_uri][data-board_id]:first");
-					var post_board_uri = $container.attr('data-board_uri');
-					var post_board_id  = $container.attr('data-board_id');
-					var $cites         = $(widget.options.selector['forwardlink'], $container);
+					var post_board_uri = $post.attr('data-board_uri');
+					var post_board_id  = $post.attr('data-board_id');
+					var $cites         = $(widget.options.selector['forwardlink'], $post);
 
 					// Each post may have many citations.
 					$cites.each(function(index) {
@@ -3937,6 +4007,7 @@ ib.widget("permissions", function(window, $, undefined) {
 									.attr('href', "/" + post_board_uri + "/post/" + post_board_id)
 									.appendTo($detail);
 
+								console.log($backlink);
 								$backlinks = $backlinks.add($backlink);
 								++backlinks;
 

@@ -371,6 +371,10 @@ section.contrib-donate #payment-form {
   display: block;
   padding-top: 100%; }
 
+#site-recent-images .recent-images > .recent-image:nth-child(30) ~ .recent-image {
+  /* Show only the first thirty images. */
+  display: none; }
+
 #site-recent-images .recent-image-link {
   position: absolute;
   top: 0;
@@ -1481,8 +1485,11 @@ div.post-action-tab {
 					border-radius: 2px; */
   line-height: 1em;
   height: 1em;
-  padding: 0.25em;
+  padding: 0 0.25em;
   margin-left: 0.25em; }
+
+span.post-action-label {
+  vertical-align: text-top; }
 
 div.post-action-tab.action-tab-actions {
   margin-left: 0; }

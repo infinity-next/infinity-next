@@ -901,6 +901,9 @@ a.pagination-link.pagination-active {
 #js-config .config-nav-item.item-main .fa::before {
   content: "\f015"; }
 
+#js-config .config-nav-item.item-content .fa::before {
+  content: "\f15c"; }
+
 #js-config .config-nav-item.item-lazyimg .fa::before {
   content: "\f03e"; }
 
@@ -1185,6 +1188,15 @@ blockquote.ugc td {
 
 blockquote.ugc th {
   padding: 0.25em; }
+
+/**
+ * Content Preferences
+ */
+body.js .nsfw {
+  display: none; }
+
+body.sfw-filter .nsfw {
+  display: none !important; }
 
 /**
  * Deprecated -- should be merged in

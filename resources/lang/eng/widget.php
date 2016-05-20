@@ -36,6 +36,17 @@ return [
 	],
 
 	/**
+	 * Content Preferences
+	 */
+	'content' => [
+		'title' => "Content",
+
+		'option' => [
+			'sfw' => "Safe-for-Work Mode",
+		],
+	],
+
+	/**
 	 * Lazy Image Loader
 	 */
 	'lazyimg' => [

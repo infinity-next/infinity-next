@@ -637,9 +637,12 @@ main.index-threaded {
 					line-height: 1em;
 					height: 1em;
 
-					padding: 0.25em;
+					padding: 0 0.25em;
 					margin-left: 0.25em;
 				}
+					span.post-action-label {
+						vertical-align: text-top;
+					}
 					div.post-action-tab.action-tab-actions {
 						margin-left: 0;
 					}

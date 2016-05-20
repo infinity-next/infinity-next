@@ -19,7 +19,7 @@
 		@show
 
 		@section('page-css')
-			<link id="page-stylesheet" rel="stylesheet" href="{{ asset('static/css/empty.css') }}" data-instant-track />
+			<link id="page-stylesheet" rel="stylesheet" href="{{ asset('static/css/empty.css') }}" data-empty="{{ asset('static/css/empty.css') }}" data-instant-track />
 		@show
 
 		<link id="theme-stylesheet" rel="stylesheet" data-instant-track />
@@ -31,6 +31,10 @@
 	@section('meta')
 		<meta name="viewport" content="width=device-width" />
 		<meta name="csrf-token" content="{{ csrf_token() }}" data-instant-track />
+	@show
+
+	@section('widgets')
+		<meta id="widget-content" data-widget="content" />
 	@show
 
 	@yield('head')

@@ -1,0 +1,11 @@
+body.js {
+    .nsfw {
+        display: none;
+    }
+}
+
+body.sfw-filter {
+    .nsfw {
+        display: none !important;
+    }
+}

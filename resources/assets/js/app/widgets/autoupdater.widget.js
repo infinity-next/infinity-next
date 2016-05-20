@@ -281,7 +281,7 @@
 							return true;
 						}
 					}
-					else if(reply.html !== null)
+					else if (reply.html !== null)
 					{
 						console.log("Autoupdater: Inserting " + reply.post_id);
 
@@ -295,8 +295,6 @@
 						$article.append($newPost);
 						$li.append($article);
 						$li.insertBefore($widget);
-
-						newPosts.push($newPost);
 
 						widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
 
@@ -326,6 +324,7 @@
 						}
 
 						ib.bindAll($newPost);
+						newPosts.push($newPost);
 
 						return true;
 					}
