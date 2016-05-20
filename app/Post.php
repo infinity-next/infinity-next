@@ -1407,7 +1407,7 @@ class Post extends Model implements FormattableContract
 
 				$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->replies     = $thread->replies
-					->reverse()
+					->sortBy('post_id')
 					->splice(-$replyTake, $replyTake);
 
 				$thread->prepareForCache();

@@ -1412,7 +1412,7 @@ class Board extends Model {
 
 				$thread->body_parsed = $thread->getBodyFormatted();
 				$thread->replies     = $thread->replies
-					->reverse()
+					->sortBy('post_id')
 					->splice(-$replyTake, $replyTake);
 
 				foreach($thread->replies as $reply)
