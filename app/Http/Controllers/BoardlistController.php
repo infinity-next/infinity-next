@@ -148,7 +148,12 @@ class BoardlistController extends Controller {
 			// Are we searching by language?
 			if ($lang)
 			{
-				$boardLang = $item['boardLanguage'];
+				$boardLang = "";
+
+				if (isset($item['settings']) && isset($items['settings']['boardLanguage']))
+				{
+					$boardLang = $item['settings']['boardLanguage'];
+				}
 
 				if ($lang != $boardLang)
 				{
