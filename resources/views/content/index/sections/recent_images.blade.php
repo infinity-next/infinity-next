@@ -2,7 +2,7 @@
 	<div class="smooth-box">
 		<h2 class="index-title">@lang('index.title.recent_images')</h2>
 		<ul class="recent-images selfclear">
-			@foreach (\App\FileAttachment::getRecentImages(60, false) as $file)
+			@foreach (\App\FileAttachment::getRecentImages(30, false) as $file)
 				@if ($file->storage->hasThumb())
 				<li class="recent-image {{ $file->post->board->isWorksafe() ? 'sfw' : 'nsfw' }}">
 					<a class="recent-image-link" href="{{ $file->post->getURL() }}">
