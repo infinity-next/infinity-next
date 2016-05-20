@@ -91,8 +91,9 @@ class FileAttachment extends Model {
 	{
 		$sfw = static::getRecentImagesByWorksafe($number, true);
 		$nsfw = static::getRecentImagesByWorksafe($number, false);
+		$images = $sfw->merge($nsfw)->sortByDesc('attachment_id');
 
-		return $sfw->merge($nsfw);
+		return $images;
 	}
 
 	protected static function getRecentImagesByWorksafe($number = 16, $sfw = false)
