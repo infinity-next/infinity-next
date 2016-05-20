@@ -371,7 +371,7 @@ section.contrib-donate #payment-form {
   display: block;
   padding-top: 100%; }
 
-#site-recent-images body.nsfw-allowed .recent-images > .recent-image:nth-child(30) ~ .recent-image {
+body.nsfw-allowed #site-recent-images .recent-images > .recent-image:nth-child(30) ~ .recent-image {
   /* Show only the first thirty images. */
   display: none; }
 

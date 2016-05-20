@@ -150,7 +150,7 @@
 		display: block;
 		padding-top: 100%;
 	}
-	body.nsfw-allowed .recent-images > .recent-image:nth-child(30) ~ .recent-image {
+	body.nsfw-allowed & .recent-images > .recent-image:nth-child(30) ~ .recent-image {
 		/* Show only the first thirty images. */
 		display: none;
 	}
