@@ -5,17 +5,17 @@
 	'class'  => "form-report smooth-box",
 ]) !!}
 	@include('widgets.messages')
-	
+
 	<fieldset class="form-fields">
 		<legend class="form-legend">{{ trans("board.legend." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
-		
+
 		@if (!$report)
 			<blockquote>@lang("board.report." . ($reportGlobal ? "global" : "local"))</blockquote>
-			
+
 			@if ($reportText)
 			<blockquote class="report-rules ugc">
 				<p>@lang("board.report.desc-" . ($reportGlobal ? "global" : "local"))</p>
-				
+
 				{!! $reportText !!}
 			</blockquote>
 			@endif
@@ -30,7 +30,7 @@
 			@endif
 		</blockquote>
 		@endif
-		
+
 		<div class="field row-reason">
 			{!! Form::label(
 				"reason",
@@ -48,14 +48,14 @@
 					(!$report ? 'data-enabled' : 'disabled'),
 			]) !!}
 		</div>
-		
+
 		@if (!$report)
 		<div class="field row-captcha">
-			<label class="field-label" for="captcha">
+			<label class="field-label" for="captcha" data-widget="captcha">
 				{!! captcha() !!}
 				<span class="field-validation"></span>
 			</label>
-			
+
 			{!! Form::text(
 				'captcha',
 				"",
@@ -66,7 +66,7 @@
 			]) !!}
 		</div>
 		@endif
-		
+
 		@if (!$user->isAnonymous())
 		<div class="field row-associate field-inline">
 			{!! Form::checkbox(
@@ -84,11 +84,11 @@
 				[
 					'class' => "field-label",
 			]) !!}
-			
+
 			<p class="row-associate-desc">@lang('board.report.associate-disclaimer')</p>
 		</div>
 		@endif
-		
+
 		@if (!$report)
 		<div class="field row-submit">
 			{!! Form::button(
@@ -100,5 +100,5 @@
 		</div>
 		@endif
 	</fieldset>
-	
+
 {!! Form::close() !!}
