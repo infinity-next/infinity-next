@@ -238,16 +238,15 @@
 				widget.events.postContentUpdate
 			)
 			.on(
+				'highlight-syntax.ib-post',
+				data,
+				widget.events.codeHighlight
+			)
+			.on(
 				'click.ib-post',
 				widget.options.selector['post-reply'],
 				data,
 				widget.events.postClick
-			)
-			.on(
-				'highlight-syntax.ib-post',
-				widget.options.selector['post-reply'],
-				data,
-				widget.events.codeHighlight
 			)
 			.on(
 				'mouseover.ib-post',
@@ -302,7 +301,6 @@
 		;
 
 		$widget.trigger('contentUpdate');
-		widget.addAuthorship();
 		widget.cachePosts($widget);
 	};
 
@@ -797,6 +795,7 @@
 			$(widget.options.selector.author_id, $widget)
 				.toggle(widget.is('author_id'));
 
+			widget.addAuthorship();
 			$widget.trigger('highlight-syntax');
 		},
 
@@ -818,8 +817,6 @@
 					var post_board_uri = $container.attr('data-board_uri');
 					var post_board_id  = $container.attr('data-board_id');
 					var $cites         = $(widget.options.selector['forwardlink'], $container);
-
-					$post.trigger('highlight-syntax');
 
 					// Each post may have many citations.
 					$cites.each(function(index) {

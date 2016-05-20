@@ -285,9 +285,16 @@
 					{
 						console.log("Autoupdater: Inserting " + reply.post_id);
 
-						$newPost = $("<li class=\"thread-reply\"><article class=\"reply\">"+reply.html+"</article></li>");
-						$newPost.insertBefore($widget);
-						ib.bindAll($newPost);
+						$newPost = $(reply.html);
+
+						var $li = $("<li class=\"thread-reply\"></li>");
+						var $article = $("<article class=\"reply\"></article>");
+
+						// Insertion has to be done very carefully so we have a
+						// valid reference for $newPost.
+						$article.append($newPost);
+						$li.append($article);
+						$li.insertBefore($widget);
 
 						newPosts.push($newPost);
 
@@ -317,6 +324,8 @@
 								});
 							}
 						}
+
+						ib.bindAll($newPost);
 
 						return true;
 					}
