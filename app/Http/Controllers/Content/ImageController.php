@@ -299,13 +299,12 @@ class ImageController extends Controller {
 				$storageExists = Storage::exists($storagePath);
 			}
 
-			$storageSize = filesize($storagePathFull);
 
 			if ($storageExists)
 			{
 				ini_set("zlib.output_compression", "Off");
 
-				$responseSize    = $storageSize;
+				$responseSize    = filesize($storagePathFull);
 				$responseCode    = 200;
 				$responseHeaders = [
 					'Cache-Control'        => "public, max-age={$cacheTime}, pre-check={$cacheTime}",
