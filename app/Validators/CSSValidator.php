@@ -170,7 +170,7 @@ class CSSValidator
 	 * Get URL string from object.
 	 *
 	 * @param  \Sabberworm\CSS\Value\URL $oURL
-	 * @return string 
+	 * @return string
 	 */
 	protected function getURLString($oURL)
 	{
