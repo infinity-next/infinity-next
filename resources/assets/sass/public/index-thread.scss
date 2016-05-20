@@ -201,12 +201,6 @@ main.index-threaded {
 				.post-content-wrapper {
 					overflow: hidden;
 				}
-				#frontpage .post-details {
-					padding-left: 0.7em;
-				}
-				#frontpage .post-content-wrapper {
-					padding: 0 0.7em 0 1em;
-				}
 					.post-content-wrapper .post {
 						padding-top: 0;
 					}
@@ -251,7 +245,6 @@ main.index-threaded {
 							text-overflow: ellipsis;
 							vertical-align: top;
 						}
-
 							.post-select-input {
 								vertical-align: text-bottom;
 							}
@@ -268,6 +261,11 @@ main.index-threaded {
 							color: #117743;
 							white-space: normal;
 						}
+							.post-you .author::after {
+								display: inline;
+								font-weight: normal;
+								content: ' (You)';
+							}
 							.author .email {
 								text-decoration: underline;
 							}
@@ -341,11 +339,11 @@ main.index-threaded {
 					.reply-container ul.post-attachments {
 						padding: 0 0 0 1em;
 					}
-						main.index-threaded ul.post-attachments.attachments-multi {
+						ul.post-attachments.attachments-multi {
 							padding-top: 0.75em;
 							float: none;
 						}
-						main.index-threaded .reply-container ul.post-attachments.attachments-multi {
+						.reply-container ul.post-attachments.attachments-multi {
 							background: rgba(0,0,155,0.1);
 						}
 						ul.post-attachments.attachments-multi + blockquote.post {

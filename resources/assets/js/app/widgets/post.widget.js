@@ -53,6 +53,7 @@
 			'element-code'   : "pre code",
 			'element-quote'  : "blockquote",
 
+			'author'         : ".author",
 			'author_id'      : ".authorid",
 
 			'cite-slot'      : "li.detail-cites",
@@ -167,7 +168,7 @@
 	};
 
 	// Includes (You) classes on posts that we think we own.
-	blueprint.prototype.addCiteAuthorship = function() {
+	blueprint.prototype.addAuthorship = function() {
 		var widget = this;
 		var cites  = [];
 
@@ -194,6 +195,17 @@
 				this.className += " " + widget.options.classname['cite-you'];
 			}
 		});
+
+		(function() {
+			var board = widget.$widget[0].dataset.board_uri;
+			var post  = widget.$widget[0].dataset.board_id.toString();
+			var posts = localStorage.getItem("yourPosts."+board);
+
+			if (posts !== null && posts.split(",").indexOf(post) > 0)
+			{
+				widget.$widget[0].className += " post-you";
+			}
+		})();
 	};
 
 	// Event bindings
@@ -290,7 +302,7 @@
 		;
 
 		$widget.trigger('contentUpdate');
-		widget.addCiteAuthorship();
+		widget.addAuthorship();
 		widget.cachePosts($widget);
 	};
 
@@ -854,7 +866,7 @@
 
 			if (backlinks)
 			{
-				widget.addCiteAuthorship();
+				widget.addAuthorship();
 			}
 		}
 	};

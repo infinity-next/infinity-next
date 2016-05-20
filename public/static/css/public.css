@@ -322,21 +322,26 @@ section.contrib-donate #payment-form {
 /* Featured */
 #site-featured-post {
   margin-bottom: 1em; }
-
-#site-featured-post .smooth-box {
-  padding: 0; }
-
-#site-featured-post .index-title {
-  padding: 1em 1em 0 0.83em;
-  margin: 0; }
-
-#site-featured-post .post-container {
-  background: none;
-  border-right: none;
-  border-bottom: none;
-  border-left: none;
-  width: 100%;
-  margin: 0; }
+  #site-featured-post .smooth-box {
+    padding: 0; }
+  #site-featured-post .index-title {
+    padding: 1em 1em 0 0.83em;
+    margin: 0; }
+  #site-featured-post .post-details {
+    padding-left: 0.7em; }
+  #site-featured-post .post-content-wrapper {
+    padding: 0; }
+  #site-featured-post .post-container {
+    background: none;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    width: 100%;
+    margin: 0; }
+  #site-featured-post .attachment-action-group {
+    display: none; }
+  #site-featured-post .post-attachment {
+    padding-bottom: 0; }
 
 /* Activity */
 #site-recent-images h2 {
@@ -1090,12 +1095,6 @@ main.index-threaded .post-container.op-container {
 .post-content-wrapper {
   overflow: hidden; }
 
-#frontpage .post-details {
-  padding-left: 0.7em; }
-
-#frontpage .post-content-wrapper {
-  padding: 0 0.7em 0 1em; }
-
 .post-content-wrapper .post {
   padding-top: 0; }
 
@@ -1149,6 +1148,11 @@ main.index-threaded .post-container.op-container {
   display: inline-block;
   color: #117743;
   white-space: normal; }
+
+.post-you .author::after {
+  display: inline;
+  font-weight: normal;
+  content: ' (You)'; }
 
 .author .email {
   text-decoration: underline; }
@@ -1216,11 +1220,11 @@ div.op-container ul.post-attachments {
 .reply-container ul.post-attachments {
   padding: 0 0 0 1em; }
 
-main.index-threaded ul.post-attachments.attachments-multi {
+ul.post-attachments.attachments-multi {
   padding-top: 0.75em;
   float: none; }
 
-main.index-threaded .reply-container ul.post-attachments.attachments-multi {
+.reply-container ul.post-attachments.attachments-multi {
   background: rgba(0, 0, 155, 0.1); }
 
 ul.post-attachments.attachments-multi + blockquote.post {

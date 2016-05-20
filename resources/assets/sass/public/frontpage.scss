@@ -90,15 +90,22 @@
 /* Featured */
 #site-featured-post {
 	margin-bottom: 1em;
-}
-	#site-featured-post .smooth-box {
+
+	.smooth-box {
 		padding: 0;
 	}
-	#site-featured-post .index-title {
+	.index-title {
 		padding: 1em 1em 0 0.83em;
 		margin: 0;
 	}
-	#site-featured-post .post-container {
+
+	.post-details {
+		padding-left: 0.7em;
+	}
+	.post-content-wrapper {
+		padding: 0;
+	}
+	.post-container {
 		background: none;
 		border-right: none;
 		border-bottom: none;
@@ -106,6 +113,13 @@
 		width: 100%;
 		margin: 0;
 	}
+	.attachment-action-group {
+		display: none;
+	}
+	.post-attachment {
+		padding-bottom: 0;
+	}
+}
 
 /* Activity */
 #site-recent-images {
