@@ -1255,7 +1255,7 @@ class Board extends Model {
 		$rememberTimer   = Carbon::now()->minute(1)->second(0)->addHour()->diffInMinutes();
 		$rememberKey     = "site.boardlist";
 		$rememberClosure = function() use ($rememberKey) {
-			return static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
+			$boards = static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
 				->with([
 					'tags',
 					'settings' => function($query) {
@@ -1276,6 +1276,22 @@ class Board extends Model {
 						?: ($b->last_post_at ? $b->last_post_at->timestamp : 0) - ($a->last_post_at ? $a->last_post_at->timestamp : 0);
 				})
 				->toArray();
+
+			foreach ($boards as &$board)
+			{
+				if (isset($board['settings']))
+				{
+					$newSettings = [];
+					foreach ($board['settings'] as &$setting)
+					{
+						$newSettings[$setting['option_name']] = $setting['option_value'];
+						unset($setting);
+					}
+					$board['settings'] = $newSettings;
+				}
+			}
+
+			return $boards;
 		};
 
 		if ($force)

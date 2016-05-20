@@ -132,6 +132,7 @@ class BoardlistController extends Controller {
 		$sortBy = $input['sortBy'];
 
 		$boards = collect(Board::getBoardsForBoardlist());
+
 		$boards = $boards->filter(function($item) use ($lang, $tags, $sfw, $title) {
 			// Are we able to view unindexed boards?
 			if (!$item['is_indexed'] && !$this->user->canViewUnindexedBoards())
@@ -150,7 +151,7 @@ class BoardlistController extends Controller {
 			{
 				$boardLang = "";
 
-				if (isset($item['settings']) && isset($items['settings']['boardLanguage']))
+				if (isset($item['settings']) && isset($item['settings']['boardLanguage']))
 				{
 					$boardLang = $item['settings']['boardLanguage'];
 				}
