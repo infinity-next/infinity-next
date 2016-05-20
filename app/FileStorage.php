@@ -6,9 +6,9 @@ use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Cache;
+use Exception;
 use File;
 use Input;
-use Log;
 use Settings;
 use Sleuth;
 use Storage;
@@ -1046,7 +1046,8 @@ class FileStorage extends Model {
 							"-threads 1 " .
 							"{$image} 2>&1";
 
-					$output = "";
+
+					app('log')->info($output);
 					exec($cmd, $output, $returnvalue);
 
 					// Constrain thumbnail to proper dimensions.
@@ -1073,7 +1074,7 @@ class FileStorage extends Model {
 				}
 				catch (\Exception $e)
 				{
-					Log::error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
+					app('log')->error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
 				}
 			}
 			else if ($this->isImage())
