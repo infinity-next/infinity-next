@@ -1047,8 +1047,8 @@ class FileStorage extends Model {
 							"{$image} 2>&1";
 
 
-					app('log')->info($output);
 					exec($cmd, $output, $returnvalue);
+					app('log')->info($output);
 
 					// Constrain thumbnail to proper dimensions.
 					if (Storage::exists($this->getPathThumb()))
