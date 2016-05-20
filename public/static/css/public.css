@@ -889,13 +889,14 @@ main.index-catalog div.post-action-tab,
 main.index-catalog div.post-action-tab.action-tab-actions {
   display: inline-block;
   position: relative;
-  top: 0.25em;
+  top: -0.2em;
   left: 0.25em;
   float: left;
   border: none;
   padding: 0;
   margin: 0;
   text-align: left;
+  vertical-align: top;
   font-size: 140%; }
 
 main.index-catalog ul.post-action-groups {
