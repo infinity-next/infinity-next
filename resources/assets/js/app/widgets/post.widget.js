@@ -32,6 +32,8 @@
 	};
 
 	blueprint.prototype.defaults = {
+		preview_delay : 200,
+
 		// Important class names.
 		classname : {
 			'post-hover'  : "post-hover",
@@ -520,7 +522,10 @@
 			var $preview = $(widget.options.selector['hover-box']);
 
 			$preview.children().attr('src', $link.attr('data-download-url'));
-			$preview.show();
+
+			widget.previewTimer = setTimeout(function() {
+				$preview.show();
+			}, widget.options.preview_delay);
 		},
 
 		attachmentMediaMouseOut : function(event) {
@@ -531,6 +536,7 @@
 
 			$preview.children().attr('src', "");
 			$preview.hide();
+			clearTimeout(widget.previewTimer);
 		},
 
 		attachmentExpandClick : function(event) {
@@ -813,10 +819,9 @@
 				// Each group can have many jQuery dom elements.
 				jQuery.each(group, function(index, $post) {
 					// This information belongs to a new post.
-					var $container     = $post.find("[data-board_uri][data-board_id]:first");
-					var post_board_uri = $container.attr('data-board_uri');
-					var post_board_id  = $container.attr('data-board_id');
-					var $cites         = $(widget.options.selector['forwardlink'], $container);
+					var post_board_uri = $post.attr('data-board_uri');
+					var post_board_id  = $post.attr('data-board_id');
+					var $cites         = $(widget.options.selector['forwardlink'], $post);
 
 					// Each post may have many citations.
 					$cites.each(function(index) {
@@ -840,6 +845,7 @@
 									.attr('href', "/" + post_board_uri + "/post/" + post_board_id)
 									.appendTo($detail);
 
+								console.log($backlink);
 								$backlinks = $backlinks.add($backlink);
 								++backlinks;
 
