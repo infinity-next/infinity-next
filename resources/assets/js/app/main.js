@@ -134,6 +134,12 @@
 		return traverse;
 	};
 
+	// Determines if this device is a small portview.
+	ib.isMobile = function()
+	{
+		return (window.innerHeight < 480 || window.innerWidth < 728)
+	};
+
 	// Lpad 5 into "05".
 	ib.lpad = function(n, width, z) {
 		z = z || '0';

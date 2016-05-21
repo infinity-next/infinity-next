@@ -40,6 +40,7 @@
 				</a>
 			</div>
 
+			{{--
 			<div class="attachment-action-group">
 				@if ($attachment->isSpoiler())
 				<a href="{{ $attachment->getUnspoilerURL($board) }}" class="attachment-action attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
@@ -55,6 +56,7 @@
 					<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
 				</a>
 			</div>
+			--}}
 			@endif
 		</div>
 		@else

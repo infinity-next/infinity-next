@@ -423,8 +423,8 @@ span.field-control {
   border-top: 1px solid darkgray; }
 
 .row-captcha img.captcha {
-  width: 280px;
-  height: 80px; }
+  width: 160px;
+  height: 70px; }
 
 .row-captcha .captcha-loading {
   padding-top: 80px;
@@ -1151,11 +1151,13 @@ a.cite-you::after {
   border-style: none solid solid none;
   border-left: none;
   border-top: none; }
-
-.post-container.post-hover {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  pointer-events: none;
-  z-index: 1100; }
+  @media (max-width: 728px) {
+    .post-container {
+      width: 100%; } }
+  .post-container .post-hover {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 1100; }
 
 .post-interior {
   position: relative; }
@@ -1175,6 +1177,9 @@ a.cite-you::after {
   margin: 0;
   line-height: 1.8em;
   white-space: normal; }
+  @media (min-width: 728px) {
+    body.responsive .post-details {
+      white-space: nowrap; } }
 
 .op-container .post-details {
   padding-left: 0; }
@@ -1275,257 +1280,6 @@ a.cite-you::after {
   text-decoration: underline;
   white-space: nowrap; }
 
-ul.post-attachments {
-  display: block;
-  float: left;
-  overflow-x: auto;
-  max-width: 99%;
-  max-width: calc(100% - 1em); }
-
-div.op-container ul.post-attachments {
-  max-width: 100%; }
-
-.reply-container ul.post-attachments {
-  padding: 0 0 0 1em; }
-
-ul.post-attachments.attachments-multi {
-  padding-top: 0.75em;
-  float: none; }
-
-.reply-container ul.post-attachments.attachments-multi {
-  background: rgba(0, 0, 155, 0.1); }
-
-ul.post-attachments.attachments-multi + blockquote.post {
-  margin-top: 0.75em; }
-
-ul.post-attachments.attachments-multi::after {
-  display: block;
-  content: ' ';
-  clear: both; }
-
-li.attachment-actions {
-  display: block;
-  margin-top: -0.50em;
-  padding-bottom: 0.75em; }
-
-li.attachment-actions .attachment-action {
-  display: inline-block;
-  cursor: pointer;
-  margin-right: 0.75em; }
-
-li.post-attachment {
-  display: inline-block;
-  vertical-align: text-bottom;
-  padding: 0 0.75em 0.75em 0; }
-
-div.attachment-container {
-  display: block; }
-
-li.attachment-expanded div.attachment-container {
-  display: inline-block;
-  max-width: 100%; }
-
-div.attachment-container.attachment-grow {
-  margin: 0;
-  width: 100%; }
-
-a.attachment-link {
-  display: inline;
-  outline: none; }
-
-a.attachment-download {
-  clear: both;
-  display: block;
-  text-align: center; }
-
-li.post-attachment.attachment-expanded a.attachment-link {
-  display: block; }
-
-a.attachment-download .detail-download {
-  margin-left: 0.5em; }
-
-a.attachment-download .detail-filesize {
-  margin-right: 0.25em; }
-
-a.attachment-download .detail-filesize::before {
-  display: inline;
-  content: "(";
-  margin-left: 0.4em; }
-
-a.attachment-download .detail-filedim::after {
-  display: inline;
-  content: ")"; }
-
-figure.attachment {
-  display: block;
-  margin: 0;
-  position: relative;
-  z-index: 3; }
-
-figure.attachment-type-audio {
-  overflow: hidden;
-  padding-right: 2em; }
-
-li.post-attachment.attachment-expanded figure.attachment {
-  /* min-width: 100%; */
-  max-width: 100%; }
-
-li.post-attachment.attachment-expanded img.attachment-img {
-  /* min-width: 100%; */
-  max-width: 100%; }
-
-li.post-attachment img.lazy-load {
-  /*
-                                The other metrics will constrain these to something sensible.
-                                My goal here is to keep the thumbnails pretty much to what you can expect them to be
-                                as to reduce the jerkiness of the loading system.
-                            */
-  height: 200px;
-  width: 200px; }
-
-.post-content div.attachment-wrapper {
-  position: relative;
-  padding: 0;
-  margin: 0;
-  text-align: center; }
-
-.post-content figure.attachment-type-audio div.attachment-wrapper {
-  margin: 0 -2em 0 0;
-  padding: 0 2em 0 0; }
-
-.post-content figure.attachment-type-audio div.attachment-wrapper::after {
-  content: ' ';
-  display: block;
-  height: 98%;
-  width: 98%;
-  padding: 0;
-  pointer-events: none;
-  position: absolute;
-  top: 1%;
-  left: auto;
-  right: -1em;
-  bottom: 1%;
-  z-index: 1;
-  background-position: center center;
-  background-image: url("/static/img/backgrounds/vinyl.svg");
-  background-repeat: no-repeat;
-  background-size: contain; }
-
-.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
-  margin: 0 0 0 0;
-  padding: 0 7em 0 0; }
-
-.post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
-  right: -20%;
-  animation: fa-spin 1.304s infinite linear; }
-
-.post-content li.attachment-expanded figure.attachment-type-video div.attachment-wrapper {
-  height: inherit !important; }
-
-img.attachment-img {
-  display: inline-block;
-  margin: 0 auto;
-  vertical-align: middle;
-  position: relative;
-  z-index: 2; }
-
-html.js a.attachment-link img.attachment-type-img {
-  cursor: zoom-in; }
-
-html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
-  cursor: zoom-out; }
-
-html a.attachment-link img.attachment-type-video {
-  box-sizing: border-box;
-  border-style: solid;
-  border-width: 17px;
-  border-image: url("/static/img/backgrounds/film.png") 27 fill stretch repeat; }
-
-li.post-attachment.attachment-expanded {
-  clear: both;
-  float: none;
-  width: 100%;
-  display: block; }
-
-li.post-attachment.attachment-expanded::before,
-li.post-attachment.attachment-expanded::after {
-  content: ' ';
-  clear: both;
-  display: block; }
-
-li.post-attachment.attachment-expanded,
-li.post-attachment.attachment-expanded figure.attachment,
-li.post-attachment.attachment-expanded div.attachment-wrapper,
-li.post-attachment.attachment-expanded img.attachment-img {
-  clear: both;
-  float: none;
-  max-width: 100%;
-  max-height: none;
-  width: auto;
-  height: auto; }
-
-li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
-  max-width: 350px;
-  padding-right: 3em; }
-
-.thumbnail-stock img.attachment-img {
-  min-height: 150px;
-  min-width: 150px; }
-
-li.post-attachment audio.attachment-inline {
-  display: block;
-  width: 100%;
-  margin: 0 auto 0.5em 0;
-  padding-top: 0.75em;
-  max-width: 400px; }
-
-li.post-attachment video.attachment-inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0 auto 0.5em auto; }
-
-attachment-inline + .attachment-link .attachment-wrapper {
-  display: none; }
-
-figcaption.attachment-details {
-  display: block;
-  max-width: 100%;
-  position: relative;
-  padding: 0 1em;
-  text-align: center;
-  white-space: nowrap; }
-
-figure.attachment-type-audio figcaption.attachment-details {
-  max-width: none;
-  margin-right: -2em; }
-
-li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
-  padding: 0 1em;
-  margin-right: -3em; }
-
-div.attachment-action-group,
-p.attachment-detail {
-  display: block;
-  color: rgba(0, 0, 0, 0.75);
-  text-align: center;
-  font-size: 90%;
-  height: 1em;
-  line-height: 1em;
-  margin: 0.5em auto;
-  padding: 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis; }
-
-figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
-  margin-bottom: 0px; }
-
-div.attachment-container:last-child {
-  margin-bottom: 0px; }
-
-div.attachment-action-group span.attachment-action {
-  margin: 0 0.25em; }
-
 ul.post-metas {
   border-top: 1px solid #D6DAF0; }
 
@@ -1551,6 +1305,8 @@ div.post-action-tab {
   height: 1.8em;
   padding: 0 0.25em;
   margin-left: 0.25em; }
+  html.js div.post-action-tab {
+    cursor: pointer; }
 
 span.post-action-label {
   line-height: 1;
@@ -1585,8 +1341,8 @@ ul.post-action-groups {
   padding: 0 0 0 0;
   margin: 0 0 0 -1px; }
 
-div.post-action-tab:hover ul.post-action-groups,
-ul.post-action-groups.open {
+html.no-js div.post-action-tab:hover ul.post-action-groups,
+html.js div.post-action-tab.open ul.post-action-groups {
   display: block; }
 
 li.post-action-group {
@@ -1619,6 +1375,207 @@ a.post-action-link {
 a.post-action-link:hover {
   color: #dee0df;
   background: #34345C; }
+
+ul.post-attachments {
+  display: block;
+  float: left;
+  overflow-x: auto;
+  max-width: 99%;
+  max-width: calc(100% - 1em); }
+  .op-container ul.post-attachments {
+    max-width: 100%; }
+  .reply-container ul.post-attachments {
+    padding: 0 0 0 1em; }
+  ul.post-attachments.attachments-multi {
+    padding-top: 0.75em;
+    float: none; }
+    .reply-container ul.post-attachments.attachments-multi {
+      background: rgba(0, 0, 155, 0.1); }
+    ul.post-attachments.attachments-multi + blockquote.post {
+      margin-top: 0.75em; }
+    ul.post-attachments.attachments-multi::after {
+      display: block;
+      content: ' ';
+      clear: both; }
+  ul.post-attachments li.attachment-actions {
+    display: block;
+    margin-top: -0.50em;
+    padding-bottom: 0.75em; }
+  ul.post-attachments li.attachment-actions .attachment-action {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 0.75em; }
+  ul.post-attachments li.post-attachment {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding: 0 0.75em 0.75em 0; }
+  ul.post-attachments div.attachment-container {
+    display: block; }
+  ul.post-attachments li.attachment-expanded div.attachment-container {
+    display: inline-block;
+    max-width: 100%; }
+  ul.post-attachments div.attachment-container.attachment-grow {
+    margin: 0;
+    width: 100%; }
+  ul.post-attachments a.attachment-link {
+    display: inline;
+    outline: none; }
+  ul.post-attachments a.attachment-download {
+    clear: both;
+    display: block;
+    text-align: center; }
+  ul.post-attachments li.post-attachment.attachment-expanded a.attachment-link {
+    display: block; }
+  ul.post-attachments a.attachment-download .detail-download {
+    margin-left: 0.5em; }
+  ul.post-attachments a.attachment-download .detail-filesize {
+    margin-right: 0.25em; }
+  ul.post-attachments a.attachment-download .detail-filesize::before {
+    display: inline;
+    content: "(";
+    margin-left: 0.4em; }
+  ul.post-attachments a.attachment-download .detail-filedim::after {
+    display: inline;
+    content: ")"; }
+  ul.post-attachments figure.attachment {
+    display: block;
+    margin: 0;
+    position: relative;
+    z-index: 3; }
+  ul.post-attachments figure.attachment-type-audio {
+    overflow: hidden;
+    padding-right: 2em; }
+  ul.post-attachments li.post-attachment.attachment-expanded figure.attachment {
+    /* min-width: 100%; */
+    max-width: 100%; }
+  ul.post-attachments li.post-attachment.attachment-expanded img.attachment-img {
+    /* min-width: 100%; */
+    max-width: 100%; }
+  ul.post-attachments .post-content div.attachment-wrapper {
+    position: relative;
+    padding: 0;
+    margin: 0 auto;
+    text-align: center; }
+  ul.post-attachments .post-content figure.attachment-type-audio div.attachment-wrapper {
+    margin: 0 -2em 0 0;
+    padding: 0 2em 0 0; }
+  ul.post-attachments .post-content figure.attachment-type-audio div.attachment-wrapper::after {
+    content: ' ';
+    display: block;
+    height: 98%;
+    width: 98%;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 1%;
+    left: auto;
+    right: -1em;
+    bottom: 1%;
+    z-index: 1;
+    background-position: center center;
+    background-image: url("/static/img/backgrounds/vinyl.svg");
+    background-repeat: no-repeat;
+    background-size: contain; }
+  ul.post-attachments .post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
+    margin: 0 0 0 0;
+    padding: 0 7em 0 0; }
+  ul.post-attachments .post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
+    right: -20%;
+    animation: fa-spin 1.304s infinite linear; }
+  ul.post-attachments .post-content li.attachment-expanded figure.attachment-type-video div.attachment-wrapper {
+    height: inherit !important; }
+  ul.post-attachments img.attachment-img {
+    display: inline-block;
+    margin: 0 auto;
+    vertical-align: middle;
+    position: relative;
+    z-index: 2; }
+  ul.post-attachments html.js a.attachment-link img.attachment-type-img {
+    cursor: zoom-in; }
+  ul.post-attachments html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
+    cursor: zoom-out; }
+  ul.post-attachments html a.attachment-link img.attachment-type-video {
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 17px;
+    border-image: url("/static/img/backgrounds/film.png") 27 fill stretch repeat; }
+  ul.post-attachments li.post-attachment.attachment-expanded {
+    clear: both;
+    float: none;
+    width: 100%;
+    display: block; }
+  ul.post-attachments li.post-attachment.attachment-expanded::before,
+  ul.post-attachments li.post-attachment.attachment-expanded::after {
+    content: ' ';
+    clear: both;
+    display: block; }
+  ul.post-attachments li.post-attachment.attachment-expanded,
+  ul.post-attachments li.post-attachment.attachment-expanded figure.attachment,
+  ul.post-attachments li.post-attachment.attachment-expanded div.attachment-wrapper,
+  ul.post-attachments li.post-attachment.attachment-expanded img.attachment-img {
+    clear: both;
+    float: none;
+    max-width: 100%;
+    max-height: none;
+    width: auto;
+    height: auto; }
+  ul.post-attachments li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
+    max-width: 350px;
+    padding-right: 3em; }
+  ul.post-attachments .thumbnail-stock img.attachment-img {
+    min-height: 150px;
+    min-width: 150px; }
+  ul.post-attachments li.post-attachment audio.attachment-inline {
+    display: block;
+    width: 100%;
+    margin: 0 auto 0.5em 0;
+    padding-top: 0.75em;
+    max-width: 400px; }
+  ul.post-attachments li.post-attachment video.attachment-inline {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 auto 0.5em auto; }
+  ul.post-attachments attachment-inline + .attachment-link .attachment-wrapper {
+    display: none; }
+  ul.post-attachments figcaption.attachment-details {
+    display: block;
+    max-width: 100%;
+    position: relative;
+    padding: 0 1em;
+    text-align: center;
+    white-space: nowrap; }
+  ul.post-attachments figure.attachment-type-audio figcaption.attachment-details {
+    max-width: none;
+    margin-right: -2em; }
+  ul.post-attachments li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
+    padding: 0 1em;
+    margin-right: -3em; }
+  ul.post-attachments div.attachment-action-group,
+  ul.post-attachments p.attachment-detail {
+    display: block;
+    color: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    font-size: 90%;
+    height: 1em;
+    line-height: 1em;
+    margin: 0.5em auto;
+    padding: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  ul.post-attachments figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
+    margin-bottom: 0px; }
+  ul.post-attachments div.attachment-container:last-child {
+    margin-bottom: 0px; }
+  ul.post-attachments div.attachment-action-group span.attachment-action {
+    margin: 0 0.25em; }
+  @media (max-width: 728px) {
+    ul.post-attachments figcaption.attachment-details {
+      display: none; }
+    ul.post-attachments a.attachment-download .detail-filesize {
+      display: none; }
+    ul.post-attachments a.attachment-download .detail-filedim {
+      display: none; } }
 
 /**
  * MAIN POST STYLING
@@ -1738,305 +1695,199 @@ body.nsfw-filtered .nsfw {
 /**
  * Deprecated -- should be merged in
  */
-/**
- * EXPANDING RESPONSIVENESS
- *
- * These media tags ADD as the screen GROWS.
- * They do not take away as the screen shrinks.
- * Scroll down for max-width selectors.
- */
-/**
- * 360px Width
- * Vertical phones
- */
-@media (min-width: 320px) {
+body.responsive {
   /**
-	 * Sidebar
-	 */
-  aside.index-sidebar {
-    padding-left: 1em;
-    padding-right: 1em; }
+     * EXPANDING RESPONSIVENESS
+     *
+     * These media tags ADD as the screen GROWS.
+     * They do not take away as the screen shrinks.
+     * Scroll down for max-width selectors.
+     */
   /**
-	 * Catalog
-	 */
-  body.responsive main.index-catalog section.index-threads {
-    padding: 0; }
-  body.responsive main.index-catalog .thread-item {
-    max-width: 150px;
-    min-width: 100px; } }
-
-/**
- * 640px Width
- * Horizontal phones
- */
-@media (max-width: 640px) {
-  blockquote.post {
-    clear: both; } }
-
-@media (min-width: 640px) {
+     * 360px Width
+     * Vertical phones
+     */
   /**
-	 * Thread & Posts
-	 */
-  body.responsive section.index-threads aside.advertiser.bottom-right {
-    display: block; }
-  ul.attachments-single + blockquote.post {
-    min-width: 30em; } }
-
-/**
- * 728px Width
- * Tablets
- */
-@media (min-width: 728px) {
+     * 640px Width
+     * Horizontal phones
+     */
   /**
-	 * Index
-	 */
-  #site-description .infobox,
-  #site-statistics .infobox {
-    min-height: 10em; }
+     * 728px Width
+     * Tablets
+     */
   /**
-	 * Contribution Page
-	 */
-  body.responsive li.contrib-option {
-    border-bottom: none;
-    border-right: 1px solid #EEF2FF;
-    padding-bottom: 0;
-    padding-right: 9px;
-    min-height: 360px; }
-  body.responsive li.contrib-option:last-child {
-    padding-right: 10px;
-    border-right: none; }
-  body.responsive .me-skill:first-child {
-    padding-right: 3em; }
-  body.responsive .me-skill:last-child {
-    padding-left: 3em; }
-  body.responsive .me-skill .fa {
-    display: block;
-    font-size: 300%;
-    vertical-align: top;
-    position: absolute;
-    top: 5px;
-    bottom: 0;
-    left: -1.5em; }
-  body.responsive .me-skill:last-child .fa {
-    left: -0.5em; }
+     * 728px width and 480px height
+     * Anything bigger
+     */
   /**
-	 * Thread & Posts
-	 */
-  body.responsive section.index-threads aside.advertiser.top-left {
-    display: block;
-    text-align: center; } }
-
-/**
- * 728px width and 480px height
- * Anything bigger
- */
-@media (min-width: 728px) {
-  /**
-	 * Helpers
-	 */
-  .no-mobile {
-    display: initial; }
-  .only-mobile {
-    display: none; }
-  /**
-	 * Primary Navigation
-	 */
-  nav.boardlist {
-    font-size: 1em;
-    padding: 0 1em;
-    overflow: hidden; }
-  nav.boardlist .boardlist-text {
-    display: none; }
-  nav.boardlist .boardlist-row {
-    display: inline-block;
-    height: 1.4em;
-    line-height: 1.4em;
-    padding: 0;
-    margin: 0 0.5em 0 0;
-    white-space: nowrap; }
-  nav.boardlist .boardlist-categories,
-  nav.boardlist .boardlist-category,
-  nav.boardlist .boardlist-items,
-  nav.boardlist .boardlist-item {
-    display: inline-block;
-    height: 1em;
-    line-height: 1em; }
-  nav.boardlist .boardlist-items {
-    white-space: nowrap;
-    text-overflow: ellipsis; }
-  nav.boardlist .boardlist-item {
-    display: inline; }
-  nav.boardlist .boardlist-link {
-    text-decoration: none; }
-  nav.boardlist .boardlist-category::before {
-    content: '[';
-    opacity: 0.6; }
-  nav.boardlist .boardlist-category::after {
-    content: ']';
-    opacity: 0.6; }
-  nav.boardlist .boardlist-item::after {
-    display: inline;
-    content: '/';
-    margin: 0 0.15em 0 0.4em;
-    opacity: 0.6; }
-  nav.boardlist .boardlist-item:last-child::after {
-    display: none; }
-  /**
-	 * Navigation
-	 */
-  nav.gnav .flyout {
-    width: auto; }
-  nav.gnav .flyout-col {
-    display: inline-block;
-    float: left;
-    width: 21em; }
-  nav.gnav .flyout-link {
-    line-height: 1.7em;
-    height: 1.7em; }
-  /**
-	 * Posts and Threads
-	 */
-  .post-details {
-    white-space: nowrap; }
-  html.js body.responsive main.index-threaded form.form-post {
-    border: none;
-    position: fixed;
-    z-index: 1000;
-    top: 45px;
-    right: 10px;
-    max-width: none;
-    width: 300px;
-    margin: 0;
-    padding: 0; }
-  html.js body.responsive main.index-threaded .form-message {
-    border-style: none none solid none;
-    border-radius: 0px;
-    margin: 0; }
-  html.js body.responsive main.index-threaded form.form-post .menu-icon {
-    display: inline-block; }
-  html.js body.responsive main.index-threaded form.form-post .menu-icon-maximize {
-    display: none; }
-  html.js body.responsive main.index-threaded form.form-post .form-fields {
-    display: block;
-    border-bottom: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
-    max-width: none;
-    min-width: 300px; }
-  html.js body.responsive main.index-threaded form.form-post .form-legend {
-    margin: 0;
-    padding: 0;
-    background: #5c58ff;
-    color: #FEFEFE;
-    text-indent: 4px; }
-  html.js body.responsive main.index-threaded form.form-post .ui-draggable-handle {
-    cursor: drag;
-    cursor: grab; }
-  html.js body.responsive main.index-threaded form.form-post.ui-draggable-dragging .ui-draggable-handle {
-    cursor: grabbing; }
-  html.js body.responsive main.index-threaded form.form-post .field {
-    margin: 0; }
-  html.js body.responsive main.index-threaded fieldset.form-fields .field-control {
-    border-bottom: none;
-    resize: none; }
-  html.js body.responsive main.index-threaded form.form-post .row-file .dz-container {
-    border-bottom: none; }
-  html.js body.responsive main.index-threaded form.form-post .row-post {
-    border-bottom: none; }
-  html.js body.responsive main.index-threaded form.form-post .row-captcha {
-    border-bottom: none;
-    width: 100%; }
-  html.js body.responsive main.index-threaded form.form-post button.field-submit {
-    border-bottom: none; }
-  /**
-	 * Catalog
-	 */
-  body.responsive main.index-catalog section.index-threads {
-    padding: 0 45px; }
-  body.responsive main.index-catalog .thread-item {
-    max-width: 180px; } }
-
-/**
- * 1440px width and 480px height
- */
-@media (min-width: 1440px) {
-  /**
-	 * Sidebar
-	 */
-  html.js body.responsive main.index-threaded .thread {
-    padding-right: 340px; }
-  html.js body.responsive main.index-threaded aside.index-sidebar {
-    position: absolute;
-    right: 0;
-    top: -1em;
-    bottom: -2em;
-    padding-top: 0;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 1em;
-    width: 310px;
-    height: auto; }
-  html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
-    position: absolute; }
-  /* Advertisements */
-  html.js body.responsive main.index-threaded aside.advertiser.top-left {
-    text-align: left; }
-  html.js body.responsive main.index-threaded aside.advertiser.bottom-right {
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-    width: 310px; }
-  html.js body.responsive main.index-threaded aside.advertiser.bottom-right figure.ad-field {
-    display: block;
-    width: 310px; } }
-
-/**
- * SHRINKING RESPONSIVENESS
- *
- * These media tags REMOVE as the screen SHRINKS.
- * Scroll up for max-width selectors.
- */
-/**
- * 360px Width
- * Vertical phones
- */
-@media (max-width: 360px) {
-  /**
-	 * Catalog
-	*/
-  body.responsive main.index-catalog .thread-item:nth-child(odd) .post-container:hover {
-    left: auto;
-    right: -50%; }
-  body.responsive main.index-catalog .thread-item:nth-child(even) .post-container:hover {
-    left: -50%;
-    right: auto; }
-  table.board-list-table .board-max,
-  table.board-list-table .board-unique {
-    padding: 0;
-    margin: 0;
-    font-size: 0;
-    width: 0; } }
-
-/**
- * 640px Width
- * Horizontal phones
- */
-@media (max-width: 640px) {
-  /**
-	 * Catalog
-	*/
-  body.responsive main.index-catalog .thread-item:nth-child(3n+1) .post-container:hover {
-    left: auto;
-    right: -50%; }
-  body.responsive main.index-catalog .thread-item:nth-child(3n+3) .post-container:hover {
-    left: -50%;
-    right: auto; }
-  table.board-list-table .board-title,
-  table.board-list-table .board-ppd,
-  table.board-list-table .board-pph {
-    padding: 0;
-    margin: 0;
-    font-size: 0;
-    width: 0; } }
+     * 1440px width and 480px height
+     */ }
+  @media (min-width: 320px) {
+    body.responsive {
+      /**
+         * Sidebar
+         */
+      /**
+         * Catalog
+         */ }
+      body.responsive aside.index-sidebar {
+        padding-left: 1em;
+        padding-right: 1em; }
+      body.responsive main.index-catalog section.index-threads {
+        padding: 0; }
+      body.responsive main.index-catalog .thread-item {
+        max-width: 150px;
+        min-width: 100px; } }
+  @media (min-width: 640px) {
+    body.responsive {
+      /**
+         * Thread & Posts
+         */ }
+      body.responsive section.index-threads aside.advertiser.bottom-right {
+        display: block; }
+      body.responsive ul.attachments-single + blockquote.post {
+        min-width: 30em; } }
+  @media (min-width: 728px) {
+    body.responsive {
+      /**
+         * Index
+         */
+      /**
+         * Contribution Page
+         */
+      /**
+         * Thread & Posts
+         */ }
+      body.responsive #site-description .infobox,
+      body.responsive #site-statistics .infobox {
+        min-height: 10em; }
+      body.responsive li.contrib-option {
+        border-bottom: none;
+        border-right: 1px solid #EEF2FF;
+        padding-bottom: 0;
+        padding-right: 9px;
+        min-height: 360px; }
+      body.responsive li.contrib-option:last-child {
+        padding-right: 10px;
+        border-right: none; }
+      body.responsive .me-skill:first-child {
+        padding-right: 3em; }
+      body.responsive .me-skill:last-child {
+        padding-left: 3em; }
+      body.responsive .me-skill .fa {
+        display: block;
+        font-size: 300%;
+        vertical-align: top;
+        position: absolute;
+        top: 5px;
+        bottom: 0;
+        left: -1.5em; }
+      body.responsive .me-skill:last-child .fa {
+        left: -0.5em; }
+      body.responsive section.index-threads aside.advertiser.top-left {
+        display: block;
+        text-align: center; } }
+  @media (min-width: 728px) {
+    body.responsive {
+      /**
+         * Helpers
+         */
+      /**
+         * Primary Navigation
+         */
+      /**
+         * Navigation
+         */
+      /**
+         * Catalog
+         */ }
+      body.responsive .no-mobile {
+        display: initial; }
+      body.responsive .only-mobile {
+        display: none; }
+      body.responsive nav.boardlist {
+        font-size: 1em;
+        padding: 0 1em;
+        overflow: hidden; }
+      body.responsive nav.boardlist .boardlist-text {
+        display: none; }
+      body.responsive nav.boardlist .boardlist-row {
+        display: inline-block;
+        height: 1.4em;
+        line-height: 1.4em;
+        padding: 0;
+        margin: 0 0.5em 0 0;
+        white-space: nowrap; }
+      body.responsive nav.boardlist .boardlist-categories,
+      body.responsive nav.boardlist .boardlist-category,
+      body.responsive nav.boardlist .boardlist-items,
+      body.responsive nav.boardlist .boardlist-item {
+        display: inline-block;
+        height: 1em;
+        line-height: 1em; }
+      body.responsive nav.boardlist .boardlist-items {
+        white-space: nowrap;
+        text-overflow: ellipsis; }
+      body.responsive nav.boardlist .boardlist-item {
+        display: inline; }
+      body.responsive nav.boardlist .boardlist-link {
+        text-decoration: none; }
+      body.responsive nav.boardlist .boardlist-category::before {
+        content: '[';
+        opacity: 0.6; }
+      body.responsive nav.boardlist .boardlist-category::after {
+        content: ']';
+        opacity: 0.6; }
+      body.responsive nav.boardlist .boardlist-item::after {
+        display: inline;
+        content: '/';
+        margin: 0 0.15em 0 0.4em;
+        opacity: 0.6; }
+      body.responsive nav.boardlist .boardlist-item:last-child::after {
+        display: none; }
+      body.responsive nav.gnav .flyout {
+        width: auto; }
+      body.responsive nav.gnav .flyout-col {
+        display: inline-block;
+        float: left;
+        width: 21em; }
+      body.responsive nav.gnav .flyout-link {
+        line-height: 1.7em;
+        height: 1.7em; }
+      body.responsive main.index-catalog section.index-threads {
+        padding: 0 45px; }
+      body.responsive main.index-catalog .thread-item {
+        max-width: 180px; } }
+  @media (min-width: 1440px) {
+    body.responsive {
+      /**
+         * Sidebar
+         */
+      /* Advertisements */ }
+      body.responsive html.js main.index-threaded .thread {
+        padding-right: 340px; }
+      body.responsive html.js main.index-threaded aside.index-sidebar {
+        position: absolute;
+        right: 0;
+        top: -1em;
+        bottom: -2em;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 1em;
+        width: 310px;
+        height: auto; }
+      body.responsive html.js main.index-threaded aside.advertiser.bottom-right {
+        position: absolute; }
+      body.responsive html.js main.index-threaded aside.advertiser.top-left {
+        text-align: left; }
+      body.responsive html.js main.index-threaded aside.advertiser.bottom-right {
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        width: 310px; }
+      body.responsive html.js main.index-threaded aside.advertiser.bottom-right figure.ad-field {
+        display: block;
+        width: 310px; } }
 
 /*# sourceMappingURL=global.css.map */

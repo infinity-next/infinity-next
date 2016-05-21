@@ -134,6 +134,12 @@
 		return traverse;
 	};
 
+	// Determines if this device is a small portview.
+	ib.isMobile = function()
+	{
+		return (window.innerHeight < 480 || window.innerWidth < 728)
+	};
+
 	// Lpad 5 into "05".
 	ib.lpad = function(n, width, z) {
 		z = z || '0';
@@ -3215,7 +3221,8 @@ ib.widget("permissions", function(window, $, undefined) {
         // Important class names.
         classname : {
             'post-hover'  : "post-hover",
-            'cite-you'    : "cite-you"
+            'cite-you'    : "cite-you",
+            'tabs-open'   : "open"
         },
 
         // Selectors for finding and binding elements.
@@ -3232,6 +3239,9 @@ ib.widget("permissions", function(window, $, undefined) {
 
             'element-code'   : "pre code",
             'element-quote'  : "blockquote",
+
+            'action-tab'     : "div.post-action-tab",
+            'action-tabs'    : "ul.post-action-groups",
 
             'author'         : ".author",
             'author_id'      : ".authorid",
@@ -3403,13 +3413,11 @@ ib.widget("permissions", function(window, $, undefined) {
                 'au-updated.ib-post',
                 data,
                 widget.events.threadNewPosts
-            );
-
-        $(document)
+            )
             .on(
-                'ready.ib-post',
+                'resize',
                 data,
-                widget.events.codeHighlight
+                widget.events.windowResize
             );
 
         $widget
@@ -3428,6 +3436,12 @@ ib.widget("permissions", function(window, $, undefined) {
                 widget.options.selector['post-reply'],
                 data,
                 widget.events.postClick
+            )
+            .on(
+                'click.ib-post',
+                widget.options.selector['action-tab'],
+                data,
+                widget.events.actionTabClick
             )
             .on(
                 'mouseover.ib-post',
@@ -3482,6 +3496,7 @@ ib.widget("permissions", function(window, $, undefined) {
         ;
 
         $widget.trigger('contentUpdate');
+        widget.scaleThumbnails();
         widget.cachePosts($widget);
     };
 
@@ -3568,8 +3583,66 @@ ib.widget("permissions", function(window, $, undefined) {
         this.citeLoad = null;
     };
 
+    // Scales thumbnails down based on resolution.
+    blueprint.prototype.scaleThumbnails = function() {
+        if ($("body").is(".responsive")) {
+            var $widget = this.$widget;
+
+            $(this.options.selector['attachment-image'], $widget).each(function()
+            {
+                var $img = $(this);
+                var $box = $img.parent();
+                var width, height;
+
+                if (!(width = $img.data('original-width'))) {
+                    width = $img.width();
+                    $img.data('original-width', width);
+                }
+                if (!(height = $img.data('original-height'))) {
+                    height = $img.height();
+                    $img.data('original-height', height);
+                }
+
+                // We want a number between 320 and 1440, minus 320.
+                // Used to get a value between 0 and 0.5.
+                var factor = Math.min(Math.max(window.innerWidth, 320), 1440) - 320;
+                var percentage = (factor / (1440 - 320) / 2) + 0.5;
+
+                console.log(factor, percentage);
+                var newWidth = Math.floor(width * percentage);
+                var newHeight = Math.floor(height * percentage);
+
+                $img.add($box).css({
+                    'height' : newHeight,
+                    'width'  : newWidth,
+                });
+            });
+        }
+    };
+
     // Events
     blueprint.prototype.events = {
+        actionTabClick : function(event) {
+            var widget  = event.data.widget;
+            var $this   = $(this);
+            var $target = $(event.target);
+
+            // Make sure we're not actually in the menu.
+            if ($target.parents(widget.options.selector['action-tabs']).length) {
+                return true;
+            }
+
+            // Toggle all tabs off.
+            $(widget.options.selector['action-tab'] + "." + widget.options.classname['tabs-open'])
+                .not($this)
+                .toggleClass(widget.options.classname['tabs-open']);
+
+            $(this).toggleClass(widget.options.classname['tabs-open']);
+
+            event.preventDefault();
+            return false;
+        },
+
         attachmentCollapseClick : function(event) {
             var widget  = event.data.widget;
             var $link   = $(this);
@@ -3692,7 +3765,7 @@ ib.widget("permissions", function(window, $, undefined) {
         attachmentMediaMouseOver : function(event) {
             var widget   = event.data.widget;
 
-            if (!widget.is('attachment_preview')) {
+            if (!widget.is('attachment_preview') || ib.isMobile()) {
                 return true;
             }
 
@@ -3970,7 +4043,15 @@ ib.widget("permissions", function(window, $, undefined) {
                     selectedText = ">" + selectedText.trim().split("\n").join("\n>") + "\n";
                 }
 
+                // Focusing the textarea automatically scrolls the window.
+                // Correct that.
+                var x = window.scrollX;
+                var y = window.scrollY;
+
                 postboxWidget.replaceBodySelection(">>" + $this.data('board_id') + "\n" + selectedText);
+                postboxWidget.responsiveAnchor(widget.$widget[0]);
+
+                window.scrollTo(x, y);
 
                 return false;
             }
@@ -4054,6 +4135,10 @@ ib.widget("permissions", function(window, $, undefined) {
             {
                 widget.addAuthorship();
             }
+        },
+
+        windowResize : function(event) {
+            event.data.widget.scaleThumbnails();
         }
     };
 
@@ -4092,7 +4177,7 @@ ib.widget("permissions", function(window, $, undefined) {
     // Used to prevent premature form submission.
     blueprint.prototype.activeUploads = 0;
 
-        // The default values that are set behind init values.
+    // The default values that are set behind init values.
     blueprint.prototype.defaults = {
         checkFileUrl  : window.app.board_url + "/check-file",
 
@@ -4350,13 +4435,34 @@ ib.widget("permissions", function(window, $, undefined) {
         return $(this.options.selector['captcha-row'], this.$widget).is(":visible");
     };
 
+    blueprint.prototype.responsiveAnchor = function($elem) {
+        if (!ib.isMobile()) {
+            return false;
+        }
+
+        var widget  = this;
+        var $widget = this.$widget;
+        $elem = $($elem);
+        var top = $elem.position().top - $widget.outerHeight() - 10;
+
+        $widget
+            .show()
+            .toggleClass('postbox-maximized', false)
+            .toggleClass('postbox-minimized', false)
+            .css({
+                'top' : top
+            });
+
+        return top;
+    };
+
     blueprint.prototype.resizePostbox = function() {
         var widget  = this;
         var $widget = this.$widget;
 
         if (widget.resizable)
         {
-            if (window.innerHeight < 480 || window.innerWidth < 728)
+            if (ib.isMobile())
             {
                 widget.unbindDraggable();
                 widget.unbindResize();
@@ -4379,7 +4485,7 @@ ib.widget("permissions", function(window, $, undefined) {
                 }
             }
         }
-        else if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        else if (!ib.isMobile())
         {
             var isClosed = $widget.hasClass("postbox-closed");
             var isMaximized = $widget.hasClass("postbox-maximized");
@@ -4617,6 +4723,10 @@ ib.widget("permissions", function(window, $, undefined) {
             $(widget.options.selector['form-body'], $widget)
                 .trigger('change')
                 .focus();
+
+            if (ib.isMobile()) {
+                $widget.css("display", "");
+            }
         },
 
         formClick     : function(event) {
@@ -5077,7 +5187,7 @@ ib.widget("permissions", function(window, $, undefined) {
         var widget   = this;
         var $widget  = this.$widget;
 
-        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        if (!ib.isMobile())
         {
             $widget.draggable({
                 containment : "window",
@@ -5093,7 +5203,7 @@ ib.widget("permissions", function(window, $, undefined) {
         var widget   = this;
         var $widget  = this.$widget;
 
-        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        if (!ib.isMobile())
         {
             // Bind resizability onto the post area.
             var $body   = $(widget.options.selector['form-body'], $widget);

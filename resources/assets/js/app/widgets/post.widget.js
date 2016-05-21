@@ -37,7 +37,8 @@
         // Important class names.
         classname : {
             'post-hover'  : "post-hover",
-            'cite-you'    : "cite-you"
+            'cite-you'    : "cite-you",
+            'tabs-open'   : "open"
         },
 
         // Selectors for finding and binding elements.
@@ -54,6 +55,9 @@
 
             'element-code'   : "pre code",
             'element-quote'  : "blockquote",
+
+            'action-tab'     : "div.post-action-tab",
+            'action-tabs'    : "ul.post-action-groups",
 
             'author'         : ".author",
             'author_id'      : ".authorid",
@@ -225,13 +229,11 @@
                 'au-updated.ib-post',
                 data,
                 widget.events.threadNewPosts
-            );
-
-        $(document)
+            )
             .on(
-                'ready.ib-post',
+                'resize',
                 data,
-                widget.events.codeHighlight
+                widget.events.windowResize
             );
 
         $widget
@@ -250,6 +252,12 @@
                 widget.options.selector['post-reply'],
                 data,
                 widget.events.postClick
+            )
+            .on(
+                'click.ib-post',
+                widget.options.selector['action-tab'],
+                data,
+                widget.events.actionTabClick
             )
             .on(
                 'mouseover.ib-post',
@@ -304,6 +312,7 @@
         ;
 
         $widget.trigger('contentUpdate');
+        widget.scaleThumbnails();
         widget.cachePosts($widget);
     };
 
@@ -390,8 +399,66 @@
         this.citeLoad = null;
     };
 
+    // Scales thumbnails down based on resolution.
+    blueprint.prototype.scaleThumbnails = function() {
+        if ($("body").is(".responsive")) {
+            var $widget = this.$widget;
+
+            $(this.options.selector['attachment-image'], $widget).each(function()
+            {
+                var $img = $(this);
+                var $box = $img.parent();
+                var width, height;
+
+                if (!(width = $img.data('original-width'))) {
+                    width = $img.width();
+                    $img.data('original-width', width);
+                }
+                if (!(height = $img.data('original-height'))) {
+                    height = $img.height();
+                    $img.data('original-height', height);
+                }
+
+                // We want a number between 320 and 1440, minus 320.
+                // Used to get a value between 0 and 0.5.
+                var factor = Math.min(Math.max(window.innerWidth, 320), 1440) - 320;
+                var percentage = (factor / (1440 - 320) / 2) + 0.5;
+
+                console.log(factor, percentage);
+                var newWidth = Math.floor(width * percentage);
+                var newHeight = Math.floor(height * percentage);
+
+                $img.add($box).css({
+                    'height' : newHeight,
+                    'width'  : newWidth,
+                });
+            });
+        }
+    };
+
     // Events
     blueprint.prototype.events = {
+        actionTabClick : function(event) {
+            var widget  = event.data.widget;
+            var $this   = $(this);
+            var $target = $(event.target);
+
+            // Make sure we're not actually in the menu.
+            if ($target.parents(widget.options.selector['action-tabs']).length) {
+                return true;
+            }
+
+            // Toggle all tabs off.
+            $(widget.options.selector['action-tab'] + "." + widget.options.classname['tabs-open'])
+                .not($this)
+                .toggleClass(widget.options.classname['tabs-open']);
+
+            $(this).toggleClass(widget.options.classname['tabs-open']);
+
+            event.preventDefault();
+            return false;
+        },
+
         attachmentCollapseClick : function(event) {
             var widget  = event.data.widget;
             var $link   = $(this);
@@ -514,7 +581,7 @@
         attachmentMediaMouseOver : function(event) {
             var widget   = event.data.widget;
 
-            if (!widget.is('attachment_preview')) {
+            if (!widget.is('attachment_preview') || ib.isMobile()) {
                 return true;
             }
 
@@ -792,7 +859,15 @@
                     selectedText = ">" + selectedText.trim().split("\n").join("\n>") + "\n";
                 }
 
+                // Focusing the textarea automatically scrolls the window.
+                // Correct that.
+                var x = window.scrollX;
+                var y = window.scrollY;
+
                 postboxWidget.replaceBodySelection(">>" + $this.data('board_id') + "\n" + selectedText);
+                postboxWidget.responsiveAnchor(widget.$widget[0]);
+
+                window.scrollTo(x, y);
 
                 return false;
             }
@@ -876,6 +951,10 @@
             {
                 widget.addAuthorship();
             }
+        },
+
+        windowResize : function(event) {
+            event.data.widget.scaleThumbnails();
         }
     };
 

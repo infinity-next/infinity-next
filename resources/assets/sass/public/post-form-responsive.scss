@@ -1,0 +1,95 @@
+/**
+ * Post Form (Responsive)
+ */
+html.js #{$responsive} main.index-threaded form.form-post {
+    border: none;
+    position: fixed;
+    z-index: 1000;
+    top: 45px;
+    right: 10px;
+    max-width: none;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: $width-tablet) {
+        /**
+         * Mobile Post Form
+         * Vertically centered and absolutely positioned for ease of use.
+         */
+        & {
+            display: none;
+            position: absolute;
+            width: auto;
+            left: 10px;
+            right: 10px;
+            top: auto;
+            bottom: auto;
+            max-width: none;
+        }
+    }
+
+    .form-message {
+        border-style: none none solid none;
+        border-radius: 0px;
+        margin: 0;
+    }
+
+    .menu-icon {
+        display: inline-block;
+    }
+
+    .menu-icon-maximize {
+        display: none;
+    }
+
+    .form-fields {
+        display: block;
+        border-bottom: 1px solid #ccc;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+        min-width: 300px;
+    }
+        .form-legend {
+            margin: 0;
+            padding: 0;
+
+            background: #5c58ff;
+            color: #FEFEFE;
+            text-indent: 4px;
+        }
+            .ui-draggable-handle {
+                cursor: drag;
+                cursor: -webkit-grab;
+                cursor: grab;
+            }
+            &.ui-draggable-dragging .ui-draggable-handle {
+                cursor: -webkit-grabbing;
+                cursor: grabbing;
+            }
+
+        .field {
+            margin: 0;
+        }
+            fieldset.form-fields .field-control {
+                border-bottom: none;
+                resize: none;
+            }
+
+        .row-file .dz-container {
+            border-bottom: none;
+        }
+
+        .row-post {
+            border-bottom: none;
+        }
+
+        .row-captcha {
+            border-bottom: none;
+            width: 100%;
+        }
+        button.field-submit {
+            border-bottom: none;
+        }
+}

@@ -78,12 +78,19 @@
 
     border-left: none;
     border-top: none;
-}
-    .post-container.post-hover {
+
+    @media (max-width: $width-tablet) {
+        & {
+            width: 100%;
+        }
+    }
+
+    .post-hover {
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         pointer-events: none;
         z-index: 1100;
     }
+}
 
     .post-interior {
         position: relative;
@@ -104,7 +111,13 @@
             margin: 0;
             line-height: 1.8em;
             white-space: normal;
-        }
+
+           @media (min-width: $width-tablet) {
+               #{$responsive} & {
+                   white-space: nowrap;
+               }
+           }
+       }
             .op-container .post-details {
                 padding-left: 0;
             }
@@ -216,287 +229,6 @@
                         white-space: nowrap;
                     }
 
-        ul.post-attachments {
-            display: block;
-            float: left;
-            overflow-x: auto;
-            max-width: 99%;
-            max-width: calc(100% - 1em);
-        }
-            div.op-container ul.post-attachments {
-                max-width: 100%;
-            }
-            .reply-container ul.post-attachments {
-                padding: 0 0 0 1em;
-            }
-                ul.post-attachments.attachments-multi {
-                    padding-top: 0.75em;
-                    float: none;
-                }
-                .reply-container ul.post-attachments.attachments-multi {
-                    background: rgba(0,0,155,0.1);
-                }
-                ul.post-attachments.attachments-multi + blockquote.post {
-                    margin-top: 0.75em;
-                }
-                ul.post-attachments.attachments-multi::after {
-                    display: block;
-                    content: ' ';
-                    clear: both;
-                }
-
-            li.attachment-actions {
-                display: block;
-                margin-top: -0.50em;
-                padding-bottom: 0.75em;
-            }
-                li.attachment-actions .attachment-action {
-                    display: inline-block;
-                    cursor: pointer;
-                    margin-right: 0.75em;
-                }
-
-            li.post-attachment {
-                display: inline-block;
-                vertical-align: text-bottom;
-                padding: 0 0.75em 0.75em 0;
-            }
-                div.attachment-container {
-                    display: block;
-                }
-                    li.attachment-expanded div.attachment-container {
-                        display: inline-block;
-                        max-width: 100%;
-                    }
-                    div.attachment-container.attachment-grow {
-                        margin: 0;
-                        width: 100%;
-                    }
-
-                a.attachment-link {
-                    display: inline;
-                    outline: none;
-                }
-                a.attachment-download {
-                    clear: both;
-                    display: block;
-                    text-align: center;
-                }
-                    li.post-attachment.attachment-expanded a.attachment-link {
-                        display: block;
-                    }
-
-                    a.attachment-download .detail-download {
-                        margin-left: 0.5em;
-                    }
-                    a.attachment-download .detail-filesize {
-                        margin-right: 0.25em;
-                    }
-                    a.attachment-download .detail-filesize::before {
-                        display: inline;
-                        content: "(";
-                        margin-left: 0.4em;
-                    }
-                    a.attachment-download .detail-filedim::after {
-                        display: inline;
-                        content: ")";
-                    }
-
-                    figure.attachment {
-                        display: block;
-                        margin: 0;
-                        position: relative;
-                        z-index: 3;
-                    }
-                        figure.attachment-type-audio {
-                            overflow: hidden;
-                            padding-right: 2em;
-                        }
-
-                        li.post-attachment.attachment-expanded figure.attachment {
-                            /* min-width: 100%; */
-                            max-width: 100%;
-                        }
-
-                        li.post-attachment.attachment-expanded img.attachment-img {
-                            /* min-width: 100%; */
-                            max-width: 100%;
-                        }
-
-                        li.post-attachment img.lazy-load {
-                            /*
-                                The other metrics will constrain these to something sensible.
-                                My goal here is to keep the thumbnails pretty much to what you can expect them to be
-                                as to reduce the jerkiness of the loading system.
-                            */
-                            height: 200px;
-                            width:  200px;
-                        }
-
-                        .post-content div.attachment-wrapper {
-                            position: relative;
-                            padding: 0;
-                            margin: 0;
-                            text-align: center;
-                        }
-                            .post-content figure.attachment-type-audio div.attachment-wrapper {
-                                margin: 0 -2em 0 0;
-                                padding: 0 2em 0 0;
-                            }
-                            .post-content figure.attachment-type-audio div.attachment-wrapper::after {
-                                content: ' ';
-                                display: block;
-                                height: 98%;
-                                width: 98%;
-                                padding: 0;
-                                pointer-events: none;
-
-                                position: absolute;
-                                top: 1%;
-                                left: auto;
-                                right: -1em;
-                                bottom: 1%;
-                                z-index: 1;
-
-                                background-position: center center;
-                                background-image: url("#{$base-url}img/backgrounds/vinyl.svg");
-                                background-repeat: no-repeat;
-                                background-size: contain;
-                            }
-
-                            .post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
-                                margin: 0 0 0 0;
-                                padding: 0 7em 0 0;
-                            }
-                            .post-content li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper::after {
-                                right: -20%;
-                                animation: fa-spin 1.304s infinite linear;
-                            }
-
-                            .post-content li.attachment-expanded figure.attachment-type-video div.attachment-wrapper {
-                                height: inherit !important;
-                            }
-
-                        img.attachment-img {
-                            display: inline-block;
-                            margin: 0 auto;
-
-                            vertical-align: middle;
-                            position: relative;
-                            z-index: 2;
-                        }
-
-                        html.js a.attachment-link img.attachment-type-img {
-                            cursor: zoom-in;
-                        }
-                        html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
-                            cursor: zoom-out;
-                        }
-
-                        html a.attachment-link img.attachment-type-video {
-                            box-sizing: border-box;
-                            border-style: solid;
-                            border-width: 17px;
-
-                            -moz-border-image:    url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                            -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                            -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                            border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                        }
-                            li.post-attachment.attachment-expanded {
-                                clear: both;
-                                float: none;
-                                width: 100%;
-                                display: block;
-                            }
-                                li.post-attachment.attachment-expanded::before,
-                                li.post-attachment.attachment-expanded::after {
-                                    content: ' ';
-                                    clear: both;
-                                    display: block;
-                                }
-                            li.post-attachment.attachment-expanded,
-                            li.post-attachment.attachment-expanded figure.attachment,
-                            li.post-attachment.attachment-expanded div.attachment-wrapper,
-                            li.post-attachment.attachment-expanded img.attachment-img {
-                                clear: both;
-                                float: none;
-                                max-width: 100%;
-                                max-height: none;
-                                width: auto;
-                                height: auto;
-                            }
-                                li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
-                                    max-width: 350px;
-                                    padding-right: 3em;
-                                }
-                            .thumbnail-stock img.attachment-img {
-                                min-height: 150px;
-                                min-width: 150px;
-                            }
-
-                        li.post-attachment audio.attachment-inline {
-                            display: block;
-                            width: 100%;
-                            margin: 0 auto 0.5em 0;
-                            padding-top: 0.75em;
-                            max-width: 400px;
-                        }
-                        li.post-attachment video.attachment-inline {
-                            display: inline-block;
-                            max-width: 100%;
-                            margin: 0 auto 0.5em auto;
-                        }
-
-                        attachment-inline + .attachment-link .attachment-wrapper {
-                            display: none;
-                        }
-
-                        figcaption.attachment-details {
-                            display: block;
-                            max-width: 100%;
-
-                            position: relative;
-                            padding: 0 1em;
-                            text-align: center;
-                            white-space: nowrap;
-                        }
-
-                            figure.attachment-type-audio figcaption.attachment-details {
-                                max-width: none;
-                                margin-right: -2em;
-                            }
-                            li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
-                                padding: 0 1em;
-                                margin-right: -3em;
-                            }
-
-                            div.attachment-action-group,
-                            p.attachment-detail {
-                                display: block;
-                                color: rgba(0,0,0,0.75);
-                                text-align: center;
-                                font-size: 90%;
-
-                                height: 1em;
-                                line-height: 1em;
-                                margin: 0.5em auto;
-                                padding: 0;
-
-                                max-width: 100%;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                            }
-                            figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
-                                margin-bottom: 0px;
-                            }
-                            div.attachment-container:last-child {
-                                margin-bottom: 0px;
-                            }
-                            div.attachment-action-group span.attachment-action {
-                                margin: 0 0.25em;
-                            }
-
 
     ul.post-metas {
         border-top: 1px solid #D6DAF0;
@@ -529,7 +261,12 @@
 
             padding: 0 0.25em;
             margin-left: 0.25em;
+
+            html.js & {
+                cursor: pointer;
+            }
         }
+
             span.post-action-label {
                 line-height: 1;
                 vertical-align: text-top;
@@ -567,8 +304,8 @@
                 padding: 0 0 0 0;
                 margin: 0 0 0 -1px;
             }
-                div.post-action-tab:hover ul.post-action-groups,
-                ul.post-action-groups.open {
+                html.no-js div.post-action-tab:hover ul.post-action-groups,
+                html.js    div.post-action-tab.open  ul.post-action-groups {
                     display: block;
                 }
 

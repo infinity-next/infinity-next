@@ -30,7 +30,7 @@
     // Used to prevent premature form submission.
     blueprint.prototype.activeUploads = 0;
 
-        // The default values that are set behind init values.
+    // The default values that are set behind init values.
     blueprint.prototype.defaults = {
         checkFileUrl  : window.app.board_url + "/check-file",
 
@@ -288,13 +288,34 @@
         return $(this.options.selector['captcha-row'], this.$widget).is(":visible");
     };
 
+    blueprint.prototype.responsiveAnchor = function($elem) {
+        if (!ib.isMobile()) {
+            return false;
+        }
+
+        var widget  = this;
+        var $widget = this.$widget;
+        $elem = $($elem);
+        var top = $elem.position().top - $widget.outerHeight() - 10;
+
+        $widget
+            .show()
+            .toggleClass('postbox-maximized', false)
+            .toggleClass('postbox-minimized', false)
+            .css({
+                'top' : top
+            });
+
+        return top;
+    };
+
     blueprint.prototype.resizePostbox = function() {
         var widget  = this;
         var $widget = this.$widget;
 
         if (widget.resizable)
         {
-            if (window.innerHeight < 480 || window.innerWidth < 728)
+            if (ib.isMobile())
             {
                 widget.unbindDraggable();
                 widget.unbindResize();
@@ -317,7 +338,7 @@
                 }
             }
         }
-        else if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        else if (!ib.isMobile())
         {
             var isClosed = $widget.hasClass("postbox-closed");
             var isMaximized = $widget.hasClass("postbox-maximized");
@@ -555,6 +576,10 @@
             $(widget.options.selector['form-body'], $widget)
                 .trigger('change')
                 .focus();
+
+            if (ib.isMobile()) {
+                $widget.css("display", "");
+            }
         },
 
         formClick     : function(event) {
@@ -1015,7 +1040,7 @@
         var widget   = this;
         var $widget  = this.$widget;
 
-        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        if (!ib.isMobile())
         {
             $widget.draggable({
                 containment : "window",
@@ -1031,7 +1056,7 @@
         var widget   = this;
         var $widget  = this.$widget;
 
-        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        if (!ib.isMobile())
         {
             // Bind resizability onto the post area.
             var $body   = $(widget.options.selector['form-body'], $widget);

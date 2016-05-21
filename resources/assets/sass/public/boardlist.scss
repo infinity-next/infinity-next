@@ -1,238 +1,273 @@
 /* Board Directory / Board List */
 #boardlist {
-	section.board-list .smooth-box {
-		padding: 0;
-	}
+    section.board-list .smooth-box {
+        padding: 0;
+    }
 
-	table.board-list-table {
-		display: table;
-		margin: 0;
-		width: 100%;
-		overflow: hidden;
-		table-layout: fixed;
-		border-collapse: collapse;
-	}
-		table.board-list-table .board-cell {
-			position: static;
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-			table.board-list-table .board-cell::after {
-				content: ' ';
-				clear: both;
-			}
+    table.board-list-table {
+        display: table;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+        table-layout: fixed;
+        border-collapse: collapse;
+
+        table.board-list-table .board-cell {
+            position: static;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+            table.board-list-table .board-cell::after {
+                content: ' ';
+                clear: both;
+            }
 
 
-		table.board-list-table .board-meta {
-			display: none;
-			padding-right: 4px;
-			width: 70px;
-		}
-		table.board-list-table .board-uri {
-			display: table-cell;
-			min-width: 196px;
-		}
-			table.board-list-table .board-uri a {
-				display: inline-block;
-				float: left;
-			}
+        table.board-list-table .board-meta {
+            display: none;
+            padding-right: 4px;
+            width: 70px;
+        }
+        table.board-list-table .board-uri {
+            display: table-cell;
+            min-width: 196px;
+        }
+            table.board-list-table .board-uri a {
+                display: inline-block;
+                float: left;
+            }
 
-			table.board-list-table .board-uri .board-nsfw {
-				color: rgb(230,0,0);
-				margin: 0 0 0 0.6em;
-				float: right;
-			}
-			table.board-list-table .board-uri .board-sfw {
-				color: #34345C;
-				margin: 0 0 0 0.6em;
-				float: right;
-			}
-		table.board-list-table .board-title {
-		}
-		table.board-list-table .board-plh,
-		table.board-list-table .board-ppd,
-		table.board-list-table .board-pph,
-		table.board-list-table .board-max,
-		table.board-list-table .board-unique {
-			width: 60px;
-			text-align: right;
-		}
-		table.board-list-table .board-max {
-			width: 80px;
-		}
-		table.board-list-table .board-tags {
-			position: relative;
-			height: 15px;
-			width: auto;
-			padding: 0 15px 0 4px;
-		}
-			table.board-list-table .board-tags .tag-link {
-				display: inline;
-			}
-			table.board-list-table .board-tags .board-cell:hover {
-				position: absolute;
-				line-height: 23px;
-				top: 0;
-				bottom: 0;
-				width: 310px;
-			}
+            table.board-list-table .board-uri .board-nsfw {
+                color: rgb(230,0,0);
+                margin: 0 0 0 0.6em;
+                float: right;
+            }
+            table.board-list-table .board-uri .board-sfw {
+                color: #34345C;
+                margin: 0 0 0 0.6em;
+                float: right;
+            }
+        table.board-list-table .board-title {
+        }
+        table.board-list-table .board-plh,
+        table.board-list-table .board-ppd,
+        table.board-list-table .board-pph,
+        table.board-list-table .board-max,
+        table.board-list-table .board-unique {
+            width: 60px;
+            text-align: right;
+        }
+        table.board-list-table .board-max {
+            width: 80px;
+        }
+        table.board-list-table .board-tags {
+            position: relative;
+            height: 15px;
+            width: auto;
+            padding: 0 15px 0 4px;
+        }
+            table.board-list-table .board-tags .tag-link {
+                display: inline;
+            }
+            table.board-list-table .board-tags .board-cell:hover {
+                position: absolute;
+                line-height: 23px;
+                top: 0;
+                bottom: 0;
+                width: 310px;
+            }
 
-		table.board-list-table div.board-cell {
-			max-width: 100%;
-			overflow: hidden;
-		}
+        table.board-list-table div.board-cell {
+            max-width: 100%;
+            overflow: hidden;
+        }
 
-		table.board-list-table th.sortable {
-			position: relative;
-			padding-right: 1.6em;
-		}
-			table.board-list-table th.sorting-by-desc .fa,
-			table.board-list-table th.sorting-by-asc  .fa {
-				display: inline-block;
-				position: absolute;
-				right: 0.33em;
-				bottom: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				margin-top: 0.25em;
-				vertical-align: middle;
-			}
-			table.board-list-table th.sorting-by-asc  .fa::before {
-				content: "\f160";
-			}
-			table.board-list-table th.sorting-by-desc .fa::before {
-				content: "\f161";
-			}
+        table.board-list-table th.sortable {
+            position: relative;
+            padding-right: 1.6em;
+        }
+            table.board-list-table th.sorting-by-desc .fa,
+            table.board-list-table th.sorting-by-asc  .fa {
+                display: inline-block;
+                position: absolute;
+                right: 0.33em;
+                bottom: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-top: 0.25em;
+                vertical-align: middle;
+            }
+            table.board-list-table th.sorting-by-asc  .fa::before {
+                content: "\f160";
+            }
+            table.board-list-table th.sorting-by-desc .fa::before {
+                content: "\f161";
+            }
 
-		tr.board-list-loading {
-			display: none;
-			width: 100%;
-		}
+        tr.board-list-loading {
+            display: none;
+            width: 100%;
+        }
 
-		tr.board-list-omitted td {
-			padding: 0;
-		}
-			tr.board-list-omitted #board-list-more {
-				cursor: default;
-				display: none;
-				background: rgba(0,0,0,0.1);
-				border-top: 1px solid rgba(0,0,0,0.25);
-				color: #333;
-				padding: 8px;
-				font-size: 125%;
-				text-align: center;
-			}
-			tr.board-list-omitted #board-list-more.board-list-hasmore {
-				cursor: pointer;
-				display: block;
-			}
-				tr.board-list-omitted .board-page-loadmore {
-					display: none;
-				}
-				tr.board-list-omitted .board-list-hasmore .board-page-loadmore {
-					display: inline;
-				}
+        tr.board-list-omitted td {
+            padding: 0;
+        }
+            tr.board-list-omitted #board-list-more {
+                cursor: default;
+                display: none;
+                background: rgba(0,0,0,0.1);
+                border-top: 1px solid rgba(0,0,0,0.25);
+                color: #333;
+                padding: 8px;
+                font-size: 125%;
+                text-align: center;
+            }
+            tr.board-list-omitted #board-list-more.board-list-hasmore {
+                cursor: pointer;
+                display: block;
+            }
+                tr.board-list-omitted .board-page-loadmore {
+                    display: none;
+                }
+                tr.board-list-omitted .board-list-hasmore .board-page-loadmore {
+                    display: inline;
+                }
 
-	aside.search-container {
-		margin-bottom: 12px;
-	}
-		aside.search-container .box {
-			margin-right: 12px;
-		}
 
-	#search-form {
-		padding: 0;
-	}
-		#search-form  .box-title {
-			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-			font-weight: bold;
-			color: #34345C;
-			padding: 0.5em;
-			margin-top: 0;
-		}
-		.board-search {
-			padding: 0.5em 1em 1em 1em;
-			margin: 0;
-		}
-		.search-item {
-			margin: 8px 0 0 0;
-			line-height: 1.2em;
-		}
-		.search-sfw {
-			display: block;
-			cursor: pointer;
-			font-size: 110%;
-			line-height: 120%;
-		}
-		#search-sfw-input {
-			margin: 0;
-			padding: 0;
-			transform: scale(1.20);
-		}
-		#search-lang-input,
-		#search-title-input,
-		#search-tag-input {
-			box-sizing: border-box;
-			font-size: 110%;
-			line-height: 120%;
-			vertical-align: top;
-			padding: 0.25em 0 0.25em 0.5em;
-			max-width: 100%;
-			min-width: 100%;
-			width: 100%;
-		}
-		#search-loading {
-			display: inline-block;
-			vertical-align: bottom;
-		}
+        /**
+         * Responsive Design
+         */
+        body.responsive & {
+            /**
+             * 360px Width
+             * Vertical phones
+             */
+            @media (max-width: 360px) {
+                .board-max,
+                .board-unique {
+                    padding: 0;
+                    margin: 0;
+                    font-size: 0;
+                    width: 0;
+                }
+            }
+            /**
+             * 640px Width
+             * Horizontal phones
+             */
+            @media (max-width: 640px) {
+                .board-title,
+                .board-ppd,
+                .board-pph {
+                    padding: 0;
+                    margin: 0;
+                    font-size: 0;
+                    width: 0;
+                }
+            }
+        }
+    }
 
-	ul.tag-list {
-		display: block;
-		list-style: none;
-		margin: 8px 8px -9px 8px;
-		padding: 8px 0 0 0;
-		border-top: 1px solid rgba(0,0,0,0.25);
-	}
-		ul.tag-list::after {
-			content: ' ';
-			display: block;
-			clear: both;
-		}
+    aside.search-container {
+        margin-bottom: 12px;
+    }
+        aside.search-container .box {
+            margin-right: 12px;
+        }
 
-		li.tag-item {
-			display: inline-block;
-			float: left;
-			font-size: 100%;
-			list-style: none;
-			margin: 0;
-			padding: 0 4px 0 0;
-		}
-			li.tag-item:last-child {
-				padding-bottom: 17px;
-			}
-				a.tag-link {
-					overflow: hidden;
-					white-space: nowrap;
-				}
+    #search-form {
+        padding: 0;
+    }
+        #search-form  .box-title {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            font-weight: bold;
+            color: #34345C;
+            padding: 0.5em;
+            margin-top: 0;
+        }
+        .board-search {
+            padding: 0.5em 1em 1em 1em;
+            margin: 0;
+        }
+        .search-item {
+            margin: 8px 0 0 0;
+            line-height: 1.2em;
+        }
+        .search-sfw {
+            display: block;
+            cursor: pointer;
+            font-size: 110%;
+            line-height: 120%;
+        }
+        #search-sfw-input {
+            margin: 0;
+            padding: 0;
+            transform: scale(1.20);
+        }
+        #search-lang-input,
+        #search-title-input,
+        #search-tag-input {
+            box-sizing: border-box;
+            font-size: 110%;
+            line-height: 120%;
+            vertical-align: top;
+            padding: 0.25em 0 0.25em 0.5em;
+            max-width: 100%;
+            min-width: 100%;
+            width: 100%;
+        }
+        #search-loading {
+            display: inline-block;
+            vertical-align: bottom;
+        }
 
-				li.tag-item a.tag-link {
+    ul.tag-list {
+        display: block;
+        list-style: none;
+        margin: 8px 8px -9px 8px;
+        padding: 8px 0 0 0;
+        border-top: 1px solid rgba(0,0,0,0.25);
+    }
+        ul.tag-list::after {
+            content: ' ';
+            display: block;
+            clear: both;
+        }
 
-				}
-				td.board-tags a.tag-link {
-					display: inline-block;
-					margin: 0 0.4em 0 0;
-				}
+        li.tag-item {
+            display: inline-block;
+            float: left;
+            font-size: 100%;
+            list-style: none;
+            margin: 0;
+            padding: 0 4px 0 0;
+        }
+            li.tag-item:last-child {
+                padding-bottom: 17px;
+            }
+                a.tag-link {
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
 
-	@media (max-width: 840px) {
-		table.board-list-table .board-tags {
-			padding: 0;
-			margin: 0;
-			font-size: 0;
-			width: 0;
-		}
-	}
+                li.tag-item a.tag-link {
+
+                }
+                td.board-tags a.tag-link {
+                    display: inline-block;
+                    margin: 0 0.4em 0 0;
+                }
+
+    @media (max-width: 840px) {
+        table.board-list-table .board-tags {
+            padding: 0;
+            margin: 0;
+            font-size: 0;
+            width: 0;
+        }
+    }
 }

@@ -142,17 +142,17 @@
 					<img src="" class="captcha">
 					<input type="hidden" name="captcha_hash" value="" />
 				@endif
-			</label>
 
-			{!! Form::text(
-				'captcha',
-				"",
-				[
-					'id'           => "captcha",
-					'class'        => "field-control",
-					'placeholder'  => "Security Code",
-					'autocomplete' => "off",
-			]) !!}
+				{!! Form::text(
+					'captcha',
+					"",
+					[
+						'id'           => "captcha",
+						'class'        => "field-control",
+						'placeholder'  => "Security Code",
+						'autocomplete' => "off",
+				]) !!}
+			</label>
 		</div>
 
 		@if (!$user->isAnonymous() && !isset($post) && $user->getCapcodes($board))
