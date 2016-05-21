@@ -3608,7 +3608,6 @@ ib.widget("permissions", function(window, $, undefined) {
                 var factor = Math.min(Math.max(window.innerWidth, 320), 1440) - 320;
                 var percentage = (factor / (1440 - 320) / 2) + 0.5;
 
-                console.log(factor, percentage);
                 var newWidth = Math.floor(width * percentage);
                 var newHeight = Math.floor(height * percentage);
 
@@ -4451,12 +4450,20 @@ ib.widget("permissions", function(window, $, undefined) {
             .toggleClass('postbox-maximized', false)
             .toggleClass('postbox-minimized', false);
 
-
         var top = $elem.position().top - $widget.outerHeight() - 10;
 
         $widget.css({
             'top' : top
         });
+
+        var offset = $widget.offset().top;
+        if (offset < 10) {
+            top -= offset;
+
+            $widget.css({
+                'top' : top,
+            });
+        }
 
         return top;
     };

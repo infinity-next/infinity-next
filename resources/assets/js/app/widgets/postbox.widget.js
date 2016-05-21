@@ -304,12 +304,20 @@
             .toggleClass('postbox-maximized', false)
             .toggleClass('postbox-minimized', false);
 
-
         var top = $elem.position().top - $widget.outerHeight() - 10;
 
         $widget.css({
             'top' : top
         });
+
+        var offset = $widget.offset().top;
+        if (offset < 10) {
+            top -= offset;
+
+            $widget.css({
+                'top' : top,
+            });
+        }
 
         return top;
     };

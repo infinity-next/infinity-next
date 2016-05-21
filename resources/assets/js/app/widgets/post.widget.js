@@ -424,7 +424,6 @@
                 var factor = Math.min(Math.max(window.innerWidth, 320), 1440) - 320;
                 var percentage = (factor / (1440 - 320) / 2) + 0.5;
 
-                console.log(factor, percentage);
                 var newWidth = Math.floor(width * percentage);
                 var newHeight = Math.floor(height * percentage);
 
