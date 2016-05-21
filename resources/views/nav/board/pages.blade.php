@@ -1,22 +1,22 @@
 <nav class="pagination @if($showPages) pagination-full @endif @if($showCatalog) pagination-catalog @endif @if($showIndex) pagination-index @endif">
 	<div class="pagination-buttons buttons-pages">
 		@if ($showIndex)
-		<a class="button pagination-button" href="{{ $board->getUrl() }}" data-instant>Index</a>
+		<a class="button pagination-button" href="{{ $board->getUrl() }}" data-instant>@lang('board.button.index')</a>
 		@endif
 
 		@if ($showCatalog)
-		<a class="button pagination-button" href="{{ $board->getUrl('catalog') }}" data-instant>Catalog</a>
+		<a class="button pagination-button" href="{{ $board->getUrl('catalog') }}" data-instant>@lang('board.button.catalog')</a>
 		@endif
 
 		@if ($user->canViewLogs($board))
-		<a class="button pagination-button" href="{{ $board->getUrl('logs') }}" data-instant>Logs</a>
+		<a class="button pagination-button" href="{{ $board->getUrl('logs') }}" data-instant>@lang('board.button.logs')</a>
 		@endif
 
 		@if (isset($header))
 		@if (!$header)
-		<a class="button pagination-button go-to-top" href="#top">Go to top</a>
+		<a class="button pagination-button go-to-top" href="#top">@lang('board.button.gotop')</a>
 		@else
-		<a class="button pagination-button go-to-bottom" href="#bottom">Go to bottom</a>
+		<a class="button pagination-button go-to-bottom" href="#bottom">@lang('board.button.gobot')</a>
 		@endif
 		@endif
 	</div>

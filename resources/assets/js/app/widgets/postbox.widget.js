@@ -40,6 +40,8 @@
             'notices'         : "[data-widget=notice]:first",
             'autoupdater'     : ".autoupdater:first",
 
+            'form-open'       : ".post-form-open",
+
             'dropzone'        : ".dz-container",
 
             'submit-post'     : "#submit-post",
@@ -296,15 +298,18 @@
         var widget  = this;
         var $widget = this.$widget;
         $elem = $($elem);
+
+        $widget.show()
+            .toggleClass('postbox-closed', false)
+            .toggleClass('postbox-maximized', false)
+            .toggleClass('postbox-minimized', false);
+
+
         var top = $elem.position().top - $widget.outerHeight() - 10;
 
-        $widget
-            .show()
-            .toggleClass('postbox-maximized', false)
-            .toggleClass('postbox-minimized', false)
-            .css({
-                'top' : top
-            });
+        $widget.css({
+            'top' : top
+        });
 
         return top;
     };
@@ -503,6 +508,10 @@
                 .removeClass("postbox-maximized postbox-minimized")
                 .addClass("postbox-closed");
 
+            if (ib.isMobile()) {
+                $widget.hide();
+            }
+
             // Unbind the jQuery UI resize.
             widget.unbindResize();
 
@@ -595,6 +604,13 @@
                 widget.bindDraggable();
                 widget.bindResize();
             }
+        },
+
+        formOpenClick : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            widget.responsiveAnchor(this);
         },
 
         formSubmit    : function(event) {
@@ -927,6 +943,15 @@
             // Ensures window.app is current with dropzone stuff.
             //InstantClick.on("change", data, widget.events.pageChange);
         }
+
+        $(document)
+            // Post form open buttons outside the form itself
+            .on(
+                'click.ib-postbox',
+                widget.options.selector['form-open'],
+                data,
+                widget.events.formOpenClick
+            );
 
         $widget
             // Watch for key downs as to capture ctrl+enter submission.

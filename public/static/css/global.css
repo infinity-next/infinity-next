@@ -35,7 +35,7 @@ body {
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
-  min-width: 340px;
+  min-width: 320px;
   color: #111111;
   -webkit-text-size-adjust: 100%;
   font-family: Arial, Helvetica, sans-serif;
@@ -750,6 +750,19 @@ footer nav.boardlist-row.row-pages {
   nav.boardlist a.boardlist-link {
     display: block; } }
 
+button.post-form-open {
+  display: none; }
+  @media (max-width: 728px) {
+    html.js button.post-form-open {
+      display: block;
+      width: auto;
+      margin: 1em auto 0 auto; }
+      html.no-js html.js button.post-form-open {
+        display: none; }
+      footer html.js button.post-form-open {
+        margin-top: 0;
+        margin-bottom: 1em; } }
+
 nav.pagination {
   padding: 0.25em 0;
   margin: 0;
@@ -771,6 +784,9 @@ div.pagination-buttons {
 div.buttons-pages {
   float: none;
   clear: both; }
+  @media (max-width: 728px) {
+    div.buttons-pages {
+      text-align: center; } }
 
 div.pagination-buttons .pagination-button {
   line-height: 1.2;

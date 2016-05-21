@@ -4,6 +4,21 @@
 	@foreach ($post->attachments as $attachment)
 	<li class="post-attachment">
 		@if (!isset($catalog) || !$catalog)
+		<div class="attachment-side-actions">
+			@if ($attachment->isSpoiler())
+			<a href="{{ $attachment->getUnspoilerURL($board) }}" class="attachment-action attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
+				<i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
+			</a>
+			@else
+			<a href="{{ $attachment->getSpoilerURL($board) }}" class="attachment-action attachment-spoiler" title="@lang('board.field.spoiler')" data-no-instant>
+				<i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
+			</a>
+			@endif
+
+			<a href="{{ $attachment->getRemoveURL($board) }}" class="attachment-action attachment-remove" title="@lang('board.field.remove')" data-no-instant>
+				<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
+			</a>
+		</div>
 		<div class="attachment-container">
 			@if ($attachment->isDeleted())
 			<figure class="attachment attachment-deleted">
@@ -39,24 +54,6 @@
 					<span class="detail-item detail-filedim" title="{{ $attachment->getFileDimensions() }}">{{ $attachment->getFileDimensions() }}</span>
 				</a>
 			</div>
-
-			{{--
-			<div class="attachment-action-group">
-				@if ($attachment->isSpoiler())
-				<a href="{{ $attachment->getUnspoilerURL($board) }}" class="attachment-action attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
-					<i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
-				</a>
-				@else
-				<a href="{{ $attachment->getSpoilerURL($board) }}" class="attachment-action attachment-spoiler" title="@lang('board.field.spoiler')" data-no-instant>
-					<i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
-				</a>
-				@endif
-
-				<a href="{{ $attachment->getRemoveURL($board) }}" class="attachment-action attachment-remove" title="@lang('board.field.remove')" data-no-instant>
-					<i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
-				</a>
-			</div>
-			--}}
 			@endif
 		</div>
 		@else
