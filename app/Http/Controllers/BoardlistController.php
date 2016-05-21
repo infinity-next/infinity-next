@@ -48,6 +48,7 @@ class BoardlistController extends Controller {
 			'boards' => $this->boardListSearch(),
 			'stats'  => $this->boardStats(),
 			'tags'   => $this->boardListTags(),
+			'input'  => $this->boardListInput(),
 		]);
 	}
 
@@ -62,8 +63,16 @@ class BoardlistController extends Controller {
 
 		if (isset($input['tags']))
 		{
-			$input['tags'] = str_replace(["+", "-", " "], ",", $input['tags']);
-			$input['tags'] = array_filter(explode(",", $input['tags']));
+			if (is_string($input['tags']))
+			{
+				$input['tags'] = str_replace(["+", "-", " "], ",", $input['tags']);
+				$input['tags'] = explode(",", $input['tags']);
+			}
+
+			if (is_array($input['tags']))
+			{
+				$input['tags'] =  array_filter($input['tags']);
+			}
 		}
 		else
 		{

@@ -48,7 +48,7 @@
 							</div>
 
 							<div class="search-item search-tag">
-								<input type="text" id="search-tag-input" name="tags" value="{{ Request::get('tags',"") }}" placeholder="@lang('boardlist.search.tags')" />
+								<input type="text" id="search-tag-input" name="tags" value="{{ implode(" ", $input['tags']) }}" placeholder="@lang('boardlist.search.tags')" />
 							</div>
 
 							<div class="search-item search-submit">
