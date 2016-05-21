@@ -503,6 +503,21 @@
 		return $instances;
 	};
 
+	// Gets a window's selected text.
+	ib.getSelectedText = function() {
+		var text = "";
+
+		if (window.getSelection)
+		{
+			text = window.getSelection().toString();
+		}
+		else if (document.selection && document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+		}
+
+		return text;
+	};
+
 	ib.widgetArguments  = function(args) {
 		var widget  = this;
 		var target  = args[0];
@@ -3168,876 +3183,881 @@ ib.widget("permissions", function(window, $, undefined) {
 // ===========================================================================
 
 (function(window, $, undefined) {
-	// Widget blueprint
-	var blueprint = ib.getBlueprint();
-
-	var events = {
-		doContentUpdate : function(event) {
-			// On setting update, trigger reformating..
-			var setting = event.data.setting;
-			var widget  = setting.widget;
-			ib.getInstances(widget).trigger('contentUpdate');
-		}
-	};
-
-	// Configuration options
-	var options = {
-		author_id : {
-			type : "bool",
-			initial : true,
-			onChange : events.doContentUpdate,
-			onUpdate : events.doContentUpdate
-		},
-		attachment_preview : {
-			type : "bool",
-			initial : true
-		}
-	};
-
-	blueprint.prototype.defaults = {
-		preview_delay : 200,
-
-		// Important class names.
-		classname : {
-			'post-hover'  : "post-hover",
-			'cite-you'    : "cite-you"
-		},
-
-		// Selectors for finding and binding elements.
-		selector : {
-			'widget'         : ".post-container",
-
-			'hover-box'      : "#attachment-preview",
-			'hover-box-img'  : "#attachment-preview-img",
-
-			'mode-reply'     : "main.mode-reply",
-			'mode-index'     : "main.mode-index",
-
-			'post-reply'     : ".post-reply",
-
-			'element-code'   : "pre code",
-			'element-quote'  : "blockquote",
-
-			'author'         : ".author",
-			'author_id'      : ".authorid",
-
-			'cite-slot'      : "li.detail-cites",
-			'cite'           : "a.cite-post",
-			'backlinks'      : "a.cite-backlink",
-			'forwardlink'    : "blockquote.post a.cite-post",
-
-			'post-form'      : "#post-form",
-			'post-form-body' : "#body",
-
-			'attachment'         : "li.post-attachment",
-			'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
-			'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
-			'attachment-media'   : "audio.attachment-inline, video.attachment-inline",
-			'attachment-image'   : "img.attachment-img",
-			'attachment-image-download'   : "img.attachment-type-file",
-			'attachment-image-expandable' : "img.attachment-type-img",
-			'attachment-image-audio'      : "img.attachment-type-audio",
-			'attachment-image-video'      : "img.attachment-type-video",
-			'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
-			'attachment-link'    : "a.attachment-link"
-		},
-
-		// HTML Templates
-		template : {
-			'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>"
-		}
-	};
-
-	// The temporary hover-over item created to show backlink posts.
-	blueprint.prototype.$cite    = null;
-	blueprint.prototype.citeLoad = null;
-
-	// Takes an element and positions it near a backlink.
-	blueprint.prototype.anchorBoxToLink = function($box, $link) {
-		var bodyWidth = document.body.scrollWidth;
-
-		var linkRect  = $link[0].getBoundingClientRect();
-
-		$(this.options.classname['post-hover']).remove();
-
-		if (!$box.parents().length)
-		{
-			$box.appendTo("body")
-				.addClass(this.options.classname['post-hover'])
-				.css('position', "absolute");
-			ib.bindAll($box);
-		}
-
-		var boxHeight = $box.outerHeight();
-		var boxWidth  = $box.outerWidth();
-
-		var posTop  = linkRect.top + window.scrollY;
-
-		// Is the box's bottom below the bottom of the screen?
-		if (posTop + boxHeight + 25 > window.scrollY + window.innerHeight)
-		{
-			// Selects the larger of two values:
-			// A) Our position in the scroll, or
-			// B) The hidden part of the post subtracted from the top.
-			// This check will try to keep the entire post visible,
-			// but will always keep the top of the post visible.
-			var posTopDiff = (posTop + boxHeight + 25) - (window.scrollY + window.innerHeight);
-			posTop = Math.max( window.scrollY, posTop - posTopDiff );
-		}
-
-
-		// Float to the right.
-		// Default for LTR
-		var posLeft;
-		var posLeftOnRight = linkRect.right + 5;
-		var posLeftOnLeft  = linkRect.left  - 5;
-		var maxWidth       = (document.body.scrollWidth * 0.7) - 15;
-		var newWidth;
-
-		// LTR display
-		if (ib.ltr)
-		{
-			// Left side has more space than right side,
-			// and box is wider than remaining space.
-			if (linkRect.left > document.body.scrollWidth - posLeftOnRight
-				&& boxWidth > document.body.scrollWidth - posLeftOnRight)
-			{
-				posLeft  = posLeftOnLeft;
-				newWidth = Math.min(maxWidth, boxWidth, linkRect.left - 15);
-				posLeft -= newWidth;
-			}
-			// Right side has more adequate room,
-			// Or box fits in.
-			else
-			{
-				posLeft  = posLeftOnRight;
-				newWidth = Math.min(
-					maxWidth,
-					boxWidth,
-					document.body.scrollWidth - posLeftOnRight  - 15
-				);
-			}
-		}
-		else
-		{
-			// TODO
-		}
-
-		$box.css({
-			'top'       : posTop,
-			'left'      : posLeft,
-			'width'     : newWidth,
-		});
-
-		this.$cite = $box;
-	};
-
-	// Includes (You) classes on posts that we think we own.
-	blueprint.prototype.addAuthorship = function() {
-		var widget = this;
-		var cites  = [];
-
-		// Loop through each citation.
-		$(this.options.selector['cite'], this.$widget).each(function() {
-			var board = this.dataset.board_uri;
-			var post  = this.dataset.board_id.toString();
-
-			// Check and see if we have an item for this citation's board.
-			if (typeof cites[board] === "undefined")
-			{
-				if (localStorage.getItem("yourPosts."+board) !== null)
-				{
-					cites[board] = localStorage.getItem("yourPosts."+board).split(",");
-				}
-				else
-				{
-					cites[board] = [];
-				}
-			}
-
-			if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
-			{
-				this.className += " " + widget.options.classname['cite-you'];
-			}
-		});
-
-		(function() {
-			var board = widget.$widget[0].dataset.board_uri;
-			var post  = widget.$widget[0].dataset.board_id.toString();
-			var posts = localStorage.getItem("yourPosts."+board);
-
-			if (posts !== null && posts.split(",").indexOf(post) > 0)
-			{
-				widget.$widget[0].className += " post-you";
-			}
-		})();
-	};
-
-	// Event bindings
-	blueprint.prototype.bind = function() {
-		var widget  = this;
-		var $widget = this.$widget;
-		var data    = {
-			widget  : widget,
-			$widget : $widget
-		};
-
-		$(window)
-			.on(
-				'au-updated.ib-post',
-				data,
-				widget.events.threadNewPosts
-			);
-
-		$(document)
-			.on(
-				'ready.ib-post',
-				data,
-				widget.events.codeHighlight
-			);
-
-		$widget
-			.on(
-				'contentUpdate.ib-post',
-				data,
-				widget.events.postContentUpdate
-			)
-			.on(
-				'highlight-syntax.ib-post',
-				data,
-				widget.events.codeHighlight
-			)
-			.on(
-				'click.ib-post',
-				widget.options.selector['post-reply'],
-				data,
-				widget.events.postClick
-			)
-			.on(
-				'mouseover.ib-post',
-				widget.options.selector['attachment-image-expandable'],
-				data,
-				widget.events.attachmentMediaMouseOver
-			)
-			.on(
-				'mouseout.ib-post',
-				widget.options.selector['attachment-image-expandable'],
-				data,
-				widget.events.attachmentMediaMouseOut
-			)
-			.on(
-				'media-check.ib-post',
-				widget.options.selector['attachment-image'],
-				data,
-				widget.events.attachmentMediaCheck
-			)
-			.on(
-				'click.ib-post',
-				widget.options.selector['attacment-expand'],
-				data,
-				widget.events.attachmentExpandClick
-			)
-			.on(
-				'click.ib-post',
-				widget.options.selector['attacment-collapse'],
-				data,
-				widget.events.attachmentCollapseClick
-			)
-
-			// Citations
-			.on(
-				'click.ib-post',
-				widget.options.selector['cite'],
-				data,
-				widget.events.citeClick
-			)
-			.on(
-				'mouseover.ib-post',
-				widget.options.selector['cite'],
-				data,
-				widget.events.citeMouseOver
-			)
-			.on(
-				'mouseout.ib-post',
-				widget.options.selector['cite'],
-				data,
-				widget.events.citeMouseOut
-			)
-		;
-
-		$widget.trigger('contentUpdate');
-		widget.cachePosts($widget);
-	};
-
-	blueprint.prototype.bindMediaEvents = function($element) {
-		var data = {
-			widget  : this,
-			$widget : this.$widget
-		};
-
-		$element.on(
-			'ended.ib-post',
-			data,
-			this.events.attachmentMediaEnded
-		);
-	};
-
-	// Stores a post in the session store.
-	blueprint.prototype.cachePosts = function(jsonOrjQuery) {
-		// This stores the post data into a session storage for fast loading.
-		if (typeof sessionStorage === "object")
-		{
-			var $post;
-
-			if (jsonOrjQuery instanceof jQuery)
-			{
-				$post = jsonOrjQuery;
-			}
-			else if (jsonOrjQuery.html)
-			{
-				var $post = $(jsonOrjQuery.html);
-			}
-
-			// We do this even with an item we pulled from AJAX to remove the ID.
-			// The HTML dom cannot have duplicate IDs, ever. It's important.
-			var $post = $($post[0].outerHTML); // Can't use .clone()
-
-			if (typeof $post[0] !== "undefined")
-			{
-				var id    = $post[0].id;
-				$post.removeAttr('id');
-				var html = $post[0].outerHTML;
-
-				// Attempt to set a new storage item.
-				// Destroy older items if we are full.
-				var setting = true;
-
-				while (setting === true)
-				{
-					try
-					{
-						sessionStorage.setItem( id, html );
-						break;
-					}
-					catch (e)
-					{
-						if (sessionStorage.length > 0)
-						{
-							sessionStorage.removeItem( sessionStorage.key(0) );
-						}
-						else
-						{
-							setting = false;
-						}
-					}
-				}
-
-				return $post;
-			}
-		}
-
-		return null;
-	};
-
-	// Clears existing hover-over divs created by anchorBoxToLink.
-	blueprint.prototype.clearCites = function() {
-		if (this.$cite instanceof jQuery)
-		{
-			this.$cite.remove();
-		}
-
-		$("."+this.options.classname['post-hover']).remove();
-
-		this.$cite    = null;
-		this.citeLoad = null;
-	};
-
-	// Events
-	blueprint.prototype.events = {
-		attachmentCollapseClick : function(event) {
-			var widget  = event.data.widget;
-			var $link   = $(this);
-			var $item   = $link.parents("li.post-attachment");
-			var $img    = $(widget.options.selector['attachment-image'], $item);
-			var $inline = $(widget.options.selector['attachment-inline'], $item);
-
-			if ($inline.length > 0)
-			{
-				$("[src]", $item).attr('src', "");
-				$inline[0].pause(0);
-				$inline[0].src = "";
-				$inline[0].load();
-			}
-
-			if ($img.is('[data-thumb-width]'))
-			{
-				$img.css('width', $img.attr('data-thumb-width') + "px");
-			}
-
-			if ($img.is('[data-thumb-height]'))
-			{
-				$img.css('height', $img.attr('data-thumb-height') + "px");
-			}
-
-			$item.removeClass('attachment-expanded');
-			$img.attr('src', $link.attr('data-thumb-url'));
-			$inline.remove();
-			$img.toggle(true);
-			$img.parent().css({
-				'background-image' : 'none',
-				'min-width'        : '',
-				'min-height'       : '',
-			});
-
-			if (event.delegateTarget === widget.$widget[0])
-			{
-				widget.$widget[0].scrollIntoView({
-					block    : "start",
-					behavior : "instant"
-				});
-			}
-
-			event.preventDefault();
-			return false;
-		},
-
-		attachmentMediaCheck : function(event) {
-			var widget = event.data.widget;
-			var $img   = $(this);
-			var $link  = $img.parents(widget.options.selector['attachment-link']).first();
-
-			// Check for previous results.
-			if ($link.is(".attachment-canplay"))
-			{
-				return true;
-			}
-			else if ($link.is(".attachment-cannotplay"))
-			{
-				return false;
-			}
-
-			// Test audio.
-			if ($img.is(widget.options.selector['attachment-image-audio']))
-			{
-				var $audio  = $("<audio></audio>");
-				var mimetype = $img.attr('data-mime');
-				var fileext  = $link.attr('href').split('.').pop();
-
-				if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "")
-				{
-					$link.addClass("attachment-canplay");
-					return true;
-				}
-			}
-			// Test video.
-			else if ($img.is(widget.options.selector['attachment-image-video']))
-			{
-				var $video   = $("<video></video>");
-				var mimetype = $img.attr('data-mime');
-				var fileext  = $link.attr('href').split('.').pop();
-
-				if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
-				{
-					$link.addClass("attachment-canplay");
-					return true;
-				}
-			}
-			else
-			{
-				$link.addClass("attachment-canplay");
-				return true;
-			}
-
-			// Add failure results.
-			$link.addClass('attachment-cannotplay');
-
-			$img
-				.addClass('attachment-type-file')
-				.removeClass('attachment-type-video attachment-type-audio');
-
-			return false;
-		},
-
-		attachmentMediaEnded : function(event) {
-			var widget  = event.data.widget;
-			var $media  = $(this);
-			var $item   = $media.parents("li.post-attachment");
-			var $link   = $(widget.options.selector['attachment-link'], $item);
-			var $img    = $(widget.options.selector['attachment-image'], $item);
-			var $inline = $(widget.options.selector['attachment-inline'], $item);
-
-			$item.removeClass('attachment-expanded');
-			$img.attr('src', $link.attr('data-thumb-url'));
-			$inline.remove();
-			$img.toggle(true);
-			$img.parent().addClass('attachment-grow');
-		},
-
-		attachmentMediaMouseOver : function(event) {
-			var widget   = event.data.widget;
-
-			if (!widget.is('attachment_preview')) {
-				return true;
-			}
-
-			var $img     = $(this);
-			var $link    = $img.parents(widget.options.selector['attachment-link']).first();
-			var $preview = $(widget.options.selector['hover-box']);
-
-			$preview.children().attr('src', $link.attr('data-download-url'));
-
-			widget.previewTimer = setTimeout(function() {
-				$preview.show();
-			}, widget.options.preview_delay);
-		},
-
-		attachmentMediaMouseOut : function(event) {
-			var widget   = event.data.widget;
-			var $img     = $(this);
-			var $link    = $img.parents(widget.options.selector['attachment-link']).first();
-			var $preview = $(widget.options.selector['hover-box']);
-
-			$preview.children().attr('src', "");
-			$preview.hide();
-			clearTimeout(widget.previewTimer);
-		},
-
-		attachmentExpandClick : function(event) {
-			var widget = event.data.widget;
-			var $link  = $(this);
-			var $item  = $link.parents("li.post-attachment");
-			var $img   = $(widget.options.selector['attachment-image'], $link);
-
-			// We don't do anything if the user is CTRL+Clicking,
-			// or if the file is a download type.
-			if (event.altKey || event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
-			{
-				return true;
-			}
-
-			// If the attachment type is not an image, we can't expand inline.
-			if ($img.is(widget.options.selector['attachment-image-expandable']))
-			{
-				$item.addClass('attachment-expanded');
-				$img.parent().css({
-						// Removed because the effect was gross.
-						// 'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
-						// 'background-size'     : '100%',
-						// 'background-repeat'   : 'no-repeat',
-						// 'background-position' : 'center center',
-						'min-width'           : $img.width() + 'px',
-						'min-height'          : $img.height() + 'px',
-						'height'              : "auto",
-						'width'               : "auto",
-						'opacity'             : 0.5,
-					});
-
-				// Clear source first so that lodaing works correctly.
-				$img
-					.attr('data-thumb-width', $img.width())
-					.attr('data-thumb-height', $img.height())
-					.attr('src', "")
-					.css({
-						'width'  : "auto",
-						'height' : "auto"
-					});
-
-				$img
-					// Change the source of our thumb to the full image.
-					.attr('src', $link.attr('data-download-url'))
-					// Bind an event to handle the image loading.
-					.one("load", function() {
-						// Remove our opacity change.
-						$(this).parent().css({
-							// 'background-image' : "none",
-							// 'min-width'        : '',
-							// 'min-height'       : '',
-							'opacity'          : ""
-						});
-					});
-
-				event.preventDefault();
-				return false;
-			}
-			else if ($img.is(widget.options.selector['attachment-image-audio']))
-			{
-				var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
-				var $source = $("<source />");
-				var mimetype = $img.attr('data-mime');
-				var fileext  = $link.attr('href').split('.').pop();
-
-				if ($audio[0].canPlayType(mimetype) || $audio[0].canPlayType("audio/"+fileext))
-				{
-					$item.addClass('attachment-expanded');
-
-					$source
-						.attr('src',  $link.attr('href'))
-						.attr('type', $img.attr('data-mime'))
-						.one('error', function(event) {
-							// Our source has failed to load!
-							// Trigger a download.
-							$img
-								.trigger('click')
-								.removeClass('attachment-type-audio')
-								.addClass('attachment-type-file');
-						})
-						.appendTo($audio);
-
-					$audio.insertBefore($link);
-					widget.bindMediaEvents($audio);
-
-					$audio.parent().addClass('attachment-grow');
-
-					event.preventDefault();
-					return false;
-				}
-			}
-			else if ($img.is(widget.options.selector['attachment-image-video']))
-			{
-				var $video   = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
-				var $source  = $("<source />");
-				var mimetype = $img.attr('data-mime');
-				var fileext  = $link.attr('href').split('.').pop();
-
-				if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
-				{
-					$item.addClass('attachment-expanded');
-
-					$source
-						.attr('src',  $link.attr('href'))
-						.attr('type', $img.attr('data-mime'))
-						.one('error', function(event) {
-							// Our source has failed to load!
-							// Trigger a download.
-							$img
-								.trigger('click')
-								.removeClass('attachment-type-video')
-								.addClass('attachment-type-download attachment-type-failed');
-						})
-						.appendTo($video);
-
-					$img.toggle(false);
-
-					widget.bindMediaEvents($video);
-					$video.insertBefore($link);
-
-					event.preventDefault();
-					return false;
-				}
-				else
-				{
-					$img
-						.addClass('attachment-type-file')
-						.removeClass('attachment-type-video');
-
-					return true;
-				}
-			}
-			else
-			{
-				return true;
-			}
-		},
-
-		citeClick : function(event) {
-			if (event.altKey || event.ctrlKey)
-			{
-				return true;
-			}
-
-			var $cite     = $(this);
-			var board_uri = $cite.attr('data-board_uri');
-			var board_id  = parseInt($cite.attr('data-board_id'), 10);
-			var $target   = $("#post-"+board_uri+"-"+board_id);
-
-			if ($target.length)
-			{
-				window.location.hash = board_id;
-				$target[0].scrollIntoView();
-
-				event.preventDefault();
-				return false;
-			}
-		},
-
-		citeMouseOver : function(event) {
-			var widget    = event.data.widget;
-			var $cite     = $(this);
-			var board_uri = $cite.attr('data-board_uri');
-			var board_id  = parseInt($cite.attr('data-board_id'), 10);
-			var post_id   = "post-"+board_uri+"-"+board_id;
-			var $post;
-
-			// Prevent InstantClick hijacking requests we can handle without
-			// reloading the document.
-			if ($("#"+post_id).length)
-			{
-				$cite.attr('data-no-instant', "data-no-instant");
-			}
-			else
-			{
-				$cite.removeAttr('data-no-instant');
-			}
-
-			widget.clearCites();
-
-			if (widget.citeLoad == post_id)
-			{
-				return true;
-			}
-
-			// Loads session storage for our post if it exists.
-			if (typeof sessionStorage === "object")
-			{
-				$post = $(sessionStorage.getItem( post_id ));
-
-				if ($post instanceof jQuery && $post.length)
-				{
-					widget.anchorBoxToLink($post, $cite);
-					return true;
-				}
-			}
-
-			widget.citeLoad = post_id;
-
-			jQuery.ajax({
-				type:        "GET",
-				url:         "/"+board_uri+"/post/"+board_id+".json",
-				contentType: "application/json; charset=utf-8"
-			}).done(function(response, textStatus, jqXHR) {
-				$post = widget.cachePosts(response);
-
-				if (widget.citeLoad === post_id)
-				{
-					widget.anchorBoxToLink($post, $cite);
-				}
-			});
-		},
-
-		citeMouseOut : function(event) {
-			event.data.widget.clearCites();
-		},
-
-		// Adds HLJS syntax formatting to posts.
-		codeHighlight : function(event) {
-			var widget  = event.data.widget;
-			var $widget =  event.data.$widget;
-
-			// Activate code highlighting if the JS module is enabled.
-			if (typeof window.hljs === "object")
-			{
-				$(widget.options.selector['element-code'], $widget).each(function()
-				{
-					window.hljs.highlightBlock(this);
-				});
-			}
-			else
-			{
-				console.log("post.codeHighlight: missing hljs");
-			}
-		},
-
-		postClick : function(event) {
-			var widget = event.data.widget;
-
-			if ($(widget.options.selector['mode-reply']).length !== 0)
-			{
-				event.preventDefault();
-
-				var $this = $(this);
-				var $body = $(widget.options.selector['post-form-body']);
-
-				$body
-					.val($body.val() + ">>" + $this.data('board_id') + "\n")
-					.focus();
-
-				return false;
-			}
-
-			return true;
-		},
-
-		postContentUpdate : function(event) {
-			var widget  = event.data.widget;
-			var $widget =  event.data.$widget;
-
-			$(widget.options.selector.author_id, $widget)
-				.toggle(widget.is('author_id'));
-
-			widget.addAuthorship();
-			$widget.trigger('highlight-syntax');
-		},
-
-		threadNewPosts : function(event, posts) {
-			// Data of our widget, the item we are hoping to insert new citations into.
-			var widget           = event.data.widget;
-			var $detail          = $(widget.options.selector['cite-slot'], widget.$widget);
-			var $backlinks       = $detail.children();
-			var backlinks        = 0;
-			var widget_board_uri = widget.$widget.attr('data-board_uri');
-			var widget_board_id  = widget.$widget.attr('data-board_id');
-
-			// All new updates show off their posts in three difeferent groups.
-			jQuery.each(posts, function(index, group) {
-				// Each group can have many jQuery dom elements.
-				jQuery.each(group, function(index, $post) {
-					// This information belongs to a new post.
-					var post_board_uri = $post.attr('data-board_uri');
-					var post_board_id  = $post.attr('data-board_id');
-					var $cites         = $(widget.options.selector['forwardlink'], $post);
-
-					// Each post may have many citations.
-					$cites.each(function(index) {
-						// This information represents the post we are citing.
-						var $cite          = $(this);
-						var cite_board_uri = $cite.attr('data-board_uri');
-						var cite_board_id  = $cite.attr('data-board_id');
-
-						// If it doesn't belong to our widget, we don't want it.
-						if (cite_board_uri == widget_board_uri && cite_board_id == widget_board_id)
-						{
-							var $target    = $("#post-" + cite_board_uri + "-" + post_board_id);
-
-							if (!$backlinks.filter("[data-board_uri="+post_board_uri+"][data-board_id="+post_board_id+"]").length)
-							{
-								var $backlink = $(widget.options.template['backlink'])
-									.attr('data-board_uri', post_board_uri)
-									.data('board_uri', post_board_uri)
-									.attr('data-board_id', post_board_id)
-									.data('board_id', post_board_id)
-									.attr('href', "/" + post_board_uri + "/post/" + post_board_id)
-									.appendTo($detail);
-
-								console.log($backlink);
-								$backlinks = $backlinks.add($backlink);
-								++backlinks;
-
-								// Believe it or not this is actually important.
-								// it adds a space after each item.
-								$detail.append("\n");
-
-								if (post_board_uri == window.app.board)
-								{
-									$backlink.addClass('cite-local').html("&gt;&gt;" + post_board_id);
-								}
-								else
-								{
-									$backlink.addClass('cite-remote').html("&gt;&gt;&gt;/" + post_board_uri + "/" + post_board_id);
-								}
-							}
-						}
-					});
-				});
-			});
-
-			if (backlinks)
-			{
-				widget.addAuthorship();
-			}
-		}
-	};
-
-	ib.widget("post", blueprint, options);
+    // Widget blueprint
+    var blueprint = ib.getBlueprint();
+
+    var events = {
+        doContentUpdate : function(event) {
+            // On setting update, trigger reformating..
+            var setting = event.data.setting;
+            var widget  = setting.widget;
+            ib.getInstances(widget).trigger('contentUpdate');
+        }
+    };
+
+    // Configuration options
+    var options = {
+        author_id : {
+            type : "bool",
+            initial : true,
+            onChange : events.doContentUpdate,
+            onUpdate : events.doContentUpdate
+        },
+        attachment_preview : {
+            type : "bool",
+            initial : true
+        }
+    };
+
+    blueprint.prototype.defaults = {
+        preview_delay : 200,
+
+        // Important class names.
+        classname : {
+            'post-hover'  : "post-hover",
+            'cite-you'    : "cite-you"
+        },
+
+        // Selectors for finding and binding elements.
+        selector : {
+            'widget'         : ".post-container",
+
+            'hover-box'      : "#attachment-preview",
+            'hover-box-img'  : "#attachment-preview-img",
+
+            'mode-reply'     : "main.mode-reply",
+            'mode-index'     : "main.mode-index",
+
+            'post-reply'     : ".post-reply",
+
+            'element-code'   : "pre code",
+            'element-quote'  : "blockquote",
+
+            'author'         : ".author",
+            'author_id'      : ".authorid",
+
+            'cite-slot'      : "li.detail-cites",
+            'cite'           : "a.cite-post",
+            'backlinks'      : "a.cite-backlink",
+            'forwardlink'    : "blockquote.post a.cite-post",
+
+            'post-form'      : "#post-form",
+            'post-form-body' : "#body",
+
+            'attachment'         : "li.post-attachment",
+            'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
+            'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
+            'attachment-media'   : "audio.attachment-inline, video.attachment-inline",
+            'attachment-image'   : "img.attachment-img",
+            'attachment-image-download'   : "img.attachment-type-file",
+            'attachment-image-expandable' : "img.attachment-type-img",
+            'attachment-image-audio'      : "img.attachment-type-audio",
+            'attachment-image-video'      : "img.attachment-type-video",
+            'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
+            'attachment-link'    : "a.attachment-link"
+        },
+
+        // HTML Templates
+        template : {
+            'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>"
+        }
+    };
+
+    // The temporary hover-over item created to show backlink posts.
+    blueprint.prototype.$cite    = null;
+    blueprint.prototype.citeLoad = null;
+
+    // Takes an element and positions it near a backlink.
+    blueprint.prototype.anchorBoxToLink = function($box, $link) {
+        var bodyWidth = document.body.scrollWidth;
+
+        var linkRect  = $link[0].getBoundingClientRect();
+
+        $(this.options.classname['post-hover']).remove();
+
+        if (!$box.parents().length)
+        {
+            $box.appendTo("body")
+                .addClass(this.options.classname['post-hover'])
+                .css('position', "absolute");
+            ib.bindAll($box);
+        }
+
+        var boxHeight = $box.outerHeight();
+        var boxWidth  = $box.outerWidth();
+
+        var posTop  = linkRect.top + window.scrollY;
+
+        // Is the box's bottom below the bottom of the screen?
+        if (posTop + boxHeight + 25 > window.scrollY + window.innerHeight)
+        {
+            // Selects the larger of two values:
+            // A) Our position in the scroll, or
+            // B) The hidden part of the post subtracted from the top.
+            // This check will try to keep the entire post visible,
+            // but will always keep the top of the post visible.
+            var posTopDiff = (posTop + boxHeight + 25) - (window.scrollY + window.innerHeight);
+            posTop = Math.max( window.scrollY, posTop - posTopDiff );
+        }
+
+
+        // Float to the right.
+        // Default for LTR
+        var posLeft;
+        var posLeftOnRight = linkRect.right + 5;
+        var posLeftOnLeft  = linkRect.left  - 5;
+        var maxWidth       = (document.body.scrollWidth * 0.7) - 15;
+        var newWidth;
+
+        // LTR display
+        if (ib.ltr)
+        {
+            // Left side has more space than right side,
+            // and box is wider than remaining space.
+            if (linkRect.left > document.body.scrollWidth - posLeftOnRight
+                && boxWidth > document.body.scrollWidth - posLeftOnRight)
+            {
+                posLeft  = posLeftOnLeft;
+                newWidth = Math.min(maxWidth, boxWidth, linkRect.left - 15);
+                posLeft -= newWidth;
+            }
+            // Right side has more adequate room,
+            // Or box fits in.
+            else
+            {
+                posLeft  = posLeftOnRight;
+                newWidth = Math.min(
+                    maxWidth,
+                    boxWidth,
+                    document.body.scrollWidth - posLeftOnRight  - 15
+                );
+            }
+        }
+        // RTL Display
+        else
+        {
+            // TODO
+        }
+
+        $box.css({
+            'top'       : posTop,
+            'left'      : posLeft,
+            'width'     : newWidth,
+        });
+
+        this.$cite = $box;
+    };
+
+    // Includes (You) classes on posts that we think we own.
+    blueprint.prototype.addAuthorship = function() {
+        var widget = this;
+        var cites  = [];
+
+        // Loop through each citation.
+        $(this.options.selector['cite'], this.$widget).each(function() {
+            var board = this.dataset.board_uri;
+            var post  = this.dataset.board_id.toString();
+
+            // Check and see if we have an item for this citation's board.
+            if (typeof cites[board] === "undefined")
+            {
+                if (localStorage.getItem("yourPosts."+board) !== null)
+                {
+                    cites[board] = localStorage.getItem("yourPosts."+board).split(",");
+                }
+                else
+                {
+                    cites[board] = [];
+                }
+            }
+
+            if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
+            {
+                this.className += " " + widget.options.classname['cite-you'];
+            }
+        });
+
+        (function() {
+            var board = widget.$widget[0].dataset.board_uri;
+            var post  = widget.$widget[0].dataset.board_id.toString();
+            var posts = localStorage.getItem("yourPosts."+board);
+
+            if (posts !== null && posts.split(",").indexOf(post) > 0)
+            {
+                widget.$widget[0].className += " post-you";
+            }
+        })();
+    };
+
+    // Event bindings
+    blueprint.prototype.bind = function() {
+        var widget  = this;
+        var $widget = this.$widget;
+        var data    = {
+            widget  : widget,
+            $widget : $widget
+        };
+
+        $(window)
+            .on(
+                'au-updated.ib-post',
+                data,
+                widget.events.threadNewPosts
+            );
+
+        $(document)
+            .on(
+                'ready.ib-post',
+                data,
+                widget.events.codeHighlight
+            );
+
+        $widget
+            .on(
+                'contentUpdate.ib-post',
+                data,
+                widget.events.postContentUpdate
+            )
+            .on(
+                'highlight-syntax.ib-post',
+                data,
+                widget.events.codeHighlight
+            )
+            .on(
+                'click.ib-post',
+                widget.options.selector['post-reply'],
+                data,
+                widget.events.postClick
+            )
+            .on(
+                'mouseover.ib-post',
+                widget.options.selector['attachment-image-expandable'],
+                data,
+                widget.events.attachmentMediaMouseOver
+            )
+            .on(
+                'mouseout.ib-post',
+                widget.options.selector['attachment-image-expandable'],
+                data,
+                widget.events.attachmentMediaMouseOut
+            )
+            .on(
+                'media-check.ib-post',
+                widget.options.selector['attachment-image'],
+                data,
+                widget.events.attachmentMediaCheck
+            )
+            .on(
+                'click.ib-post',
+                widget.options.selector['attacment-expand'],
+                data,
+                widget.events.attachmentExpandClick
+            )
+            .on(
+                'click.ib-post',
+                widget.options.selector['attacment-collapse'],
+                data,
+                widget.events.attachmentCollapseClick
+            )
+
+            // Citations
+            .on(
+                'click.ib-post',
+                widget.options.selector['cite'],
+                data,
+                widget.events.citeClick
+            )
+            .on(
+                'mouseover.ib-post',
+                widget.options.selector['cite'],
+                data,
+                widget.events.citeMouseOver
+            )
+            .on(
+                'mouseout.ib-post',
+                widget.options.selector['cite'],
+                data,
+                widget.events.citeMouseOut
+            )
+        ;
+
+        $widget.trigger('contentUpdate');
+        widget.cachePosts($widget);
+    };
+
+    blueprint.prototype.bindMediaEvents = function($element) {
+        var data = {
+            widget  : this,
+            $widget : this.$widget
+        };
+
+        $element.on(
+            'ended.ib-post',
+            data,
+            this.events.attachmentMediaEnded
+        );
+    };
+
+    // Stores a post in the session store.
+    blueprint.prototype.cachePosts = function(jsonOrjQuery) {
+        // This stores the post data into a session storage for fast loading.
+        if (typeof sessionStorage === "object")
+        {
+            var $post;
+
+            if (jsonOrjQuery instanceof jQuery)
+            {
+                $post = jsonOrjQuery;
+            }
+            else if (jsonOrjQuery.html)
+            {
+                var $post = $(jsonOrjQuery.html);
+            }
+
+            // We do this even with an item we pulled from AJAX to remove the ID.
+            // The HTML dom cannot have duplicate IDs, ever. It's important.
+            var $post = $($post[0].outerHTML); // Can't use .clone()
+
+            if (typeof $post[0] !== "undefined")
+            {
+                var id    = $post[0].id;
+                $post.removeAttr('id');
+                var html = $post[0].outerHTML;
+
+                // Attempt to set a new storage item.
+                // Destroy older items if we are full.
+                var setting = true;
+
+                while (setting === true)
+                {
+                    try
+                    {
+                        sessionStorage.setItem( id, html );
+                        break;
+                    }
+                    catch (e)
+                    {
+                        if (sessionStorage.length > 0)
+                        {
+                            sessionStorage.removeItem( sessionStorage.key(0) );
+                        }
+                        else
+                        {
+                            setting = false;
+                        }
+                    }
+                }
+
+                return $post;
+            }
+        }
+
+        return null;
+    };
+
+    // Clears existing hover-over divs created by anchorBoxToLink.
+    blueprint.prototype.clearCites = function() {
+        if (this.$cite instanceof jQuery)
+        {
+            this.$cite.remove();
+        }
+
+        $("."+this.options.classname['post-hover']).remove();
+
+        this.$cite    = null;
+        this.citeLoad = null;
+    };
+
+    // Events
+    blueprint.prototype.events = {
+        attachmentCollapseClick : function(event) {
+            var widget  = event.data.widget;
+            var $link   = $(this);
+            var $item   = $link.parents("li.post-attachment");
+            var $img    = $(widget.options.selector['attachment-image'], $item);
+            var $inline = $(widget.options.selector['attachment-inline'], $item);
+
+            if ($inline.length > 0)
+            {
+                $("[src]", $item).attr('src', "");
+                $inline[0].pause(0);
+                $inline[0].src = "";
+                $inline[0].load();
+            }
+
+            if ($img.is('[data-thumb-width]'))
+            {
+                $img.css('width', $img.attr('data-thumb-width') + "px");
+            }
+
+            if ($img.is('[data-thumb-height]'))
+            {
+                $img.css('height', $img.attr('data-thumb-height') + "px");
+            }
+
+            $item.removeClass('attachment-expanded');
+            $img.attr('src', $link.attr('data-thumb-url'));
+            $inline.remove();
+            $img.toggle(true);
+            $img.parent().css({
+                'background-image' : 'none',
+                'min-width'        : '',
+                'min-height'       : '',
+            });
+
+            if (event.delegateTarget === widget.$widget[0])
+            {
+                widget.$widget[0].scrollIntoView({
+                    block    : "start",
+                    behavior : "instant"
+                });
+            }
+
+            event.preventDefault();
+            return false;
+        },
+
+        attachmentMediaCheck : function(event) {
+            var widget = event.data.widget;
+            var $img   = $(this);
+            var $link  = $img.parents(widget.options.selector['attachment-link']).first();
+
+            // Check for previous results.
+            if ($link.is(".attachment-canplay"))
+            {
+                return true;
+            }
+            else if ($link.is(".attachment-cannotplay"))
+            {
+                return false;
+            }
+
+            // Test audio.
+            if ($img.is(widget.options.selector['attachment-image-audio']))
+            {
+                var $audio  = $("<audio></audio>");
+                var mimetype = $img.attr('data-mime');
+                var fileext  = $link.attr('href').split('.').pop();
+
+                if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "")
+                {
+                    $link.addClass("attachment-canplay");
+                    return true;
+                }
+            }
+            // Test video.
+            else if ($img.is(widget.options.selector['attachment-image-video']))
+            {
+                var $video   = $("<video></video>");
+                var mimetype = $img.attr('data-mime');
+                var fileext  = $link.attr('href').split('.').pop();
+
+                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
+                {
+                    $link.addClass("attachment-canplay");
+                    return true;
+                }
+            }
+            else
+            {
+                $link.addClass("attachment-canplay");
+                return true;
+            }
+
+            // Add failure results.
+            $link.addClass('attachment-cannotplay');
+
+            $img
+                .addClass('attachment-type-file')
+                .removeClass('attachment-type-video attachment-type-audio');
+
+            return false;
+        },
+
+        attachmentMediaEnded : function(event) {
+            var widget  = event.data.widget;
+            var $media  = $(this);
+            var $item   = $media.parents("li.post-attachment");
+            var $link   = $(widget.options.selector['attachment-link'], $item);
+            var $img    = $(widget.options.selector['attachment-image'], $item);
+            var $inline = $(widget.options.selector['attachment-inline'], $item);
+
+            $item.removeClass('attachment-expanded');
+            $img.attr('src', $link.attr('data-thumb-url'));
+            $inline.remove();
+            $img.toggle(true);
+            $img.parent().addClass('attachment-grow');
+        },
+
+        attachmentMediaMouseOver : function(event) {
+            var widget   = event.data.widget;
+
+            if (!widget.is('attachment_preview')) {
+                return true;
+            }
+
+            var $img     = $(this);
+            var $link    = $img.parents(widget.options.selector['attachment-link']).first();
+            var $preview = $(widget.options.selector['hover-box']);
+
+            $preview.children().attr('src', $link.attr('data-download-url'));
+
+            widget.previewTimer = setTimeout(function() {
+                $preview.show();
+            }, widget.options.preview_delay);
+        },
+
+        attachmentMediaMouseOut : function(event) {
+            var widget   = event.data.widget;
+            var $img     = $(this);
+            var $link    = $img.parents(widget.options.selector['attachment-link']).first();
+            var $preview = $(widget.options.selector['hover-box']);
+
+            $preview.children().attr('src', "");
+            $preview.hide();
+            clearTimeout(widget.previewTimer);
+        },
+
+        attachmentExpandClick : function(event) {
+            var widget = event.data.widget;
+            var $link  = $(this);
+            var $item  = $link.parents("li.post-attachment");
+            var $img   = $(widget.options.selector['attachment-image'], $link);
+
+            // We don't do anything if the user is CTRL+Clicking,
+            // or if the file is a download type.
+            if (event.altKey || event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
+            {
+                return true;
+            }
+
+            // If the attachment type is not an image, we can't expand inline.
+            if ($img.is(widget.options.selector['attachment-image-expandable']))
+            {
+                $item.addClass('attachment-expanded');
+                $img.parent().css({
+                        // Removed because the effect was gross.
+                        // 'background-image'    : 'url(' + $link.attr('data-thumb-url') + ')',
+                        // 'background-size'     : '100%',
+                        // 'background-repeat'   : 'no-repeat',
+                        // 'background-position' : 'center center',
+                        'min-width'           : $img.width() + 'px',
+                        'min-height'          : $img.height() + 'px',
+                        'height'              : "auto",
+                        'width'               : "auto",
+                        'opacity'             : 0.5,
+                    });
+
+                // Clear source first so that lodaing works correctly.
+                $img
+                    .attr('data-thumb-width', $img.width())
+                    .attr('data-thumb-height', $img.height())
+                    .attr('src', "")
+                    .css({
+                        'width'  : "auto",
+                        'height' : "auto"
+                    });
+
+                $img
+                    // Change the source of our thumb to the full image.
+                    .attr('src', $link.attr('data-download-url'))
+                    // Bind an event to handle the image loading.
+                    .one("load", function() {
+                        // Remove our opacity change.
+                        $(this).parent().css({
+                            // 'background-image' : "none",
+                            // 'min-width'        : '',
+                            // 'min-height'       : '',
+                            'opacity'          : ""
+                        });
+                    });
+
+                event.preventDefault();
+                return false;
+            }
+            else if ($img.is(widget.options.selector['attachment-image-audio']))
+            {
+                var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
+                var $source = $("<source />");
+                var mimetype = $img.attr('data-mime');
+                var fileext  = $link.attr('href').split('.').pop();
+
+                if ($audio[0].canPlayType(mimetype) || $audio[0].canPlayType("audio/"+fileext))
+                {
+                    $item.addClass('attachment-expanded');
+
+                    $source
+                        .attr('src',  $link.attr('href'))
+                        .attr('type', $img.attr('data-mime'))
+                        .one('error', function(event) {
+                            // Our source has failed to load!
+                            // Trigger a download.
+                            $img
+                                .trigger('click')
+                                .removeClass('attachment-type-audio')
+                                .addClass('attachment-type-file');
+                        })
+                        .appendTo($audio);
+
+                    $audio.insertBefore($link);
+                    widget.bindMediaEvents($audio);
+
+                    $audio.parent().addClass('attachment-grow');
+
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            else if ($img.is(widget.options.selector['attachment-image-video']))
+            {
+                var $video   = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
+                var $source  = $("<source />");
+                var mimetype = $img.attr('data-mime');
+                var fileext  = $link.attr('href').split('.').pop();
+
+                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
+                {
+                    $item.addClass('attachment-expanded');
+
+                    $source
+                        .attr('src',  $link.attr('href'))
+                        .attr('type', $img.attr('data-mime'))
+                        .one('error', function(event) {
+                            // Our source has failed to load!
+                            // Trigger a download.
+                            $img
+                                .trigger('click')
+                                .removeClass('attachment-type-video')
+                                .addClass('attachment-type-download attachment-type-failed');
+                        })
+                        .appendTo($video);
+
+                    $img.toggle(false);
+
+                    widget.bindMediaEvents($video);
+                    $video.insertBefore($link);
+
+                    event.preventDefault();
+                    return false;
+                }
+                else
+                {
+                    $img
+                        .addClass('attachment-type-file')
+                        .removeClass('attachment-type-video');
+
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        },
+
+        citeClick : function(event) {
+            if (event.altKey || event.ctrlKey)
+            {
+                return true;
+            }
+
+            var $cite     = $(this);
+            var board_uri = $cite.attr('data-board_uri');
+            var board_id  = parseInt($cite.attr('data-board_id'), 10);
+            var $target   = $("#post-"+board_uri+"-"+board_id);
+
+            if ($target.length)
+            {
+                window.location.hash = board_id;
+                $target[0].scrollIntoView();
+
+                event.preventDefault();
+                return false;
+            }
+        },
+
+        citeMouseOver : function(event) {
+            var widget    = event.data.widget;
+            var $cite     = $(this);
+            var board_uri = $cite.attr('data-board_uri');
+            var board_id  = parseInt($cite.attr('data-board_id'), 10);
+            var post_id   = "post-"+board_uri+"-"+board_id;
+            var $post;
+
+            // Prevent InstantClick hijacking requests we can handle without
+            // reloading the document.
+            if ($("#"+post_id).length)
+            {
+                $cite.attr('data-no-instant', "data-no-instant");
+            }
+            else
+            {
+                $cite.removeAttr('data-no-instant');
+            }
+
+            widget.clearCites();
+
+            if (widget.citeLoad == post_id)
+            {
+                return true;
+            }
+
+            // Loads session storage for our post if it exists.
+            if (typeof sessionStorage === "object")
+            {
+                $post = $(sessionStorage.getItem( post_id ));
+
+                if ($post instanceof jQuery && $post.length)
+                {
+                    widget.anchorBoxToLink($post, $cite);
+                    return true;
+                }
+            }
+
+            widget.citeLoad = post_id;
+
+            jQuery.ajax({
+                type:        "GET",
+                url:         "/"+board_uri+"/post/"+board_id+".json",
+                contentType: "application/json; charset=utf-8"
+            }).done(function(response, textStatus, jqXHR) {
+                $post = widget.cachePosts(response);
+
+                if (widget.citeLoad === post_id)
+                {
+                    widget.anchorBoxToLink($post, $cite);
+                }
+            });
+        },
+
+        citeMouseOut : function(event) {
+            event.data.widget.clearCites();
+        },
+
+        // Adds HLJS syntax formatting to posts.
+        codeHighlight : function(event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            // Activate code highlighting if the JS module is enabled.
+            if (typeof window.hljs === "object")
+            {
+                $(widget.options.selector['element-code'], $widget).each(function()
+                {
+                    window.hljs.highlightBlock(this);
+                });
+            }
+            else
+            {
+                console.log("post.codeHighlight: missing hljs");
+            }
+        },
+
+        postClick : function(event) {
+            var widget = event.data.widget;
+
+            if ($(widget.options.selector['mode-reply']).length !== 0)
+            {
+                event.preventDefault();
+
+                var $this = $(this);
+                var $body = $(widget.options.selector['post-form-body']);
+                var $postbox = $(widget.options.selector['post-form']);
+                var postboxWidget = $postbox[0].widget;
+                var selectedText = ib.getSelectedText();
+
+                if (selectedText != "") {
+                    selectedText = ">" + selectedText.trim().split("\n").join("\n>") + "\n";
+                }
+
+                postboxWidget.replaceBodySelection(">>" + $this.data('board_id') + "\n" + selectedText);
+
+                return false;
+            }
+
+            return true;
+        },
+
+        postContentUpdate : function(event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            $(widget.options.selector.author_id, $widget)
+                .toggle(widget.is('author_id'));
+
+            widget.addAuthorship();
+            $widget.trigger('highlight-syntax');
+        },
+
+        threadNewPosts : function(event, posts) {
+            // Data of our widget, the item we are hoping to insert new citations into.
+            var widget           = event.data.widget;
+            var $detail          = $(widget.options.selector['cite-slot'], widget.$widget);
+            var $backlinks       = $detail.children();
+            var backlinks        = 0;
+            var widget_board_uri = widget.$widget.attr('data-board_uri');
+            var widget_board_id  = widget.$widget.attr('data-board_id');
+
+            // All new updates show off their posts in three difeferent groups.
+            jQuery.each(posts, function(index, group) {
+                // Each group can have many jQuery dom elements.
+                jQuery.each(group, function(index, $post) {
+                    // This information belongs to a new post.
+                    var post_board_uri = $post.attr('data-board_uri');
+                    var post_board_id  = $post.attr('data-board_id');
+                    var $cites         = $(widget.options.selector['forwardlink'], $post);
+
+                    // Each post may have many citations.
+                    $cites.each(function(index) {
+                        // This information represents the post we are citing.
+                        var $cite          = $(this);
+                        var cite_board_uri = $cite.attr('data-board_uri');
+                        var cite_board_id  = $cite.attr('data-board_id');
+
+                        // If it doesn't belong to our widget, we don't want it.
+                        if (cite_board_uri == widget_board_uri && cite_board_id == widget_board_id)
+                        {
+                            var $target    = $("#post-" + cite_board_uri + "-" + post_board_id);
+
+                            if (!$backlinks.filter("[data-board_uri="+post_board_uri+"][data-board_id="+post_board_id+"]").length)
+                            {
+                                var $backlink = $(widget.options.template['backlink'])
+                                    .attr('data-board_uri', post_board_uri)
+                                    .data('board_uri', post_board_uri)
+                                    .attr('data-board_id', post_board_id)
+                                    .data('board_id', post_board_id)
+                                    .attr('href', "/" + post_board_uri + "/post/" + post_board_id)
+                                    .appendTo($detail);
+
+                                $backlinks = $backlinks.add($backlink);
+                                ++backlinks;
+
+                                // Believe it or not this is actually important.
+                                // it adds a space after each item.
+                                $detail.append("\n");
+
+                                if (post_board_uri == window.app.board)
+                                {
+                                    $backlink.addClass('cite-local').html("&gt;&gt;" + post_board_id);
+                                }
+                                else
+                                {
+                                    $backlink.addClass('cite-remote').html("&gt;&gt;&gt;/" + post_board_uri + "/" + post_board_id);
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+
+            if (backlinks)
+            {
+                widget.addAuthorship();
+            }
+        }
+    };
+
+    ib.widget("post", blueprint, options);
 })(window, window.jQuery);
 
 // ===========================================================================
@@ -4047,1021 +4067,1116 @@ ib.widget("permissions", function(window, $, undefined) {
 // ===========================================================================
 
 (function(window, $, undefined) {
-	// Widget blueprint
-	var blueprint = ib.getBlueprint();
-
-	var options = {
-		password : {
-			type : "text",
-			initial : ib.randomString(8),
-		}
-	};
-
-	// Dropzone instance.
-	blueprint.prototype.dropzone = null;
-
-		// jQuery UI bind indicators
-	blueprint.prototype.resizable = false;
-	blueprint.prototype.draggable = false;
-	blueprint.prototype.axis      = ib.ltr ? "sw" : "se";
-
-	// Other widget instances.
-	blueprint.prototype.notices = null;
-
-	// Number of uploads running.
-	// Used to prevent premature form submission.
-	blueprint.prototype.activeUploads = 0;
-
-		// The default values that are set behind init values.
-	blueprint.prototype.defaults = {
-		checkFileUrl  : window.app.board_url + "/check-file",
-
-		// Selectors for finding and binding elements.
-		selector : {
-			'widget'          : "#post-form",
-			'notices'         : "[data-widget=notice]:first",
-			'autoupdater'     : ".autoupdater:first",
-
-			'dropzone'        : ".dz-container",
-
-			'submit-post'     : "#submit-post",
-
-			// This is the main postbox password.
-			'password'        : "#password",
-			// This is any field that uses the same password.
-			'post-password'   : ".post-password",
-
-			'form-fields'     : ".form-fields",
-			'form-body'       : "#body",
-			'form-clear'      : "#subject, #body, #captcha",
-			'form-spoiler'    : ".dz-spoiler-check",
-
-			'captcha'         : ".captcha",
-			'captcha-row'     : ".row-captcha",
-			'captcha-field'   : ".field-control",
-
-			'button-close'    : ".menu-icon-close",
-			'button-maximize' : ".menu-icon-maximize",
-			'button-minimize' : ".menu-icon-minimize"
-		},
-
-		template : {
-			'counter'         : "<tt id=\"body-counter\"></tt>",
-		},
-
-		dropzone : {
-			// Localization strings.
-			// dictDefaultMessage: "Drop files here to upload",
-			// dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
-			// dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
-			// dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
-			// dictInvalidFileType: "You can't upload files of this type.",
-			// dictResponseError: "Server responded with {{statusCode}} code.",
-			// dictCancelUpload: "Cancel upload",
-			// dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
-			// dictRemoveFile: "Remove file",
-			// dictRemoveFileConfirmation: null,
-			// dictMaxFilesExceeded: "You can not upload any more files.",
-
-			// The input field name.
-			paramName      : "files",
-
-			// File upload URL
-			url            : window.app.board_url + "/upload-file",
-
-			// Allow multiple uploads.
-			uploadMultiple : true,
-
-			// Maximum filesize (MB)
-			maxFilesize    : window.app.settings.attachmentFilesize / 1024,
-
-			// Binds the instance to our widget.
-			init: function() {
-				var widget = this.options.widget;
-
-				widget.dropzone = this;
-				this.widget     = widget;
-				this.$widget    = widget.$widget;
-
-				$(this.element).append("<input type=\"hidden\" name=\"dropzone\" value=\"1\" />");
-			},
-
-			// Handles the acceptance of files.
-			accept : function(file, done) {
-				var widget  = this.widget;
-				var $widget = this.$widget;
-				var reader  = new FileReader();
-
-				widget.$widget.trigger('fileUploading', [ file ]);
-
-				reader.onload = function (event) {
-					var Hasher = new SparkMD5;
-					Hasher.appendBinary(this.result);
-
-					var hash = Hasher.end();
-					file.hash = hash;
-
-					jQuery.get( widget.options.checkFileUrl, {
-						'md5' : hash
-					})
-						.done(function(data, textStatus, jqXHR) {
-							if (typeof data === "object")
-							{
-								var response = data;
-
-								jQuery.each(response, function(index, datum) {
-									// Make sure this datum is for our file.
-									if (index !== hash)
-									{
-										return true;
-									}
-
-									// Does this file exist?
-									if (datum !== null)
-									{
-										// Is the file banned?
-										if (datum.banned == 1)
-										{
-											// Language
-											console.log("File "+file.name+" is banned from being uploaded.");
-
-											file.status = Dropzone.ERROR;
-											widget.dropzone.emit("error", file, "File <tt>"+file.name+"</tt> is banned from being uploaded", jqXHR);
-											widget.dropzone.emit("complete", file);
-										}
-										else
-										{
-											console.log("File "+file.name+" already exists.");
-
-											file.status = window.Dropzone.SUCCESS;
-											widget.dropzone.emit("success", file, datum, jqXHR);
-											widget.dropzone.emit("complete", file);
-										}
-									}
-									// If no presence, upload anew.
-									else
-									{
-										console.log("Uploading file "+file.name+".");
-
-										done();
-									}
-								});
-							}
-							else
-							{
-								console.log("Received weird response:", data);
-							}
-						});
-				};
-
-				reader.readAsBinaryString(file);
-			},
-
-			canceled : function(file) {
-				var $widget = this.$widget;
-				$widget.trigger('fileCanceled', [ file ]);
-			},
-
-			error : function(file, message, xhr) {
-				var widget  = this.widget;
-				var $widget = this.$widget;
-
-				widget.notices.push(message, 'error');
-
-				$(file.previewElement).remove();
-
-				$widget.trigger('fileFailed', [ file ]);
-			},
-
-			removedfile : function(file) {
-				var widget = this.widget;
-				var _ref;
-
-				if (file.previewElement) {
-					if ((_ref = file.previewElement) != null) {
-						_ref.parentNode.removeChild(file.previewElement);
-					}
-				}
-
-				widget.resizePostbox();
-
-				return this._updateMaxFilesReachedClass();
-			},
-
-			success : function(file, response, xhr) {
-				var widget  = this.widget;
-				var $widget = this.$widget;
-
-				if (typeof response !== "object")
-				{
-					var response = jQuery.parseJSON(response);
-				}
-
-				if (typeof response.errors !== "undefined")
-				{
-					jQuery.each(response.errors, function(field, errors)
-					{
-						jQuery.each(errors, function(index, error)
-						{
-							widget.dropzone.emit("error", file, error, xhr);
-							widget.dropzone.emit("complete", file);
-						});
-					});
-				}
-				else
-				{
-					var $preview = $(file.previewElement);
-
-					$preview
-						.addClass('dz-success')
-						.append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[hash][]").val(file.hash))
-						.append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[name][]").val(file.name))
-					;
-
-					$("[data-dz-spoiler]", $preview)
-						.attr('name', widget.options.dropzone.paramName+"[spoiler][]");
-				}
-
-				$widget.trigger('fileUploaded', [ file ]);
-			},
-
-			previewTemplate :
-				"<div class=\"dz-preview dz-file-preview\">" +
-					"<div class=\"dz-image\">" +
-						"<img data-dz-thumbnail />" +
-					"</div>" +
-					"<div class=\"dz-actions\">" +
-						"<span class=\"dz-remove\" data-dz-remove>x</span>" +
-						"<label class=\"dz-spoiler\">" +
-							"<input type=\"checkbox\" class=\"dz-spoiler-check\" name=\"\" value=\"\" />" +
-							"<input type=\"chidden\" class=\"dz-spoiler-hidden\" value=\"0\" data-dz-spoiler />" +
-							"<span class=\"dz-spoiler-desc\">Spoiler</span>" +
-						"</label>" +
-					"</div>" +
-					"<div class=\"dz-details\">" +
-						"<div class=\"dz-size\"><span data-dz-size></span></div>" +
-						"<div class=\"dz-filename\"><span data-dz-name></span></div>" +
-					"</div>" +
-					"<div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>" +
-					"<div class=\"dz-success\">" +
-						"<div class=\"dz-success-mark\">" +
-							"<svg viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">" +
-								"<g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">" +
-									"<path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" " +
-										"id=\"Oval-2\" " +
-										"stroke-opacity=\"0.198794158\" " +
-										"stroke=\"#747474\" " +
-										"fill-opacity=\"0.816519475\" " +
-										"fill=\"#FFFFFF\" " +
-										"sketch:type=\"MSShapeGroup\" " +
-									"></path>" +
-								"</g>" +
-							"</svg>" +
-						"</div>" +
-					"</div>" +
-				"</div>"
-		}
-	};
-
-	// Compiled settings.
-	blueprint.prototype.options = false;
-
-	blueprint.prototype.hasCaptcha = function() {
-		return $(this.options.selector['captcha-row'], this.$widget).is(":visible");
-	};
-
-	blueprint.prototype.resizePostbox = function() {
-		var widget  = this;
-		var $widget = this.$widget;
-
-		if (widget.resizable)
-		{
-			if (window.innerHeight < 480 || window.innerWidth < 728)
-			{
-				widget.unbindDraggable();
-				widget.unbindResize();
-			}
-			else
-			{
-				// Trigger resize on the post body.
-				// Forces the post box to obey new window constraints.
-				var $post    = $(widget.options.selector['form-body'], widget.$widget);
-				var uiWidget = $post.data('ui-resizable');
-
-				// Widget is bound and we have data
-				if (uiWidget && !jQuery.isEmptyObject(uiWidget.prevPosition))
-				{
-					// This is copy+pasted from the source code because there is no polite way
-					// to handle it otherwise.
-					uiWidget._updatePrevProperties();
-					uiWidget._trigger( "resize", event, uiWidget.ui() );
-					uiWidget._applyChanges();
-				}
-			}
-		}
-		else if (window.innerHeight >= 480 && window.innerWidth >= 728)
-		{
-			var isClosed = $widget.hasClass("postbox-closed");
-			var isMaximized = $widget.hasClass("postbox-maximized");
-
-			if (!isMaximized && !isClosed)
-			{
-				widget.bindResize();
-			}
-
-			if (!isMaximized)
-			{
-				widget.bindDraggable();
-			}
-		}
-	};
-
-	// Events
-	blueprint.prototype.events = {
-		bodyChange    : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			if (widget.$counter && widget.$counter instanceof jQuery)
-			{
-				var $body = $(this);
-				var len   = $body.val().length;
-				var text  = "<strong id=\"body-counter-curr\">" + len + "</strong>";
-				var valid = true;
-				var free  = true;
-				var max   = parseInt(window.app.board_settings.postMaxLength, 10);
-				var min   = parseInt(window.app.board_settings.postMinLength, 10);
-
-				if (!isNaN(max))
-				{
-					text  = text + "<span id=\"body-counter-max\">" + max + "</span>";
-					free  = false;
-					valid = valid && (len <= max);
-				}
-
-				if (!isNaN(min))
-				{
-					text  = "<span id=\"body-counter-min\">" + min + "</span>" + text;
-					free  = false;
-					valid = valid && (len >= min);
-				}
-
-				if (!free)
-				{
-					widget.$counter
-						.toggleClass("counter-valid",    valid)
-						.toggleClass("counter-invalid", !valid)
-						.html(text);
-				}
-			}
-		},
-
-		captchaHide   : function(widget) {
-			var $widget = widget.$widget;
-
-			$(widget.options.selector['captcha-row'], $widget).hide();
-		},
-
-		captchaShow   : function(widget) {
-			var $widget = widget.$widget;
-
-			$(widget.options.selector['captcha-row'], $widget).show();
-		},
-
-		closeClick    : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			// Tweak classes.
-			$widget
-				.removeClass("postbox-maximized postbox-minimized")
-				.addClass("postbox-closed");
-
-			// Unbind the jQuery UI resize.
-			widget.unbindResize();
-
-			// Prevents formClick from immediately firing.
-			event.stopPropagation();
-		},
-
-		fileUploading : function(event, file) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			++widget.activeUploads;
-			console.log(widget.activeUploads + " concurrent uploads.");
-
-			$(widget.options.selector['submit-post'], $widget)
-				.prop('disabled', widget.activeUploads > 0);
-		},
-
-		fileCanceled  : function(event, file) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			--widget.activeUploads;
-			console.log(widget.activeUploads + " concurrent uploads.");
-
-			$(widget.options.selector['submit-post'], $widget)
-				.prop('disabled', widget.activeUploads > 0);
-		},
-
-		fileFailed    : function(event, file) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			--widget.activeUploads;
-			console.log(widget.activeUploads + " concurrent uploads.");
-
-			$(widget.options.selector['submit-post'], $widget)
-				.prop('disabled', widget.activeUploads > 0);
-		},
-
-		fileUploaded  : function(event, file) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			--widget.activeUploads;
-			console.log(widget.activeUploads + " concurrent uploads.");
-
-			$(widget.options.selector['submit-post'], $widget)
-				.prop('disabled', widget.activeUploads > 0);
-		},
-
-		formClear     : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			// Stops redundant loading of captcha when we don't need one.
-			if (widget.hasCaptcha())
-			{
-				$(widget.options.selector['captcha'], $widget).trigger('reload');
-			}
-
-			if (widget.dropzone)
-			{
-				widget.dropzone.removeAllFiles();
-			}
-
-			$(widget.options.selector['form-clear'], $widget)
-				.val("")
-				.html("");
-
-			$(widget.options.selector['form-body'], $widget)
-				.trigger('change')
-				.focus();
-		},
-
-		formClick     : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			if ($widget.is(".postbox-closed"))
-			{
-				// Tweak classes.
-				$widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
-
-				// Rebind jQuery UI widgets.
-				widget.bindDraggable();
-				widget.bindResize();
-			}
-		},
-
-		formSubmit    : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			widget.notices.clear();
-
-			var $form       = $(this).add("<input name=\"messenger\" value=\"1\" />");
-			var $updater    = $(widget.options.selector['autoupdater']);
-			var autoupdater = false;
-
-			// Note: serializeJSON is a plugin we use to convert form data into
-			// a multidimensional array for application/json posts.
-
-			if ($updater.length && $updater[0].widget)
-			{
-				var data = $form.serialize();
-
-				autoupdater = $updater[0].widget;
-				data = $form
-					.add("<input name=\"updatesOnly\" value=\"1\" />")
-					.add("<input name=\"updateHtml\" value=\"1\" />")
-					.add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
-					.serializeJSON();
-			}
-			else
-			{
-				var data = $form.serializeJSON();
-			}
-
-			// Indicate we want a full messenger response.
-			data.messenger = true;
-
-			// Temporarialy disable form and submit button to prevent double posting
-			$form.prop('disabled', true);
-			$(widget.options.selector['submit']).prop('disabled', true);
-
-			jQuery.ajax({
-				type:        "POST",
-				method:      "PUT",
-				url:         $form.attr('action') + ".json",
-				data:        data,
-				dataType:    "json",
-				contentType: "application/json; charset=utf-8"
-			})
-				.done(function(response, textStatus, jqXHR) {
-					$form.prop('disabled', false);
-					$(widget.options.selector['submit']).prop('disabled', false);
-
-					if (typeof response !== "object")
-					{
-						try
-						{
-							response = jQuery.parseJSON(response);
-						}
-						catch (exception)
-						{
-							console.log("Post submission returned unpredictable response. Refreshing.");
-							window.location.reload();
-							return;
-						}
-					}
-
-					// This event trigger will cascade effects with our supplemental Messenger information.
-					if (response.messenger)
-					{
-						$(window).trigger('messenger', response);
-						var json = response.data;
-					}
-					else
-					{
-						var json = response;
-					}
-
-					if (typeof json.redirect !== "undefined")
-					{
-						console.log("Post submitted. Redirecting.");
-						window.location = json.redirect;
-					}
-					else if (typeof json.errors !== "undefined")
-					{
-						console.log("Post rejected.");
-
-						jQuery.each(json.errors, function(field, errors)
-						{
-							jQuery.each(errors, function(index, error)
-							{
-								widget.notices.push(error, 'error');
-							});
-						});
-					}
-					else if (autoupdater !== false)
-					{
-						console.log("Post submitted. Inline updating.");
-
-						clearInterval(autoupdater.updateTimer);
-
-						jqXHR.widget = autoupdater;
-						autoupdater.updating    = true;
-						autoupdater.updateTimer = false;
-						autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
-						autoupdater.events.updateSuccess(json, textStatus, jqXHR, true);
-						autoupdater.events.updateComplete(json, textStatus, jqXHR);
-
-						widget.events.formClear(event);
-					}
-					else
-					{
-						console.log("Post submitted. No autoupdater. Refreshing.");
-						window.location.reload();
-					}
-				});
-
-			event.preventDefault();
-			return false;
-		},
-
-		maximizeClick : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			// Tweak classes.
-			$widget
-				.removeClass("postbox-minimized postbox-closed")
-				.addClass("postbox-maximized");
-
-			// Remove jQuery UI widgets.
-			widget.unbindDraggable();
-			widget.unbindResize();
-		},
-
-		messenger     : function(event, messages) {
-			if (messages.messenger)
-			{
-				ib.getInstances('postbox').each(function()
-				{
-					var widget  = this.widget;
-					var $widget = widget.$widget;
-
-					// Toggles captcha based on messenger information.
-					if (messages.captcha)
-					{
-						widget.events.captchaShow(widget);
-						$(widget.options.selector['captcha-row'], $widget)
-							.trigger('load', messages.captcha);
-					}
-					else
-					{
-						widget.events.captchaHide(widget);
-					}
-				});
-			}
-		},
-
-		minimizeClick : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			// Tweak classes.
-			$widget
-				.removeClass("postbox-maximized postbox-closed")
-				.addClass("postbox-minimized");
-
-			// Rebind jQuery UI Resize.
-			widget.bindDraggable();
-			widget.bindResize();
-		},
-
-		pageChange    : function(event) {
-			widget.options.checkFileUrl = window.app.board_url + "check-file";
-			widget.dropzone.options.url = window.app.board_url + "upload-file";
-			widget.dropzone.options.maxFilesize = window.app.settings.attachmentFilesize / 1024;
-		},
-
-		postDragStop  : function(event, ui) {
-			var widget  = this.widget;
-			var $widget = this.widget.$widget;
-
-			if (ib.ltr && widget.axis == "sw")
-			{
-				// Okay, so:
-				// Our styling using top,right.
-				// Draggable sets the position using top,left.
-				// This causes the box to expand to the right when dragging with the resize handles.
-				// Because you cannot drag to expand and drag to move at the same time, it's safe
-				// to fix the right/left assignent after the drag has stopped.
-				// This uses little jQuery as well which is just gravy.
-				var rect  = this.getBoundingClientRect();
-				var right = (document.body.clientWidth - rect.right);
-
-				if (rect.top <= 80 && right <= 40)
-				{
-					right = 10;
-					this.style.top = 45 + "px";
-				}
-
-				this.style.height = "auto";
-				this.style.left   = "auto";
-				this.style.right  = right + "px";
-			}
-		},
-
-		postKeyDown  : function(event) {
-			var widget  = event.data.widget;
-			var $widget = event.data.$widget;
-
-			// Captures CTRL+ENTER
-			if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey)
-			{
-				$(widget.options.selector['submit-post'], $widget)
-					.trigger('click');
-
-				event.preventDefault();
-				return false;
-			}
-		},
-
-		postResize    : function(event, ui) {
-			var widget  = this.widget;
-			var $widget = this.widget.$widget;
-
-			var $post = $(this);
-
-			ui.position.top  = 0;
-			ui.position.left = 0;
-
-			var formHangY   = window.innerHeight - ($widget.position().top + widget.$widget.outerHeight());
-			ui.size.width   = Math.min(ui.size.width, $widget.width());
-			ui.size.height += Math.min(0, formHangY);
-
-			widget.$widget.css({
-				'height' : formHangY > 0 ? "auto" : window.innerHeight - $widget.position().top
-			});
-
-			$post.css('width', ui.size.width);
-			$post.children().first().css('width', "100%");
-
-			return ui;
-		},
-
-		postResizeStart : function(event, ui) {
-			var widget  = this.widget;
-			var $widget = this.widget.$widget;
-			var axis    = $(this).data('ui-resizable').axis;
-
-			if (widget.axis != axis)
-			{
-				var rect  = this.getBoundingClientRect();
-
-				if (widget.axis == "sw")
-				{
-					$widget[0].style.left  = rect.left + "px";
-					$widget[0].style.right = "auto";
-				}
-			}
-		},
-
-		postResizeStop  : function(event, ui) {
-			var widget  = this.widget;
-			var $widget = this.widget.$widget;
-			var axis    = $(this).data('ui-resizable').axis;
-
-			if (widget.axis != axis)
-			{
-				var rect  = this.getBoundingClientRect();
-
-				if (widget.axis == "sw")
-				{
-					var right = (document.body.clientWidth - rect.right);
-
-					$widget[0].style.left  = "auto";
-					$widget[0].style.right = right + "px";
-				}
-			}
-		},
-
-		spoilerChange : function(event) {
-			var $this = $(this);
-			var $next = $this.next();
-
-			$this.next().attr('value', $this.prop('checked') ? 1 : 0);
-		},
-
-		windowResize  : function(event) {
-			// For some pathetic reason, the jQery UI Resize widget uses the "resize"
-			// event name, which is also an HTML default for window resizes. Events fired
-			// also bubble up to the window, so this gets called when the post box resizes too.
-			if (event.target === window)
-			{
-				event.data.widget.resizePostbox();
-			}
-		}
-	},
-
-	// Event bindings
-	blueprint.prototype.bind = function() {
-		var widget  = this;
-		var $widget = this.$widget;
-		var data    = {
-			widget  : widget,
-			$widget : $widget
-		};
-
-		$(widget.options.selector['password'], $widget)
-			.val(ib.settings.postbox.password.get());
-
-		// Force the notices widget to be bound, and then record it.
-		// We have to do this because the notices widget is a child within this widget.
-		// The parent is bound first.
-		widget.notices = window.ib.bindElement($(widget.options.selector['notices'])[0]);
-
-		if (typeof window.Dropzone !== 'undefined')
-		{
-			var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
-			dropzoneOptions.widget  = widget;
-			dropzoneOptions.$widget = $widget;
-
-			$(widget.options.selector['dropzone'], $widget)
-				.dropzone(dropzoneOptions);
-		}
-
-		$(window)
-			.on('messenger.ib-postbox.', data, widget.events.messenger)
-			.on('resize.ib-postbox',     data, widget.events.windowResize);
-
-		// This will actually bind multiple times so make sure it only happens once.
-		if (widget.initOnce !== true)
-		{
-			// Ensures window.app is current with dropzone stuff.
-			//InstantClick.on("change", data, widget.events.pageChange);
-		}
-
-		$widget
-			// Watch for key downs as to capture ctrl+enter submission.
-			// We don't die this to any particular item.
-			.on(
-				'keydown.ib-postbox',
-				data,
-				widget.events.postKeyDown
-			)
-
-			// Watch for form size clicks
-			.on(
-				'click.ib-postbox',
-				data,
-				widget.events.formClick
-			)
-			.on(
-				'click.ib-postbox',
-				widget.options.selector['button-close'],
-				data,
-				widget.events.closeClick
-			)
-			.on(
-				'click.ib-postbox',
-				widget.options.selector['button-maximize'],
-				data,
-				widget.events.maximizeClick
-			)
-			.on(
-				'click.ib-postbox',
-				widget.options.selector['button-minimize'],
-				data,
-				widget.events.minimizeClick
-			)
-
-			// Watch field changes
-			.on(
-				'change.ib-postbox',
-				widget.options.selector['form-body'],
-				data,
-				widget.events.bodyChange
-			)
-			.on(
-				'keyup.ib-postbox',
-				widget.options.selector['form-body'],
-				data,
-				widget.events.bodyChange
-			)
-			.on(
-				'change.ib-postbox',
-				widget.options.selector['form-spoiler'],
-				data,
-				widget.events.spoilerChange
-			)
-
-			// Watch form submission.
-			.on(
-				'submit.ib-postbox',
-				data,
-				widget.events.formSubmit
-			)
-
-			// Watch for file statuses.
-			.on(
-				'fileFailed.ib-postbox',
-				data,
-				widget.events.fileFailed
-			)
-			.on(
-				'fileCanceled.ib-postbox',
-				data,
-				widget.events.fileCanceled
-			)
-			.on(
-				'fileUploaded.ib-postbox',
-				data,
-				widget.events.fileUploaded
-			)
-			.on(
-				'fileUploading.ib-postbox',
-				data,
-				widget.events.fileUploading
-			)
-		;
-
-		widget.bindCounter();
-		widget.bindDraggable();
-		widget.bindResize();
-	};
-
-	blueprint.prototype.bindCounter = function() {
-		var widget   = this;
-		var $widget  = this.$widget;
-		var $body    = $(widget.options.selector['form-body'], widget.$widget);
-		var $counter = $(widget.options.template['counter']);
-
-		$counter.insertAfter($body);
-		widget.$counter = $counter;
-		$body.trigger('change');
-	};
-
-	blueprint.prototype.bindDraggable = function() {
-		var widget   = this;
-		var $widget  = this.$widget;
-
-		if (window.innerHeight >= 480 && window.innerWidth >= 728)
-		{
-			$widget.draggable({
-				containment : "window",
-				handle      : "legend.form-legend",
-				stop        : widget.events.postDragStop
-			});
-
-			widget.draggable = true;
-		}
-	};
-
-	blueprint.prototype.bindResize = function() {
-		var widget   = this;
-		var $widget  = this.$widget;
-
-		if (window.innerHeight >= 480 && window.innerWidth >= 728)
-		{
-			// Bind resizability onto the post area.
-			var $body   = $(widget.options.selector['form-body'], $widget);
-
-			if (!widget.resizable && $body.length && typeof $body.resizable === "function")
-			{
-				$body.resizable({
-					handles:     "sw,se",
-					resize:      widget.events.postResize,
-					start:       widget.events.postResizeStart,
-					stop:        widget.events.postResizeStop,
-					alsoResize:  widget.$widget,
-					minWidth:    300,
-					minHeight:   26
-				});
-
-				// This gives the jQuery UI events a scope back to the widget.
-				var jWidget = $body.resizable("widget")[0];
-				jWidget.widget  = widget;
-				jWidget.$widget = $widget;
-
-				$widget
-					.resizable({
-						handles:  null,
-						minWidth: 300
-					})
-					.css({
-						height: "auto"
-					});
-
-				widget.resizable = true;
-			}
-		}
-	};
-
-	blueprint.prototype.unbindCounter = function() {
-		var widget   = this;
-
-		if (widget.$counter && widget.$counter instanceof jQuery)
-		{
-			widget.$counter.remove();
-		}
-	};
-
-	blueprint.prototype.unbindDraggable = function() {
-		var widget   = this;
-		var $widget  = this.$widget;
-
-		if (widget.draggable && typeof $widget.draggable === "function")
-		{
-			$widget.draggable( "destroy" ).attr('style', "");
-
-			widget.draggable = false;
-		}
-	};
-
-	blueprint.prototype.unbindResize = function() {
-		var widget   = this;
-		var $widget  = this.$widget;
-
-		// Bind resizability onto the post area.
-		var $body = $(widget.options.selector['form-body'], widget.$widget);
-
-		if (widget.resizable && $body.length && typeof $body.resizable === "function")
-		{
-			$body.resizable( "destroy" ).attr('style', "");
-
-			$widget.resizable( "destroy" ).attr('style', "");
-
-			widget.resizable = false;
-		}
-	};
-
-	ib.widget("postbox", blueprint, options);
-	ib.settings.postbox.password.setInitial(false);
-
-	$(document).on('ready.ib-postbox', function(event) {
-		// Bit of a hack.
-		// Sets form values to our password by default even outside
-		// of the scope of a thread.
-		$(blueprint.prototype.defaults.selector['post-password'])
-			.val(ib.settings['postbox']['password'].get());
-	});
+    // Widget blueprint
+    var blueprint = ib.getBlueprint();
+
+    var options = {
+        password : {
+            type : "text",
+            initial : ib.randomString(8),
+        }
+    };
+
+    // Dropzone instance.
+    blueprint.prototype.dropzone = null;
+
+        // jQuery UI bind indicators
+    blueprint.prototype.resizable = false;
+    blueprint.prototype.draggable = false;
+    blueprint.prototype.axis      = ib.ltr ? "sw" : "se";
+
+    // Other widget instances.
+    blueprint.prototype.notices = null;
+
+    // Number of uploads running.
+    // Used to prevent premature form submission.
+    blueprint.prototype.activeUploads = 0;
+
+        // The default values that are set behind init values.
+    blueprint.prototype.defaults = {
+        checkFileUrl  : window.app.board_url + "/check-file",
+
+        // Selectors for finding and binding elements.
+        selector : {
+            'widget'          : "#post-form",
+            'notices'         : "[data-widget=notice]:first",
+            'autoupdater'     : ".autoupdater:first",
+
+            'dropzone'        : ".dz-container",
+
+            'submit-post'     : "#submit-post",
+
+            // This is the main postbox password.
+            'password'        : "#password",
+            // This is any field that uses the same password.
+            'post-password'   : ".post-password",
+
+            'form-fields'     : ".form-fields",
+            'form-body'       : "#body",
+            'form-clear'      : "#subject, #body, #captcha",
+            'form-spoiler'    : ".dz-spoiler-check",
+
+            'captcha'         : ".captcha",
+            'captcha-row'     : ".row-captcha",
+            'captcha-field'   : ".field-control",
+
+            'button-close'    : ".menu-icon-close",
+            'button-maximize' : ".menu-icon-maximize",
+            'button-minimize' : ".menu-icon-minimize"
+        },
+
+        template : {
+            'counter'         : "<tt id=\"body-counter\"></tt>",
+        },
+
+        dropzone : {
+            // Localization strings.
+            // dictDefaultMessage: "Drop files here to upload",
+            // dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+            // dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+            // dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+            // dictInvalidFileType: "You can't upload files of this type.",
+            // dictResponseError: "Server responded with {{statusCode}} code.",
+            // dictCancelUpload: "Cancel upload",
+            // dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+            // dictRemoveFile: "Remove file",
+            // dictRemoveFileConfirmation: null,
+            // dictMaxFilesExceeded: "You can not upload any more files.",
+
+            // The input field name.
+            paramName      : "files",
+
+            // File upload URL
+            url            : window.app.board_url + "/upload-file",
+
+            // Allow multiple uploads.
+            uploadMultiple : true,
+
+            // Maximum filesize (MB)
+            maxFilesize    : window.app.settings.attachmentFilesize / 1024,
+
+            // Binds the instance to our widget.
+            init: function() {
+                var widget = this.options.widget;
+
+                widget.dropzone = this;
+                this.widget     = widget;
+                this.$widget    = widget.$widget;
+
+                $(this.element).append("<input type=\"hidden\" name=\"dropzone\" value=\"1\" />");
+            },
+
+            // Handles the acceptance of files.
+            accept : function(file, done) {
+                var widget  = this.widget;
+                var $widget = this.$widget;
+                var reader  = new FileReader();
+
+                widget.$widget.trigger('fileUploading', [ file ]);
+
+                reader.onload = function (event) {
+                    var Hasher = new SparkMD5;
+                    Hasher.appendBinary(this.result);
+
+                    var hash = Hasher.end();
+                    file.hash = hash;
+
+                    jQuery.get( widget.options.checkFileUrl, {
+                        'md5' : hash
+                    })
+                        .done(function(data, textStatus, jqXHR) {
+                            if (typeof data === "object")
+                            {
+                                var response = data;
+
+                                jQuery.each(response, function(index, datum) {
+                                    // Make sure this datum is for our file.
+                                    if (index !== hash)
+                                    {
+                                        return true;
+                                    }
+
+                                    // Does this file exist?
+                                    if (datum !== null)
+                                    {
+                                        // Is the file banned?
+                                        if (datum.banned == 1)
+                                        {
+                                            // Language
+                                            console.log("File "+file.name+" is banned from being uploaded.");
+
+                                            file.status = Dropzone.ERROR;
+                                            widget.dropzone.emit("error", file, "File <tt>"+file.name+"</tt> is banned from being uploaded", jqXHR);
+                                            widget.dropzone.emit("complete", file);
+                                        }
+                                        else
+                                        {
+                                            console.log("File "+file.name+" already exists.");
+
+                                            file.status = window.Dropzone.SUCCESS;
+                                            widget.dropzone.emit("success", file, datum, jqXHR);
+                                            widget.dropzone.emit("complete", file);
+                                        }
+                                    }
+                                    // If no presence, upload anew.
+                                    else
+                                    {
+                                        console.log("Uploading file "+file.name+".");
+
+                                        done();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                console.log("Received weird response:", data);
+                            }
+                        });
+                };
+
+                reader.readAsBinaryString(file);
+            },
+
+            canceled : function(file) {
+                var $widget = this.$widget;
+                $widget.trigger('fileCanceled', [ file ]);
+            },
+
+            error : function(file, message, xhr) {
+                var widget  = this.widget;
+                var $widget = this.$widget;
+
+                widget.notices.push(message, 'error');
+
+                $(file.previewElement).remove();
+
+                $widget.trigger('fileFailed', [ file ]);
+            },
+
+            removedfile : function(file) {
+                var widget = this.widget;
+                var _ref;
+
+                if (file.previewElement) {
+                    if ((_ref = file.previewElement) != null) {
+                        _ref.parentNode.removeChild(file.previewElement);
+                    }
+                }
+
+                widget.resizePostbox();
+
+                return this._updateMaxFilesReachedClass();
+            },
+
+            success : function(file, response, xhr) {
+                var widget  = this.widget;
+                var $widget = this.$widget;
+
+                if (typeof response !== "object")
+                {
+                    var response = jQuery.parseJSON(response);
+                }
+
+                if (typeof response.errors !== "undefined")
+                {
+                    jQuery.each(response.errors, function(field, errors)
+                    {
+                        jQuery.each(errors, function(index, error)
+                        {
+                            widget.dropzone.emit("error", file, error, xhr);
+                            widget.dropzone.emit("complete", file);
+                        });
+                    });
+                }
+                else
+                {
+                    var $preview = $(file.previewElement);
+
+                    $preview
+                        .addClass('dz-success')
+                        .append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[hash][]").val(file.hash))
+                        .append($("<input type=\"hidden\" />").attr('name', widget.options.dropzone.paramName+"[name][]").val(file.name))
+                    ;
+
+                    $("[data-dz-spoiler]", $preview)
+                        .attr('name', widget.options.dropzone.paramName+"[spoiler][]");
+                }
+
+                $widget.trigger('fileUploaded', [ file ]);
+            },
+
+            previewTemplate :
+                "<div class=\"dz-preview dz-file-preview\">" +
+                    "<div class=\"dz-image\">" +
+                        "<img data-dz-thumbnail />" +
+                    "</div>" +
+                    "<div class=\"dz-actions\">" +
+                        "<span class=\"dz-remove\" data-dz-remove>x</span>" +
+                        "<label class=\"dz-spoiler\">" +
+                            "<input type=\"checkbox\" class=\"dz-spoiler-check\" name=\"\" value=\"\" />" +
+                            "<input type=\"chidden\" class=\"dz-spoiler-hidden\" value=\"0\" data-dz-spoiler />" +
+                            "<span class=\"dz-spoiler-desc\">Spoiler</span>" +
+                        "</label>" +
+                    "</div>" +
+                    "<div class=\"dz-details\">" +
+                        "<div class=\"dz-size\"><span data-dz-size></span></div>" +
+                        "<div class=\"dz-filename\"><span data-dz-name></span></div>" +
+                    "</div>" +
+                    "<div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>" +
+                    "<div class=\"dz-success\">" +
+                        "<div class=\"dz-success-mark\">" +
+                            "<svg viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">" +
+                                "<g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">" +
+                                    "<path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" " +
+                                        "id=\"Oval-2\" " +
+                                        "stroke-opacity=\"0.198794158\" " +
+                                        "stroke=\"#747474\" " +
+                                        "fill-opacity=\"0.816519475\" " +
+                                        "fill=\"#FFFFFF\" " +
+                                        "sketch:type=\"MSShapeGroup\" " +
+                                    "></path>" +
+                                "</g>" +
+                            "</svg>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>"
+        }
+    };
+
+    // Compiled settings.
+    blueprint.prototype.options = false;
+
+    blueprint.prototype.hasCaptcha = function() {
+        return $(this.options.selector['captcha-row'], this.$widget).is(":visible");
+    };
+
+    blueprint.prototype.resizePostbox = function() {
+        var widget  = this;
+        var $widget = this.$widget;
+
+        if (widget.resizable)
+        {
+            if (window.innerHeight < 480 || window.innerWidth < 728)
+            {
+                widget.unbindDraggable();
+                widget.unbindResize();
+            }
+            else
+            {
+                // Trigger resize on the post body.
+                // Forces the post box to obey new window constraints.
+                var $post    = $(widget.options.selector['form-body'], widget.$widget);
+                var uiWidget = $post.data('ui-resizable');
+
+                // Widget is bound and we have data
+                if (uiWidget && !jQuery.isEmptyObject(uiWidget.prevPosition))
+                {
+                    // This is copy+pasted from the source code because there is no polite way
+                    // to handle it otherwise.
+                    uiWidget._updatePrevProperties();
+                    uiWidget._trigger( "resize", event, uiWidget.ui() );
+                    uiWidget._applyChanges();
+                }
+            }
+        }
+        else if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        {
+            var isClosed = $widget.hasClass("postbox-closed");
+            var isMaximized = $widget.hasClass("postbox-maximized");
+
+            if (!isMaximized && !isClosed)
+            {
+                widget.bindResize();
+            }
+
+            if (!isMaximized)
+            {
+                widget.bindDraggable();
+            }
+        }
+    };
+
+    // Gets the selection range of our post box.
+    blueprint.prototype.getBodySelection = function()
+    {
+        var el = $(this.options.selector['form-body'], this.$widget)[0];
+        var start = 0;
+        var end = 0;
+        var normalizedValue;
+        var range;
+        var textInputRange;
+        var len;
+        var endRange;
+
+        if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
+            start = el.selectionStart;
+            end = el.selectionEnd;
+        }
+        else if (typeof document.selection !== "undefined") {
+            range = document.selection.createRange();
+
+            if (range && range.parentElement() == el) {
+                len = el.value.length;
+                normalizedValue = el.value.replace(/\r\n/g, "\n");
+
+                // Create a working TextRange that lives only in the input
+                textInputRange = el.createTextRange();
+                textInputRange.moveToBookmark(range.getBookmark());
+
+                // Check if the start and end of the selection are at the very end
+                // of the input, since moveStart/moveEnd doesn't return what we want
+                // in those cases
+                endRange = el.createTextRange();
+                endRange.collapse(false);
+
+                if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
+                    start = end = len;
+                }
+                else {
+                    start = -textInputRange.moveStart("character", -len);
+                    start += normalizedValue.slice(0, start).split("\n").length - 1;
+
+                    if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
+                        end = len;
+                    }
+                    else {
+                        end = -textInputRange.moveEnd("character", -len);
+                        end += normalizedValue.slice(0, end).split("\n").length - 1;
+                    }
+                }
+            }
+        }
+
+        return {
+            start: start,
+            end: end
+        };
+    }
+
+    // Replaces selected text with new text in our post box.
+    blueprint.prototype.replaceBodySelection = function(text)
+    {
+        var $textarea = $(this.options.selector['form-body'], this.$widget);
+        var textarea  = $textarea[0];
+        var selection = this.getBodySelection();
+
+        var value     = textarea.value;
+        var front     = value.substring(0, selection.start);
+        var back      = value.substring(selection.end, value.length);
+
+        $textarea.val(front + text + back);
+
+        strPos = selection.start + text.length;
+
+        if (typeof textarea.selectionStart == "number" && typeof textarea.selectionEnd == "number") {
+            textarea.selectionStart = strPos;
+            textarea.selectionEnd = strPos;
+            textarea.focus();
+        }
+        else if (typeof document.selection != "undefined") {
+            textarea.focus();
+            var range = document.selection.createRange();
+            range.moveStart('character', -textarea.value.length);
+            range.moveStart('character', strPos);
+            range.moveEnd('character', 0);
+            range.select();
+        }
+    }
+
+    // Events
+    blueprint.prototype.events = {
+        bodyChange    : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            if (widget.$counter && widget.$counter instanceof jQuery)
+            {
+                var $body = $(this);
+                var len   = $body.val().length;
+                var text  = "<strong id=\"body-counter-curr\">" + len + "</strong>";
+                var valid = true;
+                var free  = true;
+                var max   = parseInt(window.app.board_settings.postMaxLength, 10);
+                var min   = parseInt(window.app.board_settings.postMinLength, 10);
+
+                if (!isNaN(max))
+                {
+                    text  = text + "<span id=\"body-counter-max\">" + max + "</span>";
+                    free  = false;
+                    valid = valid && (len <= max);
+                }
+
+                if (!isNaN(min))
+                {
+                    text  = "<span id=\"body-counter-min\">" + min + "</span>" + text;
+                    free  = false;
+                    valid = valid && (len >= min);
+                }
+
+                if (!free)
+                {
+                    widget.$counter
+                        .toggleClass("counter-valid",    valid)
+                        .toggleClass("counter-invalid", !valid)
+                        .html(text);
+                }
+            }
+        },
+
+        captchaHide   : function(widget) {
+            var $widget = widget.$widget;
+
+            $(widget.options.selector['captcha-row'], $widget).hide();
+        },
+
+        captchaShow   : function(widget) {
+            var $widget = widget.$widget;
+
+            $(widget.options.selector['captcha-row'], $widget).show();
+        },
+
+        closeClick    : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            // Tweak classes.
+            $widget
+                .removeClass("postbox-maximized postbox-minimized")
+                .addClass("postbox-closed");
+
+            // Unbind the jQuery UI resize.
+            widget.unbindResize();
+
+            // Prevents formClick from immediately firing.
+            event.stopPropagation();
+        },
+
+        fileUploading : function(event, file) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            ++widget.activeUploads;
+            console.log(widget.activeUploads + " concurrent uploads.");
+
+            $(widget.options.selector['submit-post'], $widget)
+                .prop('disabled', widget.activeUploads > 0);
+        },
+
+        fileCanceled  : function(event, file) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            --widget.activeUploads;
+            console.log(widget.activeUploads + " concurrent uploads.");
+
+            $(widget.options.selector['submit-post'], $widget)
+                .prop('disabled', widget.activeUploads > 0);
+        },
+
+        fileFailed    : function(event, file) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            --widget.activeUploads;
+            console.log(widget.activeUploads + " concurrent uploads.");
+
+            $(widget.options.selector['submit-post'], $widget)
+                .prop('disabled', widget.activeUploads > 0);
+        },
+
+        fileUploaded  : function(event, file) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            --widget.activeUploads;
+            console.log(widget.activeUploads + " concurrent uploads.");
+
+            $(widget.options.selector['submit-post'], $widget)
+                .prop('disabled', widget.activeUploads > 0);
+        },
+
+        formClear     : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            // Stops redundant loading of captcha when we don't need one.
+            if (widget.hasCaptcha())
+            {
+                $(widget.options.selector['captcha'], $widget).trigger('reload');
+            }
+
+            if (widget.dropzone)
+            {
+                widget.dropzone.removeAllFiles();
+            }
+
+            $(widget.options.selector['form-clear'], $widget)
+                .val("")
+                .html("");
+
+            $(widget.options.selector['form-body'], $widget)
+                .trigger('change')
+                .focus();
+        },
+
+        formClick     : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            if ($widget.is(".postbox-closed"))
+            {
+                // Tweak classes.
+                $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
+
+                // Rebind jQuery UI widgets.
+                widget.bindDraggable();
+                widget.bindResize();
+            }
+        },
+
+        formSubmit    : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            widget.notices.clear();
+
+            var $form       = $(this).add("<input name=\"messenger\" value=\"1\" />");
+            var $updater    = $(widget.options.selector['autoupdater']);
+            var autoupdater = false;
+
+            // Note: serializeJSON is a plugin we use to convert form data into
+            // a multidimensional array for application/json posts.
+
+            if ($updater.length && $updater[0].widget)
+            {
+                var data = $form.serialize();
+
+                autoupdater = $updater[0].widget;
+                data = $form
+                    .add("<input name=\"updatesOnly\" value=\"1\" />")
+                    .add("<input name=\"updateHtml\" value=\"1\" />")
+                    .add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
+                    .serializeJSON();
+            }
+            else
+            {
+                var data = $form.serializeJSON();
+            }
+
+            // Indicate we want a full messenger response.
+            data.messenger = true;
+
+            // Temporarialy disable form and submit button to prevent double posting
+            $form.prop('disabled', true);
+            $(widget.options.selector['submit']).prop('disabled', true);
+
+            jQuery.ajax({
+                type:        "POST",
+                method:      "PUT",
+                url:         $form.attr('action') + ".json",
+                data:        data,
+                dataType:    "json",
+                contentType: "application/json; charset=utf-8"
+            })
+                .done(function(response, textStatus, jqXHR) {
+                    $form.prop('disabled', false);
+                    $(widget.options.selector['submit']).prop('disabled', false);
+
+                    if (typeof response !== "object")
+                    {
+                        try
+                        {
+                            response = jQuery.parseJSON(response);
+                        }
+                        catch (exception)
+                        {
+                            console.log("Post submission returned unpredictable response. Refreshing.");
+                            window.location.reload();
+                            return;
+                        }
+                    }
+
+                    // This event trigger will cascade effects with our supplemental Messenger information.
+                    if (response.messenger)
+                    {
+                        $(window).trigger('messenger', response);
+                        var json = response.data;
+                    }
+                    else
+                    {
+                        var json = response;
+                    }
+
+                    if (typeof json.redirect !== "undefined")
+                    {
+                        console.log("Post submitted. Redirecting.");
+                        window.location = json.redirect;
+                    }
+                    else if (typeof json.errors !== "undefined")
+                    {
+                        console.log("Post rejected.");
+
+                        jQuery.each(json.errors, function(field, errors)
+                        {
+                            jQuery.each(errors, function(index, error)
+                            {
+                                widget.notices.push(error, 'error');
+                            });
+                        });
+                    }
+                    else if (autoupdater !== false)
+                    {
+                        console.log("Post submitted. Inline updating.");
+
+                        clearInterval(autoupdater.updateTimer);
+
+                        jqXHR.widget = autoupdater;
+                        autoupdater.updating    = true;
+                        autoupdater.updateTimer = false;
+                        autoupdater.updateAsked = parseInt(parseInt(Date.now(), 10) / 1000, 10);
+                        autoupdater.events.updateSuccess(json, textStatus, jqXHR, true);
+                        autoupdater.events.updateComplete(json, textStatus, jqXHR);
+
+                        widget.events.formClear(event);
+                    }
+                    else
+                    {
+                        console.log("Post submitted. No autoupdater. Refreshing.");
+                        window.location.reload();
+                    }
+                });
+
+            event.preventDefault();
+            return false;
+        },
+
+        maximizeClick : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            // Tweak classes.
+            $widget
+                .removeClass("postbox-minimized postbox-closed")
+                .addClass("postbox-maximized");
+
+            // Remove jQuery UI widgets.
+            widget.unbindDraggable();
+            widget.unbindResize();
+        },
+
+        messenger     : function(event, messages) {
+            if (messages.messenger)
+            {
+                ib.getInstances('postbox').each(function()
+                {
+                    var widget  = this.widget;
+                    var $widget = widget.$widget;
+
+                    // Toggles captcha based on messenger information.
+                    if (messages.captcha)
+                    {
+                        widget.events.captchaShow(widget);
+                        $(widget.options.selector['captcha-row'], $widget)
+                            .trigger('load', messages.captcha);
+                    }
+                    else
+                    {
+                        widget.events.captchaHide(widget);
+                    }
+                });
+            }
+        },
+
+        minimizeClick : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            // Tweak classes.
+            $widget
+                .removeClass("postbox-maximized postbox-closed")
+                .addClass("postbox-minimized");
+
+            // Rebind jQuery UI Resize.
+            widget.bindDraggable();
+            widget.bindResize();
+        },
+
+        pageChange    : function(event) {
+            widget.options.checkFileUrl = window.app.board_url + "check-file";
+            widget.dropzone.options.url = window.app.board_url + "upload-file";
+            widget.dropzone.options.maxFilesize = window.app.settings.attachmentFilesize / 1024;
+        },
+
+        postDragStop  : function(event, ui) {
+            var widget  = this.widget;
+            var $widget = this.widget.$widget;
+
+            if (ib.ltr && widget.axis == "sw")
+            {
+                // Okay, so:
+                // Our styling using top,right.
+                // Draggable sets the position using top,left.
+                // This causes the box to expand to the right when dragging with the resize handles.
+                // Because you cannot drag to expand and drag to move at the same time, it's safe
+                // to fix the right/left assignent after the drag has stopped.
+                // This uses little jQuery as well which is just gravy.
+                var rect  = this.getBoundingClientRect();
+                var right = (document.body.clientWidth - rect.right);
+
+                if (rect.top <= 80 && right <= 40)
+                {
+                    right = 10;
+                    this.style.top = 45 + "px";
+                }
+
+                this.style.height = "auto";
+                this.style.left   = "auto";
+                this.style.right  = right + "px";
+            }
+        },
+
+        postKeyDown  : function(event) {
+            var widget  = event.data.widget;
+            var $widget = event.data.$widget;
+
+            // Captures CTRL+ENTER
+            if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey)
+            {
+                $(widget.options.selector['submit-post'], $widget)
+                    .trigger('click');
+
+                event.preventDefault();
+                return false;
+            }
+        },
+
+        postResize    : function(event, ui) {
+            var widget  = this.widget;
+            var $widget = this.widget.$widget;
+
+            var $post = $(this);
+
+            ui.position.top  = 0;
+            ui.position.left = 0;
+
+            var formHangY   = window.innerHeight - ($widget.position().top + widget.$widget.outerHeight());
+            ui.size.width   = Math.min(ui.size.width, $widget.width());
+            ui.size.height += Math.min(0, formHangY);
+
+            widget.$widget.css({
+                'height' : formHangY > 0 ? "auto" : window.innerHeight - $widget.position().top
+            });
+
+            $post.css('width', ui.size.width);
+            $post.children().first().css('width', "100%");
+
+            return ui;
+        },
+
+        postResizeStart : function(event, ui) {
+            var widget  = this.widget;
+            var $widget = this.widget.$widget;
+            var axis    = $(this).data('ui-resizable').axis;
+
+            if (widget.axis != axis)
+            {
+                var rect  = this.getBoundingClientRect();
+
+                if (widget.axis == "sw")
+                {
+                    $widget[0].style.left  = rect.left + "px";
+                    $widget[0].style.right = "auto";
+                }
+            }
+        },
+
+        postResizeStop  : function(event, ui) {
+            var widget  = this.widget;
+            var $widget = this.widget.$widget;
+            var axis    = $(this).data('ui-resizable').axis;
+
+            if (widget.axis != axis)
+            {
+                var rect  = this.getBoundingClientRect();
+
+                if (widget.axis == "sw")
+                {
+                    var right = (document.body.clientWidth - rect.right);
+
+                    $widget[0].style.left  = "auto";
+                    $widget[0].style.right = right + "px";
+                }
+            }
+        },
+
+        spoilerChange : function(event) {
+            var $this = $(this);
+            var $next = $this.next();
+
+            $this.next().attr('value', $this.prop('checked') ? 1 : 0);
+        },
+
+        windowResize  : function(event) {
+            // For some pathetic reason, the jQery UI Resize widget uses the "resize"
+            // event name, which is also an HTML default for window resizes. Events fired
+            // also bubble up to the window, so this gets called when the post box resizes too.
+            if (event.target === window)
+            {
+                event.data.widget.resizePostbox();
+            }
+        }
+    },
+
+    // Event bindings
+    blueprint.prototype.bind = function() {
+        var widget  = this;
+        var $widget = this.$widget;
+        var data    = {
+            widget  : widget,
+            $widget : $widget
+        };
+
+        $(widget.options.selector['password'], $widget)
+            .val(ib.settings.postbox.password.get());
+
+        // Force the notices widget to be bound, and then record it.
+        // We have to do this because the notices widget is a child within this widget.
+        // The parent is bound first.
+        widget.notices = window.ib.bindElement($(widget.options.selector['notices'])[0]);
+
+        if (typeof window.Dropzone !== 'undefined')
+        {
+            var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
+            dropzoneOptions.widget  = widget;
+            dropzoneOptions.$widget = $widget;
+
+            $(widget.options.selector['dropzone'], $widget)
+                .dropzone(dropzoneOptions);
+        }
+
+        $(window)
+            .on('messenger.ib-postbox.', data, widget.events.messenger)
+            .on('resize.ib-postbox',     data, widget.events.windowResize);
+
+        // This will actually bind multiple times so make sure it only happens once.
+        if (widget.initOnce !== true)
+        {
+            // Ensures window.app is current with dropzone stuff.
+            //InstantClick.on("change", data, widget.events.pageChange);
+        }
+
+        $widget
+            // Watch for key downs as to capture ctrl+enter submission.
+            // We don't die this to any particular item.
+            .on(
+                'keydown.ib-postbox',
+                data,
+                widget.events.postKeyDown
+            )
+
+            // Watch for form size clicks
+            .on(
+                'click.ib-postbox',
+                data,
+                widget.events.formClick
+            )
+            .on(
+                'click.ib-postbox',
+                widget.options.selector['button-close'],
+                data,
+                widget.events.closeClick
+            )
+            .on(
+                'click.ib-postbox',
+                widget.options.selector['button-maximize'],
+                data,
+                widget.events.maximizeClick
+            )
+            .on(
+                'click.ib-postbox',
+                widget.options.selector['button-minimize'],
+                data,
+                widget.events.minimizeClick
+            )
+
+            // Watch field changes
+            .on(
+                'change.ib-postbox',
+                widget.options.selector['form-body'],
+                data,
+                widget.events.bodyChange
+            )
+            .on(
+                'keyup.ib-postbox',
+                widget.options.selector['form-body'],
+                data,
+                widget.events.bodyChange
+            )
+            .on(
+                'change.ib-postbox',
+                widget.options.selector['form-spoiler'],
+                data,
+                widget.events.spoilerChange
+            )
+
+            // Watch form submission.
+            .on(
+                'submit.ib-postbox',
+                data,
+                widget.events.formSubmit
+            )
+
+            // Watch for file statuses.
+            .on(
+                'fileFailed.ib-postbox',
+                data,
+                widget.events.fileFailed
+            )
+            .on(
+                'fileCanceled.ib-postbox',
+                data,
+                widget.events.fileCanceled
+            )
+            .on(
+                'fileUploaded.ib-postbox',
+                data,
+                widget.events.fileUploaded
+            )
+            .on(
+                'fileUploading.ib-postbox',
+                data,
+                widget.events.fileUploading
+            )
+        ;
+
+        // Insert our first cite if we load with #post-333 as hash.
+        var citeMatch = window.location.hash.match(/^#*reply-(\d+)$/);
+        if (citeMatch !== null)
+        {
+            var $body = $(widget.options.selector['form-body']);
+            $body.val($body.val() + ">>" + citeMatch[1] + "\n");
+        }
+
+        widget.bindCounter();
+        widget.bindDraggable();
+        widget.bindResize();
+    };
+
+    blueprint.prototype.bindCounter = function() {
+        var widget   = this;
+        var $widget  = this.$widget;
+        var $body    = $(widget.options.selector['form-body'], widget.$widget);
+        var $counter = $(widget.options.template['counter']);
+
+        $counter.insertAfter($body);
+        widget.$counter = $counter;
+        $body.trigger('change');
+    };
+
+    blueprint.prototype.bindDraggable = function() {
+        var widget   = this;
+        var $widget  = this.$widget;
+
+        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        {
+            $widget.draggable({
+                containment : "window",
+                handle      : "legend.form-legend",
+                stop        : widget.events.postDragStop
+            });
+
+            widget.draggable = true;
+        }
+    };
+
+    blueprint.prototype.bindResize = function() {
+        var widget   = this;
+        var $widget  = this.$widget;
+
+        if (window.innerHeight >= 480 && window.innerWidth >= 728)
+        {
+            // Bind resizability onto the post area.
+            var $body   = $(widget.options.selector['form-body'], $widget);
+
+            if (!widget.resizable && $body.length && typeof $body.resizable === "function")
+            {
+                $body.resizable({
+                    handles:     "sw,se",
+                    resize:      widget.events.postResize,
+                    start:       widget.events.postResizeStart,
+                    stop:        widget.events.postResizeStop,
+                    alsoResize:  widget.$widget,
+                    minWidth:    300,
+                    minHeight:   26
+                });
+
+                // This gives the jQuery UI events a scope back to the widget.
+                var jWidget = $body.resizable("widget")[0];
+                jWidget.widget  = widget;
+                jWidget.$widget = $widget;
+
+                $widget
+                    .resizable({
+                        handles:  null,
+                        minWidth: 300
+                    })
+                    .css({
+                        height: "auto"
+                    });
+
+                widget.resizable = true;
+            }
+        }
+    };
+
+    blueprint.prototype.unbindCounter = function() {
+        var widget   = this;
+
+        if (widget.$counter && widget.$counter instanceof jQuery)
+        {
+            widget.$counter.remove();
+        }
+    };
+
+    blueprint.prototype.unbindDraggable = function() {
+        var widget   = this;
+        var $widget  = this.$widget;
+
+        if (widget.draggable && typeof $widget.draggable === "function")
+        {
+            $widget.draggable( "destroy" ).attr('style', "");
+
+            widget.draggable = false;
+        }
+    };
+
+    blueprint.prototype.unbindResize = function() {
+        var widget   = this;
+        var $widget  = this.$widget;
+
+        // Bind resizability onto the post area.
+        var $body = $(widget.options.selector['form-body'], widget.$widget);
+
+        if (widget.resizable && $body.length && typeof $body.resizable === "function")
+        {
+            $body.resizable( "destroy" ).attr('style', "");
+
+            $widget.resizable( "destroy" ).attr('style', "");
+
+            widget.resizable = false;
+        }
+    };
+
+    ib.widget("postbox", blueprint, options);
+    ib.settings.postbox.password.setInitial(false);
+
+    $(document).on('ready.ib-postbox', function(event) {
+        // Bit of a hack.
+        // Sets form values to our password by default even outside
+        // of the scope of a thread.
+        $(blueprint.prototype.defaults.selector['post-password'])
+            .val(ib.settings['postbox']['password'].get());
+    });
 })(window, window.jQuery);
 
 // ===========================================================================

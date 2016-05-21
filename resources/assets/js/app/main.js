@@ -503,6 +503,21 @@
 		return $instances;
 	};
 
+	// Gets a window's selected text.
+	ib.getSelectedText = function() {
+		var text = "";
+
+		if (window.getSelection)
+		{
+			text = window.getSelection().toString();
+		}
+		else if (document.selection && document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+		}
+
+		return text;
+	};
+
 	ib.widgetArguments  = function(args) {
 		var widget  = this;
 		var target  = args[0];
