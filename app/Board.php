@@ -1093,9 +1093,9 @@ class Board extends Model {
 
 		foreach ($bannedUris as $bannedUri)
 		{
-			$bannedUri = str_replace(["\r\n", "\n", "\r"], " ", $bannedUri);
+			$bannedUri = trim(str_replace(["\r\n", "\n", "\r"], " ", $bannedUri));
 
-			if (preg_match("/{$bannedUri}/i", $this->board_uri))
+			if (preg_match("/{$bannedUri}/im", $this->board_uri))
 			{
 				return true;
 			}
