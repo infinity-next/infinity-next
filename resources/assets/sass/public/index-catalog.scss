@@ -2,7 +2,7 @@
 main.index-catalog {
     text-align: left;
 
-     .index-threads {
+    section.index-threads {
         margin: 1em 0 0 0;
     }
 
@@ -65,13 +65,13 @@ main.index-catalog {
                         overflow: visible;
                     }
 
-                     .post-attachments {
+                     ul.post-attachments {
                         display: block;
                         background: rgba(255,255,255,0.6);
                         padding: 0;
                         float: none;
-                    }
-                         .post-attachment {
+
+                         li.post-attachment {
                             float: none;
                             text-align: center;
                             padding: 0;
@@ -84,6 +84,9 @@ main.index-catalog {
                             height: auto;
                             line-height: normal;
                             margin: 0 auto;
+                            max-width:100%;
+                            overflow: hidden;
+                            text-align: cneter;
                         }
                              .attachment {
                                 display: inline;
@@ -93,7 +96,9 @@ main.index-catalog {
                                     display: inline-block;
                                     max-height: 150px;
                                     max-width: 100%;
+                                    max-height: 100%;
                                 }
+                    }
 
                      .post-details {
                         margin: 0;
@@ -215,33 +220,39 @@ main.index-catalog {
      * Responsive Design
      */
     body.responsive & {
-        /**
-         * 360px Width
-         * Vertical phones
-         */
-        @media (max-width: 360px) {
-            .thread-item:nth-child(odd) .post-container:hover {
-                left: auto;
-                right: -50%;
-            }
-            .thread-item:nth-child(even) .post-container:hover {
-                left: -50%;
-                right: auto;
-            }
-        }
+        section.index-threads {
+            & .thread-item {
+                max-width: 150px;
+                min-width: 100px;
 
-        /**
-         * 640px Width
-         * Horizontal phones
-         */
-        @media (max-width: 640px) {
-            .thread-item:nth-child(3n+1) .post-container:hover {
-                left: auto;
-                right: -50%;
-            }
-            .thread-item:nth-child(3n+3) .post-container:hover {
-                left: -50%;
-                right: auto;
+                /**
+                 * Left and right tabs on narrow phones should slide to take more space
+                 */
+                @media (max-width: 360px) {
+                    &:nth-child(odd) .post-container:hover {
+                        left: auto;
+                        right: -50%;
+                    }
+                    &:nth-child(even) .post-container:hover {
+                        left: -50%;
+                        right: auto;
+                    }
+                }
+
+                /**
+                 * Devices that can show three columns need left and right columns to
+                 * slide to take more space.
+                 */
+                @media (min-width: 465px) and (max-width: 640px) {
+                    &:nth-child(3n+1) .post-container:hover {
+                        left: auto;
+                        right: -50%;
+                    }
+                    &:nth-child(3n+3) .post-container:hover {
+                        left: -50%;
+                        right: auto;
+                    }
+                }
             }
         }
     }

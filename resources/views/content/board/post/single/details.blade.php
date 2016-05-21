@@ -1,9 +1,11 @@
 <ul class="post-details">
 	@set('catalog', isset($catalog) && $catalog)
 
+	@if (!$catalog)
 	<li class="post-detail post-actions">@include('content.board.post.single.actions')</li>
+	@endif
 
-	@if (isset($details['subject']) && $details['subject'])
+	@if (isset($details['subject']) && $details['subject'] != "")
 	<li class="post-detail post-subject">
 		<h3 class="post-detail-item subject ugc">
 		@if (!$catalog)

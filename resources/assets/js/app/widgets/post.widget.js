@@ -403,6 +403,9 @@
     blueprint.prototype.scaleThumbnails = function() {
         if ($("body").is(".responsive")) {
             var $widget = this.$widget;
+            var maxDimension = 200;
+            var rangeMax = 1440;
+            var rangeMin = 320;
 
             $(this.options.selector['attachment-image'], $widget).each(function()
             {
@@ -421,16 +424,32 @@
 
                 // We want a number between 320 and 1440, minus 320.
                 // Used to get a value between 0 and 0.5.
-                var factor = Math.min(Math.max(window.innerWidth, 320), 1440) - 320;
-                var percentage = (factor / (1440 - 320) / 2) + 0.5;
+                var factor = Math.min(Math.max(window.innerWidth, rangeMin), rangeMax) - rangeMin;
+                var percentage = (factor / (rangeMax - rangeMin) / 2) + 0.5;
+                var newMax = Math.floor(maxDimension * percentage);
 
-                var newWidth = Math.floor(width * percentage);
-                var newHeight = Math.floor(height * percentage);
+                if (width > newMax || height > newMax)
+                {
+                    var ratio;
 
-                $img.add($box).css({
-                    'height' : newHeight,
-                    'width'  : newWidth,
-                });
+                    if (width >= height)
+                    {
+                        ratio = newMax / width;
+                        height *= ratio;
+                        width = newMax;
+                    }
+                    else
+                    {
+                        ratio = newMax / height;
+                        width *= ratio;
+                        height = newMax;
+                    }
+
+                    $img.add($box).css({
+                        'height' : height,
+                        'width'  : width,
+                    });
+                }
             });
         }
     };
@@ -442,6 +461,7 @@
             var $this   = $(this);
             var $target = $(event.target);
 
+            console.log($target, $target.parents());
             // Make sure we're not actually in the menu.
             if ($target.parents(widget.options.selector['action-tabs']).length) {
                 return true;

@@ -739,7 +739,7 @@ main.index-catalog {
   /**
      * Responsive Design
      */ }
-  main.index-catalog .index-threads {
+  main.index-catalog section.index-threads {
     margin: 1em 0 0 0; }
   main.index-catalog .thread-list {
     text-align: center; }
@@ -782,30 +782,34 @@ main.index-catalog {
     overflow: hidden; }
   main.index-catalog .post-container:hover .post-content {
     overflow: visible; }
-  main.index-catalog .post-attachments {
+  main.index-catalog ul.post-attachments {
     display: block;
     background: rgba(255, 255, 255, 0.6);
     padding: 0;
     float: none; }
-  main.index-catalog .post-attachment {
-    float: none;
-    text-align: center;
-    padding: 0;
-    display: block;
-    width: 100%;
-    margin: 0; }
-  main.index-catalog .attachment-wrapper {
-    width: auto;
-    height: auto;
-    line-height: normal;
-    margin: 0 auto; }
-  main.index-catalog .attachment {
-    display: inline;
-    margin: 0; }
-  main.index-catalog .attachment-img {
-    display: inline-block;
-    max-height: 150px;
-    max-width: 100%; }
+    main.index-catalog ul.post-attachments li.post-attachment {
+      float: none;
+      text-align: center;
+      padding: 0;
+      display: block;
+      width: 100%;
+      margin: 0; }
+    main.index-catalog ul.post-attachments .attachment-wrapper {
+      width: auto;
+      height: auto;
+      line-height: normal;
+      margin: 0 auto;
+      max-width: 100%;
+      overflow: hidden;
+      text-align: cneter; }
+    main.index-catalog ul.post-attachments .attachment {
+      display: inline;
+      margin: 0; }
+    main.index-catalog ul.post-attachments .attachment-img {
+      display: inline-block;
+      max-height: 150px;
+      max-width: 100%;
+      max-height: 100%; }
   main.index-catalog .post-details {
     margin: 0;
     min-height: 1.5em; }
@@ -890,27 +894,28 @@ main.index-catalog {
     left: auto; }
   main.index-catalog div.op-container a.post-action-reply {
     border-width: 0 1.5em 1.5em 0; }
-  body.responsive main.index-catalog {
+  body.responsive main.index-catalog section.index-threads .thread-item {
+    max-width: 150px;
+    min-width: 100px;
     /**
-         * 360px Width
-         * Vertical phones
-         */
+                 * Left and right tabs on narrow phones should slide to take more space
+                 */
     /**
-         * 640px Width
-         * Horizontal phones
-         */ }
+                 * Devices that can show three columns need left and right columns to
+                 * slide to take more space.
+                 */ }
     @media (max-width: 360px) {
-      body.responsive main.index-catalog .thread-item:nth-child(odd) .post-container:hover {
+      body.responsive main.index-catalog section.index-threads .thread-item:nth-child(odd) .post-container:hover {
         left: auto;
         right: -50%; }
-      body.responsive main.index-catalog .thread-item:nth-child(even) .post-container:hover {
+      body.responsive main.index-catalog section.index-threads .thread-item:nth-child(even) .post-container:hover {
         left: -50%;
         right: auto; } }
-    @media (max-width: 640px) {
-      body.responsive main.index-catalog .thread-item:nth-child(3n+1) .post-container:hover {
+    @media (min-width: 465px) and (max-width: 640px) {
+      body.responsive main.index-catalog section.index-threads .thread-item:nth-child(3n+1) .post-container:hover {
         left: auto;
         right: -50%; }
-      body.responsive main.index-catalog .thread-item:nth-child(3n+3) .post-container:hover {
+      body.responsive main.index-catalog section.index-threads .thread-item:nth-child(3n+3) .post-container:hover {
         left: -50%;
         right: auto; } }
 
