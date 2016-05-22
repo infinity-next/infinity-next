@@ -608,6 +608,16 @@ class Post extends Model implements FormattableContract
 	}
 
 	/**
+	 * Language direction of this post.
+	 *
+	 * @return string
+	 */
+	public function getBodyDirection()
+	{
+		return $this->board_uri === "ara" ? 'rtl' : 'ltr';
+	}
+
+	/**
 	 * Returns the fully rendered HTML content of this post.
 	 *
 	 * @param  boolean  $skipCache

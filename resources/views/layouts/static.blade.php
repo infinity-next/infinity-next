@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" data-widget="instantclick">
+<html class="no-js" data-widget="instantclick" dir="{{ $direction }}">
 <head>
 	<title data-original="@yield('title') - {{ site_setting('siteName', env('SITE_NAME')) }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
 	<link rel="shortcut icon" id="favicon" href="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
@@ -40,7 +40,15 @@
 	@yield('head')
 </head>
 
-<body class="infinity-next responsive ltr nsfw-allowed @yield('body-class')" id="top">
+{{--
+	BODY CLASSES.
+		* "infinity-next", always keep.
+		* "responsive", always keep (for now). Will eventually want to unset if user requests desktop view.
+		* $direction, either "ltr" or "rtl".
+		* "nsfw-allowed", keep. JS will turn this off if enabled.
+		* The yield renders additional body classes a specific view needs.
+--}}
+<body class="infinity-next responsive {{ $direction }} nsfw-allowed @yield('body-class')" id="top">
 	<div id="page-container">
 		@section('header')
 		<header class="board-header header-height-1">

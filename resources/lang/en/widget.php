@@ -2,6 +2,11 @@
 
 return [
 
+		//'arabic' => (n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);
+
+		//nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+		//jabłko 1 jabłko, 2 jabłka, 3 jabłka, 4 jabłka, 5 jabłek, 6 jabłek, 7 jabłek
+		'polish' => ":n jabłko|:n jabłka|:n jabłek",
 	/*
 	|--------------------------------------------------------------------------
 	| Widgets

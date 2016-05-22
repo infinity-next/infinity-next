@@ -6,7 +6,6 @@ html.js #{$responsive} main.index-threaded form.form-post {
     position: fixed;
     z-index: 1000;
     top: 45px;
-    right: 10px;
     max-width: none;
     width: 300px;
     margin: 0;
@@ -92,4 +91,11 @@ html.js #{$responsive} main.index-threaded form.form-post {
         button.field-submit {
             border-bottom: none;
         }
+}
+
+html.js#{$rtl} #{$responsive} main.index-threaded form.form-post {
+    left: 10px;
+}
+html.js#{$ltr} #{$responsive} main.index-threaded form.form-post {
+    right: 10px;
 }

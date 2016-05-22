@@ -9,14 +9,9 @@
 #site-warning {
 	display: block;
 	color: #f33;
-	margin: -0.5em 0 1em 20%;
 	font-size: 0.9em;
 	text-align: center;
 	text-shadow: rgba(224, 224, 224, 0.5) 1px 1px 0px;
-
-	@media (max-width: 1024px) {
-		margin-left: -0.5em;
-	}
 }
 #site-info {
 	clear: both;

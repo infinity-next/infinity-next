@@ -129,6 +129,7 @@ return [
 	 */
 	// Default Values
 	'anonymous'         => "Anonymous",
+	'you'               => "You",
 
 	// The direct link to a post, like No. 11111
 	'post_number'       => "No.",

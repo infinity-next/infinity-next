@@ -31,8 +31,14 @@ nav.gnav {
 			padding: 0;
 		}
 			nav.gnav li.gnav-item.item-config {
-				float: right;
 				cursor: pointer;
+
+				#{$rtl} & {
+					float: left;
+				}
+				#{$ltr} & {
+					float: right;
+				}
 			}
 
 		nav.gnav li.gnav-item  .gnav-link {
@@ -53,7 +59,6 @@ nav.gnav {
 			display: none;
 
 			position: absolute;
-			left: -20px;
 			top: 0;
 
 			box-sizing: border-box;
@@ -69,6 +74,13 @@ nav.gnav {
 
 			pointer-events: none;
 			overflow: hidden;
+
+			body.ltr & {
+				left: -20px;
+			}
+			body.rtl & {
+				right: -20px;
+			}
 		}
 			nav.gnav .flyout.flyout-open {
 				display: block;
@@ -188,7 +200,7 @@ nav.gnav {
 			}
 		}
 	}
-	
+
 	footer nav.boardlist-row.row-pages {
 		display: none;
 	}

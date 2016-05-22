@@ -16,35 +16,43 @@ section.index-form {
         padding: 0 0.75em;
     }
         form.form-post .post-menu {
+            position: absolute;
+            top: 0;
 
-        }
-            form.form-post .post-menu {
-                position: absolute;
-                top: 0;
+            #{$rtl} & {
+                left: 0;
+                padding: 4px 0 0 4px;
+                margin: -1px 0 0 -1px;
+
+            }
+            #{$ltr} & {
                 right: 0;
                 padding: 4px 4px 0 0;
                 margin: -1px -1px 0 0;
             }
-                form.form-post .post-menu .field-control {
-                    display: inline-block;
-                    border: none;
-                    border-bottom: 1px solid rgba(255,255,255,0.4);
-                    background: none;
-                    color: #eee;
 
-                    padding: 0;
-                    margin: 0 0.3em 0 0;
-                    width: 5em;
-                    height: 16px;
-                    line-height: 16px;
+            & .field-control {
+                display: inline-block;
+                border: none;
+                border-bottom: 1px solid rgba(255,255,255,0.4);
+                background: none;
+                color: #eee;
+
+                padding: 0;
+                margin: 0 0.3em 0 0;
+                width: 5em;
+                height: 16px;
+                line-height: 16px;
+
+                html.no-js & {
+                    color: #111111;
+                    border-color: #111111;
                 }
-                    html.no-js form.form-post .post-menu .field-control {
-                        color: #111111;
-                        border-color: #111111;
-                    }
-                    form.form-post .post-menu .field-control:placeholder {
-                        color: #eee;
-                    }
+                &:placeholder {
+                    color: #eee;
+                }
+            }
+        }
 
                 html.js li.menu-input {
                     display: inline-block;
@@ -81,7 +89,7 @@ section.index-form {
                     display: none !important;
                 }
 
-                html.js body.responsive  form.form-post.postbox-maximized {
+                html.js body.responsive form.form-post.postbox-maximized {
                     box-sizing: border-box;
                     max-width: none;
                     top: 0;
@@ -130,14 +138,24 @@ section.index-form {
 
             form.form-post legend.form-legend .fa {
                 display: none;
-                margin: 0 0.25em 0 0;
-            }
-                .mode-reply form.form-post legend.form-legend .fa {
+
+                .mode-reply & {
                     display: inline;
                 }
-                .mode-reply form.form-post legend.form-legend {
 
+                body.rtl & {
+                    display: inline-block;
+                    float: right;
+                    margin-left: 0.25em;
+                    margin-right: 4px;
+                    height: 27px;
+                    line-height: 27px;
+                    vertical-align: middle;
                 }
+                body.ltr & {
+                    margin-left: 4px;
+                }
+            }
 
         form.form-post fieldset.form-fields {
             padding: 0.75em 0;
@@ -306,3 +324,13 @@ section.index-form {
                 float: left;
                 width: 50%;
             }
+
+#{$rtl} .dz-hidden-input {
+    /**
+     * Fixes an incredibly bizarre RTL issue that breaks page layouts.
+     */
+    top: 1vh !important;
+    bottom: 1vh !important;
+    left: 1vw !important;
+    right: 1vw !important;
+}

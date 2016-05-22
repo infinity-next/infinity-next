@@ -107,16 +107,25 @@
     }
         .post-details {
             clear: both;
-            padding: 0.6em 1em 0.4em 1em;
+            padding: 0.6em 0 0.4em 0;
             margin: 0;
             line-height: 1.8em;
             white-space: normal;
 
-           @media (min-width: $width-tablet) {
-               #{$responsive} & {
-                   white-space: nowrap;
-               }
-           }
+            #{$rtl} & {
+                padding-right: 0;
+                padding-left: 1em;
+            }
+            #{$ltr} & {
+                padding-right: 1em;
+                padding-left: 0;
+            }
+
+            @media (min-width: $width-tablet) {
+                #{$responsive} & {
+                    white-space: nowrap;
+                }
+            }
        }
             .op-container .post-details {
                 padding-left: 0;
@@ -161,17 +170,35 @@
 
                 .author {
                     display: inline-block;
-                    color: #117743;
+                    color: $color-author;
                     white-space: normal;
-                }
-                    .post-you .author::after {
-                        display: inline;
-                        font-weight: normal;
-                        content: ' (You)';
-                    }
-                    .author .email {
+
+                    .email {
                         text-decoration: underline;
                     }
+                }
+
+                .author-you {
+                    display: none;
+                    color: $color-author;
+                    direction: ltr;
+
+                    &::before {
+                        display: inline;
+                        content: '(';
+                    }
+                    &::after {
+                        display: inline;
+                        content: ')';
+                    }
+                    .post-you & {
+                        display: inline;
+                        font-weight: normal;
+                    }
+                    .email & {
+                        text-decoration: underline;
+                    }
+                }
 
                 .insecure-tripcode {
                     color: #117743;
@@ -273,6 +300,20 @@
             span.post-action-label {
                 line-height: 1;
                 vertical-align: text-top;
+
+                &::before {
+                    display: inline-block;
+                    padding: 0 0.25em;
+                    font-size: $font-size + 1;
+                    line-height: 1.2;
+
+                    #{$rtl} & {
+                        content: '◀';
+                    }
+                    #{$ltr} & {
+                        content: '▶';
+                    }
+                }
             }
             div.post-action-tab.action-tab-actions {
                 margin-left: 0;
@@ -303,8 +344,14 @@
 
                 position: absolute;
                 top: 1.5em;
-                left: 0px;
                 z-index: 10;
+
+                #{$rtl} & {
+                    right: 0px;
+                }
+                #{$ltr} & {
+                    left: 0px;
+                }
 
                 list-style: none;
                 padding: 0 0 0 0;

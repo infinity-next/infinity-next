@@ -1,4 +1,4 @@
-<section id="site-recent-images" class="grid-50">
+<section id="site-recent-images" class="grid-50 tablet-100 mobile-100 {{ $rtl ? 'push-50' : ''}}">
 	<div class="smooth-box">
 		<h2 class="index-title">@lang('index.title.recent_images')</h2>
 		<ul class="recent-images selfclear">

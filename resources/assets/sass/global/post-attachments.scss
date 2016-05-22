@@ -1,9 +1,15 @@
 ul.post-attachments {
     display: block;
-    float: left;
     overflow-x: auto;
     max-width: 99%;
     max-width: calc(100% - 1em);
+
+    #{$rtl} & {
+        float: right;
+    }
+    #{$ltr} & {
+        float: left;
+    }
 
     .op-container & {
         max-width: 100%;
@@ -53,10 +59,16 @@ ul.post-attachments {
         position: relative;
         display: inline-block;
         vertical-align: text-top;
-        padding: 0 0.75em 0.75em 0;
+
+        #{$rtl} & {
+            padding: 0 0 0.75em 0.75em;
+        }
+        #{$ltr} & {
+            padding: 0 0.75em 0.75em 0;
+        }
     }
         div.action-bar-attachments {
-            float: left;
+            display: inline-block;
 
             div.post-action-tab {
                 display: block;
@@ -65,10 +77,27 @@ ul.post-attachments {
                 &:hover {
                     color: $color-link-hover;
                 }
+
+                .post-action-groups {
+                    z-index: 4;
+                    top: auto;
+                    bottom: 2em;
+                }
             }
 
             .post-action-label {
                 font-weight: bold;
+
+                &::before {
+                    display: inline-block;
+
+                    #{$rtl} & {
+                        content: '◁';
+                    }
+                    #{$ltr} & {
+                        content: '▷';
+                    }
+                }
             }
             /*
             a.post-action {
@@ -100,24 +129,28 @@ ul.post-attachments {
         }
         a.attachment-download {
             clear: both;
-            display: block;
-            text-align: left;
+            display: inline-block;
             white-space: nowrap;
+
+            .detail-download {
+                #{$rtl} & {
+                    margin-right: 0.5em;
+                }
+                #{$ltr} & {
+                    margin-left: 0.5em;
+                }
+            }
         }
             li.post-attachment.attachment-expanded a.attachment-link {
                 display: block;
             }
 
-            a.attachment-download .detail-download {
-                margin-left: 0.5em;
-            }
             a.attachment-download .detail-filesize {
                 margin-right: 0.25em;
             }
             a.attachment-download .detail-filesize::before {
                 display: inline;
                 content: "(";
-                margin-left: 0.4em;
             }
             a.attachment-download .detail-filedim::after {
                 display: inline;
@@ -297,7 +330,6 @@ ul.post-attachments {
                     div.attachment-action-group,
                     p.attachment-detail {
                         display: block;
-                        text-align: center;
                         font-size: 90%;
 
                         height: auto;
@@ -305,9 +337,16 @@ ul.post-attachments {
                         padding: 0.5em 0;
                         margin: 0;
 
-                        max-width: 100%;
+                        max-width: 100%; /*
                         overflow: hidden;
-                        text-overflow: ellipsis;
+                        text-overflow: ellipsis; */
+
+                        #{$rtl} & {
+                            text-align: right;
+                        }
+                        #{$ltr} & {
+                            text-align: left;
+                        }
                     }
                     figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
                         margin-bottom: 0px;

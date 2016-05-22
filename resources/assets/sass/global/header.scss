@@ -29,11 +29,15 @@ figcaption.page-details {
 	h1.page-title {
 		color: #333;
 		margin: 0.2em 0 0 0;
+
+		/* Fixes "/Arabic - /wew" */
+		direction: ltr;
 	}
 		.board-favorite.fa {
 			display: none;
 			color: #aaa;
 			cursor: pointer;
+			margin-left: 0.25em;
 		}
 
 		html.js .board-list .board-favorite {

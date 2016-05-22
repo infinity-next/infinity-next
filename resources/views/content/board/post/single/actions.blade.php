@@ -3,7 +3,7 @@
 	@section('post-actions')
 	@set('postActions', false)
 	<div class="post-action-tab action-tab-actions" data-no-instant>
-		<span class="post-action-label post-action-open">▶<span class="post-action-text">@lang('board.action.open')</span></span>
+		<span class="post-action-label post-action-open"><span class="post-action-text">@lang('board.action.open')</span></span>
 
 		<ul class="post-action-groups">
 			<li class="post-action-group">

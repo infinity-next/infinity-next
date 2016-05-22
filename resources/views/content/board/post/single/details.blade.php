@@ -23,6 +23,8 @@
 			{{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
 		@if ($details['email'] && !$catalog)</a>@endif
 		</strong>
+		{{-- Always here. Added in by CSS. --}}
+		<span class="author-you">@lang('board.you')</span>
 		@if (isset($details['insecure_tripcode']) && $details['insecure_tripcode'])
 		<span class="insecure-tripcode tripcode">{{ $details['insecure_tripcode'] }}</span>
 		@endif

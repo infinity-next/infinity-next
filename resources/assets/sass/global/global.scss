@@ -3,187 +3,199 @@
  */
 html,
 body {
-	background-color: $background-color;
-	background-image: -ms-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-	background-image: -moz-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-	background-image: -o-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, $background-fade), color-stop(40px, $background-fade), color-stop(240px, $background-color), color-stop(100, $background-color));
-	background-image: -webkit-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-	background-image: linear-gradient(to bottom, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-color: $background-color;
+    background-image: -ms-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-image: -moz-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-image: -o-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, $background-fade), color-stop(40px, $background-fade), color-stop(240px, $background-color), color-stop(100, $background-color));
+    background-image: -webkit-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-image: linear-gradient(to bottom, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
 
-	box-sizing: border-box;
-	height: auto;
-	width: 100%;
-	min-width: 300px;
-	min-height: 100vh;
+    box-sizing: border-box;
+    height: auto;
+    width: 100%;
+    min-width: 300px;
+    min-height: 100vh;
 
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-	display: flex;
-	flex-direction: column;
-	min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
 
-	color: rgb(17, 17, 17);
-	-webkit-text-size-adjust: 100%;
+    color: rgb(17, 17, 17);
+    -webkit-text-size-adjust: 100%;
 
-	font-family: $font-stack;
-	font-size: $font-size;
+    font-family: $font-stack;
+    font-size: $font-size;
+
+}
+
+[dir='ltr'],
+.ltr {
+    direction: ltr;
+    text-align: left;
+}
+[dir='rtl'],
+.rtl {
+    direction: rtl;
+    text-align: right;
 }
 
 #page-container {
-	position: relative;
-	flex: 1;
+    position: relative;
+    flex: 1;
 
-	/*
-		Microsoft is a piece of shit and I hope they all get ass cancer.
-		For whatever reason, flex items in MS11 do not have a height.
-		Instead, the main body gets a height of 0, and the footer appears
-		right below the header.
+    /*
+        Microsoft is a piece of shit and I hope they all get ass cancer.
+        For whatever reason, flex items in MS11 do not have a height.
+        Instead, the main body gets a height of 0, and the footer appears
+        right below the header.
 
-		I've tried many other alternatives to this but there doesn't seem
-		to be a way to have a flexible height sticky footer.
-		The only solution is to use the easy layout for all modern browsers
-		and let IE degrade gracefully, with the footer appearing where it
-		would be without Flexbox.
-	*/
-	-ms-flex: none;
+        I've tried many other alternatives to this but there doesn't seem
+        to be a way to have a flexible height sticky footer.
+        The only solution is to use the easy layout for all modern browsers
+        and let IE degrade gracefully, with the footer appearing where it
+        would be without Flexbox.
+    */
+    -ms-flex: none;
 }
 
 a,
 a:link,
 a:visited,
 a:hover {
-	color: $color-link;
-	text-decoration: none;
+    color: $color-link;
+    text-decoration: none;
 }
-	a:hover {
-		color: $color-link-hover;
-	}
+    a:hover {
+        color: $color-link-hover;
+    }
 
 ol,
 ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 
 button,
 a.button {
-	display: inline-block;
-	padding: 0.2em 1em 0.25em;
-	margin-bottom: 0;
+    display: inline-block;
+    padding: 0.2em 1em 0.25em;
+    margin-bottom: 0;
 
-	background: rgba(255, 255, 255, 0.35);
-	border: 1px solid #34345C;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	outline: 0;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid #34345C;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
 
-	cursor: pointer;
+    cursor: pointer;
 
-	color: #34345C;
-	font-size: 1.07142857142857em;
-	font-weight: bold;
-	line-height: 1.4545em;
-	-webkit-font-smoothing: antialiased;
-	text-align: center;
-	vertical-align: middle;
+    color: #34345C;
+    font-size: 1.07142857142857em;
+    font-weight: bold;
+    line-height: 1.4545em;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    vertical-align: middle;
 }
-	button:hover,
-	a.button:hover {
-		background: #34345C;
-		color: #FFFFFF;
-	}
+    button:hover,
+    a.button:hover {
+        background: #34345C;
+        color: #FFFFFF;
+    }
 
-	button:disabled,
-	a.button.disabled {
-		background: #ffffff;
-		border: 1px solid #ccc;
-		color: #ccc;
-		cursor: default;
-	}
-		button:disabled:hover,
-		a.button.disabled:hover {
-			background: #ffffff;
-			border: 1px solid #ccc;
-			color: #ccc;
-		}
+    button:disabled,
+    a.button.disabled {
+        background: #ffffff;
+        border: 1px solid #ccc;
+        color: #ccc;
+        cursor: default;
+    }
+        button:disabled:hover,
+        a.button.disabled:hover {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            color: #ccc;
+        }
 
-	button.field-delete,
-	button.reject,
-	button.delete {
-		border-color: #5C3434;
-		color: #5C3434;
-	}
-		button.field-delete:hover,
-		button.reject:hover,
-		button.delete:hover {
-			background: #5C3434;
-			color: #FFF;
-		}
+    button.field-delete,
+    button.reject,
+    button.delete {
+        border-color: #5C3434;
+        color: #5C3434;
+    }
+        button.field-delete:hover,
+        button.reject:hover,
+        button.delete:hover {
+            background: #5C3434;
+            color: #FFF;
+        }
 
-	button.approve {
-		border-color: #4F9E2E;
-		color: #4F9E2E;
-	}
-		button.approve:hover {
-			background: #4F9E2E;
-			color: #FFF;
-		}
+    button.approve {
+        border-color: #4F9E2E;
+        color: #4F9E2E;
+    }
+        button.approve:hover {
+            background: #4F9E2E;
+            color: #FFF;
+        }
 
 input,
 textarea,
 select {
-	background: #fff;
-	border-radius: 0px;
-	border: 1px solid #ccc;
-	color: #2a2a2a;
+    background: #fff;
+    border-radius: 0px;
+    border: 1px solid #ccc;
+    color: #2a2a2a;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-	outline: none;
+    outline: none;
 }
 
 /* Tables */
 table {
-	border: none;
-	border-collapse: collapse;
-	border-spacing: 0;
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	width: 100%;
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
-	table thead {
-	}
-		table thead th {
-			border-top: none;
-			padding: 0.5em;
-			text-align: left;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-		}
+    table thead {
+    }
+        table thead th {
+            border-top: none;
+            padding: 0.5em;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        }
 
-	table tbody {
-	}
-		table tbody tr.row-inactive {
-			opacity: 0.4;
-		}
-			table tbody tr.row-inactive:hover {
-				opacity: 1;
-			}
+    table tbody {
+    }
+        table tbody tr.row-inactive {
+            opacity: 0.4;
+        }
+            table tbody tr.row-inactive:hover {
+                opacity: 1;
+            }
 
-		table tbody tr:nth-child(even) {
-			background: rgba(0,0,0,0.05);
-		}
-			table tbody td {
-				padding: 0.35em 0.75em;
-			}
+        table tbody tr:nth-child(even) {
+            background: rgba(0,0,0,0.05);
+        }
+            table tbody td {
+                padding: 0.35em 0.75em;
+            }
 
 
 
@@ -192,83 +204,83 @@ table {
  */
 
 .ugc {
-	/*
-		DO NOT PUT THIS HERE
-		It stops post bodies from wrapping their images!
+    /*
+        DO NOT PUT THIS HERE
+        It stops post bodies from wrapping their images!
 
-		overflow: hidden;
-	*/
+        overflow: hidden;
+    */
 }
 
 /* Function */
 .selfclear::after {
-	display: block;
-	content: ' ';
-	clear: both;
+    display: block;
+    content: ' ';
+    clear: both;
 }
 
 /* Design */
 .smooth-box {
-	background: #fff;
-	border-radius: 4px;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-	padding: 1.5em;
-	overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    padding: 1.5em;
+    overflow: hidden;
 }
-	.smooth-box .box-title {
+    .smooth-box .box-title {
 
-	}
+    }
 
 .infobox {
-	background: #fff;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-	border-radius: 0.25em;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 0.25em;
 }
-	.infobox .infobox-title {
-		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-		font-weight: bold;
-		color: #34345C;
-		padding: 0.5em;
-	}
-	.infobox .infobox-info {
-		padding: 0.4em 0.6em 0.4em 0.6em;
-		min-height: 73px;
-	}
-	.infobox .infobox-info p {
-		margin: 0 0 0.4em 0;
-	}
+    .infobox .infobox-title {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        font-weight: bold;
+        color: #34345C;
+        padding: 0.5em;
+    }
+    .infobox .infobox-info {
+        padding: 0.4em 0.6em 0.4em 0.6em;
+        min-height: 73px;
+    }
+    .infobox .infobox-info p {
+        margin: 0 0 0.4em 0;
+    }
 
 .loading {
-	padding-top: 80px;
-	background: center 4px url("#{$base-url}img/assets/infinity.gif") no-repeat;
+    padding-top: 80px;
+    background: center 4px url("#{$base-url}img/assets/infinity.gif") no-repeat;
 }
 
 /**
  * Feature Responsiveness
  */
 html.no-js .no-js,
-html.js	.require-js {
-	display: initial;
+html.js    .require-js {
+    display: initial;
 }
 html.no-js .require-js,
-html.js	.no-js {
-	display: none !important;
+html.js    .no-js {
+    display: none !important;
 }
 
 .no-mobile {
-	display: none;
+    display: none;
 }
 .only-mobile {
-	display: initial;
+    display: initial;
 }
 .tablet-or-larger {
-	display: none;
+    display: none;
 }
 
 /**
  * Main Content
  */
 main {
-	padding: 0 0 1em 0;
-	position: relative;
+    padding: 0 0 1em 0;
+    position: relative;
 }

@@ -35,13 +35,14 @@ blockquote.ugc {
 		margin: 1em -0.75em 1em -1.7em;
 
 		overflow-x: auto;
-		overflow-y: hidden;
+		overflow-y: auto;
+		max-height: 50vh;
 
 		& code {
 			display: block;
 			margin: 0;
 			padding: 1em 0.75em 1em 1.7em;
-			white-space: pre-wrap;
+			white-space: pre;
 
 			/* Very specific formatting for ASCII art. */
 			&.language-aa,

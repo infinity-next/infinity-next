@@ -798,7 +798,7 @@
             var widget  = this.widget;
             var $widget = this.widget.$widget;
 
-            if (ib.ltr && widget.axis == "sw")
+            if (1)// || ib.ltr && widget.axis == "sw")
             {
                 // Okay, so:
                 // Our styling using top,right.
@@ -869,7 +869,7 @@
             {
                 var rect  = this.getBoundingClientRect();
 
-                if (widget.axis == "sw")
+                if (1)//widget.axis == "sw")
                 {
                     $widget[0].style.left  = rect.left + "px";
                     $widget[0].style.right = "auto";
@@ -886,7 +886,7 @@
             {
                 var rect  = this.getBoundingClientRect();
 
-                if (widget.axis == "sw")
+                if (1)//widget.axis == "sw")
                 {
                     var right = (document.body.clientWidth - rect.right);
 

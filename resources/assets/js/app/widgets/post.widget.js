@@ -231,7 +231,12 @@
                 widget.events.threadNewPosts
             )
             .on(
-                'resize',
+                'click.ib-post',
+                data,
+                widget.events.windowClick
+            )
+            .on(
+                'resize.ib-post',
                 data,
                 widget.events.windowResize
             );
@@ -970,6 +975,10 @@
             {
                 widget.addAuthorship();
             }
+        },
+
+        windowClick : function(event) {
+            var $widget = event.data.$widget;
         },
 
         windowResize : function(event) {
