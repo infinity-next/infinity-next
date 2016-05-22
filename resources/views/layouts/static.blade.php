@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+@set('direction', isset($direction) ? $direction : "ltr")
+@set('ltr', isset($ltr) ? $ltr : true)
+@set('rtl', isset($rtl) ? $rtl : false)
 <html class="no-js" data-widget="instantclick" dir="{{ $direction }}">
 <head>
 	<title data-original="@yield('title') - {{ site_setting('siteName', env('SITE_NAME')) }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
