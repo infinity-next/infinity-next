@@ -1403,7 +1403,7 @@ ul.post-attachments {
   .reply-container ul.post-attachments {
     padding: 0 0 0 1em; }
   ul.post-attachments.attachments-multi {
-    padding-top: 0.75em;
+    padding-top: 0;
     float: none; }
     .reply-container ul.post-attachments.attachments-multi {
       background: rgba(0, 0, 155, 0.1); }
@@ -1416,15 +1416,35 @@ ul.post-attachments {
   ul.post-attachments li.attachment-actions {
     display: block;
     margin-top: -0.50em;
-    padding-bottom: 0.75em; }
+    padding-bottom: 0.75em;
+    text-align: center; }
   ul.post-attachments li.attachment-actions .attachment-action {
     display: inline-block;
     cursor: pointer;
     margin-right: 0.75em; }
   ul.post-attachments li.post-attachment {
+    position: relative;
     display: inline-block;
     vertical-align: text-bottom;
-    padding: 0 0.75em 0.75em 0; }
+    padding: 0 0.75em 0.75em 1em; }
+  ul.post-attachments div.action-bar-attachments {
+    position: absolute;
+    left: -0.2em;
+    z-index: 4;
+    /*
+            a.post-action {
+                display: block;
+                font-weight: normal;
+                font-size: 1.15em;
+                height: 1.15em;
+                line-height: 1;
+                margin-bottom: 0.3em;
+                visibility: hidden;
+            }*/ }
+    ul.post-attachments div.action-bar-attachments .post-action-label {
+      font-weight: bold; }
+    ul.post-attachments div.action-bar-attachments:hover {
+      color: #ff0000; }
   ul.post-attachments div.attachment-container {
     display: block; }
   ul.post-attachments li.attachment-expanded div.attachment-container {
@@ -1467,7 +1487,7 @@ ul.post-attachments {
   ul.post-attachments li.post-attachment.attachment-expanded img.attachment-img {
     /* min-width: 100%; */
     max-width: 100%; }
-  ul.post-attachments .post-content div.attachment-wrapper {
+  ul.post-attachments div.attachment-wrapper {
     position: relative;
     padding: 0;
     margin: 0 auto;
@@ -1503,7 +1523,7 @@ ul.post-attachments {
   ul.post-attachments img.attachment-img {
     display: inline-block;
     margin: 0 auto;
-    vertical-align: middle;
+    vertical-align: top;
     position: relative;
     z-index: 2; }
   ul.post-attachments html.js a.attachment-link img.attachment-type-img {
@@ -1569,7 +1589,6 @@ ul.post-attachments {
   ul.post-attachments div.attachment-action-group,
   ul.post-attachments p.attachment-detail {
     display: block;
-    color: rgba(0, 0, 0, 0.75);
     text-align: center;
     font-size: 90%;
     height: 1em;

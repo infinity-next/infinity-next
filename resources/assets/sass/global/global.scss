@@ -56,11 +56,11 @@ a,
 a:link,
 a:visited,
 a:hover {
-	color: #34345C;
+	color: $color-link;
 	text-decoration: none;
 }
 	a:hover {
-		color: #ff0000;
+		color: $color-link-hover;
 	}
 
 ol,

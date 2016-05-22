@@ -13,7 +13,7 @@ ul.post-attachments {
     }
 
     &.attachments-multi {
-        padding-top: 0.75em;
+        padding-top: 0;
         float: none;
 
         .reply-container & {
@@ -33,6 +33,7 @@ ul.post-attachments {
         display: block;
         margin-top: -0.50em;
         padding-bottom: 0.75em;
+        text-align: center;
     }
         li.attachment-actions .attachment-action {
             display: inline-block;
@@ -41,10 +42,34 @@ ul.post-attachments {
         }
 
     li.post-attachment {
+        position: relative;
         display: inline-block;
         vertical-align: text-bottom;
-        padding: 0 0.75em 0.75em 0;
+        padding: 0 0.75em 0.75em 1em;
     }
+        div.action-bar-attachments {
+            position: absolute;
+            left: -0.2em;
+            z-index: 4;
+
+            .post-action-label {
+                font-weight: bold;
+            }
+            &:hover {
+                color: $color-link-hover;
+            }
+            /*
+            a.post-action {
+                display: block;
+                font-weight: normal;
+                font-size: 1.15em;
+                height: 1.15em;
+                line-height: 1;
+                margin-bottom: 0.3em;
+                visibility: hidden;
+            }*/
+        }
+
         div.attachment-container {
             display: block;
         }
@@ -107,7 +132,7 @@ ul.post-attachments {
                     max-width: 100%;
                 }
 
-                .post-content div.attachment-wrapper {
+                div.attachment-wrapper {
                     position: relative;
                     padding: 0;
                     margin: 0 auto;
@@ -155,7 +180,7 @@ ul.post-attachments {
                     display: inline-block;
                     margin: 0 auto;
 
-                    vertical-align: middle;
+                    vertical-align: top;
                     position: relative;
                     z-index: 2;
                 }
@@ -248,7 +273,6 @@ ul.post-attachments {
                     div.attachment-action-group,
                     p.attachment-detail {
                         display: block;
-                        color: rgba(0,0,0,0.75);
                         text-align: center;
                         font-size: 90%;
 
