@@ -19,10 +19,10 @@ use Closure;
  */
 class BoardAmbivilance
 {
-	public function handle($request, Closure $next)
-	{
-		$request->route()->forgetParameter('board');
+    public function handle($request, Closure $next)
+    {
+        $request->route()->forgetParameter('board');
 
-		return $next($request);
-	}
+        return $next($request);
+    }
 }

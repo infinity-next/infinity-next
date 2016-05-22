@@ -252,46 +252,6 @@ Route::group([
 	], function()
 	{
 		/*
-		| Board Attachment Routes (Files)
-		*/
-		if (!env('APP_URL_MEDIA'))
-		{
-			Route::group([
-				'prefix'     => 'file',
-				'middleware' => \App\Http\Middleware\FileFilter::class,
-				'namespace'  => 'Content',
-			], function()
-			{
-				Route::get('{hash}/{filename}', [
-					'as'   => 'static.file.hash',
-					'uses' => 'ImageController@getImageFromHash',
-				])->where(['hash' => "[a-f0-9]{32}",]);
-
-				Route::get('{attachment}/{filename}', [
-					'as'   => 'static.file.attachment',
-					'uses' => 'ImageController@getImageFromAttachment',
-				]);
-
-				Route::get('thumb/{hash}/{filename}', [
-					'as'   => 'static.thumb.hash',
-					'uses' => 'ImageController@getThumbnailFromHash',
-				])->where(['hash' => "[a-f0-9]{32}",]);
-
-				Route::get('thumb/{attachment}/{filename}', [
-					'as'   => 'static.thumb.attachment',
-					'uses' => 'ImageController@getThumbnailFromAttachment',
-				]);
-
-				Route::get('remove/{attachment}', 'ImageController@getDeleteAttachment');
-				Route::post('remove/{attachment}', 'ImageController@postDeleteAttachment');
-				Route::get('spoiler/{attachment}', 'ImageController@getSpoilerAttachment');
-				Route::post('spoiler/{attachment}', 'ImageController@postSpoilerAttachment');
-				Route::get('unspoiler/{attachment}', 'ImageController@getSpoilerAttachment');
-				Route::post('unspoiler/{attachment}', 'ImageController@postSpoilerAttachment');
-			});
-		}
-
-		/*
 		| Board API Routes (JSON)
 		*/
 		Route::group([
@@ -473,6 +433,7 @@ Route::group([
 
 /*
 | Board Attachment Routes (Files)
+| Utilizes a CDN domain.
 */
 if (env('APP_URL_MEDIA'))
 {
@@ -505,5 +466,45 @@ if (env('APP_URL_MEDIA'))
 			'uses' => 'ImageController@getThumbnailFromAttachment',
 		]);
 
+	});
+}
+/*
+| Board Attachment Routes (Files)
+| Plain routing.
+*/
+else if (!env('APP_URL_MEDIA'))
+{
+	Route::group([
+		'prefix'     => '{board}/file',
+		'middleware' => \App\Http\Middleware\FileFilter::class,
+		'namespace'  => 'Content',
+	], function()
+	{
+		Route::get('{hash}/{filename}', [
+			'as'   => 'static.file.hash',
+			'uses' => 'ImageController@getImageFromHash',
+		])->where(['hash' => "[a-f0-9]{32}",]);
+
+		Route::get('{attachment}/{filename}', [
+			'as'   => 'static.file.attachment',
+			'uses' => 'ImageController@getImageFromAttachment',
+		]);
+
+		Route::get('thumb/{hash}/{filename}', [
+			'as'   => 'static.thumb.hash',
+			'uses' => 'ImageController@getThumbnailFromHash',
+		])->where(['hash' => "[a-f0-9]{32}",]);
+
+		Route::get('thumb/{attachment}/{filename}', [
+			'as'   => 'static.thumb.attachment',
+			'uses' => 'ImageController@getThumbnailFromAttachment',
+		]);
+
+		Route::get('remove/{attachment}', 'ImageController@getDeleteAttachment');
+		Route::post('remove/{attachment}', 'ImageController@postDeleteAttachment');
+		Route::get('spoiler/{attachment}', 'ImageController@getSpoilerAttachment');
+		Route::post('spoiler/{attachment}', 'ImageController@postSpoilerAttachment');
+		Route::get('unspoiler/{attachment}', 'ImageController@getSpoilerAttachment');
+		Route::post('unspoiler/{attachment}', 'ImageController@postSpoilerAttachment');
 	});
 }
