@@ -1,4 +1,6 @@
 {
-  "static/js/app.js": "static/js/app-63c5af3734.js",
-  "static/js/vendor.js": "static/js/vendor-46c53224f0.js"
+  "static/css/global.css": "static/css/global-004832d71e.css",
+  "static/css/panel.css": "static/css/panel-1f619566e7.css",
+  "static/css/public.css": "static/css/public-452c44aadb.css",
+  "static/css/vendor.css": "static/css/vendor-c853702d4e.css"
 }
