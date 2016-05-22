@@ -219,6 +219,9 @@
                         color: red;
                     }
 
+                body.single-thread .post-detail.detail-open {
+                    display: none;
+                }
                 .post-detail.detail-cites {
                     display: inline;
                     white-space: normal;

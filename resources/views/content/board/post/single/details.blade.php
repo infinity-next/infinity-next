@@ -80,27 +80,29 @@
 	@if (!$catalog)
 		@if (!$reply_to && $post->isOP())
 		<li class="post-detail detail-open">
-			{{-- Mobile Last 50 Open --}}
-			<a class="thread-replies-open only-mobile" href="{{ $post->getURL('l50')}}">
-				{{ Lang::choice(
+			{{-- Mobile Last 50 Open
+			<a class="thread-replies-open only-mobile" href="{{ $post->getURL('l50')}}">{{
+				Lang::choice(
 					'board.omitted.show.open',
 					50,
 					[
 						'count' => 50,
 					]
 				) }}
-			</a>
+			</a> --}}
 
 			{{-- Desktop Last 350 Open --}}
-			<a class="thread-replies-open no-mobile" href="{{ $post->getURL('l350')}}">
-				{{ Lang::choice(
+			<a class="thread-replies-open no-mobile" href="{{ $post->getURL('l350')}}">{{
+				Lang::choice(
 					'board.omitted.show.open',
 					350,
 					[
 						'count' => 350,
 					]
-				) }}
-			</a>
+				)
+			}}</a>
+
+			<a class="thread-replies-open no-mobile" href="{{ $post->getURL() }}">@lang('board.omitted.show.reply')</a>
 		</li>
 		@endif
 

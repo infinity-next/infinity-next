@@ -119,10 +119,10 @@ body.responsive {
          * Helpers
          */
         .no-mobile {
-            display: initial;
+            display: initial !important;
         }
         .only-mobile {
-            display: none;
+            display: none !important;
         }
 
         /**

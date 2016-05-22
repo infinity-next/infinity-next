@@ -209,8 +209,9 @@ return [
 		],
 
 		'show' => [
-			'inline' => "Click to expand",
+			'reply'  => "Reply",
 			'open'   => "Last :count",
+			'inline' => "Click to expand",
 		]
 	],
 
