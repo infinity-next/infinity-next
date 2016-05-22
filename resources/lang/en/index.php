@@ -17,13 +17,13 @@ return [
 			"<p>By default, the board <a href=\"/test/\">/test/</a> is installed for you to play with.</p>",
 
 		'statistic' => [
-			'boards' => "{1}There is a single board.|[0,Inf]There are currenctly :boards_public public and :boards_total total.",
+			'boards' => "{1}There is a single board.|[0,Inf]There are currently :boards_public public and :boards_total total.",
 			'posts'  => "Site-wide, :recent_posts have been made in the last day.",
 			'posts_all' => ":posts_total have made on all active boards since :start_date",
 
 			// Inserted into the above values. A post/board count is wrapped here, then concatenated above.
 			'post_count' => "<strong>:posts</strong> post|<strong>:posts</strong> posts",
-			'board_count' => "strong>:boards</strong> board|<strong>:boards</strong> boards",
+			'board_count' => "<strong>:boards</strong> board|<strong>:boards</strong> boards",
 		],
 	]
 ];
