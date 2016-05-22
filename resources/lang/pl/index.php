@@ -10,10 +10,10 @@ return [
 		'recent_posts'  => "Ostatnie posty",
 	],
 
-	'warning' => "Warning: Some boards on this site might contain content of an adult or offensive nature. " .
-		"Please cease use of this site if it is illegal for you to view such content. " .
-		"The boards on this site are made entirely by the users and do not represent the opinions of the administration of Infinity. " .
-		"In the interest of free speech, only content that directly violates the DMCA or other US laws is deleted.",
+	'warning' => "Warning: Some boards on this site might contain content of an adult or offensive nature.<wbr />" .
+		"Please cease use of this site if it is illegal for you to view such content.<wbr />" .
+		"The boards on this site are made entirely by the users and do not represent the opinions of the administration of Infinity.<wbr />" .
+		"In the interest of free speech, only content that directly violates the DMCA or other US laws is deleted.<wbr />",
 
 	'info' => [
 		'welcome' => "<p>Ta strona używa <a href=\"https://github.com/infinity-next/infinity-next\">Infinity Next</a>, " .
