@@ -21,8 +21,9 @@ return [
 			'posts'  => "Site-wide, :recent_posts have been made in the last day.",
 			'posts_all' => ":posts_total have made on all active boards since :start_date",
 
-			'post_count' => "{1}<strong>:posts</strong> post|[0,Inf]<strong>:posts</strong> posts",
-			'board_count' => "{1}<strong>:boards</strong> board|[0,Inf]<strong>:boards</strong> boards",
+			// Inserted into the above values. A post/board count is wrapped here, then concatenated above.
+			'post_count' => "<strong>:posts</strong> post|<strong>:posts</strong> posts",
+			'board_count' => "strong>:boards</strong> board|<strong>:boards</strong> boards",
 		],
 	]
 ];
