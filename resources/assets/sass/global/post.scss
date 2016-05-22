@@ -274,6 +274,9 @@
             div.post-action-tab.action-tab-actions {
                 margin-left: 0;
             }
+                div.action-tab-actions .fa {
+                    vertical-align: top;
+                }
                 div.action-tab-actions span.post-action-text {
                     display: none;
                 }

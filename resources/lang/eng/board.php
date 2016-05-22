@@ -152,8 +152,9 @@ return [
 
 	// Post Actions
 	'action'            => [
-		'view'              => "Open", // Open a thread in the catalog
+		'view'              => "Open",    // Open a thread in the catalog
 		'open'              => "Actions", // List of actions
+		'close'             => "Close",
 
 		'ban'               => "Ban",
 		'ban_delete'        => "Ban &amp; Delete",

@@ -60,17 +60,18 @@
 				data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}"
 			>
 				<figure class="attachment attachment-type-{{ $attachment->guessExtension() }} {{ $attachment->getThumbnailClasses() }}" data-widget="lazyimg">
+					{!! $attachment->getThumbnailHTML($board) !!}
+
 					<figcaption class="attachment-details">
 						<p class="attachment-detail">
 							@if ($attachment->pivot->is_spoiler)
 							<span class="detail-item detail-filename filename-spoilers">@lang('board.field.spoilers')</span>
 							@else
 							<span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->pivot->filename }}">{{ $attachment->getShortFilename() }}</span>
+							<span class="detail-item detail-close">&nbsp;[@lang('board.action.close')]</span>
 							@endif
 						</p>
 					</figcaption>
-
-					{!! $attachment->getThumbnailHTML($board) !!}
 				</figure>
 			</a>
 			@endif
