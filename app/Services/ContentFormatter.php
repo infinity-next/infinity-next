@@ -66,11 +66,11 @@ class ContentFormatter {
             {
                 if ($cite->cite->reply_to)
                 {
-                    $url = url("/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}");
+                    $url = "/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}";
                 }
                 else
                 {
-                    $url = url("/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}");
+                    $url = "/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}";
                 }
 
                 if ($remote)
@@ -96,7 +96,7 @@ class ContentFormatter {
         }
         else
         {
-            $url = url("/{$cite->cite_board_uri}/");
+            $url = "/{$cite->cite_board_uri}/";
 
             return [
                 'href'           => $url,
