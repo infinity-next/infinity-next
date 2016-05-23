@@ -578,7 +578,7 @@ class FileStorage extends Model
     {
         $ext     = $this->guessExtension();
         $mime    = $this->mime;
-        $url     = media_url("static/img/filetypes/{$ext}.svg");
+        $url     = media_url("static/img/filetypes/{$ext}.svg", false);
         $spoil   = $this->isSpoiler();
         $deleted = $this->isDeleted();
 
@@ -602,7 +602,7 @@ class FileStorage extends Model
             }
             else if ($this->isAudio())
             {
-                $url = media_url("static/img/assets/audio.gif");
+                $url = media_url("static/img/assets/audio.gif", false);
             }
         }
 

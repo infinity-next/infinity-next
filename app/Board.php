@@ -593,16 +593,16 @@ class Board extends Model {
 		switch ($asset)
 		{
 			case "board_icon"   :
-				return media_url("static/img/assets/Favicon_" . ($this->isWorksafe() ? "Burichan" : "Yotsuba") . ".ico");
+				return media_url("static/img/assets/Favicon_" . ($this->isWorksafe() ? "Burichan" : "Yotsuba") . ".ico", false);
 
 			case "file_spoiler" :
-				return media_url("static/img/assets/spoiler.png");
+				return media_url("static/img/assets/spoiler.png", false);
 
 			case "file_deleted" :
-				return media_url("static/img/assets/deleted.png");
+				return media_url("static/img/assets/deleted.png", false);
 		}
 
-		return media_url("static/img/errors/404.jpg");
+		return media_url("static/img/errors/404.jpg", false);
 	}
 
 	/**
