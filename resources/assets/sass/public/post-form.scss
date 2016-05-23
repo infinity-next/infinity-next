@@ -143,17 +143,18 @@ section.index-form {
                     display: inline;
                 }
 
-                body.rtl & {
+                #{$rtl} & {
                     display: inline-block;
                     float: right;
-                    margin-left: 0.25em;
                     margin-right: 4px;
+                    margin-left: 0.25em;
                     height: 27px;
                     line-height: 27px;
                     vertical-align: middle;
                 }
-                body.ltr & {
-                    margin-left: 4px;
+                #{$ltr} & {
+                    margin-left: 0.25em;
+                    margin-right: 4px;
                 }
             }
 

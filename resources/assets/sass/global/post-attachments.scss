@@ -131,14 +131,15 @@ ul.post-attachments {
             clear: both;
             display: inline-block;
             white-space: nowrap;
+            vertical-align: text-bottom;
 
+            .detail-filename {
+                direction: ltr;
+                text-align: center;
+            }
             .detail-download {
-                #{$rtl} & {
-                    margin-right: 0.5em;
-                }
-                #{$ltr} & {
-                    margin-left: 0.5em;
-                }
+                margin-right: 0.5em;
+                vertical-align: middle;
             }
         }
             li.post-attachment.attachment-expanded a.attachment-link {
@@ -337,10 +338,10 @@ ul.post-attachments {
                         padding: 0.5em 0;
                         margin: 0;
 
-                        max-width: 100%; /*
-                        overflow: hidden;
-                        text-overflow: ellipsis; */
+                        max-width: 100%;
+                    }
 
+                    div.attachment-action-group {
                         #{$rtl} & {
                             text-align: right;
                         }
@@ -348,6 +349,7 @@ ul.post-attachments {
                             text-align: left;
                         }
                     }
+
                     figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
                         margin-bottom: 0px;
                     }

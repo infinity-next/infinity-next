@@ -103,9 +103,9 @@ main.index-threaded {
 				}
 
 		main.index-threaded .post-container.op-container {
-			display: inline;
+			display: inline-block;
 			background: none;
 			border-style: solid none none none;
-			border-top: 2px solid rgba(0,0,255,0.25);
-			width: 100%;
+			/* border-top: 2px solid rgba(0,0,255,0.25); */
+			border-style: none none none none;
 		}
