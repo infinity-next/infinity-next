@@ -34,7 +34,7 @@ class TorFilter
     {
         $accountable = true;
 
-        if ($request->header('X-TOR', false) || $request->server('HTTP_HOST') === env('APP_URL_HS'))
+        if ($request->header('X-TOR', false) || is_hidden_service())
         {
             // Consider a user unaccountable if there's a custom X-TOR header,
             // or if the hostname is our hidden service name.
