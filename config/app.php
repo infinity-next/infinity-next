@@ -67,7 +67,7 @@ return [
 	|
 	*/
 
-	'fallback_locale' => '',
+	'fallback_locale' => env('APP_ENV') !== "production" ? '' : "en",
 
 	/*
 	|--------------------------------------------------------------------------
