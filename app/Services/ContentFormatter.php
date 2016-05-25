@@ -20,14 +20,21 @@ use Markdown;
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
  * @since      0.6.0
  */
-class ContentFormatter {
-
+class ContentFormatter
+{
     /**
      * Is set to true if non-citation text is detected.
      *
      * @var bool
      */
     protected $hasContent = false;
+
+    /**
+     * Is set to true if the majority of language characters are ARA/HEB.
+     *
+     * @var bool
+     */
+    protected $isRtl = false;
 
     /**
      * The formattable being parsed.
@@ -285,11 +292,13 @@ class ContentFormatter {
      */
     protected function formatMarkdown($content)
     {
-        $content = Markdown::config($this->options)
+        $parser = Markdown::config($this->options)
             ->addInlineType('>', 'Cite')
             ->addInlineType('&', 'Cite')
-            ->extendInline('Cite', $this->getCiteParser())
-            ->parse($content);
+            ->extendInline('Cite', $this->getCiteParser());
+
+        $content = $parser->parse($content);
+        $this->isRtl = $parser->isRtl();
 
         return $content;
     }
@@ -326,16 +335,6 @@ class ContentFormatter {
         ];
 
         return $this->formatContent($text);
-    }
-
-    /**
-     * Gets the hasContent property.
-     *
-     * @return bool
-     */
-    public function hasContent()
-    {
-        return $this->hasContent;
     }
 
     /**
@@ -511,4 +510,23 @@ class ContentFormatter {
         ];
     }
 
+    /**
+     * Gets the hasContent property.
+     *
+     * @return bool
+     */
+    public function hasContent()
+    {
+        return $this->hasContent;
+    }
+
+    /**
+     * Indicates if the last parsed content is rtl, ltr, or neutral.
+     *
+     * @return bool|null
+     */
+    public function isRtl()
+    {
+        return $this->isRtl;
+    }
 }

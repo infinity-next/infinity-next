@@ -36,9 +36,10 @@
 
         // Important class names.
         classname : {
-            'post-hover'  : "post-hover",
-            'cite-you'    : "cite-you",
-            'tabs-open'   : "open"
+            'post-hover'     : "post-hover",
+            'cite-you'       : "cite-you",
+            'tabs-open'      : "open",
+            'image-expanded' : "attachment-expanded"
         },
 
         // Selectors for finding and binding elements.
@@ -609,8 +610,13 @@
                 return true;
             }
 
-            var $img     = $(this);
-            var $link    = $img.parents(widget.options.selector['attachment-link']).first();
+            var $img = $(this);
+
+            if ($img.parents("."+widget.options.classname['image-expanded']).length) {
+                return true;
+            }
+
+            var $link = $img.parents(widget.options.selector['attachment-link']).first();
             var $preview = $(widget.options.selector['hover-box']);
 
             $preview.children().attr('src', $link.attr('data-download-url'));
@@ -643,6 +649,11 @@
             {
                 return true;
             }
+
+            var $preview = $(widget.options.selector['hover-box']);
+
+            // Kill an overlay if it exists.
+            $img.trigger('mouseout.ib-post');
 
             // If the attachment type is not an image, we can't expand inline.
             if ($img.is(widget.options.selector['attachment-image-expandable']))

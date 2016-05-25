@@ -1,9 +1,9 @@
 @if ($preview)
-	<blockquote class="post post-preview ugc" dir="{{ $post->getBodyDirection() }}">
+	<blockquote class="post post-preview ugc" {!! $post->getBodyDirectionAttr() !!}">
 	{!! $post->getBodyPreview() !!}
 </blockquote>
 @elseif ($post->hasBody())
-<blockquote class="post ugc" dir="{{ $post->getBodyDirection() }}">
+<blockquote class="post ugc" {!! $post->getBodyDirectionAttr() !!}>
 	{!! $post->getBodyFormatted() !!}
 </blockquote>
 @endif
