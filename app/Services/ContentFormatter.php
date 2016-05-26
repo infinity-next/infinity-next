@@ -350,7 +350,6 @@ class ContentFormatter
         {
             $Element = [
                 'name'       => 'a',
-                'handler'    => 'line',
                 'text'       => null,
                 'attributes' => [
                     'href'      => null,
@@ -362,19 +361,19 @@ class ContentFormatter
 
             $remainder = $Excerpt['text'];
 
+            $remotePattern = '/^((&gt;|>){3}\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi';
+            $localPattern  = '/^((&gt;|>){2}(?P<board_id>\d+))(?!>)/us';
+
             // Matches a remote (>>>/board/111) link.
-            $remotePattern = '/(&gt;>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi';
             if (preg_match($remotePattern, $Excerpt['text'], $matches))
             {
-                $Element['text'] = $matches[0];
-
                 $extent += strlen($matches[0]);
-            }
-            else if (preg_match('/(&gt;>(?P<board_id>\d+))(?!>)/us', $Excerpt['text'], $matches))
-            {
                 $Element['text'] = str_replace("&gt;", ">", $matches[0]);
-
+            }
+            else if (preg_match($localPattern, $Excerpt['text'], $matches))
+            {
                 $extent += strlen($matches[0]);
+                $Element['text'] = str_replace("&gt;", ">", $matches[0]);
             }
             else
             {
@@ -391,12 +390,12 @@ class ContentFormatter
 
                     if ($cite->cite_board_id)
                     {
-                        $replacements["/^>>>\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
-                        $replacements["/^>>{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
+                        $replacements["/^(&gt;|>){3}\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
+                        $replacements["/^(&gt;|>){2}{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
                     }
                     else
                     {
-                        $replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
+                        $replacements["/^(&gt;|>){3}\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
                     }
 
                     foreach ($replacements as $pattern => $replacement)
@@ -413,11 +412,9 @@ class ContentFormatter
 
             if ($replaced)
             {
-                $Element['text'] = str_replace(">", "&gt;", $Element['text']);
-
                 return [
-                    'extent'   => $extent,
-                    'element'  => $Element,
+                    'extent'  => $extent,
+                    'element' => $Element,
                 ];
             }
         };
