@@ -8,7 +8,7 @@
     'class'  => "form-mod smooth-box",
 ]) !!}
 @else
-<form method="POST" id="post-form" class="form-post postbox-closed" data-widget="postbox" action="{{ route(
+<form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
     $reply_to ? 'board.thread.reply' : 'board.thread.put',
     [
         'board_uri' => $board->board_uri,

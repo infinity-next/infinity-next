@@ -606,7 +606,6 @@
             if ($widget.is(".postbox-closed"))
             {
                 // Tweak classes.
-                $widget.css('display', 'block');
                 $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 
                 // Rebind jQuery UI widgets.
@@ -621,9 +620,7 @@
 
             widget.responsiveAnchor(this);
 
-
             // Tweak classes.
-            $widget.css('display', 'block');
             $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 
             // Rebind jQuery UI widgets.
@@ -1066,6 +1063,7 @@
         widget.bindCounter();
         widget.bindDraggable();
         widget.bindResize();
+        $widget.addClass("postbox-closed");
     };
 
     blueprint.prototype.bindCounter = function() {
