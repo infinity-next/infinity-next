@@ -2,11 +2,10 @@
 <div class="post-action-bar action-bar-mod">
     @section('post-actions')
     @set('postActions', false)
-	@set('postHasIp', isset($details['author_ip']) && $details['author_ip'] instanceof \App\Support\IP)
+    @set('postHasIp', isset($details['author_ip']) && $details['author_ip'] instanceof \App\Support\IP)
     <div class="post-action-tab action-tab-actions" data-no-instant>
         <span class="post-action-label post-action-open"><span class="post-action-text">@lang('board.action.open')</span></span>
 
-        <ul class="post-action-grou
         <ul class="post-action-groups">
             <li class="post-action-group">
 
@@ -129,16 +128,16 @@
                     @endif
 
                     @if ($user->canDeleteGlobally() && $postHasIp)
-                    @set('postActions', true)
-                    <li class="post-action">
-                        <a class="post-action-link action-link-delete-global" href="{!! $post->url("mod/delete/global") !!}">@lang('board.action.delete_global')</a>
-                    </li>
+                        @set('postActions', true)
+                        <li class="post-action">
+                            <a class="post-action-link action-link-delete-global" href="{!! $post->url("mod/delete/global") !!}">@lang('board.action.delete_global')</a>
+                        </li>
 
-                    @if ($user->canBanGlobally())
-                    <li class="post-action">
-                        <a class="post-action-link action-link-ban-delete-global" href="{!! $post->url("mod/ban/delete/global") !!}">@lang('board.action.ban_delete_global')</a>
-                    </li>
-                    @endif
+                        @if ($user->canBanGlobally())
+                        <li class="post-action">
+                            <a class="post-action-link action-link-ban-delete-global" href="{!! $post->url("mod/ban/delete/global") !!}">@lang('board.action.ban_delete_global')</a>
+                        </li>
+                        @endif
                     @endif
                 </ul>
             </li>

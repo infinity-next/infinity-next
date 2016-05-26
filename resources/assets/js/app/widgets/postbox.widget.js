@@ -606,6 +606,7 @@
             if ($widget.is(".postbox-closed"))
             {
                 // Tweak classes.
+                $widget.css('display', 'block');
                 $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 
                 // Rebind jQuery UI widgets.
@@ -619,6 +620,15 @@
             var $widget = event.data.$widget;
 
             widget.responsiveAnchor(this);
+
+
+            // Tweak classes.
+            $widget.css('display', 'block');
+            $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
+
+            // Rebind jQuery UI widgets.
+            widget.bindDraggable();
+            widget.bindResize();
         },
 
         formSubmit    : function(event) {

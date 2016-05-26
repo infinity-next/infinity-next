@@ -903,6 +903,7 @@
                 postboxWidget.responsiveAnchor(widget.$widget[0]);
 
                 window.scrollTo(x, y);
+                $postbox.trigger('click');
 
                 return false;
             }

@@ -18,10 +18,6 @@
 		'showPages'   => false,
 		'header'      => true,
 	])
-	<button class="post-form-open">@lang($reply_to
-		? 'board.button.reply'
-		: 'board.button.thread'
-	)</button>
 
 	<section class="index-threads">
 		@include( 'widgets.ads.board_top_left' )
@@ -43,11 +39,6 @@
 	</section>
 
 	@include('content.board.sidebar')
-
-	<button class="post-form-open">@lang($reply_to
-		? 'board.button.reply'
-		: 'board.button.thread'
-	)</button>
 </main>
 @stop
 

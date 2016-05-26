@@ -79,6 +79,7 @@ section.index-form {
 
                 html.js form.postbox-closed {
                     cursor: pointer;
+                    display: none;
                 }
                 html.js form.postbox-closed li.menu-icon-close,
                 html.js form.postbox-closed li.menu-icon-minimize,

@@ -1,102 +1,135 @@
-button.post-form-open {
-	display: none;
-
-	@media (max-width: $width-tablet)
-	{
-		html.js & {
-			display: block;
-			width: auto;
-			margin: 1em auto 0 auto;
-
-			html.no-js & {
-				display: none;
-			}
-			footer & {
-				margin-top: 0;
-				margin-bottom: 1em;
-			}
-		}
-	}
-}
-
 nav.pagination {
-	padding: 0.25em 0;
-	margin: 0;
-	color: #EEF2FF;
+    padding: 0.25em 0;
+    margin: 0;
+    color: #EEF2FF;
+
+    main.board-index & {
+        background: none;
+        margin: 1em 0;
+    }
+
+    &::after {
+        display: block;
+        content: ' ';
+        clear: both;
+    }
+
+    div.pagination-buttons {
+        margin: 0 1em;
+
+        #{$ltr} & {
+            float: left;
+        }
+        #{$rtl} & {
+            float: right;
+        }
+
+        &.buttons-pages {
+            float: none;
+            clear: both;
+
+            @media (max-width: $width-tablet) {
+                text-align: center;
+            }
+        }
+    }
+
+        .pagination-button {
+            line-height: 1.2;
+            margin: 0.2em 0;
+            padding: 0.15em 0.75em 0.25em;
+
+            &.post-form-open {
+                display: block;
+
+                #{$ltr} & {
+                    float: right;
+                }
+                #{$rtl} & {
+                    float: left;
+                }
+
+                @media (max-width: $width-tablet)
+                {
+                    float: none;
+
+                    html.js & {
+                        width: auto;
+                        margin: 1em auto 0 auto;
+
+                        html.no-js & {
+                            display: none;
+                        }
+                        footer & {
+                            margin-top: 0;
+                            margin-bottom: 1em;
+                        }
+                    }
+                }
+            }
+        }
+
+    ul.pagination-pages::before,
+    ul.pagination-pages::after,
+    li.pagination-page::after {
+        display: inline-block;
+        padding: 0.25em 0.1em;
+        color: #34345C;
+
+        #{$ltr} & {
+            float: left;
+        }
+        #{$rtl} & {
+            float: right;
+        }
+    }
+
+    ul.pagination-pages {
+        font-size: 110%;
+        margin: 0;
+    }
+    ul.pagination-pages::before {
+        content: '[';
+        opacity: 0.6;
+        cursor: default;
+    }
+    ul.pagination-pages::after {
+        content: ']';
+        opacity: 0.6;
+        cursor: default;
+    }
+        li.pagination-page {
+            display: inline-block;
+
+            #{$ltr} & {
+                float: left;
+            }
+            #{$rtl} & {
+                float: right;
+            }
+        }
+        li.pagination-page::after {
+            content: '/';
+            opacity: 0.6;
+            cursor: default;
+        }
+        li.pagination-page:last-child::after {
+            content: '';
+            display: none;
+        }
+            a.pagination-link {
+                display: inline-block;
+                padding: 0.25em 0.5em;
+                text-align: center;
+
+                #{$ltr} & {
+                    float: left;
+                }
+                #{$rtl} & {
+                    float: right;
+                }
+            }
+            a.pagination-link.pagination-active {
+                font-weight: bold;
+            }
 }
-	main.board-index nav.pagination {
-		background: none;
-		margin: 1em 0;
-	}
-
-	nav.pagination::after {
-		display: block;
-		content: ' ';
-		clear: both;
-	}
-
-	div.pagination-buttons {
-		float: left;
-		margin: 0 1em;
-	}
-		div.buttons-pages {
-			float: none;
-			clear: both;
-
-			@media (max-width: $width-tablet) {
-				& {
-					text-align: center;
-				}
-			}
-		}
-		div.pagination-buttons .pagination-button {
-			line-height: 1.2;
-			margin: 0.2em 0;
-			padding: 0.15em 0.75em 0.25em;
-		}
-
-	ul.pagination-pages::before,
-	ul.pagination-pages::after,
-	li.pagination-page::after {
-		display: inline-block;
-		float: left;
-		padding: 0.25em 0.1em;
-		color: #34345C;
-	}
-
-	ul.pagination-pages {
-		font-size: 110%;
-		margin: 0;
-	}
-	ul.pagination-pages::before {
-		content: '[';
-		opacity: 0.6;
-		cursor: default;
-	}
-	ul.pagination-pages::after {
-		content: ']';
-		opacity: 0.6;
-		cursor: default;
-	}
-		li.pagination-page {
-			display: inline-block;
-			float: left;
-		}
-		li.pagination-page::after {
-			content: '/';
-			opacity: 0.6;
-			cursor: default;
-		}
-		li.pagination-page:last-child::after {
-			content: '';
-			display: none;
-		}
-			a.pagination-link {
-				display: inline-block;
-				float: left;
-				padding: 0.25em 0.5em;
-				text-align: center;
-			}
-			a.pagination-link.pagination-active {
-				font-weight: bold;
-			}
