@@ -1,111 +1,126 @@
 /* Thread View */
 main.index-threaded {
-	margin: 0 0 -1em 0;
-	min-height: 50vh;
+    margin: 0 0 -1em 0;
+    min-height: 50vh;
 }
-	section.index-threads {
-		margin: -1em 0 0 0;
-		min-height: 550px;
-	}
-		/* Advertisements for small screens */
-		aside.advertiser img {
-			max-width: 100%;
-			height: auto;
-		}
-		aside.advertiser.top-left {
-			box-sizing: border-box;
-			padding: 0.5em;
-			text-align: center;
-		}
-		aside.advertiser.bottom-right {
-			box-sizing: border-box;
-			text-align: center;
-			width: 100%;
+    section.index-threads {
+        margin: -1em 0 0 0;
+        min-height: 550px;
+    }
+        /* Advertisements for small screens */
+        aside.advertiser img {
+            max-width: 100%;
+            height: auto;
+        }
+        aside.advertiser.top-left {
+            box-sizing: border-box;
+            padding: 0.5em;
+            text-align: center;
+        }
+        aside.advertiser.bottom-right {
+            box-sizing: border-box;
+            text-align: center;
+            width: 100%;
 
-			padding: 0;
+            padding: 0;
 
-			/* position: absolute; */
-			bottom: 0;
-		}
-			aside.advertiser.bottom-right figure.ad-field {
-				display: inline-block;
-				margin: 1em 0;
-			}
+            /* position: absolute; */
+            bottom: 0;
+        }
+            aside.advertiser.bottom-right figure.ad-field {
+                display: inline-block;
+                margin: 1em 0;
+            }
 
-		aside.advertiser.top-left {
-		}
+        aside.advertiser.top-left {
+        }
 
-		/* Threads */
-		main.index-threaded .thread,
-		aside.advertiser.top-left {
-			padding: 1em;
-		}
+        /* Threads */
+        main.index-threaded .thread,
+        aside.advertiser.top-left {
+            padding: 1em;
+        }
 
-		main.index-threaded .thread-item {
-			border-top:    1px solid rgba(0, 0, 255, 0.5);
-			border-bottom: 1px solid rgba(0, 0, 255, 0.5);
-		}
-		main.index-threaded .thread-item:first-child {
-			border-top: none;
-		}
-		main.index-threaded .thread-item:last-child {
-			border-bottom: none;
-		}
+        main.index-threaded .thread-item {
+            border-top:    1px solid rgba(0, 0, 255, 0.5);
+            border-bottom: 1px solid rgba(0, 0, 255, 0.5);
+        }
+        main.index-threaded .thread-item:first-child {
+            border-top: none;
+        }
+        main.index-threaded .thread-item:last-child {
+            border-bottom: none;
+        }
 
-		main.multiboard-index .post-crown {
-			margin: 0;
-			padding: 0;
-		}
-			main.multiboard-index .crown-figure {
-				margin: 0 -1px 0 0;
-				padding: 0 0.75em;
+        main.multiboard-index .post-crown {
+            margin: 0;
+            padding: 0;
+        }
+            main.multiboard-index .crown-figure {
+                margin: 0;
+                padding: 0 0.75em;
 
-				line-height: 42px;
-				vertical-align: middle;
-			}
-				main.multiboard-index .crown-image {
-					display: inline-block;
-					max-height: 32px;
-					max-width: 32px;
-					line-height: 42px;
-				}
-				main.multiboard-index .crown-title {
-					display: inline-block;
-					margin: 0 0 0 0.25em;
-					line-height: 42px;
-					font-size: 1.2em;
-					font-weight: bold;
-					vertical-align: middle;
-					white-space: nowrap;
-				}
-				main.multiboard-index .crown-link {
-					line-height: 42px;
-				}
+                line-height: 42px;
+                vertical-align: middle;
 
-		li.thread-last-reply {
-			margin-bottom: 0.5em;
-			padding-bottom: 0.5em;
-			border-bottom: 2px dotted #B7C5D9;
-		}
+                #{$rtl} & {
+                    margin-left: -1px;
+                }
+                #{$ltr} & {
+                    margin-right: -1px;
+                }
+            }
+                main.multiboard-index .crown-image {
+                    display: inline-block;
+                    max-height: 32px;
+                    max-width: 32px;
+                    line-height: 42px;
+                }
+                main.multiboard-index .crown-title {
+                    display: inline-block;
+                    margin: 0;
+                    line-height: 42px;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    vertical-align: middle;
+                    white-space: nowrap;
+                    direction: ltr;
 
-		.autoupdater {
-			margin: 1em 0;
-			padding: 0 0 0 1.5em;
-			white-space: nowrap;
-		}
-			.autoupdater .autoupdater-items {
-				margin: 0 0 0 -0.5em;
-			}
-				.autoupdater .autoupdater-item {
-					display: inline-block;
-					list-style: none;
-					margin: 0 0.5em;
-				}
+                    #{$rtl} & {
+                        margin-left: 0.25em;
+                    }
+                    #{$ltr} & {
+                        margin-right: 0.25em;
+                    }
+                }
+                main.multiboard-index .crown-link {
+                    line-height: 42px;
+                }
 
-		main.index-threaded .post-container.op-container {
-			display: inline-block;
-			background: none;
-			border-style: solid none none none;
-			/* border-top: 2px solid rgba(0,0,255,0.25); */
-			border-style: none none none none;
-		}
+        li.thread-last-reply {
+            margin-bottom: 0.5em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px dotted #B7C5D9;
+        }
+
+        .autoupdater {
+            margin: 1em 0;
+            padding: 0 0 0 1.5em;
+            white-space: nowrap;
+        }
+            .autoupdater .autoupdater-items {
+                margin: 0 0 0 -0.5em;
+            }
+                .autoupdater .autoupdater-item {
+                    display: inline-block;
+                    list-style: none;
+                    margin: 0 0.5em;
+                }
+
+        main.index-threaded .post-container.op-container {
+            display: inline-block;
+            background: none;
+            border-style: solid none none none;
+            /* border-top: 2px solid rgba(0,0,255,0.25); */
+            border-style: none none none none;
+        }
