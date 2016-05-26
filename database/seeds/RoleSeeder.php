@@ -11,24 +11,24 @@ use App\User;
 use App\UserRole;
 
 class RoleSeeder extends Seeder {
-	
+
 	public function run()
 	{
 		$this->command->info('Seeding roles.');
-		
+
 		$this->sequencePrep();
 		$this->runMaster();
 		$this->sequenceCleanup();
-		
+
 		$this->runBoards();
-		
+
 		$deleted = UserRole::whereDoesntHave('role')->forceDelete();
-		
+
 		if ($deleted > 0)
 		{
 			$this->command->warn("Dropped {$deleted} user roles where the role did not exist.");
 		}
-		
+
 		Schema::table('posts', function(Blueprint $table)
 		{
 			$table->foreign('capcode_id')
@@ -48,11 +48,11 @@ class RoleSeeder extends Seeder {
 				->onDelete('cascade')->onUpdate('cascade');
 		});
 	}
-	
+
 	public function sequencePrep()
 	{
 		$this->command->comment("\tPrepping database.");
-		
+
 		# Yes, we are required to drop and recreate these FKs to get ID reassignment working.
 		# This is for PostgreSQL.
 		try
@@ -74,17 +74,17 @@ class RoleSeeder extends Seeder {
 		{
 			$this->command->comment("\tSkipping FK drops. Probably already missing.");
 		}
-		
+
 		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
 		{
 			DB::statement("DROP SEQUENCE IF EXISTS roles_role_id_seq CASCADE;");
 		}
 	}
-	
+
 	public function sequenceCleanup()
 	{
 		$this->command->comment("\tCleaning up relationships.");
-		
+
 		if (DB::connection() instanceof \Illuminate\Database\PostgresConnection)
 		{
 			$this->command->comment("\tDealing with PGSQL sequences.");
@@ -93,7 +93,7 @@ class RoleSeeder extends Seeder {
 			DB::statement("ALTER TABLE roles ALTER COLUMN role_id SET DEFAULT nextval('roles_role_id_seq');");
 		}
 	}
-	
+
 	public function runMaster()
 	{
 		$this->command->comment("\tInserting system roles.");
@@ -105,7 +105,7 @@ class RoleSeeder extends Seeder {
 				'caste'      => $slug['caste'],
 				'system'     => true,
 			])->first();
-			
+
 			if (!$role || !$role->exists || $role->role_id != $slug['role_id'])
 			{
 				if ($role)
@@ -113,37 +113,37 @@ class RoleSeeder extends Seeder {
 					$role->forceDelete();
 					Role::forceDelete($slug['role_id']);
 				}
-				
+
 				$role = new Role($slug);
 				$role->role_id = $slug['role_id'];
 				$role->save();
 			}
 		}
 	}
-	
+
 	public function runBoards()
 	{
 		$this->command->comment("\tInserting board owner roles.");
 		$boardRole = $this->slugs()[Role::ID_OWNER];
-		
+
 		Board::chunk(50, function($boards)
 		{
 			foreach ($boards as $board)
 			{
 				$boardRole = $board->getOwnerRole();
-				
+
 				if (!$boardRole)
 				{
 					$boardRole = Role::getOwnerRoleForBoard($board);
 					$this->command->line("\t/{$board->board_uri}/ has no owner role.");
 				}
-				
+
 				$roleModel = Role::firstOrCreate([
 					'role'       => $boardRole['role'],
 					'board_uri'  => $board->board_uri,
 					'caste'      => $boardRole['caste'],
 				]);
-				
+
 				if ($roleModel->wasRecentlyCreated)
 				{
 					$roleModel->fill([
@@ -157,7 +157,7 @@ class RoleSeeder extends Seeder {
 			}
 		});
 	}
-	
+
 	private function slugs()
 	{
 		return [
@@ -255,14 +255,14 @@ class RoleSeeder extends Seeder {
 
 
 class UserRoleSeeder extends Seeder {
-	
+
 	public function run()
 	{
 		$this->command->info('Seeding role to user associations.');
 		$userRoles = [];
-		
+
 		$admins = User::whereIn('user_id', explode(",", env('APP_ROOT_USERS', "1")))->get();
-		
+
 		foreach ($admins as $admin)
 		{
 			$userRoles[] = [
@@ -270,13 +270,13 @@ class UserRoleSeeder extends Seeder {
 				'role_id'  => Role::ID_ADMIN,
 			];
 		}
-		
+
 		Board::with('operator', 'roles')->has('operator')->chunk(50, function($boards) use (&$userRoles)
 		{
 			foreach ($boards as $board)
 			{
 				$boardRole = $board->getOwnerRole();
-				
+
 				// Drops all board owner user roles where the user isn't a board operator.
 				$removed = UserRole::whereHas('role', function($query) use ($boardRole) {
 						$query->where('role_id', $boardRole->role_id);
@@ -285,19 +285,19 @@ class UserRoleSeeder extends Seeder {
 						$query->where('user_id', "<>", $board->operated_by);
 					})
 					->forceDelete();
-				
+
 				if ($removed > 0)
 				{
 					$this->command->line("\tRemoved {$removed} pretenders from /{$board->board_uri}/.");
 				}
-				
+
 				$userRoles[] = [
 					'user_id' => $board->operated_by,
 					'role_id' => $boardRole->role_id,
 				];
 			}
 		});
-		
+
 		foreach ($userRoles as $userRole)
 		{
 			UserRole::firstOrCreate($userRole);
@@ -307,15 +307,15 @@ class UserRoleSeeder extends Seeder {
 
 
 class RolePermissionSeeder extends Seeder {
-	
+
 	public function run()
 	{
 		$this->command->info('Seeding permission to role associations.');
-		
+
 		RolePermission::truncate();
-		
+
 		$permissions = Permission::get()->modelKeys();
-		
+
 		// Insert default permissions.
 		foreach ($this->slugs() as $role_id => $slugs)
 		{
@@ -331,7 +331,7 @@ class RolePermissionSeeder extends Seeder {
 					$permission_id    = $slug_value;
 					$permission_value = true;
 				}
-				
+
 				if (in_array($permission_id, $permissions))
 				{
 					(new RolePermission([
@@ -339,7 +339,7 @@ class RolePermissionSeeder extends Seeder {
 						'permission_id' => $permission_id,
 						'value'         => $permission_value,
 					]))->save();
-					
+
 				}
 				else
 				{
@@ -347,16 +347,16 @@ class RolePermissionSeeder extends Seeder {
 				}
 			}
 		}
-		
-		
+
+
 		// Give admin permissions.
 		if (count($permissions))
 		{
 			$role = Role::find( Role::ID_ADMIN );
 			$role->permissions()->detach();
-			
+
 			$attachments = [];
-			
+
 			foreach ($permissions as $permission_id)
 			{
 				$attachments[] =[
@@ -364,18 +364,18 @@ class RolePermissionSeeder extends Seeder {
 					'value'         => 1,
 				];
 			}
-			
+
 			$role->permissions()->attach($attachments);
 		}
 	}
-	
+
 	private function slugs()
 	{
 		return [
 			Role::ID_ANONYMOUS => [
 				"board.create",
 				"board.logs",
-				
+
 				"board.image.upload.new",
 				"board.image.upload.old",
 				"board.image.delete.self",
@@ -385,15 +385,15 @@ class RolePermissionSeeder extends Seeder {
 				"board.post.create.reply",
 				"board.post.delete.self",
 				"board.post.report",
-				
+
 				"site.post.report",
 				"site.user.create",
 			],
-			
+
 			Role::ID_UNACCOUNTABLE => [
 				"board.image.upload.new" => false,
 			],
-			
+
 			Role::ID_REGISTERED => [
 				"site.pm",
 				"site.profile.edit.other",
@@ -401,7 +401,7 @@ class RolePermissionSeeder extends Seeder {
 				"site.profile.view",
 				"site.user.merge",
 			],
-			
+
 			Role::ID_JANITOR => [
 				"board.logs",
 				"board.history",
@@ -426,7 +426,7 @@ class RolePermissionSeeder extends Seeder {
 				"board.post.report",
 				"board.user.ban.reason",
 			],
-			
+
 			Role::ID_OWNER => [
 				"board.config",
 				"board.logs",
@@ -455,7 +455,7 @@ class RolePermissionSeeder extends Seeder {
 				"board.user.role",
 				"board.user.unban",
 			],
-			
+
 			Role::ID_MODERATOR => [
 				"board.logs",
 				"board.image.upload.new",
@@ -479,7 +479,7 @@ class RolePermissionSeeder extends Seeder {
 				"board.user.ban.free",
 				"board.user.role",
 				"board.user.unban",
-				
+
 				"board.history",
 				"board.reports",
 				"site.reports",

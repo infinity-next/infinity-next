@@ -175,8 +175,21 @@ Route::group([
         Route::group([
             'namespace' => 'Boards',
             'prefix'    => 'board',
+            'as'        => 'board.',
         ], function()
         {
+            /**
+             * Board Featuring
+             */
+            Route::get('{board}/feature', [
+                'as'   => 'feature',
+                'uses' => 'FeatureController@getIndex',
+            ]);
+            Route::post('{board}/feature', [
+                'as'   => 'feature.update',
+                'uses' => 'FeatureController@postIndex',
+            ]);
+
             Route::controllers([
                 '{board}/staff/{user}' => 'StaffingController',
                 '{board}/staff'        => 'StaffController',

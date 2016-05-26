@@ -5,6 +5,7 @@ return [
 		'welcome'       => "Welcome to :site_name",
 		'statistics'    => "Site Statistics",
 
+		'featured_boards' => "Featured Boards",
 		'featured_post' => "Featured Post",
 		'recent_images' => "Recent Images",
 		'recent_posts'  => "Recent Posts",

@@ -30,6 +30,7 @@ use App\Events\BoardWasModified;
  * @category   Controller
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2015 Infinity Next Development Group
+ * @since      0.5.1
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
  */
 class ConfigController extends PanelController

@@ -54,6 +54,7 @@ return [
         'page_update'        => "Update Statc Page",
         'board_pages'        => "Static Pages for /:board_uri/",
         'site_pages'         => "Static Global Pages",
+        'feature_board'      => "Feature Board",
     ],
 
     'action'    => [
@@ -71,6 +72,9 @@ return [
         'delete_page'          => "Delete Page",
         'update_page'          => "Update Page",
         'view_page'            => "View Page",
+
+        'feature'              => "Feature Now",
+        'unfeature'            => "Unfeature",
     ],
 
     'field'     => [
@@ -98,6 +102,15 @@ return [
         'desc'                 => [
             'email' => "This field is optional, but is required to reset your password.",
         ],
+    ],
+
+    'confirm' => [
+        'feature' => "Featuring a thread will update its \"Featured At\" column to be the current date.<br />" .
+            "Unfeaturing a thread will clear that value.<br />" .
+            "Featured boards on the front page are sorted by their Featured At date.",
+
+        // Logical switch, not plural.
+        'featured_at' => "{0}Board not featured.|[1,Inf]Board last featured :featured_at",
     ],
 
     'list'      => [

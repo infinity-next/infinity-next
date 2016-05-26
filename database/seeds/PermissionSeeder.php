@@ -22,25 +22,25 @@ use Illuminate\Database\Seeder;
 use App\Permission;
 
 class PermissionSeeder extends Seeder {
-	
+
 	public function run()
 	{
 		$this->command->info("Seeding permissions.");
-		
+
 		$permission_count = Permission::count();
-		
+
 		foreach ($this->slugs() as $slug)
 		{
 			Permission::firstOrCreate([
 				'permission_id' => $slug
 			]);
 		}
-		
+
 		$permission_count = Permission::count() - $permission_count;
-		
+
 		$this->command->info("Done. Seeded {$permission_count} new permission(s).");
 	}
-	
+
 	private function slugs()
 	{
 		return [
@@ -75,7 +75,8 @@ class PermissionSeeder extends Seeder {
 			"board.user.ban.free",
 			"board.user.role",
 			"board.user.unban",
-			
+
+			"site.board.feature",
 			"site.board.view_unindexed",
 			"site.board.setting_lock",
 			"site.image.ban",
@@ -88,7 +89,7 @@ class PermissionSeeder extends Seeder {
 			"site.user.merge",
 			"site.user.raw_ip",
 			"site.reports",
-			
+
 			"sys.boards",
 			"sys.cache",
 			"sys.config",
@@ -99,7 +100,7 @@ class PermissionSeeder extends Seeder {
 			"sys.permissions",
 			"sys.tools",
 			"sys.users",
-			
+
 		];
 	}
 }
@@ -109,29 +110,29 @@ use App\PermissionGroup;
 use App\PermissionGroupAssignment;
 
 class PermissionGroupSeeder extends Seeder {
-	
+
 	public function run()
 	{
 		$this->command->info('Seeding permission groups and relationships.');
-		
+
 		PermissionGroupAssignment::truncate();
-		
+
 		foreach ($this->slugs() as $slug)
 		{
 			$permissionGroupPermissionModels = $slug['permissions'];
 			unset($slug['permissions']);
-			
+
 			$permissionGroup = PermissionGroup::firstOrNew([
 				'group_name' => $slug['group_name'],
 			]);
-			
+
 			$permissionGroup->group_name      = $slug['group_name'];
 			$permissionGroup->display_order   = $slug['display_order'];
 			$permissionGroup->is_system_only  = !!(isset($slug['is_system_only']) ? $slug['is_system_only'] : false);
 			$permissionGroup->is_account_only = !!(isset($slug['is_account_only']) ? $slug['is_account_only'] : false);
-			
+
 			$permissionGroup->save();
-			
+
 			foreach ($permissionGroupPermissionModels as $permissionGroupIndex => $permissionGroupPermission)
 			{
 				$permissionGroupPermissionModel = $permissionGroup
@@ -139,22 +140,22 @@ class PermissionGroupSeeder extends Seeder {
 					->firstOrNew([
 						'permission_id' => $permissionGroupPermission,
 					]);
-				
+
 				$permissionGroupPermissionModel->display_order = $permissionGroupIndex * 10;
 				$permissionGroupPermissionModel->save();
-				
+
 				$permissionGroupPermissionModels[] = $permissionGroupPermissionModel;
 			}
 		}
 	}
-	
+
 	private function slugs()
 	{
 		return [
 			[
 				'group_name'    => "board_controls",
 				'display_order' => 100,
-				
+
 				'permissions'   => [
 					"board.config",
 					"board.bans",
@@ -166,7 +167,7 @@ class PermissionGroupSeeder extends Seeder {
 			[
 				'group_name'    => "board_images",
 				'display_order' => 200,
-				
+
 				'permissions'   => [
 					"board.image.upload.new",
 					"board.image.upload.old",
@@ -180,7 +181,7 @@ class PermissionGroupSeeder extends Seeder {
 			[
 				'group_name'    => "board_posts",
 				'display_order' => 300,
-				
+
 				'permissions'   => [
 					"board.post.create.thread",
 					"board.post.create.reply",
@@ -206,7 +207,7 @@ class PermissionGroupSeeder extends Seeder {
 			[
 				'group_name'    => "board_users",
 				'display_order' => 400,
-				
+
 				'permissions'   => [
 					"board.user.ban.free",
 					"board.user.ban.reason",
@@ -214,15 +215,16 @@ class PermissionGroupSeeder extends Seeder {
 					"board.user.unban",
 				],
 			],
-			
+
 			[
 				'group_name'    => "site_tools",
 				'is_system_only'=> true,
 				'display_order' => 500,
-				
+
 				'permissions'   => [
 					"board.create",
 					"board.create.banned",
+					"site.board.feature",
 					"site.board.view_unindexed",
 					"site.image.ban",
 					"site.pm",
@@ -237,7 +239,7 @@ class PermissionGroupSeeder extends Seeder {
 				'group_name'    => "system_tools",
 				'is_system_only'=> true,
 				'display_order' => 600,
-				
+
 				'permissions'   => [
 					"sys.boards",
 					"sys.cache",
