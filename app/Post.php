@@ -645,7 +645,6 @@ class Post extends Model implements FormattableContract
      */
     public function getBodyFormatted($skipCache = false)
     {
-        $skipCache = true;
         if (!$skipCache)
         {
             // Markdown parsed content
