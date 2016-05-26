@@ -362,13 +362,15 @@ class ContentFormatter
 
             $remainder = $Excerpt['text'];
 
-            if (preg_match('/^((?:(&gt;)|>)>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi', $Excerpt['text'], $matches))
+            // Matches a remote (>>>/board/111) link.
+            $remotePattern = '/(&gt;>>\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi';
+            if (preg_match($remotePattern, $Excerpt['text'], $matches))
             {
-                $Element['text'] = str_replace("&gt;", ">", $matches[0]);
+                $Element['text'] = $matches[0];
 
                 $extent += strlen($matches[0]);
             }
-            else if (preg_match('/((?:(&gt;)|>)>(?P<board_id>\d+))(?!>)/us', $Excerpt['text'], $matches))
+            else if (preg_match('/(&gt;>(?P<board_id>\d+))(?!>)/us', $Excerpt['text'], $matches))
             {
                 $Element['text'] = str_replace("&gt;", ">", $matches[0]);
 
@@ -394,7 +396,7 @@ class ContentFormatter
                     }
                     else
                     {
-                        $replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
+                        $replacements["/^(>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
                     }
 
                     foreach ($replacements as $pattern => $replacement)
@@ -411,7 +413,7 @@ class ContentFormatter
 
             if ($replaced)
             {
-                $Element['text']       = str_replace(">", "&gt;", $Element['text']);
+                $Element['text'] = str_replace(">", "&gt;", $Element['text']);
 
                 return [
                     'extent'   => $extent,
