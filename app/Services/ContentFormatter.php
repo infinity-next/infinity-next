@@ -396,7 +396,7 @@ class ContentFormatter
                     }
                     else
                     {
-                        $replacements["/^(>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
+                        $replacements["/^>>>\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
                     }
 
                     foreach ($replacements as $pattern => $replacement)
