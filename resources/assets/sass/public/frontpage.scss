@@ -86,7 +86,7 @@
  * Featured Boards
  */
 #site-featured-boards {
-    margin-bottom: 1em;
+    margin: 0 10px 1em 10px;
 
     &::after {
         content: ' ';
@@ -96,15 +96,14 @@
 
     #featured-boards {
         text-align: center;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .post-crown {
-        display: inline-block;
-        float: left;
-        margin: 0;
-        padding: 1em 1%;
         direction: ltr;
-        width: 18%;
+        margin: 0.5em 0;
     }
 
     .crown-figure {

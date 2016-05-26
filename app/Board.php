@@ -807,7 +807,7 @@ class Board extends Model
     {
         return static::whereNotNull('featured_at')
             ->orderBy('featured_at', 'desc')
-            ->limit(5)
+            ->limit(6)
             ->get();
     }
 
