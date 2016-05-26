@@ -1850,8 +1850,8 @@ class Post extends Model implements FormattableContract
     {
             // Find posts in this board.
         return $query->where('posts.board_uri', $board->board_uri)
-            // Fetch accessory tables too.
-            ->withEverything()
+            // Include deleted posts.
+            ->withTrashed()
             // Only pull posts in this thread, or that is this thread.
             ->where(function($query) use ($thread) {
                 $query->where('posts.reply_to_board_id', $thread->board_id);
@@ -1862,8 +1862,8 @@ class Post extends Model implements FormattableContract
                 $query->where('posts.updated_at', '>', $sinceTime);
                 $query->orWhere('posts.deleted_at', '>', $sinceTime);
             })
-            // Include deleted posts.
-            ->withTrashed()
+            // Fetch accessory tables too.
+            ->withEverything()
             // Order by board id in reverse order (so they appear in the thread right).
             ->orderBy('posts.board_id', 'asc');
     }
