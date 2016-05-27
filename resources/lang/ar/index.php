@@ -2,7 +2,7 @@
 
 return [
     'title' => [
-        'welcome'       => "site_name: أهلن بكى إلى",
+        'welcome'       => ":site_name أهلن بكى إلى",
         'statistics'    => "إحصائيات الموقع",
 
         'featured_post' => "المنشور المعلقة",
@@ -22,13 +22,13 @@ return [
 
         'statistic' => [
             // These items are pluralized first, then submitted as the board and post strings to the below definitions.
-            'post_count' => "{1}<strong>posts:</strong> محنووات|[0,Inf]<strong>posts:</strong> محنووات",
-            'board_count' => "{1}<strong>boards:</strong> لوحة|[0,Inf]<strong>boards:</strong> لوحة",
+            'post_count' => "{1}<strong>:posts</strong> محنووات|[0,Inf]<strong>:posts</strong> محنووات",
+            'board_count' => "{1}<strong>:boards</strong> لوحة|[0,Inf]<strong>:boards</strong> لوحة",
 
             // {1} if there is only 1 board, the rest if there are >1 board.
-            'boards' => ".جمع boards_total: عامة و boards_public: الأن يوجد هناك",
-            'posts'  => ".محنووات recent_post: في الموقع كامل، تم انشا",
-            'posts_all' => "start_date: هي محنووات قدمت من posts_total:",
+            'boards' => ".جمع :boards_total عامة و boards_public: الأن يوجد هناك",
+            'posts'  => ".محنووات :recent_post في الموقع كامل، تم انشا",
+            'posts_all' => ":start_date هي محنووات قدمت من :posts_total",
         ],
     ]
 ];
