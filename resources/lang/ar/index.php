@@ -18,7 +18,7 @@ return [
     'info' => [
         'welcome' => "<p><a href=\"https://github.com/infinity-next/infinity-next\">انفنتي نكست</a> هذا الموقع يستخدم" .
             ".<a href=\"https://laravel.com\">الإطار لارافل</a> مع PHP لوحات صور" .
-            ".AGPL 3.0 مرخص تحت</p>" .
+            ".AGPL 3.0 مرخص تحت</p>",
 
         'statistic' => [
             // These items are pluralized first, then submitted as the board and post strings to the below definitions.
