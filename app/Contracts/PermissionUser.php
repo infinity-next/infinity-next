@@ -1,18 +1,20 @@
-<?php namespace App\Contracts;
+<?php
 
-interface PermissionUser {
-	
-	/**
-	 * Getter for the $accountable property.
-	 *
-	 * @return boolean
-	 */
-	public function isAccountable();
-	
-	/**
-	 * Getter for the $anonymous property.
-	 *
-	 * @return boolean
-	 */
-	public function isAnonymous();
+namespace App\Contracts;
+
+interface PermissionUser
+{
+    /**
+     * Getter for the $accountable property.
+     *
+     * @return bool
+     */
+    public function isAccountable();
+
+    /**
+     * Getter for the $anonymous property.
+     *
+     * @return bool
+     */
+    public function isAnonymous();
 }

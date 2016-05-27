@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Model representing static page content for boards and the global site.
  *
- * @package    InfinityNext
  * @category   Model
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.6.0
  */
 class Page extends Model implements HtmlableContarct, FormattableContract
@@ -29,7 +30,7 @@ class Page extends Model implements HtmlableContarct, FormattableContract
     protected $table = 'pages';
 
     /**
-     * The primary key that is used by ::get()
+     * The primary key that is used by ::get().
      *
      * @var string
      */
@@ -81,19 +82,19 @@ class Page extends Model implements HtmlableContarct, FormattableContract
      */
     public function getUrl()
     {
-        return $this->title . ".html";
+        return $this->title.'.html';
     }
 
     /**
-     * Htmlable API for rendered page
+     * Htmlable API for rendered page.
      *
      * @return string
      */
     public function toHtml()
     {
         return view('content.panel.page.partial', [
-            'board'   => $this->board,
-            'page'    => $this,
+            'board' => $this->board,
+            'page' => $this,
             'content' => $this->getFormatted(),
         ]);
     }

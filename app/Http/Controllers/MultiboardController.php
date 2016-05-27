@@ -3,27 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Post;
-use Carbon\Carbon;
-use Illuminate\Pagination\LengthAwarePaginator;
-
-use Cache;
 use Input;
-use Request;
-use Validator;
 
 /**
  * Renders a stream of content from all boards.
  *
- * @package    InfinityNext
  * @category   Controller
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.5.1
  */
 class MultiboardController extends Controller
 {
-    const VIEW_OVERBOARD = "overboard";
+    const VIEW_OVERBOARD = 'overboard';
 
     protected function getThreads()
     {
@@ -32,7 +27,7 @@ class MultiboardController extends Controller
         return call_user_func_array(
             [
                 Post::class,
-                "getThreadsForOverboard"
+                'getThreadsForOverboard',
             ],
             func_get_args()
         );

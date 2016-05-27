@@ -5,24 +5,22 @@ namespace App\Http\Controllers\API\Board;
 use App\Board;
 use App\Post;
 use App\Option;
-
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Board\BoardController as ParentController;
-use App\Http\MessengerResponse;
 use App\Http\Requests\PostRequest;
-
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 /**
  * Model representing posts and threads for boards.
  *
- * @package    InfinityNext
  * @category   Controller
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.5.1
  */
 class BoardController extends ParentController implements ApiContract
@@ -34,8 +32,9 @@ class BoardController extends ParentController implements ApiContract
      * This is usually the last few threads, depending on the optional page
      * parameter, which determines the thread offset.
      *
-     * @var Board $board
-     * @var integer $page
+     * @var Board
+     * @var int   $page
+     *
      * @return Response
      */
     public function getIndex(Board $board, $page = 1)
@@ -44,12 +43,9 @@ class BoardController extends ParentController implements ApiContract
         $pages = $board->getPageCount();
 
         // Clamp the page to real values.
-        if ($page <= 0)
-        {
+        if ($page <= 0) {
             $page = 1;
-        }
-        elseif ($page > $pages)
-        {
+        } elseif ($page > $pages) {
             $page = $pages;
         }
 
@@ -66,7 +62,8 @@ class BoardController extends ParentController implements ApiContract
     /**
      * Show the catalog (gridded) board view.
      *
-     * @param  Board    $board
+     * @param Board $board
+     *
      * @return Response
      */
     public function getCatalog(Board $board)
@@ -78,7 +75,8 @@ class BoardController extends ParentController implements ApiContract
     /**
      * Renders public config.
      *
-     * @param  \App\Board  $board
+     * @param \App\Board $board
+     *
      * @return REsponse
      */
     public function getConfig(Board $board)
@@ -89,33 +87,35 @@ class BoardController extends ParentController implements ApiContract
     /**
      * Returns a post to the client.
      *
-     * @param  Board    $board
-     * @param  Post     $thread
+     * @param Board $board
+     * @param Post  $thread
+     *
      * @return Response
      */
     public function getPost(Board $board, Post $post)
     {
         $post->setAppendHTML(true);
         $post->setRelation('replies', null);
+
         return $this->apiResponse($post);
     }
 
     /**
      * Returns a thread and its replies to the client.
      *
-     * @param  Request  $request
-     * @param  Board    $board
-     * @param  Post     $thread
+     * @param Request $request
+     * @param Board   $board
+     * @param Post    $thread
+     *
      * @return Response
      */
     public function getThread(Request $request, Board $board, Post $thread, $splice = null)
     {
         $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 
-        if (isset($input['updatesOnly']))
-        {
+        if (isset($input['updatesOnly'])) {
             $updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
-            $includeHTML  = isset($input['updateHtml']);
+            $includeHTML = isset($input['updateHtml']);
 
             $posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
             $posts->sortBy('board_id');
@@ -129,31 +129,29 @@ class BoardController extends ParentController implements ApiContract
     /**
      * Handles the creation of a new thread or reply.
      *
-     * @param  \App\Http\Requests\PostRequest  $request
-     * @param  Board  $board
-     * @param  Post|null  $thread
+     * @param \App\Http\Requests\PostRequest $request
+     * @param Board                          $board
+     * @param Post|null                      $thread
+     *
      * @return Response (redirects to the thread view)
      */
     public function putThread(PostRequest $request, Board $board, Post $thread = null)
     {
         $response = parent::putThread($request, $board, $thread);
 
-        if ($response instanceof Post)
-        {
+        if ($response instanceof Post) {
             $response = [
                 'redirect' => $response->getURL(),
             ];
-        }
-        else
-        {
+        } else {
             $response = $response
                 ->sortByDesc('recently_created')
-                ->unique(function($post) {
+                ->unique(function ($post) {
                     return $post->post_id;
                 })
                 ->sortBy('post_id');
 
-            $response = array_values( $response->toArray() );
+            $response = array_values($response->toArray());
         }
 
         return $this->apiResponse($response);

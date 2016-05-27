@@ -10,11 +10,12 @@ use Closure;
  * Good for controllers which can operate with or without a board.
  * You can use `app('\App\Board')` to construct the route board instance.
  *
- * @package    InfinityNext
  * @category   Middleware
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.6.0
  */
 class BoardAmbivilance

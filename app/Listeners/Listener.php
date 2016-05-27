@@ -1,7 +1,7 @@
-<?php namespace App\Listeners;
+<?php
 
-abstract class Listener {
-	
-	//
-	
+namespace App\Listeners;
+
+abstract class Listener
+{
 }

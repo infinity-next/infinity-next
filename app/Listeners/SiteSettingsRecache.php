@@ -1,30 +1,25 @@
-<?php namespace App\Listeners;
+<?php
 
-use App\Listeners\Listener;
+namespace App\Listeners;
+
 use Cache;
 
 class SiteSettingsRecache extends Listener
 {
-	
-	/**
-	 * Create the event listener.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		//
-	}
-	
-	/**
-	 * Handle the event.
-	 *
-	 * @param  Event  $event
-	 * @return void
-	 */
-	public function handle($event)
-	{
-		Cache::forget('site.settings');
-	}
-	
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param Event $event
+     */
+    public function handle($event)
+    {
+        Cache::forget('site.settings');
+    }
 }

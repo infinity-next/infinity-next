@@ -25,21 +25,18 @@ class StartSession extends BaseStartSession
     /**
      * Determine if the request has a URI that should pass through CSRF verification.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return bool
      */
     protected function shouldPassThrough($request)
     {
-
-        foreach ($this->except as $except)
-        {
-            if ($except !== '/')
-            {
+        foreach ($this->except as $except) {
+            if ($except !== '/') {
                 $except = trim($except, '/');
             }
 
-            if ($request->is($except))
-            {
+            if ($request->is($except)) {
                 return $this->shouldPassThrough = true;
             }
         }
@@ -50,19 +47,18 @@ class StartSession extends BaseStartSession
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if ($this->shouldPassThrough($request))
-        {
+        if ($this->shouldPassThrough($request)) {
             return parent::handle($request, $next);
         }
 
-        if (!$request->cookie())
-        {
+        if (!$request->cookie()) {
             Config::set('session.driver', 'array');
         }
 
@@ -72,14 +68,12 @@ class StartSession extends BaseStartSession
     /**
      * Add the session cookie to the application response.
      *
-     * @param  \Symfony\Component\HttpFoundation\Response  $response
-     * @param  \Illuminate\Session\SessionInterface  $session
-     * @return void
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param \Illuminate\Session\SessionInterface       $session
      */
     protected function addCookieToResponse(Response $response, SessionInterface $session)
     {
-        if (!$this->shouldPassThrough)
-        {
+        if (!$this->shouldPassThrough) {
             parent::addCookieToResponse($response, $session);
         }
     }

@@ -1,7 +1,8 @@
-<?php namespace App\Contracts;
+<?php
 
-interface PseudoEnum {
-	
-	public function setAttribute($key, $value);
-	
+namespace App\Contracts;
+
+interface PseudoEnum
+{
+    public function setAttribute($key, $value);
 }

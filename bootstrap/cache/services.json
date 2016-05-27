@@ -40,7 +40,6 @@
         "InfinityNext\\Sleuth\\Providers\\SleuthServiceProvider",
         "InfinityNext\\Eightdown\\EightdownServiceProvider",
         "InfinityNext\\Braintree\\BraintreeServiceProvider",
-        "Devfactory\\Minify\\MinifyServiceProvider",
         "JDare\\Acetone\\AcetoneServiceProvider"
     ],
     "eager": [
@@ -70,7 +69,6 @@
         "Cviebrock\\ImageValidator\\ImageValidatorServiceProvider",
         "InfinityNext\\Eightdown\\EightdownServiceProvider",
         "InfinityNext\\Braintree\\BraintreeServiceProvider",
-        "Devfactory\\Minify\\MinifyServiceProvider",
         "JDare\\Acetone\\AcetoneServiceProvider"
     ],
     "deferred": {

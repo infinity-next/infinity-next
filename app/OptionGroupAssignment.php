@@ -1,45 +1,46 @@
-<?php namespace App;
+<?php
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OptionGroupAssignment extends Model {
-	
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'option_group_assignments';
-	
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = ['option_name', 'option_group_id', 'display_order'];
-	
-	/**
-	 * Indicates if Laravel should set created_at and updated_at timestamps.
-	 *
-	 * @var array
-	 */
-	public $timestamps = false;
-	
-	/**
-	 * Indicates if the IDs are auto-incrementing.
-	 *
-	 * @var array
-	 */
-	public $incrementing = false;
-	
-	
-	public function option()
-	{
-		return $this->belongsTo('\App\Option', 'option_name');
-	}
-	
-	public function group()
-	{
-		return $this->belongsTo('\App\OptionGroup', 'option_group_id');
-	}
+class OptionGroupAssignment extends Model
+{
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'option_group_assignments';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['option_name', 'option_group_id', 'display_order'];
+
+    /**
+     * Indicates if Laravel should set created_at and updated_at timestamps.
+     *
+     * @var array
+     */
+    public $timestamps = false;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var array
+     */
+    public $incrementing = false;
+
+    public function option()
+    {
+        return $this->belongsTo('\App\Option', 'option_name');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo('\App\OptionGroup', 'option_group_id');
+    }
 }

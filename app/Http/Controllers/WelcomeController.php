@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\View;
 /**
  * Index page.
  *
- * @package    InfinityNext
  * @category   Controller
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.5.1
  */
 class WelcomeController extends Controller
@@ -26,7 +27,7 @@ class WelcomeController extends Controller
      *
      * @var string
      */
-    const VIEW_INDEX = "index";
+    const VIEW_INDEX = 'index';
 
     /**
      * Show the application welcome screen to the user.
@@ -35,18 +36,16 @@ class WelcomeController extends Controller
      */
     public function getIndex()
     {
-        if ($featured = Post::getPostFeatured())
-        {
+        if ($featured = Post::getPostFeatured()) {
             $featured->setRelation('replies', []);
         }
 
         $featured_boards = Board::getFeatured(5);
 
         return $this->view(static::VIEW_INDEX, [
-            'featured'        => $featured,
+            'featured' => $featured,
             'featured_boards' => $featured_boards,
-            'stats'           => $this->boardStats(),
+            'stats' => $this->boardStats(),
         ]);
     }
-
 }

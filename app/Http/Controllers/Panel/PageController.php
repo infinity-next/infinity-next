@@ -4,73 +4,63 @@ namespace App\Http\Controllers\Panel;
 
 use App\Board;
 use App\Page;
-
 use Illuminate\Http\Request;
-
-use Carbon\Carbon;
-use DB;
-use Input;
 use Session;
-use Validator;
 
 /**
  * This is the board config controller, available with appropriate permissions.
  * Its job is to load config panels and to validate and save the changes.
  *
- * @package    InfinityNext
  * @category   Controller
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.6.0
  */
 class PageController extends PanelController
 {
-    const VIEW_INDEX  = "panel.page.index";
-    const VIEW_CREATE = "panel.page.edit";
-    const VIEW_SHOW   = "panel.page.show";
-    const VIEW_EDIT   = "panel.page.edit";
-    const VIEW_DELETE = "panel.page.delete";
+    const VIEW_INDEX = 'panel.page.index';
+    const VIEW_CREATE = 'panel.page.edit';
+    const VIEW_SHOW = 'panel.page.show';
+    const VIEW_EDIT = 'panel.page.edit';
+    const VIEW_DELETE = 'panel.page.delete';
 
     /**
      * View path for the secondary (sidebar) navigation.
      *
      * @var string
      */
-    public static $navSecondary = "nav.panel.board";
+    public static $navSecondary = 'nav.panel.board';
 
     /**
      * View path for the tertiary (inner) navigation.
      *
      * @var string
      */
-    public static $navTertiary = "nav.panel.board.settings";
+    public static $navTertiary = 'nav.panel.board.settings';
 
     /**
      * Shares variables with the views.
      *
-     * @param  \App\Board  $board  Current board.
-     * @return void
+     * @param \App\Board $board Current board.
      */
     public function boot()
     {
-        if (!$this->board)
-        {
-            $this::$navSecondary = "nav.panel.site";
+        if (!$this->board) {
+            $this::$navSecondary = 'nav.panel.site';
             $this::$navTertiary = null;
 
-            if (!$this->user->canAdminConfig())
-            {
+            if (!$this->user->canAdminConfig()) {
                 abort(403);
             }
-        }
-        else if (!$this->user->canEditConfig($this->board))
-        {
+        } elseif (!$this->user->canEditConfig($this->board)) {
             return abort(403);
         }
 
         view()->share([
-            'tab'   => "pages",
+            'tab' => 'pages',
         ]);
     }
 
@@ -105,22 +95,23 @@ class PageController extends PanelController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $board = $this->board;
         $request->replace([
-            'name'  => $request->get('name'),
+            'name' => $request->get('name'),
             'title' => str_slug($request->get('name')),
-            'body'  => $request->get('body'),
+            'body' => $request->get('body'),
         ]);
 
         $this->validate($request, [
-            'name'  => 'required|unique:pages|max:255',
+            'name' => 'required|unique:pages|max:255',
             'title' => 'required|unique:pages|max:255',
-            'body'  => 'required',
+            'body' => 'required',
         ]);
 
         $page = new Page([
@@ -140,7 +131,8 @@ class PageController extends PanelController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Page  $page
+     * @param \App\Page $page
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Page $page)
@@ -153,7 +145,8 @@ class PageController extends PanelController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Page  $page
+     * @param \App\Page $page
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Page $page)
@@ -166,30 +159,31 @@ class PageController extends PanelController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Page  $page
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Page                $page
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Page $page)
     {
         $request->replace([
-            'name'  => $request->get('name'),
+            'name' => $request->get('name'),
             'title' => str_slug($request->get('name')),
-            'body'  => $request->get('body'),
+            'body' => $request->get('body'),
         ]);
 
         $this->validate($request, [
-            'name'  => [
-                "required",
+            'name' => [
+                'required',
                 "unique:pages,name,{$page->page_id},page_id",
-                "max:255",
+                'max:255',
             ],
             'title' => [
-                "required",
+                'required',
                 "unique:pages,title,{$page->page_id},page_id",
-                "max:255",
+                'max:255',
             ],
-            'body'  => 'required',
+            'body' => 'required',
         ]);
 
         $page->fill([
@@ -208,7 +202,8 @@ class PageController extends PanelController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Page  $page
+     * @param \App\Page $page
+     *
      * @return \Illuminate\Http\Response
      */
     public function delete(Page $page)
@@ -221,7 +216,8 @@ class PageController extends PanelController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Page  $page
+     * @param \App\Page $page
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($page)
@@ -229,9 +225,9 @@ class PageController extends PanelController
         $page->delete();
 
         return redirect()->route(
-            'panel.' .
-            ($board->exists ? 'board.' : null) .
-            'page.' .
+            'panel.'.
+            ($board->exists ? 'board.' : null).
+            'page.'.
             'index', [
                 'board' => $this->board ? $board : null,
             ]

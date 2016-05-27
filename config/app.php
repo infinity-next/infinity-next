@@ -2,285 +2,274 @@
 
 return [
 
-	/*
-	|--------------------------------------------------------------------------
-	| Application Debug Mode
-	|--------------------------------------------------------------------------
-	|
-	| When your application is in debug mode, detailed error messages with
-	| stack traces will be shown on every error that occurs within your
-	| application. If disabled, a simple generic error page is shown.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application Debug Mode
+    |--------------------------------------------------------------------------
+    |
+    | When your application is in debug mode, detailed error messages with
+    | stack traces will be shown on every error that occurs within your
+    | application. If disabled, a simple generic error page is shown.
+    |
+    */
 
-	'debug' => env('APP_ROOT_IP', false) === @$_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
+    'debug' => env('APP_ROOT_IP', false) === @$_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
 
-	/*
-	|--------------------------------------------------------------------------
-	| Application URL
-	|--------------------------------------------------------------------------
-	|
-	| This URL is used by the console to properly generate URLs when using
-	| the Artisan command line tool. You should set this to the root of
-	| your application so that it is used when running Artisan tasks.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used by the console to properly generate URLs when using
+    | the Artisan command line tool. You should set this to the root of
+    | your application so that it is used when running Artisan tasks.
+    |
+    */
 
-	'url' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', '')
-		? env('APP_URL_HS')
-		: env('APP_URL', 'http://localhost'),
+    'url' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', '')
+        ? env('APP_URL_HS')
+        : env('APP_URL', 'http://localhost'),
 
-	/*
-	|--------------------------------------------------------------------------
-	| Application Timezone
-	|--------------------------------------------------------------------------
-	|
-	| Here you may specify the default timezone for your application, which
-	| will be used by the PHP date and date-time functions. We have gone
-	| ahead and set this to a sensible default for you out of the box.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default timezone for your application, which
+    | will be used by the PHP date and date-time functions. We have gone
+    | ahead and set this to a sensible default for you out of the box.
+    |
+    */
 
-	'timezone' => 'UTC',
+    'timezone' => 'UTC',
 
-	/*
-	|--------------------------------------------------------------------------
-	| Application Locale Configuration
-	|--------------------------------------------------------------------------
-	|
-	| The application locale determines the default locale that will be used
-	| by the translation service provider. You are free to set this value
-	| to any of the locales which will be supported by the application.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application Locale Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The application locale determines the default locale that will be used
+    | by the translation service provider. You are free to set this value
+    | to any of the locales which will be supported by the application.
+    |
+    */
 
-	'locale' => 'en',
+    'locale' => 'en',
 
-	/*
-	|--------------------------------------------------------------------------
-	| Application Fallback Locale
-	|--------------------------------------------------------------------------
-	|
-	| The fallback locale determines the locale to use when the current one
-	| is not available. You may change the value to correspond to any of
-	| the language folders that are provided through your application.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Application Fallback Locale
+    |--------------------------------------------------------------------------
+    |
+    | The fallback locale determines the locale to use when the current one
+    | is not available. You may change the value to correspond to any of
+    | the language folders that are provided through your application.
+    |
+    */
 
-	'fallback_locale' => env('APP_ENV') !== "production" ? '' : "en",
+    'fallback_locale' => env('APP_ENV') !== "production" ? '' : "en",
 
-	/*
-	|--------------------------------------------------------------------------
-	| Encryption Key
-	|--------------------------------------------------------------------------
-	|
-	| This key is used by the Illuminate encrypter service and should be set
-	| to a random, 32 character string, otherwise these encrypted strings
-	| will not be safe. Please do this before deploying an application!
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Encryption Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used by the Illuminate encrypter service and should be set
+    | to a random, 32 character string, otherwise these encrypted strings
+    | will not be safe. Please do this before deploying an application!
+    |
+    */
 
-	'key' => env('APP_KEY', 'SomeRandomString'),
+    'key' => env('APP_KEY', 'SomeRandomString'),
 
-	'cipher' => MCRYPT_RIJNDAEL_128,
+    'cipher' => MCRYPT_RIJNDAEL_128,
 
-	/*
-	|--------------------------------------------------------------------------
-	| Logging Configuration
-	|--------------------------------------------------------------------------
-	|
-	| Here you may configure the log settings for your application. Out of
-	| the box, Laravel uses the Monolog PHP logging library. This gives
-	| you a variety of powerful log handlers / formatters to utilize.
-	|
-	| Available Settings: "single", "daily", "syslog", "errorlog"
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the log settings for your application. Out of
+    | the box, Laravel uses the Monolog PHP logging library. This gives
+    | you a variety of powerful log handlers / formatters to utilize.
+    |
+    | Available Settings: "single", "daily", "syslog", "errorlog"
+    |
+    */
 
-	'log' => 'daily',
+    'log' => 'daily',
 
-	/*
-	|--------------------------------------------------------------------------
-	| Autoloaded Service Providers
-	|--------------------------------------------------------------------------
-	|
-	| The service providers listed here will be automatically loaded on the
-	| request to your application. Feel free to add your own services to
-	| this array to grant expanded functionality to your applications.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Autoloaded Service Providers
+    |--------------------------------------------------------------------------
+    |
+    | The service providers listed here will be automatically loaded on the
+    | request to your application. Feel free to add your own services to
+    | this array to grant expanded functionality to your applications.
+    |
+    */
 
-	'providers' => [
+    'providers' => [
 
-		/*
-		 * Debugging tools...
-		 */
-		'Barryvdh\Debugbar\ServiceProvider',
+        /*
+         * Debugging tools...
+         */
+        Barryvdh\Debugbar\ServiceProvider::class,
 
-		/*
-		 * Laravel Framework Service Providers...
-		 */
-		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
-		'Illuminate\Broadcasting\BroadcastServiceProvider',
-		'Illuminate\Bus\BusServiceProvider',
-		'Illuminate\Cache\CacheServiceProvider',
-		'Illuminate\Foundation\Providers\ConsoleSupportServiceProvider',
-		'Illuminate\Routing\ControllerServiceProvider',
-		'Illuminate\Cookie\CookieServiceProvider',
-		'Illuminate\Database\DatabaseServiceProvider',
-		'Illuminate\Encryption\EncryptionServiceProvider',
-		'Illuminate\Filesystem\FilesystemServiceProvider',
-		'Illuminate\Foundation\Providers\FoundationServiceProvider',
-		'Illuminate\Hashing\HashServiceProvider',
-		'Illuminate\Mail\MailServiceProvider',
-		'Illuminate\Pagination\PaginationServiceProvider',
-		'Illuminate\Pipeline\PipelineServiceProvider',
-		'Illuminate\Queue\QueueServiceProvider',
-		'Illuminate\Redis\RedisServiceProvider',
-		'Illuminate\Session\SessionServiceProvider',
-		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
-		'Illuminate\Translation\TranslationServiceProvider',
-		'Illuminate\Validation\ValidationServiceProvider',
-		'Illuminate\View\ViewServiceProvider',
+        /*
+         * Laravel Framework Service Providers...
+         */
+        Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
+        Illuminate\Cache\CacheServiceProvider::class,
+        Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
+        Illuminate\Routing\ControllerServiceProvider::class,
+        Illuminate\Cookie\CookieServiceProvider::class,
+        Illuminate\Database\DatabaseServiceProvider::class,
+        Illuminate\Encryption\EncryptionServiceProvider::class,
+        Illuminate\Filesystem\FilesystemServiceProvider::class,
+        Illuminate\Foundation\Providers\FoundationServiceProvider::class,
+        Illuminate\Hashing\HashServiceProvider::class,
+        Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Pagination\PaginationServiceProvider::class,
+        Illuminate\Pipeline\PipelineServiceProvider::class,
+        Illuminate\Queue\QueueServiceProvider::class,
+        Illuminate\Redis\RedisServiceProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
+        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+        Illuminate\Translation\TranslationServiceProvider::class,
+        Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
 
-		/*
-		 * Captcha...
-		 */
-		'InfinityNext\LaravelCaptcha\CaptchaServiceProvider',
+        /*
+         * Captcha...
+         */
+        InfinityNext\LaravelCaptcha\CaptchaServiceProvider::class,
 
-		/*
-		 * Application Service Providers...
-		 */
-		'App\Providers\AppServiceProvider',
-		'App\Providers\AuthServiceProvider',
-		'App\Providers\BladeServiceProvider',
-		'App\Providers\BusServiceProvider',
-		'App\Providers\EventServiceProvider',
-		'App\Providers\HelperServiceProvider',
-		'App\Providers\RouteServiceProvider',
-		'App\Providers\SessionServiceProvider',
-		'App\Providers\SettingsServiceProvider',
-		'App\Providers\ValidationExtensionServiceProvider',
+        /*
+         * Application Service Providers...
+         */
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        App\Providers\BladeServiceProvider::class,
+        App\Providers\BusServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+        App\Providers\SessionServiceProvider::class,
+        App\Providers\SettingsServiceProvider::class,
+        App\Providers\ValidationExtensionServiceProvider::class,
 
-		/*
-		 * HttpCache...
-		 */
-		'Barryvdh\HttpCache\ServiceProvider',
+        /*
+         * HttpCache...
+         */
+        Barryvdh\HttpCache\ServiceProvider::class,
 
-		/*
-		 * Forms...
-		 */
-		'Collective\Html\HtmlServiceProvider',
+        /*
+         * Forms...
+         */
+        Collective\Html\HtmlServiceProvider::class,
 
-		/*
-		 * Files and Validation...
-		 */
-		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
-		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
+        /*
+         * Files and Validation...
+         */
+        Cviebrock\ImageValidator\ImageValidatorServiceProvider::class,
+        InfinityNext\Sleuth\Providers\SleuthServiceProvider::class,
 
-		/*
-		 * Content Formatting...
-		 */
-		'InfinityNext\Eightdown\EightdownServiceProvider',
+        /*
+         * Content Formatting...
+         */
+        InfinityNext\Eightdown\EightdownServiceProvider::class,
 
-		/*
-		 * Money...
-		 */
-		//'Laravel\Cashier\CashierServiceProvider',
-		'InfinityNext\Braintree\BraintreeServiceProvider',
+        /*
+         * Money...
+         */
+        //Laravel\Cashier\CashierServiceProvider::class,
+        InfinityNext\Braintree\BraintreeServiceProvider::class,
 
-		/*
-		 * CSS+JS Minify...
-		 */
-		'Devfactory\Minify\MinifyServiceProvider',
+        /*
+         * Varnish Integration...
+         */
+        JDare\Acetone\AcetoneServiceProvider::class,
+    ],
 
-		/*
-		 * Varnish Integration...
-		 */
-		'JDare\Acetone\AcetoneServiceProvider',
-	],
+    /*
+    |--------------------------------------------------------------------------
+    | Class Aliases
+    |--------------------------------------------------------------------------
+    |
+    | This array of class aliases will be registered when this application
+    | is started. However, feel free to register as many as you wish as
+    | the aliases are "lazy" loaded so they don't hinder performance.
+    |
+    */
 
-	/*
-	|--------------------------------------------------------------------------
-	| Class Aliases
-	|--------------------------------------------------------------------------
-	|
-	| This array of class aliases will be registered when this application
-	| is started. However, feel free to register as many as you wish as
-	| the aliases are "lazy" loaded so they don't hinder performance.
-	|
-	*/
+    'aliases' => [
+        /*
+         * Core
+         */
+        'App'       => Illuminate\Support\Facades\App::class,
+        'Artisan'   => Illuminate\Support\Facades\Artisan::class,
+        'Auth'      => Illuminate\Support\Facades\Auth::class,
+        'Blade'     => Illuminate\Support\Facades\Blade::class,
+        'Bus'       => Illuminate\Support\Facades\Bus::class,
+        'Cache'     => Illuminate\Support\Facades\Cache::class,
+        'Config'    => Illuminate\Support\Facades\Config::class,
+        'Cookie'    => Illuminate\Support\Facades\Cookie::class,
+        'Crypt'     => Illuminate\Support\Facades\Crypt::class,
+        'DB'        => Illuminate\Support\Facades\DB::class,
+        'Eloquent'  => Illuminate\Database\Eloquent\Model::class,
+        'Event'     => Illuminate\Support\Facades\Event::class,
+        'File'      => Illuminate\Support\Facades\File::class,
+        'Hash'      => Illuminate\Support\Facades\Hash::class,
+        'Input'     => Illuminate\Support\Facades\Input::class,
+        'Inspiring' => Illuminate\Foundation\Inspiring::class,
+        'Lang'      => Illuminate\Support\Facades\Lang::class,
+        'Log'       => Illuminate\Support\Facades\Log::class,
+        'Mail'      => Illuminate\Support\Facades\Mail::class,
+        'Password'  => Illuminate\Support\Facades\Password::class,
+        'Queue'     => Illuminate\Support\Facades\Queue::class,
+        'Redirect'  => Illuminate\Support\Facades\Redirect::class,
+        'Redis'     => Illuminate\Support\Facades\Redis::class,
+        'Request'   => Illuminate\Support\Facades\Request::class,
+        'Response'  => Illuminate\Support\Facades\Response::class,
+        'Route'     => Illuminate\Support\Facades\Route::class,
+        'Schema'    => Illuminate\Support\Facades\Schema::class,
+        'Session'   => Illuminate\Support\Facades\Session::class,
+        'Storage'   => Illuminate\Support\Facades\Storage::class,
+        'URL'       => Illuminate\Support\Facades\URL::class,
+        'Validator' => Illuminate\Support\Facades\Validator::class,
+        'View'      => Illuminate\Support\Facades\View::class,
 
-	'aliases' => [
-		/*
-		 * Core
-		 */
-		'App'       => 'Illuminate\Support\Facades\App',
-		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
-		'Auth'      => 'Illuminate\Support\Facades\Auth',
-		'Blade'     => 'Illuminate\Support\Facades\Blade',
-		'Bus'       => 'Illuminate\Support\Facades\Bus',
-		'Cache'     => 'Illuminate\Support\Facades\Cache',
-		'Config'    => 'Illuminate\Support\Facades\Config',
-		'Cookie'    => 'Illuminate\Support\Facades\Cookie',
-		'Crypt'     => 'Illuminate\Support\Facades\Crypt',
-		'DB'        => 'Illuminate\Support\Facades\DB',
-		'Eloquent'  => 'Illuminate\Database\Eloquent\Model',
-		'Event'     => 'Illuminate\Support\Facades\Event',
-		'File'      => 'Illuminate\Support\Facades\File',
-		'Hash'      => 'Illuminate\Support\Facades\Hash',
-		'Input'     => 'Illuminate\Support\Facades\Input',
-		'Inspiring' => 'Illuminate\Foundation\Inspiring',
-		'Lang'      => 'Illuminate\Support\Facades\Lang',
-		'Log'       => 'Illuminate\Support\Facades\Log',
-		'Mail'      => 'Illuminate\Support\Facades\Mail',
-		'Password'  => 'Illuminate\Support\Facades\Password',
-		'Queue'     => 'Illuminate\Support\Facades\Queue',
-		'Redirect'  => 'Illuminate\Support\Facades\Redirect',
-		'Redis'     => 'Illuminate\Support\Facades\Redis',
-		'Request'   => 'Illuminate\Support\Facades\Request',
-		'Response'  => 'Illuminate\Support\Facades\Response',
-		'Route'     => 'Illuminate\Support\Facades\Route',
-		'Schema'    => 'Illuminate\Support\Facades\Schema',
-		'Session'   => 'Illuminate\Support\Facades\Session',
-		'Storage'   => 'Illuminate\Support\Facades\Storage',
-		'URL'       => 'Illuminate\Support\Facades\URL',
-		'Validator' => 'Illuminate\Support\Facades\Validator',
-		'View'      => 'Illuminate\Support\Facades\View',
+        'Debugbar'  => Barryvdh\Debugbar\Facade::class,
+        'Settings'  => App\Support\Facades\Settings::class,
 
-		'Debugbar'  => 'Barryvdh\Debugbar\Facade',
-		'Settings'  => 'App\Support\Facades\Settings',
+        /*
+         * Forms
+         */
+        'Form'      => Collective\Html\FormFacade::class,
+        'Html'      => Collective\Html\HtmlFacade::class,
 
-		/*
-		 * Forms
-		 */
-		'Form'      => 'Collective\Html\FormFacade',
-		'Html'      => 'Collective\Html\HtmlFacade',
+        /*
+         * Markdown
+         */
+        'Markdown'  => InfinityNext\Eightdown\Facades\EightdownFacade::class,
 
-		/*
-		 * Markdown
-		 */
-		'Markdown'  => 'InfinityNext\Eightdown\Facades\EightdownFacade',
+        /*
+         * Captcha
+         */
+        'Captcha'   => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
 
-		/*
-		 * Captcha
-		 */
-		'Captcha'   => 'InfinityNext\LaravelCaptcha\Facades\Captcha',
+        /*
+         * File Validation
+         */
+        'Sleuth'   => InfinityNext\Sleuth\Facades\Sleuth::class,
 
-		/*
-		 * File Validation
-		 */
-		'Sleuth'   => 'InfinityNext\Sleuth\Facades\Sleuth',
-
-		/*
-		 * CSS+JS Minify
-		 */
-		'Minify'    => 'Devfactory\Minify\Facades\MinifyFacade',
-
-		/*
-		 * Varnish Integration...
-		 */
-		'Acetone'   => 'JDare\Acetone\Acetone\Facades\Acetone',
-	],
-
+        /*
+         * Varnish Integration...
+         */
+        'Acetone'  => JDare\Acetone\Acetone\Facades\Acetone::class,
+    ],
 ];

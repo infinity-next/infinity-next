@@ -1,137 +1,132 @@
-<?php namespace App\Exceptions;
+<?php
+
+namespace App\Exceptions;
 
 use Exception;
 use ErrorException;
 use Mail;
 use Response;
 use Request;
-
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException as FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 
-class Handler extends ExceptionHandler {
+class Handler extends ExceptionHandler
+{
+    /**
+     * A list of the exception types that should not be reported.
+     *
+     * @var array
+     */
+    protected $dontReport = [
+        'Symfony\Component\HttpKernel\Exception\HttpException',
+    ];
 
-	/**
-	 * A list of the exception types that should not be reported.
-	 *
-	 * @var array
-	 */
-	protected $dontReport = [
-		'Symfony\Component\HttpKernel\Exception\HttpException'
-	];
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param \Exception $e
+     */
+    public function report(Exception $e)
+    {
+        return parent::report($e);
+    }
 
-	/**
-	 * Report or log an exception.
-	 *
-	 * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-	 *
-	 * @param  \Exception  $e
-	 * @return void
-	 */
-	public function report(Exception $e)
-	{
-		return parent::report($e);
-	}
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $e
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function render($request, Exception $e)
+    {
+        $errorView = false;
+        $errorEmail = false;
 
-	/**
-	 * Render an exception into an HTTP response.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Exception  $e
-	 * @return \Illuminate\Http\Response
-	 */
-	public function render($request, Exception $e)
-	{
-		$errorView = false;
-		$errorEmail = false;
+        switch (get_class($e)) {
+            case "App\Exceptions\TorClearnet":
+                $errorView = 'errors.403_tor_clearnet';
+                break;
 
-		switch (get_class($e))
-		{
-			case "App\Exceptions\TorClearnet" :
-				$errorView = "errors.403_tor_clearnet";
-				break;
+            case 'Swift_TransportException':
+            case 'PDOException':
+                $errorView = 'errors.500_config';
+                $errorEmail = true;
+                break;
 
-			case "Swift_TransportException" :
-			case "PDOException" :
-				$errorView = "errors.500_config";
-				$errorEmail = true;
-				break;
+            case 'ErrorException':
+            case "Symfony\Component\Debug\Exception\FatalThrowableError":
+                $errorView = 'errors.500';
+                $errorEmail = true;
+                break;
 
-			case "ErrorException" :
-			case "Symfony\Component\Debug\Exception\FatalThrowableError" :
-				$errorView = "errors.500";
-				$errorEmail = true;
-				break;
+            case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException":
+                return abort(400);
+            case "Predis\Connection\ConnectionException":
+                $errorView = 'errors.500_predis';
+                $errorEmail = true;
+                break;
 
-			case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException" :
-				return abort(400);
+            default:
+                $errorView = false;
+                break;
+        }
 
-			case "Predis\Connection\ConnectionException" :
-				$errorView = "errors.500_predis";
-				$errorEmail = true;
-				break;
+        if (env('APP_DEBUG', false)) {
+            $errorView = false;
+        }
 
-			default :
-				$errorView = false;
-				break;
-		}
+        $errorEmail = $errorEmail && env('MAIL_ADDR_ADMIN', false) && env('MAIL_ADMIN_SERVER_ERRORS', false);
 
-		if (env('APP_DEBUG', false))
-		{
-			$errorView = false;
-		}
+        if ($errorEmail) {
+            // This makes use of a Symfony error handler to make pretty traces.
+            $SymfonyDisplayer = new SymfonyDisplayer(true);
+            $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
-		$errorEmail = $errorEmail && env('MAIL_ADDR_ADMIN', false) && env('MAIL_ADMIN_SERVER_ERRORS', false);
+            $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
+            $SymfonyHtml = $SymfonyDisplayer->getContent($FlattenException);
 
-		if ($errorEmail)
-		{
-			// This makes use of a Symfony error handler to make pretty traces.
-			$SymfonyDisplayer = new SymfonyDisplayer(true);
-			$FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
+            $data = [
+                'exception' => $e,
+                'error_class' => get_class($e),
+                'error_css' => $SymfonyCss,
+                'error_html' => $SymfonyHtml,
+            ];
 
-			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
-			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
+            Mail::send('emails.error', $data, function ($message) {
+                $to = env('SITE_NAME', 'Infinity Next').' Webaster';
+                $subject = env('SITE_NAME', 'Infinity Next').' Error';
+                $subject .= ' '.Request::url() ?: '';
 
-			$data = [
-				'exception'   => $e,
-				'error_class' => get_class($e),
-				'error_css'   => $SymfonyCss,
-				'error_html'  => $SymfonyHtml,
-			];
+                $message->to(env('MAIL_ADDR_ADMIN', false), $to);
+                $message->subject($subject);
+            });
+        }
 
-			Mail::send('emails.error', $data, function($message)
-			{
-				$to = env('SITE_NAME', 'Infinity Next') . " Webaster";
-				$subject = env('SITE_NAME', 'Infinity Next') . " Error";
-				$subject .= " " . Request::url() ?: "";
+        if ($errorView) {
+            // Duplicating logic in $errorEmail because output is completely
+            // diffrent without app.debug enabled. I always want a stack trace
+            // in my emails!
+            $SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
+            $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
-				$message->to(env('MAIL_ADDR_ADMIN', false), $to);
-				$message->subject($subject);
-			});
-		}
+            $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
+            $SymfonyHtml = $SymfonyDisplayer->getContent($FlattenException);
 
-		if ($errorView)
-		{
-			// Duplicating logic in $errorEmail because output is completely
-			// diffrent without app.debug enabled. I always want a stack trace
-			// in my emails!
-			$SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
-			$FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
+            $response = response()->view($errorView, [
+                'exception' => $e,
+                'error_class' => get_class($e),
+                'error_css' => $SymfonyCss,
+                'error_html' => $SymfonyHtml,
+            ], 500);
 
-			$SymfonyCss       = $SymfonyDisplayer->getStylesheet($FlattenException);
-			$SymfonyHtml      = $SymfonyDisplayer->getContent($FlattenException);
+            return $this->toIlluminateResponse($response, $e);
+        }
 
-			$response = response()->view($errorView, [
-				'exception'   => $e,
-				'error_class' => get_class($e),
-				'error_css'   => $SymfonyCss,
-				'error_html'  => $SymfonyHtml,
-			], 500);
-
-			return $this->toIlluminateResponse($response, $e);
-		}
-
-		return parent::render($request, $e);
-	}
+        return parent::render($request, $e);
+    }
 }

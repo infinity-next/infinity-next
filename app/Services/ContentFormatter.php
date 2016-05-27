@@ -1,23 +1,23 @@
-<?php namespace App\Services;
+<?php
+
+namespace App\Services;
 
 use App\Board;
 use App\Post;
 use App\PostCite;
-
 use App\Contracts\Support\Formattable as FormattableContract;
 use Illuminate\Database\Eloquent\Collection;
-
-use DB;
 use Markdown;
 
 /**
  * Model representing static page content for boards and the global site.
  *
- * @package    InfinityNext
  * @category   Model
+ *
  * @author     Joshua Moon <josh@jaw.sh>
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
  * @since      0.6.0
  */
 class ContentFormatter
@@ -39,19 +39,19 @@ class ContentFormatter
     /**
      * The formattable being parsed.
      *
-     * @var \App\formattable $formattable
+     * @var \App\formattable
      */
     protected $formattable;
 
     /**
-     * Markdown options
+     * Markdown options.
      *
      * @var array
      */
     protected $options;
 
     /**
-     * Censor terms (xxx => zzz)
+     * Censor terms (xxx => zzz).
      *
      * @var array
      */
@@ -60,54 +60,45 @@ class ContentFormatter
     /**
      * Builds an array of attributes for the Parsedown engine.
      *
-     * @param  \App\PostCite  $cite
-     * @param  boolean  $remote
-     * @param  boolean  $post
+     * @param \App\PostCite $cite
+     * @param bool          $remote
+     * @param bool          $post
+     *
      * @return string
      */
     protected function buildCiteAttributes(PostCite $cite, $remote = false, $post = false)
     {
-        if ($post)
-        {
-            if ($cite->cite)
-            {
-                if ($cite->cite->reply_to)
-                {
+        if ($post) {
+            if ($cite->cite) {
+                if ($cite->cite->reply_to) {
                     $url = "/{$cite->cite_board_uri}/thread/{$cite->cite->reply_to_board_id}#{$cite->cite_board_id}";
-                }
-                else
-                {
+                } else {
                     $url = "/{$cite->cite_board_uri}/thread/{$cite->cite_board_id}#{$cite->cite_board_id}";
                 }
 
-                if ($remote)
-                {
+                if ($remote) {
                     return [
-                        'href'           => $url,
-                        'class'          => "cite cite-post cite-remote",
+                        'href' => $url,
+                        'class' => 'cite cite-post cite-remote',
                         'data-board_uri' => $cite->cite_board_uri,
-                        'data-board_id'  => $cite->cite_board_id,
+                        'data-board_id' => $cite->cite_board_id,
                     ];
-                }
-                else
-                {
+                } else {
                     return [
-                        'href'           => $url,
-                        'class'          => "cite cite-post cite-local",
+                        'href' => $url,
+                        'class' => 'cite cite-post cite-local',
                         'data-board_uri' => $cite->cite_board_uri,
-                        'data-board_id'  => $cite->cite_board_id,
+                        'data-board_id' => $cite->cite_board_id,
                         'data-instant',
                     ];
                 }
             }
-        }
-        else
-        {
+        } else {
             $url = "/{$cite->cite_board_uri}/";
 
             return [
-                'href'           => $url,
-                'class'          => "cite cite-board cite-remote",
+                'href' => $url,
+                'class' => 'cite cite-board cite-remote',
                 'data-board-uri' => $cite->cite_board_uri,
             ];
         }
@@ -116,8 +107,9 @@ class ContentFormatter
     /**
      * Returns a formatted static page.
      *
-     * @param  \App\Contacts\Support\Formattable  $formattable
-     * @return string  (HTML, Formatted)
+     * @param \App\Contacts\Support\Formattable $formattable
+     *
+     * @return string (HTML, Formatted)
      */
     public function formatPage(FormattableContract $formattable, $formatKey)
     {
@@ -126,8 +118,8 @@ class ContentFormatter
         $this->options = [
             'general' => [
                 'keepLineBreaks' => true,
-                'parseHTML'      => false,
-                'parseURL'       => true,
+                'parseHTML' => false,
+                'parseURL' => true,
             ],
 
             // 'disable' => [
@@ -136,12 +128,12 @@ class ContentFormatter
             // ],
 
             'enable' => [
-                "Spoiler",
-                "Underline",
+                'Spoiler',
+                'Underline',
             ],
 
             'markup' => [
-                'quote'   => [
+                'quote' => [
                     'keepSigns' => true,
                 ],
             ],
@@ -153,47 +145,44 @@ class ContentFormatter
     /**
      * Returns a formatted formattable.
      *
-     * @param  \App\Post|string  $post
-     * @param  int|null  $splice  Optional. First number of characters to parse instead of entire formattable. Defaults to null.
-     * @return string  (HTML, Formatted)
+     * @param \App\Post|string $post
+     * @param int|null         $splice Optional. First number of characters to parse instead of entire formattable. Defaults to null.
+     *
+     * @return string (HTML, Formatted)
      */
     public function formatPost($post, $splice = null)
     {
-        if ($post instanceof FormattableContract)
-        {
+        if ($post instanceof FormattableContract) {
             $this->formattable = $post;
             $body = (string) $post->body;
             $this->wordfilters = $post->board->getWordfilters();
-        }
-        else
-        {
+        } else {
             $body = (string) $post;
         }
 
-        if (!is_null($splice))
-        {
+        if (!is_null($splice)) {
             $body = mb_substr($body, 0, (int) $splice);
         }
 
         $this->options = [
             'general' => [
                 'keepLineBreaks' => true,
-                'parseHTML'      => false,
-                'parseURL'       => true,
+                'parseHTML' => false,
+                'parseURL' => true,
             ],
 
             'disable' => [
-                "Image",
-                "Link",
+                'Image',
+                'Link',
             ],
 
             'enable' => [
-                "Spoiler",
-                "Underline",
+                'Spoiler',
+                'Underline',
             ],
 
             'markup' => [
-                'quote'   => [
+                'quote' => [
                     'keepSigns' => true,
                 ],
             ],
@@ -207,16 +196,18 @@ class ContentFormatter
      * Note that this is a public, easily breakable algorithm, and is therefore insecure.
      * However, it is retained because of its heavy use on anonymous websites from 2ch to 4chan.
      *
-     * @param  string  $trip
-     * @return string  (Tripcode)
+     * @param string $trip
+     *
+     * @return string (Tripcode)
      */
     public static function formatInsecureTripcode($trip)
     {
         $trip = mb_convert_encoding($trip, 'Shift_JIS', 'UTF-8');
-        $salt = substr($trip . 'H..', 1, 2);
+        $salt = substr($trip.'H..', 1, 2);
         $salt = preg_replace('/[^.-z]/', '.', $salt);
         $salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
         $trip = substr(crypt($trip, $salt), -10);
+
         return $trip;
     }
 
@@ -227,21 +218,18 @@ class ContentFormatter
      */
     protected function formatCensors($content)
     {
-        foreach ($this->wordfilters as $find => $replace)
-        {
+        foreach ($this->wordfilters as $find => $replace) {
             // Matches |bad| but not |<span class="censored">bad</span>|.
             $pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/";
 
-            try
-            {
+            try {
                 $newContent = preg_replace_callback($pattern, function ($matches) use ($replace) {
-                    if (isset($matches['match']))
-                    {
-                        $randBool = mt_rand(0, 1) ? "odd" : "even";
+                    if (isset($matches['match'])) {
+                        $randBool = mt_rand(0, 1) ? 'odd' : 'even';
                         $randTens = mt_rand(1, 10);
 
-                        $censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", "", $replace));
-                        $censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : "";
+                        $censoredWord = strtolower(preg_replace("/[^a-zA-Z\d]/", '', $replace));
+                        $censoredWord = strlen($censoredWord) ? "word-{$censoredWord}" : '';
 
                         return "<span class=\"censored {$censoredWord} rand-{$randBool} rand-{$randTens}\">{$replace}</span>";
                     }
@@ -252,8 +240,7 @@ class ContentFormatter
                 $content = $newContent;
             }
             // RegEx error
-            catch (\ErrorException $e)
-            {
+            catch (\ErrorException $e) {
                 // RegEx is malformed.
             }
         }
@@ -264,7 +251,8 @@ class ContentFormatter
     /**
      * Parses an entire block of text.
      *
-     * @param  string  $content
+     * @param string $content
+     *
      * @return string
      */
     protected function formatContent($content)
@@ -273,11 +261,11 @@ class ContentFormatter
         $content = $this->formatCensors($content);
 
         // Removes any citations.
-        $citelessContent  = preg_replace("/(<a(?: \w+=\"[^\"].+\")* class=\"cite(?:[^\"].*)\"(?: \w+=\"[^\"]+\")*>(?:[^<].*)<\/a>)/im", "", $content);
+        $citelessContent = preg_replace("/(<a(?: \w+=\"[^\"].+\")* class=\"cite(?:[^\"].*)\"(?: \w+=\"[^\"]+\")*>(?:[^<].*)<\/a>)/im", '', $content);
         // Removes any other tags.
-        $citelessContent  = preg_replace("/(<(?:[^\>]*)>)/", "", $citelessContent);
+        $citelessContent = preg_replace("/(<(?:[^\>]*)>)/", '', $citelessContent);
         // Removes all whitespace.
-        $citelessContent  = preg_replace("/\s/", "", $citelessContent);
+        $citelessContent = preg_replace("/\s/", '', $citelessContent);
         // If anything is left, we have content.
         $this->hasContent = (strlen($citelessContent) > 0);
 
@@ -287,7 +275,8 @@ class ContentFormatter
     /**
      * Santizes user input for a single line.
      *
-     * @param  string  $content
+     * @param string $content
+     *
      * @return string
      */
     protected function formatMarkdown($content)
@@ -306,29 +295,30 @@ class ContentFormatter
     /**
      * Returns a formatted report rule text.
      *
-     * @param  string  $text
-     * @return string  (HTML, Formatted)
+     * @param string $text
+     *
+     * @return string (HTML, Formatted)
      */
     public function formatReportText($text)
     {
         $this->options = [
             'general' => [
                 'keepLineBreaks' => true,
-                'parseHTML'      => false,
-                'parseURL'       => true,
+                'parseHTML' => false,
+                'parseURL' => true,
             ],
 
             'disable' => [
-                "Image",
-                "Link",
+                'Image',
+                'Link',
             ],
 
             'enable' => [
-                "Spoiler",
+                'Spoiler',
             ],
 
             'markup' => [
-                'quote'   => [
+                'quote' => [
                     'keepSigns' => true,
                 ],
             ],
@@ -346,14 +336,13 @@ class ContentFormatter
     {
         $parser = $this;
 
-        return function($Excerpt) use ($parser)
-        {
+        return function ($Excerpt) use ($parser) {
             $Element = [
-                'name'       => 'a',
-                'text'       => null,
+                'name' => 'a',
+                'text' => null,
                 'attributes' => [
-                    'href'      => null,
-                    'title'     => null,
+                    'href' => null,
+                    'title' => null,
                 ],
             ];
 
@@ -361,47 +350,35 @@ class ContentFormatter
 
             $remainder = $Excerpt['text'];
 
-            $remotePattern = '/^((&gt;|>){3}\/(?P<board_uri>' . Board::URI_PATTERN_INNER . ')\/(?P<board_id>\d+)?)/usi';
-            $localPattern  = '/^((&gt;|>){2}(?P<board_id>\d+))(?!>)/us';
+            $remotePattern = '/^((&gt;|>){3}\/(?P<board_uri>'.Board::URI_PATTERN_INNER.')\/(?P<board_id>\d+)?)/usi';
+            $localPattern = '/^((&gt;|>){2}(?P<board_id>\d+))(?!>)/us';
 
             // Matches a remote (>>>/board/111) link.
-            if (preg_match($remotePattern, $Excerpt['text'], $matches))
-            {
+            if (preg_match($remotePattern, $Excerpt['text'], $matches)) {
                 $extent += strlen($matches[0]);
-                $Element['text'] = str_replace("&gt;", ">", $matches[0]);
-            }
-            else if (preg_match($localPattern, $Excerpt['text'], $matches))
-            {
+                $Element['text'] = str_replace('&gt;', '>', $matches[0]);
+            } elseif (preg_match($localPattern, $Excerpt['text'], $matches)) {
                 $extent += strlen($matches[0]);
-                $Element['text'] = str_replace("&gt;", ">", $matches[0]);
-            }
-            else
-            {
+                $Element['text'] = str_replace('&gt;', '>', $matches[0]);
+            } else {
                 return;
             }
 
             $replaced = false;
 
-            if (isset($parser->formattable) && $parser->formattable instanceof FormattableContract)
-            {
-                foreach ($parser->formattable->cites as $cite)
-                {
+            if (isset($parser->formattable) && $parser->formattable instanceof FormattableContract) {
+                foreach ($parser->formattable->cites as $cite) {
                     $replacements = [];
 
-                    if ($cite->cite_board_id)
-                    {
-                        $replacements["/^(&gt;|>){3}\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true,  true);
+                    if ($cite->cite_board_id) {
+                        $replacements["/^(&gt;|>){3}\/{$cite->cite_board_uri}\/{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, true, true);
                         $replacements["/^(&gt;|>){2}{$cite->cite_board_id}\r?/"] = $parser->buildCiteAttributes($cite, false, true);
-                    }
-                    else
-                    {
+                    } else {
                         $replacements["/^(&gt;|>){3}\/{$cite->cite_board_uri}\/\r?/"] = $parser->buildCiteAttributes($cite, false, false);
                     }
 
-                    foreach ($replacements as $pattern => $replacement)
-                    {
-                        if (preg_match($pattern, $Element['text']))
-                        {
+                    foreach ($replacements as $pattern => $replacement) {
+                        if (preg_match($pattern, $Element['text'])) {
                             $Element['attributes'] = $replacement;
                             $replaced = true;
                             break 2;
@@ -410,10 +387,9 @@ class ContentFormatter
                 }
             }
 
-            if ($replaced)
-            {
+            if ($replaced) {
                 return [
-                    'extent'  => $extent,
+                    'extent' => $extent,
                     'element' => $Element,
                 ];
             }
@@ -423,51 +399,44 @@ class ContentFormatter
     /**
      * Returns a collection of formattables as cited in a formattable's text body.
      *
-     * @param  \App\Contracts\Support\Formattable $formattable
+     * @param \App\Contracts\Support\Formattable $formattable
+     *
      * @return Collection
      */
     public static function getCites(FormattableContract $formattable)
     {
-        $postCites  = [];
+        $postCites = [];
         $boardCites = [];
         $lines = explode("\n", $formattable->body);
 
         $relative = "/\s?&gt;&gt;(?P<board_id>\d+)\s?/";
-        $global   = "/\s?&gt;&gt;&gt;\/(?P<board_uri>" . Board::URI_PATTERN_INNER . ")\/(?P<board_id>\d+)?\s?/";
+        $global = "/\s?&gt;&gt;&gt;\/(?P<board_uri>".Board::URI_PATTERN_INNER.")\/(?P<board_id>\d+)?\s?/";
 
-        foreach ($lines as $line)
-        {
-            $line = str_replace(">", "&gt;", $line);
+        foreach ($lines as $line) {
+            $line = str_replace('>', '&gt;', $line);
 
             preg_match_all($relative, $line, $relativeMatch);
             preg_match_all($global, $line, $globalMatch);
 
-            if (isset($relativeMatch['board_id']))
-            {
-                foreach($relativeMatch['board_id'] as $matchIndex => $matchBoardId)
-                {
+            if (isset($relativeMatch['board_id'])) {
+                foreach ($relativeMatch['board_id'] as $matchIndex => $matchBoardId) {
                     $postCites[] = [
                         'board_uri' => $formattable->board_uri,
-                        'board_id'  => $matchBoardId,
+                        'board_id' => $matchBoardId,
                     ];
                 }
             }
 
-            if (isset($globalMatch['board_uri']))
-            {
-                foreach($globalMatch['board_uri'] as $matchIndex => $matchBoardUri)
-                {
+            if (isset($globalMatch['board_uri'])) {
+                foreach ($globalMatch['board_uri'] as $matchIndex => $matchBoardUri) {
                     $matchBoardId = $globalMatch['board_id'][$matchIndex];
 
-                    if ($matchBoardId != "")
-                    {
+                    if ($matchBoardId != '') {
                         $postCites[] = [
                             'board_uri' => $matchBoardUri,
-                            'board_id'  => $matchBoardId,
+                            'board_id' => $matchBoardId,
                         ];
-                    }
-                    else
-                    {
+                    } else {
                         $boardCites[] = $matchBoardUri;
                     }
                 }
@@ -475,37 +444,28 @@ class ContentFormatter
         }
 
         // Fetch all the boards and relevant content.
-        if (count($boardCites))
-        {
+        if (count($boardCites)) {
             $boards = Board::whereIn('board_uri', $boardCites)->get();
-        }
-        else
-        {
-            $boards = new Collection;
+        } else {
+            $boards = new Collection();
         }
 
-        if (count($postCites))
-        {
-            $posts = Post::where(function($query) use ($postCites)
-            {
-                foreach ($postCites as $postCite)
-                {
-                    $query->orWhere(function($query) use ($postCite)
-                    {
+        if (count($postCites)) {
+            $posts = Post::where(function ($query) use ($postCites) {
+                foreach ($postCites as $postCite) {
+                    $query->orWhere(function ($query) use ($postCite) {
                         $query->where('board_uri', $postCite['board_uri'])
                             ->where('board_id', $postCite['board_id']);
                     });
                 }
             })->get();
-        }
-        else
-        {
-            $posts = new Collection;
+        } else {
+            $posts = new Collection();
         }
 
         return [
             'boards' => $boards,
-            'posts'  => $posts,
+            'posts' => $posts,
         ];
     }
 

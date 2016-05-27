@@ -1,20 +1,18 @@
-<?php namespace App\Listeners;
+<?php
 
-use App\Listeners\Listener;
+namespace App\Listeners;
+
 use Cache;
 
 class BoardListRecache extends Listener
 {
-	
-	/**
-	 * Handle the event.
-	 *
-	 * @param  Event  $event
-	 * @return void
-	 */
-	public function handle($event)
-	{
-		Cache::forget('site.boardlist');
-	}
-	
+    /**
+     * Handle the event.
+     *
+     * @param Event $event
+     */
+    public function handle($event)
+    {
+        Cache::forget('site.boardlist');
+    }
 }
