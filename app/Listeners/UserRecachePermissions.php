@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\RoleCache;
 
-
 class UserRecachePermissions extends Listener
 {
     /**

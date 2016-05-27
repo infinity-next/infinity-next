@@ -19,7 +19,11 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        'Symfony\Component\HttpKernel\Exception\HttpException',
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        Symfony\Component\HttpKernel\Exception\HttpException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -48,25 +52,26 @@ class Handler extends ExceptionHandler
         $errorEmail = false;
 
         switch (get_class($e)) {
-            case "App\Exceptions\TorClearnet":
+            case App\Exceptions\TorClearnet::class:
                 $errorView = 'errors.403_tor_clearnet';
                 break;
 
-            case 'Swift_TransportException':
-            case 'PDOException':
+            case Swift_TransportException::class:
+            case PDOException::class:
                 $errorView = 'errors.500_config';
                 $errorEmail = true;
                 break;
 
-            case 'ErrorException':
-            case "Symfony\Component\Debug\Exception\FatalThrowableError":
+            case ErrorException::class:
+            case Symfony\Component\Debug\Exception\FatalThrowableError::class:
                 $errorView = 'errors.500';
                 $errorEmail = true;
                 break;
 
-            case "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException":
+            case Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException::class:
                 return abort(400);
-            case "Predis\Connection\ConnectionException":
+
+            case Predis\Connection\ConnectionException::class:
                 $errorView = 'errors.500_predis';
                 $errorEmail = true;
                 break;
@@ -76,7 +81,7 @@ class Handler extends ExceptionHandler
                 break;
         }
 
-        if (env('APP_DEBUG', false)) {
+        if (config('app.debug', false)) {
             $errorView = false;
         }
 
@@ -98,7 +103,7 @@ class Handler extends ExceptionHandler
             ];
 
             Mail::send('emails.error', $data, function ($message) {
-                $to = env('SITE_NAME', 'Infinity Next').' Webaster';
+                $to = env('SITE_NAME', 'Infinity Next').' Webmaster';
                 $subject = env('SITE_NAME', 'Infinity Next').' Error';
                 $subject .= ' '.Request::url() ?: '';
 

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Panel;
 
-
-
 class HomeController extends PanelController
 {
     /*

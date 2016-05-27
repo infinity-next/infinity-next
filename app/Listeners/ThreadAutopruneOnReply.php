@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Post;
-
 use Carbon\Carbon;
 
 class ThreadAutopruneOnReply extends Listener

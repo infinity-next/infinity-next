@@ -1,7 +1,6 @@
 <?php
 
 return array(
-
     /*
     |--------------------------------------------------------------------------
     | Varnish Server Configuration
@@ -15,7 +14,7 @@ return array(
     */
 
     'server' => array(
-        "address" =>        "your-varnish.local",
+        'address' => 'your-varnish.local',
     ),
 
     /*
@@ -34,7 +33,7 @@ return array(
     |   Supported: "auto", true, false
     */
 
-    'force_exceptions' =>   "auto",
+    'force_exceptions' => 'auto',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,5 +44,5 @@ return array(
     |
     */
 
-    'ban_url_header' =>      'x-ban-url',
+    'ban_url_header' => 'x-ban-url',
 );

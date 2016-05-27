@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Post;
 
-
 class ThreadRecache extends Listener
 {
     /**

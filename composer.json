@@ -1,7 +1,7 @@
 {
     "name": "infinity-next/infinity-next",
     "description": "Infinity Next is an imageboard suite utilizing the Laravel framework.",
-    "keywords": ["laravel", "imageboard", "8chan", "infinity"],
+    "keywords": ["laravel", "imageboard", "4chan", "16chan", "infinity"],
     "license": "AGPL 3.0",
     "type": "project",
 
@@ -11,13 +11,6 @@
             "email": "josh@jaw.sh",
             "homepage": "http://jaw.sh",
             "role": "Developer"
-        }
-    ],
-
-    "repositories": [
-        {
-            "type": "git",
-            "url":  "https://github.com/infinity-next/framework.git"
         }
     ],
 
