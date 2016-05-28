@@ -4,6 +4,12 @@ return [
 	'css' => [
 		'whitelist' => [
 			/**
+			 * Whitelist relative URLs
+			 *
+			 * @var boolean
+			 */
+			'relative' => true,
+			/**
 			 * Whitelisted URLs in url() properties
 			 *
 			 * Must include the forward slash before the path
@@ -31,7 +37,7 @@ return [
 				'https://fonts.gstatic.com/',
 			],
 			/**
-			 * Whitelisted file extensions in remote paths
+			 * Whitelisted file extensions in remote and relative paths
 			 *
 			 * @var array	extensions
 			 */
@@ -240,6 +246,7 @@ return [
 				'pointer-events',
 				'position',
 				'quotes',
+				'resize',
 				'richness',
 				'right',
 				'speak',
@@ -247,6 +254,7 @@ return [
 				'speak-numeral',
 				'speak-punctuation',
 				'speech-rate',
+				'src',
 				'stress',
 				'table-layout',
 				'tab-size',
@@ -287,6 +295,7 @@ return [
 				'will-change',
 				'word-break',
 				'word-spacing',
+				'word-wrap',
 				'z-index',
 			],
 		],
