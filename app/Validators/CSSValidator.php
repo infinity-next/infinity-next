@@ -11,6 +11,7 @@ class CSSValidator
 	 */
 	public function __construct()
 	{
+		$this->allowRelativeUrls     = config('sanitize.css.whitelist.relative');
 		$this->allowedRules          = config('sanitize.css.whitelist.rules');
 		$this->allowedUrls           = config('sanitize.css.whitelist.urls');
 		$this->allowedImportUrls     = config('sanitize.css.whitelist.imports');
@@ -24,7 +25,7 @@ class CSSValidator
 	 *
 	 * @const string
 	 */
-	const DATA_URI_REGEXP = '/data:([a-zA-Z-\/]+)([a-zA-Z0-9-_;=.+]+)?,(.*)/';
+	const DATA_URI_REGEXP = '/^data:([a-zA-Z-\/]+)([a-zA-Z0-9-_;=.+]+)?,(.*)/';
 
 
 	/**
@@ -33,7 +34,7 @@ class CSSValidator
 	 * @param  string $uri
 	 * @return boolean
 	 */
-	protected function isAllowedDataUri($uri)
+	protected function isValidDataUri($uri)
 	{
 		if (!preg_match(self::DATA_URI_REGEXP, $uri, $matches))
 		{
@@ -65,7 +66,13 @@ class CSSValidator
 	 */
 	protected function isAllowedExtension($url)
 	{
-		$path = pathinfo($url);
+		$parts = parse_url($url);
+		$path  = pathinfo($parts['path']);
+
+		if (!isset($path['extension']))
+		{
+			return false;
+		}
 
 		foreach ($this->allowedFileExtensions as $allowedExt)
 		{
@@ -100,31 +107,65 @@ class CSSValidator
 
 
 	/**
-	 * Determine if a URL is valid.
+	 * Determine if a URL is absolute, and whether it is valid.
 	 *
 	 * @param  string $url
 	 * @return boolean
 	 */
-	protected function isValidUrl($url)
+	protected function isValidAbsoluteUrl($url)
 	{
-		return (bool) filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
+		if (!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED))
+		{
+			return false;
+		}
+
+		if (!$this->isAllowedExtension($url))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 
 	/**
-	 * Determine if a URL is valid, and whether it is allowed to be used.
+	 * Determine if a URL is relative, and whether it is valid.
+	 *
+	 * @param  string $url
+	 * @return boolean
+	 */
+	protected function isValidRelativeUrl($url)
+	{
+		$parts = parse_url($url);
+
+		if (!$parts || isset($parts['scheme']) || isset($parts['host']))
+		{
+			return false;
+		}
+
+		if (!$this->isAllowedExtension($url))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Determine if a URL is allowed to be used.
 	 *
 	 * @param  string $url
 	 * @return boolean
 	 */
 	protected function isAllowedUrl($url)
 	{
-		if (!$this->isValidUrl($url))
+		if ($this->allowRelativeUrls && $this->isValidRelativeUrl($url))
 		{
-			return false;
+			return true;
 		}
 
-		if (!$this->isAllowedExtension($url))
+		if (!$this->isValidAbsoluteUrl($url))
 		{
 			return false;
 		}
@@ -142,14 +183,14 @@ class CSSValidator
 
 
 	/**
-	 * Determine if an import URL is valid, and whether it is allowed to be used.
+	 * Determine if an import URL is allowed to be used.
 	 *
 	 * @param  string $url
 	 * @return boolean
 	 */
 	protected function isAllowedImportUrl($url)
 	{
-		if (!$this->isValidUrl($url))
+		if (!$this->isValidAbsoluteUrl($url))
 		{
 			return false;
 		}
@@ -210,7 +251,7 @@ class CSSValidator
 
 					$sValue = $this->getURLString($value);
 
-					if (!$this->isAllowedDataUri($sValue) && !$this->isAllowedUrl($sValue))
+					if (!$this->isValidDataUri($sValue) && !$this->isAllowedUrl($sValue))
 					{
 						return false;
 					}
@@ -222,7 +263,7 @@ class CSSValidator
 					$oValue = $value->getLocation();
 					$sValue = $this->getURLString($oValue);
 
-					if (!$this->isAllowedDataUri($sValue) && !$this->isAllowedImportUrl($sValue))
+					if (!$this->isValidDataUri($sValue) && !$this->isAllowedImportUrl($sValue))
 					{
 						return false;
 					}
