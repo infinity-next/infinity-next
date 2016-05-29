@@ -9,17 +9,19 @@ use Lang;
 use Input;
 use Validator;
 
+/**
+ * Lists and creates boards.
+ *
+ * @category   Http
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class BoardsController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Boards Controller
-    |--------------------------------------------------------------------------
-    |
-    | The boards controller handles the creation of new boards.
-    |
-    */
-
     const VIEW_DASHBOARD = 'panel.board.dashboard';
     const VIEW_CREATE = 'panel.board.create';
     const VIEW_STAFF = 'panel.board.staff';

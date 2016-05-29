@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Content;
 
 use App\Board;
-use App\Post;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Board\BoardStats;
+use App\Post;
 use Illuminate\Support\Facades\View;
 
 /**

@@ -93,6 +93,10 @@ trait PermissionUser
      */
     public function canAny($permission)
     {
+        if ($this->can($permission)) {
+            return true;
+        }
+
         if (!($permission instanceof Permission)) {
             $permission = Permission::findOrFail($permission);
         }
@@ -555,7 +559,7 @@ trait PermissionUser
      */
     public function canManageAppealsAny()
     {
-        return $this->canAny('board.user.unban');
+        return $this->can('board.user.unban') || $this->canAny('board.user.unban');
     }
 
     /**
@@ -742,7 +746,7 @@ trait PermissionUser
             return $this->canAny('board.reports', $board->board_uri);
         }
 
-        return $this->canAny('board.reports');
+        return $this->can('board.reports') || $this->canAny('board.reports');
     }
 
     /**
@@ -853,14 +857,14 @@ trait PermissionUser
         $whitelist = true;
         $boardlist = [];
 
-        if ($this->canEditConfig(null)) {
+        if ($this->canEditConfig()) {
             $whitelist = false;
         }
 
         $boardlist = $this->canInBoards('board.config');
         $boardlist = array_unique($boardlist);
 
-        if (empty($boardlist)) {
+        if ($whitelist && empty($boardlist)) {
             return collect();
         }
 

@@ -29,7 +29,7 @@
                         @if ($user->canViewHistory($post))
                         @set('postActions', true)
                         <li class="post-action">
-                            <a class="post-action-link action-link-report" href="{!! $board->getURL('history/' . $details['board_id']) !!}">@lang('board.action.history', [ 'board_uri' => $details['board_uri'] ])</a>
+                            <a class="post-action-link action-link-report" href="{!! $board->getUrl('history.'.$details['board_id']) !!}">@lang('board.action.history', [ 'board_uri' => $details['board_uri'] ])</a>
                         </li>
                         @endif
 

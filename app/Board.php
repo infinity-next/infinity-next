@@ -557,7 +557,7 @@ class Board extends Model
      *
      * @return string url
      */
-    public function getAudioArtURL()
+    public function getAudioArtUrl()
     {
         return asset('static/img/assets/audio.gif');
     }
@@ -569,14 +569,14 @@ class Board extends Model
      *
      * @return string url
      */
-    public function getAssetURL($asset)
+    public function getAssetUrl($asset)
     {
         $assetObj = $this->assets
             ->where('asset_type', $asset)
             ->first();
 
         if ($assetObj) {
-            return $assetObj->getURL();
+            return $assetObj->getUrl();
         }
 
         switch ($asset) {
@@ -623,12 +623,12 @@ class Board extends Model
      *
      * @return string
      */
-    public function getBannerURL()
+    public function getBannerUrl()
     {
         $banners = $this->getBanners();
 
         if (count($banners) > 0) {
-            return $banners->random()->getURL();
+            return $banners->random()->getUrl();
         } elseif (!user()->isAccountable()) {
             return asset('static/img/logo_tor.png');
         } elseif (!$this->isWorksafe()) {
@@ -757,7 +757,7 @@ class Board extends Model
      *
      * @return string
      */
-    public function getIconURL()
+    public function getIconUrl()
     {
         $icon = $this->assets->where('asset_type', 'board_icon')->first();
 
@@ -769,7 +769,7 @@ class Board extends Model
             }
         }
 
-        return $icon->getURL();
+        return $icon->getUrl();
     }
 
     /**
@@ -999,23 +999,44 @@ class Board extends Model
     /**
      * Returns a fully qualified URL for a route on this board.
      *
-     * @param string $route Optional suffix to be added after the board URL.
+     * @param string $route Optional route addendum.
+     * @param array $params Optional array of parameters to be added.
+     * @param bool $abs Options indicator if the URL is to be absolute.
      *
      * @return string
      */
-    public function getURL($route = '')
+    public function getUrl($route = "index", array $params = [], $abs = true)
     {
-        return url("{$this->board_uri}/{$route}");
+        // Most people like URLs to be /foo/ instead of /foo.
+        if ($route === "index" && empty($params)) {
+            $trailing_slash = "/";
+        } else {
+            $trailing_slash = "";
+        }
+
+        return route(
+            implode(array_filter(['board', $route]), '.'),
+            [ 'board' => $this, ] + $params,
+            true
+        ).$trailing_slash;
     }
 
-    public function getURLForRoles($route = 'add')
+    /**
+     * Returns a fully qualified URL for a route on this board in the panel.
+     *
+     * @param string $route Optional route addendum.
+     * @param array $params Optional array of parameters to be added.
+     * @param bool $abs Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getPanelUrl($route = "", array $params = [], $abs = true)
     {
-        return url("/cp/board/{$this->board_uri}/roles/{$route}");
-    }
-
-    public function getURLForStaff($route = 'add')
-    {
-        return url("/cp/board/{$this->board_uri}/staff/{$route}");
+        return route(
+            implode(array_filter(['panel.board', $route]), '.'),
+            [ 'board' => $this, ] + $params,
+            $abs
+        );
     }
 
     /**
@@ -1148,7 +1169,9 @@ class Board extends Model
      */
     public function getStylesheetUrl()
     {
-        return $this->getUrl("style_{$this->updated_at->timestamp}.css");
+        return $this->getUrl('style', [
+            'style' => "style_{$this->updated_at->timestamp}",
+        ]);
     }
 
     /**

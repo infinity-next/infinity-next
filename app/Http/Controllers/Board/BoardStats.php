@@ -50,7 +50,8 @@ trait BoardStats
                         break;
 
                     case 'startDate':
-                        $stats[$boardStat] = Board::orderBy('created_at', 'desc')->take(1)->pluck('created_at')->format('M jS, Y');
+                        $createdAt = Board::orderBy('created_at', 'desc')->get()->pluck('created_at');
+                        $stats[$boardStat] = $createdAt->count() ? $createdAt->first()->format('M jS, Y') : "???";
                         break;
 
                     case 'boardTotalCount':

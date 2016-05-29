@@ -10,18 +10,19 @@ use Validator;
 use Event;
 use App\Events\UserRolesModified;
 
+/**
+ * Lists and adds board staff.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class StaffController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Staff Controller
-    |--------------------------------------------------------------------------
-    |
-    | This is the board staff controller, available only to the board owner and admins.
-    | Its only job is to list, remove, update, and add staff members to a board.
-    |
-    */
-
     const VIEW_LIST = 'panel.board.staff';
     const VIEW_ADD = 'panel.board.staff.create';
     const VIEW_EDIT = 'panel.board.staff.edit';
@@ -91,7 +92,7 @@ class StaffController extends PanelController
      *
      * @return Response
      */
-    public function putAdd(Board $board)
+    public function storeAdd(Board $board)
     {
         if (!$board->canEditConfig($this->user)) {
             return abort(403);

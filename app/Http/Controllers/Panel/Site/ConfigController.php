@@ -11,18 +11,19 @@ use Validator;
 use Event;
 use App\Events\SiteSettingsWereModified;
 
+/**
+ * Handles global configuration.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class ConfigController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Config Controller
-    |--------------------------------------------------------------------------
-    |
-    | This is the site config controller, available only to admins.
-    | Its only job is to load config panels and to validate and save the changes.
-    |
-    */
-
     const VIEW_CONFIG = 'panel.site.config';
 
     /**

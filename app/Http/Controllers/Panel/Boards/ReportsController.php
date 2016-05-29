@@ -7,18 +7,19 @@ use App\Post;
 use App\Report;
 use App\Http\Controllers\Panel\PanelController;
 
+/**
+ * Lists and manages content reports.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class ReportsController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Reprts Controller
-    |--------------------------------------------------------------------------
-    |
-    | The reports controller will display and allow the handling of posts reports,
-    | either on all boards (for global moderators), or local boards.
-    |
-    */
-
     const VIEW_REPORTS = 'panel.board.reports';
 
     /**

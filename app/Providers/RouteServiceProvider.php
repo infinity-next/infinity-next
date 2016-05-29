@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Board;
+use App\FileAttachment;
 use App\Page;
 use App\Post;
+use App\Role;
 use App\User;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -18,7 +20,36 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $routeGroup = [
+        'media'   => [
+            'as'         => 'static.',
+            'middleware' => 'media',
+            'namespace'  => 'App\Http\Controllers\Media',
+        ],
+
+        'web'     => [
+            'middleware' => 'web',
+            'namespace'  => 'App\Http\Controllers',
+        ],
+        'content' => [
+            'as'         => 'site.',
+            'namespace'  => 'Content',
+        ],
+        'board' => [
+            'prefix'     => "{board}",
+            'as'         => 'board.',
+            'namespace'  => 'Board',
+        ],
+
+        'panel' => [
+            'as'         => 'panel.',
+            'middleware' => ['web', 'panel'],
+            'namespace'  => 'App\Http\Controllers\Panel',
+        ],
+
+        'api'     => 'API',
+        'esi'     => 'ESI',
+    ];
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -27,16 +58,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        // Sets up our routing tokens.
-        $router->pattern('attachment', '[0-9]\d*');
-        $router->pattern('board', Board::URI_PATTERN);
-        $router->pattern('id', '[0-9]\d*');
-
         $router->model('attachment', '\App\FileAttachment');
         $router->model('ban', '\App\Ban');
         $router->model('board', '\App\Board');
         $router->model('page', '\App\Page');
-        $router->model('post', '\App\Post');
+        //$router->model('post', '\App\Post');
         $router->model('report', '\App\Report');
         $router->model('role', '\App\Role');
 
@@ -71,8 +97,13 @@ class RouteServiceProvider extends ServiceProvider
                 $value
             );
 
-            if ($board) {
+            if ($board instanceof Board && $board->exists) {
                 $board->applicationSingleton = true;
+
+                // Binds the board to the application if it exists.
+                $this->app->singleton(Board::class, function ($app) use ($board) {
+                    return $board;
+                });
 
                 return $board;
             }
@@ -81,54 +112,44 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $router->bind('attachment', function ($value, $route) {
-            return \App\FileAttachment::where('is_deleted', false)
+            return FileAttachment::where('is_deleted', false)
                 ->with('storage')
                 ->find($value);
         });
 
         $router->bind('role', function ($value, $route) {
             if (is_numeric($value)) {
-                return \App\Role::find($value);
+                return Role::find($value);
             } elseif (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
-                return \App\Role::find($matches['id']);
+                return Role::find($matches['id']);
             }
         });
 
-        $router->bind('post_id', function ($value, $route) {
+        $router->bind('post', function ($value, $route) {
             $board = $route->getParameter('board');
 
             if (!($board instanceof Board)) {
-                $board = $this->app->make("\App\Board");
+                $board = $this->app->make(Board::class);
             }
 
             if (is_numeric($value) && $board instanceof Board) {
-                return $board->getThreadByBoardId($value);
+                $post = $board->getThreadByBoardId($value);
+
+                if ($post instanceof Post && $post->exists) {
+                    $route->setParameter('post', $post);
+
+                    $this->app->singleton(Post::class, function ($app) use ($post) {
+                        return $post;
+                    });
+                }
             }
         });
 
-        // Binds a matched instance of a {board} as a singleton instance.
-        $router->matched(function ($route, $request) {
-            $board = $route->getParameter('board');
-
-            if ($board instanceof Board && $board->exists) {
-                // Binds the board to the application if it exists.
-                $this->app->singleton("\App\Board", function ($app) use ($board) {
-                    return $board;
-                });
-            }
-
-            // Binds the post to the application if it exists.
-            $post = $route->getParameter('post_id');
-
-            if ($post instanceof Post && $post->exists) {
-                $route->setParameter('post', $post);
-                //$this->app->instance("\App\Post", $post);
-                $this->app->singleton("\App\Post", function ($app) use ($post) {
-                    return $post;
-                });
-            }
-        });
-
+        // Sets up our routing tokens.
+        $router->pattern('attachment', '[0-9]\d*');
+        $router->pattern('board', Board::URI_PATTERN);
+        $router->pattern('id', '[0-9]\d*');
+        $router->pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
         parent::boot($router);
     }
@@ -140,8 +161,47 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+        /**
+         * Media distribution
+         */
+        $router->group($this->routeGroup['media'], function ($router) {
+            require app_path('Http/Routes/Media.php');
+        });
+
+        /**
+         * Panel
+         */
+        if (config('app.url_panel', false)) {
+            $this->routeGroup['panel'] += [ 'domain' => config('app.url_panel'), ];
+        } else {
+            $this->routeGroup['panel'] += [ 'prefix' => 'cp', ];
+        }
+
+        $router->group($this->routeGroup['panel'], function ($router) {
+            require app_path('Http/Routes/Panel.php');
+        });
+
+        /**
+         * Main web group
+         */
+        $router->group($this->routeGroup['web'], function ($router) {
+            /**
+             * Root-level content requests
+             */
+            $router->group($this->routeGroup['content'], function ($router) {
+                require app_path('Http/Routes/Content.php');
+            });
+
+            /**
+             * Boards
+             */
+            $router->group($this->routeGroup['board'], function ($router) {
+                require app_path('Http/Routes/Board.php');
+            });
+
+            // This has to be dead last or the welcome controller starts
+            // getting greedy.
+            require app_path('Http/Routes/Web.php');
         });
     }
 }

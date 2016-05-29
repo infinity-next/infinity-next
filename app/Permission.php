@@ -22,6 +22,13 @@ class Permission extends Model
     protected $primaryKey = 'permission_id';
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

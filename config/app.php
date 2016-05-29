@@ -1,6 +1,18 @@
 <?php
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Environment
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the "environment" your application is currently
+    | running in. This may determine how you prefer to configure various
+    | services your application utilizes. Set this in your ".env" file.
+    |
+    */
+
     'env' => env('APP_ENV', 'production'),
 
     /*
@@ -27,9 +39,13 @@ return [
     |
     */
 
-    'url' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', '')
-        ? env('APP_URL_HS')
-        : env('APP_URL', 'http://localhost'),
+    'url'       => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'),
+
+    'url_hs'    => env('APP_URL_HS', false),
+
+    'url_media' => env('APP_URL_MEDIA', false),
+
+    'url_panel' => env('APP_URL_PANEL', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -121,6 +137,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
@@ -136,8 +153,8 @@ return [
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
-        Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
@@ -153,18 +170,12 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
-        App\Providers\BusServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SessionServiceProvider::class,
         App\Providers\SettingsServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,
-
-        /*
-         * HttpCache...
-         */
-        Barryvdh\HttpCache\ServiceProvider::class,
 
         /*
          * Forms...
@@ -187,11 +198,6 @@ return [
          */
         //Laravel\Cashier\CashierServiceProvider::class,
         InfinityNext\Braintree\BraintreeServiceProvider::class,
-
-        /*
-         * Varnish Integration...
-         */
-        JDare\Acetone\AcetoneServiceProvider::class,
     ],
 
     /*
@@ -222,6 +228,7 @@ return [
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
+        'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'Inspiring' => Illuminate\Foundation\Inspiring::class,
@@ -265,10 +272,5 @@ return [
          * File Validation
          */
         'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
-
-        /*
-         * Varnish Integration...
-         */
-        'Acetone' => JDare\Acetone\Acetone\Facades\Acetone::class,
     ],
 ];

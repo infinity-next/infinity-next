@@ -7,17 +7,19 @@ use App\Board;
 use App\Http\Controllers\Panel\PanelController;
 use Input;
 
+/**
+ * Lists and manages ban appeals.
+ *
+ * @category   Http
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class AppealsController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Appeals Controller
-    |--------------------------------------------------------------------------
-    |
-    | Lists applicable appeals and dispatches actions on them.
-    |
-    */
-
     const VIEW_APPEALS = 'panel.board.appeals';
 
     /**

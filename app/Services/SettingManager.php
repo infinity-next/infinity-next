@@ -108,10 +108,10 @@ class SettingManager
     public function getNavigationPrimary()
     {
         $nav = [
-            'home' => url('/'),
-            'boards' => url('boards.html'),
-            'recent_posts' => url('overboard.html'),
-            'panel' => url('cp'),
+            'home' => route('site.home'),
+            'boards' => route('site.boardlist'),
+            'recent_posts' => route('site.overboard'),
+            'panel' => route('panel.home'),
         ];
 
 

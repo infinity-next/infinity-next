@@ -8,17 +8,19 @@ use App\Http\Controllers\Panel\PanelController;
 use Input;
 use Validator;
 
+/**
+ * Lists and creates board roles.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class RolesController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Roles Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles an index request for all roles in the system.
-    |
-    */
-
     const VIEW_ROLES = 'panel.board.roles';
     const VIEW_CREATE = 'panel.board.roles.create';
 
@@ -41,7 +43,7 @@ class RolesController extends PanelController
      *
      * @return Response
      */
-    public function getIndex(Board $board)
+    public function get(Board $board)
     {
         if (!$this->user->canEditConfig($board)) {
             return abort(403);
@@ -63,7 +65,7 @@ class RolesController extends PanelController
      *
      * @return Response
      */
-    public function getAdd(Board $board)
+    public function create(Board $board)
     {
         if (!$this->user->canEditConfig($board)) {
             return abort(403);
@@ -91,7 +93,7 @@ class RolesController extends PanelController
      *
      * @return Response
      */
-    public function putAdd(Board $board)
+    public function store(Board $board)
     {
         if (!$this->user->canEditConfig($board)) {
             return abort(403);
@@ -142,6 +144,6 @@ class RolesController extends PanelController
         $role->weight = 5 + constant(Role::class.'::WEIGHT_'.strtoupper(Input::get('roleType')));
         $role->save();
 
-        return redirect($role->getPermissionsURLForBoard());
+        return redirect($role->getPanelUrl('permissions'));
     }
 }

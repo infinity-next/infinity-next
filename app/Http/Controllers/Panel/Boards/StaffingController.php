@@ -10,6 +10,17 @@ use Validator;
 use Event;
 use App\Events\UserRolesModified;
 
+/**
+ * Allows board staff management.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class StaffingController extends PanelController
 {
     /*

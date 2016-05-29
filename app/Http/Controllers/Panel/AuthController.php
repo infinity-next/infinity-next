@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Panel;
 
 use App\User;
-use Cookie;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
+use App\Http\Controllers\Panel\PanelController;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
-use Session;
+use Input;
+use Validator;
 
 class AuthController extends PanelController
 {
@@ -17,36 +18,76 @@ class AuthController extends PanelController
     |--------------------------------------------------------------------------
     |
     | This controller handles the registration of new users, as well as the
-    | authentication of existing users.
+    | authentication of existing users. By default, this controller uses
+    | a simple trait to add these behaviors. Why don't you explore it?
     |
     */
+
+    use AuthenticatesAndRegistersUsers,
+        ThrottlesLogins;
 
     const VIEW_LOGIN = 'panel.auth.login';
     const VIEW_REGISTER = 'panel.auth.register';
 
     /**
-     * Asserts middleware.
+     * Where to redirect users after login / registration.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/';
+
+    /**
+     * Create a new authentication controller instance.
+     *
+     * @return void
      */
     public function boot()
     {
-        $this->middleware('guest', [
-            'except' => 'getLogout',
+        $this->middleware(
+            $this->guestMiddleware(),
+            ['except' => 'logout']
+        );
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return User::create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
     }
 
     /**
-     * The Guard implementation.
+     * Get a validator for an incoming registration request.
      *
-     * @var \Illuminate\Contracts\Auth\Guard
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected $auth;
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'username' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+    }
 
     /**
-     * The registrar implementation.
+     * Show the application login form.
      *
-     * @var \Illuminate\Contracts\Auth\Registrar
+     * @return \Illuminate\Http\Response
      */
-    protected $registrar;
+    public function getLogin()
+    {
+        return $this->view(static::VIEW_LOGIN);
+    }
 
     /**
      * Show the application registration form.
@@ -65,8 +106,6 @@ class AuthController extends PanelController
     /**
      * Handle a registration request for the application.
      *
-     * @param \Illuminate\Http\Request $request
-     *
      * @return \Illuminate\Http\Response
      */
     public function putRegister(Request $request)
@@ -75,7 +114,7 @@ class AuthController extends PanelController
             abort(403);
         }
 
-        $validator = $this->registrationValidator();
+        $validator = $this->registrationValidator($request->all());
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -84,19 +123,9 @@ class AuthController extends PanelController
             );
         }
 
-        $this->auth->login($this->registrar->create($request->all()));
+        $this->auth->login($this->create($request->all()));
 
         return redirect($this->redirectPath());
-    }
-
-    /**
-     * Show the application login form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getLogin()
-    {
-        return $this->view(static::VIEW_LOGIN);
     }
 
     /**
@@ -129,10 +158,10 @@ class AuthController extends PanelController
 
             if (!$this->auth->attempt($credentials, $request->has('remember'))) {
                 return redirect($this->loginPath())
-                            ->withInput($request->only('username', 'remember'))
-                            ->withErrors([
-                                     $this->getFailedLoginMessage(),
-                            ]);
+                    ->withInput($request->only('username', 'remember'))
+                    ->withErrors([
+                             $this->getFailedLoginMessage(),
+                    ]);
             }
         }
 
@@ -163,21 +192,7 @@ class AuthController extends PanelController
         Cookie::queue(Cookie::forget('laravel_session'));
         Cookie::queue(Cookie::forget('XSRF-TOKEN'));
 
-        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
-    }
-
-    /**
-     * Get the post register / login redirect path.
-     *
-     * @return string
-     */
-    public function redirectPath()
-    {
-        if (property_exists($this, 'redirectPath')) {
-            return $this->redirectPath;
-        }
-
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/cp/home';
+        return redirect($this->redirectPath(), 302);
     }
 
     /**
@@ -187,6 +202,16 @@ class AuthController extends PanelController
      */
     public function loginPath()
     {
-        return property_exists($this, 'loginPath') ? $this->loginPath : '/cp/auth/login';
+        return route('panel.login');
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        return route('panel.home');
     }
 }

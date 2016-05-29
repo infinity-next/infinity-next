@@ -11,7 +11,7 @@
 
 	{{-- Prevents any foreign URLs from loading. They must come in LEGALLY. --}}
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data: blob: filesystem:; script-src 'self' 'unsafe-inline' 'unsafe-eval';" />
+		content="default-src 'self' 'unsafe-inline' {!!config('app.url_media','')!!}; img-src 'self' 'unsafe-inline' {!!config('app.url_media','')!!} data: blob: filesystem:; script-src 'self' 'unsafe-inline' 'unsafe-eval' {!!config('app.url_media','')!!};" />
 
 	@section('css')
 		<link rel="stylesheet" href="{{ elixir('static/css/vendor.css') }}" data-no-instant id="style-vendor" />

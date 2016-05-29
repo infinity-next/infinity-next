@@ -138,8 +138,9 @@ class BoardController extends Controller
     /**
      * Renders a thread.
      *
-     * @param Board $board
-     * @param Post  $thread
+     * @param Board  $board
+     * @param Post   $thread
+     * @param string $splice  2ch-style URL API
      *
      * @return Response
      */

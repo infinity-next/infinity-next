@@ -39,7 +39,7 @@
 
 			'title'      : "@yield('title', 'Infinity Next')",
 
-			'url'        : "{!! url() !!}",
+			'url'        : "{!! url('/') !!}",
 
 			@yield('app-js')
 

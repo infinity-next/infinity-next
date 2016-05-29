@@ -77,7 +77,7 @@ class ConfigController extends PanelController
      *
      * @return Response
      */
-    public function deleteAssets(Request $request, Board $board)
+    public function destroyAssets(Request $request, Board $board)
     {
         $input = Input::all();
         $validator = Validator::make($input, [
@@ -320,7 +320,7 @@ class ConfigController extends PanelController
 
         Event::fire(new BoardWasModified($board));
 
-        return $this->getAssets($board);
+        return redirect()->back();
     }
 
     /**
@@ -460,6 +460,11 @@ class ConfigController extends PanelController
                 'min:0',
                 'max:5',
             ],
+            'boardTags.*' => [
+                'string',
+                'alpha_dash',
+                'max:24',
+            ]
         ];
 
         if (isset($input['boardTags']) && is_array($input['boardTags'])) {
@@ -467,12 +472,6 @@ class ConfigController extends PanelController
         }
 
         $validator = Validator::make($input, $rules);
-
-        $validator->each('boardTags', [
-            'string',
-            'alpha_dash',
-            'max:24',
-        ]);
 
         if (!$validator->passes()) {
             return redirect()
@@ -485,14 +484,14 @@ class ConfigController extends PanelController
         $tagArray = [];
 
         foreach ($input['boardTags'] as $boardTag) {
-            $boardTag = (string) $boardTag;
+            $boardTag = (string) strtolower($boardTag);
 
             if (strlen($boardTag) && !isset($tagArray[$boardTag])) {
                 // Add the tag to the list of set tags to prevent duplicates.
                 $tagArray[$boardTag] = true;
 
                 // Find or create the board tag.
-                $tags[] = BoardTag::firstorCreate([
+                $tags[] = BoardTag::firstOrCreate([
                     'tag' => $boardTag,
                 ]);
             }

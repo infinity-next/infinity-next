@@ -352,34 +352,17 @@ class Role extends Model
         return;
     }
 
-    public function getURL($route = '')
+    public function getPanelUrl($route = "")
     {
-        return url("/cp/roles/{$this->role_id}/{$route}");
-    }
-
-    public function getURLForBoard($route = '')
-    {
-        return url("/cp/board/{$this->board_uri}/role/{$this->role_id}/{$route}");
-    }
-
-    /**
-     * Returns a URL for opening this role on the site level.
-     *
-     * @return string
-     */
-    public function getPermissionsURL()
-    {
-        return $this->getURL('permissions');
-    }
-
-    /**
-     * Returns a URL for opening this role in the context of the board.
-     *
-     * @return string
-     */
-    public function getPermissionsURLForBoard()
-    {
-        return $this->getURLForBoard('permissions');
+        return route(implode(".", array_filter([
+            "panel",
+            is_null($this->board_uri) ? "site" : "board",
+            "role",
+            $route,
+        ])), [
+            'role'  => $this,
+            'board' => $this->board_uri,
+        ]);
     }
 
     /**

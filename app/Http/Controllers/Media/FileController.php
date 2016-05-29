@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Media;
 
 use App\Board;
 use App\FileStorage;
@@ -17,7 +17,7 @@ use Event;
 use App\Events\AttachmentWasModified;
 
 /**
- * Renders a stream of content from all boards.
+ * Delivers static content from across the site.
  *
  * @category   Controller
  *
@@ -27,7 +27,7 @@ use App\Events\AttachmentWasModified;
  *
  * @since      0.5.1
  */
-class ImageController extends Controller
+class FileController extends Controller
 {
     /*
     |--------------------------------------------------------------------------

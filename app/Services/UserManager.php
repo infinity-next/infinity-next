@@ -5,7 +5,6 @@ namespace App\Services;
 use App;
 use App\Contracts\PermissionUser;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 
 class UserManager
 {
@@ -14,13 +13,11 @@ class UserManager
      * Don't overwrite __construct in any children. Use ::boot.
      *
      * @param \Illuminate\Auth\Guard     $auth
-     * @param \Illuminate\Auth\Registrar $registrar
      */
-    public function __construct(Guard $auth, Registrar $registrar)
+    public function __construct(Guard $auth)
     {
         $this->auth = $auth;
-        $this->registrar = $registrar;
-        $this->user = App::make(PermissionUser::class);
+        $this->user = app(PermissionUser::class);
     }
 
     /**

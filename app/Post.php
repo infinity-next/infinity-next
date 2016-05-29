@@ -881,23 +881,24 @@ class Post extends Model implements FormattableContract
      *
      * @return string
      */
-    public function getURL($splice = null)
+    public function getUrl($splice = null)
     {
+        $url_hash = "";
+
         if ($this->reply_to_board_id) {
             $url_id = $this->reply_to_board_id;
-            $url_hash = $this->board_id;
+            $url_hash = "#{$this->board_id}";
         } else {
             $url_id = $this->board_id;
-            $url_hash = $this->board_id;
         }
 
-        return route('board.thread.splice', [
+        return route('board.thread', [
             'board_uri' => $this->board_uri,
             'post_id' => $url_id,
             'splice' => $splice,
-        ], false)."#{$url_hash}";
-    }
+        ], false).$url_hash;
 
+    }
     /**
      * Determines if the post is made from the client's remote address.
      *

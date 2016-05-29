@@ -1,28 +1,31 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Content;
 
 use App\Board;
 use App\BoardTag;
 use App\Http\Controllers\Board\BoardStats;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Request;
 
+/**
+ * Lists all public boards on the system with pertinent stats.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class BoardlistController extends Controller
 {
     use BoardStats;
-
-    /*
-    |--------------------------------------------------------------------------
-    | Boardlist Controller
-    |--------------------------------------------------------------------------
-    |
-    |
-    |
-    */
 
     /**
      * View file for the main index page container.
@@ -124,7 +127,7 @@ class BoardlistController extends Controller
         $title = $input['title'];
         $lang = $input['lang'];
         $page = $input['page'];
-        $tags = $input['tags'];
+        $tags = collect($input['tags']);
         $sfw = $input['sfw'];
         $sort = $input['sort'];
         $sortBy = $input['sortBy'];
@@ -156,7 +159,7 @@ class BoardlistController extends Controller
             }
 
             // Are we searching tags?
-            if ($tags && (!count($item['tags']) || count(array_intersect($tags, array_fetch($item['tags'], 'tag'))) < count($tags))) {
+            if ($tags->count() && $tags->intersect(array_pluck($item['tags'], 'tag'))->count() < $tags->count()) {
                 return false;
             }
 

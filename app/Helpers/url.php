@@ -62,7 +62,7 @@ if (!function_exists('media_url')) {
             $gen = app(Request::class);
             $request = app(UrlGenerator::class);
             $scheme = $gen->getScheme();
-            $media = env('APP_URL_MEDIA', false);
+            $media = config('app.url_media', false);
 
             if (is_hidden_service()) {
                 return $gen->to($url);

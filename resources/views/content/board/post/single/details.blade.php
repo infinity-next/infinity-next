@@ -11,7 +11,7 @@
 		@if (!$catalog)
 		{{ @$details['subject'] }}
 		@else
-		<a href="{{ $post->getURL() }}" class="subject-link">{{ $post->subject }}</a>
+		<a href="{{ $post->getUrl() }}" class="subject-link">{{ $post->subject }}</a>
 		@endif
 		</h3>
 	</li>
@@ -83,7 +83,7 @@
 		@if (!$reply_to && $post->isOP())
 		<li class="post-detail detail-open">
 			{{-- Mobile Last 50 Open
-			<a class="thread-replies-open only-mobile" href="{{ $post->getURL('l50')}}">{{
+			<a class="thread-replies-open only-mobile" href="{{ $post->getUrl('l50')}}">{{
 				Lang::choice(
 					'board.omitted.show.open',
 					50,
@@ -94,7 +94,7 @@
 			</a> --}}
 
 			{{-- Desktop Last 350 Open --}}
-			<a class="thread-replies-open no-mobile" href="{{ $post->getURL('l350')}}">{{
+			<a class="thread-replies-open no-mobile" href="{{ $post->getUrl('l350')}}">{{
 				Lang::choice(
 					'board.omitted.show.open',
 					350,
@@ -104,7 +104,7 @@
 				)
 			}}</a>
 
-			<a class="thread-replies-open no-mobile" href="{{ $post->getURL() }}">@lang('board.omitted.show.reply')</a>
+			<a class="thread-replies-open no-mobile" href="{{ $post->getUrl() }}">@lang('board.omitted.show.reply')</a>
 		</li>
 		@endif
 

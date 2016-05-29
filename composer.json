@@ -24,11 +24,6 @@
         "laravel/cashier": "~5.0",
         "laravelcollective/html": "~5.0",
 
-        "illuminate/config": "~5.0",
-        "illuminate/hashing": "~5.0",
-        "illuminate/filesystem": "~5.0",
-        "illuminate/support": "~5.0",
-
         "ext-gd": "*",
         "intervention/imagecache": "~2.3",
         "intervention/image": "~2.3",
@@ -37,10 +32,6 @@
 
         "james-heinrich/getid3" : "1.9.*",
 
-        "barryvdh/laravel-httpcache": "0.2.x@dev",
-
-        "ademes/acetone": "dev-master",
-
         "infinity-next/braintree":       "*@dev",
         "infinity-next/laravel-captcha": "*@dev",
         "infinity-next/eightdown":       "*@dev",
@@ -48,11 +39,11 @@
     },
 
     "require-dev": {
-        "symfony/dom-crawler": "~3.0",
-        "symfony/css-selector": "~3.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
+        "symfony/css-selector": "2.8.*|3.0.*",
+        "symfony/dom-crawler": "2.8.*|3.0.*",
         "phpspec/phpspec": "~2.1",
         "barryvdh/laravel-debugbar": "2.*"
     },

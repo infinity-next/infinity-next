@@ -81,7 +81,7 @@
 			</a>
 		</div>
 		@else
-		<a href="{!! $post->getURL() !!}" data-instant>
+		<a href="{!! $post->getUrl() !!}" data-instant>
 			<figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
 				{!! $attachment->getThumbnailHTML($board, 150) !!}
 			</figure>

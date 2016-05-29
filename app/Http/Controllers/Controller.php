@@ -6,18 +6,24 @@ use App\Board;
 use App\Log;
 use App\Http\MessengerResponse;
 use App\Services\UserManager;
-use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\Router as Router;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Cache;
 use Request;
 use Settings;
+use Validator;
 use View;
 
 abstract class Controller extends BaseController
 {
-    use DispatchesCommands, ValidatesRequests;
+    use AuthorizesRequests,
+        AuthorizesResources,
+        DispatchesJobs,
+        ValidatesRequests;
 
     /**
      * Board model for this request.
@@ -37,7 +43,6 @@ abstract class Controller extends BaseController
     {
         $this->userManager = $manager;
         $this->auth = $manager->auth;
-        $this->registrar = $manager->registrar;
         $this->user = $manager->user;
 
         $board = app(Board::class);
@@ -156,20 +161,14 @@ abstract class Controller extends BaseController
      *
      * @return Validator
      */
-    public function registrationValidator()
+    public function registrationValidator(array $data)
     {
-        $validator = $this->registrar->validator(Request::all());
-        $rules = $validator->getRules();
-
-        $rules['username'][] = 'alpha_num';
-        $rules['username'][] = 'unique:users,username';
-        $rules['username'][] = 'unique:users,email';
-
-        $rules['captcha'] = 'required|captcha';
-
-        $validator->setRules($rules);
-
-        return $validator;
+        return Validator::make($data, [
+            'username' => 'required|alpha_num|max:255|unique:users,username',
+            'email   ' => 'email|max:255|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+            'captcha'  => 'required|captcha',
+        ]);
     }
 
     /**

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Contracts\PermissionUser;use App\Services\AuthManager;
+use App\Contracts\PermissionUser;
+use App\Services\AuthManager;
 use App\Support\Anonymous;
-use Illuminate\Auth\AuthServiceProvider as ServiceProvider;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,18 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         \App\Post::class => \App\Policies\PostPolicy::class,
     ];
+
+    /**
+     * Register any application authentication / authorization services.
+     *
+     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
+     * @return void
+     */
+    public function boot(GateContract $gate)
+    {
+        $this->registerAuthenticator();
+        $this->registerPolicies($gate);
+    }
 
     /**
      * Register the authenticator services.
@@ -32,7 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('auth.driver', function ($app) {
-            return $app['auth']->driver();
+            return $app['auth']->guard();
         });
 
         $this->app->singleton(
@@ -41,7 +55,7 @@ class AuthServiceProvider extends ServiceProvider
                 $auth = $app->make('auth');
 
                 if ($auth->guest()) {
-                    return new Anonymous();
+                    return new Anonymous;
                 } else {
                     return $auth->user();
                 }
