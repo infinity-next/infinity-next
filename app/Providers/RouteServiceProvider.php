@@ -69,7 +69,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->bind('user', function ($value, $route) {
             if (is_numeric($value)) {
                 return User::find($value);
-            } elseif (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
+            } elseif (preg_match('/^[a-z0-9\-]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
                 return User::find($matches['id']);
             }
         });
@@ -77,7 +77,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->bind('page', function ($value, $route) {
             if (is_numeric($value)) {
                 return Page::find($value);
-            } elseif (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
+            } elseif (preg_match('/^[a-z0-9\-]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
                 return Page::find($matches['id']);
             }
         });
@@ -172,9 +172,9 @@ class RouteServiceProvider extends ServiceProvider
          * Panel
          */
         if (config('app.url_panel', false)) {
-            $this->routeGroup['panel'] += [ 'domain' => config('app.url_panel'), ];
+            $this->routeGroup['panel'] += ['domain' => config('app.url_panel'),];
         } else {
-            $this->routeGroup['panel'] += [ 'prefix' => 'cp', ];
+            $this->routeGroup['panel'] += ['prefix' => 'cp',];
         }
 
         $router->group($this->routeGroup['panel'], function ($router) {
@@ -184,6 +184,10 @@ class RouteServiceProvider extends ServiceProvider
         /**
          * Main web group
          */
+        if (config('app.url', false)) {
+            $this->routeGroup['web'] += ['domain' => config('app.url'),];
+        }
+
         $router->group($this->routeGroup['web'], function ($router) {
             /**
              * Root-level content requests

@@ -6,26 +6,30 @@ use App\Board;
 use App\BoardAdventure;
 use App\Support\IP;
 
+/**
+ * Jumps the user to a random board based on recent activity.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class AdventureController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Adventure Controller
-    |--------------------------------------------------------------------------
-    |
-    | Anon! Grab my hand!
-    | ADVENTURE.
-    |
-    | This controller forwards the user to a random board and creates an
-    | adventure token for their IP in the database that belongs to the board.
-    | If they post within an hour after landing, their post gets an adventurer
-    | meta icon. This only happens once per IP per board.
-    |
-    */
-
     const VIEW_ADVENTURE = 'panel.adventure';
 
-    public function getIndex()
+    /**
+     * Sends the user to a random board.
+     *
+     * Also marks their IP with an adventure token that allows them to post with
+     * a nifty icon.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
     {
         if (!$this->option('adventureEnabled')) {
             return abort(404);

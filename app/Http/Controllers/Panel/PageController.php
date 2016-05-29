@@ -109,8 +109,17 @@ class PageController extends PanelController
         ]);
 
         $this->validate($request, [
-            'name' => 'required|unique:pages|max:255',
-            'title' => 'required|unique:pages|max:255',
+            'name' => [
+                'required',
+                'unique:pages,name,NULL,page_id,board_uri,'.($board ? $board->board_uri : 'NULL'),
+                'max:255',
+            ],
+            'title' => [
+                'required',
+                // unique title (ignoring nothing) where board uri is uri/null
+                'unique:pages,title,NULL,page_id,board_uri,'.($board ? $board->board_uri : 'NULL'),
+                'max:255',
+            ],
             'body' => 'required',
         ]);
 
@@ -176,6 +185,11 @@ class PageController extends PanelController
             'name' => [
                 'required',
                 "unique:pages,name,{$page->page_id},page_id",
+                'max:255',
+            ],
+            'title' => [
+                'required',
+                "unique:pages,title,{$page->page_id},page_id,board_uri,".($board ? $board->board_uri : $board),
                 'max:255',
             ],
             'title' => [

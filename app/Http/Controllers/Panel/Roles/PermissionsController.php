@@ -13,16 +13,6 @@ use App\Events\RoleWasModified;
 
 class PermissionsController extends PanelController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Config Controller
-    |--------------------------------------------------------------------------
-    |
-    | This is the site config controller, available only to admins.
-    | Its only job is to load config panels and to validate and save the changes.
-    |
-    */
-
     const VIEW_PERMISSIONS = 'panel.roles.permissions.edit';
 
     /**
@@ -37,7 +27,7 @@ class PermissionsController extends PanelController
      *
      * @return Response
      */
-    public function getIndex(Role $role)
+    public function index(Role $role)
     {
         if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions()) {
             return abort(403);
@@ -60,7 +50,7 @@ class PermissionsController extends PanelController
         ]);
     }
 
-    public function patchIndex(Role $role)
+    public function patch(Role $role)
     {
         if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions()) {
             return abort(403);

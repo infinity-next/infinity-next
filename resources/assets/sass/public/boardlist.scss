@@ -12,7 +12,7 @@
         table-layout: fixed;
         border-collapse: collapse;
 
-        table.board-list-table .board-cell {
+        .board-cell {
             position: static;
             margin: 0;
             padding: 0;
@@ -21,59 +21,59 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-            table.board-list-table .board-cell::after {
+            .board-cell::after {
                 content: ' ';
                 clear: both;
             }
 
 
-        table.board-list-table .board-meta {
+        .board-meta {
             display: none;
             padding-right: 4px;
             width: 70px;
         }
-        table.board-list-table .board-uri {
+        .board-uri {
             display: table-cell;
             min-width: 196px;
         }
-            table.board-list-table .board-uri a {
+            .board-uri a {
                 display: inline-block;
                 float: left;
             }
 
-            table.board-list-table .board-uri .board-nsfw {
+            .board-uri .board-nsfw {
                 color: rgb(230,0,0);
                 margin: 0 0 0 0.6em;
                 float: right;
             }
-            table.board-list-table .board-uri .board-sfw {
+            .board-uri .board-sfw {
                 color: #34345C;
                 margin: 0 0 0 0.6em;
                 float: right;
             }
-        table.board-list-table .board-title {
+        .board-title {
         }
-        table.board-list-table .board-plh,
-        table.board-list-table .board-ppd,
-        table.board-list-table .board-pph,
-        table.board-list-table .board-max,
-        table.board-list-table .board-unique {
+        .board-plh,
+        .board-ppd,
+        .board-pph,
+        .board-max,
+        .board-unique {
             width: 60px;
             text-align: right;
         }
-        table.board-list-table .board-max {
+        .board-max {
             width: 80px;
         }
-        table.board-list-table .board-tags {
+        .board-tags {
             position: relative;
             height: 15px;
             width: auto;
             padding: 0 15px 0 4px;
         }
-            table.board-list-table .board-tags .tag-link {
+            .board-tags .tag-link {
                 display: inline;
             }
-            table.board-list-table .board-tags .board-cell:hover {
+            .board-tags .board-cell:hover {
                 position: absolute;
                 line-height: 23px;
                 top: 0;
@@ -81,17 +81,17 @@
                 width: 310px;
             }
 
-        table.board-list-table div.board-cell {
+        div.board-cell {
             max-width: 100%;
             overflow: hidden;
         }
 
-        table.board-list-table th.sortable {
+        th.sortable {
             position: relative;
             padding-right: 1.6em;
         }
-            table.board-list-table th.sorting-by-desc .fa,
-            table.board-list-table th.sorting-by-asc  .fa {
+            th.sorting-by-desc .fa,
+            th.sorting-by-asc  .fa {
                 display: inline-block;
                 position: absolute;
                 right: 0.33em;
@@ -101,10 +101,10 @@
                 margin-top: 0.25em;
                 vertical-align: middle;
             }
-            table.board-list-table th.sorting-by-asc  .fa::before {
+            th.sorting-by-asc  .fa::before {
                 content: "\f160";
             }
-            table.board-list-table th.sorting-by-desc .fa::before {
+            th.sorting-by-desc .fa::before {
                 content: "\f161";
             }
 

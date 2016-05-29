@@ -11,15 +11,3 @@
  *
  * @since      0.6.0
  */
-
-/*
-| API
-*/
-Route::group([
-    'namespace' => 'API',
-], function () {
-    Route::get('board-details.json', 'BoardlistController@getDetails');
-    Route::post('board-details.json', 'BoardlistController@getDetails');
-
-    Route::get('overboard.json', 'MultiboardController@getOverboard');
-});

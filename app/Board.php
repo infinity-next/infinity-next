@@ -1030,7 +1030,7 @@ class Board extends Model
      *
      * @return string
      */
-    public function getPanelUrl($route = "", array $params = [], $abs = true)
+    public function getPanelUrl($route = "basic", array $params = [], $abs = true)
     {
         return route(
             implode(array_filter(['panel.board', $route]), '.'),

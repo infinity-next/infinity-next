@@ -30,7 +30,12 @@ class BansController extends PanelController
      */
     public static $navSecondary = 'nav.panel.home';
 
-    public function getIndex(Board $board)
+    /**
+     * Lists the site's bans.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getIndex()
     {
         $bans = Ban::orderBy('ban_id', 'desc')
             ->paginate(15);
@@ -41,7 +46,12 @@ class BansController extends PanelController
         ]);
     }
 
-    public function getIndexForSelf(Board $board)
+    /**
+     * Lists bans for this connection.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getIndexForSelf()
     {
         $bans = Ban::getBans(Request::ip(), false, false)
             ->paginate(15);
@@ -52,6 +62,16 @@ class BansController extends PanelController
         ]);
     }
 
+    /**
+     * Lists a ban.
+     *
+     * Will also update its "seen" if it was not seen prior.
+     *
+     * @param  \App\Board  $board
+     * @param  \App\Ban    $ban
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getBan(Board $board, Ban $ban)
     {
         if (!$ban->canView($this->user)) {
@@ -75,6 +95,13 @@ class BansController extends PanelController
         ]);
     }
 
+    /**
+     * Lists a board's bans.
+     *
+     * @param  \App\Board  $board
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getBoardIndex(Board $board)
     {
         $bans = Ban::orderBy('ban_id', 'desc')
@@ -87,7 +114,14 @@ class BansController extends PanelController
         ]);
     }
 
-    public function putAppeal(Board $board, Ban $ban)
+    /**
+     * Submits an appeal for a ban.
+     *
+     * @param  \App\Ban    $ban
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function putAppeal(Ban $ban)
     {
         if (!$ban->canAppeal() || !$ban->isBanForIP()) {
             return abort(403);
@@ -113,6 +147,6 @@ class BansController extends PanelController
         ]);
         $ban->setRelation('appeals', $ban->appeals->push($appeal));
 
-        return $this->getBan($board, $ban);
+        return redirect($ban->getUrl());
     }
 }

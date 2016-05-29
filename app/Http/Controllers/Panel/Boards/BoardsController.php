@@ -257,6 +257,6 @@ class BoardsController extends PanelController
 
         $this->log('log.board.create', $board->board_uri);
 
-        return redirect("cp/board/{$board->board_uri}");
+        return redirect($board->getPanelUrl());
     }
 }

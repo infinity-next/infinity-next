@@ -236,9 +236,30 @@ class Ban extends Model
         return $fetch ? $query->get() : $query;
     }
 
-    public function getRedirectUrl()
+    /**
+     * Returns a fully qualified URL for a route on this ban.
+     *
+     * @param  string  $route  Optional route addendum.
+     * @param  array  $params  Optional array of parameters to be added.
+     * @param  bool  $abs  Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getUrl($route = "", array $params = [], $abs = true)
     {
-        return '/cp/bans/'.($this->isGlobal() ? 'global' : "board/{$this->board_uri}")."/{$this->ban_id}";
+        return route(
+            implode(array_filter([
+                "panel",
+                $this->isGlobal() ? "site" : "board",
+                "ban",
+                $route,
+            ]), '.'),
+            [
+                'board' => $this->isGlobal() ? null : $this->board,
+                'ban'   => $this,
+            ] + $params,
+            true
+        );
     }
 
     /**

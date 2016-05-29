@@ -152,7 +152,7 @@ class PasswordController extends PanelController
 
         switch ($response) {
             case PasswordBroker::PASSWORD_RESET:
-                return redirect('/cp/home');
+                return redirect()->route('panel.home');
             default:
                 return redirect()->back()
                     ->withInput($request->only('email'))

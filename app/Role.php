@@ -356,7 +356,7 @@ class Role extends Model
     {
         return route(implode(".", array_filter([
             "panel",
-            is_null($this->board_uri) ? "site" : "board",
+            is_null($this->board_uri) ? "" : "board",
             "role",
             $route,
         ])), [

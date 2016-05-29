@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
+use Illuminate\Http\Request;
 use Input;
 use Validator;
 use Event;
@@ -26,6 +27,7 @@ class StaffController extends PanelController
     const VIEW_LIST = 'panel.board.staff';
     const VIEW_ADD = 'panel.board.staff.create';
     const VIEW_EDIT = 'panel.board.staff.edit';
+    const VIEW_DELETE = 'panel.board.staff.delete';
 
     /**
      * View path for the secondary (sidebar) navigation.
@@ -46,7 +48,7 @@ class StaffController extends PanelController
      *
      * @return Response
      */
-    public function getIndex(Board $board)
+    public function index(Board $board)
     {
         if (!$board->canEditConfig($this->user)) {
             return abort(403);
@@ -69,7 +71,7 @@ class StaffController extends PanelController
      *
      * @return Response
      */
-    public function getAdd(Board $board)
+    public function create(Board $board)
     {
         if (!$board->canEditConfig($this->user)) {
             return abort(403);
@@ -92,7 +94,7 @@ class StaffController extends PanelController
      *
      * @return Response
      */
-    public function storeAdd(Board $board)
+    public function store(Board $board)
     {
         if (!$board->canEditConfig($this->user)) {
             return abort(403);
@@ -160,6 +162,143 @@ class StaffController extends PanelController
 
         Event::fire(new UserRolesModified($user));
 
-        return redirect("/cp/board/{$board->board_uri}/staff");
+        return redirect($board->getPanelUrl('staff'));
+    }
+
+    /**
+     * Opens staff management form.
+     *
+     * @param  \App\Board  $board
+     * @param  \App\User  $user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Board $board, User $user)
+    {
+        if (!$this->user->canEditBoardStaffMember($user, $board)) {
+            return abort(403);
+        }
+
+        $roles = $this->user->getAssignableRoles($board);
+        $staff = $board->getStaff();
+
+        $user->load('roles');
+
+        return $this->view(static::VIEW_EDIT, [
+            'board' => $board,
+            'roles' => $roles,
+            'staff' => $user,
+
+            'tab' => 'staff',
+        ]);
+    }
+
+    /**
+     * Saves new castes to staff member.
+     *
+     * @param  \App\Board  $board
+     * @param  \App\User  $user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Board $board, User $user)
+    {
+        if (!$this->user->canEditBoardStaffMember($user, $board)) {
+            return abort(403);
+        }
+
+        $user->load('roles');
+
+        $roles = $this->user->getAssignableRoles($board);
+        $castes = $roles->pluck('role_id');
+        $rules = [
+            'castes' => [
+                'array',
+            ],
+        ];
+        $input = Input::only('castes');
+        $validator = Validator::make($input, $rules);
+
+        $validator->each('castes', [
+            'in:'.$castes->implode(','),
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($validator->errors());
+        }
+
+
+        $user->roles()->detach($roles->pluck('role_id')->toArray());
+
+        if (is_array($input['castes'])) {
+            $user->roles()->attach($input['castes']);
+        }
+
+        Event::fire(new UserRolesModified($user));
+
+        if (count($input['castes'])) {
+            return redirect()->back();
+        } else {
+            return redirect($board->getPanelUrl('staff'));
+        }
+    }
+
+    /**
+     * Presents staff dismissal confirmation.
+     *
+     * @param  \App\Board  $board
+     * @param  \App\User  $user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Board $board, User $user)
+    {
+        if (!$this->user->canEditBoardStaffMember($user, $board)) {
+            return abort(403);
+        }
+
+        return $this->view(static::VIEW_DELETE, [
+            'board' => $board,
+            'tab' => 'staff',
+            'staff' => $user,
+        ]);
+    }
+
+    /**
+     * Deletes staff position.
+     *
+     * @param  \App\Board  $board
+     * @param  \App\User  $user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, Board $board, User $user)
+    {
+        if (!$this->user->canEditBoardStaffMember($user, $board)) {
+            return abort(403);
+        }
+
+        if ($user->user_id === $this->user->user_id) {
+            $this->validate($request, [
+                'confirmation' => [
+                    'required',
+                    'boolean',
+                ]
+            ]);
+        }
+
+        $user->load('roles');
+
+        $roles = $user->getBoardRoles($board);
+
+        $user->roles()->detach($roles->pluck('role_id')->toArray());
+
+        Event::fire(new UserRolesModified($user));
+
+        return redirect($board->getPanelUrl('staff'));
     }
 }

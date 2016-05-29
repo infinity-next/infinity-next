@@ -43,6 +43,7 @@ return [
         'board_staff_list'   => "Staff of /:board_uri/",
         'board_staff_add'    => "Creating /:board_uri/ Staff",
         'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
+        'board_staff_delete' => "Removing /:board_uri/ Staff: :staff_name",
         'permissions'        => ":role Role Permissions",
         'they_are_banned'    => "Ban Overview",
         'you_are_banned'     => "You are BANNED!",
@@ -63,6 +64,7 @@ return [
 
         'add_staff'            => "Add Staff",
         'edit_staff'           => "Save Staff",
+        'delete_staff'         => "Remove Staff",
 
         'add_role'             => "Create Role",
         'edit_role'            => "Save Role",
@@ -108,6 +110,10 @@ return [
         'feature' => "Featuring a thread will update its \"Featured At\" column to be the current date.<br />" .
             "Unfeaturing a thread will clear that value.<br />" .
             "Featured boards on the front page are sorted by their Featured At date.",
+
+        'delete_staff_self' => "<strong>Warning!</strong><br />" .
+            "You are <em>removing yourself</em> from this board's staff.<br />" .
+            "You may not be able to regain control later on.",
 
         // Logical switch, not plural.
         'featured_at' => "{0}Board not featured.|[1,Inf]Board last featured :featured_at",

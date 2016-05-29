@@ -7,7 +7,10 @@
 
                 <ul class="cp-linkitems">
                     <li class="cp-linkitem">
-                        <a class="linkitem-name" href="{!! url('cp/roles/permissions') !!}">@lang('nav.panel.secondary.users.role_permissions')</a>
+                        <a class="linkitem-name" href="{!! route('panel.user.index') !!}">@lang('nav.panel.secondary.users.user_index')</a>
+                    </li>
+                    <li class="cp-linkitem">
+                        <a class="linkitem-name" href="{!! route('panel.role.index') !!}">@lang('nav.panel.secondary.users.role_permissions')</a>
                     </li>
                 </ul>
             </li>

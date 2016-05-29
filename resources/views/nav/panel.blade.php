@@ -18,13 +18,11 @@
             </li>
             @endif
 
-            {{--
             @if ($user->canAdminUsers() || $user->canAdminPermissions())
             <li class="cp-linkgroup">
-                <a class="linkgroup-name linkgroup-users" href="{!! route('panel.users.index') !!}">@lang('nav.panel.primary.users')</a>
+                <a class="linkgroup-name linkgroup-users" href="{!! route('panel.user.index') !!}">@lang('nav.panel.primary.users')</a>
             </li>
             @endif
-            --}}
         </ul>
         @endif
 

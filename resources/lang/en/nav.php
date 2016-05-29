@@ -82,7 +82,8 @@ return [
 			],
 
 			'users'  => [
-				'permissions'     => "Permissions",
+				'user_index'       => "Users",
+				'permissions'      => "Permissions",
 				'role_permissions' => "Role Permissions",
 			],
 		],

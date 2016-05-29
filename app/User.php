@@ -191,26 +191,60 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
     }
 
     /**
-     * Returns the full URL for a user profile.
+     * Returns roles which belong to a specific board.
      *
-     * @return string
+     * @param  \App\Board  $board
+     *
+     * @return Collection
      */
-    public function getURL()
+    public function getBoardRoles(Board $board)
     {
-        return url("/cp/user/{$this->getURLSlug()}");
+        return $this->roles()->where('board_uri', $board->board_uri)->get();
     }
 
     /**
-     * Returns the fill URL for a staff profile regarding a single board.
+     * Returns a fully qualified URL for a route on this user.
      *
-     * @param \App\Board $board
-     * @param string     $action
+     * @param  string  $route  Optional route addendum.
+     * @param  array  $params  Optional array of parameters to be added.
+     * @param  bool  $abs  Options indicator if the URL is to be absolute.
      *
      * @return string
      */
-    public function getURLForBoardStaff(Board $board, $action = '')
+    public function getUrl($route = "show", array $params = [], $abs = true)
     {
-        return url("/cp/board/{$board->board_uri}/staff/{$this->getURLSlug()}/{$action}");
+        return route(
+            implode(array_filter([
+                "panel",
+                "user",
+                $route,
+            ]), '.'),
+            [
+                'user' => $this,
+            ] + $params,
+            true
+        );
+    }
+
+    /**
+     * Returns a fully qualified URL for a route to user's board staff page.
+     *
+     * @param  \App\Board  $board
+     * @param  string  $route  Optional route addendum.
+     * @param  array  $params  Optional array of parameters to be added.
+     * @param  bool  $abs  Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getBoardStaffUrl(Board $board, $route = "show", array $params = [], $abs = true)
+    {
+        return $board->getPanelUrl(
+            implode(array_filter([
+                "staff",
+                $route,
+            ]), '.'),
+            ['user' => $this]
+        );
     }
 
     /**
@@ -218,9 +252,9 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
      *
      * @return string
      */
-    public function getURLSlug()
+    public function getSlugForUrl()
     {
-        return "{$this->username}.{$this->user_id}";
+        return str_slug($this->username).".".$this->user_id;
     }
 
     /**

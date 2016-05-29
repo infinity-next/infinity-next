@@ -6,6 +6,8 @@ use App\Board;
 use App\SiteSetting;
 use App\Option;
 use Cache;
+use DB;
+use Exception;
 
 class SettingManager
 {
@@ -116,22 +118,15 @@ class SettingManager
 
 
         if ($this->hasDB()) {
-            global $app;
-            $manager = $app->make(UserManager::class);
+            $manager = app()->make(UserManager::class);
 
             if ($manager->user && $manager->user->canCreateBoard()) {
-                $nav['new_board'] = url('cp/boards/create');
+                $nav['new_board'] = route('panel.boards.create');
             }
         }
 
-        if (env('CONTRIB_ENABLED', false)) {
-            $nav['contribute'] = url('contribute');
-            $nav['donate'] = secure_url('cp/donate');
-        }
-
-
         if ($this->get('adventureEnabled')) {
-            $nav['adventure'] = url('cp/adventure');
+            $nav['adventure'] = route('panel.adventure');
         }
 
 
@@ -220,8 +215,8 @@ class SettingManager
     {
         if (!isset($this->db)) {
             try {
-                $this->db = (bool) \DB::connection()->getDatabaseName();
-            } catch (\Exception $e) {
+                $this->db = (bool) DB::connection()->getDatabaseName();
+            } catch (Exception $e) {
                 $this->db = false;
             }
         }
