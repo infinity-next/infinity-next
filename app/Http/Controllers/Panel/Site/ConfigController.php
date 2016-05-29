@@ -38,7 +38,7 @@ class ConfigController extends PanelController
      *
      * @return Response
      */
-    public function getIndex()
+    public function get()
     {
         if (!$this->user->canAdminConfig()) {
             return abort(403);
@@ -56,7 +56,7 @@ class ConfigController extends PanelController
      *
      * @return Response
      */
-    public function patchIndex(Request $request)
+    public function patch(Request $request)
     {
         if (!$this->user->canAdminConfig()) {
             return abort(403);

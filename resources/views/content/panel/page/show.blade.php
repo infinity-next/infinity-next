@@ -5,7 +5,7 @@
 @section('actions')
     <a class="panel-action" href="{{ route( $board->exists
         ? 'panel.board.page.edit'
-        : 'panel.page.edit', [
+        : 'panel.site.page.edit', [
             'page'  => $page,
             'board' => $board,
         ]

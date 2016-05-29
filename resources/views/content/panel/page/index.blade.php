@@ -13,7 +13,7 @@
 @section('actions')
     <a class="panel-action" href="{{ route( $board->exists
         ? 'panel.board.page.create'
-        : 'panel.page.create', [
+        : 'panel.site.page.create', [
             'board' => $board,
         ]
     ) }}">+ @lang('panel.action.create_page')</a>
@@ -28,19 +28,19 @@
             <li class="filterlist-item">
                 <a class="filterlist-secondary" href="{{ route($board->exists
                     ? 'panel.board.page.delete'
-                    : 'panel.page.delete', [
+                    : 'panel.site.page.delete', [
                         'id' => $page->page_id,
                         'board' => $board,
                 ]) }}"><i class="fa fa-remove"></i></a>
                 <a class="filterlist-secondary" href="{{ route($board->exists
                     ? 'panel.board.page.edit'
-                    : 'panel.page.edit', [
+                    : 'panel.site.page.edit', [
                         'id' => $page->page_id,
                         'board' => $board,
                 ]) }}">@lang('panel.action.update')</a>
                 <a class="filterlist-primary" href="{{ route($board->exists
                     ? 'panel.board.page.show'
-                    : 'panel.page.show', [
+                    : 'panel.site.page.show', [
                         'id' => $page->page_id,
                         'board' => $board,
                 ]) }}">

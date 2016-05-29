@@ -6,7 +6,7 @@
     @if ($page)
     <a class="panel-action" href="{{ route( $board->exists
         ? 'panel.board.page.show'
-        : 'panel.page.show', [
+        : 'panel.site.page.show', [
             'page'  => $page,
             'board' => $board,
         ]
@@ -19,7 +19,7 @@
     'route' => [
         // Route Name
         'panel.' .
-        ($board->exists ? 'board.' : '') .
+        ($board->exists ? 'board.' : 'site.') .
         'page.' .
         ($page ? 'update' : 'store'),
 

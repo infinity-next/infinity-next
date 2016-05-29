@@ -65,21 +65,18 @@ Route::get('history/{ip}', 'HistoryController@getHistory');
 /*
  *  Page Controllers (Panel / Management)
  */
-Route::group([ 'middleware' => [ \App\Http\Middleware\BoardAmbivilance::class, ], ], function () {
-    Route::get('site/page/{page}/delete', [
-        'as' => 'page.delete',
-        'uses' => 'PageController@delete',
-    ]);
-    Route::get('site/pages', ['as' => 'pages', 'uses' => 'PageController@index']);
+Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],], function () {
+    Route::get('site/pages', ['as' => 'site.pages', 'uses' => 'PageController@index']);
+    Route::get('site/page/{page}/delete', ['as' => 'site.page.delete', 'uses' => 'PageController@delete',]);
     Route::resource('site/page', 'PageController', [
         'names' => [
-            'index' => 'page.index',
-            'create' => 'page.create',
-            'store' => 'page.store',
-            'show' => 'page.show',
-            'edit' => 'page.edit',
-            'update' => 'page.update',
-            'destroy' => 'page.destroy',
+            'index' => 'site.page.index',
+            'create' => 'site.page.create',
+            'store' => 'site.page.store',
+            'show' => 'site.page.show',
+            'edit' => 'site.page.edit',
+            'update' => 'site.page.update',
+            'destroy' => 'site.page.destroy',
         ],
     ]);
     Route::get('board/{board}/page/{page}/delete', [
@@ -199,13 +196,18 @@ Route::group(['namespace' => 'Boards',], function () {
 });
 
 Route::group(['namespace' => 'Site', 'as' => 'site.', 'prefix' => 'site',], function () {
-    Route::get('/', ['as' => 'index', 'uses' => 'SiteController@getIndex',]);
+    /**
+     * Config
+     */
+    Route::get('config', ['as' => 'config', 'uses' => 'ConfigController@get']);
+    Route::patch('config', ['as' => 'config.edit', 'uses' => 'ConfigController@patch']);
 
+    /**
+     * phpinfo
+     */
     Route::get('phpinfo', ['as' => 'phpinfo', 'uses' => 'SiteController@getPhpinfo']);
 
-    Route::controllers([
-        'config' => 'ConfigController',
-    ]);
+    Route::get('/', ['as' => 'index', 'uses' => 'SiteController@getIndex',]);
 });
 
 /*

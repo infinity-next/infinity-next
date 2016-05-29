@@ -7,7 +7,7 @@
     'route' => [
         // Route Name
         'panel.' .
-        ($board->exists ? 'board.' : '') .
+        ($board->exists ? 'board.' : 'site.') .
         'page.' .
         'destroy',
 

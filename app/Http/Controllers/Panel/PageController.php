@@ -226,7 +226,7 @@ class PageController extends PanelController
 
         return redirect()->route(
             'panel.'.
-            ($board->exists ? 'board.' : null).
+            ($this->board ? 'board.' : 'site.').
             'page.'.
             'index', [
                 'board' => $this->board ? $board : null,
