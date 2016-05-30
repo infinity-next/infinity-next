@@ -29,8 +29,7 @@ Route::put('register', ['as' => 'register.create', 'uses' => 'AuthController@put
 /**
  * Account Recovery
  */
-Route::group(['prefix' => 'password', 'as' => 'password'], function()
-{
+Route::group(['prefix' => 'password', 'as' => 'password',], function() {
     // password
     Route::get('/', ['uses' => 'PasswordController@getIndex',]);
     // password update
@@ -44,11 +43,6 @@ Route::group(['prefix' => 'password', 'as' => 'password'], function()
     // email request
     Route::post('email',['as' => '.email.request', 'uses' => 'PasswordController@postEmail',]);
 });
-
-/**
- * Post history (IP)
- */
-Route::get('history/{ip}', 'HistoryController@getHistory');
 
 Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],], function () {
     /**
@@ -65,6 +59,11 @@ Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],]
         Route::get('global', ['as' => 'site.ban', 'uses' => 'BansController@getGlobalIndex']);
         Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
     });
+
+    /**
+     * Post History
+     */
+    Route::get('history/{ip}', ['as' => 'history.global', 'uses' => 'HistoryController@list',]);
 
     /*
      *  Page Controllers (Panel / Management)
@@ -150,7 +149,7 @@ Route::group(['namespace' => 'Boards',], function () {
          * Roles
          */
         Route::get('roles/create',  ['as' => 'roles.create', 'uses' => 'RolesController@create',]);
-        Route::put('roles/create',  ['as' => 'roles.store', 'uses' => 'RolesController@store',]);
+        Route::put('roles',         ['as' => 'roles.store', 'uses' => 'RolesController@store',]);
         Route::get('roles',         ['as' => 'roles', 'uses' => 'RolesController@get',]);
 
         /**
@@ -159,7 +158,7 @@ Route::group(['namespace' => 'Boards',], function () {
         Route::get('role/{role}/delete',        ['as' => 'role.delete', 'uses' => 'RoleController@getDelete',]);
         Route::delete('role/{role}/delete',     ['as' => 'role.destroy', 'uses' => 'RoleController@destroyDelete',]);
         Route::patch('role/{role}',             ['as' => 'role.store', 'uses' => 'RoleController@patchIndex',]);
-        Route::get('role/{role}',               ['as' => 'role', 'uses' => 'RoleController@getIndex',]);
+        Route::get('role/{role}',               ['as' => 'role.show', 'uses' => 'RoleController@getIndex',]);
 
         /**
          * Permissions
@@ -170,13 +169,16 @@ Route::group(['namespace' => 'Boards',], function () {
         /**
          * Staff Management
          */
-         Route::get('staff/create',  ['as' => 'staff.create', 'uses' => 'StaffController@create',]);
-         Route::post('staff/create', ['as' => 'staff.store', 'uses' => 'StaffController@store',]);
-        Route::get('staff/{user}/delete', ['as' => 'staff.delete', 'uses' => 'StaffController@delete',]);
-        Route::delete('staff/{user}',     ['as' => 'staff.destroy', 'uses' => 'StaffController@destroy',]);
-        Route::get('staff/{user}',        ['as' => 'staff.show', 'uses' => 'StaffController@show',]);
-        Route::patch('staff/{user}',      ['as' => 'staff.update', 'uses' => 'StaffController@patch',]);
-        Route::get('staff',         ['as' => 'staff', 'uses' => 'StaffController@index',]);
+        Route::group(['prefix' => 'staff'], function()
+        {
+            Route::get('create',               ['as' => 'staff.create', 'uses' => 'StaffController@create',]);
+            Route::get('{user}/delete', ['as' => 'staff.delete', 'uses' => 'StaffController@delete',]);
+            Route::delete('{user}',     ['as' => 'staff.destroy', 'uses' => 'StaffController@destroy',]);
+            Route::get('{user}',        ['as' => 'staff.show', 'uses' => 'StaffController@show',]);
+            Route::patch('{user}',             ['as' => 'staff.update', 'uses' => 'StaffController@patch',]);
+            Route::put('/',                    ['as' => 'staff.store', 'uses' => 'StaffController@store',]);
+            Route::get('/',                    ['as' => 'staff', 'uses' => 'StaffController@index',]);
+        });
 
         /**
          * Tags
@@ -228,18 +230,20 @@ Route::group(['namespace' => 'Site', 'as' => 'site.', 'prefix' => 'site',], func
 /**
  * Users
  */
-Route::group(['as' => 'user.', 'namespace' => 'Users', 'prefix' => 'users',], function () {
+Route::group(['as' => 'user.', 'namespace' => 'Users', 'prefix' => 'user',], function () {
     // user show
-    Route::get('{user}', ['as' => 'show', 'uses' => 'UsersController@show']);
+    Route::get('{user}/{slug?}', ['as' => 'show', 'uses' => 'UserController@show']);
 
     // users list
-    Route::get('/', ['as' => 'index', 'uses' => 'UsersController@index']);
+    Route::get('/', ['as' => 'index', 'uses' => 'UserController@index']);
 });
 
 /**
  * Global Roles
  */
-Route::group(['as' => 'role.', 'namespace' => 'Roles', 'prefix' => 'roles',], function () {
+Route::group(['as' => 'role.', 'namespace' => 'Roles', 'prefix' => 'role',], function () {
+    Route::get('{role}', ['as' => 'show', 'uses' => 'RolesController@show',]);
+
     /**
      * Permissions
      */

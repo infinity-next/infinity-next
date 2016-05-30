@@ -17,31 +17,24 @@ use Event;
 use App\Events\PostWasBanned;
 use App\Events\PostWasModerated;
 
+/**
+ * Post moderation and management.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class PostController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Post Controller
-    |--------------------------------------------------------------------------
-    |
-    | Any request to be acted upon a single, extant post is carried out through
-    | this form.
-    |
-    | Note that creating a NEW post against a board is handled
-    | in the BoardController instead.
-    |
-    */
-
     const VIEW_EDIT = 'board.post.mod';
-    const VIEW_MOD = 'board.post.mod';
+    const VIEW_MOD  = 'board.post.mod';
 
-
-    public function getMod(Request $request, Board $board, Post $post)
+    public function moderate(Request $request, Board $board, Post $post)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
-
         // Take trailing arguments,
         // compare them against a list of real actions,
         // intersect the liss to find the true commands.
@@ -66,21 +59,53 @@ class PostController extends Controller
                 return abort(403);
             }
 
-            return $this->view(static::VIEW_MOD, [
-                'actions' => $modActions,
-                'form' => 'ban',
-                'board' => $board,
-                'post' => $post,
-
-                'banMaxLength' => $this->option('banMaxLength'),
-            ]);
         } elseif ($delete) {
             if ($global) {
                 if (!$this->user->canDeleteGlobally()) {
                     return abort(403);
                 }
+            } elseif (!$this->user->canDelete($post)) {
+                return abort(403);
+            }
+        }
+
+        return $this->view(static::VIEW_MOD, [
+            'actions' => $modActions,
+            'form' => 'ban',
+            'board' => $board,
+            'post' => $post,
+
+            'banMaxLength' => $this->option('banMaxLength'),
+        ]);
+    }
 
 
+    public function issue(Request $request, Board $board, Post $post)
+    {
+        if (!$post->exists) {
+            abort(404);
+        }
+
+        // Take trailing arguments,
+        // compare them against a list of real actions,
+        // intersect the liss to find the true commands.
+        $actions = ['delete', 'ban', 'all', 'global'];
+        $argList = func_get_args();
+        $modActions = array_intersect($actions, array_splice($argList, 2));
+        sort($modActions);
+
+        $ban = in_array('ban', $modActions);
+        $delete = in_array('delete', $modActions);
+        $all = in_array('all', $modActions);
+        $global = in_array('global', $modActions);
+
+        if (!$ban) {
+            return abort(404);
+        } elseif ($delete) {
+            if ($global) {
+                if (!$this->user->canDeleteGlobally()) {
+                    return abort(403);
+                }
                 $posts = Post::whereAuthorIP($post->author_ip)
                     ->with('reports')
                     ->get();
@@ -137,43 +162,13 @@ class PostController extends Controller
                             ]);
                         }
                     }
-
-                    $post->delete();
-
-                    Event::fire(new PostWasModerated($post, $this->user));
                 }
+
+                $post->delete();
+
+                Event::fire(new PostWasModerated($post, $this->user));
             }
-
-            return back();
         }
-
-        return abort(403);
-    }
-
-
-    public function putMod(Request $request, Board $board, Post $post)
-    {
-        if (!$post->exists) {
-            abort(404);
-        }
-
-        // Take trailing arguments,
-        // compare them against a list of real actions,
-        // intersect the liss to find the true commands.
-        $actions = ['delete', 'ban', 'all', 'global'];
-        $argList = func_get_args();
-        $modActions = array_intersect($actions, array_splice($argList, 2));
-        sort($modActions);
-
-        $ban = in_array('ban', $modActions);
-        $delete = in_array('delete', $modActions);
-        $all = in_array('all', $modActions);
-        $global = in_array('global', $modActions);
-
-        if (!$ban) {
-            return abort(404);
-        }
-
 
         $validator = Validator::make(Input::all(), [
             'raw_ip' => 'required|boolean',
@@ -321,7 +316,7 @@ class PostController extends Controller
     /**
      * Renders the post edit form.
      */
-    public function getEdit(Request $request, Board $board, Post $post)
+    public function edit(Request $request, Board $board, Post $post)
     {
         if (!$post->exists) {
             abort(404);
@@ -342,7 +337,7 @@ class PostController extends Controller
     /**
      * Updates a post with the edit.
      */
-    public function patchEdit(Request $request, Board $board, Post $post)
+    public function update(Request $request, Board $board, Post $post)
     {
         if (!$post->exists) {
             abort(404);
@@ -379,7 +374,7 @@ class PostController extends Controller
     /**
      * Renders the post edit form.
      */
-    public function getReport(Request $request, Board $board, Post $post, $global = false)
+    public function report(Request $request, Board $board, Post $post, $global = false)
     {
         if (!$post->exists) {
             abort(404);
@@ -425,9 +420,9 @@ class PostController extends Controller
     }
 
     /**
-     * Updates a post with the edit.
+     * Submits a report.
      */
-    public function postReport(Request $request, Board $board, Post $post, $global = false)
+    public function flag(Request $request, Board $board, Post $post, $global = false)
     {
         if (!$post->exists) {
             abort(404);
@@ -490,7 +485,7 @@ class PostController extends Controller
     /**
      * Features a post.
      */
-    public function anyFeature(Request $request, Board $board, Post $post, $global = false)
+    public function feature(Request $request, Board $board, Post $post, $global = false)
     {
         if (!$this->user->canFeatureGlobally($post)) {
             return abort(403);
@@ -505,7 +500,7 @@ class PostController extends Controller
     /**
      * Locks a thread.
      */
-    public function anyLock(Request $request, Board $board, Post $post, $lock = true)
+    public function lock(Request $request, Board $board, Post $post, $lock = true)
     {
         if (!$post->exists) {
             abort(404);
@@ -528,7 +523,7 @@ class PostController extends Controller
     /**
      * Unlocks a thread.
      */
-    public function anyUnlock(Request $request, Board $board, Post $post)
+    public function unlock(Request $request, Board $board, Post $post)
     {
         // Redirect to anyBumplock with a flag denoting an unlock.
         return $this->anyLock($request, $board, $post, false);
@@ -537,7 +532,7 @@ class PostController extends Controller
     /**
      * Bumplocks a thread.
      */
-    public function anyBumplock(Request $request, Board $board, Post $post, $bumplock = true)
+    public function bumplock(Request $request, Board $board, Post $post, $bumplock = true)
     {
         if (!$post->exists) {
             abort(404);
@@ -560,7 +555,7 @@ class PostController extends Controller
     /**
      * Un-bumplocks a thread.
      */
-    public function anyUnbumplock(Request $request, Board $board, Post $post)
+    public function unbumplock(Request $request, Board $board, Post $post)
     {
         // Redirect to anyBumplock with a flag denoting an unbumplock.
         return $this->anyBumplock($request, $board, $post, false);
@@ -569,7 +564,7 @@ class PostController extends Controller
     /**
      * Stickies a thread.
      */
-    public function anySticky(Request $request, Board $board, Post $post, $sticky = true)
+    public function sticky(Request $request, Board $board, Post $post, $sticky = true)
     {
         if (!$post->exists) {
             abort(404);
@@ -593,7 +588,7 @@ class PostController extends Controller
     /**
      * Unstickies a thread.
      */
-    public function anyUnsticky(Request $request, Board $board, Post $post)
+    public function unsticky(Request $request, Board $board, Post $post)
     {
         // Redirect to anySticky with a flag denoting an unsticky.
         return $this->anySticky($request, $board, $post, false);
@@ -602,7 +597,7 @@ class PostController extends Controller
     /**
      * Generates HTML content with post input.
      */
-    public function anyPreview(Request $request, Board $board)
+    public function preview(Request $request, Board $board)
     {
         $body = $request->input('body');
 

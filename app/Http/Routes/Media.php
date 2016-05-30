@@ -64,22 +64,3 @@
         ]);
     });
 }
-
-/**
- * Content moderation actions.
- * Only available through frontend.
- *//*
- Route::group([
-     'domain'     => config('app.url_media', config('app.url')),
-     'prefix'     => '{board}/file',
-     'middleware' => \App\Http\Middleware\FileFilter::class,
-     'namespace'  => 'Content',
- ], function () {
-     Route::get('remove/{attachment}', 'FileController@getDeleteAttachment');
-     Route::post('remove/{attachment}', 'FileController@postDeleteAttachment');
-     Route::get('spoiler/{attachment}', 'FileController@getSpoilerAttachment');
-     Route::post('spoiler/{attachment}', 'FileController@postSpoilerAttachment');
-     Route::get('unspoiler/{attachment}', 'FileController@getSpoilerAttachment');
-     Route::post('unspoiler/{attachment}', 'FileController@postSpoilerAttachment');
-});
-*/

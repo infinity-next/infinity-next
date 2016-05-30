@@ -124,6 +124,10 @@ return [
             'staff'         => "Staff",
             'pages'         => "Pages",
             'roles'         => "Roles",
+            'users'         => "Users",
+
+            'global_roles'  => "Site-Wide Roles",
+            'board_roles'   => "Board-Specific Roles",
         ],
 
         'field'     => [

@@ -47,7 +47,12 @@ class RouteServiceProvider extends ServiceProvider
             'namespace'  => 'App\Http\Controllers\Panel',
         ],
 
-        'api'     => 'API',
+        'api' => [
+            'as'         => 'api.',
+            'middleware' => ['api'],
+            'namespace'  => 'App\Http\Controllers\API',
+        ],
+
         'esi'     => 'ESI',
     ];
 
@@ -62,25 +67,10 @@ class RouteServiceProvider extends ServiceProvider
         $router->model('ban', '\App\Ban');
         $router->model('board', '\App\Board');
         $router->model('page', '\App\Page');
-        //$router->model('post', '\App\Post');
+        $router->model('post', '\App\Post');
+        $router->model('user', '\App\User');
         $router->model('report', '\App\Report');
         $router->model('role', '\App\Role');
-
-        $router->bind('user', function ($value, $route) {
-            if (is_numeric($value)) {
-                return User::find($value);
-            } elseif (preg_match('/^[a-z0-9\-]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
-                return User::find($matches['id']);
-            }
-        });
-
-        $router->bind('page', function ($value, $route) {
-            if (is_numeric($value)) {
-                return Page::find($value);
-            } elseif (preg_match('/^[a-z0-9\-]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
-                return Page::find($matches['id']);
-            }
-        });
 
         $router->bind('page_title', function ($value, $route) {
             $board = $route->getParameter('board');
@@ -117,21 +107,12 @@ class RouteServiceProvider extends ServiceProvider
                 ->find($value);
         });
 
-        $router->bind('role', function ($value, $route) {
-            if (is_numeric($value)) {
-                return Role::find($value);
-            } elseif (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches)) {
-                return Role::find($matches['id']);
-            }
-        });
-
         $router->bind('post', function ($value, $route) {
             $board = $route->getParameter('board');
 
             if (!($board instanceof Board)) {
                 $board = $this->app->make(Board::class);
             }
-
             if (is_numeric($value) && $board instanceof Board) {
                 $post = $board->getThreadByBoardId($value);
 
@@ -141,6 +122,8 @@ class RouteServiceProvider extends ServiceProvider
                     $this->app->singleton(Post::class, function ($app) use ($post) {
                         return $post;
                     });
+
+                    return $post;
                 }
             }
         });
@@ -166,6 +149,13 @@ class RouteServiceProvider extends ServiceProvider
          */
         $router->group($this->routeGroup['media'], function ($router) {
             require app_path('Http/Routes/Media.php');
+        });
+
+        /**
+         * API
+         */
+        $router->group($this->routeGroup['api'], function ($router) {
+            require app_path('Http/Routes/API.php');
         });
 
         /**

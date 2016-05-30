@@ -352,7 +352,7 @@ class Role extends Model
         return;
     }
 
-    public function getPanelUrl($route = "")
+    public function getPanelUrl($route = "show")
     {
         return route(implode(".", array_filter([
             "panel",

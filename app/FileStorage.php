@@ -285,10 +285,8 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getDownloadURL(Board $board)
+    public function getDownloadUrl(Board $board)
     {
-        //return url("/{$board->board_uri}/file/{$this->pivot->attachment_id}/{$this->getDownloadName()}");
-
         $params = [
             'attachment' => $this->pivot->attachment_id,
             'filename' => $this->getDownloadName(),
@@ -473,9 +471,11 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getRemoveURL(Board $board)
+    public function getRemoveUrl(Board $board)
     {
-        return url("{$board->board_uri}/file/remove/{$this->pivot->attachment_id}", [], false);
+        return $board->getUrl('file.delete', [
+            'attachment' => $this->pivot->attachment_id,
+        ], false);
     }
 
     /**
@@ -509,9 +509,11 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getSpoilerURL(Board $board)
+    public function getSpoilerUrl(Board $board)
     {
-        return url("{$board->board_uri}/file/spoiler/{$this->pivot->attachment_id}", [], false);
+        return $board->getUrl('file.spoiler', [
+            'attachment' => $this->pivot->attachment_id,
+        ], false);
     }
 
     /**
@@ -562,7 +564,7 @@ class FileStorage extends Model
      *
      * @return string as HTML
      */
-    public function getThumbnailHTML(Board $board, $maxDimension = null)
+    public function getThumbnailHtml(Board $board, $maxDimension = null)
     {
         $ext = $this->guessExtension();
         $mime = $this->mime;
@@ -575,10 +577,10 @@ class FileStorage extends Model
         } elseif ($spoil) {
             $url = $board->getAssetUrl('file_spoiler');
         } elseif ($this->isImageVector()) {
-            $url = $this->getDownloadURL($board);
+            $url = $this->getDownloadUrl($board);
         } elseif ($this->isAudio() || $this->isImage() || $this->isVideo()) {
             if ($this->hasThumb()) {
-                $url = $this->getThumbnailURL($board);
+                $url = $this->getThumbnailUrl($board);
             } elseif ($this->isAudio()) {
                 $url = media_url('static/img/assets/audio.gif', false);
             }
@@ -646,7 +648,7 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getThumbnailURL(Board $board)
+    public function getThumbnailUrl(Board $board)
     {
         $ext = $this->guessExtension();
 
@@ -660,13 +662,13 @@ class FileStorage extends Model
             $ext = 'jpg';
         } elseif ($this->isAudio()) {
             if (!$this->hasThumb()) {
-                return $board->getAudioArtURL();
+                return $board->getAudioArtUrl();
             }
 
             $ext = 'png';
         } elseif ($this->isImageVector()) {
             // With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-            return $this->getDownloadURL($board);
+            return $this->getDownloadUrl($board);
         }
 
         $params = [
@@ -690,9 +692,11 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getUnspoilerURL(Board $board)
+    public function getUnspoilerUrl(Board $board)
     {
-        return url("{$board->board_uri}/file/unspoiler/{$this->pivot->attachment_id}", [], false);
+        return $board->getUrl('file.unspoiler', [
+            'attachment' => $this->pivot->attachment_id,
+        ], false);
     }
 
     /**

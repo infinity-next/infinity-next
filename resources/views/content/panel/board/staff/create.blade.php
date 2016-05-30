@@ -12,8 +12,8 @@
 
 @section('body')
     {!! Form::open([
-        'url'    => Request::url(),
-        'method' => "PUT",
+        'url'    => $board->getPanelUrl('staff.store'),
+        'method' => 'PUT',
         'files'  => true,
         'id'     => "config-staff",
         'class'  => "form-staff",

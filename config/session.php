@@ -43,7 +43,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ return [
     |
     */
 
-    'cookie' => 'laravel_session',
+    'cookie' => 'infinity_next_session',
 
     /*
     |--------------------------------------------------------------------------
@@ -134,7 +134,7 @@ return [
     |
     */
 
-    'domain' => null,
+    'domain' => ".".(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost')),
 
     /*
     |--------------------------------------------------------------------------

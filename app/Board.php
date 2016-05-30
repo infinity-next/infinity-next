@@ -1017,7 +1017,7 @@ class Board extends Model
         return route(
             implode(array_filter(['board', $route]), '.'),
             [ 'board' => $this, ] + $params,
-            true
+            $abs
         ).$trailing_slash;
     }
 

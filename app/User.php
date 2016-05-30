@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Contracts\Support\Sluggable as SluggableContract;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
 use Illuminate\Auth\Authenticatable;
@@ -25,7 +26,14 @@ use InfinityNext\Braintree\Contracts\Billable as BillableContract;
  *
  * @since      0.5.1
  */
-class User extends Model implements AuthenticatableContract, BillableContract, CanResetPasswordContract, PermissionUserContract
+class User
+extends Model
+implements
+    AuthenticatableContract,
+    BillableContract,
+    CanResetPasswordContract,
+    PermissionUserContract,
+    SluggableContract
 {
     use Authenticatable,
         Billable,
@@ -220,6 +228,7 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
                 $route,
             ]), '.'),
             [
+                'slug' => $this->getSlug(),
                 'user' => $this,
             ] + $params,
             true
@@ -243,7 +252,10 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
                 "staff",
                 $route,
             ]), '.'),
-            ['user' => $this]
+            [
+                'user' => $this
+            ] + $params,
+            $abs
         );
     }
 
@@ -252,9 +264,9 @@ class User extends Model implements AuthenticatableContract, BillableContract, C
      *
      * @return string
      */
-    public function getSlugForUrl()
+    public function getSlug()
     {
-        return str_slug($this->username).".".$this->user_id;
+        return str_slug($this->username, '-');
     }
 
     /**

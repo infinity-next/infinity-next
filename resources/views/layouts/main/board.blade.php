@@ -6,28 +6,28 @@
 @section('body-class', "view-board board-{$board->board_uri}")
 
 @section('page-css')
-	@if ($board->hasStylesheet())
-	<link id="page-stylesheet" rel="stylesheet" href="{{ $board->getStylesheetUrl('style.css') }}" data-instant-track />
-	@else
-	<link id="page-stylesheet" rel="stylesheet" href="{{ asset('static/css/empty.css') }}" data-instant-track />
-	@endif
+    @if ($board->hasStylesheet())
+    <link id="page-stylesheet" rel="stylesheet" href="{{ $board->getStylesheetUrl('style.css') }}" data-instant-track />
+    @else
+    <link id="page-stylesheet" rel="stylesheet" href="{{ asset('static/css/empty.css') }}" data-instant-track />
+    @endif
 @stop
 
 @section('app-js')
-	'board'          : "{{ $board->board_uri }}",
-	'board_url'      : "{{ $board->getUrl() }}",
-	'board_settings' : {
-		'postAttachmentsMax' : "{{ $board->getConfig('postAttachmentsMax') }}",
-		'postAttachmentsMin' : "{{ $board->getConfig('postAttachmentsMin') }}",
-		'postMaxLength'      : "{{ $board->getConfig('postMaxLength') }}",
-		'postMinLength'      : "{{ $board->getConfig('postMinLength') }}"
-	},
+    'board'          : "{{ $board->board_uri }}",
+    'board_url'      : "{{ trim($board->getUrl(), '/') }}",
+    'board_settings' : {
+        'postAttachmentsMax' : "{{ $board->getConfig('postAttachmentsMax') }}",
+        'postAttachmentsMin' : "{{ $board->getConfig('postAttachmentsMin') }}",
+        'postMaxLength'      : "{{ $board->getConfig('postMaxLength') }}",
+        'postMinLength'      : "{{ $board->getConfig('postMinLength') }}"
+    },
 @stop
 
 @section('content-addendum')
-	<div id="attachment-preview">
-		<img id="attachment-preview-img" src="" />
-	</div>
+    <div id="attachment-preview">
+        <img id="attachment-preview-img" src="" />
+    </div>
 @stop
 
 @section('header-logo', $board->getBannerURL())

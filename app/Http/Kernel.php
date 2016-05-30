@@ -41,6 +41,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\TorFilter::class,
+            \App\Http\Middleware\SlugRouting::class,
         ],
 
         'media' => [

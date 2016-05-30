@@ -419,11 +419,11 @@
                 var $box = $img.parent();
                 var width, height;
 
-                if (!(width = $img.data('original-width'))) {
+                if (undefined === (width = $img.data('original-width'))) {
                     width = $img.width();
                     $img.data('original-width', width);
                 }
-                if (!(height = $img.data('original-height'))) {
+                if (undefined === (height = $img.data('original-height'))) {
                     height = $img.height();
                     $img.data('original-height', height);
                 }
@@ -438,17 +438,24 @@
                 {
                     var ratio;
 
-                    if (width >= height)
-                    {
-                        ratio = newMax / width;
-                        height *= ratio;
-                        width = newMax;
+                    if (height !== 0) {
+                        if (width >= height)
+                        {
+                            ratio = newMax / width;
+                            height *= ratio;
+                            width = newMax;
+                        }
+                        else
+                        {
+                            ratio = newMax / height;
+                            width *= ratio;
+                            height = newMax;
+                        }
                     }
                     else
                     {
-                        ratio = newMax / height;
-                        width *= ratio;
-                        height = newMax;
+                        width = newMax;
+                        height = "auto";
                     }
 
                     $img.add($box).css({

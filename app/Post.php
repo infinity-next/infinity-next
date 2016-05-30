@@ -808,10 +808,10 @@ class Post extends Model implements FormattableContract
         // Indices start at 1, which includes OP.
         if (preg_match('/^(?<last>l)?(?<start>\d+)?(?P<between>-)?(?P<end>\d+)?$/', $splice, $m) === 1) {
             $count = $this->replies->count();
-            $last = isset($m['last']) && $m['last'] == 'l'        ? true : false;
-            $start = isset($m['start']) && $m['start'] != ''       ? (int) $m['start'] : false;
-            $between = isset($m['between']) && $m['between'] == '-'  ? true : false;
-            $end = isset($m['end']) && $m['end'] != ''           ? (int) $m['end']   : false;
+            $last = isset($m['last']) && $m['last'] == 'l' ? true : false;
+            $start = isset($m['start']) && $m['start'] != '' ? (int) $m['start'] : false;
+            $between = isset($m['between']) && $m['between'] == '-' ? true : false;
+            $end = isset($m['end']) && $m['end'] != '' ? (int) $m['end']   : false;
             $length = null;
 
             // Fetching last posts?
@@ -877,6 +877,37 @@ class Post extends Model implements FormattableContract
     }
 
     /**
+     * Returns a relative URL for an API route to this post.
+     *
+     * @param string $route Optional route addendum.
+     * @param array $params Optional array of parameters to be added.
+     * @param bool $abs Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getApiUrl($route = "index", array $params = [], $abs = false)
+    {
+        if ($this->reply_to_board_id) {
+            $url_id = $this->reply_to_board_id;
+        } else {
+            $url_id = $this->board_id;
+        }
+
+        return route(
+            implode(array_filter([
+                'api',
+                'board',
+                $route,
+            ]), '.'),
+            [
+                'post_id'=> $url_id,
+                'board'  => $this->board,
+            ] + $params,
+            $abs
+        );
+    }
+
+    /**
      * Returns a relative URL for opening this post.
      *
      * @return string
@@ -897,8 +928,49 @@ class Post extends Model implements FormattableContract
             'post_id' => $url_id,
             'splice' => $splice,
         ], false).$url_hash;
-
     }
+
+    /**
+     * Returns a relative URL for replying to this post.
+     *
+     * @return string
+     */
+    public function getReplyUrl($splice = null)
+    {
+        if ($this->reply_to_board_id) {
+            $url_id = $this->reply_to_board_id;
+        } else {
+            $url_id = $this->board_id;
+        }
+
+        return route('board.thread', [
+            'board_uri' => $this->board_uri,
+            'post_id' => $url_id,
+            'splice' => $splice,
+        ], false)."#reply-{$this->board_id}";
+    }
+
+    /**
+     * Returns a post moderation URL for this post.
+     *
+     * @return string
+     */
+    public function getModUrl($route = "index", array $params = [], $abs = false)
+    {
+        return route(
+            implode(array_filter([
+                'board',
+                'post',
+                $route,
+            ]), '.'),
+            [
+                'board' => $this->board,
+                'post' => $this,
+            ] + $params,
+            $abs
+        );
+    }
+
     /**
      * Determines if the post is made from the client's remote address.
      *
@@ -1847,72 +1919,6 @@ class Post extends Model implements FormattableContract
     }
 
     /**
-     * Fetches a URL for either this thread or an action.
-     *
-     * @param string $action
-     *
-     * @return string
-     */
-    public function url($action = null)
-    {
-        $url = '';
-
-        if (is_null($action)) {
-            if ($this->reply_to_board_id) {
-                $url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}#{$this->board_id}";
-            } else {
-                $url = "/{$this->board_uri}/thread/{$this->board_id}";
-            }
-        } else {
-            $url = "/{$this->board_uri}/post/{$this->board_id}/{$action}";
-        }
-
-        return $url;
-    }
-
-    /**
-     * Fetches a URL for JSON requests that will update this thread or post.
-     *
-     * @param bool $thread If set to FALSE, will only provide a URl for single post (no reply) updates.
-     *
-     * @return string
-     */
-    public function urlJson($thread = true)
-    {
-        $url = '';
-
-        if ($thread) {
-            if ($this->reply_to_board_id) {
-                $url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}.json";
-            } else {
-                $url = "/{$this->board_uri}/thread/{$this->board_id}.json";
-            }
-        } else {
-            $url = "/{$this->board_uri}/post/{$this->board_id}.json";
-        }
-
-        return $url;
-    }
-
-    /**
-     * Fetches a URL for this post, with the reply-to hash.
-     *
-     * @return string
-     */
-    public function urlReply()
-    {
-        $url = '';
-
-        if ($this->reply_to_board_id) {
-            $url = "/{$this->board_uri}/thread/{$this->reply_to_board_id}#reply-{$this->board_id}";
-        } else {
-            $url = "/{$this->board_uri}/thread/{$this->board_id}#reply-{$this->board_id}";
-        }
-
-        return $url;
-    }
-
-    /**
      * Sends a redirect to the post's page.
      *
      * @param string $action
@@ -1921,7 +1927,7 @@ class Post extends Model implements FormattableContract
      */
     public function redirect($action = null)
     {
-        return redirect($this->url($action));
+        return redirect($this->getUrl($action));
     }
 
     /**

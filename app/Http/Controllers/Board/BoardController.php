@@ -20,18 +20,6 @@ use Validator;
 
 class BoardController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Board Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles any requests that point to a directory which is
-    | otherwise unavailable. It will determine if such a board exists and then
-    | distribute content based on what what additional directries are specified
-    | and what information is available to the accessing user.
-    |
-    */
-
     const VIEW_BOARD = 'board';
     const VIEW_CATALOG = 'catalog';
     const VIEW_CONFIG = 'board.config';

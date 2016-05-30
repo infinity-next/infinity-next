@@ -201,7 +201,7 @@ class StaffController extends PanelController
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Board $board, User $user)
+    public function patch(Board $board, User $user)
     {
         if (!$this->user->canEditBoardStaffMember($user, $board)) {
             return abort(403);

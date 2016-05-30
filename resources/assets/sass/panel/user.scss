@@ -1,0 +1,26 @@
+#user-profile {
+
+    .avatar-figure {
+        float: left;
+        margin: 0 1em 1em 0;
+    }
+    .avatar-caption {
+    }
+
+    .username {
+        margin-top: 0;
+    }
+
+    #avatar {
+        height: auto;
+        width: 250px;
+        max-height: 40vh;
+        max-width: 40vh;
+    }
+
+    &::after {
+        content: ' ';
+        display: block;
+        clear: both;
+    }
+}
