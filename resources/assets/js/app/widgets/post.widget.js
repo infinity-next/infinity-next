@@ -80,6 +80,7 @@
             'attachment-image-expandable' : "img.attachment-type-img",
             'attachment-image-audio'      : "img.attachment-type-audio",
             'attachment-image-video'      : "img.attachment-type-video",
+            'attachment-hoverable'        : "li.post-attachment:not(.attachment-expanded) img.attachment-type-img",
             'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
             'attachment-link'    : "a.attachment-link"
         },
@@ -267,13 +268,13 @@
             )
             .on(
                 'mouseover.ib-post',
-                widget.options.selector['attachment-image-expandable'],
+                widget.options.selector['attachment-hoverable'],
                 data,
                 widget.events.attachmentMediaMouseOver
             )
             .on(
                 'mouseout.ib-post',
-                widget.options.selector['attachment-image-expandable'],
+                widget.options.selector['attachment-hoverable'],
                 data,
                 widget.events.attachmentMediaMouseOut
             )
@@ -625,6 +626,10 @@
 
             var $link = $img.parents(widget.options.selector['attachment-link']).first();
             var $preview = $(widget.options.selector['hover-box']);
+
+            if ($link.attr('data-download-url') === undefined) {
+                return true;
+            }
 
             $preview.children().attr('src', $link.attr('data-download-url'));
 
