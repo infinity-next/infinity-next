@@ -51,20 +51,20 @@ nav.pagination {
 
                 @media (max-width: $width-tablet)
                 {
-                    float: none;
-
                     html.js & {
+                        float: none;
                         width: auto;
-                        margin: 1em auto 0 auto;
+                        margin: 0.5em auto 1em auto;
 
-                        html.no-js & {
-                            display: none;
-                        }
                         footer & {
                             margin-top: 0;
                             margin-bottom: 1em;
                         }
                     }
+                }
+
+                html.no-js & {
+                    display: none;
                 }
             }
         }
