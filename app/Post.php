@@ -75,6 +75,8 @@ class Post extends Model implements FormattableContract
         'board_id',
         'reply_to',
         'reply_to_board_id',
+        'reply_count',
+        'reply_file_count',
         'reply_last',
         'bumped_last',
 
@@ -964,8 +966,8 @@ class Post extends Model implements FormattableContract
                 $route,
             ]), '.'),
             [
-                'board' => $this->board,
-                'post' => $this,
+                'board'   => $this->board_uri,
+                'post_id' => $this->board_id,
             ] + $params,
             $abs
         );
@@ -1713,6 +1715,16 @@ class Post extends Model implements FormattableContract
         $ip = new IP($ip);
 
         return $query->where('author_ip', $ip->toSQL());
+    }
+
+    public function scopeWhereBump($query)
+    {
+        return $query->whereNot('email', "sage");
+    }
+
+    public function scopeWhereBumpless($query)
+    {
+        return $query->where('email', "sage");
     }
 
     public function scopeIpString($query, $ip)

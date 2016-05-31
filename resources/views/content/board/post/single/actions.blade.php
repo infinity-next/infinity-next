@@ -117,16 +117,17 @@
                         @endif
                     </li>
                     @endif
-
                 </ul>
 
                 <!-- Broad sweeping user & board actions -->
                 <ul class="post-actions">
-                    @if ($board->canBan($user))
+                    @if ($board->canBan($user) && $postHasIp)
                     @set('postActions', true)
                     <li class="post-action">
                         <a class="post-action-link action-link-ban"
-                            href="{!! $post->getModUrl('ban') !!}">
+                            href="{!! $post->getModUrl('mod', [
+                                'ban'    => 1,
+                            ]) !!}">
                             @lang('board.action.ban')
                         </a>
                     </li>
@@ -136,7 +137,9 @@
                     @set('postActions', true)
                         <li class="post-action">
                             <a class="post-action-link action-link-delete"
-                                href="{!! $post->getModUrl('delete') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                ]) !!}">
                                 @lang('board.action.delete')
                             </a>
                         </li>
@@ -145,7 +148,10 @@
                         @if ($board->canDelete($user))
                         <li class="post-action">
                             <a class="post-action-link action-link-delete-all"
-                                href="{!! $post->getModUrl('delete.all') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                    'scope'  => 'all',
+                                ]) !!}">
                                 @lang('board.action.delete_board')
                             </a>
                         </li>
@@ -154,14 +160,21 @@
                         @if ($board->canBan($user))
                         <li class="post-action">
                             <a class="post-action-link action-link-ban-delete"
-                                href="{!! $post->getModUrl('ban.delete') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                    'ban'    => 1,
+                                ]) !!}">
                                 @lang('board.action.ban_delete')
                             </a>
                         </li>
 
                         <li class="post-action">
                             <a class="post-action-link action-link-ban-delete-all"
-                                href="{!! $post->getModUrl('ban.delete.all') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                    'ban'    => 1,
+                                    'scope'  => 'all',
+                                ]) !!}">
                                 @lang('board.action.ban_delete_board')
                             </a>
                         </li>
@@ -197,7 +210,10 @@
                         @set('postActions', true)
                         <li class="post-action">
                             <a class="post-action-link action-link-delete-global"
-                                href="{!! $post->getModUrl('delete.global') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                    'scope'  => 'global',
+                                ]) !!}">
                                 @lang('board.action.delete_global')
                             </a>
                         </li>
@@ -205,7 +221,11 @@
                         @if ($user->canBanGlobally())
                         <li class="post-action">
                             <a class="post-action-link action-link-ban-delete-global"
-                                href="{!! $post->getModUrl('ban.delete.global') !!}">
+                                href="{!! $post->getModUrl('mod', [
+                                    'delete' => 1,
+                                    'ban'    => 1,
+                                    'scope'  => 'global',
+                                ]) !!}">
                                 @lang('board.action.ban_delete_global')
                             </a>
                         </li>

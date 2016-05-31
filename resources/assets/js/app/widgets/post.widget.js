@@ -424,9 +424,14 @@
                     width = $img.width();
                     $img.data('original-width', width);
                 }
-                if (undefined === (height = $img.data('original-height'))) {
-                    height = $img.height();
-                    $img.data('original-height', height);
+                if (!$img.is(".thumbnail-spoiler")) {
+                    if (undefined === (height = $img.data('original-height'))) {
+                        height = $img.height();
+                        $img.data('original-height', height);
+                    }
+                }
+                else {
+                    height = 0;
                 }
 
                 // We want a number between 320 and 1440, minus 320.

@@ -47,6 +47,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\PostWasModerated::class => [
             \App\Listeners\ReportMarkSuccessful::class,
+            \App\Listeners\ThreadRecount::class,
 
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,

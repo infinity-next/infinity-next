@@ -107,6 +107,28 @@ class RouteServiceProvider extends ServiceProvider
                 ->find($value);
         });
 
+        $router->bind('post_id', function ($value, $route) {
+            $board = $route->getParameter('board');
+
+            if (!($board instanceof Board)) {
+                $board = $this->app->make(Board::class);
+            }
+            if (is_numeric($value) && $board instanceof Board) {
+                $post = $board->getThreadByBoardId($value);
+
+                if ($post instanceof Post && $post->exists) {
+                    $route->setParameter('post', $post);
+                    $route->forgetParameter('post_id', $post);
+
+                    $this->app->singleton(Post::class, function ($app) use ($post) {
+                        return $post;
+                    });
+
+                    return $post;
+                }
+            }
+        });
+
         $router->bind('post', function ($value, $route) {
             $board = $route->getParameter('board');
 

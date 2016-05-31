@@ -27,6 +27,10 @@ class HistoryController extends Controller
             return abort(403);
         }
 
+        if (is_null($post->author_ip)) {
+            return abort(400);
+        }
+
         $posts = $board->posts()
             ->with('op')
             ->withEverything()

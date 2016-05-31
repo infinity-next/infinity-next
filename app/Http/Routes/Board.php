@@ -25,25 +25,13 @@ if (env('LEGACY_ROUTES', false)) {
 /**
  * Post Management
  */
-Route::group(['as' => 'post.', 'prefix' => 'post/{post}',], function () {
+Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     // history
     Route::get('history', ['as' => 'history', 'uses' => 'HistoryController@list',]);
 
     // mod (delete, ban)
-    Route::get('ban',               ['as' => 'ban', 'uses' => 'PostController@moderate',]);
-    Route::put('ban',               ['as' => 'ban.put', 'uses' => 'PostController@issue',]);
-    Route::get('delete',            ['as' => 'delete', 'uses' => 'PostController@moderate',]);
-    Route::put('delete',            ['as' => 'delete.put', 'uses' => 'PostController@issue',]);
-    Route::get('delete/all',        ['as' => 'delete.all', 'uses' => 'PostController@moderate',]);
-    Route::put('delete/all',        ['as' => 'delete.all.put', 'uses' => 'PostController@issue',]);
-    Route::get('delete/global',     ['as' => 'delete.global', 'uses' => 'PostController@moderate',]);
-    Route::put('delete/global',     ['as' => 'delete.global.put', 'uses' => 'PostController@issue',]);
-    Route::get('ban/delete',        ['as' => 'ban.delete', 'uses' => 'PostController@moderate',]);
-    Route::put('ban/delete',        ['as' => 'ban.delete.put', 'uses' => 'PostController@issue',]);
-    Route::get('ban/delete/all',    ['as' => 'ban.delete.all', 'uses' => 'PostController@moderate',]);
-    Route::put('ban/delete/all',    ['as' => 'ban.delete.all.put', 'uses' => 'PostController@issue',]);
-    Route::get('ban/delete/global', ['as' => 'ban.delete.global', 'uses' => 'PostController@moderate',]);
-    Route::put('ban/delete/global', ['as' => 'ban.delete.global.put', 'uses' => 'PostController@issue',]);
+    Route::get('moderate', ['as' => 'mod', 'uses' => 'PostController@moderate',]);
+    Route::post('moderate', ['as' => 'mod.issue', 'uses' => 'PostController@issue',]);
 
     // report
     Route::get('report', ['as' => 'report', 'uses' => 'PostController@report']);
