@@ -399,15 +399,7 @@ class Post extends Model implements FormattableContract
      */
     public function clearPostHTMLCache()
     {
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                break;
-
-            default:
-                Cache::tags(["post_{$this->post_id}"])->flush();
-                break;
-        }
+        Cache::tags(["post_{$this->post_id}"])->flush();
     }
 
     /**
@@ -416,33 +408,11 @@ class Post extends Model implements FormattableContract
     public function clearThreadCache()
     {
         // If this post is a reply to a thread
-        if ($this->reply_to_board_id) {
-            switch (env('CACHE_DRIVER')) {
-                case 'file':
-                case 'database':
-                    Cache::forget("board.{$this->board_uri}.thread.{$this->reply_to_board_id}");
-                    break;
-
-                default:
-                    Cache::tags(["board.{$this->board_uri}", 'threads'])->forget("board.{$this->board_uri}.thread.{$this->reply_to_board_id}");
-                    break;
-            }
-        }
-
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                Cache::forget("board.{$this->board_uri}.thread.{$this->board_id}");
-                break;
-
-            default:
-                Cache::tags(["board.{$this->board_uri}", 'threads'])->forget("board.{$this->board_uri}.thread.{$this->board_id}");
-                break;
-        }
-
-        if (env('APP_VARNISH')) {
-            Acetone::purge("/{$this->board_uri}/thread/{$this->reply_to_board_id}");
-        }
+        Cache::tags(["board.{$this->board_uri}", 'threads'])->forget(
+            $this->reply_to_board_id
+            ? "board.{$this->board_uri}.thread.{$this->reply_to_board_id}"
+            : "board.{$this->board_uri}.thread.{$this->board_id}"
+        );
     }
 
     /**
@@ -481,7 +451,7 @@ class Post extends Model implements FormattableContract
         }
 
         $hashParts = [];
-        $hashParts[] = env('APP_KEY');
+        $hashParts[] = config('app.key');
         $hashParts[] = $this->board_uri;
         $hashParts[] = $this->reply_to_board_id ?: $this->board_id;
         $hashParts[] = $this->author_ip;
@@ -528,7 +498,7 @@ class Post extends Model implements FormattableContract
         $hashParts = [];
 
         if ((bool) $password) {
-            $hashParts[] = env('APP_KEY');
+            $hashParts[] = config('app.key');
             $hashParts[] = $this->board_uri;
             $hashParts[] = $password;
             $hashParts[] = $this->board_id;
@@ -1472,16 +1442,7 @@ class Post extends Model implements FormattableContract
             return $threads;
         };
 
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                $threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-
-            default:
-                $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-        }
+        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 
         return $threads;
     }
@@ -1926,17 +1887,9 @@ class Post extends Model implements FormattableContract
             $rememberTags[] = 'preview_post';
             $rememberTimer -= 20;
         }
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                break;
 
-            default:
-                return Cache::tags($rememberTags)
-                    ->remember($rememberKey, $rememberTimer, $rememberClosure);
-        }
-
-        return $rememberClosure();
+        return Cache::tags($rememberTags)
+            ->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 
     /**
@@ -2172,16 +2125,8 @@ class Post extends Model implements FormattableContract
             return $thread;
         };
 
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                $thread = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-
-            default:
-                $thread = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-        }
+        $thread = Cache::tags($rememberTags)
+            ->remember($rememberKey, $rememberTimer, $rememberClosure);
 
         if (!is_null($uri)) {
             return $thread->getReplySplice($uri);

@@ -152,7 +152,6 @@ class SettingManager
                         $popularBoards->push(new Board($popularBoard));
                     }
 
-
                     $recentBoards = Board::where('posts_total', '>', 0)
                         ->whereNotNull('last_post_at')
                         ->wherePublic()

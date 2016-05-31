@@ -383,33 +383,7 @@ class Board extends Model
     {
         Cache::forget("board.{$this->board_uri}.catalog");
         Cache::forget("board.{$this->board_uri}.pages");
-
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-                for ($i = 1; $i <= $this->getPageCount() * 2; ++$i) {
-                    Cache::forget("board.{$this->board_uri}.page.{$i}");
-                }
-                break;
-
-            case 'database':
-                DB::table('cache')
-                    ->where('key', 'like', "%board.{$this->board_uri}.page.%")
-                    ->delete();
-                break;
-
-            default:
-                Cache::tags("board.{$this->board_uri}.pages")->flush();
-                break;
-        }
-
-        if (env('APP_VARNISH')) {
-            Acetone::purge("/{$this->board_uri}");
-            Acetone::purge("/{$this->board_uri}/catalog");
-
-            for ($i = 1; $i <= $this->getPageCount() * 2; ++$i) {
-                Acetone::purge("/{$this->board_uri}/{$i}");
-            }
-        }
+        Cache::tags("board.{$this->board_uri}.pages")->flush();
     }
 
     /**
@@ -1338,16 +1312,7 @@ class Board extends Model
             return $threads;
         };
 
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                $threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-
-            default:
-                $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-        }
+        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 
         return $threads;
     }
@@ -1394,16 +1359,7 @@ class Board extends Model
             return $threads;
         };
 
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-            case 'database':
-                $threads = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-
-            default:
-                $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
-                break;
-        }
+        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
 
         return $threads;
     }

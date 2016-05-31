@@ -797,24 +797,11 @@ trait PermissionUser
      */
     public function forgetPermissions()
     {
+        // Delete all cache rows
         RoleCache::where('user_id', $this->isAnonymous() ? null : $this->user_id)
             ->delete();
 
-        switch (env('CACHE_DRIVER')) {
-            case 'file':
-                Cache::forget("user.{$this->user_id}.permissions");
-                break;
-
-            case 'database':
-                DB::table('cache')
-                    ->where('key', 'like', "%user.{$this->user_id}.%")
-                    ->delete();
-                break;
-
-            default:
-                Cache::tags("user.{$this->user_id}")->flush();
-                break;
-        }
+        Cache::tags("user.{$this->user_id}")->flush();
     }
 
     /**
