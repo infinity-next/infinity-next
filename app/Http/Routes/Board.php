@@ -35,9 +35,9 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
 
     // report
     Route::get('report', ['as' => 'report', 'uses' => 'PostController@report']);
-    Route::put('report', ['as' => 'put.report', 'uses' => 'PostController@flag']);
+    Route::post('report', ['as' => 'put.report', 'uses' => 'PostController@flag']);
     Route::get('report/global', ['as' => 'report.global', 'uses' => 'PostController@report']);
-    Route::put('report/global', ['as' => 'put.report.global', 'uses' => 'PostController@flag']);
+    Route::post('report/global', ['as' => 'put.report.global', 'uses' => 'PostController@flag']);
 
     // edit
     Route::get('edit', ['as' => 'edit', 'uses' => 'PostController@edit']);

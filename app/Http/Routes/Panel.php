@@ -126,7 +126,7 @@ Route::group(['namespace' => 'Boards',], function () {
     /**
      * Reports
      */
-    Route::group(['as' => 'reports.', 'prefix' => 'reports/{board?}'], function () {
+    Route::group(['as' => 'reports.', 'prefix' => 'reports'], function () {
         Route::get('{report}/dismiss', ['as' => 'dismiss', 'uses' => 'ReportsController@getDismiss']);
         Route::get('{report}/dismiss-ip', ['as' => 'dismiss.ip', 'uses' => 'ReportsController@getDismissIp']);
         Route::get('{post}/dismiss-post', ['as' => 'dismiss.post', 'uses' => 'ReportsController@getDismissPost']);
@@ -134,7 +134,7 @@ Route::group(['namespace' => 'Boards',], function () {
         Route::get('{post}/promote-post', ['as' => 'promote.post', 'uses' => 'ReportsController@getPromotePost']);
         Route::get('{report}/demote', ['as' => 'demote', 'uses' => 'ReportsController@getDemote']);
         Route::get('{post}/demote-post', ['as' => 'demote.post', 'uses' => 'ReportsController@getDemotePost']);
-        Route::get('', ['as' => 'index', 'uses' => 'ReportsController@getIndex']);
+        Route::get('/', ['as' => 'index', 'uses' => 'ReportsController@getIndex']);
     });
 
     Route::group(['prefix' => 'board/{board}', 'as' => 'board.',], function () {

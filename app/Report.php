@@ -112,6 +112,55 @@ class Report extends Model
     }
 
     /**
+     * Returns a fully qualified URL.
+     *
+     * @param  string  $route  Optional route addendum.
+     * @param  array  $params  Optional array of parameters to be added.
+     * @param  bool  $abs  Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getUrl($route = "index", array $params = [], $abs = true)
+    {
+        return route(
+            implode(array_filter([
+                "panel",
+                "reports",
+                $route,
+            ]), '.'),
+            [
+                'report' => $this,
+            ] + $params,
+            true
+        );
+    }
+
+    /**
+     * Returns a fully qualified URL for post bulk actions.
+     *
+     * @param  string  $route  Optional route addendum.
+     * @param  array  $params  Optional array of parameters to be added.
+     * @param  bool  $abs  Options indicator if the URL is to be absolute.
+     *
+     * @return string
+     */
+    public function getPostUrl($route = "index", array $params = [], $abs = true)
+    {
+        return route(
+            implode(array_filter([
+                "panel",
+                "reports",
+                $route,
+                "post",
+            ]), '.'),
+            [
+                'post' => $this->post,
+            ] + $params,
+            true
+        );
+    }
+
+    /**
      * Determines if the post has been Demoted.
      *
      * @return bool
@@ -217,13 +266,13 @@ class Report extends Model
     public function scopeWhereResponsibleFor($query, PermissionUser $user)
     {
         return $query->where(function ($query) use ($user) {
+            $query->whereIn('board_uri', $user->canInBoards('board.reports'));
+
             if (!$user->can('site.reports')) {
                 $query->where('global', false);
             } else {
                 $query->orWhere('global', true);
             }
-
-            $query->whereIn('board_uri', $user->canInBoards('board.reports'));
         });
     }
 }

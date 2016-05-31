@@ -1,11 +1,13 @@
-main#banned {
-    figure.error-figure {
+#banned {
+    .error-figure {
         margin-left: 1em;
         margin-right: 1em;
         float: right;
     }
-    img.error-image {
+    .error-image {
+        height: auto;
+        width: auto;
         max-height: 250px;
-        max-widht: 250px;
+        max-width: 250px;
     }
 }

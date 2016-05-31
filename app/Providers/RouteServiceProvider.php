@@ -136,7 +136,7 @@ class RouteServiceProvider extends ServiceProvider
                 $board = $this->app->make(Board::class);
             }
             if (is_numeric($value) && $board instanceof Board) {
-                $post = $board->getThreadByBoardId($value);
+                $post = Post::find($value);
 
                 if ($post instanceof Post && $post->exists) {
                     $route->setParameter('post', $post);

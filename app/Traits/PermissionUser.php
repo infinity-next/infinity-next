@@ -609,7 +609,7 @@ trait PermissionUser
      *
      * @return bool
      */
-    public function canReportGlobally(Post $post)
+    public function canReportGlobally()
     {
         return $this->can('site.post.report');
     }
@@ -1174,16 +1174,6 @@ trait PermissionUser
         }
 
         return "<a href=\"{$this->getUserURL()}\" class=\"username\">{$this->username}</a>";
-    }
-
-    /**
-     * Returns a link to the user's public profile page.
-     *
-     * @return string URL
-     */
-    public function getUserURL()
-    {
-        return "/cp/user/{$this->username}.{$this->user_id}/";
     }
 
     /**
