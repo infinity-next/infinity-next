@@ -255,7 +255,7 @@ class Ban extends Model
                 $route,
             ]), '.'),
             [
-                'board' => $this->isGlobal() ? null : $this->board,
+                'board' => $this->isGlobal() ? false : $this->board,
                 'ban'   => $this,
             ] + $params,
             true

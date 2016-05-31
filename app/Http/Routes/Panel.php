@@ -55,8 +55,7 @@ Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],]
         Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal.store', 'uses' => 'BansController@putAppeal']);
         Route::get('board/{board}', ['as' => 'board.ban', 'uses' => 'BansController@getBoardIndex']);
 
-        Route::get('global/{ban}', ['as' => 'site.ban.create', 'uses' => 'BansController@getBan']);
-        Route::get('global', ['as' => 'site.ban', 'uses' => 'BansController@getGlobalIndex']);
+        Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getGlobalBan']);
         Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
     });
 

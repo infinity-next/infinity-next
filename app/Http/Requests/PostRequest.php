@@ -15,6 +15,17 @@ use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Cache;
 
+/**
+ * Handles a new post.
+ *
+ * @category   Request
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class PostRequest extends Request implements ApiContract
 {
     use ApiController;
@@ -158,7 +169,7 @@ class PostRequest extends Request implements ApiContract
     public function forbiddenResponse()
     {
         if ($this->ban) {
-            $url = $this->ban->getRedirectUrl();
+            $url = $this->ban->getUrl();
 
             if ($this->ajax() || $this->wantsJson()) {
                 return $this->apiResponse(['redirect' => $url]);

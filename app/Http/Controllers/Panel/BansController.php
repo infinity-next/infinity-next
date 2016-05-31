@@ -67,12 +67,12 @@ class BansController extends PanelController
      *
      * Will also update its "seen" if it was not seen prior.
      *
-     * @param  \App\Board  $board
      * @param  \App\Ban    $ban
+     * @param  \App\Board  $board  Optional.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getBan(Board $board, Ban $ban)
+    public function getGlobalBan(Ban $ban)
     {
         if (!$ban->canView($this->user)) {
             return abort(403);
@@ -86,10 +86,7 @@ class BansController extends PanelController
             $seeing = true;
         }
 
-        $ban->setRelation('board', $board);
-
         return $this->view(static::VIEW_BAN, [
-            'board' => $board,
             'ban' => $ban,
             'seeing' => $seeing,
         ]);

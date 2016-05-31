@@ -290,10 +290,13 @@ class PostController extends Controller
                     'time' => $banLengthStr,
                 ]);
             }
-        }
 
-        Event::fire(new PostWasBanned($post));
-        Event::fire(new PostWasModerated($post, $this->user));
+            Event::fire(new PostWasBanned($post));
+
+            if (!$delete) {
+                Event::fire(new PostWasModerated($post, $this->user));
+            }
+        }
 
         if ($delete) {
             return redirect($board->getUrl());
