@@ -2,15 +2,28 @@
 
 namespace App\Providers;
 
+use App\Ban;
 use App\Board;
 use App\FileAttachment;
 use App\Page;
 use App\Post;
+use App\Report;
 use App\Role;
 use App\User;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
+/**
+ * Complex HTTP/S routing provider.
+ *
+ * @category   Provider
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.6.0
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -63,14 +76,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $router->model('attachment', '\App\FileAttachment');
-        $router->model('ban', '\App\Ban');
-        $router->model('board', '\App\Board');
-        $router->model('page', '\App\Page');
-        $router->model('post', '\App\Post');
-        $router->model('user', '\App\User');
-        $router->model('report', '\App\Report');
-        $router->model('role', '\App\Role');
+        $router->model('attachment', FileAttachment::class);
+        $router->model('ban',        Ban::class);
+        $router->model('board',      Board::class);
+        $router->model('page',       Page::class);
+        $router->model('post',       Post::class);
+        $router->model('user',       User::class);
+        $router->model('report',     Report::class);
+        $router->model('role',       Role::class);
 
         $router->bind('page_title', function ($value, $route) {
             $board = $route->getParameter('board');
@@ -82,10 +95,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $router->bind('board', function ($value, $route) {
-            $board = Board::getBoardForRouter(
-                $this->app,
-                $value
-            );
+            $board = Board::getBoardWithEverything($value);
 
             if ($board instanceof Board && $board->exists) {
                 $board->applicationSingleton = true;
@@ -170,14 +180,14 @@ class RouteServiceProvider extends ServiceProvider
          * Media distribution
          */
         $router->group($this->routeGroup['media'], function ($router) {
-            require app_path('Http/Routes/Media.php');
+            require __DIR__.'/../Http/Routes/Media.php';
         });
 
         /**
          * API
          */
         $router->group($this->routeGroup['api'], function ($router) {
-            require app_path('Http/Routes/API.php');
+            require __DIR__.'/../Http/Routes/API.php';
         });
 
         /**
@@ -190,7 +200,7 @@ class RouteServiceProvider extends ServiceProvider
         }
 
         $router->group($this->routeGroup['panel'], function ($router) {
-            require app_path('Http/Routes/Panel.php');
+            require __DIR__.'/../Http/Routes/Panel.php';
         });
 
         /**
@@ -205,19 +215,19 @@ class RouteServiceProvider extends ServiceProvider
              * Root-level content requests
              */
             $router->group($this->routeGroup['content'], function ($router) {
-                require app_path('Http/Routes/Content.php');
+                require __DIR__.'/../Http/Routes/Content.php';
             });
 
             /**
              * Boards
              */
             $router->group($this->routeGroup['board'], function ($router) {
-                require app_path('Http/Routes/Board.php');
+                require __DIR__.'/../Http/Routes/Board.php';
             });
 
             // This has to be dead last or the welcome controller starts
             // getting greedy.
-            require app_path('Http/Routes/Web.php');
+            require __DIR__.'/../Http/Routes/Web.php';
         });
     }
 }

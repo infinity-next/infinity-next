@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Content;
 
 use App\Board;
 use App\Contracts\ApiController as ApiContract;
-use App\Http\Controllers\BoardlistController as ParentController;
+use App\Http\Controllers\API\ApiController;
+use App\Http\Controllers\Content\BoardlistController as ParentController;
 use Input;
 use Request;
 

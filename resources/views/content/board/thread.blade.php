@@ -1,7 +1,7 @@
 {!! $thread->toHTML(
-		false,
-		isset($multiboard) ? $multiboard : false,
-		false
+        false,
+        isset($multiboard) ? $multiboard : false,
+        false
 ) !!}
 
 @if (!$thread->reply_to)
@@ -10,27 +10,27 @@
 <div class="thread-replies-omitted">
 {{-- Normal Reply Count --}}
 <span class="thread-replies-count">{{ Lang::get(
-	$thread->reply_file_count > 0 ? 'board.omitted.text.both' : 'board.omitted.text.only',
-	[
-		'text_posts' => Lang::choice(
-			'board.omitted.count.replies',
-			$thread->reply_count - $thread->getReplyCount(),
-			[
-				'count' => $thread->reply_count - $thread->getReplyCount()
-			]
-		),
-		'text_files' => Lang::choice(
-			'board.omitted.count.files',
-			$thread->reply_file_count - $thread->getReplyFileCount(),
-			[
-				'count' => $thread->reply_file_count - $thread->getReplyFileCount()
-			]
-		),
-	]
+    $thread->reply_file_count > 0 ? 'board.omitted.text.both' : 'board.omitted.text.only',
+    [
+        'text_posts' => Lang::choice(
+            'board.omitted.count.replies',
+            $thread->reply_count - $thread->getReplyCount(),
+            [
+                'count' => $thread->reply_count - $thread->getReplyCount()
+            ]
+        ),
+        'text_files' => Lang::choice(
+            'board.omitted.count.files',
+            $thread->reply_file_count - $thread->getReplyFileCount(),
+            [
+                'count' => $thread->reply_file_count - $thread->getReplyFileCount()
+            ]
+        ),
+    ]
 ) }}</span>
 {{-- JavaScript Expand Inline
 <a class="thread-replies-expand no-mobile require-js" href="#">{{ Lang::get(
-	'board.omitted.show.inline'
+    'board.omitted.show.inline'
 ) }}</a> --}}
 </div>
 @endif
@@ -38,22 +38,22 @@
 @if (!isset($catalog) || !$catalog)
 <ul class="thread-replies">
 @foreach ($thread->getReplies() as $reply)
-	<li class="thread-reply">
-		<article class="reply">
-			@endspaceless
-			{!! $reply->toHTML(
-					false,
-					isset($multiboard) ? $multiboard : false,
-					false
-			) !!}
-			@spaceless
-		</article>
-	</li>
-	@endforeach
-	
-	@if (isset($updater) && $updater === true)
-	@include('widgets.thread-autoupdater')
-	@endif
+    <li class="thread-reply">
+        <article class="reply">
+            @endspaceless
+            {!! $reply->toHTML(
+                    false,
+                    isset($multiboard) ? $multiboard : false,
+                    false
+            ) !!}
+            @spaceless
+        </article>
+    </li>
+    @endforeach
+
+    @if (isset($updater) && $updater === true)
+    @include('widgets.thread-autoupdater')
+    @endif
 </ul>
 @endif
 @endspaceless

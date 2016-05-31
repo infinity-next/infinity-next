@@ -7,6 +7,6 @@
 
 @section('content')
 <main class="board-landing" id="landing">
-	<p class="landing-message"><a href="{{ $url }}">{{ $message }}</a></p>
+    <p class="landing-message"><a href="{{ $url }}">{{ $message }}</a></p>
 </main>
 @stop

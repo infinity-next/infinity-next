@@ -735,6 +735,9 @@ class Board extends Model
     public static function getFeatured($count = 5)
     {
         return static::whereNotNull('featured_at')
+            ->with(['assets' => function ($query) {
+                $query->whereBoardIcon();
+            }])
             ->orderBy('featured_at', 'desc')
             ->limit(6)
             ->get();
@@ -1179,16 +1182,15 @@ class Board extends Model
      *
      * @static
      *
-     * @param App    $app
-     * @param string $board_ur
+     * @param string $board_uri
      *
      * @return \App\Board
      */
-    public static function getBoardForRouter($app, $board_uri)
+    public static function getBoardWithEverything($board_uri)
     {
         $rememberTimer = 60;
         $rememberKey = "board.{$board_uri}";
-        $rememberClosure = function () use ($app, $board_uri) {
+        $rememberClosure = function () use ($board_uri) {
             $board = static::find($board_uri);
 
             if ($board instanceof Board && $board->exists) {

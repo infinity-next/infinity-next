@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "predis/predis": "~1.1@dev",
+        "predis/predis": "~1.0",
         "doctrine/dbal": "~2.3",
 
         "stripe/stripe-php": "2.*",

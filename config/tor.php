@@ -29,7 +29,7 @@ return [
     | Supported: true, false
     |
     */
-    'request' => defined('INFINITY_NEXT_TOR') && INFINITY_NEXT_TOR,
+    'request' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false),
 
     'url' => env('APP_URL_HS'),
 ];

@@ -3,7 +3,7 @@
 /**
  * Content API
  */
-Route::group([], function () {
+Route::group(['as' => 'site', 'namespace' => "Content",], function () {
     // boardlist get
     Route::get('board-details.json', 'BoardlistController@getDetails');
     // boardlist search
@@ -33,13 +33,13 @@ Route::group(['as' => 'board.', 'prefix' => '{board}', 'namespace' => "Board",],
     Route::put('thread.json', ['as' => 'thread.put', 'uses' => 'BoardController@putThread']);
 
     // Put reply to thread.
-    Route::put('thread/{post}.json', ['as' => 'thread.reply', 'uses' => 'BoardController@putThread']);
+    Route::put('thread/{post_id}.json', ['as' => 'thread.reply', 'uses' => 'BoardController@putThread']);
 
     // Get single thread.
-    Route::get('thread/{post}.json', ['as' => 'thread', 'uses' => 'BoardController@getThread']);
+    Route::get('thread/{post_id}.json', ['as' => 'thread', 'uses' => 'BoardController@getThread']);
 
     // Get single post.
-    Route::get('post/{post}.json', ['as' => 'post', 'uses' => 'BoardController@getPost']);
+    Route::get('post/{post_id}.json', ['as' => 'post', 'uses' => 'BoardController@getPost']);
 });
 
 /*
@@ -57,6 +57,6 @@ if (env('LEGACY_ROUTES', false)) {
         Route::any('{board}/threads.json', 'BoardController@getThreads');
 
         // Get single thread.
-        Route::get('{board}/res/{post}.json', 'BoardController@getThread');
+        Route::get('{board}/res/{post_id}.json', 'BoardController@getThread');
     });
 }

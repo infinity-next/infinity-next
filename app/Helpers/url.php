@@ -39,7 +39,7 @@ if (!function_exists('is_hidden_service')) {
      */
     function is_hidden_service()
     {
-        return app(Request::class)->server('HTTP_HOST') === env('APP_URL_HS', false);
+        return config('tor.request', false);
     }
 }
 

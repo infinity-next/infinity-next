@@ -1432,16 +1432,16 @@ class Post extends Model implements FormattableContract
         $rememberTimer = 30;
         $rememberKey = "site.overboard.page.{$page}";
         $rememberClosure = function () use ($page, $postsPerPage) {
-            $threads = static::with('board', 'board.settings', 'board.assets')
+            $boards  = [];
+            $threads = static::whereHas('board', function ($query) {
+                    $query->where('is_indexed', true);
+                    $query->where('is_overboard', true);
+                })
                 ->op()
                 ->withEverything()
                 ->with(['replies' => function ($query) {
                     $query->forIndex();
                 }])
-                ->whereHas('board', function ($query) {
-                    $query->where('is_indexed', true);
-                    $query->where('is_overboard', true);
-                })
                 ->orderBy('bumped_last', 'desc')
                 ->skip($postsPerPage * ($page - 1))
                 ->take($postsPerPage)
@@ -1450,12 +1450,21 @@ class Post extends Model implements FormattableContract
             // The way that replies are fetched forIndex pulls them in reverse order.
             // Fix that.
             foreach ($threads as $thread) {
+                if (!isset($boards[$thread->board_uri])) {
+                    $boards[$thread->board_uri] = Board::getBoardWithEverything($thread->board_uri);
+                }
+
+                $thread->setRelation('board', $boards[$thread->board_uri]);
                 $replyTake = $thread->stickied_at ? 1 : 5;
 
                 $thread->body_parsed = $thread->getBodyFormatted();
                 $thread->replies = $thread->replies
                     ->sortBy('post_id')
                     ->splice(-$replyTake, $replyTake);
+
+                $thread->replies->each(function($reply) use ($boards) {
+                    $reply->setRelation('board', $boards[$reply->board_uri]);
+                });
 
                 $thread->prepareForCache();
             }

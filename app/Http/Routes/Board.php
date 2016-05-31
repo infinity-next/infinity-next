@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * Board, threads, and accessory pages.
+ *
+ * @category   Routes
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.6.0
+ */
+
+/**
  * Legacy
  */
 if (env('LEGACY_ROUTES', false)) {
@@ -78,16 +90,16 @@ Route::group(['as' => 'thread',], function () {
     Route::put('thread', ['as' => '.put', 'uses' => 'BoardController@putThread',]);
 
     // reply put
-    Route::put('thread/{post}', ['as' => '.reply', 'uses' => 'BoardController@putThread',]);
+    Route::put('thread/{post_id}', ['as' => '.reply', 'uses' => 'BoardController@putThread',]);
 
     // submission success (redirect to created post)
-    Route::get('redirect/{post}', ['as' => '.redirect', 'uses' => 'BoardController@getThreadRedirect', ]);
+    Route::get('redirect/{post_id}', ['as' => '.redirect', 'uses' => 'BoardController@getThreadRedirect', ]);
 
     // post shortcut
-    Route::get('post/{post}', ['as' => '.goto', 'uses' => 'BoardController@getThread',]);
+    Route::get('post/{post_id}', ['as' => '.goto', 'uses' => 'BoardController@getThread',]);
 
     // thread get
-    Route::get('thread/{post}/{splice?}', ['uses' => 'BoardController@getThread',]);
+    Route::get('thread/{post_id}/{splice?}', ['uses' => 'BoardController@getThread',]);
 });
 
 // stylesheet
