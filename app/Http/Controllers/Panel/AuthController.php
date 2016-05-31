@@ -189,7 +189,7 @@ class AuthController extends PanelController
 
         Session::flush();
 
-        Cookie::queue(Cookie::forget('laravel_session'));
+        Cookie::queue(Cookie::forget(config('session.cookie')));
         Cookie::queue(Cookie::forget('XSRF-TOKEN'));
 
         return redirect($this->redirectPath(), 302);

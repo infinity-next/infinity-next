@@ -35,7 +35,7 @@ Route::group(['prefix' => 'password', 'as' => 'password',], function() {
     // password update
     Route::post('/',['as' => '.update', 'uses' => 'PasswordController@postIndex',]);
     // reset
-    Route::get('reset', ['as' => '.reset', 'uses' => 'PasswordController@getReset',]);
+    Route::get('reset/{token?}', ['as' => '.reset', 'uses' => 'PasswordController@getReset',]);
     // reset attempt
     Route::post('reset',['as' => '.reset.attempt', 'uses' => 'PasswordController@postReset',]);
     // email

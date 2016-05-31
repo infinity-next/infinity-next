@@ -114,7 +114,7 @@ class PasswordController extends PanelController
     public function getReset($token = null)
     {
         if (is_null($token)) {
-            return abort(404);
+            return abort(400);
         }
 
         return $this->view(static::VIEW_RESET)->with('token', $token);

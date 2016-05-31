@@ -30,7 +30,7 @@ abstract class PanelController extends Controller
      */
     public function templateOptions(array $options = array())
     {
-        if (is_null(Cookie::get('laravel_session'))) {
+        if (is_null(Cookie::get(config('session.cookie')))) {
             if (isset($options['messages']['xsrf-token-missing'])) {
                 unset($options['messages']['xsrf-token-missing']);
             }
