@@ -52,6 +52,7 @@ class BoardsController extends PanelController
     public function getAssets()
     {
         $boards = $this->user->getBoardsWithAssetRights();
+        $boards->load('creator', 'operator');
 
         return $this->view(static::VIEW_DASHBOARD, [
             'boards' => $boards,
@@ -67,6 +68,7 @@ class BoardsController extends PanelController
     public function getConfig()
     {
         $boards = $this->user->getBoardsWithConfigRights();
+        $boards->load('creator', 'operator');
 
         return $this->view(static::VIEW_DASHBOARD, [
             'boards' => $boards,
@@ -82,6 +84,7 @@ class BoardsController extends PanelController
     public function getStaff()
     {
         $boards = $this->user->getBoardsWithStaffRights();
+        $boards->load('creator', 'operator');
 
         return $this->view(static::VIEW_DASHBOARD, [
             'boards' => $boards,

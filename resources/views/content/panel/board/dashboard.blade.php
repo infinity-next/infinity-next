@@ -34,8 +34,8 @@
                         ]
                     )
                 }}}</td>
-                <td><a href="{{{ url("/cp/user/{$board->operated_by_username}.{$board->operated_by}/") }}}">{{{ $board->operated_by_username }}}</a></td>
-                <td><a href="{{{ url("/cp/user/{$board->created_by_username}.{$board->created_by}/") }}}">{{{ $board->created_by_username }}}</a></td>
+                <td><a href="{{ $board->operator->getUrl() }}">{{ $board->operated_by_username }}</a></td>
+                <td><a href="{{ $board->creator->getUrl() }}">{{ $board->created_by_username }}</a></td>
             </tr>
             @endforeach
         </tbody>
