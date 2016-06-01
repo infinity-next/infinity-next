@@ -140,7 +140,7 @@ return [
         'deleted'    => "Deleted",
         'history'    => "View author history",
 
-        'catalog_stats' => "R: :reply_count / F: :file_count / P: :page",
+        'catalog_stats' => "{0}R: :reply_count / F: :file_count|{1}R: :reply_count / F: :file_count / P: :page",
 
         // Translator's Note:
         // This is a bit silly. It just means the poster

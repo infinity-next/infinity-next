@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Content;
 
 use App\Contracts\ApiController as ApiContract;
-use App\Http\Controllers\MultiboardController as ParentController;
+use App\Http\Controllers\API\ApiController;
+use App\Http\Controllers\Content\MultiboardController as ParentController;
 use Input;
 
 /**
@@ -21,8 +22,8 @@ class MultiboardController extends ParentController implements ApiContract
 {
     use ApiController;
 
-    public function getOverboard()
+    public function getOverboard($worksafe = null, $boards = null, $catalog = false)
     {
-        return $this->getThreads(max(1, Input::get('page', 1)));
+        return $this->prepareThreads($worksafe, $boards, $catalog);
     }
 }

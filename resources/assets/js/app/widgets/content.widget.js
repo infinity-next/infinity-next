@@ -32,6 +32,11 @@
         $("body").toggleClass('nsfw-filtered', sfw);
         $("body").toggleClass('nsfw-allowed', !sfw);
 
+        if (sfw) {
+            var $ob = $(this.options.selector['overboard-nav']);
+            $ob.attr('href', $ob.attr('href') + '/sfw');
+        }
+
         // var $pageStylesheet = $(widget.defaults.selector['page-stylesheet']);
         // $pageStylesheet.attr('href', sfw
         //     ? $pageStylesheet.data('empty')
@@ -55,7 +60,8 @@
         nsfw_skin : "/static/css/skins/next-yotsuba.css",
 
         selector : {
-            'page-stylesheet' : "#page-stylesheet"
+            'page-stylesheet' : "#page-stylesheet",
+            'overboard-nav'   : ".item-recent_posts .gnav-link"
         }
     };
 

@@ -1304,7 +1304,6 @@ class Board extends Model
                 $thread->setRelation('replies', collect());
 
                 $thread->page_number = floor($threadIndex / $postsPerPage) + 1;
-                $thread->reply_files = '?';
 
                 $thread->prepareForCache();
             }

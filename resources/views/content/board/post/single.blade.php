@@ -5,11 +5,14 @@
 
     @if (isset($catalog) && $catalog === true)
         <a class="catalog-open" href="{!! $post->getUrl() !!}" data-instant>
-            {{ Lang::trans('board.detail.catalog_stats', [
-                'reply_count' => $post->reply_count,
-                'file_count'  => $post->reply_file_count,
-                'page'        => $post->page_number,
-            ]) }}
+            {{ Lang::choice('board.detail.catalog_stats',
+                isset($post->page_number) ? 1 : 0,
+                [
+                    'reply_count' => $post->reply_count,
+                    'file_count'  => $post->reply_file_count,
+                    'page'        => $post->page_number,
+                ]
+            ) }}
         </a>
 
         @if ($post->attachments->count() > 0)

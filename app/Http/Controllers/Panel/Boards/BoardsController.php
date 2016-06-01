@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
+use App\User;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Http\Request;
 use Lang;
@@ -32,6 +33,21 @@ class BoardsController extends PanelController
      * @var string
      */
     public static $navSecondary = 'nav.panel.board';
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
+    protected function createUser(array $data)
+    {
+        return User::create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+    }
 
     /**
      * Show the application dashboard to the user.
@@ -184,7 +200,7 @@ class BoardsController extends PanelController
         $input = Input::all();
 
         if ($this->user->isAnonymous()) {
-            $validator = $this->registrationValidator();
+            $validator = $this->registrationValidator($input);
 
             if ($validator->fails()) {
                 $this->throwValidationException(
@@ -245,7 +261,7 @@ class BoardsController extends PanelController
 
         // Create user if we have to.
         if ($this->user->isAnonymous()) {
-            $this->auth->login($this->registrar->create($request->all()));
+            $this->auth->login($this->createUser    ($request->all()));
             $this->user = $this->auth->user();
         }
 

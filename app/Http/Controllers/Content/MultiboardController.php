@@ -34,17 +34,7 @@ class MultiboardController extends Controller
         );
     }
 
-    public function getOverboardWithWorksafe($worksafe)
-    {
-        return $this->getOverboard($worksafe, null);
-    }
-
-    public function getOverboardWithBoards($boards)
-    {
-        return $this->getOverboard(null, $boards);
-    }
-
-    public function getOverboard($worksafe = null, $boards = null)
+    protected function prepareThreads($worksafe = null, $boards = null, $catalog = false)
     {
         $includes = [];
         $excludes  = [];
@@ -70,15 +60,47 @@ class MultiboardController extends Controller
             }
         }
 
-        $threads = $this->getThreads(
+        return $this->getThreads(
             max(1, Input::get('page', 1)),
-            is_null($worksafe) ? $worksafe : $worksafe === "nsfw" ? false : true,
+            is_null($worksafe) ? null : ($worksafe === "nsfw" ? false : true),
             $includes,
-            $excludes
+            $excludes,
+            !!$catalog
         );
+    }
 
+    public function getOverboardCatalogWithWorksafe($worksafe)
+    {
+        return $this->getOverboard($worksafe, null, true);
+    }
+
+    public function getOverboardCatalogWithBoards($boards)
+    {
+        return $this->getOverboard(null, $boards, true);
+    }
+
+    public function getOverboardCatalog($worksafe = null, $boards = null)
+    {
+        return $this->getOverboard($worksafe, $boards, true);
+    }
+
+    public function getOverboardWithWorksafe($worksafe)
+    {
+        return $this->getOverboard($worksafe, null);
+    }
+
+    public function getOverboardWithBoards($boards)
+    {
+        return $this->getOverboard(null, $boards);
+    }
+
+    public function getOverboard($worksafe = null, $boards = null, $catalog = false)
+    {
         return $this->view(static::VIEW_OVERBOARD, [
-            'threads' => $threads,
+            'worksafe' => $worksafe,
+            'boards' => $boards,
+            'catalog' => $catalog,
+            'threads' => $this->prepareThreads($worksafe, $boards, $catalog),
         ]);
     }
 }

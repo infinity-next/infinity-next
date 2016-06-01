@@ -14,6 +14,11 @@
 
 
 Route::group(['prefix' => '*', 'as' => 'overboard'], function () {
+    Route::get('{boards}/catalog', ['uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
+    Route::get('{worksafe}/catalog', ['uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
+    Route::get('{worksafe}/{boards}/catalog', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+    Route::get('catalog', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+
     Route::get('{boards}', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
     Route::get('{worksafe}', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);
     Route::get('{worksafe?}/{boards?}', ['uses' => 'MultiboardController@getOverboard',]);
