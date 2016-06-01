@@ -166,6 +166,9 @@ class RouteServiceProvider extends ServiceProvider
         $router->pattern('id', '[0-9]\d*');
         $router->pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
+        $router->pattern('worksafe', '^(sfw|nsfw)$');
+        $router->pattern('boards', '^((\+|-)[a-z0-9]{1,32})+$');
+
         parent::boot($router);
     }
 

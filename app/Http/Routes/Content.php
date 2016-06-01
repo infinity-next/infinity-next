@@ -12,15 +12,14 @@
  * @since      0.6.0
  */
 
-Route::get('boards.html', [
-    'as'   => 'boardlist',
-    'uses' => 'BoardlistController@getIndex',
-]);
 
-Route::get('overboard.html', [
-    'as'   => 'overboard',
-    'uses' => 'MultiboardController@getOverboard',
-]);
+Route::group(['prefix' => '*', 'as' => 'overboard'], function () {
+    Route::get('{boards}', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
+    Route::get('{worksafe}', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);
+    Route::get('{worksafe?}/{boards?}', ['uses' => 'MultiboardController@getOverboard',]);
+});
+
+Route::get('boards.html', ['as'   => 'boardlist', 'uses' => 'BoardlistController@getIndex',]);
 
 /**
  * Static Pages

@@ -1391,58 +1391,68 @@ class Post extends Model implements FormattableContract
      * @static
      *
      * @param int $page
+     * @param bool|null $worksafe If we should only allow worksafe/nsfw.
+     * @param array $include Boards to include.
+     * @param array $exclude Boards to exclude.
      *
      * @return Collection of static
      */
-    public static function getThreadsForOverboard($page = 0)
+    public static function getThreadsForOverboard($page = 0, $worksafe = null, array $include = [], array $exclude = [])
     {
         $postsPerPage = 10;
+        $boards = [];
+        $threads = static::whereHas('board', function ($query) use ($worksafe, $include, $exclude) {
+            $query->where('is_indexed', true);
+            $query->where('is_overboard', true);
 
-        $rememberTags = ['site.overboard.pages'];
-        $rememberTimer = 30;
-        $rememberKey = "site.overboard.page.{$page}";
-        $rememberClosure = function () use ($page, $postsPerPage) {
-            $boards  = [];
-            $threads = static::whereHas('board', function ($query) {
-                    $query->where('is_indexed', true);
-                    $query->where('is_overboard', true);
-                })
-                ->op()
-                ->withEverything()
-                ->with(['replies' => function ($query) {
-                    $query->forIndex();
-                }])
-                ->orderBy('bumped_last', 'desc')
-                ->skip($postsPerPage * ($page - 1))
-                ->take($postsPerPage)
-                ->get();
-
-            // The way that replies are fetched forIndex pulls them in reverse order.
-            // Fix that.
-            foreach ($threads as $thread) {
-                if (!isset($boards[$thread->board_uri])) {
-                    $boards[$thread->board_uri] = Board::getBoardWithEverything($thread->board_uri);
-                }
-
-                $thread->setRelation('board', $boards[$thread->board_uri]);
-                $replyTake = $thread->stickied_at ? 1 : 5;
-
-                $thread->body_parsed = $thread->getBodyFormatted();
-                $thread->replies = $thread->replies
-                    ->sortBy('post_id')
-                    ->splice(-$replyTake, $replyTake);
-
-                $thread->replies->each(function($reply) use ($boards) {
-                    $reply->setRelation('board', $boards[$reply->board_uri]);
+            $query->where(function ($query) use ($worksafe, $include, $exclude) {
+                $query->where(function ($query) use ($worksafe, $exclude) {
+                    if (!is_null($worksafe)) {
+                        $query->where('is_worksafe', $worksafe);
+                    }
+                    if (count($exclude)) {
+                        $query->whereNotIn('boards.board_uri', $exclude);
+                    }
                 });
 
-                $thread->prepareForCache();
+                if (count($include)) {
+                    $query->orWhereIn('boards.board_uri', $include);
+                }
+            });
+        })->op();
+
+        $count   = $threads->count();
+        $threads = $threads
+            ->withEverything()
+            ->with(['replies' => function ($query) {
+                $query->forIndex();
+            }])
+            ->orderBy('bumped_last', 'desc')
+            ->skip($postsPerPage * ($page - 1))
+            ->take($postsPerPage)
+            ->get();
+
+        // The way that replies are fetched forIndex pulls them in reverse order.
+        // Fix that.
+        foreach ($threads as $thread) {
+            if (!isset($boards[$thread->board_uri])) {
+                $boards[$thread->board_uri] = Board::getBoardWithEverything($thread->board_uri);
             }
 
-            return $threads;
-        };
+            $thread->setRelation('board', $boards[$thread->board_uri]);
+            $replyTake = $thread->stickied_at ? 1 : 5;
 
-        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+            $thread->body_parsed = $thread->getBodyFormatted();
+            $thread->replies = $thread->replies
+                ->sortBy('post_id')
+                ->splice(-$replyTake, $replyTake);
+
+            $thread->replies->each(function($reply) use ($boards) {
+                $reply->setRelation('board', $boards[$reply->board_uri]);
+            });
+
+            $thread->prepareForCache();
+        }
 
         return $threads;
     }

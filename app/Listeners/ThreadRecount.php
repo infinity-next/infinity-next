@@ -29,6 +29,10 @@ class ThreadRecount extends Listener
         if ($post instanceof Post) {
             $op = $post->op;
 
+            if (!($op instanceof Post)) {
+                $op = $post;
+            }
+
             $op->timestamps = false;
             $op->reply_count = $op->replies()->count();
             $op->reply_file_count = $op->replyFiles()->count();

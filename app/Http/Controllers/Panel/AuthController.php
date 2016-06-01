@@ -7,7 +7,9 @@ use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Cookie;
 use Input;
+use Session;
 use Validator;
 
 class AuthController extends PanelController
@@ -45,7 +47,7 @@ class AuthController extends PanelController
     {
         $this->middleware(
             $this->guestMiddleware(),
-            ['except' => 'logout']
+            ['except' => 'getLogout']
         );
     }
 

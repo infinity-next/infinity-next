@@ -1157,10 +1157,10 @@ trait PermissionUser
     public function getUsernameHTML()
     {
         if ($this->isAnonymous()) {
-            return '<span class="username">Anonymous</span>';
+            return '<span class="username">'.Lang::trans('board.anonymous').'</span>';
         }
 
-        return "<a href=\"{$this->getUserURL()}\" class=\"username\">{$this->username}</a>";
+        return "<a href=\"{$this->getUrl()}\" class=\"username\">{$this->username}</a>";
     }
 
     /**

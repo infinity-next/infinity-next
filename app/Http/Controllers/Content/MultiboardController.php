@@ -34,9 +34,48 @@ class MultiboardController extends Controller
         );
     }
 
-    public function getOverboard()
+    public function getOverboardWithWorksafe($worksafe)
     {
-        $threads = $this->getThreads(max(1, Input::get('page', 1)));
+        return $this->getOverboard($worksafe, null);
+    }
+
+    public function getOverboardWithBoards($boards)
+    {
+        return $this->getOverboard(null, $boards);
+    }
+
+    public function getOverboard($worksafe = null, $boards = null)
+    {
+        $includes = [];
+        $excludes  = [];
+
+        if (!is_null($boards)) {
+            // Break apart a board filter string.
+            // Examples: +want -donotwant +want+alsowant-notthis
+            $matchCount = preg_match_all(
+                '/((?P<sign>\+|-)(?P<board_uri>[a-z0-9]{1,32}))/',
+                $boards,
+                $matches
+            );
+
+            for ($x = 0; $x < $matchCount; ++$x) {
+                $sign = $matches['sign'][$x];
+                $board_uri = $matches['board_uri'][$x];
+
+                if ($sign === "-") {
+                    $excludes[] = $board_uri;
+                } else {
+                    $includes[] = $board_uri;
+                }
+            }
+        }
+
+        $threads = $this->getThreads(
+            max(1, Input::get('page', 1)),
+            is_null($worksafe) ? $worksafe : $worksafe === "nsfw" ? false : true,
+            $includes,
+            $excludes
+        );
 
         return $this->view(static::VIEW_OVERBOARD, [
             'threads' => $threads,

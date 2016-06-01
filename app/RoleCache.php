@@ -52,6 +52,9 @@ class RoleCache extends Model
     }
 
     /**
+     * Staticly mounts additional role data into $permissions with respect to
+     * weight and role importance.
+     *
      * @static
      *
      * @param array|Collection $roles        Roles being added.

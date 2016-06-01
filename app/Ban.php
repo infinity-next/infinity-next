@@ -247,6 +247,12 @@ class Ban extends Model
      */
     public function getUrl($route = "", array $params = [], $abs = true)
     {
+        $defParams = ['ban' => $this->ban_id];
+
+        if (!$this->isGlobal()) {
+            $defParams += ['board' => $this->board_uri];
+        }
+
         return route(
             implode(array_filter([
                 "panel",
@@ -254,10 +260,7 @@ class Ban extends Model
                 "ban",
                 $route,
             ]), '.'),
-            [
-                'board' => $this->isGlobal() ? false : $this->board,
-                'ban'   => $this,
-            ] + $params,
+            $defParams + $params,
             true
         );
     }
@@ -277,13 +280,9 @@ class Ban extends Model
         return asset("static/img/errors/robot/{$filename}");
     }
 
-    public function getAppealUrl()
+    public function getAppealUrl(array $params = [], $abs = true)
     {
-        if (!is_null($this->board_uri)) {
-            return "/cp/bans/board/{$this->board_uri}/{$this->ban_id}";
-        }
-
-        return "/cp/bans/global/{$this->ban_id}";
+        return $this->getUrl("appeal", $params, $abs);
     }
 
     public static function isBanned($ip, $board = null)

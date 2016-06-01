@@ -15,12 +15,12 @@
 /**
  * Authentication
  */
+// logout
+Route::get('logout',   ['as' => 'logout', 'uses' => 'AuthController@getLogout',]);
 // login
 Route::get('login',    ['as' => 'login', 'uses' => 'AuthController@getLogin',]);
 // login attempt
 Route::post('login',   ['as' => 'login.attempt', 'uses' => 'AuthController@postLogin',]);
-// logout
-Route::get('logout',   ['as' => 'logout', 'uses' => 'AuthController@getLogout',]);
 // register
 Route::get('register', ['as' => 'register', 'uses' => 'AuthController@getRegister',]);
 // register create
@@ -52,10 +52,11 @@ Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],]
         Route::get('banned', ['as' => 'banned', 'uses' => 'BansController@getIndexForSelf']);
 
         Route::get('board/{board}/{ban}', ['as' => 'board.ban', 'uses' => 'BansController@getBan']);
-        Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal.store', 'uses' => 'BansController@putAppeal']);
+        Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal', 'uses' => 'BansController@putAppeal']);
         Route::get('board/{board}', ['as' => 'board.ban', 'uses' => 'BansController@getBoardIndex']);
 
-        Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getGlobalBan']);
+        Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getBan']);
+        Route::put('global/{ban}', ['as' => 'site.ban.appeal', 'uses' => 'BansController@putAppeal']);
         Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
     });
 

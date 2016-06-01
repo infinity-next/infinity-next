@@ -68,11 +68,10 @@ class BansController extends PanelController
      * Will also update its "seen" if it was not seen prior.
      *
      * @param  \App\Ban    $ban
-     * @param  \App\Board  $board  Optional.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getGlobalBan(Ban $ban)
+    public function getBan(Ban $ban)
     {
         if (!$ban->canView($this->user)) {
             return abort(403);
