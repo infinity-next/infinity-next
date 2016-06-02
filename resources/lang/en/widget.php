@@ -52,6 +52,23 @@ return [
 	],
 
 	/**
+	 * Dice
+	 */
+	'dice' => [
+		'rolling' => 'Rolling',
+		'flipping' => 'Flipping',
+
+		'main' => "Rolling D dice with N sides.",
+		'modifier' => "Adding / subtrating this value from the final total.",
+		'minimum' => "Rolls below this value are re-rolled.",
+		'maximum' => "Rolls above this value are re-rolled.",
+		'greater_than' => "Rolls smaller than this value are not totalled.",
+		'less_than' => "Rolls larger than this value are not totalled.",
+
+		'total' => "Effective net value of rolls with rules considered.",
+	],
+
+	/**
 	 * Lazy Image Loader
 	 */
 	'lazyimg' => [

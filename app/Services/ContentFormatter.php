@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Board;
+use App\Dice;
 use App\Post;
 use App\PostCite;
 use App\Contracts\Support\Formattable as FormattableContract;
 use Illuminate\Database\Eloquent\Collection;
+use InvalidArgumentException;
 use Markdown;
 
 /**
@@ -179,6 +181,7 @@ class ContentFormatter
             'enable' => [
                 'Spoiler',
                 'Underline',
+                'Dice',
             ],
 
             'markup' => [
@@ -284,7 +287,9 @@ class ContentFormatter
         $parser = Markdown::config($this->options)
             ->addInlineType('>', 'Cite')
             ->addInlineType('&', 'Cite')
-            ->extendInline('Cite', $this->getCiteParser());
+            ->extendInline('Cite', $this->getCiteParser())
+            ->addBlockType('r', 'Dice')
+            ->extendBlock('Dice', $this->getDiceParser());
 
         $content = $parser->parse($content);
         $this->isRtl = $parser->isRtl();
@@ -467,6 +472,91 @@ class ContentFormatter
             'boards' => $boards,
             'posts' => $posts,
         ];
+    }
+
+
+    /**
+     * Provides parser logic for dice within a post.
+     *
+     * @return Closure
+     */
+    protected function getDiceParser()
+    {
+        $formatter = $this;
+
+        return function ($Line) use ($formatter) {
+            if (isset($formatter->diceThrows) && $formatter->diceThrows >= 10) {
+                return;
+            }
+
+            $regex = '/^(?<line>'
+                // "roll" declaration
+                .'[rR]oll '
+                // Number of dice 1~99. Mandatory.
+                .'(?<rolling>100|[1-9][0-9]?)'
+                // "d" delimiter.
+                .'[dD]'
+                // All beyond optional.
+                // Sides. 2~100.
+                .'(?<sides>[2-9]|[1-9][0-9]{1,4}|100)?'
+                // +/- net amount.
+                .'(?<modifier>[\+-][1-9][0-9]{0,8})?'
+                // "minimum" roll requirement.
+                .'((?:\^)(?<minimum>'.Dice::PATTERN.'))?'
+                // "maixmum" roll requirement.
+                .'((?:v)(?<maximum>'.Dice::PATTERN.'))?'
+                // "greater than" count requirement.
+                .'((?:<)(?<greater_than>'.Dice::PATTERN.'))?'
+                // "less than" count requirement.
+                .'((?:>)(?<less_than>'.Dice::PATTERN.'))?'
+            .')$/';
+
+            $matchCount = preg_match_all($regex, $Line['text'], $matches);
+
+            if (!$matchCount) {
+                return;
+            }
+
+            for ($i = 0; $i < $matchCount; ++$i) {
+                // We only get one dice at a time.
+                try {
+                    $dice = Dice::throw(
+                        @((int) $matches['rolling'][$i] ?: 0),
+                        @((int) $matches['sides'][$i] ?: 0),
+                        @((int) $matches['modifier'][$i] ?: 0),
+                        @((int) $matches['greater_than'][$i] ?: null),
+                        @((int) $matches['less_than'][$i] ?: null),
+                        @((int) $matches['minimum'][$i] ?: null),
+                        @((int) $matches['maximum'][$i] ?: null)
+                    );
+                } catch (InvalidArgumentException $e) {
+                    return;
+                    //return [
+                    //    'name' => "div",
+                    //    'closed' => true,
+                    //    'depth' => 0,
+                    //    'markup' => "<div><tt>{$e->getMessage()}</tt></div>",
+                    //];
+                }
+            }
+
+            if (!isset($dice)) {
+                return;
+            }
+
+            if (isset($formatter->diceThrows)) {
+                ++$formatter->diceThrows;
+            } else {
+                $formatter->diceThrows = 1;
+            }
+
+            return [
+                'name' => "div",
+                'closed' => true,
+                'depth' => 0,
+                'markup' => $dice->toHtml(),
+            ];
+        };
     }
 
     /**

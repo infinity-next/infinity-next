@@ -16,16 +16,16 @@ Route::group(['as' => 'site', 'namespace' => "Content",], function () {
 /**
  * Multiboard API
  */
- Route::group(['as' => 'overboard', 'namespace' => "Content",], function () {
-     Route::get('*/{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
-     Route::get('*/{worksafe}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
-     Route::get('*/{worksafe}/{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
-     Route::get('*/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+ Route::group(['prefix' => '*', 'as' => 'overboard', 'namespace' => "Content",], function () {
+     Route::get('{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
+     Route::get('{worksafe}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
+     Route::get('{worksafe}/{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+     Route::get('catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
 
-     Route::get('*/{boards}.json', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
-     Route::get('*/{worksafe}.json', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);
-     Route::get('*/{worksafe}/{boards}.json', ['uses' => 'MultiboardController@getOverboard',]);
-     Route::get('*.json', ['uses' => 'MultiboardController@getOverboard',]);
+     Route::get('{boards}.json', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
+     Route::get('{worksafe}.json', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);
+     Route::get('{worksafe}/{boards}.json', ['uses' => 'MultiboardController@getOverboard',]);
+     Route::get('.json', ['uses' => 'MultiboardController@getOverboard',]);
  });
 
 
