@@ -38,7 +38,14 @@ abstract class Controller extends BaseController
      */
     protected $options;
 
-
+    /**
+     * Constructs all controllers with the user and board as properties.
+     *
+     * @param  UserManager  $manager
+     * @param  Router       $router
+     *
+     * @return void
+     */
     public function __construct(UserManager $manager, Router $router)
     {
         $this->userManager = $manager;
@@ -49,7 +56,7 @@ abstract class Controller extends BaseController
         $this->board = $board->exists ? $board : null;
 
         view()->share([
-            'board' => $board,
+            'board' => $board ?: null,
             'user' => $this->user,
         ]);
 
@@ -58,6 +65,8 @@ abstract class Controller extends BaseController
 
     /**
      * Hook called immediately after __construct.
+     *
+     * @return void
      */
     protected function boot()
     {
@@ -73,7 +82,7 @@ abstract class Controller extends BaseController
      *
      * @return App\Log
      */
-    public function log($action, $board = null, $data = null)
+    protected function log($action, $board = null, $data = null)
     {
         $board_uri = null;
         $action_details = null;
@@ -118,7 +127,7 @@ abstract class Controller extends BaseController
      *
      * @return string|null
      */
-    public function option($option_name)
+    protected function option($option_name)
     {
         global $app;
 
@@ -136,7 +145,7 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    public static function template($template)
+    protected static function template($template)
     {
         return "content.{$template}";
     }
@@ -148,12 +157,9 @@ abstract class Controller extends BaseController
      *
      * @return array
      */
-    public function templateOptions(array $options = array())
+    protected function templateOptions(array $options = [])
     {
-        return (array) array_merge([
-            'c' => &$this,
-            'controller' => &$this,
-        ], $options);
+        return ['c' => $this] + $options;
     }
 
     /**
@@ -161,7 +167,7 @@ abstract class Controller extends BaseController
      *
      * @return Validator
      */
-    public function registrationValidator(array $data)
+    protected function registrationValidator(array $data)
     {
         return Validator::make($data, [
             'username' => 'required|alpha_num|max:255|unique:users,username',
@@ -179,7 +185,7 @@ abstract class Controller extends BaseController
      *
      * @return View
      */
-    public function view($template, array $options = array())
+    protected function view($template, array $options = array())
     {
         return View::make(
             $this->template($template),
@@ -195,7 +201,7 @@ abstract class Controller extends BaseController
      *
      * @return View
      */
-    public function viewAsJson($template, array $options = array())
+    protected function viewAsJson($template, array $options = array())
     {
         $html = $this->view($template, $options);
 

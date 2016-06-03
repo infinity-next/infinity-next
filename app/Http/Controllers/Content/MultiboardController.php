@@ -34,7 +34,7 @@ class MultiboardController extends Controller
         );
     }
 
-    protected function prepareThreads($worksafe = null, $boards = null, $catalog = false)
+    protected function prepareThreads($worksafe = null, $boards = null, $catalog = false, $updatedSince = null)
     {
         $includes = [];
         $excludes  = [];
@@ -65,7 +65,8 @@ class MultiboardController extends Controller
             is_null($worksafe) ? null : ($worksafe === "nsfw" ? false : true),
             $includes,
             $excludes,
-            !!$catalog
+            !!$catalog,
+            $updatedSince
         );
     }
 
@@ -98,9 +99,9 @@ class MultiboardController extends Controller
     {
         return $this->view(static::VIEW_OVERBOARD, [
             'worksafe' => $worksafe,
-            'boards' => $boards,
-            'catalog' => $catalog,
-            'threads' => $this->prepareThreads($worksafe, $boards, $catalog),
+            'boards'   => $boards,
+            'catalog'  => $catalog,
+            'threads'  => $this->prepareThreads($worksafe, $boards, $catalog),
         ]);
     }
 }

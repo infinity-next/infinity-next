@@ -57,7 +57,14 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            //'throttle:60,1',
+            \App\Http\Middleware\LocalizedSubdomains::class,
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \App\Http\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\TorFilter::class,
+            \App\Http\Middleware\SlugRouting::class,
+            'throttle:60,1',
         ],
     ];
 

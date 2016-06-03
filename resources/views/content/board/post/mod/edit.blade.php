@@ -1,1 +1,1 @@
-@include( $c->template('board.post.form') )
+@include('content.board.post.form')

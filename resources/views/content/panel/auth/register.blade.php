@@ -9,7 +9,7 @@
     'id'     => "create-form",
     'class'  => "form-auth",
 ]) !!}
-    @include($c->template('panel.auth.register.form'))
+    @include('content.panel.auth.register.form')
 
     <div class="field row-submit">
         <button type="submit" class="field-submit">@lang('panel.field.register')</button>

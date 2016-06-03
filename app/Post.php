@@ -727,6 +727,13 @@ class Post extends Model implements FormattableContract
     }
 
     /**
+     * Hacks until I figure something better out.
+     */
+    public $renderCatalog = false;
+    public $renderMultiboard = false;
+    public $renderPartial = false;
+
+    /**
      * Returns the fully rendered HTML of a post in the JSON output.
      *
      * @return string
@@ -734,7 +741,11 @@ class Post extends Model implements FormattableContract
     public function getHtmlAttribute()
     {
         if (!$this->trashed()) {
-            return $this->toHTML(false, false, false);
+            return $this->toHTML(
+                $this->renderCatalog,
+                $this->renderMultiboard,
+                $this->renderPartial
+            );
         }
 
         return;
@@ -1420,10 +1431,11 @@ class Post extends Model implements FormattableContract
      * @param array $include Boards to include.
      * @param array $exclude Boards to exclude.
      * @param bool $catalog Catalog view.
+     * @param integer $updatedSince
      *
      * @return Collection of static
      */
-    public static function getThreadsForOverboard($page = 0, $worksafe = null, array $include = [], array $exclude = [], $catalog = false)
+    public static function getThreadsForOverboard($page = 0, $worksafe = null, array $include = [], array $exclude = [], $catalog = false, $updatedSince = null)
     {
         $postsPerPage = $catalog ? 150 : 10;
         $boards = [];
@@ -1458,7 +1470,10 @@ class Post extends Model implements FormattableContract
             $threads = $threads->withEverything();
         }
 
-        $count   = $threads->count();
+        if ($updatedSince) {
+            $threads->where('posts.bumped_last', '>', Carbon::createFromTimestamp($updatedSince));
+        }
+
         $threads = $threads
             ->orderBy('bumped_last', 'desc')
             ->skip($postsPerPage * ($page - 1))

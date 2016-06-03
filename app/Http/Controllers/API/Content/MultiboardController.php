@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Content;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Content\MultiboardController as ParentController;
+use Request;
 use Input;
 
 /**
@@ -22,8 +23,19 @@ class MultiboardController extends ParentController implements ApiContract
 {
     use ApiController;
 
-    public function getOverboard($worksafe = null, $boards = null, $catalog = false)
+    public function getOverboardCatalog($worksafe = null, $boards = null, $catalog = false)
     {
-        return $this->prepareThreads($worksafe, $boards, $catalog);
+        $updatedSince = Request::get('updatedSince', null);
+
+        $threads = $this->prepareThreads($worksafe, $boards, $catalog, $updatedSince);
+        $threads->each(function($thread) use ($catalog)
+        {
+            $thread->renderCatalog = $catalog;
+            $thread->renderMultiboard = true;
+            $thread->renderPartial = false;
+            $thread->setAppendHtml(true);
+        });
+
+        return $threads;
     }
 }

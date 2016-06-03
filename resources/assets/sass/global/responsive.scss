@@ -50,7 +50,7 @@ body.responsive {
             display: block;
         }
 
-        ul.attachments-single + blockquote.post {
+        main.index-threaded ul.attachments-single + blockquote.post {
             min-width: 30em;
         }
     }

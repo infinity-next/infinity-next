@@ -58,6 +58,7 @@
 
             'captcha'         : ".captcha",
             'captcha-row'     : ".row-captcha",
+            'captcha-widget'  : "[data-widget='captcha']",
             'captcha-field'   : ".field-control",
 
             'button-close'    : ".menu-icon-close",
@@ -770,8 +771,8 @@
                     if (messages.captcha)
                     {
                         widget.events.captchaShow(widget);
-                        $(widget.options.selector['captcha-row'], $widget)
-                            .trigger('load', messages.captcha);
+                        $captcha = $(widget.options.selector['captcha-widget'], $widget);
+                        $captcha.trigger('load', messages.captcha);
                     }
                     else
                     {

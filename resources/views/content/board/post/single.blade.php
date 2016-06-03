@@ -4,6 +4,12 @@
     <a name="reply-{!! $details['board_id'] !!}"></a>
 
     @if (isset($catalog) && $catalog === true)
+        @if (isset($multiboard) && $multiboard === true)
+        @include('content.board.crown', [
+            'board'  => $post->board,
+        ])
+        @endif
+
         <a class="catalog-open" href="{!! $post->getUrl() !!}" data-instant>
             {{ Lang::choice('board.detail.catalog_stats',
                 isset($post->page_number) ? 1 : 0,

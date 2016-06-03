@@ -40,6 +40,7 @@
             'title'      : "@yield('title', 'Infinity Next')",
 
             'url'        : "{!! route('site.home') !!}/",
+            'panel_url'  : "{!! route('panel.home') !!}/",
 
             @yield('app-js')
 

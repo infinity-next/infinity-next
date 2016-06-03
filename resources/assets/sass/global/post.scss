@@ -259,13 +259,13 @@
                     }
 
 
-    ul.post-metas {
+    .post-metas {
         border-top: 1px solid #D6DAF0;
     }
-        ul.post-metas:empty {
+        .post-metas:empty {
             display: none;
         }
-        .op-container ul.post-metas {
+        .op-container .post-metas {
             border-top: none;
         }
         li.post-meta {

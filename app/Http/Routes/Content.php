@@ -14,14 +14,21 @@
 
 
 Route::group(['prefix' => '*', 'as' => 'overboard'], function () {
-    Route::get('{boards}/catalog', ['uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
-    Route::get('{worksafe}/catalog', ['uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
-    Route::get('{worksafe}/{boards}/catalog', ['uses' => 'MultiboardController@getOverboardCatalog',]);
-    Route::get('catalog', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+    Route::group(['as' => '.catalog.'], function () {
+        Route::get('{boards}/catalog',            ['as' => 'boards', 'uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
+        Route::get('{worksafe}/catalog',          ['as' => 'filter', 'uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
+        Route::get('{worksafe}/{boards}/catalog', ['as' => 'filter.boards', 'uses' => 'MultiboardController@getOverboardCatalog',]);
+        Route::get('catalog',                     ['as' => 'all', 'uses' => 'MultiboardController@getOverboardCatalog',]);
+    });
 
-    Route::get('{boards}', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
-    Route::get('{worksafe}', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);
-    Route::get('{worksafe?}/{boards?}', ['uses' => 'MultiboardController@getOverboard',]);
+    Route::group(['as' => '.threads.'], function () {
+        Route::get('{boards}',            ['as' => 'boards', 'uses' => 'MultiboardController@getOverboardWithBoards',]);
+        Route::get('{worksafe}',          ['as' => 'filter', 'uses' => 'MultiboardController@getOverboardWithWorksafe',]);
+        Route::get('{worksafe}/{boards}', ['as' => 'filter.boards', 'uses' => 'MultiboardController@getOverboard',]);
+        Route::get('/',                   ['as' => 'all', 'uses' => 'MultiboardController@getOverboard',]);
+    });
+
+    Route::get('/', ['uses' => 'MultiboardController@getOverboard',]);
 });
 
 Route::get('boards.html', ['as'   => 'boardlist', 'uses' => 'BoardlistController@getIndex',]);

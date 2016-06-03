@@ -25,7 +25,7 @@
     data-updated-at="{{ $post->updated_at->timestamp }}"
     data-capcode="{{ isset($details['capcode_capcode']) ? $details['capcode_capcode'] : '' }}"
 >
-    {{-- The intraboard crown applied to posts in Overboard. --}}
+    {{-- The interboard crown applied to posts in Overboard. --}}
     @if ($multiboard && !$reply_to)
     @include('content.board.crown', [
         'board'  => $post->board,

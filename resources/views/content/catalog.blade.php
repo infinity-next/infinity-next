@@ -11,12 +11,12 @@
 
     <section class="index-threads static">
         <ul class="thread-list">
-            @foreach ($posts as $thread)
+            @foreach ($posts as $post)
             <li class="thread-item">
                 <article class="thread">
-                    @include($c->template('board.catalog'), [
+                    @include('content.board.catalog'), [
                         'board'      => $board,
-                        'post'       => $thread,
+                        'post'       => $post,
                         'multiboard' => false,
                         'preview'    => false,
                     ])
@@ -27,7 +27,7 @@
     </section>
 
     <section class="index-form">
-        @include( $c->template('board.post.form'), [
+        @include('content.board.post.form', [
             'board'   => $board,
             'actions' => [ $reply_to ? "reply" : "thread" ],
         ])

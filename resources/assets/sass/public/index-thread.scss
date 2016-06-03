@@ -52,11 +52,16 @@ main.index-threaded {
             border-bottom: none;
         }
 
-        main.multiboard-index .post-crown {
-            margin: 0;
-            padding: 0;
-        }
-            main.multiboard-index .crown-figure {
+        main.multiboard-index {
+            .post-crown {
+                margin: 0;
+                padding: 0;
+            }
+            &.index-catalog .post-crown {
+                background: rgba(255, 255, 255, 0.25);
+            }
+
+            .crown-figure {
                 margin: 0;
                 padding: 0 0.75em;
 
@@ -70,32 +75,46 @@ main.index-threaded {
                     margin-right: -1px;
                 }
             }
-                main.multiboard-index .crown-image {
-                    display: inline-block;
-                    max-height: 32px;
-                    max-width: 32px;
-                    line-height: 42px;
-                }
-                main.multiboard-index .crown-title {
-                    display: inline-block;
-                    margin: 0;
-                    line-height: 42px;
-                    font-size: 1.2em;
-                    font-weight: bold;
-                    vertical-align: middle;
-                    white-space: nowrap;
-                    direction: ltr;
+            &.index-catalog .crown-figure {
+                line-height: 24px;
+                padding: 0 0.5em;
+                text-align: center;
+            }
 
-                    #{$rtl} & {
-                        margin-left: 0.25em;
-                    }
-                    #{$ltr} & {
-                        margin-right: 0.25em;
-                    }
+            .crown-image {
+                display: inline-block;
+                max-height: 32px;
+                max-width: 32px;
+                line-height: 42px;
+                margin-right: 0.25em;
+            }
+            &.index-catalog .crown-image {
+                max-height: 16px;
+                max-width: 16px;
+                line-height: 24px;
+            }
+
+
+            .crown-title {
+                display: inline-block;
+                margin: 0;
+                font-size: 1.2em;
+                font-weight: bold;
+                vertical-align: middle;
+                white-space: nowrap;
+                direction: ltr;
+
+                #{$rtl} & {
+                    margin-left: 0.25em;
                 }
-                main.multiboard-index .crown-link {
-                    line-height: 42px;
+                #{$ltr} & {
+                    margin-right: 0.25em;
                 }
+            }
+
+            .crown-link {
+            }
+        }
 
         li.thread-last-reply {
             margin-bottom: 0.5em;

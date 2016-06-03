@@ -2,10 +2,11 @@
 
 namespace App\Http;
 
+use App;
+use App\Board;
 use InfinityNext\LaravelCaptcha\Captcha;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\ResponseTrait;
-use App;
 
 class MessengerResponse extends JsonResponse
 {
@@ -53,7 +54,7 @@ class MessengerResponse extends JsonResponse
      */
     protected function buildSiblingCaptcha()
     {
-        $needCaptcha = !App::make('App\Board')->canPostWithoutCaptcha(App::make('App\Services\UserManager')->user);
+        $needCaptcha = !App::make(Board::class)->canPostWithoutCaptcha(user());
 
         return $needCaptcha ? Captcha::findOrCreateCaptcha() : false;
     }
