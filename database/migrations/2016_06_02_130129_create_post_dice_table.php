@@ -19,6 +19,9 @@ class CreatePostDiceTable extends Migration
             $table->bigInteger('post_id')->unsigned();
             $table->bigInteger('dice_id')->unsigned();
 
+            $table->text('command_text');
+            $table->smallInteger('order')->unsigned()->default(0);
+
             $table->foreign('dice_id')->references('dice_id')->on('dice');
             $table->foreign('post_id')->references('post_id')->on('posts');
         });

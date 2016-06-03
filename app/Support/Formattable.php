@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Services\ContentFormatter;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class API for syntactical markup formatting.
@@ -27,6 +28,30 @@ trait Formattable
         'parsed_html' => 'body_parsed',
         'parsed_at' => 'body_parsed_at',
     ];
+
+    /**
+     * Tests if this formattable class can cite posts and boards.
+     *
+     * @return bool
+     */
+    public function canCite()
+    {
+        $method = 'cite';
+        return is_callable([$this, $method])
+            && $this->{$method}() instanceof BelongsToMany;
+    }
+
+    /**
+     * Tests if this formattable class can throw dice.
+     *
+     * @return bool
+     */
+    public function canDice()
+    {
+        $method = 'dice';
+        return is_callable([$this, $method])
+            && $this->{$method}() instanceof BelongsToMany;
+    }
 
     /**
      * Get content as a string of HTML.

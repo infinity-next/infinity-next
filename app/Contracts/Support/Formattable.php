@@ -16,6 +16,20 @@ namespace App\Contracts\Support;
 interface Formattable
 {
     /**
+     * Tests if this formattable class can cite posts and boards.
+     *
+     * @return bool
+     */
+    public function canCite();
+
+    /**
+     * Tests if this formattable class can throw dice.
+     *
+     * @return bool
+     */
+    public function canDice();
+
+    /**
      * Get content as a string of HTML.
      *
      * @return string

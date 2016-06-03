@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Post;
 use App\PostCite;
+use Carbon\Carbon;
 use Event;
 use App\Events\PostWasAdded;
 use App\Events\PostWasDeleted;
@@ -22,6 +23,20 @@ class PostObserver
     {
         // Fire event, which clears cache among other things.
         Event::fire(new PostWasAdded($post));
+
+        // Add dice rolls.
+        // Because of how dice rolls work, we don't ever remove them and only
+        // create them with the post, not on update.
+        $throws = $post->getDiceFromText();
+        $dice   = collect();
+
+        foreach ($throws as $throw)
+        {
+            $post->dice()->save($throw['throw'], [
+                'command_text' => $throw['command_text'],
+                'order' => $throw['order'],
+            ]);
+        }
 
         return true;
     }
@@ -81,7 +96,7 @@ class PostObserver
 
         // Clear authorshop information.
         $post->author_ip = null;
-        $post->author_ip_nulled_at = \Carbon\Carbon::now();
+        $post->author_ip_nulled_at = Carbon::now();
         $post->save();
 
         return true;

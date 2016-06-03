@@ -2,7 +2,15 @@
 
 namespace App;
 
-use Acetone;
+use App\Ban;
+use App\BoardAsset;
+use App\Dice;
+use App\FileStorage;
+use App\FileAttachment;
+use App\PostCite;
+use App\User;
+use App\Report;
+use App\Role;
 use App\Contracts\PermissionUser;
 use App\Contracts\Support\Formattable as FormattableContract;
 use App\Services\ContentFormatter;
@@ -11,6 +19,7 @@ use App\Support\Geolocation;
 use App\Support\IP;
 use App\Traits\TakePerGroup;
 use App\Traits\EloquentBinary;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -166,78 +175,84 @@ class Post extends Model implements FormattableContract
 
     public function attachments()
     {
-        return $this->belongsToMany("\App\FileStorage", 'file_attachments', 'post_id', 'file_id')
+        return $this->belongsToMany(FileStorage::class, 'file_attachments', 'post_id', 'file_id')
             ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');
     }
 
     public function attachmentLinks()
     {
-        return $this->hasMany("\App\FileAttachment");
+        return $this->hasMany(FileAttachment::class);
     }
 
     public function backlinks()
     {
-        return $this->hasMany('\App\PostCite', 'cite_id', 'post_id');
+        return $this->hasMany(PostCite::class, 'cite_id', 'post_id');
     }
 
     public function bans()
     {
-        return $this->hasMany('\App\Ban', 'post_id');
+        return $this->hasMany(Ban::class, 'post_id');
     }
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     public function capcode()
     {
-        return $this->hasOne('\App\Role', 'role_id', 'capcode_id');
+        return $this->hasOne(Role::class, 'role_id', 'capcode_id');
     }
 
     public function cites()
     {
-        return $this->hasMany('\App\PostCite', 'post_id');
+        return $this->hasMany(PostCite::class, 'post_id');
     }
 
     public function citedPosts()
     {
-        return $this->belongsToMany("\App\Post", 'post_cites', 'post_id');
+        return $this->belongsToMany(static::class, 'post_cites', 'post_id');
     }
 
     public function citedByPosts()
     {
-        return $this->belongsToMany("\App\Post", 'post_cites', 'cite_id', 'post_id');
+        return $this->belongsToMany(static::class, 'post_cites', 'cite_id', 'post_id');
+    }
+
+    public function dice()
+    {
+        return $this->belongsToMany(Dice::class, 'post_dice', 'post_id', 'dice_id')
+            ->withPivot('command_text', 'order');
     }
 
     public function editor()
     {
-        return $this->hasOne('\App\User', 'user_id', 'updated_by');
+        return $this->hasOne(User::class, 'user_id', 'updated_by');
     }
 
     public function flag()
     {
-        return $this->hasOne('\App\BoardAsset', 'board_asset_id', 'flag_id');
+        return $this->hasOne(BoardAsset::class, 'board_asset_id', 'flag_id');
     }
 
     public function op()
     {
-        return $this->belongsTo('\App\Post', 'reply_to', 'post_id');
+        return $this->belongsTo(static::class, 'reply_to', 'post_id');
     }
 
     public function replies()
     {
-        return $this->hasMany('\App\Post', 'reply_to', 'post_id');
+        return $this->hasMany(static::class, 'reply_to', 'post_id');
     }
 
     public function replyFiles()
     {
-        return $this->hasManyThrough('App\FileAttachment', 'App\Post', 'reply_to', 'post_id');
+        return $this->hasManyThrough(FileAttachment::class, 'App\Post', 'reply_to', 'post_id');
     }
 
     public function reports()
     {
-        return $this->hasMany('\App\Report', 'post_id');
+        return $this->hasMany(Report::class, 'post_id');
     }
 
     /**
@@ -596,7 +611,6 @@ class Post extends Model implements FormattableContract
      */
     public function getBodyFormatted($skipCache = false)
     {
-        $skipCache = true; // TODO
         if (!$skipCache) {
             // Markdown parsed content
             if (!is_null($this->body_html)) {
@@ -1133,11 +1147,21 @@ class Post extends Model implements FormattableContract
     /**
      * Parses the post text for citations.
      *
-     * @return Collection
+     * @return array
      */
     public function getCitesFromText()
     {
         return ContentFormatter::getCites($this);
+    }
+
+    /**
+     * Parses the post text for dice throws.
+     *
+     * @return Collection
+     */
+    public function getDiceFromText()
+    {
+        return ContentFormatter::getDice($this);
     }
 
     /**
@@ -1204,7 +1228,7 @@ class Post extends Model implements FormattableContract
      */
     public static function getPostFeatured($dayRange = 3)
     {
-        $oldestPossible = \Carbon\Carbon::now()->subDays($dayRange);
+        $oldestPossible = Carbon::now()->subDays($dayRange);
 
         return static::where('featured_at', '>=', $oldestPossible)
             ->withEverything()
@@ -1666,6 +1690,13 @@ class Post extends Model implements FormattableContract
         return $query->with('cites', 'cites.cite');
     }
 
+    public function scopeAndDice($query)
+    {
+        return $query->with(['dice' => function ($query) {
+            $query->orderBy('post_dice.order', 'desc');
+        }]);
+    }
+
     public function scopeAndEditor($query)
     {
         return $query
@@ -1791,6 +1822,7 @@ class Post extends Model implements FormattableContract
             ->andBacklinks()
             ->andCapcode()
             ->andCites()
+            ->andDice()
             ->andEditor()
             ->andFlag()
             ->andPromotedReports();

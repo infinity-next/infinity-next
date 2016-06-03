@@ -289,6 +289,7 @@ class ContentFormatter
             ->addInlineType('&', 'Cite')
             ->extendInline('Cite', $this->getCiteParser())
             ->addBlockType('r', 'Dice')
+            ->addBlockType('R', 'Dice')
             ->extendBlock('Dice', $this->getDiceParser());
 
         $content = $parser->parse($content);
@@ -402,11 +403,11 @@ class ContentFormatter
     }
 
     /**
-     * Returns a collection of formattables as cited in a formattable's text body.
+     * Returns a collection of citations in a formattable's text body.
      *
      * @param \App\Contracts\Support\Formattable $formattable
      *
-     * @return Collection
+     * @return array
      */
     public static function getCites(FormattableContract $formattable)
     {
@@ -474,6 +475,73 @@ class ContentFormatter
         ];
     }
 
+    /**
+     * Returns a collection of dice throws in a formattable's text body.
+     *
+     * @param \App\Contracts\Support\Formattable $formattable
+     *
+     * @return Collection
+     */
+    public static function getDice(FormattableContract $formattable)
+    {
+        $throws = collect();
+        $regex = '/^(?<line>'
+            // "roll" declaration
+            .'[rR][oO][lL][lL] '
+            // Number of dice 1~99. Mandatory.
+            .'(?<rolling>100|[1-9][0-9]?)'
+            // "d" delimiter.
+            .'[dD]'
+            // All beyond optional.
+            // Sides. 2~100.
+            .'(?<sides>[2-9]|[1-9][0-9]{1,4}|100)?'
+            // +/- net amount.
+            .'(?<modifier>[\+-][1-9][0-9]{0,8})?'
+            // "minimum" roll requirement.
+            .'((?:\^)(?<minimum>'.Dice::PATTERN.'))?'
+            // "maixmum" roll requirement.
+            .'((?:v)(?<maximum>'.Dice::PATTERN.'))?'
+            // "greater than" count requirement.
+            .'((?:<)(?<greater_than>'.Dice::PATTERN.'))?'
+            // "less than" count requirement.
+            .'((?:>)(?<less_than>'.Dice::PATTERN.'))?'
+        .')$/';
+
+        $lines = explode("\n", $formattable->body);
+
+        foreach ($lines as $line) {
+            if (preg_match($regex, $line, $matches)) {
+                // We're squelching undefined index warnings from $matches.
+                // InvalidArgumentException from Dice::throw are captured.
+                // Anything else is unexpected.
+                try {
+                    $throw = Dice::throw(
+                        @((int) $matches['rolling'] ?: 0),
+                        @((int) $matches['sides'] ?: 0),
+                        @((int) $matches['modifier'] ?: 0),
+                        @((int) $matches['greater_than'] ?: null),
+                        @((int) $matches['less_than'] ?: null),
+                        @((int) $matches['minimum'] ?: null),
+                        @((int) $matches['maximum'] ?: null)
+                    );
+                } catch (InvalidArgumentException $e) {
+                    continue;
+                }
+
+                $throws->push([
+                    'command_text' => $matches['line'],
+                    'order' => $throws->count(),
+                    'throw' => $throw,
+                ]);
+            }
+
+            if ($throws->count() >= 10) {
+                break;
+            }
+        }
+
+        return $throws;
+    }
 
     /**
      * Provides parser logic for dice within a post.
@@ -483,71 +551,25 @@ class ContentFormatter
     protected function getDiceParser()
     {
         $formatter = $this;
+        $formattable = $formatter->formattable;
 
-        return function ($Line) use ($formatter) {
-            if (isset($formatter->diceThrows) && $formatter->diceThrows >= 10) {
+        return function ($Line) use ($formatter, $formattable) {
+            if (!$formattable->canDice()) {
                 return;
             }
 
-            $regex = '/^(?<line>'
-                // "roll" declaration
-                .'[rR]oll '
-                // Number of dice 1~99. Mandatory.
-                .'(?<rolling>100|[1-9][0-9]?)'
-                // "d" delimiter.
-                .'[dD]'
-                // All beyond optional.
-                // Sides. 2~100.
-                .'(?<sides>[2-9]|[1-9][0-9]{1,4}|100)?'
-                // +/- net amount.
-                .'(?<modifier>[\+-][1-9][0-9]{0,8})?'
-                // "minimum" roll requirement.
-                .'((?:\^)(?<minimum>'.Dice::PATTERN.'))?'
-                // "maixmum" roll requirement.
-                .'((?:v)(?<maximum>'.Dice::PATTERN.'))?'
-                // "greater than" count requirement.
-                .'((?:<)(?<greater_than>'.Dice::PATTERN.'))?'
-                // "less than" count requirement.
-                .'((?:>)(?<less_than>'.Dice::PATTERN.'))?'
-            .')$/';
+            $dice = null;
 
-            $matchCount = preg_match_all($regex, $Line['text'], $matches);
 
-            if (!$matchCount) {
-                return;
-            }
-
-            for ($i = 0; $i < $matchCount; ++$i) {
-                // We only get one dice at a time.
-                try {
-                    $dice = Dice::throw(
-                        @((int) $matches['rolling'][$i] ?: 0),
-                        @((int) $matches['sides'][$i] ?: 0),
-                        @((int) $matches['modifier'][$i] ?: 0),
-                        @((int) $matches['greater_than'][$i] ?: null),
-                        @((int) $matches['less_than'][$i] ?: null),
-                        @((int) $matches['minimum'][$i] ?: null),
-                        @((int) $matches['maximum'][$i] ?: null)
-                    );
-                } catch (InvalidArgumentException $e) {
-                    return;
-                    //return [
-                    //    'name' => "div",
-                    //    'closed' => true,
-                    //    'depth' => 0,
-                    //    'markup' => "<div><tt>{$e->getMessage()}</tt></div>",
-                    //];
+            foreach ($formattable->dice as $throw) {
+                if ($throw->pivot->command_text === $Line['body']) {
+                    $dice = $throw;
+                    break;
                 }
             }
 
-            if (!isset($dice)) {
+            if (is_null($dice)) {
                 return;
-            }
-
-            if (isset($formatter->diceThrows)) {
-                ++$formatter->diceThrows;
-            } else {
-                $formatter->diceThrows = 1;
             }
 
             return [
