@@ -18,6 +18,17 @@ use File;
 use Response;
 use Validator;
 
+/**
+ * Controller for board related views.
+ *
+ * @category   Controller
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since      0.5.1
+ */
 class BoardController extends Controller
 {
     const VIEW_BOARD = 'board';

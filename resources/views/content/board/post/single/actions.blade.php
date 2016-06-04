@@ -189,14 +189,14 @@
                         <li class="post-action">
                             <a class="post-action-link action-link-feature-global"
                                 href="{!! $post->getModUrl('feature') !!}">
-                                @lang($details['featured_at']
+                                @lang(isset($details['featured_at']) && $details['featured_at']
                                     ? 'board.action.refeature'
                                     : 'board.action.feature'
                                 )
                             </a>
                         </li>
 
-                        @if ($details['featured_at'])
+                        @if (isset($details['featured_at']) && $details['featured_at'])
                         <li class="post-action">
                             <a class="post-action-link action-link-feature-global"
                                 href="{!! $post->getModUrl('feature') !!}">

@@ -12,15 +12,23 @@ main.index-catalog {
         margin: 1em 0 0 0;
     }
 
-     .thread-list {
+    .thread-list {
+        position: relative;
         text-align: center;
+        min-width: 100%;
     }
 
-     .thread-item {
+    .thread-item {
         display: inline-block;
         margin: 0 0.25em 0.25em 0;
-
         width: 180px;
+
+        &.already-seen {
+            opacity: 0.5;
+        }
+    }
+    html.js &.multiboard-index .thread-item {
+        display: none;
     }
          .thread {
             position: relative;
@@ -47,7 +55,8 @@ main.index-catalog {
 
                 border: none;
                 padding-top: 0;
-                overflow: visible
+                overflow: visible;
+                z-index: 5;
             }
                  .post-container:hover {
                     box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);

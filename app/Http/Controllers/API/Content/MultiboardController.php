@@ -23,9 +23,13 @@ class MultiboardController extends ParentController implements ApiContract
 {
     use ApiController;
 
-    public function getOverboardCatalog($worksafe = null, $boards = null, $catalog = false)
+    public function getOverboard($worksafe = null, $boards = null, $catalog = false)
     {
         $updatedSince = Request::get('updatedSince', null);
+
+        if (!is_null($updatedSince) && !is_numeric($updatedSince)) {
+            return abort(400);
+        }
 
         $threads = $this->prepareThreads($worksafe, $boards, $catalog, $updatedSince);
         $threads->each(function($thread) use ($catalog)

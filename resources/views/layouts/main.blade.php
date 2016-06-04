@@ -41,6 +41,7 @@
 
             'url'        : "{!! route('site.home') !!}/",
             'panel_url'  : "{!! route('panel.home') !!}/",
+            'media_url'  : "//{!! config('app.url_media') !!}/",
 
             @yield('app-js')
 

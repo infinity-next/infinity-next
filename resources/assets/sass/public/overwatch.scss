@@ -1,0 +1,40 @@
+.overwatch {
+    display: block;
+    width: 320px;
+    padding: 0 1em;
+    margin: 0.5em auto 1em auto;
+
+    font-size: 110%;
+    font-weight: normal;
+    text-align: center;
+
+    cursor: pointer;
+
+    html.no-js & {
+        display: none;
+    }
+
+    .overwatch-toggle {
+        visibility: hidden;
+        margin-left: -1em;
+    }
+    .overwatch-label {
+    }
+
+    .label-enter {
+        display: inline;
+    }
+    .label-pause {
+        display: none;
+        font-weight: bold;
+    }
+        .overwatch-toggle:checked ~ .label-pause {
+            display: inline;
+        }
+        .overwatch-toggle:checked ~ .label-enter {
+            display: none;
+        }
+    .label-reading {
+        visibility: hidden;
+    }
+}

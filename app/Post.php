@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cache;
 use DB;
+use DateTime;
+use DateTimeInterface;
 use Input;
 use File;
 use Request;
@@ -72,6 +74,13 @@ class Post extends Model implements FormattableContract
         'board_id' => 'int',
         'reply_to' => 'int',
         'author_ip' => 'ip',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'stickied_at' => 'datetime',
+        'bumplocked_at' => 'datetime',
+        'locked_at' => 'datetime',
+        'featured_at' => 'datetime',
+        'body_parsed_at' => 'datetime',
     ];
 
     /**
@@ -967,6 +976,18 @@ class Post extends Model implements FormattableContract
             ] + $params,
             $abs
         );
+    }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     *
+     * @param  \DateTime  $date
+     *
+     * @return string
+     */
+    protected function serializeDate(DateTime $date)
+    {
+        return $date->timestamp;
     }
 
     /**

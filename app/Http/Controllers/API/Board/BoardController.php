@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 /**
- * Model representing posts and threads for boards.
+ * Controller for board related API.
  *
  * @category   Controller
  *
