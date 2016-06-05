@@ -114,9 +114,11 @@
                 return true;
             }
 
-            widget.paused = $(widget.options.selector['post-container']+":hover", $catalog).length > 0;
-            $(widget.options.selector['label-reading'], $widget)
-                .css('visibility', widget.paused ? 'visible' : 'hidden');
+            setTimeout(function() {
+                widget.paused = $(widget.options.selector['post-container']+":hover", $catalog).length > 0;
+                $(widget.options.selector['label-reading'], $widget)
+                    .css('visibility', widget.paused ? 'visible' : 'hidden');
+            }, 100);
         },
 
         scanStop : function(event) {
