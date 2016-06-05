@@ -32,10 +32,10 @@
         $("body").toggleClass('nsfw-filtered', sfw);
         $("body").toggleClass('nsfw-allowed', !sfw);
 
-        if (sfw) {
-            var $ob = $(this.options.selector['overboard-nav']);
-            $ob.attr('href', $ob.attr('href') + '/sfw');
-        }
+        // if (sfw) {
+        //     var $ob = $(this.options.selector['overboard-nav']);
+        //     $ob.attr('href', $ob.attr('href') + '/sfw');
+        // }
 
         // var $pageStylesheet = $(widget.defaults.selector['page-stylesheet']);
         // $pageStylesheet.attr('href', sfw

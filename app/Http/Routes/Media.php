@@ -16,33 +16,31 @@
  * Media queries for actual content.
  * Can be routed through a CDN (sub)domain.
  */
- if (!is_hidden_service() && config('app.url_media', false))
- {
-     Route::group(['domain' => config('app.url_media')], function() {
-         Route::get('{attachment}/{filename}', [
-             'as'   => 'file.attachment',
-             'uses' => 'FileController@getImageFromAttachment',
-         ]);
+if (false && !is_hidden_service() && config('app.url_media', false))
+{
+    Route::group(['domain' => config('app.url_media')], function() {
+        Route::get('{attachment}/{filename}', [
+            'as'   => 'file.attachment',
+            'uses' => 'FileController@getImageFromAttachment',
+        ]);
 
-         Route::get('{hash}/{filename}', [
-             'as'   => 'file.hash',
-             'uses' => 'FileController@getImageFromHash',
-         ])->where(['hash' => "[a-f0-9]{32}",]);
+        Route::get('{hash}/{filename}', [
+            'as'   => 'file.hash',
+            'uses' => 'FileController@getImageFromHash',
+            ])->where(['hash' => "[a-f0-9]{32}",]);
 
-          Route::get('thumb/{attachment}/{filename}', [
-              'as'   => 'thumb.attachment',
-              'uses' => 'FileController@getThumbnailFromAttachment',
-          ]);
+        Route::get('thumb/{attachment}/{filename}', [
+            'as'   => 'thumb.attachment',
+            'uses' => 'FileController@getThumbnailFromAttachment',
+        ]);
 
-         Route::get('thumb/{hash}/{filename}', [
-             'as'   => 'thumb.hash',
-             'uses' => 'FileController@getThumbnailFromHash',
-         ])->where(['hash' => "[a-f0-9]{32}",]);
-     });
+        Route::get('thumb/{hash}/{filename}', [
+            'as'   => 'thumb.hash',
+            'uses' => 'FileController@getThumbnailFromHash',
+        ])->where(['hash' => "[a-f0-9]{32}",]);
+    });
 } else {
-    Route::group([
-        'prefix'   => '{board}/file',
-    ], function() {
+    Route::group(['prefix' => '{board}/file',], function() {
         Route::get('{hash}/{filename}', [
             'as'   => 'file.hash',
             'uses' => 'FileController@getImageFromHash',

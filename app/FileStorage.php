@@ -672,17 +672,18 @@ class FileStorage extends Model
         }
 
         $params = [
+            'board' => $board,
             'attachment' => $this->getIdentifier(),
-            'filename' => $this->getDownloadName().".{$ext}",
+            'filename' => "thumb_".$this->getDownloadName().".{$ext}",
         ];
 
-        if (!config('app.url_media', false)) {
-            $params['board'] = $board;
-        }
+        // if (!config('app.url_media', false)) {
+        //     $params['board'] = $board;
+        // }
 
         // "False" generates a relativel URL.
-        // Attachments get cached, so we want that.
-        return route('static.thumb.attachment', $params, config('app.url_media', false));
+        // Attachments get cached, so we want that
+        return route('static.thumb.attachment', $params, false);//config('app.url_media', false));
     }
 
     /**
