@@ -162,7 +162,7 @@ return [
              *
              * @var int
              */
-            'length_min' => 3,
+            'length_min' => 1,
 
             /*
              * Maximum characters per captcha.
@@ -176,15 +176,14 @@ return [
              *
              * @var boolean
              */
-            'sine' => true,
-
+            'sine' => false,
 
             /*
              * Captcha image width.
              *
              * @var int
              */
-            'width' => 380,
+            'width' => 596,
 
             /*
              * Maximum image width.
@@ -212,7 +211,7 @@ return [
              *
              * @var int
              */
-            'flourishes_max' => 2,
+            'flourishes_max' => 3,
 
         ],
 

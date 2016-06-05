@@ -317,6 +317,11 @@ section.index-form {
                 border: 1px solid #ccc;
             }
                 form.form-post .row-double button.field-submit {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    
+                    border-left: none;
                     width: 50%;
                 }
 

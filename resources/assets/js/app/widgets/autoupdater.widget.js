@@ -471,8 +471,8 @@
 
             if (time <= 0)
             {
-                time = (widget.hasFocus ? widget.updateMisses * 2 : Math.pow(widget.updateMisses, 1.5)) + 3;
-                time = parseInt( Math.min(time, 20), 10);
+                time = (widget.hasFocus ? widget.updateMisses * 1.25 : Math.pow(widget.updateMisses, 1.5)) + 3;
+                time = parseInt(Math.max(1, Math.min(time, 20)), 10);
 
                 $widget.trigger('au-update');
             }

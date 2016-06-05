@@ -197,7 +197,8 @@ form {
             border-top: 1px solid rgb(169, 169, 169);
         }
             .row-captcha img.captcha {
-                width: 160px;
+                width: auto;
+                max-width: 100%;
                 height: 70px;
             }
 

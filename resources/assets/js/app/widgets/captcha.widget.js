@@ -36,10 +36,15 @@ ib.widget("captcha", function(window, $, undefined) {
 
             captchaLoadIn : function(event, captcha) {
                 var $captcha = $(widget.options.selector['captcha'], widget.$widget),
-                    $hidden  = $captcha.next();
+                    $hidden  = $captcha.next(),
+                    $field   = $captcha.parent().children("input"),
+                    url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".png";
 
-                $captcha.attr('src', widget.options.captchaUrl + "/" + captcha['hash_string'] + ".png");
-                $hidden.val(captcha['hash_string']);
+                if ($captcha.attr('src') != url) {
+                    $field.val("");
+                    $captcha.attr('src', url);
+                    $hidden.val(captcha['hash_string']);
+                }
             },
 
             captchaReload : function() {

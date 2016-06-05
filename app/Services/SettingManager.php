@@ -112,7 +112,7 @@ class SettingManager
         $nav = [
             'home' => route('site.home'),
             'boards' => route('site.boardlist'),
-            'recent_posts' => route('site.overboard'),
+            'recent_posts' => route('site.overboard.catalog.all'),
             'panel' => route('panel.home'),
         ];
 
@@ -231,19 +231,11 @@ class SettingManager
     public function fetchSettings()
     {
         if ($this->hasDB()) {
-            switch (env('CACHE_DRIVER')) {
-                case 'file':
-                case 'database':
-                    return SiteSetting::getAll();
-                // We only cache settings when we are using a memory cache.
-                // Anything else is slower than the query.
-                default:
-                    return Cache::remember('site.settings', 30, function () {
-                        return SiteSetting::getAll();
-                    });
-            }
+            return Cache::remember('site.settings', 30, function () {
+                return SiteSetting::getAll();
+            });
         }
 
-        return collect([]);
+        return collect();
     }
 }
