@@ -39,6 +39,7 @@ if (!function_exists('is_hidden_service')) {
      */
     function is_hidden_service()
     {
+        return true;
         return config('tor.request', false);
     }
 }
@@ -65,7 +66,7 @@ if (!function_exists('media_url')) {
             $media = config('app.url_media', false);
 
             if (is_hidden_service()) {
-                return $gen->to($url);
+                return $request->to($url);
             }
 
             if ($media) {
