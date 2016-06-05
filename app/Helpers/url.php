@@ -54,7 +54,7 @@ if (!function_exists('media_url')) {
      *
      * @return Illuminate\Contracts\Routing\UrlGenerator|string
      */
-    function media_url($path, $absolute = true)
+    function media_url($path = "", $absolute = true)
     {
         $url = '/'.trim($path, '/');
 
