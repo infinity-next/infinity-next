@@ -39,7 +39,6 @@ if (!function_exists('is_hidden_service')) {
      */
     function is_hidden_service()
     {
-        return true;
         return config('tor.request', false);
     }
 }
