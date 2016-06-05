@@ -510,7 +510,7 @@ class ContentFormatter
         $lines = explode("\n", $formattable->body);
 
         foreach ($lines as $line) {
-            if (preg_match($regex, $line, $matches)) {
+            if (preg_match($regex, trim($line), $matches)) {
                 // We're squelching undefined index warnings from $matches.
                 // InvalidArgumentException from Dice::throw are captured.
                 // Anything else is unexpected.
@@ -527,6 +527,7 @@ class ContentFormatter
                 } catch (InvalidArgumentException $e) {
                     continue;
                 }
+
 
                 $throws->push([
                     'command_text' => $matches['line'],
@@ -553,7 +554,13 @@ class ContentFormatter
         $formatter = $this;
         $formattable = $formatter->formattable;
 
-        return function ($Line) use ($formatter, $formattable) {
+        if ($formattable->canDice() && $formattable->dice) {
+            $formatter->dice = $formattable->dice;
+        } else {
+            $formatter->dice = collect();
+        }
+
+        return function ($Line) use (&$formatter, $formattable) {
             if (!$formattable->canDice()) {
                 return;
             }
@@ -561,9 +568,13 @@ class ContentFormatter
             $dice = null;
 
 
-            foreach ($formattable->dice as $throw) {
-                if ($throw->pivot->command_text === $Line['body']) {
+            foreach ($formatter->dice as $index => $throw) {
+                if ($throw->pivot->command_text === trim($Line['body'])) {
                     $dice = $throw;
+                    $formatter->dice = $formatter->dice->filter(function($item) use ($throw)
+                    {
+                        return $item->dice_id !== $throw->dice_id;
+                    });
                     break;
                 }
             }
