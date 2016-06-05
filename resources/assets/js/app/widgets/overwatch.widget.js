@@ -11,6 +11,7 @@
 
     blueprint.prototype.defaults = {
         refresh  : 3000,//ms
+        interval : 1000,//ms
 
         selector : {
             'toggle' : '.overwatch-toggle',
@@ -72,7 +73,7 @@
 
         $(window)
             .on('focus.ib-overwatch', data, widget.events.windowFocus)
-            .on('unfocus.ib-overwatch', data, widget.events.windowUnfocus)
+            .on('blur.ib-overwatch', data, widget.events.windowUnfocus)
         ;
 
         return true;
@@ -135,15 +136,14 @@
 
             widget.scanning = true;
             widget.timer = widget.options.refresh;
-            widget.interval = setInterval(widget.updateInterval, 100)
 
             var $logo = $(widget.options.selector['logo'])
             $logo.data('original', $logo.attr('src'));
             $logo.attr('src', window.app.media_url+'static/img/logo_overscan.gif');
         },
 
-        updateAlways : function(jqXHR) {
-            this.widget.updating = false;
+        updateAlways : function(json, textStatus, jqXHR) {
+            jqXHR.widget.updating = false;
         },
 
         updateDone : function(data, textStatus, jqXHR) {
@@ -184,7 +184,7 @@
                 // Track the last time the user saw a post.
                 widget.updateLast = item.bumped_last > widget.updateLast ? item.bumped_last : widget.updateLast;
 
-                if (!window.hasFocus) {
+                if (!widget.hasFocus) {
                     ++widget.updateCount;
                 }
                 else {
@@ -196,7 +196,7 @@
                 $catalog.mixItUp('sort', 'bumped:desc');
             }
 
-            if (widget.updateCount > 0)
+            if (!widget.hasFocus && widget.updateCount > 0)
             {
                 $("#favicon").attr('href', window.app.favicon.alert);
                 document.title = "(" + widget.updateCount + ") " + $('<div/>').html(window.app.title).text();
@@ -240,7 +240,7 @@
                 time = widget.options.refresh;
             }
 
-            time -= 100;
+            time -= widget.options.interval;
 
             if (time <= 0)
             {
@@ -253,7 +253,7 @@
 
         widget.updateTimer = setInterval(function() {
             widget.updateInterval.apply(widget);
-        }, 100);
+        }, 1000);
     };
 
     blueprint.prototype.updateQuery = function() {
