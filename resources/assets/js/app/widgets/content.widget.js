@@ -19,7 +19,7 @@
     var options = {
         sfw : {
             type : "bool",
-            initial : true,
+            initial : false,
             onChange : events.doContentUpdate,
             onUpdate : events.doContentUpdate
         }
