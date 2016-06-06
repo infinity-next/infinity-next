@@ -24,7 +24,11 @@ main.index-catalog {
         width: 180px;
 
         &.already-seen {
-            opacity: 0.5;
+            opacity: 0.75;
+
+            &:hover {
+                opacity: 1;
+            }
         }
     }
     html.js &.multiboard-index .thread-item {

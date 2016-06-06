@@ -22,9 +22,13 @@ ul.post-attachments {
         padding-top: 0;
         float: none;
 
-        .reply-container & {
+        .reply-container.sfw & {
             background: rgba(0,0,155,0.1);
         }
+        .reply-container.nsfw & {
+            background-color: rgba(155,0,0,0.1);
+        }
+
         & + blockquote.post {
             margin-top: 0.75em;
         }

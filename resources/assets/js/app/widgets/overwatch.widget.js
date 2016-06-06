@@ -29,13 +29,19 @@
     /* https://mixitup.kunkalabs.com/docs */
     blueprint.prototype.mixItUp = {
         animation: {
-            enabled: true,
-            duration: 100,
-            effects: 'fade stagger(18ms)',
-            easing: 'ease'
+            enabled: false
         },
         load: {
             sort: 'bumped:desc'
+        },
+        callbacks: {
+            onMixEnd: function(state) {
+                state.$targets.css({
+                    transition: "",
+                    transform: "",
+                    display: 'inline-block'
+                });
+            }
         }
     };
 
@@ -47,7 +53,8 @@
     blueprint.prototype.updateLastSeen = false;
     blueprint.prototype.updateTimer    = false;
     blueprint.prototype.updateTime     = false;
-    blueprint.prototype.updateCount    = 0;
+    blueprint.prototype.updateCount    = 0
+    blueprint.prototype.viewedRecently = false;
     blueprint.prototype.viewedLast     = false;
 
     blueprint.prototype.bind = function() {
@@ -106,6 +113,13 @@
         },
 
         threadHoverCheck : function(event) {
+            // mixItUp tacks on this bullshit CSS3 stuff I can't get rid of
+            // any other way. It fucks up how my catalog works.
+            $(event.currentTarget).parents(".thread-item:first").css({
+                'transition' : "",
+                'transform' : ""
+            });
+
             var widget = event.data.widget;
             var $widget = event.data.$widget;
             var $catalog = event.data.$catalog;
@@ -152,7 +166,13 @@
             var widget = jqXHR.widget;
             var $catalog = widget.$catalog;
             var replacements = 0;
+            var $alreadySeen = $();
+
             data = data.reverse();
+
+            if (widget.viewedRecently && !widget.hasFocus) {
+                $alreadySeen = $(widget.options.selector['thread-item'], $catalog);
+            }
 
             $.each(data, function(index, item) {
                 var $thread = $(item.html);
@@ -175,13 +195,17 @@
 
                 // Insertion
                 if ($existing.length) {
-                    ++replacements;
                     $existing.remove();
                 }
 
+                ++replacements;
+
                 // Add the item
-                $catalog.mixItUp('prepend', $li);
+                $catalog.mixItUp('insert', 0, $li[0]);
                 ib.bindAll($li[0]);
+                $li.css({
+                    'display' : 'inline-block'
+                });
 
                 // Track the last time the user saw a post.
                 widget.updateLast = item.bumped_last > widget.updateLast ? item.bumped_last : widget.updateLast;
@@ -194,8 +218,13 @@
                 }
             });
 
-            if (replacements) {
+            if (replacements > 0) {
                 $catalog.mixItUp('sort', 'bumped:desc');
+
+                if ($alreadySeen.length > 0) {
+                    $alreadySeen.addClass('already-seen');
+                    widget.viewedRecently = false;
+                }
             }
 
             if (!widget.hasFocus && widget.updateCount > 0)
@@ -214,8 +243,9 @@
             var widget = event.data.widget;
             var $widget = event.data.$widget;
 
-            widget.hasFocus    = true;
+            widget.hasFocus = true;
             widget.updateCount = 0;
+            widget.viewedRecently = true;
 
             document.title = $('<div/>').html(window.app.title).text();
             $("#favicon").attr('href', window.app.favicon.normal);
@@ -223,6 +253,7 @@
 
         windowUnfocus : function(event) {
             var widget = event.data.widget;
+            var $catalog = widget.$catalog;
 
             widget.hasFocus = false;
         }
@@ -264,9 +295,8 @@
         var $catalog = this.$catalog;
 
         var data = {
-            updatedSince : $(widget.options.selector['thread-item'], $catalog)
+            updatedSince : $(widget.options.selector['thread-item']+":first", $catalog)
         };
-
 
         var jqXHR = $.ajax(window.location.pathname+".json", {
             data : {

@@ -1947,18 +1947,21 @@ class Post extends Model implements FormattableContract
         $rememberClosure = function () use ($catalog, $multiboard, $preview) {
             $this->setRelation('attachments', $this->attachments);
 
-            return \View::make('content.board.post', [
-                // Models
-                'board' => $this->board,
-                'post' => $this,
-                'user' => user(),
+            return \View::make(
+                $catalog ? 'content.board.catalog' : 'content.board.post',
+                [
+                    // Models
+                    'board' => $this->board,
+                    'post' => $this,
+                    'user' => user(),
 
-                // Statuses
-                'catalog' => $catalog,
-                'reply_to' => $this->reply_to ?: false,
-                'multiboard' => $multiboard,
-                'preview' => $preview,
-            ])->render();
+                    // Statuses
+                    'catalog' => $catalog,
+                    'reply_to' => $this->reply_to ?: false,
+                    'multiboard' => $multiboard,
+                    'preview' => $preview,
+                ]
+            )->render();
         };
 
         if (!user()->isAnonymous()) {
