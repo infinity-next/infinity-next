@@ -141,7 +141,7 @@ class BoardController extends ParentController implements ApiContract
 
         if ($response instanceof Post) {
             $response = [
-                'redirect' => $response->getURL(),
+                'redirect' => $response->getUrl(),
             ];
         } else {
             $response = $response

@@ -10,10 +10,10 @@
 @else
 <form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
     $reply_to ? 'board.thread.reply' : 'board.thread.put',
-    [
-        'board_uri' => $board->board_uri,
-        'post_id'   => $reply_to ? $reply_to->board_id : "",
-    ],
+    ['board_uri' => $board->board_uri,] + ($reply_to
+        ? ['post_id' => $reply_to->board_id]
+        : []
+    ),
     false
 )}}" accept-charset="UTF-8" enctype="multipart/form-data">
     <input name="_method" type="hidden" value="PUT" />
