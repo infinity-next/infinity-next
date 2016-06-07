@@ -705,6 +705,7 @@
                     if (typeof json.redirect !== "undefined")
                     {
                         console.log("Post submitted. Redirecting.");
+                        window.ib.storeYouPost(json.post.board_uri, json.post.board_id);
                         window.location = json.redirect;
                     }
                     else if (typeof json.errors !== "undefined")

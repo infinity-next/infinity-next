@@ -171,6 +171,37 @@
     };
 
     /**
+     * Stores post authorship data.
+     *
+     * @param  string  uri  Board uri
+     * @param  string  id   Board id
+     *
+     * @return undefined
+     */
+    ib.storeYouPost = function(uri, id) {
+        if (typeof window.localStorage !== "object")
+        {
+            return [];
+        }
+
+        try
+        {
+            var storage = localStorage.getItem("yourPosts."+uri).split(",");
+        }
+        catch (e)
+        {
+            var storage = [];
+        }
+
+        storage.push(id);
+        storage = storage.filter(function(index, item, array) {
+            return array.lastIndexOf(index) === item;
+        });
+
+        localStorage.setItem("yourPosts."+uri, storage.join(","));
+    };
+
+    /**
      * Options and Settings
      */
     ib.option = function(widget, params) {

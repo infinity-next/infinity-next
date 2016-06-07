@@ -96,29 +96,6 @@
         return Math.max.apply(Math, times);
     };
 
-    blueprint.prototype.addYouPost = function(uri, id) {
-        if (typeof window.localStorage !== "object")
-        {
-            return [];
-        }
-
-        try
-        {
-            var storage = localStorage.getItem("yourPosts."+uri).split(",");
-        }
-        catch (e)
-        {
-            var storage = [];
-        }
-
-        storage.push(id);
-        storage = storage.filter(function(index, item, array) {
-            return array.lastIndexOf(index) === item;
-        });
-
-        localStorage.setItem("yourPosts."+uri, storage.join(","));
-    };
-
     blueprint.prototype.bind = function() {
         var widget  = this;
         var $widget = this.$widget;
@@ -301,7 +278,7 @@
                         // Push this ID into our You lists if we made it.
                         if (reply.recently_created)
                         {
-                            widget.addYouPost(reply.board_uri, reply.board_id);
+                            ib.storeYouPost(reply.board_uri, reply.board_id);
                         }
 
                         // Used primarily by postbox updates to force the scroll to see our new post.

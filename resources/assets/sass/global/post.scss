@@ -37,15 +37,23 @@
         color: #789922;
     }
 
-    a.cite-you::after {
+    /**
+     * Citation addendums.
+     * If this gets any more complicated, do something better.
+     */
+    a.cite-you::after,
+    a.cite-op::after {
         display: 'inline';
+    }
+    a.cite-you::after {
         content: ' (You)';
     }
     a.cite-op::after {
-        display: 'inline';
         content: ' (OP)';
     }
-
+    a.cite-you.cite-op::after {
+        content: ' (You) (OP)';
+    }
 
 .thread-replies-omitted {
     margin: 0.25em 0 0.5em 0.25em;
