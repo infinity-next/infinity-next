@@ -32,12 +32,13 @@
     };
 
     blueprint.prototype.defaults = {
-        preview_delay : 200,
+        preview_delay : 300,
 
         // Important class names.
         classname : {
             'post-hover'     : "post-hover",
             'cite-you'       : "cite-you",
+            'cite-op'        : "cite-op",
             'tabs-open'      : "open",
             'image-expanded' : "attachment-expanded"
         },
@@ -179,12 +180,15 @@
     // Includes (You) classes on posts that we think we own.
     blueprint.prototype.addAuthorship = function() {
         var widget = this;
+        var $widget = widget.$widget;
         var cites  = [];
+        var op_board_id = $widget.data('reply-to-board-id').toString();
+        var post_board_uri = $widget.data('board_uri');
 
         // Loop through each citation.
-        $(this.options.selector['cite'], this.$widget).each(function() {
-            var board = this.dataset.board_uri;
-            var post  = this.dataset.board_id.toString();
+        $(widget.options.selector['cite'], $widget).each(function() {
+            var board    = this.dataset.board_uri;
+            var post     = this.dataset.board_id.toString();
 
             // Check and see if we have an item for this citation's board.
             if (typeof cites[board] === "undefined")
@@ -202,6 +206,11 @@
             if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
             {
                 this.className += " " + widget.options.classname['cite-you'];
+            }
+
+            if (board === post_board_uri && post === op_board_id)
+            {
+                this.className += " " + widget.options.classname['cite-op'];
             }
         });
 

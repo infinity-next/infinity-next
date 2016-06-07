@@ -41,6 +41,10 @@
         display: 'inline';
         content: ' (You)';
     }
+    a.cite-op::after {
+        display: 'inline';
+        content: ' (OP)';
+    }
 
 
 .thread-replies-omitted {

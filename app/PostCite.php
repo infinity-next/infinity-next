@@ -63,12 +63,21 @@ class PostCite extends Model
         return $this->belongsTo('\App\Board', 'board_uri', 'cite_board_uri');
     }
 
+    /**
+     * Generates HTML for a post's BACKLINKS, which are replies to.
+     *
+     * @param  \App\Board  $board
+     *
+     * @return string
+     */
     public function getBacklinkHTML(Board $board = null)
     {
         $citeBoard = $this->post_board_uri;
         $citePost = $this->post_board_id;
         $citeURL = $this->getBacklinkURL();
-        $citeText = $board ? $this->getBacklinkText($board) : $this->getBacklinkText();
+        $citeText = $board instanceof Board
+            ? $this->getBacklinkText($board)
+            : $this->getBacklinkText();
 
         $citeClass = [];
         $citeClass[] = 'cite';

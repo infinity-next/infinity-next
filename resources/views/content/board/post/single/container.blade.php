@@ -12,6 +12,7 @@
     data-post_id="{{ $details['post_id'] }}"
     data-board_uri="{{ $details['board_uri'] }}"
     data-board_id="{{ $details['board_id'] }}"
+    data-reply-to-board-id="{{ $details['reply_to_board_id'] }}"
     data-created-at="{{ $post->created_at->timestamp }}"
     data-updated-at="{{ $post->updated_at->timestamp }}"
     data-bumped-last="{{ $post->bumped_last->timestamp }}"
