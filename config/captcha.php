@@ -19,7 +19,7 @@ return [
      *
      * @var string  /route/to/captcha/
      */
-    'route' => config('app.panel_url') . '/captcha',
+    'route' => config('app.panel_url', '/cp') . '/captcha',
 
     /*
      * Expiry time (in minutes) for a captcha.
