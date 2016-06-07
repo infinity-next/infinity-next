@@ -77,6 +77,18 @@ class PostObserver
             $post->op->save();
         }
 
+        // Update any posts that reference this one.
+        $citedBy = $post->citedByPosts();
+        $citedBy->update([
+            'body_parsed' => null,
+            'body_parsed_at' => null,
+        ]);
+        $citedBy->detach();
+
+        // Remove this item from the cache.
+        $post->forget();
+
+        // Fire event.
         Event::fire(new PostWasDeleted($post));
 
         return true;

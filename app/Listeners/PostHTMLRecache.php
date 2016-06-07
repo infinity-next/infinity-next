@@ -14,7 +14,7 @@ class PostHTMLRecache extends Listener
     public function handle($event)
     {
         if ($event->post instanceof Post) {
-            $event->post->clearPostHTMLCache();
+            $event->post->forget();
         }
     }
 }

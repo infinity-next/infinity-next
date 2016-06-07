@@ -419,11 +419,15 @@ class Post extends Model implements FormattableContract
     }
 
     /**
-     * Removes post HTML caches..
+     * Removes post caches.
      */
-    public function clearPostHTMLCache()
+    public function forget()
     {
         Cache::tags(["post_{$this->post_id}"])->flush();
+        Cache::tags([
+            "board_{$this->board_uri}",
+            "board_id_{$this->board_id}",
+        ])->flush();
     }
 
     /**
@@ -1338,8 +1342,7 @@ class Post extends Model implements FormattableContract
     {
         return $this->replies()
             ->orderBy('post_id', 'desc')
-            ->take(1)
-            ->get()
+            ->whereBump()
             ->first();
     }
 
@@ -1780,7 +1783,7 @@ class Post extends Model implements FormattableContract
 
     public function scopeWhereBump($query)
     {
-        return $query->whereNot('email', "sage");
+        return $query->where('email', '<>', "sage");
     }
 
     public function scopeWhereBumpless($query)
@@ -1937,10 +1940,14 @@ class Post extends Model implements FormattableContract
      */
     public function toHTML($catalog, $multiboard, $preview)
     {
+        if ($this->deleted_at) {
+            return "";
+        }
+
         $rememberTags = [
-            "board.{$this->board->board_uri}",
+            "board_{$this->board->board_uri}",
             "post_{$this->post_id}",
-            'post_html',
+            "post_html",
         ];
         $rememberTimer = 30;
         $rememberKey = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
@@ -2203,7 +2210,11 @@ class Post extends Model implements FormattableContract
             $board = Board::find($board_uri);
         }
 
-        $rememberTags = ["board.{$board_uri}", 'threads'];
+        $rememberTags = [
+            "board_{$board->board_uri}",
+            "board_id_{$board_id}",
+            "threads",
+        ];
         $rememberTimer = 30;
         $rememberKey = "board.{$board_uri}.thread.{$board_id}";
         $rememberClosure = function () use ($board, $board_uri, $board_id) {
