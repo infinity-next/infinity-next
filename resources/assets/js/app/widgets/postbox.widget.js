@@ -770,9 +770,33 @@
                     // Toggles captcha based on messenger information.
                     if (messages.captcha)
                     {
-                        widget.events.captchaShow(widget);
-                        $captcha = $(widget.options.selector['captcha-widget'], $widget);
-                        $captcha.trigger('load', messages.captcha);
+                        var $captcha = $(widget.options.selector['captcha-widget'], $widget);
+                        // Replace if we've requested a replace.
+                        var replacing = widget.replacingCaptcha;
+
+                        if (!replacing)
+                        {
+                            // Otherwise, replace if we've expired.
+                            var expiresAt = $captcha.children('img').data('expires-at');
+                            replacing = expiresAt < (new Date().getTime() / 1000);
+                        }
+
+                        if (!replacing)
+                        {
+                            // Otherwise, replace if our session is the same and
+                            // our captcha has changed. This would mean that our
+                            // captcha has been invalidated somehow. We don't
+                            // normally replace a captcha because if we're using
+                            // Tor we never keep a session.
+                            replacing = window.ib.session === messages.session;
+                        }
+
+                        if (replacing)
+                        {
+                            widget.replacingCaptcha = false;
+                            widget.events.captchaShow(widget);
+                            $captcha.trigger('load', [ messages.captcha ]);
+                        }
                     }
                     else
                     {

@@ -5,7 +5,7 @@
         document.getElementsByTagName('html')[0].class = "js";
 
         window.app = {
-            'lang'     : {!! json_encode( Lang::get('widget') ) !!},
+            'session'  : "{!! Session::getId() !!}",
 
             'merchant' : "{{ env('CASHIER_SERVICE') }}",
 
@@ -47,7 +47,9 @@
 
             'settings'   : {!! $app['settings']->getJson() !!},
 
-            'version'    : 0
+            'version'    : 0,
+
+            'lang'     : {!! json_encode( Lang::get('widget') ) !!}
         };
     </script>
 

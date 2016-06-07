@@ -27,6 +27,11 @@ ib.widget("captcha", function(window, $, undefined) {
                 }
             },
 
+            /**
+             * Captcha IMAGE Load
+             *
+             * @param  object  event
+             */
             captchaLoad : function(event) {
                 var $captcha = $(this),
                     $parent  = $captcha.parent();
@@ -40,11 +45,17 @@ ib.widget("captcha", function(window, $, undefined) {
                     $field   = $captcha.parent().children("input"),
                     url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".png";
 
+                widget.$widget.data('replacing', false);
+                $captcha
+                    .attr('data-expires-at', captcha.expires_at)
+                    .data('expires-at', captcha.expires_at);
+
                 if ($captcha.attr('src') != url) {
                     $field.val("");
                     $captcha.attr('src', url);
                     $hidden.val(captcha['hash_string']);
                 }
+
             },
 
             captchaReload : function() {
@@ -52,6 +63,7 @@ ib.widget("captcha", function(window, $, undefined) {
                     $parent  = $captcha.parent(),
                     $field   = $captcha.parent().children("input");
 
+                widget.$widget.data('replacing', true);
                 $parent.addClass("captcha-loading");
                 $field.val("").focus();
 
@@ -72,6 +84,8 @@ ib.widget("captcha", function(window, $, undefined) {
                     .on('load.ip-captcha', widget.events.captchaLoad);
 
                 widget.$widget
+                    .data('replacing', false)
+
                     // Watch for captcha clicks.
                     .on('load.ib-captcha',                                       widget.events.captchaLoadIn)
                     .on('reload.ib-captcha',                                     widget.events.captchaReload)

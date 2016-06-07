@@ -7,6 +7,7 @@ use App\Board;
 use InfinityNext\LaravelCaptcha\Captcha;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\ResponseTrait;
+use Session;
 
 class MessengerResponse extends JsonResponse
 {
@@ -42,8 +43,9 @@ class MessengerResponse extends JsonResponse
     protected function buildSiblingContent()
     {
         return $this->siblingContent = [
-            'captcha' => $this->buildSiblingCaptcha(),
+            'captcha'   => $this->buildSiblingCaptcha(),
             'messenger' => true,
+            'session'   => $this->buildSiblingSession(),
         ];
     }
 
@@ -57,6 +59,16 @@ class MessengerResponse extends JsonResponse
         $needCaptcha = !App::make(Board::class)->canPostWithoutCaptcha(user());
 
         return $needCaptcha ? Captcha::findOrCreateCaptcha() : false;
+    }
+
+    /**
+     * Returns the session ID.
+     *
+     * @return  string Session ID.
+     */
+    protected function buildSiblingSession()
+    {
+        return Session::getId();
     }
 
     /**
