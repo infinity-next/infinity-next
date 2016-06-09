@@ -554,7 +554,7 @@ class ContentFormatter
         $formatter = $this;
         $formattable = $formatter->formattable;
 
-        if ($formattable->canDice() && $formattable->dice) {
+        if ($formattable instanceof FormattableContract && $formattable->canDice() && $formattable->dice) {
             $formatter->dice = $formattable->dice;
         } else {
             $formatter->dice = collect();

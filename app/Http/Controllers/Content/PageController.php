@@ -30,6 +30,10 @@ class PageController extends Controller
      */
     public function show(Page $page)
     {
+        if (!$page->exists) {
+            return abort(404);
+        }
+
         return $this->view(static::VIEW_PAGE, [
             'page' => $page,
         ]);

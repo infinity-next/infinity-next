@@ -49,7 +49,7 @@ trait Formattable
     public function canDice()
     {
         $method = 'dice';
-        return is_callable([$this, $method])
+        return method_exists($this, 'dice') && is_callable([$this, $method])
             && $this->{$method}() instanceof BelongsToMany;
     }
 
