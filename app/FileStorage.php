@@ -461,6 +461,30 @@ class FileStorage extends Model
     }
 
     /**
+     * Returns the full meta array, if the key is not specified.
+     *
+     * @param  $key     Defaults to null.
+     * @return mixed
+     */
+    public function getMeta($key = null)
+    {
+        $meta = json_decode($this->meta, true);
+
+        if (is_null($key))
+        {
+            return $meta;
+        }
+        elseif (array_key_exists($key, $meta))
+        {
+            return $meta[$key];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
      * Returns the full internal file path for the thumbnail.
      *
      * @return string
@@ -556,6 +580,14 @@ class FileStorage extends Model
             $stock = false;
             $type  = "audio";
         }
+        else if ($this->isDocument())
+        {
+            if ($this->hasThumb())
+            {
+                $stock = false;
+                $type  = "document";
+            }
+        }
 
         $classes = [];
         $classes['type']  = "attachment-type-{$type}";
@@ -594,7 +626,7 @@ class FileStorage extends Model
         {
             $url = $this->getDownloadURL($board);
         }
-        else if ($this->isAudio() || $this->isImage() || $this->isVideo())
+        else if ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument())
         {
             if ($this->hasThumb())
             {
@@ -687,7 +719,7 @@ class FileStorage extends Model
             return $board->getSpoilerUrl();
         }
 
-        if ($this->isImage())
+        if ($this->isImage() || $this->isDocument())
         {
             $ext = Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png";
         }
@@ -889,6 +921,23 @@ class FileStorage extends Model
         return isset($this->pivot)
             && isset($this->pivot->is_deleted)
             && !!$this->pivot->is_deleted;
+    }
+
+    /**
+     * Is this attachment a document?
+     *
+     * @return boolean
+     */
+    public function isDocument()
+    {
+        switch ($this->mime)
+        {
+            case "application/epub+zip" :
+            case "application/pdf" :
+                return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1111,6 +1160,80 @@ class FileStorage extends Model
                 $this->thumbnail_width  = $image->width();
 
                 return true;
+            }
+            else if ($this->isDocument() && $this->mime === "application/epub+zip")
+            {
+                $epub = new \ZipArchive();
+                $epub->open($this->getFullPath());
+
+                // Parse the container file
+                $container     = $epub->getFromName("META-INF/container.xml");
+                $containerXML  = simplexml_load_string($container);
+                $rootFilePath  = $containerXML->rootfiles->rootfile[0]['full-path'];
+
+                // Determine base directory
+                $rootFileParts = pathinfo($rootFilePath);
+                $baseDirectory = ($rootFileParts['dirname'] == "." ? null : $rootFileParts['dirname']);
+
+                // Parse the rootfile
+                $rootFile      = $epub->getFromName($rootFilePath);
+                $rootFileXML   = simplexml_load_string($rootFile);
+
+                // XPath queries with namespaces are shit until XPath 2.0 so we hold its hand
+                $rootFileNS    = $rootFileXML->getDocNamespaces();
+
+                if (isset($rootFileNS[""]))
+                {
+                    $rootFileXML->registerXPathNamespace("default", $rootFileNS[""]);
+                    $ns = "default:";
+                }
+                else
+                {
+                    $ns = "";
+                }
+
+                // Non-standards used with OEB, prior to EPUB
+                $oebXPath   = "//{$ns}reference[@type='coverimagestandard' or @type='other.ms-coverimage-standard']";
+                // EPUB2 standard
+                $epub2XPath = "//{$ns}item[@id=(//{$ns}meta[@name='cover']/@content)]";
+                // EPUB3 standard
+                $epub3XPath = "//{$ns}item[@properties='cover-image']";
+                // Query the rootfile for cover elements
+                $coverXPath = $rootFileXML->xpath("{$oebXPath} | {$epub2XPath} | {$epub3XPath}");
+
+                if ($coverXPath)
+                {
+                    // Get real cover entry name and read it
+                    $coverHref   = $coverXPath[0]['href'];
+                    $coverEntry  = (is_null($baseDirectory) ? $coverHref : $baseDirectory . "/" . $coverHref);
+                    $coverString = $epub->getFromName($coverEntry);
+
+                    try
+                    {
+                        $cover = imagecreatefromstring($coverString);
+                        $image = (new ImageManager)->make($cover);
+
+                        $this->file_height = $image->height();
+                        $this->file_width  = $image->width();
+
+                        $image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
+                                    $constraint->aspectRatio();
+                                    $constraint->upsize();
+                            })
+                            ->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
+                            ->save($this->getFullPathThumb());
+
+                        $this->has_thumbnail    = true;
+                        $this->thumbnail_height = $image->height();
+                        $this->thumbnail_width  = $image->width();
+
+                        return true;
+                    }
+                    catch (\Exception $e)
+                    {
+                        app('log')->error("Encountered an error trying to generate a thumbnail for file {$this->hash}.");
+                    }
+                }
             }
         }
         else
