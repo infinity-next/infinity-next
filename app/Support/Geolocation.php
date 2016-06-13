@@ -128,7 +128,7 @@ class Geolocation
     public static function isTorExitNode($ip)
     {
         if (!Cache::has('tor-exit-nodes')) {
-            Arisan::call('tor:pull');
+            Artisan::call('tor:pull');
         }
 
         $ips = Cache::get('tor-exit-nodes');
