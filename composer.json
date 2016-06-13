@@ -32,6 +32,8 @@
 
         "james-heinrich/getid3" : "1.9.*",
 
+        "geoip2/geoip2" : "~2.0",
+
         "infinity-next/braintree":       "*@dev",
         "infinity-next/laravel-captcha": "*@dev",
         "infinity-next/eightdown":       "*@dev",

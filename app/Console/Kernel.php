@@ -15,11 +15,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Autoprune',
-        'App\Console\Commands\Import',
-        'App\Console\Commands\Inspire',
-        'App\Console\Commands\RecordStats',
-        'App\Console\Commands\RecordStatsAll',
+        \App\Console\Commands\Autoprune::class,
+        \App\Console\Commands\Import::class,
+        \App\Console\Commands\Inspire::class,
+        \App\Console\Commands\RecordStats::class,
+        \App\Console\Commands\RecordStatsAll::class,
+        \App\Console\Commands\TorCheck::class,
+        \App\Console\Commands\TorPull::class,
     ];
 
     /**
