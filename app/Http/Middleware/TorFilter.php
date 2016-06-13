@@ -30,13 +30,18 @@ class TorFilter
     public function handle($request, Closure $next)
     {
         $accountable = true;
+        $geolocation = new Geolocation;
 
         if ($request->header('X-TOR', false) || is_hidden_service()) {
             // Consider a user unaccountable if there's a custom X-TOR header,
             // or if the hostname is our hidden service name.
             $accountable = false;
-        } elseif (!env('APP_DEBUG', false) && env('APP_URL_HS', false) && (new Geolocation())->getCountryCode() == 'tor') {
-            throw new TorClearnet();
+        } elseif ($geolocation->getCountryCode() == 'tor') {
+            $accountable = false;
+
+            if (!config('app.debug', false) && env('APP_URL_HS', false)) {
+                throw new TorClearnet;
+            }
         }
 
         $this->auth->user()->setAccountable($accountable);
