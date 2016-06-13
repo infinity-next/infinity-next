@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\TorFilter::class,
             \App\Http\Middleware\SlugRouting::class,
-            'throttle:90,1',
+            'throttle:120,1',
         ],
     ];
 

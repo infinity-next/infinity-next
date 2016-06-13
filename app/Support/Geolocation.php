@@ -36,7 +36,7 @@ class Geolocation
      *
      * @return Geolocation
      */
-    public function __cosntruct($ip = null)
+    public function __construct($ip = null)
     {
         if (is_null($ip)) {
             $ip = Request::ip();

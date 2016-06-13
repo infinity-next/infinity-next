@@ -2018,8 +2018,8 @@ class Post extends Model implements FormattableContract
     public function submitTo(Board &$board, &$thread = null)
     {
         $this->board_uri = $board->board_uri;
-        $this->author_ip = new IP();
-        $this->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation() : null;
+        $this->author_ip = new IP;
+        $this->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation : null;
         $this->reply_last = $this->freshTimestamp();
         $this->bumped_last = $this->reply_last;
         $this->setCreatedAt($this->reply_last);

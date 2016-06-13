@@ -23,6 +23,7 @@
         "stripe/stripe-php": "2.*",
         "laravel/cashier": "~5.0",
         "laravelcollective/html": "~5.0",
+        "sabberworm/PHP-CSS-Parser": "7.0.*",
 
         "ext-gd": "*",
         "intervention/imagecache": "~2.3",
