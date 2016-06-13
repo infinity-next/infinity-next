@@ -35,8 +35,22 @@ class Kernel extends ConsoleKernel
 
         $this->runRecordStats($schedule, $now);
         $this->runAutoprune($schedule, $now);
+        $this->runTorPull($schedule, $now);
     }
 
+
+    private function runTorPull(Schedule $schedule, Carbon $now)
+    {
+        $logdir = storage_path('logs/torpull');
+
+        if (!File::exists($logdir)) {
+            File::makeDirectory($logdir);
+        }
+
+        $schedule->command('tor:pull')
+            ->twiceDaily()
+            ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
+    }
 
     private function runAutoprune(Schedule $schedule, Carbon $now)
     {
