@@ -11,6 +11,7 @@ use GeoIp2\Exception\AddressNotFoundException;
 use MaxMind\Db\InvalidDatabaseException;
 use Request;
 use Storage;
+use \InvalidArgumentException;
 
 class Geolocation
 {
@@ -99,7 +100,7 @@ class Geolocation
     {
         // Try a lookup to MaxMind.
         try {
-            $reader = new Reader(Storage::get('GeoLite2-Country.mmdb'));
+            $reader = new Reader(storage_path('GeoLite2-Country.mmdb'));
             $record = $reader->country($this->ip);
 
             return strtolower($record->country->isoCode);
@@ -111,6 +112,8 @@ class Geolocation
         // Thrown if address not in DB.
         catch (AddressNotFoundException $e) {
             // Nothing. This is safe to ignore.
+        }
+        catch (InvalidArgumentException $e) {
         }
 
         return '';
