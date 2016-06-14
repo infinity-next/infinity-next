@@ -613,6 +613,7 @@ class FileStorage extends Model
         $url     = media_url("static/img/filetypes/{$ext}.svg", false);
         $spoil   = $this->isSpoiler();
         $deleted = $this->isDeleted();
+        $md5     = $deleted ? null : $this->hash;
 
         if ($deleted)
         {
@@ -700,7 +701,7 @@ class FileStorage extends Model
         }
 
         return "<div class=\"attachment-wrapper\" style=\"height: {$height}; width: {$width};\">" .
-            "<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" style=\"height: {$height}; width: {$width};\"/>" .
+            "<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" data-md5=\"{$md5}\" style=\"height: {$height}; width: {$width};\"/>" .
         "</div>";
     }
 
@@ -1161,23 +1162,21 @@ class FileStorage extends Model
 
                 return true;
             }
-            else if ($this->isDocument() && $this->mime === "application/epub+zip")
+            else if ($this->mime === "application/epub+zip")
             {
                 $epub = new \ZipArchive();
                 $epub->open($this->getFullPath());
 
-                // Parse the container file
+                // Find and parse the rootfile
                 $container     = $epub->getFromName("META-INF/container.xml");
                 $containerXML  = simplexml_load_string($container);
                 $rootFilePath  = $containerXML->rootfiles->rootfile[0]['full-path'];
+                $rootFile      = $epub->getFromName($rootFilePath);
+                $rootFileXML   = simplexml_load_string($rootFile);
 
                 // Determine base directory
                 $rootFileParts = pathinfo($rootFilePath);
                 $baseDirectory = ($rootFileParts['dirname'] == "." ? null : $rootFileParts['dirname']);
-
-                // Parse the rootfile
-                $rootFile      = $epub->getFromName($rootFilePath);
-                $rootFileXML   = simplexml_load_string($rootFile);
 
                 // XPath queries with namespaces are shit until XPath 2.0 so we hold its hand
                 $rootFileNS    = $rootFileXML->getDocNamespaces();
@@ -1194,12 +1193,11 @@ class FileStorage extends Model
 
                 // Non-standards used with OEB, prior to EPUB
                 $oebXPath   = "//{$ns}reference[@type='coverimagestandard' or @type='other.ms-coverimage-standard']";
-                // EPUB2 standard
-                $epub2XPath = "//{$ns}item[@id=(//{$ns}meta[@name='cover']/@content)]";
-                // EPUB3 standard
-                $epub3XPath = "//{$ns}item[@properties='cover-image']";
+                // EPUB standards
+                $epubXPath = "//{$ns}item[@properties='cover-image' or @id=(//{$ns}meta[@name='cover']/@content)]";
+
                 // Query the rootfile for cover elements
-                $coverXPath = $rootFileXML->xpath("{$oebXPath} | {$epub2XPath} | {$epub3XPath}");
+                $coverXPath = $rootFileXML->xpath("{$oebXPath} | {$epubXPath}");
 
                 if ($coverXPath)
                 {
