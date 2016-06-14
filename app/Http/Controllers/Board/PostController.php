@@ -518,7 +518,7 @@ class PostController extends Controller
     public function unlock(Request $request, Board $board, Post $post)
     {
         // Redirect to anyBumplock with a flag denoting an unlock.
-        return $this->anyLock($request, $board, $post, false);
+        return $this->unlock($request, $board, $post, false);
     }
 
     /**
@@ -550,7 +550,7 @@ class PostController extends Controller
     public function unbumplock(Request $request, Board $board, Post $post)
     {
         // Redirect to anyBumplock with a flag denoting an unbumplock.
-        return $this->anyBumplock($request, $board, $post, false);
+        return $this->bumplock($request, $board, $post, false);
     }
 
     /**
@@ -561,7 +561,6 @@ class PostController extends Controller
         if (!$post->exists) {
             abort(404);
         }
-
 
         if ($post->canSticky($this->user)) {
             $post->setSticky($sticky !== false)->save();
@@ -583,7 +582,7 @@ class PostController extends Controller
     public function unsticky(Request $request, Board $board, Post $post)
     {
         // Redirect to anySticky with a flag denoting an unsticky.
-        return $this->anySticky($request, $board, $post, false);
+        return $this->sticky($request, $board, $post, false);
     }
 
     /**
