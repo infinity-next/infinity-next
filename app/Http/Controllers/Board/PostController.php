@@ -237,7 +237,9 @@ class PostController extends Controller
                     foreach ($posts as $post) {
                         Event::fire(new PostWasModerated($post, $this->user));
                     }
-                } else {
+                }
+                // Delete a single post
+                else {
                     if (!$post->isAuthoredByClient()) {
                         if ($ban) {
                             $this->log('log.post.ban.delete', $post, [
@@ -246,7 +248,7 @@ class PostController extends Controller
                                 'ip' => $post->getAuthorIpAsString(),
                                 'justification' => $banModel->justification,
                                 'time' => $banLengthStr,
-                                'posts' => $posts->count(),
+                                'posts' => 1,
                             ]);
                         } elseif ($post->reply_to) {
                             $this->log('log.post.delete.reply', $post, [
