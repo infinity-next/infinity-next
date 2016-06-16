@@ -175,6 +175,7 @@ class PageController extends PanelController
      */
     public function update(Request $request, Page $page)
     {
+        $board = $page->board ?: null;
         $request->replace([
             'name' => $request->get('name'),
             'title' => str_slug($request->get('name')),
@@ -184,17 +185,12 @@ class PageController extends PanelController
         $this->validate($request, [
             'name' => [
                 'required',
-                "unique:pages,name,{$page->page_id},page_id",
+                "unique:pages,name,{$page->page_id},page_id,board_uri,".($board ? $board->board_uri : 'NULL'),
                 'max:255',
             ],
             'title' => [
                 'required',
-                "unique:pages,title,{$page->page_id},page_id,board_uri,".($board ? $board->board_uri : $board),
-                'max:255',
-            ],
-            'title' => [
-                'required',
-                "unique:pages,title,{$page->page_id},page_id",
+                "unique:pages,title,{$page->page_id},page_id,board_uri,".($board ? $board->board_uri : 'NULL'),
                 'max:255',
             ],
             'body' => 'required',
