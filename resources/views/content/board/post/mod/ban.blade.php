@@ -7,7 +7,7 @@
 ]) !!}
     @include('widgets.messages')
 
-    @if ($post->hasAuthorIp())
+    @if ($post->hasAuthorIp() || $scope === false)
     <fieldset class="form-fields">
         <legend class="form-legend">{{ trans("board.legend." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
 

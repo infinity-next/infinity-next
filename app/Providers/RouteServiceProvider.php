@@ -128,7 +128,7 @@ class RouteServiceProvider extends ServiceProvider
 
                 if ($post instanceof Post && $post->exists) {
                     $route->setParameter('post', $post);
-                    $route->forgetParameter('post_id', $post);
+                    $route->setParameter('post_id', $post);
 
                     $this->app->singleton(Post::class, function ($app) use ($post) {
                         return $post;

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\TorClearnet;
 use Exception;
 use ErrorException;
 use Mail;
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
         $errorEmail = false;
 
         switch (get_class($e)) {
-            case App\Exceptions\TorClearnet::class:
+            case TorClearnet::class:
                 $errorView = 'errors.403_tor_clearnet';
                 break;
 

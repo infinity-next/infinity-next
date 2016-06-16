@@ -80,7 +80,7 @@ class Geolocation
             }
         }
         // Without Cloudflare, check for a Tor address using our own records.
-        elseif ($this->isTorExitNode($this->ip)) {
+        elseif ($this->isIpTorExitNode($this->ip)) {
             $cc = 'tor';
         }
         // Not Tor, try a MaxMind lookup.
@@ -128,8 +128,12 @@ class Geolocation
      *
      * @return bool
      */
-    public static function isTorExitNode($ip)
+    public static function isIpTorExitNode($ip = null)
     {
+        if (is_null($ip)) {
+            $ip = Request::ip();
+        }
+
         if (!Cache::has('tor-exit-nodes')) {
             Artisan::call('tor:pull');
         }

@@ -6,6 +6,17 @@ use App\Support\Geolocation;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
 
+/**
+ * Checks IPs against known Tor data.
+ *
+ * @category   Command
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2016 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @since  0.6.1
+ */
 class TorCheck extends Command
 {
     /**
@@ -29,7 +40,7 @@ class TorCheck extends Command
      */
     public function handle()
     {
-        if (Geolocation::isTorExitNode($this->argument('ip'))) {
+        if (Geolocation::isIpTorExitNode($this->argument('ip'))) {
             $this->line("IP is an accessible Tor exit node.");
         } else {
             $this->line("IP is not recognized as a Tor exit node.");
