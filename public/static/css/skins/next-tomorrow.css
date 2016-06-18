@@ -16,6 +16,10 @@ a, a:link, a:visited {
     a:hover {
         color: white;
     }
+    button, a.button {
+	border-color: #D9BFB7;
+	color: #81a2be;
+}
 /* navig */
 header nav.gnav {
     background: #1d1f21;
