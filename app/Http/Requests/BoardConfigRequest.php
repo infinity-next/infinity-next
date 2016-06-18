@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Board;
 use App\OptionGroup;
 use App\Services\UserManager;
+use Sabberworm\CSS\OutputFormat;
+use Sabberworm\CSS\Parser;
 
 class BoardConfigRequest extends Request
 {
@@ -97,14 +99,16 @@ class BoardConfigRequest extends Request
      */
     public function sanitize()
     {
-        $input = $this->all();
+        $input = $this->input('boardCustomCSS', false);
 
-        $parser = new \Sabberworm\CSS\Parser($input['boardCustomCSS']);
-        $style = $parser->parse()->render(\Sabberworm\CSS\OutputFormat::createPretty());
+        if ($input) {
+            $parser = new Parser($input['boardCustomCSS']);
+            $style = $parser->parse()->render(OutputFormat::createPretty());
 
-        $input['boardCustomCSS'] = $style;
+            $input['boardCustomCSS'] = $style;
 
-        $this->replace($input);
+            $this->replace(['boardCustomCSS' => $input]);
+        }
     }
 
     /**

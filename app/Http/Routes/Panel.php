@@ -190,8 +190,8 @@ Route::group(['namespace' => 'Boards',], function () {
           * Assets
           */
          Route::get('assets',     ['as' => 'assets', 'uses' => 'ConfigController@getAssets',]);
-         Route::patch('assets',   ['as' => 'assets.patch', 'uses' => 'ConfigController@patchConfig',]);
-         Route::put('assets',     ['as' => 'assets.put', 'uses' => 'ConfigController@patchConfig',]);
+         Route::patch('assets',   ['as' => 'assets.patch', 'uses' => 'ConfigController@patchAssets',]);
+         Route::put('assets',     ['as' => 'assets.put', 'uses' => 'ConfigController@putAssets',]);
          Route::post('assets',    ['as' => 'assets.destroy', 'uses' => 'ConfigController@destroyAssets',]);
 
         /**
