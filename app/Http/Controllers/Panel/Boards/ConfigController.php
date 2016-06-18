@@ -105,7 +105,7 @@ class ConfigController extends PanelController
 
         Event::fire(new BoardWasModified($board));
 
-        return $this->getAssets($board);
+        return redirect()->back();
     }
 
     /**
