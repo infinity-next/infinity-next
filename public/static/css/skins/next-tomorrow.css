@@ -505,6 +505,10 @@ ul.post-metas {
     span.post-action-label {
 	color: #81a2be;
 }
+a.post-action-link:hover {
+	color: white;
+	background: #81a2be;
+}
 /* Footer */
 footer {
     margin: 10px 15px;
