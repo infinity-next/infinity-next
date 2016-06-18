@@ -16,6 +16,10 @@ a, a:link, a:visited {
     a:hover {
         color: white;
     }
+    button, a.button {
+	border-color: #D9BFB7;
+	color: #81a2be;
+}
 /* navig */
 header nav.gnav {
     background: #1d1f21;
@@ -140,7 +144,7 @@ form.form-post {
             }
                 form.form-post .ui-resizable-handle {
                     opacity: 0.4;
-                    background-image: url("https://beta.8ch.net/static/img/backgrounds/ui-icons_FFFFFF_256x240.png");
+                    background-image: url("https://16chan.nl/static/img/backgrounds/ui-icons_FFFFFF_256x240.png");
                 }
             html body.responsive main.index-threaded form.form-post .row-file .dz-container {
                 border: 1px solid #CCC !important;
@@ -262,7 +266,7 @@ body.responsive .index-threaded {
 #site-recent-images .recent-images {
     text-align: center;
     font-size: 0;
-    background: #282a2e;
+    background: #282a2e !important;
 }
 
 #search-form .box-title {
@@ -295,7 +299,7 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 /* Post Layout */
 
 .post-container {
-    background: #282a2e;
+    background: #282a2e !important;
     border: none;
     box-sizing: border-box;
 }
