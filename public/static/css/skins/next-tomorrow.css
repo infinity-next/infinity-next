@@ -1,4 +1,4 @@
- html, body {
+    html, body {
     background-color: #1d1f21;
     background-image: none;
     color: #C5C8C6;
@@ -16,6 +16,27 @@ a, a:link, a:visited {
     a:hover {
         color: white;
     }
+    button, a.button {
+	border-color: #D9BFB7;
+	color: #81a2be;
+    background:none;
+}
+button:hover, a.button:hover {
+	background: #81a2be!important;
+	color: #FFFFFF!important;
+}
+button:disabled, a.button.disabled {
+	background: #282A2E none repeat scroll 0% 0% !important;
+}
+#boardlist table.board-list-table .board-uri .board-sfw {
+	color: #81a2be;
+}
+#boardlist table.board-list-table tr.board-list-omitted #board-list-more.board-list-hasmore {
+	color:#C5C8C6;
+}
+#boardlist #search-form .box-title {
+	color: #C5C8C6;
+}
 /* navig */
 header nav.gnav {
     background: #1d1f21;
@@ -65,10 +86,6 @@ figure.page-head {
     }
 /**/
    /* Navigation Buttons */
-main.board-index nav.pagination {
-    margin: -1em 15px 0 15px;
-    padding-bottom: 1em;
-}
     main.board-index .pagination-buttons {
         float: left;
         margin: 0;
@@ -76,15 +93,8 @@ main.board-index nav.pagination {
         text-align: center;
     }
         main.board-index div.pagination-buttons .pagination-button {
-            line-height: 1.5;
-            margin: 0;
-            padding: 2px 10px;
             background: none;
-            border: none;
-            font-size: 11px;
-            font-weight: normal;
-            text-decoration: underline;
-            padding: 0;
+            float:left;
         }
 
         a.button.pagination-button + a.button.pagination-button {
@@ -140,7 +150,7 @@ form.form-post {
             }
                 form.form-post .ui-resizable-handle {
                     opacity: 0.4;
-                    background-image: url("https://beta.8ch.net/static/img/backgrounds/ui-icons_FFFFFF_256x240.png");
+                    background-image: url("https://16chan.nl/static/img/backgrounds/ui-icons_FFFFFF_256x240.png");
                 }
             html body.responsive main.index-threaded form.form-post .row-file .dz-container {
                 border: 1px solid #CCC !important;
@@ -292,7 +302,13 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 /**/
 
 /* Post Layout */
-
+main.index-threaded .thread-item {
+	border-top: 1px solid rgba(129, 162, 190, 0.5);
+	border-bottom: 1px solid rgba(129, 162, 190, 0.5);
+}
+body.responsive .index-threaded .thread-item {
+	border-top: 1px solid rgba(129, 162, 190, 0.5);
+}
 .post-container {
     background: #282a2e !important;
     border: none;
@@ -486,13 +502,14 @@ ul.post-metas {
         display: block;
         color: #C5C8C6;
     }
-    
+    span.post-action-label {
+	color: #81a2be;
+}
 /* Footer */
 footer {
     margin: 10px 15px;
 }
     footer nav.pagination, nav.pagination-automatic {
-        display: inline-block;
         background-color: #282A2E;
         border-bottom: 1px solid #101112;
         border-right: 1px solid #101112;
