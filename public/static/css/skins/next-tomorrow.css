@@ -1,4 +1,4 @@
-    html, body {
+ html, body {
     background-color: #1d1f21;
     background-image: none;
     color: #C5C8C6;
@@ -261,7 +261,7 @@ body.responsive .index-threaded {
 #site-recent-images .recent-images {
     text-align: center;
     font-size: 0;
-    background: #282a2e;
+    background: #282a2e !important;
 }
 
 #search-form .box-title {
@@ -294,7 +294,7 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 /* Post Layout */
 
 .post-container {
-    background: #282a2e;
+    background: #282a2e !important;
     border: none;
     box-sizing: border-box;
 }
