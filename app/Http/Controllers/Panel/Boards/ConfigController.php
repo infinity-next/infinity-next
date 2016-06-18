@@ -194,7 +194,7 @@ class ConfigController extends PanelController
         }
 
         if ((bool) Input::get('delete', false)) {
-            return $this->deleteAssets($request, $board);
+            return $this->destroyAssets($request, $board);
         }
 
         $input = Input::all();
