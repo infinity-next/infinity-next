@@ -1,0 +1,144 @@
+/**
+ * MAIN POST STYLING
+ */
+blockquote.ugc {
+	margin-left: 1.8em;
+	padding-left: 0;
+}
+	blockquote.ugc h1,
+	blockquote.ugc h2,
+	blockquote.ugc h3,
+	blockquote.ugc h4,
+	blockquote.ugc h5,
+	blockquote.ugc h6 {
+		color: #AF0A0F;
+		padding: 0;
+	}
+
+	blockquote.ugc a {
+		text-decoration: underline;
+	}
+		blockquote.ugc a:hover,
+		blockquote.ugc a.cite {
+			color: #D00;
+		}
+
+	blockquote.ugc hr {
+		border-top: 2px groove rgba(255, 255, 255, 1);
+	}
+
+	blockquote.ugc pre {
+		clear: both;
+		background-color: rgba(255, 255, 255, 0.35);
+		color: #111111;
+
+		margin: 1em -0.75em 1em -1.7em;
+
+		overflow-x: auto;
+		overflow-y: auto;
+		max-height: 50vh;
+
+		& code {
+			display: block;
+			margin: 0;
+			padding: 1em 0.75em 1em 1.7em;
+			white-space: pre;
+
+			/* Very specific formatting for ASCII art. */
+			&.language-aa,
+			&.language-AA {
+				font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", sans-serif;
+				display: block !important;
+				font-size: 12pt;
+				line-height: 1.1;
+			}
+		}
+
+		&:last-child {
+			margin-bottom: -0.7em;
+		}
+	}
+
+	blockquote.ugc blockquote {
+		margin-left: 0;
+		margin-right: 0;
+
+		color: #789922;
+	}
+		blockquote.ugc blockquote.spoiler {
+			box-sizing: border-box;
+			padding: 1px 0.5em;
+		}
+		/* blockquote.ugc blockquote + p {
+			margin-top: -1em;
+		} */
+
+	blockquote.ugc .spoiler {
+		box-sizing: border-box;
+		padding: 1px 0.5em;
+
+		color: black;
+		background: black;
+	}
+		blockquote.ugc .spoiler:hover {
+			color: white;
+			background: black;
+		}
+
+	blockquote.ugc p {
+		margin-left: 0;
+		margin-right: 0;
+		margin-top: 0;
+	}
+		blockquote.ugc :first-child {
+			margin-top: 0;
+		}
+		blockquote.ugc :last-child {
+			margin-bottom: 0;
+		}
+		blockquote.ugc blockquote {
+			margin-bottom: 0;
+		}
+
+	blockquote.ugc ol,
+	blockquote.ugc ul {
+		display: block;
+		margin: 1em;
+		padding: 0 0 0 2em;
+
+		list-style-type: decimal;
+		list-style-position: inside;
+	}
+		blockquote.ugc ul {
+			list-style-type: disc;
+		}
+
+	blockquote.ugc table {
+		border-spacing: 0.25em;
+		margin: 1em 0;
+		width: auto;
+	}
+		blockquote.ugc thead tr,
+		blockquote.ugc tbody tr:nth-of-type(even) {
+			background-color: rgba(0, 0, 100, 0.1);
+		}
+
+		blockquote.ugc tbody {
+
+		}
+			blockquote.ugc tr {
+
+			}
+			blockquote.ugc td {
+				padding: 0.25em;
+			}
+
+		blockquote.ugc thead {
+
+		}
+			blockquote.ugc th {
+				padding: 0.25em;
+			}
+		blockquote.ugc tfoot {
+
+		}

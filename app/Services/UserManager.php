@@ -5,8 +5,11 @@ use App\Contracts\PermissionUser;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 
+use Config;
+use Debugbar;
+
 class UserManager {
-	
+
 	/**
 	 * Create a new authentication controller instance.
 	 * Don't overwrite __construct in any children. Use ::boot
@@ -21,7 +24,7 @@ class UserManager {
 		$this->registrar = $registrar;
 		$this->user      = App::make(PermissionUser::class);
 	}
-	
+
 	/**
 	 * Returns our user object.
 	 *
@@ -31,5 +34,5 @@ class UserManager {
 	{
 		return $this->user;
 	}
-	
+
 };

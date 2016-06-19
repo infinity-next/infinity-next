@@ -1,14 +1,16 @@
-<?php namespace App\Http\Middleware;
+<?php
+
+namespace App\Http\Middleware;
 
 use Closure;
 
-class DomainFilter 
+class DomainFilter
 {
-	public function handle($request, Closure $next)
-	{
-		$request->route()->forgetParameter('domain');
-		$request->route()->forgetParameter('tld');
-		
-		return $next($request);
-	}
+    public function handle($request, Closure $next)
+    {
+        $request->route()->forgetParameter('domain');
+        $request->route()->forgetParameter('tld');
+
+        return $next($request);
+    }
 }

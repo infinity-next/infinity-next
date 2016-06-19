@@ -1,13 +1,15 @@
 <?php namespace App\Providers;
 
 use App\Board;
+use App\Page;
 use App\Post;
+use App\User;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider {
-	
+
 	/**
 	 * This namespace is applied to the controller routes in your routes file.
 	 *
@@ -16,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider {
 	 * @var string
 	 */
 	protected $namespace = 'App\Http\Controllers';
-	
+
 	/**
 	 * Define your route model bindings, pattern filters, etc.
 	 *
@@ -29,47 +31,74 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->pattern('attachment', '[0-9]\d*');
 		$router->pattern('board',      Board::URI_PATTERN);
 		$router->pattern('id',         '[0-9]\d*');
-		
+
 		$router->model('attachment', '\App\FileAttachment');
 		$router->model('ban',        '\App\Ban');
 		$router->model('board',      '\App\Board');
+		$router->model('page',       '\App\Page');
 		$router->model('post',       '\App\Post');
 		$router->model('report',     '\App\Report');
 		$router->model('role',       '\App\Role');
-		
-		$router->bind('user', function($value, $route) {
+
+		$router->bind('user', function($value, $route)
+		{
 			if (is_numeric($value))
 			{
-				return \App\User::find($value);
+				return User::find($value);
 			}
 			else if (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches))
 			{
-				return \App\User::find($matches['id']);
+				return User::find($matches['id']);
 			}
 		});
-		
-		$router->bind('board', function($value, $route) {
+
+		$router->bind('page', function($value, $route)
+		{
+			if (is_numeric($value))
+			{
+				return Page::find($value);
+			}
+			else if (preg_match('/^[a-z0-9]{1,64}\.(?P<id>\d+)$/i', $value, $matches))
+			{
+				return Page::find($matches['id']);
+			}
+		});
+
+		$router->bind('page_title', function($value, $route)
+		{
+			$board = $route->getParameter('board');
+
+			return Page::where([
+				'board_uri' => $board instanceof Board ? $board->board_uri : null,
+				'title' => $value,
+			])->first();
+		});
+
+		$router->bind('board', function($value, $route)
+		{
 			$board = Board::getBoardForRouter(
 				$this->app,
 				$value
 			);
-			
+
 			if ($board)
 			{
 				$board->applicationSingleton = true;
 				return $board;
 			}
-			
+
 			return abort(404);
 		});
-		
-		$router->bind('attachment', function($value, $route) {
+
+		$router->bind('attachment', function($value, $route)
+		{
 			return \App\FileAttachment::where('is_deleted', false)
 				->with('storage')
 				->find($value);
 		});
-		
-		$router->bind('role', function($value, $route) {
+
+		$router->bind('role', function($value, $route)
+		{
 			if (is_numeric($value))
 			{
 				return \App\Role::find($value);
@@ -79,25 +108,27 @@ class RouteServiceProvider extends ServiceProvider {
 				return \App\Role::find($matches['id']);
 			}
 		});
-		
-		$router->bind('post_id', function($value, $route) {
+
+		$router->bind('post_id', function($value, $route)
+		{
 			$board = $route->getParameter('board');
-			
+
 			if (!($board instanceof Board))
 			{
 				$board = $this->app->make("\App\Board");
 			}
-			
+
 			if (is_numeric($value) && $board instanceof Board)
 			{
 				return $board->getThreadByBoardId($value);
 			}
 		});
-		
+
 		// Binds a matched instance of a {board} as a singleton instance.
-		$router->matched(function($route, $request) {
+		$router->matched(function($route, $request)
+		{
 			$board = $route->getParameter('board');
-			
+
 			if ($board instanceof Board && $board->exists)
 			{
 				// Binds the board to the application if it exists.
@@ -105,10 +136,10 @@ class RouteServiceProvider extends ServiceProvider {
 					return $board;
 				});
 			}
-			
+
 			// Binds the post to the application if it exists.
 			$post = $route->getParameter('post_id');
-			
+
 			if ($post instanceof Post && $post->exists)
 			{
 				$route->setParameter('post', $post);
@@ -118,11 +149,11 @@ class RouteServiceProvider extends ServiceProvider {
 				});
 			}
 		});
-		
-		
+
+
 		parent::boot($router);
 	}
-	
+
 	/**
 	 * Define the routes for the application.
 	 *
@@ -136,5 +167,5 @@ class RouteServiceProvider extends ServiceProvider {
 			require app_path('Http/routes.php');
 		});
 	}
-	
+
 }

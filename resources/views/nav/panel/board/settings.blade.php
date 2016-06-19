@@ -7,6 +7,7 @@
 						@foreach ([
 							'assets' => "assets",
 							'config' => "basic",
+							'pages'  => "pages",
 							'roles'  => "roles",
 							'staff'  => "staff",
 							'tags'   => "tags",

@@ -162,6 +162,14 @@ class OptionSeeder extends Seeder {
 					'data_type'             => "boolean",
 					'validation_parameters' => "boolean",
 				],
+				
+				[
+					'option_name'           => "captchaEnabled",
+					'default_value'         => false,
+					'format'                => "onoff",
+					'data_type'             => "boolean",
+					'validation_parameters' => "boolean",
+				],
 				[
 					'option_name'           => "captchaLifespanTime",
 					'default_value'         => 60,
@@ -263,7 +271,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max",
+					'validation_parameters' => "min:\$min|max:\$max|css",
 				],
 				[
 					'option_name'           => "boardLanguage",

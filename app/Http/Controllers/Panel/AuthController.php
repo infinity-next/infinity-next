@@ -2,9 +2,11 @@
 
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
+use Cookie;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Http\Request;
+use Session;
 
 class AuthController extends PanelController {
 	
@@ -68,7 +70,7 @@ class AuthController extends PanelController {
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function postRegister(Request $request)
+	public function putRegister(Request $request)
 	{
 		if (!$this->user->canCreateUser())
 		{
@@ -118,7 +120,10 @@ class AuthController extends PanelController {
 		
 		if (env('APP_NO_AUTH', false))
 		{
-			$user = User::where(['username' => $request->get('username')])->firstOrFail();
+			$user = User::where([
+				'username' => $request->get('username')
+			])->firstOrFail();
+			
 			$this->auth->login($user);
 		}
 		else if (!$this->auth->attempt($credentials, $request->has('remember')))
@@ -158,6 +163,11 @@ class AuthController extends PanelController {
 	public function getLogout()
 	{
 		$this->auth->logout();
+
+		Session::flush();
+
+		Cookie::queue(Cookie::forget('laravel_session'));
+		Cookie::queue(Cookie::forget('XSRF-TOKEN'));
 		
 		return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
 	}

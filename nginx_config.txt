@@ -1,0 +1,41 @@
+server {
+	
+        listen 80;
+
+	# set the following to your web root
+        root /var/www/domain.com;
+        index index.php index.html index.htm;
+	
+	# logs	
+        access_log /var/log/nginx/domain.com-access.log;
+        error_log /var/log/nginx/domain.com-error.log;
+
+        # server name, add your domain here
+        server_name domain.com;
+        
+	# php info
+        location ~ \.php$ {
+
+        	fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+        	# if you are using php5-fpm uncomment this next line
+        	# fastcgi_pass unix:/var/run/php5-fpm.sock;
+        	# if you are using fastcgi on loopback uncomment this next line
+        	# fastcgi_pass 127.0.0.1:9000;
+        
+        	fastcgi_index index.php;
+        	include fastcgi_params;
+        	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    	}
+
+	# the following 2 rewrites are for infinity-next
+        location /attachments {
+                internal;
+                alias /var/www/anons.ca/storage/app/attachments;
+        }
+
+        location / {
+                try_files /public/$uri /public/$uri/ /public/index.php$is_args$args;
+        }
+
+}

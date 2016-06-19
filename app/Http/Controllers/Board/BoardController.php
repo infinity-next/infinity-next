@@ -221,8 +221,9 @@ class BoardController extends Controller {
 				$updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', Carbon::now()->timestamp));
 				$includeHTML  = isset($input['updateHtml']);
 				
-				$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
 				$post->setAppendHTML($includeHTML);
+				
+				$posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);
 				$posts->push($post);
 				$posts->sortBy('board_id');
 				

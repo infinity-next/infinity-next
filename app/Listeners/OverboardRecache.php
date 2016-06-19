@@ -1,11 +1,13 @@
 <?php namespace App\Listeners;
 
+use Acetone;
 use App\Listeners\Listener;
 use Cache;
+use DB;
 
 class OverboardRecache extends Listener
 {
-	
+
 	/**
 	 * Handle the event.
 	 *
@@ -22,17 +24,22 @@ class OverboardRecache extends Listener
 					Cache::forget("site.overboard.page.{$i}");
 				}
 				break;
-			
+
 			case "database" :
 				DB::table('cache')
 					->where('key', 'like', "%site.overboard.page.%")
 					->delete();
 				break;
-			
+
 			default :
 				Cache::tags("site.overboard.pages")->flush();
 				break;
 		}
+
+		if (env('APP_VARNISH'))
+		{
+			Acetone::purge("/overboard.html");
+		}
 	}
-	
+
 }

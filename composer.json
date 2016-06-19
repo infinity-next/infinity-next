@@ -16,8 +16,8 @@
 	
 	"repositories": [
 		{
-			"type": "vcs",
-			"url":  "git@github.com:infinity-next/framework.git"
+			"type": "git",
+			"url":  "https://github.com/infinity-next/framework.git"
 		}
 	],
 	
@@ -45,9 +45,14 @@
 		"james-heinrich/getid3" : "1.9.*",
 		
 		"devfactory/minify" : "1.0.*",
+		"sabberworm/PHP-CSS-Parser": "7.0.*",
+		
+		"barryvdh/laravel-httpcache": "0.2.x@dev",
+
+		"ademes/acetone": "dev-master",
 		
 		"infinity-next/braintree":       "*@dev",
-		"infinity-next/brennan-captcha": "*@dev",
+		"infinity-next/laravel-captcha": "*@dev",
 		"infinity-next/eightdown":       "*@dev",
 		"infinity-next/sleuth":          "*@dev"
 	},

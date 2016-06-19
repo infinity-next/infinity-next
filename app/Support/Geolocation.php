@@ -5,21 +5,21 @@ use App;
 use Request;
 
 class Geolocation {
-	
+
 	/**
 	 * The IP address we're locating.
 	 *
 	 * @var string  IPv4 or IPv6 Address
 	 */
 	protected $ip;
-	
+
 	/**
 	 * If our IP is the request IP.
 	 *
 	 * @var boolean
 	 */
 	protected $current;
-	
+
 	/**
 	 * Builds a Geolocation interpreter instance.
 	 *
@@ -32,13 +32,13 @@ class Geolocation {
 		{
 			$ip = Request::ip();
 		}
-		
+
 		$this->ip = $ip;
 		$this->current = ($ip == Request::ip());
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Returns the country code when you echo the object.
 	 *
@@ -48,7 +48,7 @@ class Geolocation {
 	{
 		return $this->getCountryCode();
 	}
-	
+
 	/**
 	 * Returns the ISO 3166-1 alpha-2 country codes for the IP.
 	 *
@@ -57,19 +57,24 @@ class Geolocation {
 	public function getCountryCode()
 	{
 		$cc = "";
-		
+
 		if (!\App::make(PermissionUser::class)->isAccountable())
 		{
-			return "tor";
+			$cc = "tor";
 		}
 		// This checks for the CloudFlare country code provided for any service hidden behind Cloudflare.
 		// It's probably the easiest, fastest, and most reliable way to achieve this.
 		else if (isset($_SERVER['HTTP_CF_IPCOUNTRY']))
 		{
-			return strtolower($_SERVER["HTTP_CF_IPCOUNTRY"]);
+			$cc = strtolower($_SERVER["HTTP_CF_IPCOUNTRY"]);
+
+			if ($cc == "t1")
+			{
+				$cc = "tor";
+			}
 		}
-		
+
 		return $cc;
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-@if (!$reply_to || !$reply_to->isLocked() || $board->canPostInLockedThreads($user))
+@if ($board->canPost($user, $reply_to))
 @if (isset($post))
 {!! Form::model($post, [
 	'url'    => Request::url(),
@@ -8,14 +8,15 @@
 	'class'  => "form-mod smooth-box",
 ]) !!}
 @else
-{!! Form::open([
-	'url'    => url($board->board_uri . '/thread/' . ($reply_to ? $reply_to->board_id: "")),
-	'files'  => true,
-	'method' => "PUT",
-	'id'     => "post-form",
-	'class'  => "form-post",
-	'data-widget' => "postbox",
-]) !!}
+<form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
+	$reply_to ? 'board.thread.reply' : 'board.thread.put',
+	[
+		'board_uri' => $board->board_uri,
+		'post_id'   => $reply_to ? $reply_to->board_id : "",
+	],
+	false
+)}}" accept-charset="UTF-8" enctype="multipart/form-data">
+	<input name="_method" type="hidden" value="PUT" />
 @endif
 	@if (!isset($post))
 	<ul class="post-menu">
@@ -31,26 +32,26 @@
 			]) !!}
 		</li>
 		@endif
-		<li class="menu-icon menu-icon-minimize">
+		<li class="menu-icon menu-icon-minimize require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Minimize</span>
 		</li>
-		<li class="menu-icon menu-icon-maximize">
+		<li class="menu-icon menu-icon-maximize require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Expand</span>
 		</li>
-		<li class="menu-icon menu-icon-close">
+		<li class="menu-icon menu-icon-close require-js">
 			<span class="menu-icon-button"></span>
 			<span class="menu-icon-text">Close</span>
 		</li>
 	</ul>
 	@endif
-	
+
 	<fieldset class="form-fields">
 		<legend class="form-legend"><i class="fa fa-reply"></i>{{ trans("board.legend." . implode($actions, "+")) }}</legend>
-		
+
 		@include('widgets.messages')
-		
+
 		@if ($board->canPostWithAuthor($user, !!$reply_to))
 		<div class="field row-author">
 			{!! Form::text(
@@ -64,7 +65,7 @@
 			]) !!}
 		</div>
 		@endif
-		
+
 		@if ($board->canPostWithSubject($user, !!$reply_to))
 		<div class="field row-subject">
 			{!! Form::text(
@@ -78,18 +79,18 @@
 			]) !!}
 		</div>
 		@endif
-		
+
 		@if (isset($post) && $post->capcode_id)
 		<div class="field row-capcode">
 			<span>{{ "## {$post->capcode->getDisplayName()}" }}</span>
 		</div>
 		@endif
-		
+
 		@if ($board->hasFlags())
 		<div class="field row-submit row-double">
 			<select id="flag" class="field-control field-flag" name="flag_id">
 				<option value="" selected>@lang('board.field.flag')</option>
-				
+
 				@foreach ($board->getFlags() as $flag)
 					<option value="{!! $flag->board_asset_id !!}">{{{ $flag->asset_name }}}</option>
 				@endforeach
@@ -107,7 +108,7 @@
 					'placeholder' => trans('board.field.email'),
 			]) !!}
 		</div>
-		
+
 		<div class="field row-post">
 			{!! Form::textarea(
 				'body',
@@ -118,7 +119,7 @@
 					'autocomplete' => "off",
 			]) !!}
 		</div>
-		
+
 		@if ($board->canAttach($user) && !isset($post))
 		<div class="field row-file">
 			<div class="dz-container">
@@ -132,33 +133,33 @@
 			</div>
 		</div>
 		@endif
-		
-		<div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;" data-widget="captcha">
-			<label class="field-label" for="captcha">
+
+		<div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;">
+			<label class="field-label" for="captcha" data-widget="captcha">
 				@if (!$board->canPostWithoutCaptcha($user))
 					{!! captcha() !!}
 				@else
 					<img src="" class="captcha">
 					<input type="hidden" name="captcha_hash" value="" />
 				@endif
+
+				{!! Form::text(
+					'captcha',
+					"",
+					[
+						'id'           => "captcha",
+						'class'        => "field-control",
+						'placeholder'  => "Security Code",
+						'autocomplete' => "off",
+				]) !!}
 			</label>
-			
-			{!! Form::text(
-				'captcha',
-				"",
-				[
-					'id'           => "captcha",
-					'class'        => "field-control",
-					'placeholder'  => "Security Code",
-					'autocomplete' => "off",
-			]) !!}
 		</div>
-		
+
 		@if (!$user->isAnonymous() && !isset($post) && $user->getCapcodes($board))
 		<div class="field row-submit row-double">
 			<select id="capcode" class="field-control field-capcode" name="capcode">
 				<option value="" selected>@lang('board.field.capcode')</option>
-				
+
 				@foreach ($user->getCapcodes($board) as $role)
 					<option value="{!! $role->role_id !!}">{{{ $role->getCapcodeName() }}}</option>
 				@endforeach
@@ -166,7 +167,7 @@
 		@else
 		<div class="field row-submit">
 		@endif
-			
+
 			{!! Form::button(
 				trans("board.submit." . implode($actions, "+")),
 				[
@@ -176,7 +177,7 @@
 			]) !!}
 		</div>
 	</fieldset>
-	
+
 @if (!isset($form) || $form)
 </form>
 @endif

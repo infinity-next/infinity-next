@@ -12,9 +12,9 @@ return [
 	| application. If disabled, a simple generic error page is shown.
 	|
 	*/
-	
-	'debug' => env('APP_DEBUG'),
-	
+
+	'debug' => env('APP_ROOT_IP', false) === @$_SERVER['REMOTE_ADDR'] ?: env('APP_DEBUG', false),
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application URL
@@ -25,9 +25,11 @@ return [
 	| your application so that it is used when running Artisan tasks.
 	|
 	*/
-	
-	'url' => env('APP_URL', 'http://localhost'),
-	
+
+	'url' => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', '')
+		? env('APP_URL_HS')
+		: env('APP_URL', 'http://localhost'),
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Timezone
@@ -38,9 +40,9 @@ return [
 	| ahead and set this to a sensible default for you out of the box.
 	|
 	*/
-	
+
 	'timezone' => 'UTC',
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Locale Configuration
@@ -51,9 +53,9 @@ return [
 	| to any of the locales which will be supported by the application.
 	|
 	*/
-	
-	'locale' => 'eng',
-	
+
+	'locale' => 'en',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Fallback Locale
@@ -64,9 +66,9 @@ return [
 	| the language folders that are provided through your application.
 	|
 	*/
-	
-	'fallback_locale' => '',
-	
+
+	'fallback_locale' => env('APP_ENV') !== "production" ? '' : "en",
+
 	/*
 	|--------------------------------------------------------------------------
 	| Encryption Key
@@ -77,11 +79,11 @@ return [
 	| will not be safe. Please do this before deploying an application!
 	|
 	*/
-	
+
 	'key' => env('APP_KEY', 'SomeRandomString'),
-	
+
 	'cipher' => MCRYPT_RIJNDAEL_128,
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Logging Configuration
@@ -94,9 +96,9 @@ return [
 	| Available Settings: "single", "daily", "syslog", "errorlog"
 	|
 	*/
-	
-	'log' => 'errorlog',
-	
+
+	'log' => 'daily',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Autoloaded Service Providers
@@ -109,12 +111,12 @@ return [
 	*/
 
 	'providers' => [
-		
+
 		/*
 		 * Debugging tools...
 		 */
 		'Barryvdh\Debugbar\ServiceProvider',
-		
+
 		/*
 		 * Laravel Framework Service Providers...
 		 */
@@ -135,17 +137,17 @@ return [
 		'Illuminate\Pipeline\PipelineServiceProvider',
 		'Illuminate\Queue\QueueServiceProvider',
 		'Illuminate\Redis\RedisServiceProvider',
-		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
 		'Illuminate\Session\SessionServiceProvider',
+		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-		
+
 		/*
 		 * Captcha...
 		 */
-		'InfinityNext\BrennanCaptcha\CaptchaServiceProvider',
-		
+		'InfinityNext\LaravelCaptcha\CaptchaServiceProvider',
+
 		/*
 		 * Application Service Providers...
 		 */
@@ -156,37 +158,48 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\HelperServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'App\Providers\SessionServiceProvider',
 		'App\Providers\SettingsServiceProvider',
 		'App\Providers\ValidationExtensionServiceProvider',
-		
+
+		/*
+		 * HttpCache...
+		 */
+		'Barryvdh\HttpCache\ServiceProvider',
+
 		/*
 		 * Forms...
 		 */
 		'Collective\Html\HtmlServiceProvider',
-		
+
 		/*
 		 * Files and Validation...
 		 */
 		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 		'InfinityNext\Sleuth\Providers\SleuthServiceProvider',
-		
+
 		/*
 		 * Content Formatting...
 		 */
 		'InfinityNext\Eightdown\EightdownServiceProvider',
-		
+
 		/*
 		 * Money...
 		 */
 		//'Laravel\Cashier\CashierServiceProvider',
 		'InfinityNext\Braintree\BraintreeServiceProvider',
-		
+
 		/*
 		 * CSS+JS Minify...
 		 */
 		'Devfactory\Minify\MinifyServiceProvider',
+
+		/*
+		 * Varnish Integration...
+		 */
+		'JDare\Acetone\AcetoneServiceProvider',
 	],
-	
+
 	/*
 	|--------------------------------------------------------------------------
 	| Class Aliases
@@ -234,35 +247,40 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-		
+
 		'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 		'Settings'  => 'App\Support\Facades\Settings',
-		
+
 		/*
 		 * Forms
 		 */
 		'Form'      => 'Collective\Html\FormFacade',
 		'Html'      => 'Collective\Html\HtmlFacade',
-		
+
 		/*
 		 * Markdown
 		 */
 		'Markdown'  => 'InfinityNext\Eightdown\Facades\EightdownFacade',
-		
+
 		/*
 		 * Captcha
 		 */
-		'Captcha'   => 'InfinityNext\BrennanCaptcha\Facades\Captcha',
-		
+		'Captcha'   => 'InfinityNext\LaravelCaptcha\Facades\Captcha',
+
 		/*
 		 * File Validation
 		 */
 		'Sleuth'   => 'InfinityNext\Sleuth\Facades\Sleuth',
-		
+
 		/*
 		 * CSS+JS Minify
 		 */
 		'Minify'    => 'Devfactory\Minify\Facades\MinifyFacade',
+
+		/*
+		 * Varnish Integration...
+		 */
+		'Acetone'   => 'JDare\Acetone\Acetone\Facades\Acetone',
 	],
 
 ];

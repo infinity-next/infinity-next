@@ -1,0 +1,337 @@
+/* Board Index */
+section.index-form {
+
+}
+    form.form-post,
+    form.form-post .row-double {
+        background: #d6daf0;
+    }
+
+    form.form-post {
+        border: 1px solid #ccc;
+        position: relative;
+        overflow: hidden;
+        max-width: 740px;
+        margin: 0 auto 2em auto;
+        padding: 0 0.75em;
+    }
+        form.form-post .post-menu {
+            position: absolute;
+            top: 0;
+
+            #{$rtl} & {
+                left: 0;
+                padding: 4px 0 0 4px;
+                margin: -1px 0 0 -1px;
+
+            }
+            #{$ltr} & {
+                right: 0;
+                padding: 4px 4px 0 0;
+                margin: -1px -1px 0 0;
+            }
+
+            & .field-control {
+                display: inline-block;
+                border: none;
+                border-bottom: 1px solid rgba(255,255,255,0.4);
+                background: none;
+                color: #eee;
+
+                padding: 0;
+                margin: 0 0.3em 0 0;
+                width: 5em;
+                height: 16px;
+                line-height: 16px;
+
+                html.no-js & {
+                    color: #111111;
+                    border-color: #111111;
+                }
+                &:placeholder {
+                    color: #eee;
+                }
+            }
+        }
+
+                html.js li.menu-input {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+
+                html.js li.menu-icon {
+                    display: none;
+                    vertical-align: middle;
+                }
+                html.js li.menu-icon-maximize {
+                    display: none;
+                }
+                html.js li.menu-icon-minimize {
+                    visibility: hidden;
+                }
+
+                html.js form.postbox-maximized li.menu-icon-minimize {
+                    visibility: visible;
+                }
+                html.js form.postbox-maximized li.menu-icon-maximize {
+                    visibility: hidden;
+                }
+
+                html.js form.postbox-closed {
+                    cursor: pointer;
+                }
+                html.js form.postbox-closed li.menu-icon-close,
+                html.js form.postbox-closed li.menu-icon-minimize,
+                html.js form.postbox-closed li.menu-icon-maximize {
+                    visibility: hidden;
+                }
+                html.js form.postbox-closed div.field {
+                    display: none !important;
+                }
+
+                html.js body.responsive form.form-post.postbox-maximized {
+                    box-sizing: border-box;
+                    max-width: none;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 100%;
+                    position: fixed;
+                    height: 100vh;
+                }
+
+                form.form-post .menu-icon {
+                    display: inline-block;
+                    cursor: pointer;
+                    height: 17px;
+                    min-width:  17px;
+                    border: 1px solid rgba(255,255,255,0.4);
+                    background-color: rgba(255,255,255,0.1);
+                }
+                    form.form-post .menu-icon:hover {
+                        background-color: rgba(255,255,255,0.4);
+                        border-color: rgba(255,255,255,0.8);
+                    }
+
+                    form.form-post .menu-icon .menu-icon-text {
+                        display: inline-block;
+                        display: none;
+                        padding: 0 3px;
+                    }
+                    form.form-post .menu-icon .menu-icon-button {
+                        display: none;
+                        display: inline-block;
+                        background-image: url("#{$base-url}img/backgrounds/ui-icons_FFFFFF_256x240.png");
+                        height: 16px;
+                        width: 16px;
+                    }
+                    form.form-post .menu-icon.menu-icon-minimize .menu-icon-button {
+                        background-position: -64px -128px;
+                    }
+                    form.form-post .menu-icon.menu-icon-maximize .menu-icon-button {
+                        background-position: -32px -128px;
+                    }
+                    form.form-post .menu-icon.menu-icon-close .menu-icon-button {
+                        background-position: -96px -128px;
+                    }
+
+            form.form-post legend.form-legend .fa {
+                display: none;
+
+                .mode-reply & {
+                    display: inline;
+                }
+
+                #{$rtl} & {
+                    display: inline-block;
+                    float: right;
+                    margin-right: 4px;
+                    margin-left: 0.25em;
+                    height: 27px;
+                    line-height: 27px;
+                    vertical-align: middle;
+                }
+                #{$ltr} & {
+                    margin-left: 0.25em;
+                    margin-right: 4px;
+                }
+            }
+
+        form.form-post fieldset.form-fields {
+            padding: 0.75em 0;
+        }
+
+        html.js form.form-post .form-legend {
+            display: block;
+            padding: 0.75em 0 0 0;
+            margin: 0 0 -1em 0;
+            font-weight: bold;
+            font-size: 1.2em;
+            line-height: 27px;
+            vertical-align: middle;
+            width: 100%;
+        }
+
+        form.form-post .field {
+            margin: 0.5em 0;
+
+        }
+
+        /* Text area */
+        form.form-post .row-post {
+            background: #fff;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+            form.form-post .row-post #body {
+                border: none;
+                font-size: 10pt;
+            }
+            form.form-post .ui-resizable-handle {
+                background-image: url("#{$base-url}img/backgrounds/ui-icons_000000_256x240.png");
+                background-position: -64px -224px;
+
+                width:  16px;
+                height: 16px;
+            }
+            form.form-post .ui-resizable-se {
+                cursor: se-resize;
+                right:   0px;
+                bottom:  0px;
+            }
+            form.form-post .ui-resizable-sw {
+                cursor: sw-resize;
+                left:    0px;
+                bottom:  0px;
+
+                -ms-transform: rotate(90deg); /* IE 9 */
+                -webkit-transform: rotate(90deg); /* Safari */
+                transform: rotate(90deg);
+            }
+
+            /* Counter */
+            #body-counter {
+                line-height: 16px;
+                font-size: 9pt;
+                vertical-align: middle;
+                position: absolute;
+                text-align: center;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                pointer-events: none;
+            }
+                #body-counter-max::before {
+                    display: inline;
+                    content: ' ≤ ';
+                }
+                #body-counter-min::after {
+                    display: inline;
+                    content: ' ≤ ';
+                }
+                #body-counter.counter-valid {
+                    color: #ccc;
+                }
+                #body-counter.counter-invalid {
+                    color: #C00;
+                }
+
+        /* Dropzone */
+        form.form-post div.row-file {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0.5em 0;
+            width: auto;
+            overflow: hidden;
+        }
+            form.form-post button.field-submit,
+            form.form-post div.row-file {
+                border: none;
+                background: #E4E4E4;
+                color: rgb(17, 17, 17);
+                text-align: center;
+            }
+
+            form.form-post .row-submit::after {
+                display: block;
+                clear: both;
+                content: ' ';
+            }
+
+            form.form-post button.field-submit:hover,
+            form.form-post div.row-file:hover {
+                background-color: #F1EFEF;
+            }
+
+            html.js form.form-post div.dz-container {
+            }
+                html.js form.form-post div.dz-container input {
+                    display: none;
+                }
+
+            form.form-post div.row-file .fallback {
+                text-align: left;
+            }
+
+        form.form-post .field-control {
+            outline: none;
+        }
+
+        form.form-post .row-captcha {
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0;
+            width: 100%;
+        }
+            form.form-post .row-captcha .field-control {
+                border-color: #ccc;
+            }
+
+        form.form-post .row-post .field-control {
+            height: 6.25em;
+            font-size: 90%;
+            max-height: 50vh;
+        }
+            form.form-post .row-post .ui-wrapper .field-control {
+                max-height: none;
+            }
+
+            form.form-post .row-double #email {
+                width: 60%;
+            }
+            form.form-post .row-double #flag {
+                float: right;
+                border-left: none;
+                width: 40%;
+            }
+
+            form.form-post button.field-submit {
+                box-sizing: border-box;
+                margin: 0;
+                float: right;
+                width: 100%;
+                border: 1px solid #ccc;
+            }
+                form.form-post .row-double button.field-submit {
+                    width: 50%;
+                }
+
+            form.form-post select.field-capcode {
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                float: left;
+                width: 50%;
+            }
+
+#{$rtl} .dz-hidden-input {
+    /**
+     * Fixes an incredibly bizarre RTL issue that breaks page layouts.
+     */
+    top: 1vh !important;
+    bottom: 1vh !important;
+    left: 1vw !important;
+    right: 1vw !important;
+}

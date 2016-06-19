@@ -4,8 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model {
 	
-	use \App\Traits\EloquentBinary;
-	
 	/**
 	 * The database table used by the model.
 	 *
@@ -25,7 +23,14 @@ class Payment extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['customer_id', 'attribution', 'payment_ip', 'amount', 'subscription'];
+	protected $fillable = [
+		'customer_id',
+		'attribution',
+		'payment_ip',
+		'amount',
+		'currency',
+		'subscription',
+	];
 	
 	/**
 	 * API visible fields.
@@ -56,17 +61,6 @@ class Payment extends Model {
 	public function customer()
 	{
 		return $this->belongsTo('\App\User', 'user_id', 'customer_id');
-	}
-	
-	/**
-	 * Gets our binary value and unwraps it from any stream wrappers.
-	 *
-	 * @param  mixed  $value
-	 * @return IP
-	 */
-	public function getPaymentIpStartAttribute($value)
-	{
-		return new IP($value);
 	}
 	
 	public static function getDonorGroups()
@@ -115,16 +109,4 @@ class Payment extends Model {
 		
 		return $donorGroups;
 	}
-	
-	/**
-	 * Sets our binary value and encodes it if required.
-	 *
-	 * @param  mixed  $value
-	 * @return mixed
-	 */
-	public function setPaymentIpStartAttribute($value)
-	{
-		$this->attributes['payment_ip'] = (new IP($value))->toSQL();
-	}
-	
 }

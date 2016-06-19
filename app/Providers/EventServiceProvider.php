@@ -1,12 +1,14 @@
 <?php namespace App\Providers;
 
+use App\Page;
 use App\Post;
+use App\Observers\PageObserver;
 use App\Observers\PostObserver;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
-	
+class EventServiceProvider extends ServiceProvider
+{
 	/**
 	 * The event handler mappings for the application.
 	 *
@@ -14,88 +16,91 @@ class EventServiceProvider extends ServiceProvider {
 	 */
 	protected $listen = [
 		// Post specific events
-		'App\Events\AttachmentWasModified' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\AttachmentWasModified::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\PostWasAdded' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\PostHTMLRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\PostWasAdded::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\PostHTMLRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\PostWasBanned' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\PostWasBanned::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\PostWasDeleted' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\PostWasDeleted::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\PostWasModified' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\PostHTMLRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\PostWasModified::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\PostHTMLRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\PostWasModerated' => [
-			'App\Listeners\ReportMarkSuccessful',
-			
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\PostHTMLRecache',
-			'App\Listeners\ThreadRecache',
+		\App\Events\PostWasModerated::class => [
+			\App\Listeners\ReportMarkSuccessful::class,
+
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\PostHTMLRecache::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		
+
 		// Thread (OP) specific Events
-		'App\Events\ThreadWasStickied' => [
-			'App\Listeners\BoardRecachePages',
-			'App\Listeners\ThreadRecache',
+		\App\Events\ThreadWasStickied::class => [
+			\App\Listeners\BoardRecachePages::class,
+			\App\Listeners\ThreadRecache::class,
 		],
-		'App\Events\ThreadNewReply' => [
-			'App\Listeners\ThreadAutopruneOnReply',
+		\App\Events\ThreadNewReply::class => [
+			\App\Listeners\ThreadAutopruneOnReply::class,
 		],
-		
+
 		// Board specific events
-		'App\Events\BoardWasCreated' => [
-			'App\Listeners\UserRecachePermissions',
+		\App\Events\BoardWasCreated::class => [
+			\App\Listeners\UserRecachePermissions::class,
 		],
-		'App\Events\BoardWasModified' => [
-			'App\Listeners\BoardModelRecache',
-			'App\Listeners\BoardListRecache',
-			'App\Listeners\BoardStyleRecache',
-			'App\Listeners\OverboardRecache',
-			'App\Listeners\BoardRecachePages',
+		\App\Events\BoardWasModified::class => [
+			\App\Listeners\BoardModelRecache::class,
+			\App\Listeners\BoardListRecache::class,
+			\App\Listeners\BoardStyleRecache::class,
+			\App\Listeners\OverboardRecache::class,
+			\App\Listeners\BoardRecachePages::class,
 		],
-		
+		\App\Events\BoardWasReassigned::class => [
+			\App\Listeners\UserRecachePermissions::class,
+		],
+
+		// Page specific events
+		\Appp\Events\PageWasCreated::class => [],
+		\Appp\Events\PageWasModified::class => [],
+		\Appp\Events\PageWasDeleted::class => [],
+
 		// Role events
-		'App\Events\BoardWasReassigned' => [
-			'App\Listeners\UserRecachePermissions',
+		\App\Events\RoleWasModified::class => [
+			\App\Listeners\UserRecachePermissions::class,
 		],
-		
-		// Role events
-		'App\Events\RoleWasModified' => [
-			'App\Listeners\UserRecachePermissions',
+		\App\Events\RoleWasDeleted::class => [
+			\App\Listeners\UserRecachePermissions::class,
 		],
-		'App\Events\RoleWasDeleted' => [
-			'App\Listeners\UserRecachePermissions',
-		],
-		
+
 		// User Events
-		'App\Events\UserRolesModified' => [
-			'App\Listeners\UserRecachePermissions',
+		\App\Events\UserRolesModified::class => [
+			\App\Listeners\UserRecachePermissions::class,
 		],
-		
+
 		// Site Events
-		'App\Events\SiteSettingsWereModified' => [
-			'App\Listeners\SiteSettingsRecache',
+		\App\Events\SiteSettingsWereModified::class => [
+			\App\Listeners\SiteSettingsRecache::class,
 		],
-		
+
 	];
-	
+
 	/**
 	 * Register any other events for your application.
 	 *
@@ -104,8 +109,8 @@ class EventServiceProvider extends ServiceProvider {
 	 */
 	public function boot(DispatcherContract $events)
 	{
+		Page::observe(new PageObserver);
 		Post::observe(new PostObserver);
 		parent::boot($events);
 	}
-	
 }

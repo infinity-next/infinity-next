@@ -3,7 +3,7 @@
 use App\Support\IP;
 
 trait EloquentBinary {
-	
+
 	/**
 	 * Create a collection of models from plain arrays.
 	 *
@@ -15,14 +15,14 @@ trait EloquentBinary {
 	public static function hydrate(array $items, $connection = null)
 	{
 		$instance = (new static)->setConnection($connection);
-		
+
 		$items = array_map(function ($item) use ($instance) {
 			// This loop unwraps content from stream resource objects.
 			// PostgreSQL will return binary data as a stream, which does not
 			// cache correctly. Doing this allows proper attribute mutation and
 			// type casting without any headache or checking which database
 			// system we are using before doing business logic.
-			// 
+			//
 			// See: https://github.com/laravel/framework/issues/10847
 			foreach ($item as $column => $datum)
 			{
@@ -31,13 +31,13 @@ trait EloquentBinary {
 					$item->{$column} = stream_get_contents($datum);
 				}
 			}
-			
+
 			return $instance->newFromBuilder($item);
 		}, $items);
-		
+
 		return $instance->newCollection($items);
 	}
-	
+
 	/**
 	 * Cast an attribute to a native PHP type.
 	 *
@@ -50,7 +50,7 @@ trait EloquentBinary {
 		if (is_null($value)) {
 			return $value;
 		}
-		
+
 		switch ($this->getCastType($key)) {
 			case 'ip':
 				return new IP($value);

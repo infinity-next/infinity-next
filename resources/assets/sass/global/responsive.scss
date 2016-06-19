@@ -1,0 +1,261 @@
+body.responsive {
+    /**
+     * EXPANDING RESPONSIVENESS
+     *
+     * These media tags ADD as the screen GROWS.
+     * They do not take away as the screen shrinks.
+     * Scroll down for max-width selectors.
+     */
+
+    /**
+     * 360px Width
+     * Vertical phones
+     */
+    @media (min-width: 320px) {
+        /**
+         * Sidebar
+         */
+        aside.index-sidebar {
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+
+        /**
+         * Catalog
+         */
+        main.index-catalog section.index-threads {
+            padding: 0;
+        }
+            main.index-catalog .thread-item {
+                max-width: 150px;
+                min-width: 100px;
+            }
+    }
+
+    /**
+     * 640px Width
+     * Horizontal phones
+     */
+    @media (min-width: 640px) {
+        /**
+         * Thread & Posts
+         */
+        section.index-threads aside.advertiser.bottom-right {
+            display: block;
+        }
+
+        ul.attachments-single + blockquote.post {
+            min-width: 30em;
+        }
+    }
+
+
+    /**
+     * 728px Width
+     * Tablets
+     */
+    @media (min-width: 728px) {
+        /**
+         * Index
+         */
+        #site-description .infobox,
+        #site-statistics .infobox {
+            min-height: 10em;
+        }
+
+        /**
+         * Contribution Page
+         */
+        li.contrib-option {
+            border-bottom: none;
+            border-right: 1px solid #EEF2FF;
+            padding-bottom: 0;
+            padding-right: 9px;
+            min-height: 360px;
+        }
+        li.contrib-option:last-child {
+            padding-right: 10px;
+            border-right: none;
+        }
+
+        .me-skill:first-child {
+            padding-right: 3em;
+        }
+        .me-skill:last-child {
+            padding-left: 3em;
+        }
+            .me-skill .fa {
+                display: block;
+                font-size: 300%;
+                vertical-align: top;
+
+                position: absolute;
+                top: 5px;
+                bottom: 0;
+                left: -1.5em;
+            }
+            .me-skill:last-child .fa {
+                left: -0.5em;
+            }
+
+        /**
+         * Thread & Posts
+         */
+        form.form-post {
+        }
+
+        section.index-threads aside.advertiser.top-left {
+            display: block;
+            text-align: center;
+        }
+    }
+
+    /**
+     * 728px width and 480px height
+     * Anything bigger
+     */
+    @media (min-width: 728px) {
+        /**
+         * Helpers
+         */
+        .no-mobile {
+            display: initial !important;
+        }
+        .only-mobile {
+            display: none !important;
+        }
+
+        /**
+         * Primary Navigation
+         */
+        nav.boardlist {
+            font-size: 1em;
+            padding: 0 1em;
+            overflow: hidden;
+        }
+            nav.boardlist .boardlist-text {
+                display: none;
+            }
+            nav.boardlist .boardlist-row {
+                display: inline-block;
+
+                height: 1.4em;
+                line-height: 1.4em;
+                padding: 0;
+                margin: 0 0.5em 0 0;
+
+                white-space: nowrap;
+            }
+
+            nav.boardlist .boardlist-categories,
+            nav.boardlist .boardlist-category,
+            nav.boardlist .boardlist-items,
+            nav.boardlist .boardlist-item {
+                display: inline-block;
+                height: 1em;
+                line-height: 1em;
+            }
+
+            nav.boardlist .boardlist-items {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            nav.boardlist .boardlist-item {
+                display: inline;
+            }
+            nav.boardlist .boardlist-link {
+                text-decoration: none;
+            }
+
+            nav.boardlist .boardlist-category::before {
+                content: '[';
+                opacity: 0.6;
+            }
+            nav.boardlist .boardlist-category::after {
+                content: ']';
+                opacity: 0.6;
+            }
+            nav.boardlist .boardlist-item::after {
+                display: inline;
+                content: '/';
+                margin: 0 0.15em 0 0.4em;
+                opacity: 0.6;
+            }
+            nav.boardlist .boardlist-item:last-child::after {
+                display: none;
+            }
+
+        /**
+         * Navigation
+         */
+        nav.gnav .flyout {
+            width: auto;
+        }
+        nav.gnav .flyout-col {
+            display: inline-block;
+            float: left;
+            width: 21em;
+        }
+        nav.gnav .flyout-link {
+            line-height: 1.7em;
+            height: 1.7em;
+        }
+
+        /**
+         * Catalog
+         */
+        main.index-catalog section.index-threads {
+            padding: 0 45px;
+        }
+            main.index-catalog .thread-item {
+                max-width: 180px;
+            }
+    }
+
+    /**
+     * 1440px width and 480px height
+     */
+    @media (min-width: 1440px) {
+
+        /**
+         * Sidebar
+         */
+        html.js main.index-threaded .thread {
+            padding-right: 340px;
+        }
+
+        html.js main.index-threaded aside.index-sidebar {
+            position: absolute;
+            right: 0;
+            top: -1em;
+            bottom: -2em;
+
+            padding-top: 0;
+            padding-left: 0;
+            padding-right: 0;
+            padding-bottom: 1em;
+
+            width: 310px;
+            height: auto;
+        }
+            html.js main.index-threaded aside.advertiser.bottom-right {
+                position: absolute;
+            }
+
+        /* Advertisements */
+        html.js main.index-threaded aside.advertiser.top-left {
+            text-align: left;
+        }
+        html.js main.index-threaded aside.advertiser.bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 5px;
+
+            width: 310px;
+        }
+            html.js main.index-threaded aside.advertiser.bottom-right figure.ad-field {
+                display: block;
+                width: 310px;
+            }
+    }
+}

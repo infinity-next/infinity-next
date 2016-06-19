@@ -1,0 +1,23 @@
+@import "variables.scss";
+
+/**
+ * Authentication
+ */
+@import "panel/auth.scss";
+
+/**
+ * Unique Pages
+ */
+@import "panel/donate-form.scss";
+
+/**
+ * Configuration
+ */
+@import "panel/config.scss";
+@import "panel/filter-list.scss";
+@import "panel/page.scss";
+
+/**
+ * Deprecated -- should be merged in
+ */
+@import "panel/main.scss";

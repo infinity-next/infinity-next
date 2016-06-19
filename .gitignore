@@ -2,6 +2,7 @@
 /packages
 /vendor
 /storage/infinity.import
+/public/webgrind
 .env
 composer.lock
 dump.rdb

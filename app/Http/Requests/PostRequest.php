@@ -18,53 +18,53 @@ use Validator;
 use View;
 
 class PostRequest extends Request implements ApiContract {
-	
+
 	use ApiController;
-	
+
 	const VIEW_BANNED = "errors.banned";
-	
+
 	/**
 	 * Input items that should not be returned when reloading the page.
 	 *
 	 * @var array
 	 */
 	protected $dontFlash = ['password', 'password_confirmation', 'captcha'];
-	
+
 	/**
 	 * The board pertinent to the request.
 	 *
 	 * @var App\Board
 	 */
 	protected $board;
-	
+
 	/**
 	 * A ban pulled during validation checks.
 	 *
 	 * @var App\Ban
 	 */
 	protected $ban;
-	
+
 	/**
 	 * Indicates if we're checking a traditional file post or a dropzone file array.
 	 *
 	 * @var boolean
 	 */
 	protected $dropzone;
-	
+
 	/**
 	 * The thread we're replying to.
 	 *
 	 * @var App\Post
 	 */
 	protected $thread;
-	
+
 	/**
 	 * The user.
 	 *
 	 * @var App\Trait\PermissionUser
 	 */
 	protected $user;
-	
+
 	/**
 	 * Does this post respect the robot?
 	 * If set to false during validation and failedValidation is triggered,
@@ -73,7 +73,7 @@ class PostRequest extends Request implements ApiContract {
 	 * @var boolean
 	 */
 	protected $respectTheRobot = true;
-	
+
 	/**
 	 * Fetches the user and our board config.
 	 *
@@ -83,7 +83,7 @@ class PostRequest extends Request implements ApiContract {
 	{
 		$this->board  = $board;
 		$this->user   = $manager->user;
-		
+
 		if ($thread->exists)
 		{
 			$this->thread = $thread;
@@ -93,7 +93,7 @@ class PostRequest extends Request implements ApiContract {
 			$this->thread = false;
 		}
 	}
-	
+
 	/**
 	 * Get all form input.
 	 *
@@ -102,23 +102,23 @@ class PostRequest extends Request implements ApiContract {
 	public function all()
 	{
 		$input = parent::all();
-		
+
 		$this->dropzone = isset($input['dropzone']);
-		
+
 		if (isset($input['files']) && is_array($input['files']))
 		{
 			// Having an [null] file array passes validation.
 			$input['files'] = array_filter($input['files']);
 		}
-		
+
 		if (isset($input['capcode']) && $input['capcode'])
 		{
 			$user = $this->user;
-			
+
 			if ($user && !$user->isAnonymous())
 			{
-				$role = $user->roles->where('role_id', (int) $input['capcode'])->first();
-				
+				$role = $user->roles->find( (int) $input['capcode'] );
+
 				if ($role && $role->capcode != "")
 				{
 					$input['capcode_id'] = (int) $role->role_id;
@@ -134,20 +134,20 @@ class PostRequest extends Request implements ApiContract {
 				unset($input['capcode']);
 			}
 		}
-		
+
 		if (!$this->board->canPostWithAuthor($this->user, !!$this->thread))
 		{
 			unset($input['author']);
 		}
-		
+
 		if (!$this->board->canPostWithSubject($this->user, !!$this->thread))
 		{
 			unset($input['subject']);
 		}
-		
+
 		return $input;
 	}
-	
+
 	/**
 	 * Returns if the client has access to this form.
 	 *
@@ -157,24 +157,16 @@ class PostRequest extends Request implements ApiContract {
 	{
 		// Ban check.
 		$ban = Ban::getBan($this->ip(), $this->board->board_uri);
-		
+
 		if ($ban)
 		{
 			$this->ban = $ban;
 			return false;
 		}
-		
-		// Locked thread check.
-		if ($this->thread instanceof Post && $this->thread->isLocked() && !$this->user->canPostInLockedThreads($this->board))
-		{
-			return false;
-		}
-		
-		## TODO ##
-		// Separate these permsisions.
-		return $this->user->canPostThread() || $this->user->canPostReply();
+
+		return $this->board->canPost($this->user, $this->thread);
 	}
-	
+
 	/**
 	 * Returns the response if authorize() fails.
 	 *
@@ -185,7 +177,7 @@ class PostRequest extends Request implements ApiContract {
 		if ($this->ban)
 		{
 			$url = $this->ban->getRedirectUrl();
-			
+
 			if ($this->ajax() || $this->wantsJson())
 			{
 				return $this->apiResponse([ 'redirect' => $url ]);
@@ -195,10 +187,10 @@ class PostRequest extends Request implements ApiContract {
 				return redirect($url);
 			}
 		}
-		
+
 		return abort(403);
 	}
-	
+
 	/**
 	 * Form specific error messages.
 	 *
@@ -208,12 +200,12 @@ class PostRequest extends Request implements ApiContract {
 	{
 		$board = $this->board;
 		$postNewLines = (int) $board->getConfig('postNewLines', 0);
-		
+
 		return [
 			'body.regex' => trans_choice('validation.form.post.body.newlines', $postNewLines, [ 'count' => $postNewLines ]),
 		];
 	}
-	
+
 	/**
 	 * Get the proper failed validation response for the request.
 	 *
@@ -227,19 +219,19 @@ class PostRequest extends Request implements ApiContract {
 			$this->ban = Ban::addRobotBan($this->board);
 			return $this->forbiddenResponse();
 		}
-		
+
 		$redirectURL = $this->getRedirectUrl();
-		
+
 		if ($this->wantsJson())
 		{
 			return $this->apiResponse([ 'errors' => $errors ]);
 		}
-		
+
 		return redirect($redirectURL)
 			->withInput($this->except($this->dontFlash))
 			->withErrors($errors, $this->errorBag);
 	}
-	
+
 	/**
 	 * Returns validation rules for this request.
 	 *
@@ -254,23 +246,23 @@ class PostRequest extends Request implements ApiContract {
 				"string",
 				"encoding:UTF-8",
 			],
-			
+
 			'email'   => [
 				"string",
 				"encoding:UTF-8",
 			],
-			
+
 			'subject' => [
 				"string",
 				"encoding:UTF-8",
 			],
 		];
-		
+
 		if (!$this->thread && $board->getConfig('threadRequireSubject'))
 		{
 			$rules['subject'][] = "required";
 		}
-		
+
 		// Modify the validation rules based on what we've been supplied.
 		if ($board && $user)
 		{
@@ -279,14 +271,14 @@ class PostRequest extends Request implements ApiContract {
 				"min:" . $board->getConfig('postMinLength', 0),
 				"max:" . $board->getConfig('postMaxLength', 65534),
 			];
-			
+
 			$newLineMax = (int) $board->getConfig('postNewLines', 0);
-			
+
 			if ($newLineMax > 0)
 			{
 				$rules['body'][] = "regex:/^(\n?(.*)){1,{$newLineMax}}$/";
 			}
-			
+
 			if (!$board->canAttach($user))
 			{
 				$rules['body'][]  = "required";
@@ -296,9 +288,9 @@ class PostRequest extends Request implements ApiContract {
 			else
 			{
 				$rules['body'][]  = "required_without:files";
-				
+
 				$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
-				
+
 				// There are different rules for starting threads.
 				if (!($this->thread instanceof Post))
 				{
@@ -308,16 +300,16 @@ class PostRequest extends Request implements ApiContract {
 				{
 					$attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0));
 				}
-				
-				
+
+
 				// Add the rules for file uploads.
 				if ($this->dropzone)
 				{
 					$fileToken = "files.hash";
-					
+
 					// JavaScript enabled hash posting
 					static::rulesForFileHashes($board, $rules);
-					
+
 					if ($attachmentsMin > 0)
 					{
 						$rules['files.name'][] = "required";
@@ -329,17 +321,17 @@ class PostRequest extends Request implements ApiContract {
 				else
 				{
 					$fileToken = "files";
-					
+
 					// Vanilla HTML upload
 					static::rulesForFiles($board, $rules);
-					
+
 					if ($attachmentsMin > 0)
 					{
 						$rules['files'][] = "required";
 						$rules['files'][] = "min:{$attachmentsMin}";
 					}
 				}
-				
+
 				for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 				{
 					// Can only attach existing files.
@@ -352,7 +344,7 @@ class PostRequest extends Request implements ApiContract {
 					{
 						$rules["{$fileToken}.{$attachment}"][] = "file_new";
 					}
-					
+
 					for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment)
 					{
 						$rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
@@ -360,10 +352,10 @@ class PostRequest extends Request implements ApiContract {
 				}
 			}
 		}
-		
+
 		return $rules;
 	}
-	
+
 	/**
 	 * Returns rules specifically for files for a board.
 	 *
@@ -374,14 +366,14 @@ class PostRequest extends Request implements ApiContract {
 	public static function rulesForFiles(Board $board, array &$rules)
 	{
 		global $app;
-		
+
 		$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
-		
+
 		$rules['spoilers'] = "boolean";
-		
+
 		$rules['files'][] = "array";
 		$rules['files'][] = "max:{$attachmentsMax}";
-		
+
 		// Create an additional rule for each possible file.
 		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 		{
@@ -391,7 +383,7 @@ class PostRequest extends Request implements ApiContract {
 			];
 		}
 	}
-	
+
 	/**
 	 * Returns rules specifically for dropzone files for a board.
 	 *
@@ -402,16 +394,16 @@ class PostRequest extends Request implements ApiContract {
 	public static function rulesForFileHashes(Board $board, array &$rules)
 	{
 		global $app;
-		
+
 		$attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
-		
+
 		$rules['files'][] = "array";
 		$rules['files'][] = "between:2,3"; // [files.hash,files.name] or +[files.spoiler]
-		
+
 		$rules['files.name']    = ["array", "max:{$attachmentsMax}"];
 		$rules['files.hash']    = ["array", "max:{$attachmentsMax}"];
 		$rules['files.spoiler'] = ["array", "max:{$attachmentsMax}"];
-		
+
 		// Create an additional rule for each possible file.
 		for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment)
 		{
@@ -421,20 +413,20 @@ class PostRequest extends Request implements ApiContract {
 				"between:1,254",
 				"file_name",
 			];
-			
+
 			$rules["files.hash.{$attachment}"] = [
 				"string",
 				"required_with:files.name.{$attachment}",
 				"md5",
 				"exists:files,hash,banned,0",
 			];
-			
+
 			$rules["files.spoiler.{$attachment}"] = [
 				"boolean",
 			];
 		}
 	}
-	
+
 	/**
 	 * Validate the class instance.
 	 * This overrides the default invocation to provide additional rules after the controller is setup.
@@ -446,29 +438,29 @@ class PostRequest extends Request implements ApiContract {
 		$board     = $this->board;
 		$thread    = $this->thread;
 		$user      = $this->user;
-		
+
 		$ip        = new IP($this->ip());
 		$carbon    = new \Carbon\Carbon;
-		
+
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
 		$isReply   = $this->thread instanceof Post;
-		
+
 		if ($isReply)
 		{
 			$floodTime = site_setting('postFloodTime');
-			
+
 			// Check global flood.
 			$nextPostTime = Carbon::createFromTimestamp(Cache::get('last_post_for_' . $ip->toLong(), 0) + $floodTime);
-			
+
 			if ($nextPostTime->isFuture())
 			{
 				$timeDiff = $nextPostTime->diffInSeconds() + 1;
-				
+
 				$messages->add("flood", trans_choice("validation.custom.post_flood", $timeDiff, [
 						'time_left' => $timeDiff,
 				]));
-				
+
 				$this->failedValidation($validator);
 				return;
 			}
@@ -476,28 +468,28 @@ class PostRequest extends Request implements ApiContract {
 		else
 		{
 			$floodTime = site_setting('threadFloodTime');
-			
+
 			// Check global flood.
 			$nextPostTime = Carbon::createFromTimestamp(Cache::get('last_thread_for_' . $ip->toLong(), 0) + $floodTime);
-			
+
 			if ($nextPostTime->isFuture())
 			{
 				$timeDiff = $nextPostTime->diffInSeconds() + 1;
-				
+
 				$messages->add("flood", trans_choice("validation.custom.thread_flood", $timeDiff, [
 						'time_left' => $timeDiff,
 				]));
-				
+
 				$this->failedValidation($validator);
 				return;
 			}
 		}
-		
+
 		// Board-level setting validaiton.
 		$validator->sometimes('captcha', "required|captcha", function($input) use ($board) {
 			return !$board->canPostWithoutCaptcha($this->user);
 		});
-		
+
 		if (!$validator->passes())
 		{
 			$this->failedValidation($validator);
@@ -508,34 +500,34 @@ class PostRequest extends Request implements ApiContract {
 			{
 				// Check last post time for flood.
 				$floodTime = site_setting('postFloodTime');
-				
+
 				if ($floodTime > 0)
 				{
 					$lastPost = Post::getLastPostForIP();
-					
+
 					if ($lastPost)
 					{
 						$floodTimer = clone $lastPost->created_at;
 						$floodTimer->addSeconds($floodTime);
-						
+
 						if ($floodTimer->isFuture())
 						{
 							$messages->add("flood", trans("validation.custom.post_flood", [
 								'time_left' => $floodTimer->diffInSeconds(),
 							]));
-							
+
 							$this->failedValidation($validator);
 							return;
 						}
 					}
 				}
 			}
-			
-			
+
+
 			// Validate individual files being uploaded right now.
 			$this->validateOriginality();
 		}
-		
+
 		if (count($validator->errors()))
 		{
 			$this->failedValidation($validator);
@@ -544,25 +536,25 @@ class PostRequest extends Request implements ApiContract {
 		{
 			$this->failedAuthorization();
 		}
-		
+
 	}
-	
+
 	protected function validateOriginality()
 	{
 		$board     = $this->board;
 		$thread    = $this->thread;
 		$user      = $this->user;
 		$input     = $this->all();
-		
+
 		$validated = true;
 		$validator = $this->getValidatorInstance();
 		$messages  = $validator->errors();
-		
+
 		// Process uploads.
 		if (isset($input['files']))
 		{
 			$uploads = $input['files'];
-			
+
 			if(count($uploads) > 0)
 			{
 				// Standard upload originality and integrity checks.
@@ -579,7 +571,7 @@ class PostRequest extends Request implements ApiContract {
 							]));
 						}
 					}
-					
+
 					if ($board->getConfig('originalityImages'))
 					{
 						foreach ($uploads as $uploadIndex => $upload)
@@ -588,7 +580,7 @@ class PostRequest extends Request implements ApiContract {
 							{
 								continue;
 							}
-							
+
 							if ($board->getConfig('originalityImages') == "thread")
 							{
 								if ($thread instanceof Post && $originalPost = FileStorage::checkUploadExists($upload, $board, $thread))
@@ -639,15 +631,15 @@ class PostRequest extends Request implements ApiContract {
 				}
 			}
 		}
-		
-		
+
+
 		// Process body checksum for origianlity.
 		$strictness = $board->getConfig('originalityPosts');
-		
+
 		if (isset($input['body']) && $strictness)
 		{
 			$checksum = Post::makeChecksum($input['body']);
-			
+
 			if ($strictness == "board" || $strictness == "boardr9k")
 			{
 				$checksums = PostChecksum::getChecksum($checksum, $board);
@@ -656,26 +648,26 @@ class PostRequest extends Request implements ApiContract {
 			{
 				$checksums = PostChecksum::getChecksum($checksum);
 			}
-			
+
 			//dd($checksums);
-			
+
 			if ($checksums->count())
 			{
 				$validated = false;
-				
+
 				$messages->add("body", trans("validation.custom.unoriginal_content"));
-				
+
 				// If we are in R9K mode, set $respectTheRobot property to to false.
 				// This will trigger a Robot ban in failedValidation.
 				$this->respectTheRobot = !($strictness == "boardr9k" || $strictness == "siter9k");
 			}
 		}
-		
+
 		if ($validated !== true)
 		{
 			$this->failedValidation($validator);
 			return;
 		}
 	}
-	
+
 }
