@@ -439,6 +439,7 @@ div.attachment-wrapper {
     ul.post-attachments.attachments-multi {
         display: block;
         float: none;
+        background: #282a2e !important;
     }
     main.index-threaded .reply-container ul.post-attachments.attachments-multi {
         background: none;
