@@ -64,6 +64,9 @@ nav.gnav li.gnav-item .gnav-link{
 nav.gnav li.gnav-item .gnav-link:hover{
     color:#FFF;
 }
+li.flyout-item:hover{
+     background:#81a2be!important;
+}
     /* Header */
 figure.page-head {
     margin: 3em auto 1em auto;
