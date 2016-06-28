@@ -510,9 +510,11 @@ button:disabled:hover, a.button.disabled:hover {
     border: 1px solid #444;
     color: #555;
 }
-ul.pagination-pages::before, ul.pagination-pages::after, li.pagination-page::after {
+ul.pagination-pages::before, ul.pagination-pages::after, li.pagination-page::after,
+    ul.boardlist-category::before, ul.boardlist-category::after, li.boardlist-item, 
+    li.boardlist-category::before, li.boardlist-category::after {
     padding: 3px 0;
-    color: #81a2be !important;
+    color: #C5C8C6 !important;
     opacity: initial !important;
 }
 li.pagination-page::after {
