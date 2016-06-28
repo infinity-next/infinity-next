@@ -119,7 +119,7 @@ html.js form.form-post .post-menu {
     padding: 2px 2px 0 0;
 }
 html.js body.responsive main.index-threaded form.form-post .form-legend {
-    background: #81A2BE;
+    background: #81A2BE!important;
     border-bottom: 1px solid #222;
     box-sizing: border-box;
     color: #222;
@@ -301,7 +301,7 @@ body.responsive .index-threaded .thread-item {
 }
 .post-container {
     background: #282a2e !important;
-    border: none;
+    border: none !important;
     box-sizing: border-box;
 }
 .post-container.has-file {
@@ -314,6 +314,10 @@ body.responsive .index-threaded .thread-item {
     border-bottom: 1px solid rgba(52, 52, 92, 0.30);
     box-shadow: 2px 2px 2px -1px rgba(0, 0, 0, 0.2);
     -webkit-box-shadow: 2px 2px 2px -1px rgba(0, 0, 0, 0.2);
+}
+.post-hover .post-content {
+    background: #282a2e !important;
+    border: none;
 }
 .op-container.post-hover {
     padding: 7px 10px;
@@ -477,6 +481,10 @@ blockquote.ugc a:hover, blockquote.ugc a.cite:hover {
 }
 h1 {
     margin: 0;
+}
+blockquote.ugc h1, blockquote.ugc h2, blockquote.ugc h3, blockquote.ugc h4, blockquote.ugc h5, blockquote.ugc h6 {
+	color: #AF0A0F !important;
+	padding: 0;
 }
 ul.post-metas {
     border: none;
