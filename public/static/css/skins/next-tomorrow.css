@@ -512,7 +512,7 @@ button:disabled:hover, a.button.disabled:hover {
 }
 ul.pagination-pages::before, ul.pagination-pages::after, li.pagination-page::after {
     padding: 3px 0;
-    color: #89A;
+    color: #81a2be !important;
     opacity: initial !important;
 }
 li.pagination-page::after {
