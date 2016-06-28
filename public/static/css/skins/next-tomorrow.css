@@ -628,7 +628,7 @@ nav.boardlist .boardlist-row li.boardlist-category:nth-of-type(2) {
 #js-config .config-nav-item {
     border-bottom: 1px solid #444;
 }
-#js-config .config-nav-item:hover {
+#js-config .config-nav-item:hover, #js-config .config-nav-active {
     background: #81a2be!important;
     color: #FFFFFF!important;     
 }
