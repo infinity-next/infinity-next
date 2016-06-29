@@ -17,7 +17,7 @@ a:hover {
     color: white;
 }
 button, a.button {
-    border-color: #D9BFB7;
+    border-color: #D9BFB7 !important;
     color: #81a2be;
     background:none;
 }
@@ -27,6 +27,7 @@ button:hover, a.button:hover {
 }
 button:disabled, a.button.disabled {
     background: #282A2E none repeat scroll 0% 0% !important;
+    border-color: black !important;
 }
 #boardlist table.board-list-table .board-uri .board-sfw {
     color: #81a2be;
