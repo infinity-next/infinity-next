@@ -102,12 +102,10 @@ class BoardConfigRequest extends Request
         $input = $this->input('boardCustomCSS', false);
 
         if ($input) {
-            $parser = new Parser($input['boardCustomCSS']);
+            $parser = new Parser($input);
             $style = $parser->parse()->render(OutputFormat::createPretty());
 
-            $input['boardCustomCSS'] = $style;
-
-            $this->replace(['boardCustomCSS' => $input]);
+            $this->merge(['boardCustomCSS' => $input]);
         }
     }
 
