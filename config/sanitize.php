@@ -3,7 +3,14 @@
 return [
     'css' => [
         'whitelist' => [
-            /*
+            /**
+             * Whitelist relative URLs
+             *
+             * @var bool
+             */
+            'relative' => true,
+
+            /**
              * Whitelisted URLs in url() properties
              *
              * Must include the forward slash before the path
@@ -18,7 +25,8 @@ return [
                 'https://fonts.googleapis.com/',
                 'https://fonts.gstatic.com/',
             ],
-            /*
+
+            /**
              * Whitelisted URLs in @import directives
              *
              * Must include the forward slash before the path
@@ -30,8 +38,9 @@ return [
                 'https://fonts.googleapis.com/',
                 'https://fonts.gstatic.com/',
             ],
-            /*
-             * Whitelisted file extensions in remote paths
+
+            /**
+             * Whitelisted file extensions in remote and relative paths
              *
              * @var array	extensions
              */
@@ -42,7 +51,8 @@ return [
                 'ttf',
                 'woff',
             ],
-            /*
+
+            /**
              * Whitelisted data URI mimetypes
              *
              * @var array	data URIs
@@ -54,7 +64,8 @@ return [
                 'image/jpeg',
                 'image/png',
             ],
-            /*
+
+            /**
              * Whitelisted CSS properties
              *
              * @var array	properties
@@ -142,7 +153,8 @@ return [
                 'display',
                 'elevation',
                 'empty-cells',
-                /*
+
+                /**
                  * With IE <= 10 various filters with this property will allow
                  * XHR. Additionally it may have some other fun side effects
                  * that allow bypassing of the validator.
@@ -240,6 +252,7 @@ return [
                 'pointer-events',
                 'position',
                 'quotes',
+                'resize',
                 'richness',
                 'right',
                 'speak',
@@ -247,6 +260,7 @@ return [
                 'speak-numeral',
                 'speak-punctuation',
                 'speech-rate',
+                'src',
                 'stress',
                 'table-layout',
                 'tab-size',
@@ -287,6 +301,7 @@ return [
                 'will-change',
                 'word-break',
                 'word-spacing',
+                'word-wrap',
                 'z-index',
             ],
         ],

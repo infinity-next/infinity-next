@@ -7,6 +7,7 @@ use App\OptionGroup;
 use App\Services\UserManager;
 use Sabberworm\CSS\OutputFormat;
 use Sabberworm\CSS\Parser;
+use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
 class BoardConfigRequest extends Request
 {
@@ -74,7 +75,6 @@ class BoardConfigRequest extends Request
      */
     public function rules()
     {
-        $this->sanitize();
 
         $rules = [
             'boardBasicTitle' => 'required|string|between:1,255',
@@ -129,5 +129,25 @@ class BoardConfigRequest extends Request
         }
 
         return $this->boardOptionGroups;
+    }
+
+    /**
+     * Validates the request.
+     *
+     * @return void
+     */
+    public function validate()
+    {
+        $validator = $this->getValidatorInstance();
+        $messages = $validator->errors();
+
+        try {
+            $this->sanitize();
+        }
+        catch (UnexpectedTokenException $e) {
+            $messages->add('boardCustomCSS', "Invalid CSS supplied. Unexpected token.");
+        }
+
+        return parent::validate();
     }
 }

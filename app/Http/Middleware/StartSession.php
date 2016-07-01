@@ -58,9 +58,9 @@ class StartSession extends BaseStartSession
             return parent::handle($request, $next);
         }
 
-        if (!$request->cookie()) {
-            Config::set('session.driver', 'array');
-        }
+        // if (!$request->cookie()) {
+        //     Config::set('session.driver', 'array');
+        // }
 
         return parent::handle($request, $next);
     }
