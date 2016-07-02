@@ -670,7 +670,7 @@ nav.cp-inner a.linkitem-name.linkitem-active {
     color: #FFF;
 }
 main.cp .filterlist-item:hover .filterlist-primary {
-	background-color: #1d1f21;
+	background: #1d1f21;
 }
 #config-page textarea {
     background: #282A2E;
