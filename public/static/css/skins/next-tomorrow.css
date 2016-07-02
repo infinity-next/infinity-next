@@ -421,8 +421,8 @@ div.attachment-wrapper {
     line-height: inherit;
 }
 li.post-attachment {
-    padding: 0 1em 5px 2px;
-    display: inline-block;
+   padding: 0 1em 5px 2px;
+   display: inline-block;
 }
 /*Fix attachment scrollbars*/
 ul.post-attachments {
@@ -436,13 +436,6 @@ ul.post-attachments.attachments-multi {
 main.index-threaded .reply-container ul.post-attachments.attachments-multi {
     background: none;
     padding: 0 10px;
-}
-ul.attachments-multi.attachment-count-6 li.post-attachment,
-ul.attachments-multi.attachment-count-7 li.post-attachment,
-ul.attachments-multi.attachment-count-8 li.post-attachment,
-ul.attachments-multi.attachment-count-9 li.post-attachment,
-ul.attachments-multi.attachment-count-10 li.post-attachment {
-    height: 240px;
 }
 html a.attachment-link img.attachment-type-video {
     border-width: 0;
@@ -671,4 +664,18 @@ nav.cp-side a.linkgroup-name, nav.cp-side a.linkitem-name {
     color: #C5C8C6;
     display: block;
     padding: 0.2em 0px;
+}
+nav.cp-inner a.linkitem-name.linkitem-active {
+	background: #81a2be;
+    color: #FFF;
+}
+main.cp .filterlist-item:hover .filterlist-primary {
+	background-color: #1d1f21;
+}
+#config-page textarea {
+    background: #282A2E;
+    border: 1px solid #1D1F21;
+    margin: 1px 0;
+    padding: 1px 4px;
+    color: white;
 }
