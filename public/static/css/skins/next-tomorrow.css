@@ -409,6 +409,11 @@ li.post-detail.detail-cites {
 .author, .author-you {
     color: #C5C8C6 !important;
 }
+.author-you {
+    font-style: italic;
+    font-weight: normal;
+    opacity: .666;
+}
 .post-no, .post-reply {
     color: #C5C8C6 !important;
 }
