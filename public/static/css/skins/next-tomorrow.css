@@ -337,6 +337,9 @@ main.index-threaded .post-container.op-container {
     background: #1d1f21 !important;
     display: inline;
 }
+.op-container ul.post-attachments.attachments-multi {
+    background: #1d1f21 !important;
+}
 .reply {
     display: flex;
     padding: 2px 0;
