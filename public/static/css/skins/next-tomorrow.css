@@ -333,12 +333,9 @@ main.index-threaded .post-container.op-container {
     border: none;
     width: 100%;
 }
-.op-container {
+.op-container, .op-container ul.post-attachments.attachments-multi {
     background: #1d1f21 !important;
     display: inline;
-}
-.op-container ul.post-attachments.attachments-multi {
-    background: #1d1f21 !important;
 }
 .reply {
     display: flex;
