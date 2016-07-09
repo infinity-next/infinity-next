@@ -293,12 +293,11 @@ tr.board-list-omitted #board-list-more.board-list-hasmore {
 /**/
 
 /* Post Layout */
-main.index-threaded .thread-item {
-    border-top: 1px solid rgba(129, 162, 190, 0.5);
-    border-bottom: 1px solid rgba(129, 162, 190, 0.5);
+main.index-threaded .thread-item:first-child {
+	border-top: none !important;
 }
-body.responsive .index-threaded .thread-item {
-    border-top: 1px solid rgba(129, 162, 190, 0.5);
+main.index-threaded .thread-item {
+    border-bottom: 2px solid #282a2e;
 }
 .post-container {
     background: #282a2e !important;
@@ -334,7 +333,8 @@ main.index-threaded .post-container.op-container {
     border: none;
     width: 100%;
 }
-.op-container {
+.op-container, .op-container ul.post-attachments.attachments-multi {
+    background: #1d1f21 !important;
     display: inline;
 }
 .reply {
@@ -406,8 +406,13 @@ li.post-detail.detail-cites {
 .subject {
     color: #b294bb;
 }
-.author {
+.author, .author-you {
     color: #C5C8C6 !important;
+}
+.author-you {
+    font-style: italic;
+    font-weight: normal;
+    opacity: .666;
 }
 .post-no, .post-reply {
     color: #C5C8C6 !important;
@@ -555,9 +560,6 @@ nav.boardlist .boardlist-row li.boardlist-category:nth-of-type(2) {
 @media (min-height: 480px) and (min-width: 1028px) {
     html.js body.responsive main.index-threaded .thread {
         padding-right: 0;
-    }
-    main:not(.index-catalog) section.index-threads, main:not(.multiboard-index) section.index-threads {
-        width: calc(100% - 310px);
     }
 }
 /**/
