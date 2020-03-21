@@ -106,13 +106,11 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Register any other events for your application.
-     *
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
      */
-    public function boot(DispatcherContract $events)
+    public function boot()
     {
         Page::observe(new PageObserver());
         Post::observe(new PostObserver());
-        parent::boot($events);
+        parent::boot();
     }
 }

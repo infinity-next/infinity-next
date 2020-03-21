@@ -8,7 +8,6 @@ use App\Http\MessengerResponse;
 use App\Services\UserManager;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\Router as Router;
@@ -21,7 +20,6 @@ use View;
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests,
-        AuthorizesResources,
         DispatchesJobs,
         ValidatesRequests;
 

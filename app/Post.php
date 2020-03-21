@@ -989,7 +989,7 @@ class Post extends Model implements FormattableContract
      *
      * @return string
      */
-    protected function serializeDate(DateTime $date)
+    protected function serializeDate(DateTimeInterface $date)
     {
         return $date->timestamp;
     }

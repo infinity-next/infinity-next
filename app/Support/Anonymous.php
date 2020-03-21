@@ -14,14 +14,12 @@ namespace App\Support;
 
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
-//use Laravel\Cashier\Billable;
-//use Laravel\Cashier\Contracts\Billable as BillableContract;
 use InfinityNext\Braintree\Billable;
 use InfinityNext\Braintree\Contracts\Billable as BillableContract;
 
-class Anonymous implements BillableContract, PermissionUserContract
+class Anonymous implements PermissionUserContract
 {
-    use Billable, PermissionUser;
+    use PermissionUser;
 
     /**
      * Dummy properties for User models.

@@ -99,7 +99,7 @@ return [
 
     'key' => env('APP_KEY', 'SomeRandomString'),
 
-    'cipher' => MCRYPT_RIJNDAEL_128,
+    'cipher' => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
@@ -128,12 +128,6 @@ return [
     */
 
     'providers' => [
-
-        /*
-         * Debugging tools...
-         */
-        Barryvdh\Debugbar\ServiceProvider::class,
-
         /*
          * Laravel Framework Service Providers...
          */
@@ -160,11 +154,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Captcha...
-         */
-        InfinityNext\LaravelCaptcha\CaptchaServiceProvider::class,
-
-        /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
@@ -181,23 +170,6 @@ return [
          * Forms...
          */
         Collective\Html\HtmlServiceProvider::class,
-
-        /*
-         * Files and Validation...
-         */
-        Cviebrock\ImageValidator\ImageValidatorServiceProvider::class,
-        InfinityNext\Sleuth\Providers\SleuthServiceProvider::class,
-
-        /*
-         * Content Formatting...
-         */
-        InfinityNext\Eightdown\EightdownServiceProvider::class,
-
-        /*
-         * Money...
-         */
-        //Laravel\Cashier\CashierServiceProvider::class,
-        InfinityNext\Braintree\BraintreeServiceProvider::class,
     ],
 
     /*
@@ -249,7 +221,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Settings' => App\Support\Facades\Settings::class,
 
         /*
@@ -261,16 +232,16 @@ return [
         /*
          * Markdown
          */
-        'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
+        //'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
 
         /*
          * Captcha
          */
-        'Captcha' => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
+        //'Captcha' => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
 
         /*
          * File Validation
          */
-        'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
+        //'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
     ],
 ];

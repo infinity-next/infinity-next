@@ -15,40 +15,17 @@
     ],
 
     "require": {
-        "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
-        "predis/predis": "~1.0",
-        "doctrine/dbal": "~2.3",
-
-        "stripe/stripe-php": "2.*",
-        "laravel/cashier": "~5.0",
-        "laravelcollective/html": "~5.0",
-        "sabberworm/PHP-CSS-Parser": "7.0.*",
-
-        "ext-gd": "*",
-        "intervention/imagecache": "~2.3",
-        "intervention/image": "~2.3",
-        "cviebrock/image-validator" : "2.0.*@beta",
-        "jenssegers/imagehash" : "0.2.*",
-
-        "james-heinrich/getid3" : "1.9.*",
-
-        "geoip2/geoip2" : "~2.0",
-
-        "infinity-next/braintree":       "*@dev",
-        "infinity-next/laravel-captcha": "*@dev",
-        "infinity-next/eightdown":       "*@dev",
-        "infinity-next/sleuth":          "*@dev"
+        "php": ">=5.6.4",
+        "laravel/framework": "5.3.*",
+        "laravelcollective/html":"5.3.*",
+        "predis/predis": "^1.1.1"
     },
 
     "require-dev": {
-        "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*",
-        "phpspec/phpspec": "~2.1",
-        "barryvdh/laravel-debugbar": "2.*"
+        "phpunit/phpunit": "~5.0",
+        "symfony/css-selector": "3.1.*",
+        "symfony/dom-crawler": "3.1.*"
     },
 
     "autoload": {
@@ -83,6 +60,8 @@
     },
 
     "config": {
-        "preferred-install": "dist"
+        "process-timeout": 600,
+        "preferred-install": "dist",
+        "github-protocols": ["https"]
     }
 }

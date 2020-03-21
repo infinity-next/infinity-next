@@ -594,7 +594,7 @@ class Import extends Command
                                 'permission_id' => 'board.post.create.reply',
                                 'value' => (bool) $configValue,
                             ];
-                            continue;
+                            continue 2;
 
                         case 'tor_image_posting':
                             $permissions[] = [
@@ -605,7 +605,7 @@ class Import extends Command
                                 'permission_id' => 'board.image.upload.old',
                                 'value' => true,
                             ];
-                            continue;
+                            continue 2;
 
                         // CSS
                         case 'stylesheets':

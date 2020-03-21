@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-//use Laravel\Cashier\Billable;
-//use Laravel\Cashier\Contracts\Billable as BillableContract;
 use InfinityNext\Braintree\Billable;
 use InfinityNext\Braintree\Contracts\Billable as BillableContract;
 
@@ -30,13 +28,11 @@ class User
 extends Model
 implements
     AuthenticatableContract,
-    BillableContract,
     CanResetPasswordContract,
     PermissionUserContract,
     SluggableContract
 {
     use Authenticatable,
-        Billable,
         CanResetPassword,
         PermissionUser;
 

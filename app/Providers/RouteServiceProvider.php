@@ -10,7 +10,7 @@ use App\Post;
 use App\Report;
 use App\Role;
 use App\User;
-use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 /**
@@ -71,21 +71,19 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define your route model bindings, pattern filters, etc.
-     *
-     * @param \Illuminate\Routing\Router $router
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        $router->model('attachment', FileAttachment::class);
-        $router->model('ban',        Ban::class);
-        $router->model('board',      Board::class);
-        $router->model('page',       Page::class);
-        $router->model('post',       Post::class);
-        $router->model('user',       User::class);
-        $router->model('report',     Report::class);
-        $router->model('role',       Role::class);
+        Route::model('attachment', FileAttachment::class);
+        Route::model('ban',        Ban::class);
+        Route::model('board',      Board::class);
+        Route::model('page',       Page::class);
+        Route::model('post',       Post::class);
+        Route::model('user',       User::class);
+        Route::model('report',     Report::class);
+        Route::model('role',       Role::class);
 
-        $router->bind('page_title', function ($value, $route) {
+        Route::bind('page_title', function ($value, $route) {
             $board = $route->getParameter('board');
 
             return Page::where([
@@ -94,7 +92,7 @@ class RouteServiceProvider extends ServiceProvider
             ])->first();
         });
 
-        $router->bind('board', function ($value, $route) {
+        Route::bind('board', function ($value, $route) {
             $board = Board::getBoardWithEverything($value);
 
             if ($board instanceof Board && $board->exists) {
@@ -111,13 +109,13 @@ class RouteServiceProvider extends ServiceProvider
             return abort(404);
         });
 
-        $router->bind('attachment', function ($value, $route) {
+        Route::bind('attachment', function ($value, $route) {
             return FileAttachment::where('is_deleted', false)
                 ->with('storage')
                 ->find($value);
         });
 
-        $router->bind('post_id', function ($value, $route) {
+        Route::bind('post_id', function ($value, $route) {
             $board = $route->getParameter('board');
 
             if (!($board instanceof Board)) {
@@ -139,7 +137,7 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        $router->bind('post', function ($value, $route) {
+        Route::bind('post', function ($value, $route) {
             $board = $route->getParameter('board');
 
             if (!($board instanceof Board)) {
@@ -161,35 +159,33 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         // Sets up our routing tokens.
-        $router->pattern('attachment', '[0-9]\d*');
-        $router->pattern('board', Board::URI_PATTERN);
-        $router->pattern('id', '[0-9]\d*');
-        $router->pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
+        Route::pattern('attachment', '[0-9]\d*');
+        Route::pattern('board', Board::URI_PATTERN);
+        Route::pattern('id', '[0-9]\d*');
+        Route::pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
-        $router->pattern('worksafe', '^(sfw|nsfw)$');
-        $router->pattern('boards', '^((\+|-)[a-z0-9]{1,32})+$');
+        Route::pattern('worksafe', '^(sfw|nsfw)$');
+        Route::pattern('boards', '^((\+|-)[a-z0-9]{1,32})+$');
 
-        parent::boot($router);
+        parent::boot();
     }
 
     /**
      * Define the routes for the application.
-     *
-     * @param \Illuminate\Routing\Router $router
      */
-    public function map(Router $router)
+    public function map()
     {
         /**
          * Media distribution
          */
-        $router->group($this->routeGroup['media'], function ($router) {
+        Route::group($this->routeGroup['media'], function ($router) {
             require __DIR__.'/../Http/Routes/Media.php';
         });
 
         /**
          * API
          */
-        $router->group($this->routeGroup['api'], function ($router) {
+        Route::group($this->routeGroup['api'], function ($router) {
             require __DIR__.'/../Http/Routes/API.php';
         });
 
@@ -202,7 +198,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->routeGroup['panel'] += ['prefix' => 'cp',];
         }
 
-        $router->group($this->routeGroup['panel'], function ($router) {
+        Route::group($this->routeGroup['panel'], function ($router) {
             require __DIR__.'/../Http/Routes/Panel.php';
         });
 
@@ -213,18 +209,18 @@ class RouteServiceProvider extends ServiceProvider
             $this->routeGroup['web'] += ['domain' => config('app.url'),];
         }
 
-        $router->group($this->routeGroup['web'], function ($router) {
+        Route::group($this->routeGroup['web'], function ($router) {
             /**
              * Root-level content requests
              */
-            $router->group($this->routeGroup['content'], function ($router) {
+            Route::group($this->routeGroup['content'], function ($router) {
                 require __DIR__.'/../Http/Routes/Content.php';
             });
 
             /**
              * Boards
              */
-            $router->group($this->routeGroup['board'], function ($router) {
+            Route::group($this->routeGroup['board'], function ($router) {
                 require __DIR__.'/../Http/Routes/Board.php';
             });
 
