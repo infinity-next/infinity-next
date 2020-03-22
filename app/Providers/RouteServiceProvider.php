@@ -74,6 +74,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        parent::boot();
+
         Route::model('attachment', FileAttachment::class);
         Route::model('ban',        Ban::class);
         Route::model('board',      Board::class);
@@ -94,6 +96,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('board', function ($value, $route) {
             $board = Board::getBoardWithEverything($value);
+
 
             if ($board instanceof Board && $board->exists) {
                 $board->applicationSingleton = true;
@@ -160,14 +163,12 @@ class RouteServiceProvider extends ServiceProvider
 
         // Sets up our routing tokens.
         Route::pattern('attachment', '[0-9]\d*');
-        Route::pattern('board', Board::URI_PATTERN);
+        Route::pattern('board', "Board::URI_PATTERN");
         Route::pattern('id', '[0-9]\d*');
         Route::pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
         Route::pattern('worksafe', '^(sfw|nsfw)$');
         Route::pattern('boards', '^((\+|-)[a-z0-9]{1,32})+$');
-
-        parent::boot();
     }
 
     /**
