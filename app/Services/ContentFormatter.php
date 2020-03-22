@@ -284,7 +284,7 @@ class ContentFormatter
      */
     protected function formatMarkdown($content)
     {
-        $parser = Markdown::config($this->options)
+        $parser = (new \InfinityNext\Eightdown\Eightdown)->config($this->options)
             ->addInlineType('>', 'Cite')
             ->addInlineType('&', 'Cite')
             ->extendInline('Cite', $this->getCiteParser())

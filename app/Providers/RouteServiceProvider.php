@@ -86,7 +86,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('role',       Role::class);
 
         Route::bind('page_title', function ($value, $route) {
-            $board = $route->getParameter('board');
+            $board = $route->parameter('board');
 
             return Page::where([
                 'board_uri' => $board instanceof Board ? $board->board_uri : null,
@@ -119,7 +119,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('post_id', function ($value, $route) {
-            $board = $route->getParameter('board');
+            $board = $route->parameter('board');
 
             if (!($board instanceof Board)) {
                 $board = $this->app->make(Board::class);
@@ -128,8 +128,8 @@ class RouteServiceProvider extends ServiceProvider
                 $post = $board->getThreadByBoardId($value);
 
                 if ($post instanceof Post && $post->exists) {
-                    $route->setParameter('post', $post);
-                    $route->setParameter('post_id', $post);
+                    $route->parameter('post', $post);
+                    $route->parameter('post_id', $post);
 
                     $this->app->singleton(Post::class, function ($app) use ($post) {
                         return $post;
@@ -141,7 +141,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('post', function ($value, $route) {
-            $board = $route->getParameter('board');
+            $board = parameter('board');
 
             if (!($board instanceof Board)) {
                 $board = $this->app->make(Board::class);
@@ -150,7 +150,7 @@ class RouteServiceProvider extends ServiceProvider
                 $post = Post::find($value);
 
                 if ($post instanceof Post && $post->exists) {
-                    $route->setParameter('post', $post);
+                    $route->parameter('post', $post);
 
                     $this->app->singleton(Post::class, function ($app) use ($post) {
                         return $post;

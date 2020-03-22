@@ -3,13 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use InfinityNext\Sleuth\FileSleuth;
 use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use File;
 use Input;
 use Settings;
-use Sleuth;
 use Storage;
 
 /**
@@ -1242,10 +1242,11 @@ class FileStorage extends Model
             if (!isset($file->case)) {
                 $ext = $file->guessExtension();
 
-                $file->case = Sleuth::check($file->getRealPath(), $ext);
+                $sleuth = new FileSleuth($file);
+                $file->case = $sleuth->check($file->getRealPath(), $ext);
 
                 if (!$file->case) {
-                    $file->case = Sleuth::check($file->getRealPath());
+                    $file->case = $sleuth->check($file->getRealPath());
                 }
             }
 

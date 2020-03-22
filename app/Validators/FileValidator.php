@@ -3,8 +3,8 @@
 namespace App\Validators;
 
 use App\FileStorage;
+use InfinityNext\Sleuth\FileSleuth;
 use DB;
-use Sleuth;
 
 class FileValidator
 {
@@ -24,10 +24,11 @@ class FileValidator
         if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
             $ext = $file->guessExtension();
 
-            $detective = Sleuth::check($file->getRealPath(), $ext);
+            $sleuth = new FileSleuth($file);
+            $detective = $sleuth->check($file->getRealPath(), $ext);
 
             if ($detective === false) {
-                $detective = Sleuth::check($file->getRealPath());
+                $detective = $sleuth->check($file->getRealPath());
             }
 
             if ($detective !== false) {

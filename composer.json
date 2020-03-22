@@ -16,6 +16,7 @@
 
     "require": {
         "php": "^7.1.3",
+        "ext-bcmath": "*",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
         "laravel/framework": "5.7.*",
@@ -23,7 +24,11 @@
         "laravelcollective/html":"5.7.*",
         "predis/predis": "^1.1.1",
         "geoip2/geoip2": "~2.1",
-        "doctrine/dbal": "^2.10"
+        "doctrine/dbal": "^2.10",
+        "infinity-next/laravel-captcha": "^1.0",
+        "infinity-next/eightdown": "^0.1",
+        "infinity-next/sleuth": "^0.2",
+        "intervention/image": "^2.5"
     },
 
     "require-dev": {

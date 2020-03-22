@@ -63,7 +63,7 @@ class BoardAdventure extends Model
      */
     public function setAdventurerIpAttribute($value)
     {
-        $this->attributes['adventurer_ip'] = (new IP($value))->toSQL();
+        $this->attributes['adventurer_ip'] = (new IP($value));
     }
 
     public function scopeWhereBoard($query, Board $board)
@@ -73,7 +73,7 @@ class BoardAdventure extends Model
 
     public function scopeWhereBelongsToClient($query)
     {
-        return $query->where('adventurer_ip', (new IP())->toSQL());
+        return $query->where('adventurer_ip', (new IP));
     }
 
     public function scopeWhereFresh($query)

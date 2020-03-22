@@ -489,6 +489,8 @@ class PostRequest extends Request implements ApiContract
             $this->validateOriginality();
         }
 
+        dd($validator->errors());
+
         if (count($validator->errors())) {
             $this->failedValidation($validator);
         } elseif (!$this->passesAuthorization()) {

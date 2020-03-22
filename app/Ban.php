@@ -208,7 +208,7 @@ class Ban extends Model
      */
     public static function getBan($ip, $board_uri = null)
     {
-        return self::ipString($ip)
+        return self::whereIpInBan($ip)
             ->board($board_uri)
             ->whereActive()
             ->orderBy('board_uri', 'desc') // Prioritizes local over global bans.
@@ -346,8 +346,8 @@ class Ban extends Model
         $ip = new IP($ip);
 
         return $query->where(function ($query) use ($ip) {
-            $query->where('ban_ip_start', '<=', $ip->toSQL());
-            $query->where('ban_ip_end', '>=', $ip->toSQL());
+            $query->where('ban_ip_start', '<=', $ip->toText());
+            $query->where('ban_ip_end', '>=', $ip->toText());
         });
     }
 

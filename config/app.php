@@ -218,16 +218,16 @@ return [
         /*
          * Markdown
          */
-        //'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
+        'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
 
         /*
          * Captcha
          */
-        //'Captcha' => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
+        'Captcha' => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
 
         /*
          * File Validation
          */
-        //'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
+        'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
     ],
 ];

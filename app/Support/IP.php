@@ -50,6 +50,9 @@ class IP extends CIDR
             } catch (\Exception $e) {
                 $start = $cidr;
             }
+            if ($start === false) {
+                $start = $cidr;
+            }
         }
 
         // Passing a static, return it.
@@ -74,7 +77,7 @@ class IP extends CIDR
 
     public function __toString()
     {
-        return $this->toSQL();
+        return $this->toText();
     }
 
     public function getStartForSQL()
