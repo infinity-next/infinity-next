@@ -179,14 +179,14 @@ class RouteServiceProvider extends ServiceProvider
          * Media distribution
          */
         Route::group($this->routeGroup['media'], function ($router) {
-            require __DIR__.'/../Http/Routes/Media.php';
+            require base_path('routes/media.php');
         });
 
         /**
          * API
          */
         Route::group($this->routeGroup['api'], function ($router) {
-            require __DIR__.'/../Http/Routes/API.php';
+            require base_path('routes/api.php');
         });
 
         /**
@@ -199,7 +199,7 @@ class RouteServiceProvider extends ServiceProvider
         }
 
         Route::group($this->routeGroup['panel'], function ($router) {
-            require __DIR__.'/../Http/Routes/Panel.php';
+            require base_path('routes/panel.php');
         });
 
         /**
@@ -214,19 +214,19 @@ class RouteServiceProvider extends ServiceProvider
              * Root-level content requests
              */
             Route::group($this->routeGroup['content'], function ($router) {
-                require __DIR__.'/../Http/Routes/Content.php';
+                require base_path('routes/content.php');
             });
 
             /**
              * Boards
              */
             Route::group($this->routeGroup['board'], function ($router) {
-                require __DIR__.'/../Http/Routes/Board.php';
+                require base_path('routes/board.php');
             });
 
             // This has to be dead last or the welcome controller starts
             // getting greedy.
-            require __DIR__.'/../Http/Routes/Web.php';
+            require base_path('routes/web.php');
         });
     }
 }

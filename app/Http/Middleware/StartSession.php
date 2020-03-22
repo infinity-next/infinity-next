@@ -6,7 +6,7 @@ use Config;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession as BaseStartSession;
-use Illuminate\Session\SessionInterface;
+use Illuminate\Contracts\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class StartSession extends BaseStartSession
@@ -69,9 +69,9 @@ class StartSession extends BaseStartSession
      * Add the session cookie to the application response.
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
-     * @param \Illuminate\Session\SessionInterface       $session
+     * @param \Illuminate\Contracts\Session\Session       $session
      */
-    protected function addCookieToResponse(Response $response, SessionInterface $session)
+    protected function addCookieToResponse(Response $response, Session $session)
     {
         if (!$this->shouldPassThrough) {
             parent::addCookieToResponse($response, $session);

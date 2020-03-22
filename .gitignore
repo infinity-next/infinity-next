@@ -3,7 +3,11 @@
 /vendor
 /storage/infinity.import
 /public/webgrind
+/public/mix-manifest.json
+/public/static/css/*.css
+/public/static/js/*.js
 .env
 composer.lock
 dump.rdb
-
+yarn-error.log
+yarn.lock

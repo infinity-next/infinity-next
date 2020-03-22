@@ -19,7 +19,7 @@ class AddCaptchaToken extends Migration
 
 		Schema::table('captcha', function(Blueprint $table)
 		{
-			$table->binary('client_ip')->after('hash')->nullable();
+			$table->ipAddress('client_ip')->after('hash')->nullable();
 			$table->binary('client_session_id')->after('client_ip')->nullable();
 
 			if (!(DB::connection() instanceof \Illuminate\Database\MySqlConnection))
@@ -41,7 +41,7 @@ class AddCaptchaToken extends Migration
 		{
 			$table->dropColumn('client_ip');
 			$table->dropColumn('client_session_id');
-			$table->inet('client_ip')->after('hash')->nullable();
+			$table->ipAddress('client_ip')->after('hash')->nullable();
 		});
 	}
 }

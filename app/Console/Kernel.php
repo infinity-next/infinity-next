@@ -10,19 +10,16 @@ use File;
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
+     * Register the commands for the application.
      *
-     * @var array
+     * @return void
      */
-    protected $commands = [
-        \App\Console\Commands\Autoprune::class,
-        \App\Console\Commands\Import::class,
-        \App\Console\Commands\Inspire::class,
-        \App\Console\Commands\RecordStats::class,
-        \App\Console\Commands\RecordStatsAll::class,
-        \App\Console\Commands\TorCheck::class,
-        \App\Console\Commands\TorPull::class,
-    ];
+    protected function commands()
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
+    }
 
     /**
      * Define the application's command schedule.
