@@ -51,6 +51,7 @@ class Kernel extends HttpKernel
         ],
 
         'media' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\FileFilter::class,
         ],
 

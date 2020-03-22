@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Media;
 use App\Board;
 use App\FileStorage;
 use App\FileAttachment;
+use App\Events\AttachmentWasModified;
 use App\Http\Controllers\Controller;
 use File;
 use Input;
@@ -14,7 +15,6 @@ use Request;
 use Response;
 use Validator;
 use Event;
-use App\Events\AttachmentWasModified;
 
 /**
  * Delivers static content from across the site.
@@ -52,7 +52,7 @@ class FileController extends Controller
         }
 
         if ($FileStorage instanceof FileStorage) {
-            $storagePath = !$thumbnail ? $FileStorage->getPath()     : $FileStorage->getPathThumb();
+            $storagePath = !$thumbnail ? $FileStorage->getPath() : $FileStorage->getPathThumb();
             $storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
             $cacheTime = 31536000; /// 1 year
 

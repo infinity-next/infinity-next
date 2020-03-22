@@ -44,10 +44,12 @@ class RouteServiceProvider extends ServiceProvider
             'middleware' => 'web',
             'namespace'  => 'App\Http\Controllers',
         ],
+
         'content' => [
             'as'         => 'site.',
             'namespace'  => 'Content',
         ],
+
         'board' => [
             'prefix'     => "{board}",
             'as'         => 'board.',
@@ -96,7 +98,6 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('board', function ($value, $route) {
             $board = Board::getBoardWithEverything($value);
-
 
             if ($board instanceof Board && $board->exists) {
                 $board->applicationSingleton = true;
@@ -162,8 +163,9 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         // Sets up our routing tokens.
-        Route::pattern('attachment', '[0-9]\d*');
-        Route::pattern('board', "Board::URI_PATTERN");
+        //Route::pattern('attachment', '[0-9]\d*');
+        Route::pattern('board', Board::URI_PATTERN);
+        //Route::pattern('filename', "^[\w\-. ]+$");
         Route::pattern('id', '[0-9]\d*');
         Route::pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
