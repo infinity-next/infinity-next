@@ -103,9 +103,9 @@ class PostRequest extends Request implements ApiContract
      *
      * @return array
      */
-    public function all()
+    public function all($keys = NULL)
     {
-        $input = parent::all();
+        $input = parent::all($keys);
 
         $this->dropzone = isset($input['dropzone']);
 

@@ -53,9 +53,9 @@ class BoardConfigRequest extends Request
      *
      * @return array
      */
-    public function all()
+    public function all($keys = NULL)
     {
-        $input = parent::all();
+        $input = parent::all($keys);
 
         foreach ($this->getBoardOptions() as $optionGroup) {
             foreach ($optionGroup->options as $option) {
