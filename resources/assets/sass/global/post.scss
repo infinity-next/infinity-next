@@ -115,12 +115,9 @@
     .post-interior {
         position: relative;
     }
-        .post-content-wrapper {
-            overflow: hidden;
+        .post-content-wrapper .post {
+            padding-top: 0;
         }
-            .post-content-wrapper .post {
-                padding-top: 0;
-            }
 
     .post-content {
         padding: 0;

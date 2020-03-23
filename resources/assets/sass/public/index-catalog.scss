@@ -80,6 +80,9 @@ main.index-catalog {
                     height: 100%;
                     overflow: hidden;
                 }
+                    .post-content-wrapper {
+                        overflow: hidden;
+                    }
                      .post-container:hover .post-content {
                         overflow: visible;
                     }
