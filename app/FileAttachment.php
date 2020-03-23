@@ -50,12 +50,12 @@ class FileAttachment extends Model
 
     public function post()
     {
-        return $this->belongsTo('\App\Post', 'post_id');
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     public function storage()
     {
-        return $this->belongsTo('\App\FileStorage', 'file_id');
+        return $this->belongsTo(FileStorage::class, 'file_id');
     }
 
     /**

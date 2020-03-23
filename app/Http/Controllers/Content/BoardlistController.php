@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Input;
 use Request;
 
 /**
@@ -55,7 +54,7 @@ class BoardlistController extends Controller
 
     protected function boardListInput()
     {
-        $input = Input::only('page', 'sfw', 'title', 'lang', 'tags', 'sort', 'sortBy');
+        $input = Request::only('page', 'sfw', 'title', 'lang', 'tags', 'sort', 'sortBy');
 
         $input['page'] = isset($input['page'])  ? max((int) $input['page'], 1) : 1;
         $input['sfw'] = isset($input['sfw'])   ? (bool) $input['sfw'] : false;

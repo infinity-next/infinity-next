@@ -52,6 +52,7 @@ class Board extends Model
      * @var string
      */
     protected $primaryKey = 'board_uri';
+    public $keyType = "string";
 
     /**
      * Denotes our primary key is not an autoincrementing integer.
@@ -112,15 +113,16 @@ class Board extends Model
     ];
 
     /**
-     * Attributes which are automatically sent through a Carbon instance on load.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'last_post_at',
-        'featured_at',
+    protected $casts = [
+        'board_uri' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'last_post_at' => 'datetime',
+        'featured_at' => 'datetime',
     ];
 
     /**

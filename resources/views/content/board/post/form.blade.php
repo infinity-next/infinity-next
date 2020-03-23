@@ -10,7 +10,7 @@
 @else
 <form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
     $reply_to ? 'board.thread.reply' : 'board.thread.put',
-    ['board_uri' => $board->board_uri,] + ($reply_to
+    ['board' => $board->board_uri,] + ($reply_to
         ? ['post_id' => $reply_to->board_id]
         : []
     ),

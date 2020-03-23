@@ -66,24 +66,6 @@ class Post extends Model implements FormattableContract
     protected $primaryKey = 'post_id';
 
     /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'board_id' => 'int',
-        'reply_to' => 'int',
-        'author_ip' => 'ip',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'stickied_at' => 'datetime',
-        'bumplocked_at' => 'datetime',
-        'locked_at' => 'datetime',
-        'featured_at' => 'datetime',
-        'body_parsed_at' => 'datetime',
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -165,21 +147,25 @@ class Post extends Model implements FormattableContract
     ];
 
     /**
-     * Attributes which are automatically sent through a Carbon instance on load.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $dates = [
-        'reply_last',
-        'bumped_last',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'stickied_at',
-        'bumplocked_at',
-        'locked_at',
-        'body_parsed_at',
-        'author_ip_nulled_at',
+    protected $casts = [
+        'board_id' => 'int',
+        'board_uri' => 'string',
+        'reply_to' => 'int',
+        'author_ip' => 'ip',
+        'reply_last' => 'datetime',
+        'bumped_last' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'stickied_at' => 'datetime',
+        'bumplocked_at' => 'datetime',
+        'locked_at' => 'datetime',
+        'body_parsed_at' => 'datetime',
+        'author_ip_nulled_at' => 'datetime',
     ];
 
     public function attachments()
@@ -904,15 +890,9 @@ class Post extends Model implements FormattableContract
             $url_id = $this->board_id;
         }
 
-        return route(
-            implode(array_filter([
-                'api',
-                'board',
-                $route,
-            ]), '.'),
-            [
-                'post_id'=> $url_id,
-                'board'  => $this->board,
+        return route(implode(array_filter(['api', 'board', $route, ]), '.'), [
+                'board'   => $this->board_uri,
+                'post_id' => $url_id,
             ] + $params,
             $abs
         );
@@ -930,15 +910,16 @@ class Post extends Model implements FormattableContract
         if ($this->reply_to_board_id) {
             $url_id = $this->reply_to_board_id;
             $url_hash = "#{$this->board_id}";
-        } else {
+        }
+        else {
             $url_id = $this->board_id;
         }
 
         return route('board.thread', [
-            'board_uri' => $this->board_uri,
+            'board' => $this->board_uri,
             'post_id' => $url_id,
             'splice' => $splice,
-        ], false).$url_hash;
+        ], false) . $url_hash;
     }
 
     /**
@@ -955,7 +936,7 @@ class Post extends Model implements FormattableContract
         }
 
         return route('board.thread', [
-            'board_uri' => $this->board_uri,
+            'board' => $this->board_uri,
             'post_id' => $url_id,
             'splice' => $splice,
         ], false)."#reply-{$this->board_id}";

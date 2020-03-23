@@ -53,7 +53,7 @@ Route::group(['as' => 'board.', 'prefix' => '{board}', 'namespace' => "Board",],
         ->name('thread.reply');
 
     // Get single thread.
-    Route::get('thread/{post}.json', 'BoardController@getThread')
+    Route::get('thread/{post_id}.json', 'BoardController@getThread')
         ->name('thread');
 
     // Get single post.

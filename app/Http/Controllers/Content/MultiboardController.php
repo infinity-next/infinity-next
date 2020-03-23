@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
 use App\Post;
-use Input;
+use Request;
 
 /**
  * Renders a stream of content from all boards.
@@ -61,7 +61,7 @@ class MultiboardController extends Controller
         }
 
         return $this->getThreads(
-            max(1, Input::get('page', 1)),
+            max(1, Request::get('page', 1)),
             is_null($worksafe) ? null : ($worksafe === "nsfw" ? false : true),
             $includes,
             $excludes,

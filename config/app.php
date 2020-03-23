@@ -216,18 +216,10 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         /*
-         * Markdown
-         */
-        'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
-
-        /*
-         * Captcha
+         * Infinity Next Packages
          */
         'Captcha' => InfinityNext\LaravelCaptcha\Facades\Captcha::class,
-
-        /*
-         * File Validation
-         */
+        'Markdown' => InfinityNext\Eightdown\Facades\EightdownFacade::class,
         'Sleuth' => InfinityNext\Sleuth\Facades\Sleuth::class,
     ],
 ];

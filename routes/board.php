@@ -99,8 +99,8 @@ Route::group(['as' => 'thread',], function () {
     Route::get('post/{post_id}', ['as' => '.goto', 'uses' => 'BoardController@getThread',]);
 
     // thread get
-    Route::get('thread/{post_id}', ['uses' => 'BoardController@getThread',]);
-    Route::get('thread/{post_id}/{splice}', ['uses' => 'BoardController@getThread',]);
+    //Route::get('thread/{post_id}', ['uses' => 'BoardController@getThread',]);
+    Route::get('thread/{post_id}/{splice?}', ['uses' => 'BoardController@getThread',]);
 });
 
 // stylesheet
