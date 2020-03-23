@@ -102,7 +102,7 @@ class ConfigController extends PanelController
             }
         }
 
-        Event::fire(new SiteSettingsWereModified());
+        Event::dispatch(new SiteSettingsWereModified());
 
         return $this->view(static::VIEW_CONFIG, [
             'groups' => $optionGroups,

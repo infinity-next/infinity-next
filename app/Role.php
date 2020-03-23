@@ -120,7 +120,7 @@ class Role extends Model
             $role->permissions()->detach();
             $role->users()->detach();
 
-            Event::fire(new RoleWasDeleted($role, $users));
+            Event::dispatch(new RoleWasDeleted($role, $users));
 
             return true;
         });

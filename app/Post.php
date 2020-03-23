@@ -190,7 +190,7 @@ class Post extends Model implements FormattableContract
 
     public function attachmentLinks()
     {
-        return $this->hasMany(FileAttachment::class);
+        return $this->hasMany(FileAttachment::class, 'post_id');
     }
 
     public function backlinks()
@@ -2035,14 +2035,14 @@ class Post extends Model implements FormattableContract
             }
 
             // Cache what time we're submitting our post for flood checks.
-            Cache::put('posting_now_'.$this->author_ip->toLong(), true, 1);
-            Cache::put('last_post_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, 60);
+            Cache::put('posting_now_'.$this->author_ip->toLong(), true, now()->addMinute());
+            Cache::put('last_post_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, now()->addHour());
 
             if ($thread instanceof self) {
                 $this->reply_to = $thread->post_id;
                 $this->reply_to_board_id = $thread->board_id;
 
-                Cache::put('last_thread_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, 60);
+                Cache::put('last_thread_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, now()->addHour());
             }
         } else {
             $this->author_ip = null;
@@ -2177,7 +2177,7 @@ class Post extends Model implements FormattableContract
         // Finally fire event on OP, if it exists.
         if ($thread instanceof self) {
             $thread->setRelation('board', $board);
-            Event::fire(new ThreadNewReply($thread));
+            Event::dispatch(new ThreadNewReply($thread));
         }
 
         if (user()->isAccountable()) {

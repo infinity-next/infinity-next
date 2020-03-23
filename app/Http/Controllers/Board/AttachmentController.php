@@ -90,7 +90,7 @@ class AttachmentController extends Controller
         $attachment->is_spoiler = !$attachment->is_spoiler;
         $attachment->save();
 
-        Event::fire(new AttachmentWasModified($attachment));
+        Event::dispatch(new AttachmentWasModified($attachment));
 
         return redirect()->back();
     }
@@ -152,7 +152,7 @@ class AttachmentController extends Controller
         $attachment->is_deleted = true;
         $attachment->save();
 
-        Event::fire(new AttachmentWasModified($attachment));
+        Event::dispatch(new AttachmentWasModified($attachment));
 
 
         return redirect($attachment->post->getUrl());
@@ -219,7 +219,7 @@ class AttachmentController extends Controller
         $attachment->is_spoiler = !$attachment->is_spoiler;
         $attachment->save();
 
-        Event::fire(new AttachmentWasModified($attachment));
+        Event::dispatch(new AttachmentWasModified($attachment));
 
 
         return redirect($attachment->post->getUrl());

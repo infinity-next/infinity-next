@@ -125,7 +125,7 @@ class PermissionController extends PanelController
 
         $permission_groups = PermissionGroup::withPermissions()->get();
 
-        Event::fire(new RoleWasModified($role));
+        Event::dispatch(new RoleWasModified($role));
 
         return $this->view(static::VIEW_PERMISSIONS, [
             'board' => $board,

@@ -189,7 +189,7 @@ class BoardController extends Controller
      *
      * @param \App\Http\Requests\PostRequest $request
      * @param Board                          $board
-     * @param Post|null                      $thread
+     * @param Post                           $thread
      *
      * @return Response (redirects to the thread view)
      */
@@ -223,7 +223,8 @@ class BoardController extends Controller
                 $posts->sortBy('board_id');
 
                 return $posts;
-            } else {
+            }
+            else {
                 return $post;
             }
         }

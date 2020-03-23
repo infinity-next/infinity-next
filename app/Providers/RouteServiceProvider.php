@@ -51,8 +51,8 @@ class RouteServiceProvider extends ServiceProvider
         ],
 
         'board' => [
-            'prefix'     => "{board}",
             'as'         => 'board.',
+            'prefix'     => "{board}",
             'namespace'  => 'Board',
         ],
 
@@ -67,8 +67,6 @@ class RouteServiceProvider extends ServiceProvider
             'middleware' => ['api'],
             'namespace'  => 'App\Http\Controllers\API',
         ],
-
-        'esi'     => 'ESI',
     ];
 
     /**
@@ -83,6 +81,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('board',      Board::class);
         Route::model('page',       Page::class);
         Route::model('post',       Post::class);
+        Route::model('post_id',    Post::class);
         Route::model('user',       User::class);
         Route::model('report',     Report::class);
         Route::model('role',       Role::class);
@@ -119,6 +118,27 @@ class RouteServiceProvider extends ServiceProvider
                 ->find($value);
         });
 
+        Route::bind('post', function ($value, $route) {
+            $board = parameter('board');
+
+            if (!($board instanceof Board)) {
+                $board = $this->app->make(Board::class);
+            }
+            if (is_numeric($value) && $board instanceof Board) {
+                $post = Post::find($value);
+
+                if ($post instanceof Post && $post->exists) {
+                    $route->parameter('post', $post);
+
+                    $this->app->singleton(Post::class, function ($app) use ($post) {
+                        return $post;
+                    });
+
+                    return $post;
+                }
+            }
+        });
+
         Route::bind('post_id', function ($value, $route) {
             $board = $route->parameter('board');
 
@@ -141,32 +161,12 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        Route::bind('post', function ($value, $route) {
-            $board = parameter('board');
-
-            if (!($board instanceof Board)) {
-                $board = $this->app->make(Board::class);
-            }
-            if (is_numeric($value) && $board instanceof Board) {
-                $post = Post::find($value);
-
-                if ($post instanceof Post && $post->exists) {
-                    $route->parameter('post', $post);
-
-                    $this->app->singleton(Post::class, function ($app) use ($post) {
-                        return $post;
-                    });
-
-                    return $post;
-                }
-            }
-        });
-
         // Sets up our routing tokens.
-        //Route::pattern('attachment', '[0-9]\d*');
+        Route::pattern('attachment', '[0-9]\d*');
         Route::pattern('board', Board::URI_PATTERN);
-        //Route::pattern('filename', "^[\w\-. ]+$");
+        Route::pattern('filename', "^[\w\-. ]+$");
         Route::pattern('id', '[0-9]\d*');
+        Route::pattern('post_id', '[0-9]\d*');
         Route::pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
 
         Route::pattern('worksafe', '^(sfw|nsfw)$');

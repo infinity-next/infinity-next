@@ -22,7 +22,7 @@ class PostObserver
     public function created(Post $post)
     {
         // Fire event, which clears cache among other things.
-        Event::fire(new PostWasAdded($post));
+        Event::dispatch(new PostWasAdded($post));
 
         // Add dice rolls.
         // Because of how dice rolls work, we don't ever remove them and only
@@ -89,7 +89,7 @@ class PostObserver
         $post->forget();
 
         // Fire event.
-        Event::fire(new PostWasDeleted($post));
+        Event::dispatch(new PostWasDeleted($post));
 
         return true;
     }
@@ -180,7 +180,7 @@ class PostObserver
     public function updated(Post $post)
     {
         // Fire event, which clears cache among other things.
-        Event::fire(new PostWasModified($post));
+        Event::dispatch(new PostWasModified($post));
 
         return true;
     }

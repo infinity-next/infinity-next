@@ -103,7 +103,7 @@ class ConfigController extends PanelController
             $asset->storage->challengeExistence();
         }
 
-        Event::fire(new BoardWasModified($board));
+        Event::dispatch(new BoardWasModified($board));
 
         return redirect()->back();
     }
@@ -177,7 +177,7 @@ class ConfigController extends PanelController
             }
         }
 
-        Event::fire(new BoardWasModified($board));
+        Event::dispatch(new BoardWasModified($board));
 
         return $this->getAssets($board);
     }
@@ -318,7 +318,7 @@ class ConfigController extends PanelController
             }
         }
 
-        Event::fire(new BoardWasModified($board));
+        Event::dispatch(new BoardWasModified($board));
 
         return redirect()->back();
     }
@@ -402,7 +402,7 @@ class ConfigController extends PanelController
         $board->updated_at = Carbon::now();
         $board->save();
 
-        Event::fire(new BoardWasModified($board));
+        Event::dispatch(new BoardWasModified($board));
 
         return redirect()->back();
     }
@@ -503,7 +503,7 @@ class ConfigController extends PanelController
             $tags = $board->tags()->saveMany($tags);
         }
 
-        Event::fire(new BoardWasModified($board));
+        Event::dispatch(new BoardWasModified($board));
 
         return $this->view(static::VIEW_TAGS, [
             'board' => $board,

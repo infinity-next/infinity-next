@@ -59,10 +59,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
         ],
 
-        'esi' => [
-            \Barryvdh\HttpCache\Middleware\ParseEsi::class,
-        ],
-
         'api' => [
             \App\Http\Middleware\LocalizedSubdomains::class,
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
@@ -71,6 +67,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\TorFilter::class,
             \App\Http\Middleware\SlugRouting::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             'throttle:120,1',
         ],
     ];

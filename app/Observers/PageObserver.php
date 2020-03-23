@@ -30,7 +30,7 @@ class PageObserver
      */
     public function created(Page $page)
     {
-        Event::fire(new PageWasCreated($page));
+        Event::dispatch(new PageWasCreated($page));
 
         return true;
     }
@@ -56,7 +56,7 @@ class PageObserver
      */
     public function deleted($page)
     {
-        Event::fire(new PageWasDeleted($page));
+        Event::dispatch(new PageWasDeleted($page));
 
         return true;
     }
@@ -109,7 +109,7 @@ class PageObserver
      */
     public function updated(Page $page)
     {
-        Event::fire(new PageWasModified($page));
+        Event::dispatch(new PageWasModified($page));
 
         return true;
     }

@@ -160,7 +160,7 @@ class StaffController extends PanelController
         $user->roles()->detach($roles->pluck('role_id')->toArray());
         $user->roles()->attach($casteInput['castes']);
 
-        Event::fire(new UserRolesModified($user));
+        Event::dispatch(new UserRolesModified($user));
 
         return redirect($board->getPanelUrl('staff'));
     }
@@ -238,7 +238,7 @@ class StaffController extends PanelController
             $user->roles()->attach($input['castes']);
         }
 
-        Event::fire(new UserRolesModified($user));
+        Event::dispatch(new UserRolesModified($user));
 
         if (count($input['castes'])) {
             return redirect()->back();
@@ -297,7 +297,7 @@ class StaffController extends PanelController
 
         $user->roles()->detach($roles->pluck('role_id')->toArray());
 
-        Event::fire(new UserRolesModified($user));
+        Event::dispatch(new UserRolesModified($user));
 
         return redirect($board->getPanelUrl('staff'));
     }

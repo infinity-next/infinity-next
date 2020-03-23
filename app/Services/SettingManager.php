@@ -142,7 +142,7 @@ class SettingManager
     {
         if ($this->hasDB() && $this->get('boardListShow', false)) {
             if (Cache::has('site.boardlist')) {
-                return Cache::remember('site.gnav.boards', 1, function () {
+                return Cache::remember('site.gnav.boards', now()->addMinute(), function () {
                     $popularBoards = collect();
                     $recentBoards = collect();
 
@@ -231,7 +231,7 @@ class SettingManager
     public function fetchSettings()
     {
         if ($this->hasDB()) {
-            return Cache::remember('site.settings', 30, function () {
+            return Cache::remember('site.settings', now()->addMinutes(30), function () {
                 return SiteSetting::getAll();
             });
         }

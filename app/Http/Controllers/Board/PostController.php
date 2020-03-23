@@ -209,7 +209,7 @@ class PostController extends Controller
                 Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 
                 foreach ($posts as $post) {
-                    Event::fire(new PostWasModerated($post, $this->user));
+                    Event::dispatch(new PostWasModerated($post, $this->user));
                 }
             }
             // Delete posts locally
@@ -235,7 +235,7 @@ class PostController extends Controller
                     Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 
                     foreach ($posts as $post) {
-                        Event::fire(new PostWasModerated($post, $this->user));
+                        Event::dispatch(new PostWasModerated($post, $this->user));
                     }
                 }
                 // Delete a single post
@@ -268,7 +268,7 @@ class PostController extends Controller
 
                 $post->delete();
 
-                Event::fire(new PostWasModerated($post, $this->user));
+                Event::dispatch(new PostWasModerated($post, $this->user));
             }
         }
 
@@ -293,10 +293,10 @@ class PostController extends Controller
                 ]);
             }
 
-            Event::fire(new PostWasBanned($post));
+            Event::dispatch(new PostWasBanned($post));
 
             if (!$delete) {
-                Event::fire(new PostWasModerated($post, $this->user));
+                Event::dispatch(new PostWasModerated($post, $this->user));
             }
         }
 

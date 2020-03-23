@@ -143,14 +143,14 @@ class Board extends Model
 
         // Fire event on board created.
         static::created(function (Board $board) {
-            Event::fire(new BoardWasCreated($board, $board->operator));
+            Event::dispatch(new BoardWasCreated($board, $board->operator));
         });
 
         // Handle board reassignment
         static::saved(function (Board $board) {
             foreach ($board->getDirty() as $attribute => $value) {
                 if ($attribute === 'operated_by') {
-                    Event::fire(new BoardWasReassigned($board, $board->operator));
+                    Event::dispatch(new BoardWasReassigned($board, $board->operator));
                     break;
                 }
             }
@@ -778,9 +778,9 @@ class Board extends Model
 
     public function getPageCount()
     {
-        return Cache::remember("board.{$this->board_uri}.pages", 60, function () {
+        return Cache::remember("board.{$this->board_uri}.pages", now()->addHour(), function () {
             $visibleThreads = $this->threads()->op()->count();
-            $threadsPerPage = (int) $this->getConfig('postsPerPage', 10);
+            $threadsPerPage = (int) $this->getConfig('postsPerPage', now()->addMinutes(10));
             $pageCount = ceil($visibleThreads / $threadsPerPage);
 
             return $pageCount > 0 ? $pageCount : 1;
@@ -1112,7 +1112,7 @@ class Board extends Model
      */
     public function getStylesheet()
     {
-        return Cache::remember("board.{$this->board_uri}.stylesheet", 30, function () {
+        return Cache::remember("board.{$this->board_uri}.stylesheet", now()->addMinutes(30), function () {
             $stealFrom = $this->getConfig('boardCustomCSSSteal', '');
 
             if ($stealFrom != '') {
@@ -1162,7 +1162,7 @@ class Board extends Model
      */
     public static function getBoardWithEverything($board_uri)
     {
-        $rememberTimer = 60;
+        $rememberTimer = now()->addHour();
         $rememberKey = "board.{$board_uri}";
         $rememberClosure = function () use ($board_uri) {
             $board = static::find($board_uri);
@@ -1200,14 +1200,14 @@ class Board extends Model
      */
     public static function getBoardsForBoardlist($start = 0, $length = null, $force = false)
     {
-        // Compiling a large board list require sa lot of resources.
+        // Compiling a large board list requires a lot of resources.
         ini_set('memory_limit', '512M');
         ini_set('max_execution_time', 60);
 
         // This timer is very precisely set to be a minute after the turn of the next hour.
         // Laravel's CRON system will add new stat rows and we will be free to recache
         // with the up-to-date information.
-        $rememberTimer = Carbon::now()->minute(1)->second(0)->addHour()->diffInMinutes();
+        $rememberTimer = Carbon::now()->minute(1)->second(0)->addHour();
         $rememberKey = 'site.boardlist';
         $rememberClosure = function () use ($rememberKey) {
             $boards = static::select('board_uri', 'title', 'description', 'posts_total', 'last_post_at', 'is_indexed', 'is_worksafe')
@@ -1286,7 +1286,7 @@ class Board extends Model
         $postsPerPage = $this->getConfig('postsPerPage', 10);
 
         $rememberTags = ["board.{$this->board_uri}.pages"];
-        $rememberTimer = 30;
+        $rememberTimer = now()->addMinutes(30);
         $rememberKey = "board.{$this->board_uri}.catalog";
         $rememberClosure = function () use ($page, $postsPerCatalog, $postsPerPage) {
             $threads = $this->threads()

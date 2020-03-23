@@ -38,7 +38,8 @@ if (false && !is_hidden_service() && config('app.url_media', false)) {
             'uses' => 'FileController@getThumbnailFromHash',
         ])->where(['hash' => "[a-f0-9]{32}",]);
     });
-} else {
+}
+else {
     Route::group(['prefix' => '{board}/file',], function() {
         Route::get('{attachment}/{filename}', 'FileController@getImageFromAttachment')
             ->name('file.attachment');
