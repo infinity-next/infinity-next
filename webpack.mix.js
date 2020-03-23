@@ -31,13 +31,13 @@ mix
     .sass('resources/assets/sass/panel.scss', 'public/static/css')
 
     .scripts([
-        '../../../node_modules/jquery/dist/jquery.js',
-        '../vendor/**/*.js',
-        'plugins/**/*.js'
+        'node_modules/jquery/dist/jquery.min.js',
+        'resources/assets/vendor/**/*.js',
+        'resources/assets/js/plugins/**/*.js'
     ], 'public/static/js/vendor.js')
 
     .scripts([
-        'app/**/*.js'
+        'resources/assets/js/app/**/*.js'
     ], 'public/static/js/app.js')
 ;
 

@@ -36,9 +36,8 @@
 @endif
 
 @if (!isset($catalog) || !$catalog)
-<ul class="thread-replies">
+<div class="replies">
 @foreach ($thread->getReplies() as $reply)
-    <li class="thread-reply">
         <article class="reply">
             @endspaceless
             {!! $reply->toHTML(
@@ -48,13 +47,12 @@
             ) !!}
             @spaceless
         </article>
-    </li>
     @endforeach
 
     @if (isset($updater) && $updater === true)
     @include('widgets.thread-autoupdater')
     @endif
-</ul>
+</div>
 @endif
 @endspaceless
 @endif
