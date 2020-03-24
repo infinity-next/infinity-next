@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Panel;
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Cookie;
 use Input;
@@ -25,7 +26,7 @@ class AuthController extends PanelController
     |
     */
 
-    use AuthenticatesAndRegistersUsers,
+    use AuthenticatesUsers,
         ThrottlesLogins;
 
     const VIEW_LOGIN = 'panel.auth.login';
@@ -37,19 +38,6 @@ class AuthController extends PanelController
      * @var string
      */
     protected $redirectTo = '/';
-
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->middleware(
-            $this->guestMiddleware(),
-            ['except' => 'getLogout']
-        );
-    }
 
     /**
      * Create a new user instance after a valid registration.
