@@ -141,7 +141,7 @@ class AttachmentController extends Controller
                         ->back()
                         ->withInput($input)
                         ->withErrors([
-                            'password' => \Lang::trans('validation.password', [
+                            'password' => \Lang::get('validation.password', [
                                 'attribute' => 'password',
                             ]),
                         ]);
@@ -208,7 +208,7 @@ class AttachmentController extends Controller
                         ->back()
                         ->withInput($input)
                         ->withErrors([
-                            'password' => \Lang::trans('validation.password', [
+                            'password' => \Lang::get('validation.password', [
                                 'attribute' => 'password',
                             ]),
                         ]);
