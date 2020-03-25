@@ -1,3 +1,10 @@
+
+Infinity Next was never completed and is currently in an unusable state. I am currently working on refactoring it to Laravel 6 and modernizing some backend work, but it is just something I am doing for myself. For some reason, I just can't stand to see it unfinished.
+
+Use at your own risk: I can't help you.
+
+---
+
 **[Infinity Next](https://16chan.nl)** is an imageboard using the [Laravel Framework](https://github.com/laravel/laravel). It was conceived as a way to replace existing free imageboard software that have aged poorly. Infinity Next is completely free to use, but modifications to the source code must be made open source as well.
 
 # Submitting Issues
