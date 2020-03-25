@@ -19,10 +19,10 @@ Please don't assume we'll understand exactly what you're talking about. If I can
 # Requirements
 Larachan runs on Laravel 5 and has the same requirements.
 
-* `PHP 5.5.9` or greater.
-  * `php5-mcrypt` for bcrypt functions.
-  * `php5-curl` for Stripe.
-  * `php5-gd` for captcha codes and other image manipulation.
+* `PHP 7.2` or greater.
+  * `php-bcmath` for dealing with IP addresses.
+  * `php-mcrypt` for bcrypt functions.
+  * `php-gd` for captcha codes and other image manipulation.
 
 You may also need the following because not all PHP packages include them:
   * `mbstring` for Lavarel.
