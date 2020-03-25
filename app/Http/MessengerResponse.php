@@ -56,7 +56,7 @@ class MessengerResponse extends JsonResponse
      */
     protected function buildSiblingCaptcha()
     {
-        $needCaptcha = !App::make(Board::class)->canPostWithoutCaptcha(user());
+        $needCaptcha = user()->cannot('bypass-captcha');
 
         return $needCaptcha ? Captcha::findOrCreateCaptcha() : false;
     }

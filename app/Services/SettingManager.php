@@ -118,9 +118,7 @@ class SettingManager
 
 
         if ($this->hasDB()) {
-            $manager = app()->make(UserManager::class);
-
-            if ($manager->user && $manager->user->canCreateBoard()) {
+            if (user()->can('create', Board::class)) {
                 $nav['new_board'] = route('panel.boards.create');
             }
         }

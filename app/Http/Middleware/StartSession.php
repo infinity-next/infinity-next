@@ -45,27 +45,6 @@ class StartSession extends BaseStartSession
     }
 
     /**
-     * Handle an incoming request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     *
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-        if ($this->shouldPassThrough($request)) {
-            return parent::handle($request, $next);
-        }
-
-        // if (!$request->cookie()) {
-        //     Config::set('session.driver', 'array');
-        // }
-
-        return parent::handle($request, $next);
-    }
-
-    /**
      * Add the session cookie to the application response.
      *
      * @param \Symfony\Component\HttpFoundation\Response $response

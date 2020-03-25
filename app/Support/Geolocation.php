@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App;
-use App\Contracts\PermissionUser;
 use Artisan;
 use Cache;
 use GeoIp2\Database\Reader;
@@ -67,7 +66,7 @@ class Geolocation
     {
         $cc = '';
 
-        if (!App::make(PermissionUser::class)->isAccountable()) {
+        if (!user()->isAccountable()) {
             $cc = 'tor';
         }
         // This checks for the CloudFlare country code provided for any service hidden behind Cloudflare.

@@ -101,7 +101,7 @@
                     </li>
                     @endif
 
-                    @if ($post->canBumplock($user))
+                    @can('bumplock', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         @if (!$post->bumplocked_at)
@@ -116,12 +116,12 @@
                         </a>
                         @endif
                     </li>
-                    @endif
+                    @endcan
                 </ul>
 
                 <!-- Broad sweeping user & board actions -->
                 <ul class="post-actions">
-                    @if ($board->canBan($user) && $postHasIp)
+                    @can('ban', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         <a class="post-action-link action-link-ban"
@@ -131,7 +131,7 @@
                             @lang('board.action.ban')
                         </a>
                     </li>
-                    @endif
+                    @endcan
 
                     @if ($post->canDelete($user))
                     @set('postActions', true)
@@ -157,7 +157,7 @@
                         </li>
                         @endif
 
-                        @if ($board->canBan($user))
+                        @can('ban', $board)
                         <li class="post-action">
                             <a class="post-action-link action-link-ban-delete"
                                 href="{!! $post->getModUrl('mod', [

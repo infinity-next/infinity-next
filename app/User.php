@@ -6,12 +6,13 @@ use App\Contracts\Support\Sluggable as SluggableContract;
 use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use InfinityNext\Braintree\Billable;
-use InfinityNext\Braintree\Contracts\Billable as BillableContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 
 /**
  * Model representing static page content for boards and the global site.
@@ -28,21 +29,20 @@ class User
 extends Model
 implements
     AuthenticatableContract,
+    AuthorizableContract,
     CanResetPasswordContract,
-    PermissionUserContract,
-    SluggableContract
+    PermissionUserContract
 {
     use Authenticatable,
+        Authorizable,
         CanResetPassword,
+        MustVerifyEmail,
         PermissionUser;
 
-    /**
-     * Distinguishes this model from an Anonymous user.
-     *
-     * @var bool
-     */
-    protected $anonymous = false;
-
+    public function isAnonymous()
+    {
+        return !$this->exists;
+    }
 
     /**
      * The database table used by the model.
@@ -115,22 +115,17 @@ implements
 
     public function boards()
     {
-        return $this->hasMany('\App\Board', 'operated_by', 'user_id');
+        return $this->hasMany(Board::class, 'operated_by', 'user_id');
     }
 
     public function createdBoards()
     {
-        return $this->hasMany('\App\Board', 'created_by', 'user_id');
-    }
-
-    public function payments()
-    {
-        return $this->hasMany('\App\Payment', 'customer_id', 'user_id');
+        return $this->hasMany(Board::class, 'created_by', 'user_id');
     }
 
     public function roles()
     {
-        return $this->belongsToMany('\App\Role', 'user_roles', 'user_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
 
     /**

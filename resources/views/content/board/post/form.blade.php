@@ -1,4 +1,4 @@
-@if ($board->canPost($user, $reply_to))
+@can('create', [App\Post::class, $board])
 @if (isset($post))
 {!! Form::model($post, [
     'url'    => Request::url(),
@@ -20,7 +20,7 @@
 @endif
     @if (!isset($post))
     <ul class="post-menu">
-        @if ($user->canUsePassword($board))
+        @can('password', [App\Post::class, $board])
         <li class="menu-input menu-password">
             {!! Form::password(
                 'password',
@@ -31,7 +31,8 @@
                     'placeholder' => trans('board.field.password'),
             ]) !!}
         </li>
-        @endif
+        @endcan
+
         <li class="menu-icon menu-icon-minimize require-js">
             <span class="menu-icon-button"></span>
             <span class="menu-icon-text">Minimize</span>
@@ -52,7 +53,7 @@
 
         @include('widgets.messages')
 
-        @if ($board->canPostWithAuthor($user, !!$reply_to))
+        @can('author', [App\Post::class, $board])
         <div class="field row-author">
             {!! Form::text(
                 'author',
@@ -64,9 +65,9 @@
                     'placeholder' => trans('board.field.author')
             ]) !!}
         </div>
-        @endif
+        @endcan
 
-        @if ($board->canPostWithSubject($user, !!$reply_to))
+        @can('subject', [App\Post::class, $board])
         <div class="field row-subject">
             {!! Form::text(
                 'subject',
@@ -78,7 +79,7 @@
                     'placeholder' => trans('board.field.subject'),
             ]) !!}
         </div>
-        @endif
+        @endcan
 
         @if (isset($post) && $post->capcode_id)
         <div class="field row-capcode">
@@ -120,7 +121,8 @@
             ]) !!}
         </div>
 
-        @if ($board->canAttach($user) && !isset($post))
+        @if(!isset($post))
+        @can('attach', [App\Post::class, $board, $reply_to])
         <div class="field row-file">
             <div class="dz-container">
                 <span class="dz-instructions"><span class="dz-instructions-text"><i class="fa fa-upload"></i>&nbsp;@lang('board.field.file-dz')</span></span>
@@ -132,16 +134,17 @@
                 </div>
             </div>
         </div>
+        @endcan
         @endif
 
-        <div class="field row-captcha" style="display:@if ($board->canPostWithoutCaptcha($user)) none @else block @endif;">
+        <div class="field row-captcha" style="display:@can('bypass-captcha') none @else block @endcan;">
             <label class="field-label" for="captcha" data-widget="captcha">
-                @if (!$board->canPostWithoutCaptcha($user))
+                @cannot('bypass-captcha')
                     {!! captcha() !!}
                 @else
                     <img src="" class="captcha">
                     <input type="hidden" name="captcha_hash" value="" />
-                @endif
+                @endcan
 
                 {!! Form::text(
                     'captcha',
@@ -155,19 +158,18 @@
             </label>
         </div>
 
-        @if (!$user->isAnonymous() && !isset($post) && $user->getCapcodes($board))
+        @can('capcode', [$board, $post ?? null])
         <div class="field row-submit row-double">
             <select id="capcode" class="field-control field-capcode" name="capcode">
                 <option value="" selected>@lang('board.field.capcode')</option>
 
-                @foreach ($user->getCapcodes($board) as $role)
+                @foreach (user()->getCapcodes($board) as $role)
                     <option value="{!! $role->role_id !!}">{{{ $role->getCapcodeName() }}}</option>
                 @endforeach
             </select>
         @else
         <div class="field row-submit">
-        @endif
-
+        @endcan
             {!! Form::button(
                 trans("board.submit." . implode($actions, "+")),
                 [

@@ -71,7 +71,7 @@ trait PermissionUser
      *
      * @return bool
      */
-    public function can($permission, $board = null)
+    public function permission($permission, $board = null)
     {
         if ($permission instanceof Permission) {
             $permission = $permission->permission_id;
@@ -91,9 +91,9 @@ trait PermissionUser
      *
      * @return bool
      */
-    public function canAny($permission)
+    public function permissionAny($permission)
     {
-        if ($this->can($permission)) {
+        if ($this->permission($permission)) {
             return true;
         }
 
@@ -149,7 +149,7 @@ trait PermissionUser
      */
     public function canAdminBoards()
     {
-        return $this->can('sys.boards');
+        return $this->permission('sys.boards');
     }
 
     /**
@@ -159,7 +159,7 @@ trait PermissionUser
      */
     public function canAdminCache()
     {
-        return $this->can('sys.cache');
+        return $this->permission('sys.cache');
     }
 
     /**
@@ -169,7 +169,7 @@ trait PermissionUser
      */
     public function canAdminConfig()
     {
-        return $this->can('sys.config');
+        return $this->permission('sys.config');
     }
 
     /**
@@ -179,7 +179,7 @@ trait PermissionUser
      */
     public function canAdminLogs()
     {
-        return $this->can('sys.logs');
+        return $this->permission('sys.logs');
     }
 
     /**
@@ -189,7 +189,7 @@ trait PermissionUser
      */
     public function canAdminRoles()
     {
-        return $this->can('sys.roles');
+        return $this->permission('sys.roles');
     }
 
     /**
@@ -199,7 +199,7 @@ trait PermissionUser
      */
     public function canAdminPayments()
     {
-        return $this->can('sys.payments');
+        return $this->permission('sys.payments');
     }
 
     /**
@@ -209,7 +209,7 @@ trait PermissionUser
      */
     public function canAdminPermissions()
     {
-        return $this->can('sys.permissions');
+        return $this->permission('sys.permissions');
     }
 
     /**
@@ -219,7 +219,7 @@ trait PermissionUser
      */
     public function canAdminTools()
     {
-        return $this->can('sys.tools');
+        return $this->permission('sys.tools');
     }
 
     /**
@@ -229,7 +229,7 @@ trait PermissionUser
      */
     public function canAdminUsers()
     {
-        return $this->can('sys.users');
+        return $this->permission('sys.users');
     }
 
     /**
@@ -240,7 +240,7 @@ trait PermissionUser
     public function canAttachNew(Board $board)
     {
         // The only thing we care about for this setting is the permission mask.
-        return $this->can('board.image.upload.new', $board);
+        return $this->permission('board.image.upload.new', $board);
     }
 
     /**
@@ -251,18 +251,7 @@ trait PermissionUser
     public function canAttachOld(Board $board)
     {
         // The only thing we care about for this setting is the permission mask.
-        return $this->can('board.image.upload.old', $board);
-    }
-
-    /**
-     * Can this user ban others from this board?
-     *
-     * @return bool
-     */
-    public function canBan(Board $board)
-    {
-        // The only thing we care about for this setting is the permission mask.
-        return $this->can('board.user.ban.free', $board) || $this->can('board.user.ban.reason', $board);
+        return $this->permission('board.image.upload.old', $board);
     }
 
     /**
@@ -273,33 +262,9 @@ trait PermissionUser
     public function canBanGlobally()
     {
         // The only thing we care about for this setting is the permission mask.
-        return $this->can('board.user.ban.free') || $this->can('board.user.ban.reason');
+        return $this->permission('board.user.ban.free') || $this->permission('board.user.ban.reason');
     }
 
-    /**
-     * Can this user bumplock threads?
-     *
-     * @return bool
-     */
-    public function canBumplock(Post $post)
-    {
-        // We can only ever sticky a thread, for now.
-        if (is_null($post->reply_to)) {
-            return $this->can('board.post.bumplock', $post->board_uri);
-        }
-
-        return false;
-    }
-
-    /**
-     * Can this user create and assume control of a new board?
-     *
-     * @return bool
-     */
-    public function canCreateBoard()
-    {
-        return $this->can('board.create');
-    }
 
     /**
      * Can this user create a board with a banned URI?
@@ -308,7 +273,7 @@ trait PermissionUser
      */
     public function canCreateBoardWithBannedUri()
     {
-        return $this->can('board.create.banned');
+        return $this->permission('board.create.banned');
     }
 
     /**
@@ -318,7 +283,7 @@ trait PermissionUser
      */
     public function canCreateUser()
     {
-        return $this->can('site.user.create');
+        return $this->permission('site.user.create');
     }
 
     /**
@@ -329,14 +294,14 @@ trait PermissionUser
     public function canDelete(Post $post)
     {
         // If we can delete any post for this board ...
-        if ($this->can('board.post.delete.other', $post->board_uri)) {
+        if ($this->permission('board.post.delete.other', $post->board_uri)) {
             // Allow post deletion.
             return true;
         }
         // If the author and our current user share an IP ...
         elseif ($post->author_ip == Request::ip()) {
             // Allow post deletion, if the masks allows it.
-            return $this->can('board.post.delete.self', $post->board_uri);
+            return $this->permission('board.post.delete.self', $post->board_uri);
         }
 
         return false;
@@ -349,7 +314,7 @@ trait PermissionUser
      */
     public function canDeleteLocally(Board $board)
     {
-        return $this->can('board.post.delete.other', $board);
+        return $this->permission('board.post.delete.other', $board);
     }
 
     /**
@@ -359,7 +324,7 @@ trait PermissionUser
      */
     public function canDeletePostWithPassword(Board $board)
     {
-        return $this->can('board.post.delete.self', $board);
+        return $this->permission('board.post.delete.self', $board);
     }
 
     /**
@@ -369,7 +334,7 @@ trait PermissionUser
      */
     public function canDeleteGlobally()
     {
-        return $this->can('board.post.delete.other');
+        return $this->permission('board.post.delete.other');
     }
 
     /**
@@ -380,14 +345,14 @@ trait PermissionUser
     public function canEdit(Post $post)
     {
         // If we can edit any post for this board ...
-        if ($this->can('board.post.edit.other', $post->board_uri)) {
+        if ($this->permission('board.post.edit.other', $post->board_uri)) {
             // Allow post edit.
             return true;
         }
         // If the author and our current user share an IP ...
         elseif (!is_null($post->author_ip) && $post->author_ip->is(Request::ip())) {
             // Allow post edit, if the masks allows it.
-            return $this->can('board.post.edit.self', $post->board_uri);
+            return $this->permission('board.post.edit.self', $post->board_uri);
         }
 
         return false;
@@ -400,7 +365,7 @@ trait PermissionUser
      */
     public function canEditAnyConfig()
     {
-        return $this->canAny('board.config');
+        return $this->permissionAny('board.config');
     }
 
     /**
@@ -410,7 +375,7 @@ trait PermissionUser
      */
     public function canEditConfig($board = null)
     {
-        return $this->can('board.config', $board);
+        return $this->permission('board.config', $board);
     }
 
     /**
@@ -422,7 +387,7 @@ trait PermissionUser
      */
     public function canEditPostWithPassword(Board $board)
     {
-        return $this->can('board.post.edit.self', $board);
+        return $this->permission('board.post.edit.self', $board);
     }
 
     /**
@@ -456,7 +421,7 @@ trait PermissionUser
      */
     public function canEditSettingLock(Board $board, Option $option)
     {
-        return $this->can('site.board.setting_lock', $board);
+        return $this->permission('site.board.setting_lock', $board);
     }
 
     /**
@@ -474,7 +439,7 @@ trait PermissionUser
             return false;
         }
 
-        return $this->can('board.config', $board);
+        return $this->permission('board.config', $board);
     }
 
     /**
@@ -494,7 +459,7 @@ trait PermissionUser
      */
     public function canFeatureGlobally(Post $post)
     {
-        return $this->can('sys.config');
+        return $this->permission('sys.config');
     }
 
     /**
@@ -506,7 +471,7 @@ trait PermissionUser
     {
         // We can only ever sticky a thread, for now.
         if (is_null($post->reply_to)) {
-            return $this->can('board.post.lock', $post);
+            return $this->permission('board.post.lock', $post);
         }
 
         return false;
@@ -519,17 +484,7 @@ trait PermissionUser
      */
     public function canPostInLockedThreads(Board $board = null)
     {
-        return $this->can('board.post.lock_bypass', $board);
-    }
-
-    /**
-     * Can this user post in this thread without filling out the captcha?
-     *
-     * @return bool
-     */
-    public function canPostWithoutCaptcha(Board $board = null)
-    {
-        return $this->can('sys.nocaptcha', $board);
+        return $this->permission('board.post.lock_bypass', $board);
     }
 
     /**
@@ -539,7 +494,7 @@ trait PermissionUser
      */
     public function canPostReply(Board $board = null)
     {
-        return $this->can('board.post.create.reply', $board);
+        return $this->permission('board.post.create.reply', $board);
     }
 
     /**
@@ -549,7 +504,7 @@ trait PermissionUser
      */
     public function canManageAppeals(Board $board = null)
     {
-        return $this->can('board.user.unban', $board);
+        return $this->permission('board.user.unban', $board);
     }
 
     /**
@@ -559,7 +514,7 @@ trait PermissionUser
      */
     public function canManageAppealsAny()
     {
-        return $this->can('board.user.unban') || $this->canAny('board.user.unban');
+        return $this->permission('board.user.unban') || $this->permissionAny('board.user.unban');
     }
 
     /**
@@ -579,7 +534,7 @@ trait PermissionUser
      */
     public function canPostThread(Board $board = null)
     {
-        return $this->can('board.post.create.thread', $board);
+        return $this->permission('board.post.create.thread', $board);
     }
 
     /**
@@ -591,7 +546,7 @@ trait PermissionUser
      */
     public function canRemoveAttachmentWithPassword(Board $board)
     {
-        return $this->can('board.image.delete.self', $board);
+        return $this->permission('board.image.delete.self', $board);
     }
 
     /**
@@ -601,7 +556,7 @@ trait PermissionUser
      */
     public function canReport(Post $post)
     {
-        return $this->can('board.post.report', $post->board_uri);
+        return $this->permission('board.post.report', $post->board_uri);
     }
 
     /**
@@ -611,7 +566,7 @@ trait PermissionUser
      */
     public function canReportGlobally()
     {
-        return $this->can('site.post.report');
+        return $this->permission('site.post.report');
     }
 
     /**
@@ -621,7 +576,7 @@ trait PermissionUser
      */
     public function canSpoilerAttachmentLocally(Board $board)
     {
-        return $this->can('board.image.spoiler.other', $board);
+        return $this->permission('board.image.spoiler.other', $board);
     }
 
     /**
@@ -633,7 +588,7 @@ trait PermissionUser
      */
     public function canSpoilerAttachmentWithPassword(Board $board)
     {
-        return $this->can('board.image.spoiler.self', $board);
+        return $this->permission('board.image.spoiler.self', $board);
     }
 
     /**
@@ -643,7 +598,7 @@ trait PermissionUser
      */
     public function canSpoilerAttachmentGlobally()
     {
-        return $this->can('board.image.spoiler.other');
+        return $this->permission('board.image.spoiler.other');
     }
 
     /**
@@ -655,35 +610,7 @@ trait PermissionUser
     {
         // We can only ever sticky a thread, for now.
         if (is_null($post->reply_to)) {
-            return $this->can('board.post.sticky', $post->board_uri);
-        }
-
-        return false;
-    }
-
-    /**
-     * Can this user supply a password for any purpose?
-     *
-     * @param \App\Board $board
-     *
-     * @return bool
-     */
-    public function canUsePassword(Board $board)
-    {
-        if ($this->canDeletePostWithPassword($board)) {
-            return true;
-        }
-
-        if ($this->canEditPostWithPassword($board)) {
-            return true;
-        }
-
-        if ($this->canRemoveAttachmentWithPassword($board)) {
-            return true;
-        }
-
-        if ($this->canSpoilerAttachmentWithPassword($board)) {
-            return true;
+            return $this->permission('board.post.sticky', $post->board_uri);
         }
 
         return false;
@@ -698,7 +625,7 @@ trait PermissionUser
      */
     public function canViewBan(Ban $ban)
     {
-        return $this->can('board.bans', $ban->board_uri);
+        return $this->permission('board.bans', $ban->board_uri);
     }
 
     /**
@@ -710,19 +637,7 @@ trait PermissionUser
      */
     public function canViewHistory(Post $post)
     {
-        return $this->can('board.history', $post->board_uri);
-    }
-
-    /**
-     * Can this user view moderator logs?
-     *
-     * @param  \App\Board
-     *
-     * @return bool
-     */
-    public function canViewLogs(Board $board)
-    {
-        return $this->can('board.logs', $board);
+        return $this->permission('board.history', $post->board_uri);
     }
 
     /**
@@ -732,7 +647,7 @@ trait PermissionUser
      */
     public function canViewGlobalHistory()
     {
-        return $this->can('board.history', null);
+        return $this->permission('board.history', null);
     }
 
     /**
@@ -743,10 +658,10 @@ trait PermissionUser
     public function canViewReports($board = null)
     {
         if ($board instanceof Board) {
-            return $this->canAny('board.reports', $board->board_uri);
+            return $this->permissionAny('board.reports', $board->board_uri);
         }
 
-        return $this->can('board.reports') || $this->canAny('board.reports');
+        return $this->permission('board.reports') || $this->permissionAny('board.reports');
     }
 
     /**
@@ -756,7 +671,7 @@ trait PermissionUser
      */
     public function canViewReportsGlobally()
     {
-        return $this->can('site.reports');
+        return $this->permission('site.reports');
     }
 
     /**
@@ -766,7 +681,7 @@ trait PermissionUser
      */
     public function canViewRawIP()
     {
-        return $this->can('site.user.raw_ip');
+        return $this->permission('site.user.raw_ip');
     }
 
     /**
@@ -776,7 +691,7 @@ trait PermissionUser
      */
     public function canViewUnindexedBoards()
     {
-        return $this->can('site.board.view_unindexed');
+        return $this->permission('site.board.view_unindexed');
     }
 
     /**
@@ -817,7 +732,7 @@ trait PermissionUser
             ->where(function ($query) use ($board) {
                 if (is_null($board) && $this->canAdminRoles()) {
                     $query->whereStaff();
-                } elseif ($this->can('board.user.role', $board)) {
+                } elseif ($this->permission('board.user.role', $board)) {
                     $query->whereJanitor();
                 }
             })
@@ -901,7 +816,7 @@ trait PermissionUser
             });
         }
 
-        return [];
+        return collect([]);
     }
 
     /**

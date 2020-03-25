@@ -9,7 +9,6 @@ use App\Post;
 use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
-use App\Services\UserManager;
 use App\Support\IP;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -86,16 +85,10 @@ class PostRequest extends Request implements ApiContract
     /**
      * Fetches the user and our board config.
      */
-    public function __construct(Board $board, Post $thread, UserManager $manager)
+    public function __construct(Board $board, Post $thread)
     {
         $this->board = $board;
-        $this->user = $manager->user;
-
-        if ($thread->exists) {
-            $this->thread = $thread;
-        } else {
-            $this->thread = false;
-        }
+        $this->thread = $thread->exists ? $thread : false;
     }
 
     /**
@@ -115,7 +108,7 @@ class PostRequest extends Request implements ApiContract
         }
 
         if (isset($input['capcode']) && $input['capcode']) {
-            $user = $this->user;
+            $user = user();
 
             if ($user && !$user->isAnonymous()) {
                 $role = $user->roles->find((int) $input['capcode']);
@@ -131,11 +124,11 @@ class PostRequest extends Request implements ApiContract
             }
         }
 
-        if (!$this->board->canPostWithAuthor($this->user, (bool) $this->thread)) {
+        if (user()->cannot('author', [Post::class, $this->board])) {
             unset($input['author']);
         }
 
-        if (!$this->board->canPostWithSubject($this->user, (bool) $this->thread)) {
+        if (user()->cannot('subject', [Post::class, $this->board])) {
             unset($input['subject']);
         }
 
@@ -158,7 +151,7 @@ class PostRequest extends Request implements ApiContract
             return false;
         }
 
-        return $this->board->canPost($this->user, $this->thread);
+        return user()->can('reply', $this->thread);
     }
 
     /**
@@ -230,14 +223,16 @@ class PostRequest extends Request implements ApiContract
     public function rules()
     {
         $board = $this->board;
-        $user = $this->user;
+        $user = user();
         $rules = [
             'author' => [
+                'nullable',
                 'string',
                 'encoding:UTF-8',
             ],
 
             'email' => [
+                'nullable',
                 'string',
                 'encoding:UTF-8',
             ],
@@ -250,6 +245,9 @@ class PostRequest extends Request implements ApiContract
 
         if (!$this->thread && $board->getConfig('threadRequireSubject')) {
             $rules['subject'][] = 'required';
+        }
+        else {
+            $rules['subject'][] = 'nullable';
         }
 
         // Modify the validation rules based on what we've been supplied.
@@ -407,7 +405,7 @@ class PostRequest extends Request implements ApiContract
     {
         $board = $this->board;
         $thread = $this->thread;
-        $user = $this->user;
+        $user = user();
 
         $ip = new IP($this->ip());
         $carbon = new \Carbon\Carbon();
@@ -454,13 +452,13 @@ class PostRequest extends Request implements ApiContract
 
         // Board-level setting validaiton.
         $validator->sometimes('captcha', 'required|captcha', function ($input) use ($board) {
-            return !$board->canPostWithoutCaptcha($this->user);
+            return !$board->canPostWithoutCaptcha(user());
         });
 
         if (!$validator->passes()) {
             $this->failedValidation($validator);
         } else {
-            if (!$this->user->canAdminConfig() && $board->canPostWithoutCaptcha($this->user)) {
+            if (!user()->canAdminConfig() && $board->canPostWithoutCaptcha(user())) {
                 // Check last post time for flood.
                 $floodTime = site_setting('postFloodTime');
 
@@ -502,7 +500,7 @@ class PostRequest extends Request implements ApiContract
     {
         $board = $this->board;
         $thread = $this->thread;
-        $user = $this->user;
+        $user = user();
         $input = $this->all();
 
         $validated = true;

@@ -271,86 +271,9 @@ class Board extends Model
         return $this->canPostThread($user);
     }
 
-    public function canPostReply(PermissionUser $user)
-    {
-        return $user->canPostReply($this);
-    }
-
-    public function canPostWithAuthor(PermissionUser $user, $asReply)
-    {
-        // If we don't allow author and user is not board admin
-        return $this->getConfig('postsAllowAuthor') || $user->canEditConfig($this);
-    }
-
-    public function canPostWithSubject(PermissionUser $user, $asReply)
-    {
-        // If we don't allow subjects and user is not board admin
-        $canPostSubject = $this->getConfig('postsAllowSubject') || $user->canEditConfig($this);
-
-        // ... and this is not a new thread and we don't require subjects for new threads
-        $canPostSubject = $canPostSubject || (!$asReply && $this->getConfig('threadRequireSubject'));
-
-        return $canPostSubject;
-    }
-
     public function canPostThread(PermissionUser $user)
     {
         return $user->canPostThread($this);
-    }
-
-    public function canPostWithoutCaptcha(PermissionUser $user)
-    {
-        // Check if site requires captchas.
-        if (!site_setting('captchaEnabled')) {
-            return true;
-        }
-
-        if (!$user->isAccountable()) {
-            return false;
-        }
-
-        // Check if this user can bypass captchas.
-        if ($user->canPostWithoutCaptcha($this)) {
-            return true;
-        }
-
-        // Begin to check captchas for last answers.
-        $ip = new IP();
-        $session_id = Session::getId();
-
-        $lastCaptcha = Captcha::select('created_at', 'cracked_at')
-            ->where(function ($query) use ($ip, $session_id) {
-                // Find captchas answered by this user.
-                $query->where('client_session_id', hex2bin($session_id));
-
-                // Pull the lifespan of a captcha.
-                // This is the number of minutes between successful entries.
-                $captchaLifespan = (int) site_setting('captchaLifespanTime', 0);
-
-                if ($captchaLifespan > 0) {
-                    $query->whereNotNull('cracked_at');
-                    $query->where('cracked_at', '>=', \Carbon\Carbon::now()->subMinutes($captchaLifespan));
-                }
-            })
-            ->orderBy('cracked_at', 'desc')
-            ->first();
-
-        $requireCaptcha = !($lastCaptcha instanceof Captcha);
-
-        if (!$requireCaptcha) {
-            $captchaLifespan = (int) site_setting('captchaLifespanPosts');
-
-            if ($captchaLifespan > 0) {
-                $postsWithCaptcha = Post::select('created_at')
-                    ->where('author_ip', $ip->toText())
-                    ->where('created_at', '>=', $lastCaptcha->created_at)
-                    ->count();
-
-                $requireCaptcha = $postsWithCaptcha >= $captchaLifespan;
-            }
-        }
-
-        return !$requireCaptcha;
     }
 
     public function canPostInLockedThreads(PermissionUser $user)

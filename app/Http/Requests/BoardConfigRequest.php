@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Board;
 use App\OptionGroup;
-use App\Services\UserManager;
 use Sabberworm\CSS\OutputFormat;
 use Sabberworm\CSS\Parser;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
@@ -42,7 +41,7 @@ class BoardConfigRequest extends Request
     /**
      * Fetches the user and our board config.
      */
-    public function __construct(Board $board, UserManager $manager)
+    public function __construct(Board $board)
     {
         $this->user = $manager->user;
         $this->board = $board;
@@ -116,7 +115,7 @@ class BoardConfigRequest extends Request
      */
     public function authorize()
     {
-        return $this->board->canEditConfig($this->user);
+        return $this->board->canEditConfig(user());
     }
 
     /**

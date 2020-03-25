@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Services\UserManager;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Http\Request;
@@ -51,10 +50,9 @@ class PasswordController extends PanelController
      * Create a new password controller instance.
      *
      * @param \Illuminate\Http\Request                  $request
-     * @param \App\Services\UserManager                 $auth
      * @param \Illuminate\Contracts\Auth\PasswordBroker $passwords
      */
-    public function __construct(UserManager $manager, Router $router, PasswordBroker $passwords)
+    public function __construct(Router $router, PasswordBroker $passwords)
     {
         $this->passwords = $passwords;
 

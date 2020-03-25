@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Board;
 use App\Log;
 use App\Http\MessengerResponse;
-use App\Services\UserManager;
+use App\Support\IP;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -39,16 +39,13 @@ abstract class Controller extends BaseController
     /**
      * Constructs all controllers with the user and board as properties.
      *
-     * @param  UserManager  $manager
      * @param  Router       $router
      *
      * @return void
      */
-    public function __construct(UserManager $manager, Router $router)
+    public function __construct(Router $router)
     {
-        $this->userManager = $manager;
-        $this->auth = $manager->auth;
-        $this->user = $manager->user;
+        $this->user = auth()->user();
 
         $board = app(Board::class);
         $this->board = $board->exists ? $board : null;
@@ -110,8 +107,8 @@ abstract class Controller extends BaseController
         $log = new Log([
             'action_name' => $action,
             'action_details' => $action_details,
-            'user_id' => $this->user->isAnonymous() ? null : $this->user->user_id,
-            'user_ip' => inet_pton(Request::inputClientIp()),
+            'user_id' => user()->isAnonymous() ? null : user()->user_id,
+            'user_ip' => new IP,
             'board_uri' => $board_uri,
         ]);
 

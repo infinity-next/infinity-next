@@ -123,10 +123,8 @@ class BoardController extends Controller
      */
     public function getLogs(Board $board)
     {
-        if (!$this->user->canViewLogs($board)) {
-            return abort(403);
-        }
-
+        $this->authorize('audit', $board);
+        
         return $this->view(static::VIEW_LOGS, [
             'board' => $board,
             'logs' => $board->getLogs(),

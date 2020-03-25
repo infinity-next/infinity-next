@@ -250,18 +250,6 @@ class Post extends Model implements FormattableContract
     }
 
     /**
-     * Determines if the user can bumplock this post.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canBumplock($user)
-    {
-        return $user->canBumplock($this);
-    }
-
-    /**
      * Determines if the user can delete this post.
      *
      * @param App\Contracts\PermissionUser $user
@@ -295,22 +283,6 @@ class Post extends Model implements FormattableContract
     public function canLock($user)
     {
         return $user->canLock($this);
-    }
-
-    /**
-     * Determines if the user can reply to post, or if this thread is open to replies in general.
-     *
-     * @param App\Contracts\PermissionUser|null $user
-     *
-     * @return bool
-     */
-    public function canReply($user = null)
-    {
-        if (!is_null($user)) {
-            return $user->canReply($this);
-        }
-
-        return true;
     }
 
     /**

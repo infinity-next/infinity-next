@@ -7,9 +7,10 @@ if (!function_exists('site_setting')) {
     }
 }
 
+
 if (!function_exists('user')) {
     function user()
     {
-        return app()->make('App\Contracts\PermissionUser');
+        return auth()->user();
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
-use Illuminate\Http\Request;
 use Lang;
 use Request;
 use Validator;
@@ -148,7 +147,7 @@ class BoardsController extends PanelController
      *
      * @return Response
      */
-    public function putCreate(Request $request)
+    public function putCreate()
     {
         if (!$this->user->canCreateBoard()) {
             return abort(403);

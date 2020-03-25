@@ -5,6 +5,8 @@ namespace App;
 use App\Contracts\PermissionUser;
 use App\Support\IP;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
 
 class Log extends Model
 {
@@ -58,7 +60,7 @@ class Log extends Model
         $details = json_decode($this->action_details, true);
 
         foreach ($details as $detailKey => &$detailValue) {
-            $methodName = camel_case("get_log_visible_{$detailKey}");
+            $methodName = Str::camel("get_log_visible_{$detailKey}");
 
             if (method_exists($this, $methodName)) {
                 $detailValue = $this->{$methodName}($detailValue, $user);
@@ -115,6 +117,6 @@ class Log extends Model
      */
     public function setUserIpAttribute($value)
     {
-        $this->attributes['user_ip'] = (new IP($value))->toSQL();
+        $this->attributes['user_ip'] = (new IP($value))->toText();
     }
 }

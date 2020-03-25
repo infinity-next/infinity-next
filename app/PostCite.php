@@ -101,7 +101,7 @@ class PostCite extends Model
     public function getBacklinkURL()
     {
         return route('board.thread.goto', [
-            'board_uri' => $this->post_board_uri,
+            'board' => $this->post_board_uri,
             'post_id' => $this->post_board_id,
         ], false);
     }
