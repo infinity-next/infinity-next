@@ -7,7 +7,7 @@ use App\PermissionGroup;
 use App\Role;
 use App\RolePermission;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
+use Request;
 use Event;
 use App\Events\RoleWasModified;
 
@@ -56,7 +56,7 @@ class PermissionsController extends PanelController
             return abort(403);
         }
 
-        $input = Input::all();
+        $input = Request::all();
         $permissions = Permission::all();
         $rolePermissions = [];
         $nullPermissions = [];

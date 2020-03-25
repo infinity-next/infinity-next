@@ -8,7 +8,7 @@ use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use File;
-use Input;
+use Request;
 use Settings;
 use Storage;
 
@@ -160,7 +160,7 @@ class FileStorage extends Model
         $attachment->post_id = $post->post_id;
         $attachment->file_id = $storage->file_id;
         $attachment->filename = urlencode("{$fileName}.{$fileExt}");
-        $attachment->is_spoiler = (bool) Input::get('spoilers');
+        $attachment->is_spoiler = (bool) Request::input('spoilers');
 
         if ($autosave) {
             $attachment->save();

@@ -29,7 +29,7 @@ trait ApiController
      */
     public function apiResponse($data = null, $status = 200, $headers = array())
     {
-        if ((bool) Request::get('messenger', 0)) {
+        if ((bool) Request::input('messenger', 0)) {
             return new MessengerResponse($data, $status, $headers);
         }
 

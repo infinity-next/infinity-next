@@ -9,8 +9,8 @@ use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Board\BoardController as ParentController;
 use App\Http\Requests\PostRequest;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Request;
 
 /**
  * Controller for board related API.
@@ -103,18 +103,17 @@ class BoardController extends ParentController implements ApiContract
     /**
      * Returns a thread and its replies to the client.
      *
-     * @param Request $request
      * @param Board   $board
      * @param Post    $thread
      *
      * @return Response
      */
-    public function getThread(Request $request, Board $board, Post $thread, $splice = null)
+    public function getThread(Board $board, Post $thread, $splice = null)
     {
-        $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
+        $input = Request::only('updatesOnly', 'updateHtml', 'updatedSince');
 
         if (isset($input['updatesOnly'])) {
-            $updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', 0));
+            $updatedSince = Carbon::createFromTimestamp(Request::input('updatedSince', 0));
             $includeHTML = isset($input['updateHtml']);
 
             $posts = Post::getUpdates($updatedSince, $board, $thread, $includeHTML);

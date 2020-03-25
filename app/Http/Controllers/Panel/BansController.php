@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Panel;
 
 use App\Ban;
 use App\Board;
-use Input;
 use Request;
 use Validator;
 
@@ -123,7 +122,7 @@ class BansController extends PanelController
             return abort(403);
         }
 
-        $input = Input::all();
+        $input = Request::all();
         $validator = Validator::make($input, [
             'appeal_text' => [
                 'string',

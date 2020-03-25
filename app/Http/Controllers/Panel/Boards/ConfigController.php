@@ -11,7 +11,6 @@ use App\OptionGroup;
 use App\Http\Requests\BoardConfigRequest;
 use App\Http\Controllers\Panel\PanelController;
 use Carbon\Carbon;
-use Input;
 use Request;
 use Validator;
 use Event;
@@ -79,7 +78,7 @@ class ConfigController extends PanelController
      */
     public function destroyAssets(Request $request, Board $board)
     {
-        $input = Input::all();
+        $input = Request::all();
         $validator = Validator::make($input, [
             'asset_type' => [
                 'required',
@@ -119,10 +118,10 @@ class ConfigController extends PanelController
             return abort(403);
         }
 
-        $assetsToKeep = Input::get('asset', []);
-        $assetsToName = Input::get('asset_name', []);
-        $assetsToReplace = Input::file('asset_file', []);
-        $assetType = Input::get('patching', false);
+        $assetsToKeep = Request::input('asset', []);
+        $assetsToName = Request::input('asset_name', []);
+        $assetsToReplace = Request::file('asset_file', []);
+        $assetType = Request::input('patching', false);
         $assets = $board->assets()->where('asset_type', $assetType)->get();
 
         foreach ($assets as $assetIndex => $asset) {
@@ -193,12 +192,12 @@ class ConfigController extends PanelController
             return abort(403);
         }
 
-        if ((bool) Input::get('delete', false)) {
+        if ((bool) Request::input('delete', false)) {
             return $this->destroyAssets($request, $board);
         }
 
-        $input = Input::all();
-        $assetType = Input::get('asset_type', false);
+        $input = Request::all();
+        $assetType = Request::input('asset_type', false);
         $validator = Validator::make($input, [
             'asset_type' => [
                 'required',
@@ -284,7 +283,7 @@ class ConfigController extends PanelController
                     ->withErrors($validator->errors());
             }
         } else {
-            $uploads = [Input::file("new_{$input['asset_type']}")];
+            $uploads = [Request::file("new_{$input['asset_type']}")];
         }
 
         foreach ((array) $uploads as $index => $upload) {
@@ -453,7 +452,7 @@ class ConfigController extends PanelController
             return abort(403);
         }
 
-        $input = Input::all();
+        $input = Request::all();
         $rules = [
             'boardTags' => [
                 'array',

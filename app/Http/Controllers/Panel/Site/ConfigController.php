@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Panel\Site;
 use App\OptionGroup;
 use App\SiteSetting;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
 use Request;
 use Validator;
 use Event;
@@ -56,13 +55,13 @@ class ConfigController extends PanelController
      *
      * @return Response
      */
-    public function patch(Request $request)
+    public function patch()
     {
         if (!$this->user->canAdminConfig()) {
             return abort(403);
         }
 
-        $input = Input::all();
+        $input = Request::all();
         $optionGroups = OptionGroup::getSiteConfig();
         $requirements = [];
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Panel\Boards;
 
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
+use Request;
 use Validator;
 
 /**
@@ -50,7 +50,7 @@ class FeatureController extends PanelController
 
     public function postIndex(Board $board)
     {
-        $input = Input::all();
+        $input = Request::all();
         $rules = [
             'action' => [
                 'required',

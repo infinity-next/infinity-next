@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\Role;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
+use Request;
 use Validator;
 
 /**
@@ -100,7 +100,7 @@ class RolesController extends PanelController
         }
 
         $roles = Role::whereCanParentForBoard($board, $this->user)->get();
-        $castes = $board->getRoleCastes(Input::get('roleType'))->get()->pluck('caste');
+        $castes = $board->getRoleCastes(Request::input('roleType'))->get()->pluck('caste');
 
         $rules = [
             'roleType' => [
@@ -121,7 +121,7 @@ class RolesController extends PanelController
             ],
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(Request::all(), $rules);
 
         $validator->sometimes('roleCaste', 'not_in:'.$castes->implode(','), function ($input) use ($castes) {
             return $castes->count();
@@ -136,12 +136,12 @@ class RolesController extends PanelController
 
         $role = new Role();
         $role->board_uri = $board->board_uri;
-        $role->inherit_id = $roles->where('role', strtolower(Input::get('roleType')))->pluck('role_id')[0];
-        $role->role = strtolower(Input::get('roleType'));
-        $role->caste = strtolower(Input::get('roleCaste'));
-        $role->name = Input::get('roleName') ?: "user.role.{$role->role}";
-        $role->capcode = Input::get('roleCapcode');
-        $role->weight = 5 + constant(Role::class.'::WEIGHT_'.strtoupper(Input::get('roleType')));
+        $role->inherit_id = $roles->where('role', strtolower(Request::input('roleType')))->pluck('role_id')[0];
+        $role->role = strtolower(Request::input('roleType'));
+        $role->caste = strtolower(Request::input('roleCaste'));
+        $role->name = Request::input('roleName') ?: "user.role.{$role->role}";
+        $role->capcode = Request::input('roleCapcode');
+        $role->weight = 5 + constant(Role::class.'::WEIGHT_'.strtoupper(Request::input('roleType')));
         $role->save();
 
         return redirect($role->getPanelUrl('permissions'));

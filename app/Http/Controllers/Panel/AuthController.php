@@ -7,9 +7,8 @@ use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
 use Cookie;
-use Input;
+use Request;
 use Session;
 use Validator;
 
@@ -98,13 +97,13 @@ class AuthController extends PanelController
      *
      * @return \Illuminate\Http\Response
      */
-    public function putRegister(Request $request)
+    public function putRegister()
     {
         if (!$this->user->canCreateUser()) {
             abort(403);
         }
 
-        $validator = $this->registrationValidator($request->all());
+        $validator = $this->registrationValidator(Request::all());
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -113,7 +112,7 @@ class AuthController extends PanelController
             );
         }
 
-        $this->auth->login($this->create($request->all()));
+        $this->auth->login($this->create(Request::all()));
 
         return redirect($this->redirectPath());
     }
@@ -121,34 +120,32 @@ class AuthController extends PanelController
     /**
      * Handle a login request to the application.
      *
-     * @param \Illuminate\Http\Request $request
-     *
      * @return \Illuminate\Http\Response
      */
-    public function postLogin(Request $request)
+    public function postLogin()
     {
-        $this->validate($request, [
+        $this->validate(Request::all(), [
             'username' => 'required',
             'password' => 'required',
         ]);
 
         // Attempt a login with supplied credentials.
-        $credentials = $request->only('username', 'password');
+        $credentials = Request::only('username', 'password');
 
         if (env('APP_NO_AUTH', false)) {
             $user = User::where([
-                'username' => $request->get('username'),
+                'username' => Request::input('username'),
             ])->firstOrFail();
 
             $this->auth->login($user);
-        } elseif (!$this->auth->attempt($credentials, $request->has('remember'))) {
+        } elseif (!$this->auth->attempt($credentials, Request::has('remember'))) {
             // Re-attempt with the supplied username as an email address.
             $credentials['email'] = $credentials['username'];
             unset($credentials['username']);
 
-            if (!$this->auth->attempt($credentials, $request->has('remember'))) {
+            if (!$this->auth->attempt($credentials, Request::has('remember'))) {
                 return redirect($this->loginPath())
-                    ->withInput($request->only('username', 'remember'))
+                    ->withInput(Request::only('username', 'remember'))
                     ->withErrors([
                              $this->getFailedLoginMessage(),
                     ]);

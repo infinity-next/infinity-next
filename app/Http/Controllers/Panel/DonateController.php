@@ -43,8 +43,8 @@ class DonateController extends PanelController
 
         return $this->view(static::VIEW_DONATE, [
             'donated' => $donated,
-            'cycles' => DonationRequest::getCycles(),
-            'amounts' => DonationRequest::getOptions(),
+            'cycles' => DonationRequest::inputCycles(),
+            'amounts' => DonationRequest::inputOptions(),
 
             'BraintreeClientKey' => $this->user->getBraintreeId(),
         ]);
@@ -63,7 +63,7 @@ class DonateController extends PanelController
         $fakeUser = false;
 
         $user = $this->user;
-        $input = Input::all();
+        $input = Request::all();
 
         // Build our \App\Payment model.
         $payment = [

@@ -27,7 +27,6 @@ use Cache;
 use DB;
 use DateTime;
 use DateTimeInterface;
-use Input;
 use File;
 use Request;
 use Event;
@@ -2117,7 +2116,7 @@ class Post extends Model implements FormattableContract
         $uploads = [];
 
         // Check file uploads.
-        if (is_array($files = Input::file('files'))) {
+        if (is_array($files = Request::file('files'))) {
             $uploads = array_filter($files);
 
             if (count($uploads) > 0) {
@@ -2127,7 +2126,7 @@ class Post extends Model implements FormattableContract
                     }
                 }
             }
-        } elseif (is_array($files = Input::get('files'))) {
+        } elseif (is_array($files = Request::input('files'))) {
             $uniques = [];
             $hashes = $files['hash'];
             $names = $files['name'];

@@ -7,11 +7,10 @@ use App\FileStorage;
 use App\FileAttachment;
 use App\Http\Controllers\Controller;
 use File;
-use Input;
-use Settings;
-use Storage;
 use Request;
 use Response;
+use Settings;
+use Storage;
 use Validator;
 use Event;
 use App\Events\AttachmentWasModified;
@@ -108,7 +107,7 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        $input = Input::all();
+        $input = Request::all();
 
         $validator = Validator::make($input, [
             'scope' => 'required|string|in:other,self',
@@ -171,7 +170,7 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        $input = Input::all();
+        $input = Request::all();
 
         $validator = Validator::make($input, [
             'scope' => 'required|string|in:other,self',

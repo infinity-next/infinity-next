@@ -7,7 +7,7 @@ use App\User;
 use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Http\Request;
 use Lang;
-use Input;
+use Request;
 use Validator;
 
 /**
@@ -197,7 +197,7 @@ class BoardsController extends PanelController
 
         // Validate input.
         // If the user is anonymous, we must also be creating an account.
-        $input = Input::all();
+        $input = Request::all();
 
         if ($this->user->isAnonymous()) {
             $validator = $this->registrationValidator($input);

@@ -6,7 +6,6 @@ use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Content\MultiboardController as ParentController;
 use Request;
-use Input;
 
 /**
  * API controller for the Multiboard.
@@ -25,7 +24,7 @@ class MultiboardController extends ParentController implements ApiContract
 
     public function getOverboard($worksafe = null, $boards = null, $catalog = false)
     {
-        $updatedSince = Request::get('updatedSince', null);
+        $updatedSince = Request::input('updatedSince', null);
 
         if (!is_null($updatedSince) && !is_numeric($updatedSince)) {
             return abort(400);

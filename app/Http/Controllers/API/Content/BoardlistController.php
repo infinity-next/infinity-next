@@ -6,7 +6,6 @@ use App\Board;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Content\BoardlistController as ParentController;
-use Input;
 use Request;
 
 class BoardlistController extends ParentController implements ApiContract
@@ -30,7 +29,7 @@ class BoardlistController extends ParentController implements ApiContract
      */
     public function getDetails(Request $request)
     {
-        $boardUris = Input::get('boards', []);
+        $boardUris = Request::input('boards', []);
         $boards = Board::select('board_uri', 'title')
             ->whereIn('board_uri', $boardUris)
             ->orderBy('board_uri', 'desc')

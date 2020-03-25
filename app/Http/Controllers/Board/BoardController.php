@@ -11,10 +11,9 @@ use App\Http\Requests\PostRequest;
 use App\Support\IP;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Cache;
-use Input;
 use File;
+use Request;
 use Response;
 use Validator;
 
@@ -143,11 +142,12 @@ class BoardController extends Controller
      *
      * @return Response
      */
-    public function getThread(Request $request, Board $board, Post $thread, $splice = null)
+    public function getThread(Board $board, Post $thread, $splice = null)
     {
         if (!$thread->exists) {
             return abort(404);
-        } elseif ($thread->reply_to) {
+        }
+        elseif ($thread->reply_to) {
             return redirect("{$board->board_uri}/thread/{$thread->reply_to_board_id}#{$thread->board_id}");
         }
 
@@ -276,14 +276,13 @@ class BoardController extends Controller
     /**
      * Checks if a file exists.
      *
-     * @param Request $request
      * @param Board   $board
      *
      * @return json
      */
-    public function getFile(Request $request, Board $board)
+    public function getFile(Board $board)
     {
-        $hash = $request->get('md5');
+        $hash = Request::input('md5');
         $storage = FileStorage::getHash($hash);
 
         if (is_null($storage) || !$storage->hasFile()) {
@@ -296,14 +295,13 @@ class BoardController extends Controller
     /**
      * Uploads a single file.
      *
-     * @param Request $request
      * @param Board   $board
      *
      * @return json
      */
-    public function putFile(Request $request, Board $board)
+    public function putFile(Board $board)
     {
-        $input = Input::all();
+        $input = Request::all();
         $rules = [];
 
         PostRequest::rulesForFiles($board, $rules);
@@ -321,7 +319,7 @@ class BoardController extends Controller
         $storage = new Collection();
 
         foreach ($input['files'] as $file) {
-            $ip = new IP($request->ip());
+            $ip = new IP;
             $uploadSize = (int) Cache::get('upstream_data_for_'.$ip->toLong(), 0);
 
             if ($uploadSize <= 52430000) {

@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
-use Illuminate\Http\Request;
-use Input;
+use Request;
 use Validator;
 use Event;
 use App\Events\UserRolesModified;
@@ -103,7 +102,7 @@ class StaffController extends PanelController
         $createUser = false;
         $roles = $this->user->getAssignableRoles($board);
         $rules = [];
-        $existing = Input::get('staff-source') == 'existing';
+        $existing = Request::input('staff-source') == 'existing';
 
         if ($existing) {
             $rules = [
@@ -118,7 +117,7 @@ class StaffController extends PanelController
                 ],
             ];
 
-            $input = Input::only('existinguser', 'captcha');
+            $input = Request::only('existinguser', 'captcha');
             $validator = Validator::make($input, $rules);
         } else {
             $createUser = true;
@@ -132,7 +131,7 @@ class StaffController extends PanelController
                 'array',
             ],
         ];
-        $casteInput = Input::only('castes');
+        $casteInput = Request::only('castes');
         $casteValidator = Validator::make($casteInput, $casteRules);
 
         $casteValidator->each('castes', [
@@ -151,9 +150,9 @@ class StaffController extends PanelController
                 ->withInput()
                 ->withErrors($casteValidator->errors());
         } elseif ($createUser) {
-            $user = $this->registrar->create(Input::all());
+            $user = $this->registrar->create(Request::all());
         } else {
-            $user = User::whereUsername(Input::only('existinguser'))->firstOrFail();
+            $user = User::whereUsername(Request::only('existinguser'))->firstOrFail();
         }
 
 
@@ -216,7 +215,7 @@ class StaffController extends PanelController
                 'array',
             ],
         ];
-        $input = Input::only('castes');
+        $input = Request::only('castes');
         $validator = Validator::make($input, $rules);
 
         $validator->each('castes', [
@@ -276,14 +275,14 @@ class StaffController extends PanelController
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Board $board, User $user)
+    public function destroy(Board $board, User $user)
     {
         if (!$this->user->canEditBoardStaffMember($user, $board)) {
             return abort(403);
         }
 
         if ($user->user_id === $this->user->user_id) {
-            $this->validate($request, [
+            $this->validate(Request::all(), [
                 'confirmation' => [
                     'required',
                     'boolean',

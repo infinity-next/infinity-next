@@ -61,7 +61,7 @@ class MultiboardController extends Controller
         }
 
         return $this->getThreads(
-            max(1, Request::get('page', 1)),
+            max(1, Request::input('page', 1)),
             is_null($worksafe) ? null : ($worksafe === "nsfw" ? false : true),
             $includes,
             $excludes,

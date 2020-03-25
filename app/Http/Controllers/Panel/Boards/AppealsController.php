@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\BanAppeal;
 use App\Board;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
+use Request;
 
 /**
  * Lists and manages ban appeals.
@@ -45,11 +45,11 @@ class AppealsController extends PanelController
     public function patchIndex(Board $board = null)
     {
         $approve = true;
-        $appeal = Input::get('approve', false);
+        $appeal = Request::input('approve', false);
 
         if ($appeal === false) {
             $approve = false;
-            $appeal = Input::get('reject', false);
+            $appeal = Request::input('reject', false);
         }
         if ($appeal === false) {
             return abort(404);

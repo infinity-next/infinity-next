@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\Role;
 use App\Http\Controllers\Panel\PanelController;
-use Input;
+use Request;
 use Validator;
 use Event;
 use App\Events\RoleWasModified;
@@ -88,7 +88,7 @@ class RoleController extends PanelController
             ],
         ];
 
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(Request::all(), $rules);
 
         $validator->sometimes('roleCaste', 'not_in:'.$castes->implode(','), function ($input) use ($castes) {
             return $castes->count();
@@ -101,9 +101,9 @@ class RoleController extends PanelController
                 ->withErrors($validator->errors());
         }
 
-        $role->caste = strtolower(Input::get('roleCaste'));
-        $role->name = Input::get('roleName');
-        $role->capcode = Input::get('roleCapcode');
+        $role->caste = strtolower(Request::input('roleCaste'));
+        $role->name = Request::input('roleName');
+        $role->capcode = Request::input('roleCapcode');
         $role->save();
 
         return $this->getIndex($board, $role);

@@ -9,10 +9,9 @@ use App\Report;
 use App\Http\Controllers\Controller;
 use App\Services\ContentFormatter;
 use App\Support\IP;
-use Input;
 use Request;
-use Validator;
 use Session;
+use Validator;
 use Event;
 use App\Events\PostWasBanned;
 use App\Events\PostWasModerated;
@@ -35,10 +34,10 @@ class PostController extends Controller
 
     public function moderate(Request $request, Board $board, Post $post)
     {
-        $ban = Input::get('ban', false);
-        $delete = Input::get('delete', false);
-        $all = Input::get('scope', false) === "all";
-        $global = Input::get('scope', false) === "global";
+        $ban = Request::input('ban', false);
+        $delete = Request::input('delete', false);
+        $all = Request::input('scope', false) === "all";
+        $global = Request::input('scope', false) === "global";
 
         if (!$ban && !$delete) {
             return abort(400);
@@ -97,7 +96,7 @@ class PostController extends Controller
 
             'ban' => $ban,
             'delete' => $delete,
-            'scope' => Input::get('scope', false),
+            'scope' => Request::input('scope', false),
 
             'banMaxLength' => $this->option('banMaxLength'),
         ]);
@@ -110,10 +109,10 @@ class PostController extends Controller
             abort(404);
         }
 
-        $ban = Input::get('ban', false);
-        $delete = Input::get('delete', false);
-        $all = Input::get('scope', false) === "all";
-        $global = Input::get('scope', false) === "global";
+        $ban = Request::input('ban', false);
+        $delete = Request::input('delete', false);
+        $all = Request::input('scope', false) === "all";
+        $global = Request::input('scope', false) === "global";
 
         // Create ban.
         if ($ban) {
@@ -123,7 +122,7 @@ class PostController extends Controller
                 return abort(403);
             }
 
-            $validator = Validator::make(Input::all(), [
+            $validator = Validator::make(Request::all(), [
                 'raw_ip' => 'required|boolean',
                 'ban_ip' => 'required_if:raw_ip,true|ip',
                 'ban_ip_range' => 'required|between:0,128',
@@ -136,14 +135,14 @@ class PostController extends Controller
             if (!$validator->passes()) {
                 return redirect()
                     ->back()
-                    ->withInput(Input::all())
+                    ->withInput(Request::all())
                     ->withErrors($validator->errors());
             }
 
             $banLengthStr = [];
-            $expiresDays = Input::get('expires_days');
-            $expiresHours = Input::get('expires_hours');
-            $expiresMinutes = Input::get('expires_minutes');
+            $expiresDays = Request::input('expires_days');
+            $expiresHours = Request::input('expires_hours');
+            $expiresMinutes = Request::input('expires_minutes');
 
             if ($expiresDays > 0) {
                 $banLengthStr[] = "{$expiresDays}d";
@@ -161,9 +160,9 @@ class PostController extends Controller
             $banLengthStr = implode($banLengthStr, ' ');
 
             // If we're banning without the ability to view IP addresses, we will get our address directly from the post in human-readable format.
-            $banIpAddr = $this->user->canViewRawIP() ? Input::get('ban_ip') : $post->getAuthorIpAsString();
+            $banIpAddr = $this->user->canViewRawIP() ? Request::input('ban_ip') : $post->getAuthorIpAsString();
             // The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
-            $banCidr = Input::get('ban_ip_range');
+            $banCidr = Request::input('ban_ip_range');
             // This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
             // If we just pass the CDIR into the construct, we get 192.168.1.3-129.168.3.255 for some reason.
             $banCidrRange = IP::cidr_to_range("{$banIpAddr}/{$banCidr}");
@@ -183,7 +182,7 @@ class PostController extends Controller
             $banModel->mod_id = $this->user->user_id;
             $banModel->post_id = $post->post_id;
             $banModel->ban_reason_id = null;
-            $banModel->justification = Input::get('justification');
+            $banModel->justification = Request::input('justification');
             $banModel->board_uri = $global ? null : $board->board_uri;
         }
 
@@ -338,10 +337,10 @@ class PostController extends Controller
         }
 
         if ($post->canEdit($this->user)) {
-            $post->subject = Input::get('subject');
-            $post->email = Input::get('email');
-            $post->author = Input::get('author');
-            $post->body = Input::get('body');
+            $post->subject = Request::input('subject');
+            $post->email = Request::input('email');
+            $post->author = Request::input('author');
+            $post->body = Request::input('body');
             $post->body_parsed = null;
             $post->body_parsed_at = null;
             $post->body_html = null;
@@ -432,7 +431,7 @@ class PostController extends Controller
             abort(403);
         }
 
-        $input = Input::all();
+        $input = Request::all();
         $validator = Validator::make($input, [
             'associate' => [
                 'boolean',
@@ -452,7 +451,7 @@ class PostController extends Controller
         if (!$validator->passes()) {
             return redirect()
                 ->back()
-                ->withInput(Input::except('captcha'))
+                ->withInput(Request::except('captcha'))
                 ->withErrors($validator->errors());
         }
 
@@ -466,7 +465,7 @@ class PostController extends Controller
 
         $report->board_uri = $board->board_uri;
         $report->reason = $input['reason'];
-        $report->user_id = (bool) Input::get('associate', false) ? $this->user->user_id : null;
+        $report->user_id = (bool) Request::input('associate', false) ? $this->user->user_id : null;
         $report->is_dismissed = false;
         $report->is_successful = false;
         $report->save();
