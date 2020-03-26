@@ -45,7 +45,7 @@ abstract class Controller extends BaseController
      */
     public function __construct(Router $router)
     {
-        $this->user = auth()->user();
+        $this->user = user();
 
         $board = app(Board::class);
         $this->board = $board->exists ? $board : null;

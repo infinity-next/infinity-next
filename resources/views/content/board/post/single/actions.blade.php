@@ -11,7 +11,7 @@
 
                 <!-- Board specific content management actions -->
                 <ul class="post-actions">
-                    @if ($post->canReport($user))
+                    @can('report', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         <a class="post-action-link action-link-report"
@@ -19,9 +19,9 @@
                             @lang('board.action.report')
                         </a>
                     </li>
-                    @endif
+                    @endcan
 
-                    @if ($post->canReportGlobally($user))
+                    @can('report-globally', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         <a class="post-action-link action-link-report-global"
@@ -29,35 +29,33 @@
                             @lang('board.action.report_global')
                         </a>
                     </li>
-                    @endif
+                    @endcan
 
-                    @if ($postHasIp)
-                        @if ($user->canViewHistory($post))
-                        @set('postActions', true)
-                        <li class="post-action">
-                            <a class="post-action-link action-link-report"
-                                href="{!! $post->getUrl('history') !!}">
-                                @lang('board.action.history', [
-                                    'board_uri' => $details['board_uri'],
-                                ])
-                            </a>
-                        </li>
-                        @endif
+                    @can('history', $post)
+                    @set('postActions', true)
+                    <li class="post-action">
+                        <a class="post-action-link action-link-report"
+                            href="{!! $post->getUrl('history') !!}">
+                            @lang('board.action.history', [
+                                'board_uri' => $details['board_uri'],
+                            ])
+                        </a>
+                    </li>
+                    @endcan
 
-                        @if ($user->canViewGlobalHistory())
-                        @set('postActions', true)
-                        <li class="post-action">
-                            <a class="post-action-link action-link-report"
-                                href="{!! route('panel.history.global', [
-                                    'ip' => $details['author_ip']->toText(),
-                                ]) !!}">
-                                @lang('board.action.history_global')
-                            </a>
-                        </li>
-                        @endif
-                    @endif
+                    @can('global-history', $post)
+                    @set('postActions', true)
+                    <li class="post-action">
+                        <a class="post-action-link action-link-report"
+                            href="{!! route('panel.history.global', [
+                                'ip' => $details['author_ip']->toText(),
+                            ]) !!}">
+                            @lang('board.action.history_global')
+                        </a>
+                    </li>
+                    @endcan
 
-                    @if ($post->canEdit($user))
+                    @can('edit', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         <a class="post-action-link action-link-edit"
@@ -65,9 +63,9 @@
                             @lang('board.action.edit')
                         </a>
                     </li>
-                    @endif
+                    @endcan
 
-                    @if ($post->canSticky($user))
+                    @can('sticky', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         @if (!$post->stickied_at)
@@ -82,9 +80,9 @@
                         </a>
                         @endif
                     </li>
-                    @endif
+                    @endcan
 
-                    @if ($post->canLock($user))
+                    @can('lock', $post)
                     @set('postActions', true)
                     <li class="post-action">
                         @if (!$post->locked_at)
@@ -99,7 +97,7 @@
                         </a>
                         @endif
                     </li>
-                    @endif
+                    @endcan
 
                     @can('bumplock', $post)
                     @set('postActions', true)
@@ -133,7 +131,7 @@
                     </li>
                     @endcan
 
-                    @if ($post->canDelete($user))
+                    @can('delete', $post)
                     @set('postActions', true)
                         <li class="post-action">
                             <a class="post-action-link action-link-delete"
@@ -144,8 +142,7 @@
                             </a>
                         </li>
 
-                        @if ($postHasIp)
-                        @if ($board->canDelete($user))
+                        @can('delete-history', $post)
                         <li class="post-action">
                             <a class="post-action-link action-link-delete-all"
                                 href="{!! $post->getModUrl('mod', [
@@ -155,7 +152,7 @@
                                 @lang('board.action.delete_board')
                             </a>
                         </li>
-                        @endif
+                        @endcan
 
                         @can('ban', $board)
                         <li class="post-action">
@@ -178,13 +175,12 @@
                                 @lang('board.action.ban_delete_board')
                             </a>
                         </li>
-                        @endif
-                        @endif
-                    @endif
+                        @endcan
+                    @endcan
                 </ul>
 
                 <ul class="post-actions">
-                    @if ($user->canFeatureGlobally($post))
+                    @can('feature', $post)
                     @set('postActions', true)
                         <li class="post-action">
                             <a class="post-action-link action-link-feature-global"
@@ -204,9 +200,9 @@
                             </a>
                         </li>
                         @endif
-                    @endif
+                    @endcan
 
-                    @if ($user->canDeleteGlobally() && $postHasIp)
+                    @can('global-delete', $post)
                         @set('postActions', true)
                         <li class="post-action">
                             <a class="post-action-link action-link-delete-global"
@@ -218,7 +214,7 @@
                             </a>
                         </li>
 
-                        @if ($user->canBanGlobally())
+                        @can('global-ban', $post)
                         <li class="post-action">
                             <a class="post-action-link action-link-ban-delete-global"
                                 href="{!! $post->getModUrl('mod', [
@@ -229,8 +225,8 @@
                                 @lang('board.action.ban_delete_global')
                             </a>
                         </li>
-                        @endif
-                    @endif
+                        @endcan
+                    @endcan
                 </ul>
             </li>
         </ul>

@@ -63,4 +63,19 @@ class BoardPolicy extends AbstractPolicy
             ? Response::allow()
             : Response::deny();
     }
+
+    /**
+     * Can this user view posting history on this board?
+     *
+     * @param  \App\User  $user
+     * @param  \App\Board  $board
+     *
+     * @return Illuminate\Auth\Access\Response
+     */
+    public function history(User $user, Board $board)
+    {
+        return $user->permission('board.history', $board)
+            ? Response::allow()
+            : Response::deny('auth.board.cannot_view_history');
+    }
 }

@@ -11,6 +11,6 @@ if (!function_exists('site_setting')) {
 if (!function_exists('user')) {
     function user()
     {
-        return auth()->user();
+        return optional(auth()->user());
     }
 }

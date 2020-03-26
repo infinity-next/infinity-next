@@ -27,7 +27,7 @@ class TorFilter
             }
         }
 
-        auth()->user()->setAccountable($accountable);
+        user()->setAccountable($accountable);
 
         return $next($request);
     }

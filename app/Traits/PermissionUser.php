@@ -24,7 +24,7 @@ trait PermissionUser
      *
      * @var bool
      */
-    protected $accountable;
+    protected $accountable = true;
 
     /**
      * The $permission array is a derived set of permissions.
@@ -287,27 +287,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user delete this post?
-     *
-     * @return bool
-     */
-    public function canDelete(Post $post)
-    {
-        // If we can delete any post for this board ...
-        if ($this->permission('board.post.delete.other', $post->board_uri)) {
-            // Allow post deletion.
-            return true;
-        }
-        // If the author and our current user share an IP ...
-        elseif ($post->author_ip == Request::ip()) {
-            // Allow post deletion, if the masks allows it.
-            return $this->permission('board.post.delete.self', $post->board_uri);
-        }
-
-        return false;
-    }
-
-    /**
      * Can this user delete on this board?
      *
      * @return bool
@@ -325,37 +304,6 @@ trait PermissionUser
     public function canDeletePostWithPassword(Board $board)
     {
         return $this->permission('board.post.delete.self', $board);
-    }
-
-    /**
-     * Can this user delete posts across the entire site?
-     *
-     * @return bool
-     */
-    public function canDeleteGlobally()
-    {
-        return $this->permission('board.post.delete.other');
-    }
-
-    /**
-     * Can this user edit this post?
-     *
-     * @return bool
-     */
-    public function canEdit(Post $post)
-    {
-        // If we can edit any post for this board ...
-        if ($this->permission('board.post.edit.other', $post->board_uri)) {
-            // Allow post edit.
-            return true;
-        }
-        // If the author and our current user share an IP ...
-        elseif (!is_null($post->author_ip) && $post->author_ip->is(Request::ip())) {
-            // Allow post edit, if the masks allows it.
-            return $this->permission('board.post.edit.self', $post->board_uri);
-        }
-
-        return false;
     }
 
     /**
@@ -453,31 +401,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user feature a post globally?
-     *
-     * @return bool
-     */
-    public function canFeatureGlobally(Post $post)
-    {
-        return $this->permission('sys.config');
-    }
-
-    /**
-     * Can this user lock this thread to replies?
-     *
-     * @return bool
-     */
-    public function canLock(Post $post)
-    {
-        // We can only ever sticky a thread, for now.
-        if (is_null($post->reply_to)) {
-            return $this->permission('board.post.lock', $post);
-        }
-
-        return false;
-    }
-
-    /**
      * Can this user post in locked threads?
      *
      * @return bool
@@ -550,26 +473,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user report this post?
-     *
-     * @return bool
-     */
-    public function canReport(Post $post)
-    {
-        return $this->permission('board.post.report', $post->board_uri);
-    }
-
-    /**
-     * Can this user report this post?
-     *
-     * @return bool
-     */
-    public function canReportGlobally()
-    {
-        return $this->permission('site.post.report');
-    }
-
-    /**
      * Can this user delete on this board?
      *
      * @return bool
@@ -626,28 +529,6 @@ trait PermissionUser
     public function canViewBan(Ban $ban)
     {
         return $this->permission('board.bans', $ban->board_uri);
-    }
-
-    /**
-     * Can this user view a post's local history?
-     *
-     * @param \App\Post $post The post we want to see if we can check the history of locally.
-     *
-     * @return bool
-     */
-    public function canViewHistory(Post $post)
-    {
-        return $this->permission('board.history', $post->board_uri);
-    }
-
-    /**
-     * Can this user view an addresses's global history?
-     *
-     * @return bool
-     */
-    public function canViewGlobalHistory()
-    {
-        return $this->permission('board.history', null);
     }
 
     /**

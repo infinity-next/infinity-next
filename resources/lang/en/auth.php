@@ -19,18 +19,32 @@ return [
     "reset"    => "Your password has been reset!",
     "mismatch" => "These credentials do not match our records.",
 
-    "captcha"  => [
+    "board" => [
+        "cannot_view_history" => "You cannot view post history on this board.",
+    ]
+
+    "captcha" => [
         "lifespan" => "{0} You must solve a Captcha every post."
             . "|{1} You must solve a Captcha every other post."
             . "|[2,*] You must solve a Captcha every :value posts.",
         "unaccountable" => "You are using Tor and must always solve a Captcha.",
     ],
 
-    "post"     => [
-        "cannot_ban_without_ip" => "This post has no IP to ban.",
+    "post" => [
         "cannot_edit_capcode" => "You cannot change the capcode on a post.",
+        "cannot_feature" => "You cannot feature posts on the site.",
         "cannot_reply" => "You cannot post replies.",
+        "cannot_report" => "You cannot report posts to board moderators.",
+        "cannot_report_globally" => "You cannot report posts to site administrators.",
+        "cannot_sticky" => "You cannot sticky posts."
+        "cannot_without_password" => "You cannot dom this without the post's password.",
+        "no_ip_address" => "This post has no IP address, so certain actions are impossible.",
         "only_on_an_op" => "This action is valid only on the first post of a thread.",
         "thread_is_locked" => "This thread is locked.",
+    ],
+
+
+    "site" => [
+        "cannot_view_history" => "You cannot view global post history.",
     ],
 ];

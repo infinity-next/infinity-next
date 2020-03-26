@@ -105,5 +105,26 @@ class AuthServiceProvider extends ServiceProvider
 
             return Response::allow();
         });
+
+        Gate::define('global-delete', function(User $user)
+        {
+            return ($user->permission('board.user.ban.free') || $user->permission('board.user.ban.reason'))
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_ban');
+        });
+
+        Gate::define('global-delete', function(User $user)
+        {
+            return $user->permission('board.post.delete.other', null)
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_delete');
+        });
+
+        Gate::define('global-history', function(User $user)
+        {
+            return $user->permission('board.history', null)
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_view_history');
+        });
     }
 }

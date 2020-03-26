@@ -1042,7 +1042,7 @@ class Post extends Model implements FormattableContract
     public function getAuthorIpAsString()
     {
         if ($this->hasAuthorIp()) {
-            return$this->author_ip->toText();
+            return $this->author_ip->toText();
         }
 
         return false;
