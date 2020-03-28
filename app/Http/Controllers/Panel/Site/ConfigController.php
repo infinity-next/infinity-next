@@ -39,9 +39,7 @@ class ConfigController extends PanelController
      */
     public function get()
     {
-        if (!$this->user->canAdminConfig()) {
-            return abort(403);
-        }
+        $this->authorize('admin-config');
 
         $optionGroups = OptionGroup::getSiteConfig();
 
@@ -57,9 +55,7 @@ class ConfigController extends PanelController
      */
     public function patch()
     {
-        if (!$this->user->canAdminConfig()) {
-            return abort(403);
-        }
+        $this->authorize('admin-config');
 
         $input = Request::all();
         $optionGroups = OptionGroup::getSiteConfig();

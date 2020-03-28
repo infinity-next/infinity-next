@@ -144,7 +144,7 @@ class OptionSeeder extends Seeder {
 					'default_value'         => "",
 					'format'                => "textbox",
 					'data_type'             => "string",
-					'validation_parameters' => "string",
+					'validation_parameters' => "nullable|string",
 				],
 
 				[
@@ -210,7 +210,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max",
+					'validation_parameters' => "nullable|min:\$min|max:\$max",
 				],
 
 				[
@@ -263,7 +263,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "text",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 32 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max",
+					'validation_parameters' => "nullable|min:\$min|max:\$max",
 				],
 				[
 					'option_name'           => "boardCustomCSS",
@@ -271,7 +271,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max|css",
+					'validation_parameters' => "nullable|min:\$min|max:\$max|css",
 				],
 				[
 					'option_name'           => "boardLanguage",
@@ -287,7 +287,7 @@ class OptionSeeder extends Seeder {
 					'format'                => "textbox",
 					'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
 					'data_type'             => "string",
-					'validation_parameters' => "min:\$min|max:\$max",
+					'validation_parameters' => "nullable|min:\$min|max:\$max",
 				],
 				[
 					'option_name'           => "boardBacklinksCrossboard",
@@ -301,14 +301,14 @@ class OptionSeeder extends Seeder {
 					'default_value'         => "",
 					'format'                => "textbox",
 					'data_type'             => "string",
-					'validation_parameters' => "string",
+					'validation_parameters' => "nullable|string",
 				],
 				[
 					'option_name'           => "boardBacklinksWhitelist",
 					'default_value'         => "",
 					'format'                => "textbox",
 					'data_type'             => "string",
-					'validation_parameters' => "string",
+					'validation_parameters' => "nullable|string",
 				],
 
 				[

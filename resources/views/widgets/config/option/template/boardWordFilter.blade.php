@@ -19,7 +19,7 @@
                     $option_find,
                     [
                         'class'     => "field-control",
-                            user()->cannot('setting-edit', [$board ?? null, $option ?? null]) ? 'disabled' : 'data-enabled',
+                            isset($board) && user()->cannot('setting-edit', [$board, $option ?? null]) ? 'disabled' : 'data-enabled',
                         'placeholder' => trans('config.option.boardWordFilterFind'),
                 ]) !!}
                 {!! Form::text(
@@ -27,7 +27,7 @@
                     $option_replace,
                     [
                         'class'     => "field-control",
-                            user()->cannot('setting-edit', [$board ?? null, $option ?? null]) ? 'disabled' : 'data-enabled',
+                            isset($board) && user()->cannot('setting-edit', [$board, $option ?? null]) ? 'disabled' : 'data-enabled',
                         'placeholder' => trans('config.option.boardWordFilterReplace'),
                 ]) !!}
             </li>

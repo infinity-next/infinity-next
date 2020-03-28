@@ -72,7 +72,7 @@ class AnonymousUser implements AuthorizableContract, PermittableContract, UserCo
      */
     public function getAuthPassword()
     {
-        return $this->attributes['password'];
+        return $this->attributes['password'] ?? null;
     }
 
     /**

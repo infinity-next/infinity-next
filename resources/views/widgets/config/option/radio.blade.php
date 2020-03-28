@@ -18,7 +18,7 @@
                 [
                     'id'        => "{$option_name}-{$option_choice}",
                     'class'     => "field-control",
-                        user()->cannot('setting-edit', [$board ?? null, $option ?? null]) ? 'disabled' : 'data-enabled',
+                        isset($board) && user()->cannot('setting-edit', [$board, $option ?? null]) ? 'disabled' : 'data-enabled',
             ]) !!}
             {!! Form::label(
                 "{$option_name}-{$option_choice}",
