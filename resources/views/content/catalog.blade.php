@@ -26,11 +26,11 @@
         </ul>
     </section>
 
-    @can('create', App\Post::class)
+    @can('post', $board)
     <section class="index-form">
         @include('content.board.post.form', [
             'board'   => $board,
-            'actions' => "thread",
+            'actions' => ["thread"],
         ])
     </section>
     @endcan
