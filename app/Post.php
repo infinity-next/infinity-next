@@ -1501,7 +1501,7 @@ class Post extends Model implements FormattableContract
         $board = $this->getRelation('board' ?: $this->load('board'));
 
         foreach ($this->replies as $reply) {
-            $reply->author_ip = new IP($reply->author_ip);
+            $this->author_ip = new IP($this->author_ip);
             $reply->setRelation('board', $board);
         }
 
@@ -1730,7 +1730,7 @@ class Post extends Model implements FormattableContract
     {
         $ip = new IP($ip);
 
-        return $query->where('author_ip', $ip->toSQL());
+        return $query->where('author_ip', $ip->toText());
     }
 
     public function scopeWhereBump($query)
