@@ -1497,11 +1497,11 @@ class Post extends Model implements FormattableContract
         // Find a better way to do this.
         // Call these methods so we typecast the IP as an IP class before
         // we invoke memory caching.
-        $this->author_ip;
+        $this->author_ip = new IP($this->author_ip);
         $board = $this->getRelation('board' ?: $this->load('board'));
 
         foreach ($this->replies as $reply) {
-            $reply->author_ip;
+            $reply->author_ip = new IP($reply->author_ip);
             $reply->setRelation('board', $board);
         }
 

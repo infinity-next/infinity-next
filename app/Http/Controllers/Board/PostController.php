@@ -51,17 +51,13 @@ class PostController extends Controller
             if ($global) {
                 $modActions[] = "global";
 
-                if (!$this->user->canBanGlobally()) {
-                    return abort(403);
-                }
+                $this->authorize('global-ban', $post);
             } else {
                 if ($all) {
                     $modActions[] = "all";
                 }
 
-                if (!$this->user->canBan($board)) {
-                    return abort(403);
-                }
+                $this->authorize('ban', $post);
             }
 
         }
@@ -71,17 +67,13 @@ class PostController extends Controller
             if ($global) {
                 $modActions[] = "global";
 
-                if (!$this->user->canDeleteGlobally()) {
-                    return abort(403);
-                }
+                $this->authorize('global-delete', $post);
             } else {
                 if ($all) {
                     $modActions[] = "all";
                 }
 
-                if (!$this->user->canDelete($post)) {
-                    return abort(403);
-                }
+                $this->authorize('delete', $post);
             }
         }
 
@@ -105,10 +97,6 @@ class PostController extends Controller
 
     public function issue(Request $request, Board $board, Post $post)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
-
         $ban = Request::input('ban', false);
         $delete = Request::input('delete', false);
         $all = Request::input('scope', false) === "all";
@@ -116,10 +104,11 @@ class PostController extends Controller
 
         // Create ban.
         if ($ban) {
-            if ($global && !$this->user->canBanGlobally()) {
-                return abort(403);
-            } elseif (!$board->canBan($this->user)) {
-                return abort(403);
+            if ($global) {
+                $this->authorize('global-ban', $post);
+            }
+            else {
+                $this->authorize('ban', $post);
             }
 
             $validator = Validator::make(Request::all(), [
@@ -160,7 +149,7 @@ class PostController extends Controller
             $banLengthStr = implode($banLengthStr, ' ');
 
             // If we're banning without the ability to view IP addresses, we will get our address directly from the post in human-readable format.
-            $banIpAddr = $this->user->canViewRawIP() ? Request::input('ban_ip') : $post->getAuthorIpAsString();
+            $banIpAddr = user()->getTextForIP($post->author_ip);
             // The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
             $banCidr = Request::input('ban_ip_range');
             // This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
@@ -179,7 +168,7 @@ class PostController extends Controller
             $banModel->expires_at = $banModel->expires_at->addDays($expiresDays);
             $banModel->expires_at = $banModel->expires_at->addHours($expiresHours);
             $banModel->expires_at = $banModel->expires_at->addMinutes($expiresMinutes);
-            $banModel->mod_id = $this->user->user_id;
+            $banModel->mod_id = user()->user_id;
             $banModel->post_id = $post->post_id;
             $banModel->ban_reason_id = null;
             $banModel->justification = Request::input('justification');
@@ -190,9 +179,7 @@ class PostController extends Controller
         if ($delete) {
             // Delete all posts globally.
             if ($global) {
-                if (!$this->user->canDeleteGlobally()) {
-                    return abort(403);
-                }
+                $this->authorize('global-delete', $post);
 
                 $posts = Post::whereAuthorIP($post->author_ip)
                     ->with('reports')
@@ -208,14 +195,12 @@ class PostController extends Controller
                 Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 
                 foreach ($posts as $post) {
-                    Event::dispatch(new PostWasModerated($post, $this->user));
+                    Event::dispatch(new PostWasModerated($post, user()));
                 }
             }
             // Delete posts locally
             else {
-                if (!$this->user->canDelete($post)) {
-                    return abort(403);
-                }
+                $this->authorize('delete', $post);
 
                 // Delete all posts on board
                 if ($all) {
@@ -234,7 +219,7 @@ class PostController extends Controller
                     Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 
                     foreach ($posts as $post) {
-                        Event::dispatch(new PostWasModerated($post, $this->user));
+                        Event::dispatch(new PostWasModerated($post, user()));
                     }
                 }
                 // Delete a single post
@@ -267,7 +252,7 @@ class PostController extends Controller
 
                 $post->delete();
 
-                Event::dispatch(new PostWasModerated($post, $this->user));
+                Event::dispatch(new PostWasModerated($post, user()));
             }
         }
 
@@ -295,7 +280,7 @@ class PostController extends Controller
             Event::dispatch(new PostWasBanned($post));
 
             if (!$delete) {
-                Event::dispatch(new PostWasModerated($post, $this->user));
+                Event::dispatch(new PostWasModerated($post, user()));
             }
         }
 
@@ -311,20 +296,14 @@ class PostController extends Controller
      */
     public function edit(Request $request, Board $board, Post $post)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
+        $this->authorize('edit', $post);
 
-        if ($post->canEdit($this->user)) {
-            return $this->view(static::VIEW_EDIT, [
-                'actions' => ['edit'],
-                'form' => 'edit',
-                'board' => $board,
-                'post' => $post,
-            ]);
-        }
-
-        return abort(403);
+        return $this->view(static::VIEW_EDIT, [
+            'actions' => ['edit'],
+            'form' => 'edit',
+            'board' => $board,
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -332,36 +311,30 @@ class PostController extends Controller
      */
     public function update(Request $request, Board $board, Post $post)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
+        $this->authorize('edit', $post);
 
-        if ($post->canEdit($this->user)) {
-            $post->subject = Request::input('subject');
-            $post->email = Request::input('email');
-            $post->author = Request::input('author');
-            $post->body = Request::input('body');
-            $post->body_parsed = null;
-            $post->body_parsed_at = null;
-            $post->body_html = null;
-            $post->updated_by = $this->user->user_id;
+        $post->subject = Request::input('subject');
+        $post->email = Request::input('email');
+        $post->author = Request::input('author');
+        $post->body = Request::input('body');
+        $post->body_parsed = null;
+        $post->body_parsed_at = null;
+        $post->body_html = null;
+        $post->updated_by = user()->user_id;
 
-            $post->save();
+        $post->save();
 
-            $this->log('log.post.edit', $post, [
-                'board_id' => $post->board_id,
-                'board_uri' => $post->board_uri,
-            ]);
+        $this->log('log.post.edit', $post, [
+            'board_id' => $post->board_id,
+            'board_uri' => $post->board_uri,
+        ]);
 
-            return $this->view(static::VIEW_EDIT, [
-                'actions' => ['edit'],
-                'form' => 'edit',
-                'board' => $board,
-                'post' => $post,
-            ]);
-        }
-
-        return abort(403);
+        return $this->view(static::VIEW_EDIT, [
+            'actions' => ['edit'],
+            'form' => 'edit',
+            'board' => $board,
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -379,16 +352,13 @@ class PostController extends Controller
         $reportText = '';
 
         if ($global === 'global') {
-            if (!$post->canReportGlobally($this->user)) {
-                abort(403);
-            }
+            $this->authorize('create-global', Report::class);
 
             $actions[] = 'global';
             $reportText = $ContentFormatter->formatReportText($this->option('globalReportText'));
-        } else {
-            if (!$post->canReport($this->user)) {
-                abort(403);
-            }
+        }
+        else {
+            $this->authorize('report', $post);
 
             $reportText = $ContentFormatter->formatReportText($board->getConfig('boardReportText'));
         }
@@ -397,7 +367,7 @@ class PostController extends Controller
             $report = Report::where('post_id', '=', $post->post_id)
                 ->where('global', $global === 'global')
                 ->where('board_uri', $board->board_uri)
-                ->whereByIPOrUser($this->user)
+                ->whereByIPOrUser(user())
                 ->first();
         }
 
@@ -422,13 +392,11 @@ class PostController extends Controller
         }
 
         if ($global === 'global') {
-            if (!$post->canReportGlobally($this->user)) {
-                abort(403);
-            }
-
+            $this->authorize('create-global', Report::class);
             $actions[] = 'global';
-        } elseif (!$post->canReport($this->user)) {
-            abort(403);
+        }
+        else {
+            $this->authorize('report', $post);
         }
 
         $input = Request::all();
@@ -465,7 +433,7 @@ class PostController extends Controller
 
         $report->board_uri = $board->board_uri;
         $report->reason = $input['reason'];
-        $report->user_id = (bool) Request::input('associate', false) ? $this->user->user_id : null;
+        $report->user_id = (bool) Request::input('associate', false) ? user()->user_id : null;
         $report->is_dismissed = false;
         $report->is_successful = false;
         $report->save();
@@ -480,9 +448,7 @@ class PostController extends Controller
      */
     public function feature(Request $request, Board $board, Post $post, $global = false)
     {
-        if (!$this->user->canFeatureGlobally($post)) {
-            return abort(403);
-        }
+        $this->authorize('feature', $post);
 
         $post->featured_at = \Carbon\Carbon::now();
         $post->save();
@@ -495,22 +461,15 @@ class PostController extends Controller
      */
     public function lock(Request $request, Board $board, Post $post, $lock = true)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
+        $this->authorize('lock', $post);
+        $post->setLocked($lock !== false)->save();
 
-        if ($post->canLock($this->user)) {
-            $post->setLocked($lock !== false)->save();
+        $this->log($lock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
+            'board_id' => $post->board_id,
+            'board_uri' => $post->board_uri,
+        ]);
 
-            $this->log($lock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
-                'board_id' => $post->board_id,
-                'board_uri' => $post->board_uri,
-            ]);
-
-            return $post->redirect();
-        }
-
-        return abort(403);
+        return $post->redirect();
     }
 
     /**
@@ -527,22 +486,16 @@ class PostController extends Controller
      */
     public function bumplock(Request $request, Board $board, Post $post, $bumplock = true)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
+        $this->authorize('bumplock', $post);
 
-        if ($post->canBumplock($this->user)) {
-            $post->setBumplock($bumplock !== false)->save();
+        $post->setBumplock($bumplock !== false)->save();
 
-            $this->log($bumplock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
-                'board_id' => $post->board_id,
-                'board_uri' => $post->board_uri,
-            ]);
+        $this->log($bumplock ? 'log.post.bumplock' : 'log.post.unbumplock', $post, [
+            'board_id' => $post->board_id,
+            'board_uri' => $post->board_uri,
+        ]);
 
-            return $post->redirect();
-        }
-
-        return abort(403);
+        return $post->redirect();
     }
 
     /**
@@ -559,22 +512,16 @@ class PostController extends Controller
      */
     public function sticky(Request $request, Board $board, Post $post, $sticky = true)
     {
-        if (!$post->exists) {
-            abort(404);
-        }
+        $this->authorize('sticky', $post);
 
-        if ($post->canSticky($this->user)) {
-            $post->setSticky($sticky !== false)->save();
+        $post->setSticky($sticky !== false)->save();
 
-            $this->log($sticky ? 'log.post.sticky' : 'log.post.unsticky', $post, [
-                'board_id' => $post->board_id,
-                'board_uri' => $post->board_uri,
-            ]);
+        $this->log($sticky ? 'log.post.sticky' : 'log.post.unsticky', $post, [
+            'board_id' => $post->board_id,
+            'board_uri' => $post->board_uri,
+        ]);
 
-            return redirect("{$board->board_uri}/thread/{$post->board_id}");
-        }
-
-        return abort(403);
+        return redirect("{$board->board_uri}/thread/{$post->board_id}");
     }
 
     /**
