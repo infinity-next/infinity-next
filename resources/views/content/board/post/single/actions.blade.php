@@ -47,7 +47,7 @@
                     <li class="post-action">
                         <a class="post-action-link action-link-report"
                             href="{!! route('panel.history.global', [
-                                'ip' => new \App\Support\IP\IP($details['author_ip'])->toText(),
+                                'ip' => (new \App\Support\IP\IP($details['author_ip']))->toText(),
                             ]) !!}">
                             @lang('board.action.history_global')
                         </a>
