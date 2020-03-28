@@ -458,13 +458,14 @@ class PostRequest extends Request implements ApiContract
 
         // Board-level setting validaiton.
         $validator->sometimes('captcha', 'required|captcha', function ($input) use ($board) {
-            return !$board->canPostWithoutCaptcha(user());
+            return !user()->can('bypass-captcha');
         });
 
         if (!$validator->passes()) {
             $this->failedValidation($validator);
-        } else {
-            if (!user()->canAdminConfig() && $board->canPostWithoutCaptcha(user())) {
+        }
+        else {
+            if (user()->can('bypass-captcha', $board)) {
                 // Check last post time for flood.
                 $floodTime = site_setting('postFloodTime');
 
