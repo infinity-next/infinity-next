@@ -14,7 +14,7 @@ class TorFilter
         $accountable = true;
         $geolocation = new Geolocation;
 
-        if ($request->header('X-TOR', false) || is_hidden_service()) {
+        /*if ($request->header('X-TOR', false) || is_hidden_service()) {
             // Consider a user unaccountable if there's a custom X-TOR header,
             // or if the hostname is our hidden service name.
             $accountable = false;
@@ -25,7 +25,7 @@ class TorFilter
             if (!config('app.debug', false) && env('APP_URL_HS', false)) {
                 throw new TorClearnet;
             }
-        }
+        }*/
 
         user()->setAccountable($accountable);
 

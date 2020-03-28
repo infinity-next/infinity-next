@@ -829,7 +829,7 @@ trait Permittable
      */
     public function getTextForIP($ip)
     {
-        if ($this->can('ip-address'))
+        if ($this->can('ip-address')) {
             return (string) $ip;
         }
 
