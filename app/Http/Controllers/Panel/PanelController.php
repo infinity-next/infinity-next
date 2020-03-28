@@ -22,6 +22,16 @@ abstract class PanelController extends Controller
     public static $navSecondary = 'nav.panel.home';
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Passes a warning message if we do not have a CSRF token.
      *
      * @param array $options

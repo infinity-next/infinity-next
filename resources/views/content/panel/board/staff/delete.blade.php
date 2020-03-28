@@ -14,7 +14,7 @@
 ]) !!}
     <div class="field row-delete">
 
-        @if ($staff->user_id === $user->user_id)
+        @if ($staff->user_id === user()->user_id)
         <span class="field-confirm">
             @lang('panel.confirm.delete_staff_self')
 

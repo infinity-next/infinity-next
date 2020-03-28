@@ -4,10 +4,13 @@ namespace App\Providers;
 
 use App\Board;
 use App\Post;
-use App\User;
+use App\Report;
+use App\Contracts\Auth\Permittable as User;
+use App\Auth\IneloquentUserProvider;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Auth;
+use Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,8 +20,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        App\Board::class => App\Policies\BoardPolicy::class,
-        App\Post::class  => App\Policies\PostPolicy::class,
+        Board::class  => \App\Policies\BoardPolicy::class,
+        Post::class   => \App\Policies\PostPolicy::class,
+        Report::class => \App\Policies\ReportPolicy::class,
     ];
 
     /**
@@ -30,7 +34,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('capcode', function (User $user, Board $board, Post $post = null) {
+        Auth::provider('ineloquent', function ($app, array $config) {
+            return new IneloquentUserProvider($this->app['hash'], $config['model']);
+        });
+
+        Gate::define('capcode', function (?User $user, Board $board, ?Post $post = null) {
             if ($post instanceof Post) {
                 return Response::deny('auth.post.cannot_edit_capcode');
             }
@@ -42,11 +50,11 @@ class AuthServiceProvider extends ServiceProvider
             return Response::deny();
         });
 
-        Gate::define('be-accountable', function (User $user) {
+        Gate::define('be-accountable', function (?User $user) {
             return $user->isAccountable();
         });
 
-        Gate::define('bypass-captcha', function (User   $user) {
+        Gate::define('bypass-captcha', function (?User $user) {
             // Check if site requires captchas.
             if (!site_setting('captchaEnabled')) {
                 return Response::allow();
@@ -106,25 +114,74 @@ class AuthServiceProvider extends ServiceProvider
             return Response::allow();
         });
 
-        Gate::define('global-delete', function(User $user)
+        Gate::define('create-attachment', function(?User $user)
+        {
+            return $user->permission('site.attachment.create')
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_ban');
+        });
+
+        Gate::define('global-delete', function(?User $user)
         {
             return ($user->permission('board.user.ban.free') || $user->permission('board.user.ban.reason'))
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_ban');
         });
 
-        Gate::define('global-delete', function(User $user)
+        Gate::define('global-delete', function(?User $user)
         {
             return $user->permission('board.post.delete.other', null)
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_delete');
         });
 
-        Gate::define('global-history', function(User $user)
+        Gate::define('global-history', function(?User $user)
         {
             return $user->permission('board.history', null)
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_view_history');
+        });
+
+        Gate::define('global-history', function(?User $user)
+        {
+            return $user->permission('board.history', null)
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_view_history');
+        });
+
+        Gate::define('ip-address', function(?User $user)
+        {
+            return $user->permission('site.user.raw_ip')
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_view_ip_address');
+        });
+
+        Gate::define('admin-config', function(?User $user)
+        {
+            return $user->permission('sys.config')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_config');
+        });
+
+        Gate::define('admin-permissions', function(?User $user)
+        {
+            return $user->permission('sys.permissions')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_permissions');
+        });
+
+        Gate::define('admin-tools', function(?User $user)
+        {
+            return $user->permission('sys.tools')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_tools');
+        });
+
+        Gate::define('admin-users', function(?User $user)
+        {
+            return $user->permission('sys.users')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_users');
         });
     }
 }

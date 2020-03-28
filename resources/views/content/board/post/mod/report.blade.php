@@ -67,7 +67,7 @@
 		</div>
 		@endif
 
-		@if (!$user->isAnonymous())
+		@auth
 		<div class="field row-associate field-inline">
 			{!! Form::checkbox(
 				'associate',
@@ -76,7 +76,7 @@
 				[
 					'id'        => "associate",
 					'class'     => "field-control",
-					(!$report && !$user->isAnonymous() ? 'data-enabled' : 'disabled'),
+					(!$report ? 'data-enabled' : 'disabled'),
 			]) !!}
 			{!! Form::label(
 				'associate',
@@ -87,7 +87,7 @@
 
 			<p class="row-associate-desc">@lang('board.report.associate-disclaimer')</p>
 		</div>
-		@endif
+		@endauth
 
 		@if (!$report)
 		<div class="field row-submit">

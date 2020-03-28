@@ -21,12 +21,9 @@
         @endif
 
         @if ($ban)
-        {!! Form::hidden(
-            'raw_ip',
-            $user->canViewRawIP() ? 1 : 0
-        ) !!}
 
-        @if ($user->canViewRawIP())
+        @can('ip-address')
+        {!! Form::hidden('raw_ip', 1) !!}
         <div class="field row-ip label-inline row-inline">
             {!! Form::text(
                 'ban_ip',
@@ -35,7 +32,7 @@
                     'id'        => "ban_ip",
                     'class'     => "field-control",
                     'maxlength' => 255,
-                    $user->canViewRawIP() ? 'data-disabled' : 'disabled' => "disabled",
+                    (user()->can('ip-address') ? 'data-disabled' : 'disabled') => "disabled",
             ]) !!}
             {!! Form::label(
                 "ban_ip",
@@ -45,6 +42,7 @@
             ]) !!}
         </div>
         @else
+        {!! Form::hidden('raw_ip', 0) !!}
         <div class="field row-ipless label-inline row-inline">
             {!! Form::text(
                 'ban_ip',
@@ -53,7 +51,7 @@
                     'id'        => "ban_ip",
                     'class'     => "field-control",
                     'maxlength' => 255,
-                    $user->canViewRawIP() ? 'data-disabled' : 'disabled' => "disabled",
+                    (user()->can('ip-address') ? 'data-disabled' : 'disabled') => "disabled",
             ]) !!}
             {!! Form::label(
                 "ban_ip",
@@ -62,7 +60,7 @@
                     'class' => "field-label",
             ]) !!}
         </div>
-        @endif
+        @endcan
 
         <div class="field row-iplessrange label-inline row-inline">
             {!! Form::select(

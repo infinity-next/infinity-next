@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Auth;
 
 use App\Ban;
 use App\Board;
@@ -9,13 +9,13 @@ use App\Permission;
 use App\Post;
 use App\Role;
 use App\RoleCache;
-use App\Contracts\PermissionUser as PermissionUserContract;
+use App\Support\IP\IP;
 use App\Support\IP\CIDR;
 use Illuminate\Database\Eloquent\Collection;
 use Request;
 use Cache;
 
-trait PermissionUser
+trait Permittable
 {
     /**
      * Accountability is the property which determines if a user is high-risk.
@@ -24,17 +24,16 @@ trait PermissionUser
      *
      * @var bool
      */
-    protected $accountable = true;
+     protected $accountable = true;
 
     /**
-     * The $permission array is a derived set of permissions.
-     * It is associative. Each key represents a board.
-     * NULL represents global permissions.
-     * If a value is not set, it is assumed false.
+     * The $permission array is an associative set of permissions.
+     * Each key represents a board. NULL as a key means global scope.
+     * If a value is not set, it should be implicitly false.
      *
      * @var array
      */
-    protected $permissions;
+     protected $permissions;
 
     /**
      * Getter for the $accountable property.
@@ -47,6 +46,11 @@ trait PermissionUser
             $this->accountable = true;
         }
 
+        return $this->accountable;
+    }
+
+    public function setAccountable($accountable) {
+        $this->accountable = !!$accountable;
         return $this->accountable;
     }
 
@@ -79,7 +83,8 @@ trait PermissionUser
 
         if ($board instanceof Board || $board instanceof Post) {
             $board = $board->board_uri;
-        } elseif (!is_string($board)) {
+        }
+        elseif (!is_string($board)) {
             $board = null;
         }
 
@@ -163,16 +168,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user administrate the system config?
-     *
-     * @return bool
-     */
-    public function canAdminConfig()
-    {
-        return $this->permission('sys.config');
-    }
-
-    /**
      * Can this user administrate the system logs?
      *
      * @return bool
@@ -209,62 +204,8 @@ trait PermissionUser
      */
     public function canAdminPermissions()
     {
-        return $this->permission('sys.permissions');
+        return $this->permission('sys.');
     }
-
-    /**
-     * Can this user administrate the system config?
-     *
-     * @return bool
-     */
-    public function canAdminTools()
-    {
-        return $this->permission('sys.tools');
-    }
-
-    /**
-     * Can this user administrate the system config?
-     *
-     * @return bool
-     */
-    public function canAdminUsers()
-    {
-        return $this->permission('sys.users');
-    }
-
-    /**
-     * Can this user reply with newly uploaded attachments for this board?
-     *
-     * @return bool
-     */
-    public function canAttachNew(Board $board)
-    {
-        // The only thing we care about for this setting is the permission mask.
-        return $this->permission('board.image.upload.new', $board);
-    }
-
-    /**
-     * Can this user reply with previously uploaded attachments for this board?
-     *
-     * @return bool
-     */
-    public function canAttachOld(Board $board)
-    {
-        // The only thing we care about for this setting is the permission mask.
-        return $this->permission('board.image.upload.old', $board);
-    }
-
-    /**
-     * Can this user ban others across the entire site?
-     *
-     * @return bool
-     */
-    public function canBanGlobally()
-    {
-        // The only thing we care about for this setting is the permission mask.
-        return $this->permission('board.user.ban.free') || $this->permission('board.user.ban.reason');
-    }
-
 
     /**
      * Can this user create a board with a banned URI?
@@ -307,26 +248,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user edit any board's config?
-     *
-     * @return bool
-     */
-    public function canEditAnyConfig()
-    {
-        return $this->permissionAny('board.config');
-    }
-
-    /**
-     * Can this user edit this board's config?
-     *
-     * @return bool
-     */
-    public function canEditConfig($board = null)
-    {
-        return $this->permission('board.config', $board);
-    }
-
-    /**
      * Can edit a post with a password?
      *
      * @param \App\Board $board
@@ -348,7 +269,7 @@ trait PermissionUser
      */
     public function canEditSetting(Board $board, Option $option)
     {
-        if ($this->canEditConfig($board)) {
+        if ($this->can('configure', $board)) {
             if ($option->isLocked()) {
                 return $this->canEditSettingLock($board, $option);
             }
@@ -451,16 +372,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user post a new thread.
-     *
-     * @return bool
-     */
-    public function canPostThread(Board $board = null)
-    {
-        return $this->permission('board.post.create.thread', $board);
-    }
-
-    /**
      * Can remove attachments from post with password?
      *
      * @param \App\Board $board
@@ -505,21 +416,6 @@ trait PermissionUser
     }
 
     /**
-     * Can this user sticky a thread?
-     *
-     * @return bool
-     */
-    public function canSticky(Post $post)
-    {
-        // We can only ever sticky a thread, for now.
-        if (is_null($post->reply_to)) {
-            return $this->permission('board.post.sticky', $post->board_uri);
-        }
-
-        return false;
-    }
-
-    /**
      * Can this user view this ban?
      *
      * @param  \App\Ban The ban we're checking to see if we can view.
@@ -529,40 +425,6 @@ trait PermissionUser
     public function canViewBan(Ban $ban)
     {
         return $this->permission('board.bans', $ban->board_uri);
-    }
-
-    /**
-     * Can this user view a board's reports?
-     *
-     * @return bool
-     */
-    public function canViewReports($board = null)
-    {
-        if ($board instanceof Board) {
-            return $this->permissionAny('board.reports', $board->board_uri);
-        }
-
-        return $this->permission('board.reports') || $this->permissionAny('board.reports');
-    }
-
-    /**
-     * Can this user report this post?
-     *
-     * @return bool
-     */
-    public function canViewReportsGlobally()
-    {
-        return $this->permission('site.reports');
-    }
-
-    /**
-     * Can this user see another's raw IP?
-     *
-     * @return bool
-     */
-    public function canViewRawIP()
-    {
-        return $this->permission('site.user.raw_ip');
     }
 
     /**
@@ -613,7 +475,8 @@ trait PermissionUser
             ->where(function ($query) use ($board) {
                 if (is_null($board) && $this->canAdminRoles()) {
                     $query->whereStaff();
-                } elseif ($this->permission('board.user.role', $board)) {
+                }
+                elseif ($this->permission('board.user.role', $board)) {
                     $query->whereJanitor();
                 }
             })
@@ -637,10 +500,14 @@ trait PermissionUser
      */
     public function getBoardsWithConfigRights()
     {
+        if ($this->isAnonymous()) {
+            return collect();
+        }
+
         $whitelist = true;
         $boardlist = [];
 
-        if ($this->canEditConfig()) {
+        if ($this->permission('board.config')) {
             $whitelist = false;
         }
 
@@ -674,6 +541,7 @@ trait PermissionUser
         return $this->getBoardsWithConfigRights();
     }
 
+
     /**
      * Gets the user's roles with capcodes for this board.
      * A capcode is a text colum associated with a role.
@@ -698,16 +566,6 @@ trait PermissionUser
         }
 
         return collect([]);
-    }
-
-    /**
-     * Returns the name of the user that should be displayed in public.
-     *
-     * @return string
-     */
-    public function getDisplayName()
-    {
-        return $this->isAnonymous() ? trans('board.anonymous') : $this->username;
     }
 
     /**
@@ -774,9 +632,14 @@ trait PermissionUser
         $routes = $this->getPermissionRoutes();
 
         // Build a route name to empty array relationship.
-        $permissions = array_combine(array_keys($routes), array_map(function ($n) {
-            return [];
-        }, $routes));
+        $permissions = array_combine(
+            array_keys($routes),
+            array_map(function ($n) {
+                return [];
+            },
+        $routes));
+
+        dd('penis');
 
         // There are two kinds of permission assignments.
         // 1. Permissions that belong to the route.
@@ -800,7 +663,7 @@ trait PermissionUser
 
         // In order to determine if we want to include a role in a specific mask,
         // we must also pull a user's roles to see what is directly applied to them.
-        $userRoles = $this->getRoles()->modelKeys();
+        $userRoles = !$this->isAnonymous() ? $this->roles->get()->modelKeys() : [];
 
         $parentRoles = Role::where('system', true)->with('permissions')->get()->getDictionary();
 
@@ -818,9 +681,10 @@ trait PermissionUser
             if (!$this->isAnonymous()) {
                 $query->orWhereHas('users', function ($query) {
                     //$query->where( \DB::raw("`user_roles`.`user_id`"), $this->user_id);
-                    $query->where('user_roles.user_id', $this->user_id);
+                    $query->where('user_roles.user_id', !$this->isAnonymous() ? $this->user_id : null);
                 });
-            } else {
+            }
+            else {
                 $query->whereDoesntHave('users');
             }
         });
@@ -909,7 +773,8 @@ trait PermissionUser
                 $value = $this->getPermissionMask($board_uri);
                 $cache->value = json_encode($value);
                 $cache->save();
-            } else {
+            }
+            else {
                 $value = json_decode($cache->value, true);
             }
 
@@ -931,18 +796,15 @@ trait PermissionUser
         return $this->permissions;
     }
 
-    /**
-     * Returns a collection of roles directly assigned to this user.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getRoles()
-    {
-        if ($this->isAnonymous()) {
-            return new Collection();
-        }
 
-        return $this->roles()->get();
+    /**
+     * Returns the name of the user that should be displayed in public.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->isAnonymous() ? trans('board.anonymous') : $this->username;
     }
 
     /**
@@ -979,17 +841,5 @@ trait PermissionUser
 
 
         return ip_less($ip);
-    }
-
-    /**
-     * Setter for the accountable mask.
-     *
-     * @param bool $accountable
-     *
-     * @return bool
-     */
-    public function setAccountable($accountable)
-    {
-        $this->accountable = (bool) $accountable;
     }
 }

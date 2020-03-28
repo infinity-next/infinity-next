@@ -20,8 +20,9 @@ return [
     "mismatch" => "These credentials do not match our records.",
 
     "board" => [
+        "cannot_edit_uri" => "You cannot change this board's name.",
         "cannot_view_history" => "You cannot view post history on this board.",
-    ]
+    ],
 
     "captcha" => [
         "lifespan" => "{0} You must solve a Captcha every post."
@@ -34,17 +35,30 @@ return [
         "cannot_edit_capcode" => "You cannot change the capcode on a post.",
         "cannot_feature" => "You cannot feature posts on the site.",
         "cannot_reply" => "You cannot post replies.",
-        "cannot_report" => "You cannot report posts to board moderators.",
-        "cannot_report_globally" => "You cannot report posts to site administrators.",
-        "cannot_sticky" => "You cannot sticky posts."
+        "cannot_sticky" => "You cannot sticky posts.",
+        "cannot_view_reports" => "You cannot review reports on this board.",
         "cannot_without_password" => "You cannot dom this without the post's password.",
         "no_ip_address" => "This post has no IP address, so certain actions are impossible.",
         "only_on_an_op" => "This action is valid only on the first post of a thread.",
         "thread_is_locked" => "This thread is locked.",
     ],
 
+    "report" => [
+        "already_demoted" => "This report is already demoted.",
+        "already_promoted" => "This report has already been promoted and cannot be promoted again.",
+        "not_global" => "This action can only be done to global reports.",
+        "not_local" => "This action can only be done to local reports.",
+     ],
 
     "site" => [
+        "cannot_admin_config" => "You cannot administrate the system config.",
+        "cannot_admin_permissions" => "You cannot administrate user permissions.",
+        "cannot_admin_tools" => "You cannot access administrative tools.",
+        "cannot_admin_users" => "You cannot administrate users.",
+        "cannot_create" => "You cannot report posts to board moderators.",
+        "cannot_create_global" => "You cannot report posts to site administrators.",
         "cannot_view_history" => "You cannot view global post history.",
+        "cannot_view_ip_address" => "You cannot view unredacted IP addresses.",
+        "cannot_view_reports" => "You cannot view reports made to site administration.",
     ],
 ];

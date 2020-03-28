@@ -27,6 +27,22 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 class RouteServiceProvider extends ServiceProvider
 {
     /**
+     * This namespace is applied to your controller routes.
+     *
+     * In addition, it is set as the URL generator's root namespace.
+     *
+     * @var string
+     */
+    protected $namespace = 'App\Http\Controllers';
+
+    /**
+     * The path to the "home" route for your application.
+     *
+     * @var string
+     */
+    public const HOME = '/cp/home';
+
+    /**
      * This namespace is applied to the controller routes in your routes file.
      *
      * In addition, it is set as the URL generator's root namespace.
@@ -54,6 +70,12 @@ class RouteServiceProvider extends ServiceProvider
             'as'         => 'board.',
             'prefix'     => "{board}",
             'namespace'  => 'Board',
+        ],
+
+        'auth' => [
+            'as'         => 'auth.',
+            'middleware' => ['web', 'auth'],
+            'namespace'  => 'App\Http\Controllers\Auth',
         ],
 
         'panel' => [
@@ -197,9 +219,15 @@ class RouteServiceProvider extends ServiceProvider
          */
         if (config('app.url_panel', false)) {
             $this->routeGroup['panel'] += ['domain' => config('app.url_panel'),];
+            $this->routeGroup['auth'] += ['domain' => config('app.url_panel'),];
         } else {
+            $this->routeGroup['auth'] += ['prefix' => 'cp',];
             $this->routeGroup['panel'] += ['prefix' => 'cp',];
         }
+
+        Route::group($this->routeGroup['auth'], function ($router) {
+            require base_path('routes/auth.php');
+        });
 
         Route::group($this->routeGroup['panel'], function ($router) {
             require base_path('routes/panel.php');

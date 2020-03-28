@@ -2,8 +2,50 @@
 
 namespace App\Http\Middleware;
 
-class Authenticate extends Illuminate\Auth\Middleware\Authenticate
+/**
+ * Extension of the Authenticate middleware to reject anonymous users.
+ *
+ * @category   Middleware
+ *
+ * @author     Joshua Moon <josh@jaw.sh>
+ * @copyright  2020 Infinity Next Development Group
+ * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
+ *
+ * @see \Illuminate\Auth\Middleware\Authenticate
+ *
+ * @since      0.6.0
+ */
+class Authenticate extends \Illuminate\Auth\Middleware\Authenticate
 {
+    /**
+     * Determine if the user is logged in to any of the given guards.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array  $guards
+     * @return void
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
+     */
+    protected function authenticate($request, array $guards)
+    {
+        if (empty($guards)) {
+            $guards = [null];
+        }
+
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+
+                if ($this->auth->guard($guard)->user()->isAnonymous()) {
+                    continue;
+                }
+
+                return $this->auth->shouldUse($guard);
+            }
+        }
+
+        $this->unauthenticated($request, $guards);
+    }
+
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
@@ -13,7 +55,7 @@ class Authenticate extends Illuminate\Auth\Middleware\Authenticate
     protected function redirectTo($request)
     {
         if (!$request->expectsJson()) {
-            return route('panel.login');
+            return route('auth.login');
         }
     }
 }

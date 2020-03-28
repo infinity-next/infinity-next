@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
@@ -50,7 +50,7 @@ class Permission extends Model
      *
      * @return Collection of \App\Board->board_uri strings
      */
-    public function getBoardsWithPermissions(PermissionUser $user = null, $anonymous = true)
+    public function getBoardsWithPermissions(Permittable $user = null, $anonymous = true)
     {
         // Identify roles which affect this user.
         // Sometimes we will only want direct assignments.

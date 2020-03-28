@@ -26,7 +26,7 @@
                         <td>{{ $log->user->getDisplayName() }}</td>
 
                         @if ($log->action_details)
-                        <td>@lang($log->action_name, $log->getDetails($user))</td>
+                        <td>@lang($log->action_name, $log->getDetails())</td>
                         @else
                         <td>@lang($log->action_name)</td>
                         @endif

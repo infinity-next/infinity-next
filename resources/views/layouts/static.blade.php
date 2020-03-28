@@ -68,11 +68,11 @@
 
             @section('header-inner')
                 <figure class="page-head">
-                    @if (user()->isAccountable())
+                    @can('be-accountable')
                     <img id="logo" src="@yield('header-logo', asset('static/img/logo.png'))" alt="{{ site_setting('siteName') }}" />
                     @else
                     <img id="logo" src="@yield('header-logo', asset('static/img/logo_tor.png'))" alt="{{ site_setting('siteName') }}" />
-                    @endif
+                    @endcan
                     <figcaption class="page-details">
                         @if (!isset($hideTitles))
                             @if (array_key_exists('page-title', View::getSections()))

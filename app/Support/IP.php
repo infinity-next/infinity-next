@@ -112,8 +112,12 @@ class IP extends CIDR
         return parent::__toString();
     }
 
-    public function toTextForUser(PermissionUser $user)
+    public function toTextForUser(PermissionUser $user = null)
     {
+        if (is_null($user)) {
+            $user = user();
+        }
+
         return $user->getTextForIP($this->toText());
     }
 

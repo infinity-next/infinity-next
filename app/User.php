@@ -2,8 +2,9 @@
 
 namespace App;
 
+use App\Auth\Permittable;
+use App\Contracts\Auth\Permittable as PermittableContract;
 use App\Contracts\Support\Sluggable as SluggableContract;
-use App\Contracts\PermissionUser as PermissionUserContract;
 use App\Traits\PermissionUser;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Str;
 
 /**
  * Model representing static page content for boards and the global site.
@@ -31,18 +33,12 @@ implements
     AuthenticatableContract,
     AuthorizableContract,
     CanResetPasswordContract,
-    PermissionUserContract
+    PermittableContract
 {
     use Authenticatable,
         Authorizable,
         CanResetPassword,
-        MustVerifyEmail,
-        PermissionUser;
-
-    public function isAnonymous()
-    {
-        return !$this->exists;
-    }
+        Permittable;
 
     /**
      * The database table used by the model.
@@ -257,7 +253,7 @@ implements
      */
     public function getSlug()
     {
-        return str_slug($this->username, '-');
+        return Str::slug($this->username, '-');
     }
 
     /**

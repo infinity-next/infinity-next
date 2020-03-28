@@ -1,7 +1,7 @@
 <nav class="cp-side">
     <section class="cp-linklists">
         <ul class="cp-linkgroups">
-            @if ($user->canCreateBoard())
+            @can('create', \App\Board::class)
             <li class="cp-linkgroup">
                 <ul class="cp-linkitems">
                     <li class="cp-linkitem">
@@ -9,9 +9,9 @@
                     </li>
                 </ul>
             </li>
-            @endif
+            @endcan
 
-            @if ($user->canEditAnyConfig())
+            @can('configure', \App\Board::class)
             <li class="cp-linkgroup">
                 <a class="linkgroup-name">@lang('nav.panel.secondary.board.boards')</a>
 
@@ -29,9 +29,9 @@
                     </li>
                 </ul>
             </li>
-            @endif
+            @endcan
 
-            @if ($user->canViewReports() || $user->canViewReportsGlobally())
+            @can('viewGlobal', \App\Report::class)
             <li class="cp-linkgroup">
                 <a class="linkgroup-name">@lang('nav.panel.secondary.board.discipline')</a>
 
@@ -45,7 +45,7 @@
                     </li>
                 </ul>
             </li>
-            @endif
+            @endcan
         </ul>
     </section>
 </nav>

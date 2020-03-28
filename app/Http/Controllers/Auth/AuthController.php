@@ -7,10 +7,14 @@ use App\Http\Controllers\Panel\PanelController;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Auth;
 use Cookie;
 use Request;
 use Session;
 use Validator;
+
+echo "AuthController.php depreicated";
+exit;
 
 class AuthController extends PanelController
 {
@@ -99,7 +103,7 @@ class AuthController extends PanelController
      */
     public function putRegister()
     {
-        if (!$this->user->canCreateUser()) {
+        if (!user()->canCreateUser()) {
             abort(403);
         }
 
@@ -112,7 +116,7 @@ class AuthController extends PanelController
             );
         }
 
-        $this->auth->login($this->create(Request::all()));
+        Auth::login($this->create(Request::all()));
 
         return redirect($this->redirectPath());
     }
@@ -124,7 +128,7 @@ class AuthController extends PanelController
      */
     public function postLogin()
     {
-        $this->validate(Request::all(), [
+        $validatedData = Request::validate([
             'username' => 'required',
             'password' => 'required',
         ]);
@@ -138,12 +142,13 @@ class AuthController extends PanelController
             ])->firstOrFail();
 
             $this->auth->login($user);
-        } elseif (!$this->auth->attempt($credentials, Request::has('remember'))) {
+        }
+        elseif (!auth()->attempt($credentials, Request::has('remember'))) {
             // Re-attempt with the supplied username as an email address.
             $credentials['email'] = $credentials['username'];
             unset($credentials['username']);
 
-            if (!$this->auth->attempt($credentials, Request::has('remember'))) {
+            if (!auth()->attempt($credentials, Request::has('remember'))) {
                 return redirect($this->loginPath())
                     ->withInput(Request::only('username', 'remember'))
                     ->withErrors([
@@ -172,7 +177,7 @@ class AuthController extends PanelController
      */
     public function getLogout()
     {
-        $this->auth->logout();
+        Auth::logout();
 
         Session::flush();
 

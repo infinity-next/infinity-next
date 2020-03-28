@@ -1,4 +1,3 @@
-@can('create', [App\Post::class, $board])
 @if (isset($post))
 {!! Form::model($post, [
     'url'    => Request::url(),
@@ -122,7 +121,7 @@
         </div>
 
         @if(!isset($post))
-        @can('attach', [App\Post::class, $board, $reply_to])
+        @can('attach', $board)
         <div class="field row-file">
             <div class="dz-container">
                 <span class="dz-instructions"><span class="dz-instructions-text"><i class="fa fa-upload"></i>&nbsp;@lang('board.field.file-dz')</span></span>
@@ -181,5 +180,4 @@
     </fieldset>
 @if (!isset($form) || $form)
 </form>
-@endif
 @endif

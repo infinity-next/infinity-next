@@ -57,6 +57,10 @@ class Log extends Model
 
     public function getDetails($user = null)
     {
+        if (is_null($user)) {
+            $user = user();
+        }
+
         $details = json_decode($this->action_details, true);
 
         foreach ($details as $detailKey => &$detailValue) {

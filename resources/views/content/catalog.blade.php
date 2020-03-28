@@ -26,12 +26,14 @@
         </ul>
     </section>
 
+    @can('create', App\Post::class)
     <section class="index-form">
         @include('content.board.post.form', [
             'board'   => $board,
-            'actions' => [ $reply_to ? "reply" : "thread" ],
+            'actions' => "thread",
         ])
     </section>
+    @endcan
 
     @include('content.board.sidebar')
 </main>

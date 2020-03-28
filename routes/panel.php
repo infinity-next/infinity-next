@@ -12,38 +12,6 @@
  * @since      0.6.0
  */
 
-/**
- * Authentication
- */
-// logout
-Route::get('logout',   ['as' => 'logout', 'uses' => 'AuthController@getLogout',]);
-// login
-Route::get('login',    ['as' => 'login', 'uses' => 'AuthController@getLogin',]);
-// login attempt
-Route::post('login',   ['as' => 'login.attempt', 'uses' => 'AuthController@postLogin',]);
-// register
-Route::get('register', ['as' => 'register', 'uses' => 'AuthController@getRegister',]);
-// register create
-Route::put('register', ['as' => 'register.create', 'uses' => 'AuthController@putRegister',]);
-
-/**
- * Account Recovery
- */
-Route::group(['prefix' => 'password', 'as' => 'password',], function() {
-    // password
-    Route::get('/', ['uses' => 'PasswordController@getIndex',]);
-    // password update
-    Route::post('/',['as' => '.update', 'uses' => 'PasswordController@postIndex',]);
-    // reset
-    Route::get('reset/{token?}', ['as' => '.reset', 'uses' => 'PasswordController@getReset',]);
-    // reset attempt
-    Route::post('reset',['as' => '.reset.attempt', 'uses' => 'PasswordController@postReset',]);
-    // email
-    Route::get('email', ['as' => '.email', 'uses' => 'PasswordController@getEmail',]);
-    // email request
-    Route::post('email',['as' => '.email.request', 'uses' => 'PasswordController@postEmail',]);
-});
-
 Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],], function () {
     /**
      * Bans and Appeals

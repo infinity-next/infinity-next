@@ -55,8 +55,13 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\FileFilter::class,
         ],
 
+        'auth' => [
+            \App\Http\Middleware\VerifyCsrfToken::class,
+        ],
+
         'panel' => [
             \App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\Authenticate::class,
         ],
 
         'api' => [

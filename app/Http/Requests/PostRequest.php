@@ -151,7 +151,12 @@ class PostRequest extends Request implements ApiContract
             return false;
         }
 
-        return user()->can('reply', $this->thread);
+        if ($this->thread instanceof Post) {
+            return user()->can('reply', $this->thread);
+        }
+        else {
+            return  user()->can('post', $this->board);
+        }
     }
 
     /**
@@ -264,11 +269,12 @@ class PostRequest extends Request implements ApiContract
                 $rules['body'][] = "regex:/^(\n?(.*)){1,{$newLineMax}}$/";
             }
 
-            if (!$board->canAttach($user)) {
+            if ($user->cannot('attach', $board)) {
                 $rules['body'][] = 'required';
                 $rules['files'][] = 'array';
                 $rules['files'][] = 'max:0';
-            } else {
+            }
+            else {
                 $rules['body'][] = 'required_without:files';
 
                 $attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
@@ -308,13 +314,13 @@ class PostRequest extends Request implements ApiContract
 
                 for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment) {
                     // Can only attach existing files.
-                    if (!$user->canAttachNew($board) && $user->canAttachOld($board)) {
+                    if (!$user->can('create-attachment')) {
                         $rules["{$fileToken}.{$attachment}"][] = 'file_old';
                     }
                     // Can only attach new files.
-                    elseif ($user->canAttachNew($board) && !$user->canAttachOld($board)) {
-                        $rules["{$fileToken}.{$attachment}"][] = 'file_new';
-                    }
+                    //elseif ($user->can('create-attachment') && !$user->can('attach', $board)) {
+                    //    $rules["{$fileToken}.{$attachment}"][] = 'file_new';
+                    //}
 
                     for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment) {
                         $rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
@@ -486,8 +492,6 @@ class PostRequest extends Request implements ApiContract
             // Validate individual files being uploaded right now.
             $this->validateOriginality();
         }
-
-        dd($validator->errors());
 
         if (count($validator->errors())) {
             $this->failedValidation($validator);

@@ -1,45 +1,45 @@
 <nav class="cp-top">
     <section class="cp-linklists">
-        @if (!$user->isAnonymous())
+        @auth
         <ul class="cp-linkgroups">
             <li class="cp-linkgroup">
                 <a class="linkgroup-name linkgroup-home" href="{!! route('panel.home') !!}">@lang('nav.panel.primary.home')</a>
             </li>
 
-            @if ($user->canCreateBoard() || $user->canEditAnyConfig())
+            @canany(['create', 'configure'], \App\Board::class)
             <li class="cp-linkgroup">
                 <a class="linkgroup-name linkgroup-boards" href="{!! route('panel.boards.index') !!}">@lang('nav.panel.primary.board')</a>
             </li>
-            @endif
+            @endcanany
 
-            @if ($user->canAdminConfig())
+            @can('admin-config')
             <li class="cp-linkgroup">
                 <a class="linkgroup-name linkgroup-site" href="{!! route('panel.site.index') !!}">@lang('nav.panel.primary.site')</a>
             </li>
-            @endif
+            @endcan
 
-            @if ($user->canAdminUsers() || $user->canAdminPermissions())
+            @canany(['admin-users', 'admin-permissions'])
             <li class="cp-linkgroup">
                 <a class="linkgroup-name linkgroup-users" href="{!! route('panel.user.index') !!}">@lang('nav.panel.primary.users')</a>
             </li>
-            @endif
+            @endcanany
         </ul>
-        @endif
+        @endauth
 
         <ul class="cp-linkgroups linkgroups-user" data-no-instant>
-            @if (!$user->isAnonymous())
+            @auth
             <li class="cp-linkgroup">
-                @lang('panel.authed_as', [ 'name' => $user->username ])
+                @lang('panel.authed_as', [ 'name' => user()->getDisplayName() ])
             </li>
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('panel.logout') !!}">@lang('nav.panel.primary.logout')</a>
+                <a class="linkgroup-name" href="{!! route('auth.logout') !!}">@lang('nav.panel.primary.logout')</a>
             </li>
             @else
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('panel.register') !!}">@lang('nav.panel.primary.register')</a>
+                <a class="linkgroup-name" href="{!! route('auth.register') !!}">@lang('nav.panel.primary.register')</a>
             </li>
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('panel.login') !!}">@lang('nav.panel.primary.login')</a>
+                <a class="linkgroup-name" href="{!! route('auth.login') !!}">@lang('nav.panel.primary.login')</a>
             </li>
             @endif
         </ul>

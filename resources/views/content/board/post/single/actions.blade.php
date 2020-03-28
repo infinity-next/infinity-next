@@ -2,7 +2,6 @@
 <div class="post-action-bar action-bar-mod">
     @section('post-actions')
     @set('postActions', false)
-    @set('postHasIp', isset($details['author_ip']) && $details['author_ip'] instanceof \App\Support\IP)
     <div class="post-action-tab action-tab-actions" data-no-instant>
         <span class="post-action-label post-action-open"><span class="post-action-text">@lang('board.action.open')</span></span>
 

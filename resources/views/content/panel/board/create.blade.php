@@ -1,6 +1,6 @@
-@extends($user->isAnonymous() ? 'layouts.main.simplebox' : 'layouts.main.panel')
+@extends(user()->isAnonymous() ? 'layouts.main.simplebox' : 'layouts.main.panel')
 
-@section('title', $user->isAnonymous() ? trans("panel.title.board_create") : "")
+@section('title', user()->isAnonymous() ? trans("panel.title.board_create") : "")
 
 @section('body')
 {!! Form::open([
@@ -11,7 +11,7 @@
     'class'  => "form-config",
 ]) !!}
 
-    @if ($user->isAnonymous())
+    @if (user()->isAnonymous())
         <h3 class="config-title">@lang("panel.title.board_create_your")</h3>
     @else
         <h3 class="config-title">@lang("panel.title.board_create")</h3>
@@ -79,19 +79,19 @@
                 ]) !!}
         </div>
 
-        @if (!$user->isAnonymous())
+        @auth
         <div class="field row-captcha">
             <label class="field-label" for="captcha" data-widget="captcha">
                 {!! captcha() !!}
             </label>
             <input class="field-control" id="captcha" name="captcha" type="text" />
         </div>
-        @endif
+        @endauth
     </fieldset>
 
-    @if ($user->isAnonymous())
+    @guest
         @include('content.panel.auth.register.form')
-    @endif
+    @endguest
 
     <div class="field">
         {!! Form::button(

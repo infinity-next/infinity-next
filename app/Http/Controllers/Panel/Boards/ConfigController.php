@@ -329,9 +329,7 @@ class ConfigController extends PanelController
      */
     public function getConfig(Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $optionGroups = OptionGroup::getBoardConfig($board);
 

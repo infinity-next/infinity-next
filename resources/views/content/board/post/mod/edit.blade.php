@@ -1,1 +1,3 @@
-@include('content.board.post.form')
+@can('edit', $post)
+    @include('content.board.post.form')
+@endcan

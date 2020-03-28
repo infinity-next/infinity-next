@@ -4,12 +4,14 @@
 
 @section('content')
 <main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} @if (isset($page)) page-{{ $page }} @endif">
+    @can($reply_to ? 'reply' : 'post', $reply_to ? $reply_to : $board)
     <section class="index-form">
         @include('content.board.post.form', [
             'board'   => $board,
             'actions' => [ $reply_to ? "reply" : "thread" ],
         ])
     </section>
+    @endcan
 
     @include('nav.board.pages', [
         'showCatalog' => true,

@@ -36,14 +36,19 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'panel' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users-and-anon',
+        ],
+
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'users-and-anon',
         ],
     ],
 
@@ -69,11 +74,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'users-and-anon' => [
+            'driver' => 'ineloquent',
+            'model' => App\User::class,
+        ],
     ],
 
     /*

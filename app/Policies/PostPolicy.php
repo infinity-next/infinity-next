@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Board;
 use App\Post;
-use App\User;
+use App\Contracts\Auth\Permittable as User;
 use Illuminate\Auth\Access\Response;
 
 /**
@@ -28,11 +28,11 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function author(User $user, Board $board)
+    public function author(?User $user, Board $board)
     {
         return $board->getConfig('postsAllowAuthor')
             ? Response::allow()
-            : Response::deny();
+            : Response::deny('auth.post.cannot_use_authors');
     }
 
     /**
@@ -43,7 +43,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function bumplock(User $user, Post $post)
+    public function bumplock(?User $user, Post $post)
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to))
@@ -52,7 +52,7 @@ class PostPolicy extends AbstractPolicy
         if ($user->can('board.post.bumplock', $post->board_uri))
             return Response::allow();
 
-        return Response::deny();
+        return Response::deny('auth.post.cannot_bumplock');
     }
 
     /**
@@ -65,14 +65,14 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function ban(User $user, Post $post)
+    public function ban(?User $user, Post $post)
     {
         if (!$post->hasAuthorIp())
             return Response::deny('auth.post.no_ip_address');
 
         return $user->can('ban', $post->board)
             ? Response::allow()
-            : Response::deny();
+            : Response::deny('auth.post.cannot_ban');
     }
 
     /**
@@ -83,7 +83,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function delete(User $user, Post $post)
+    public function delete(?User $user, Post $post)
     {
         // If we can edit any post for this board ...
         if ($user->permission('board.post.delete.other', $post->board_uri)) {
@@ -107,7 +107,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function deleteHistory(User $user, Post $post)
+    public function deleteHistory(?User $user, Post $post)
     {
         if (!$user->can('delete', $post)) {
             return $this->delete($user, $post);
@@ -128,7 +128,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function edit(User $user, Post $post)
+    public function edit(?User $user, Post $post)
     {
         // If we can edit any post for this board ...
         if ($user->permission('board.post.edit.other', $post->board_uri)) {
@@ -154,7 +154,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function feature(User $user, Post $post)
+    public function feature(?User $user, Post $post)
     {
         return $user->permission('sys.config')
             ? Response::allow()
@@ -169,7 +169,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function history(User $user, Post $post)
+    public function history(?User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
             return Response::deny('auth.post.no_ip_address');
@@ -186,7 +186,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function globalBan(User $user, Post $post)
+    public function globalBan(?User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
             return Response::deny('auth.post.no_ip_address');
@@ -203,7 +203,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function globalDelete(User $user, Post $post)
+    public function globalDelete(?User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
             return Response::deny('auth.post.no_ip_address');
@@ -220,7 +220,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function globalHistory(User $user, Post $post)
+    public function globalHistory(?User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
             return Response::deny('auth.post.no_ip_address');
@@ -237,7 +237,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function lock(User $user, Post $post)
+    public function lock(?User $user, Post $post)
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to))
@@ -256,7 +256,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function password(User $user, Board $board)
+    public function password(?User $user, Board $board)
     {
         // Previously, this would refuse if the user could not subsequently
         // do anything with his password (like delete the post with it).
@@ -273,7 +273,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function reply(User $user, Post $post)
+    public function reply(?User $user, Post $post)
     {
         if ($post->isLocked() && !$user->can('lock', $post)) {
             return Response::deny('auth.post.thread_is_locked');
@@ -292,7 +292,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function report(User $user, Post $post)
+    public function report(?User $user, Post $post)
     {
         return $user->permission('board.post.report', $post)
             ? Response::allow()
@@ -307,11 +307,11 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function reportGlobally(User $user, Post $post)
+    public function reportGlobal(?User $user, Post $post)
     {
         return $user->permission('site.post.report', $post)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_report_globally');
+            : Response::deny('auth.post.cannot_report_global');
     }
 
     /**
@@ -322,7 +322,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function sticky(User $user, Post $post)
+    public function sticky(?User $user, Post $post)
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to))
@@ -341,7 +341,7 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function subject(User $user, Board $board, Post $post = null)
+    public function subject(?User $user, Board $board, ?Post $post = null)
     {
         if ($board->getConfig('postsAllowSubject')) {
             return Response::allow();
@@ -351,7 +351,7 @@ class PostPolicy extends AbstractPolicy
             return Response::allow();
         }
 
-        return Response::deny();
+        return Response::deny('auth.post.cannot_use_subjects');
     }
 
     /**
@@ -362,9 +362,9 @@ class PostPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function update(User $user, Post $post)
+    public function update(?User $user, Post $post)
     {
         ## TODO ##
-        return Resposne::deny();
+        return Resposne::deny('auth.post.cannot_edit');
     }
 }

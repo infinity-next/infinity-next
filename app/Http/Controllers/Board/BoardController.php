@@ -124,7 +124,7 @@ class BoardController extends Controller
     public function getLogs(Board $board)
     {
         $this->authorize('audit', $board);
-        
+
         return $this->view(static::VIEW_LOGS, [
             'board' => $board,
             'logs' => $board->getLogs(),

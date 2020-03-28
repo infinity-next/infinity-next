@@ -8,9 +8,9 @@
         <a class="button pagination-button" href="{{ $board->getUrl('catalog') }}" data-instant>@lang('board.button.catalog')</a>
         @endif
 
-        @if ($user->canViewLogs($board))
+        @can('audit', $board)
         <a class="button pagination-button" href="{{ $board->getUrl('logs') }}" data-instant>@lang('board.button.logs')</a>
-        @endif
+        @endcan
 
         @if (isset($header))
         @if (!$header)

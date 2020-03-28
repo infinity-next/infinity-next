@@ -29,86 +29,40 @@ class Report extends Model
      *
      * @var array
      */
-    protected $fillable = ['reason', 'board_uri', 'post_id', 'reporter_ip', 'user_id', 'is_dismissed', 'is_successful', 'global'];
+    protected $fillable = [
+        'reason',
+        'board_uri',
+        'post_id',
+        'reporter_ip',
+        'user_id',
+        'is_dismissed',
+        'is_successful',
+        'global',
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['reporter_ip', 'user_id'];
+    protected $hidden = [
+        'reporter_ip',
+        'user_id',
+    ];
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(\App\Board::class, 'board_uri');
     }
 
     public function post()
     {
-        return $this->belongsTo('\App\Post', 'post_id');
+        return $this->belongsTo(\App\Post::class, 'post_id');
     }
 
     public function user()
     {
-        return $this->belongsTo('\App\User', 'user_id');
-    }
-
-    /**
-     * Determines if a user can view this report in any context.
-     * This does not determine if a report is useful in a management view.
-     *
-     * @param PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canView(PermissionUser $user)
-    {
-        if (is_null($this->board_uri) && $user->canViewReportsGlobally()) {
-            return true;
-        }
-
-        if (!is_null($this->board_uri) && $user->canViewReports($this->board_uri)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Determines if the user can Demote the post.
-     *
-     * @param PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canDemote(PermissionUser $user)
-    {
-        return !$this->isDemoted() && $this->global;
-    }
-
-    /**
-     * Determines if the user can dismiss the report.
-     *
-     * @param PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canDismiss(PermissionUser $user)
-    {
-        // At the moment, anyone who can view can dismiss.
-        return $this->canView($user);
-    }
-
-    /**
-     * Determines if the user can promote the post.
-     *
-     * @param PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canPromote(PermissionUser $user)
-    {
-        return $user->canReportGlobally($this->post) && !$this->isPromoted() && !$this->global;
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 
     /**
