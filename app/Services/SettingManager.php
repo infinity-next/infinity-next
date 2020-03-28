@@ -117,7 +117,7 @@ class SettingManager
         ];
 
 
-        if ($this->hasDB()) {
+        if ($this->hasDB() && false) {
             if (user()->can('create', Board::class)) {
                 $nav['new_board'] = route('panel.boards.create');
             }
