@@ -58,7 +58,6 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('bypass-captcha', function (?User $user) {
-            return false;
             // Check if site requires captchas.
             if (!site_setting('captchaEnabled')) {
                 return Response::allow();
