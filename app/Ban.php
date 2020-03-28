@@ -35,6 +35,19 @@ class Ban extends Model
     protected $dates = ['created_at', 'updated_at', 'expires_at'];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ban_ip_start' => 'ip',
+        'ban_ip_end' => 'ip',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'expires_at' => 'datetime',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -168,7 +181,7 @@ class Ban extends Model
      */
     public function setBanIpStartAttribute($value)
     {
-        $this->attributes['ban_ip_start'] = (new IP($value))->toSQL();
+        $this->attributes['ban_ip_start'] = (new IP($value))->toText();
     }
 
     /**
@@ -180,7 +193,7 @@ class Ban extends Model
      */
     public function setBanIpEndAttribute($value)
     {
-        $this->attributes['ban_ip_end'] = (new IP($value))->toSQL();
+        $this->attributes['ban_ip_end'] = (new IP($value))->toText();
     }
 
     /**
@@ -193,7 +206,7 @@ class Ban extends Model
     public function getAppeal($ip = null)
     {
         return $this->appeals()
-            ->where('appeal_ip', (new IP($ip))->toSQL())
+            ->where('appeal_ip', (new IP($ip))->toText())
             ->orderBy('ban_appeal_id', 'desc')
             ->first();
     }
