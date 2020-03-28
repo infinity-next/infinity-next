@@ -639,8 +639,6 @@ trait Permittable
             },
         $routes));
 
-        dd('penis');
-
         // There are two kinds of permission assignments.
         // 1. Permissions that belong to the route.
         // 2. Permissions directly assigned to the user.
