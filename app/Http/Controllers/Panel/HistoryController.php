@@ -23,9 +23,7 @@ class HistoryController extends PanelController
 
     public function list($ip)
     {
-        if (!$this->user->canViewGlobalHistory()) {
-            return abort(403);
-        }
+        $this->authorize('global-history');
 
         if (is_null($ip)) {
             return abort(404);
@@ -33,9 +31,11 @@ class HistoryController extends PanelController
 
         try {
             $ip = new IP($ip);
-        } catch (\InvalidArgumentException $e) {
+        }
+        catch (\InvalidArgumentException $e) {
             return abort(404);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             throw $e;
         }
 
@@ -47,7 +47,7 @@ class HistoryController extends PanelController
 
         return $this->view(static::VIEW_HISTORY, [
             'posts' => $posts,
-            'ip' => $ip->toText(),
+            'ip' => $ip,
         ]);
     }
 }
