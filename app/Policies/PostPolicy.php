@@ -325,10 +325,11 @@ class PostPolicy extends AbstractPolicy
     public function sticky(?User $user, Post $post)
     {
         // This only applies to OPs.
-        if (!is_null($post->reply_to))
+        if (!is_null($post->reply_to)) {
             return Response::deny('auth.post.only_on_an_op');
+        }
 
-        return $user->can('board.post.bumplock', $post)
+        return $user->permission('board.post.sticky', $post)
             ? Response::allow()
             : Response::deny('auth.post.cannot_sticky');
     }
