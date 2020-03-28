@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Board;
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use Illuminate\Queue\SerializesModels;
 
 class BoardWasCreated extends Event
@@ -20,14 +20,14 @@ class BoardWasCreated extends Event
     /**
      * The board the event is being fired on.
      *
-     * @var \App\Traits\PermissionUser
+     * @var \App\Auth\Permittable
      */
     public $User;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Board $board, PermissionUser $user)
+    public function __construct(Board $board, Permittable $user)
     {
         $this->board = $board;
         $this->user = $user;

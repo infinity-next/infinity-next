@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use Illuminate\Queue\SerializesModels;
 
 class UserRolesModified extends Event
@@ -19,9 +19,9 @@ class UserRolesModified extends Event
     /**
      * Create a new event instance.
      *
-     * @param \App\Contracts\PermissionUser $user
+     * @param \App\Contracts\Auth\Permittable $user
      */
-    public function __construct(PermissionUser $user)
+    public function __construct(Permittable $user)
     {
         $this->user = $user;
     }

@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Board;
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use Illuminate\Queue\SerializesModels;
 
 class BoardWasReassigned extends Event
@@ -20,7 +20,7 @@ class BoardWasReassigned extends Event
     /**
      * The user the board has been assigned to.
      *
-     * @var \App\Contracts\PermissionUser
+     * @var \App\Contracts\Auth\Permittable
      */
     public $user;
 
@@ -28,9 +28,9 @@ class BoardWasReassigned extends Event
      * Create a new event instance.
      *
      * @param \App\Board                    $board
-     * @param \App\Contracts\PermissionUser $user
+     * @param \App\Contracts\Auth\Permittable $user
      */
-    public function __construct(Board $board, PermissionUser $user)
+    public function __construct(Board $board, Permittable $user)
     {
         $this->board = $board;
         $this->user = $user;
