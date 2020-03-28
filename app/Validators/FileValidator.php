@@ -21,7 +21,7 @@ class FileValidator
 
     public function validateFileIntegrity($attribute, $file, $parameters)
     {
-        if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+        if ($file instanceof \Illuminate\Http\UploadedFile) {
             $ext = $file->guessExtension();
 
             $sleuth = new FileSleuth($file);
