@@ -38,6 +38,11 @@ class RolesController extends PanelController
      */
     public static $navTertiary = 'nav.panel.board.settings';
 
+    public function authorize($ability, $arguments = [])
+    {
+        $this->authorize('configure', $this->board);
+    }
+
     /**
      * Show the application dashboard to the user.
      *
@@ -45,11 +50,7 @@ class RolesController extends PanelController
      */
     public function get(Board $board)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
-
-        $roles = Role::whereBoardRole($board, $this->user)->get();
+        $roles = Role::whereBoardRole($board, user())->get();
 
         return $this->view(static::VIEW_ROLES, [
             'board' => $board,
@@ -67,11 +68,7 @@ class RolesController extends PanelController
      */
     public function create(Board $board)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
-
-        $roles = Role::whereCanParentForBoard($board, $this->user)->get();
+        $roles = Role::whereCanParentForBoard($board, user())->get();
         $choices = [];
 
         foreach ($roles as $role) {
@@ -95,10 +92,6 @@ class RolesController extends PanelController
      */
     public function store(Board $board)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
-
         $roles = Role::whereCanParentForBoard($board, $this->user)->get();
         $castes = $board->getRoleCastes(Request::input('roleType'))->get()->pluck('caste');
 

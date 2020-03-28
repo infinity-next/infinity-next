@@ -1,7 +1,7 @@
 <nav class="cp-side">
     <section class="cp-linklists">
         <ul class="cp-linkgroups">
-            @if ($user->canAdminPermissions())
+            @can('admin-users')
             <li class="cp-linkgroup">
                 <a class="linkgroup-name">@lang('nav.panel.secondary.users.permissions')</a>
 
@@ -14,7 +14,7 @@
                     </li>
                 </ul>
             </li>
-            @endif
+            @endcan
         </ul>
     </section>
 </nav>

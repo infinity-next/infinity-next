@@ -5,12 +5,15 @@ namespace App\Providers;
 use App\Board;
 use App\Post;
 use App\Report;
-use App\Contracts\Auth\Permittable as User;
 use App\Auth\IneloquentUserProvider;
+use App\Contracts\Auth\Permittable as User;
+use App\Support\IP;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Auth;
 use Gate;
+use Session;
+use InfinityNext\LaravelCaptcha\Captcha;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -55,6 +58,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('bypass-captcha', function (?User $user) {
+            return false;
             // Check if site requires captchas.
             if (!site_setting('captchaEnabled')) {
                 return Response::allow();
@@ -77,7 +81,7 @@ class AuthServiceProvider extends ServiceProvider
             $lastCaptcha = Captcha::select('created_at', 'cracked_at')
                 ->where(function ($query) use ($ip, $session_id) {
                     // Find captchas answered by this user.
-                    $query->where('client_session_id', hex2bin($session_id));
+                    $query->where('client_session_id', $session_id);
 
                     // Pull the lifespan of a captcha.
                     // This is the number of minutes between successful entries.

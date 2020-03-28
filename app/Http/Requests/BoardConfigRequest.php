@@ -32,18 +32,10 @@ class BoardConfigRequest extends Request
     public $board;
 
     /**
-     * The user.
-     *
-     * @var App\Trait\PermissionUser
-     */
-    protected $user;
-
-    /**
      * Fetches the user and our board config.
      */
     public function __construct(Board $board)
     {
-        $this->user = $manager->user;
         $this->board = $board;
     }
 
@@ -74,7 +66,6 @@ class BoardConfigRequest extends Request
      */
     public function rules()
     {
-
         $rules = [
             'boardBasicTitle' => 'required|string|between:1,255',
             'boardBasicDesc' => 'string|between:1,255',
@@ -98,7 +89,7 @@ class BoardConfigRequest extends Request
      */
     public function sanitize()
     {
-        $input = $this->input('boardCustomCSS', false);
+        $input = ""$this->input('boardCustomCSS', false);
 
         if ($input) {
             $parser = new Parser($input);
@@ -108,14 +99,9 @@ class BoardConfigRequest extends Request
         }
     }
 
-    /**
-     * Determines if the client has access to this form.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize($ability, $arguments = [])
     {
-        return $this->board->canEditConfig(user());
+        $this->authorize('configure', $this->board);
     }
 
     /**

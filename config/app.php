@@ -156,6 +156,8 @@ return [
          * Forms...
          */
         Collective\Html\HtmlServiceProvider::class,
+
+        InfinityNext\LaravelCaptcha\CaptchaServiceProvider::class,
     ],
 
     /*

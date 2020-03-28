@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use Illuminate\Database\Eloquent\Model;
 use Event;
 use App\Events\RoleWasDeleted;
@@ -124,22 +124,6 @@ class Role extends Model
 
             return true;
         });
-    }
-
-    /**
-     * Determines if this user can edit this role's permissions.
-     *
-     * @param \App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canSetPermissions(PermissionUser $user)
-    {
-        if (!is_null($this->board_uri)) {
-            return $user->canEditConfig($this->board_uri);
-        } else {
-            return $user->canAdminConfig();
-        }
     }
 
     /**
@@ -403,11 +387,11 @@ class Role extends Model
      * Narrows query to only roles which are for a board and can be manipulated by this user.
      *
      * @param \App\Board                    $board
-     * @param \App\Contracts\PermissionUser $user
+     * @param \App\Contracts\Permittable $user
      *
      * @return Query
      */
-    public function scopeWhereBoardRole($query, Board $board, PermissionUser $user)
+    public function scopeWhereBoardRole($query, Board $board, Permittable $user)
     {
         return $query->where('board_uri', $board->board_uri)
             ->whereLighterThanUser($user, $board)
@@ -418,11 +402,11 @@ class Role extends Model
      * Selects top-level roles that a user can instantiate a new caste of.
      *
      * @param \App\Board                    $board
-     * @param \App\Contracts\PermissionUser $user
+     * @param \App\Contracts\Permittable $user
      *
      * @return Query
      */
-    public function scopeWhereCanParentForBoard($query, Board $board, PermissionUser $user)
+    public function scopeWhereCanParentForBoard($query, Board $board, Permittable $user)
     {
         // Only select top-level roles.
         return $query->whereStatic()
@@ -501,19 +485,19 @@ class Role extends Model
     /**
      * Narrows query to only roles which can be manipulated by this user.
      *
-     * @param \App\Contracts\PermissionUser $user
+     * @param \App\Contracts\Permittable $user
      * @param \App\Board                    $board
      *
      * @return Query
      */
-    public function scopeWhereLighterThanUser($query, PermissionUser $user, Board $board = null)
+    public function scopeWhereLighterThanUser($query, Permittable $user, Board $board = null)
     {
         return $query->where(function ($query) use ($user, $board) {
             $weight = -1;
 
-            if ($user->canEditConfig(null)) {
+            if ($user->can('admin-config')) {
                 $weight = Role::WEIGHT_ADMIN;
-            } elseif (!is_null($board) && $user->canEditConfig($board)) {
+            } elseif (!is_null($board) && $user->can('configure', $board)) {
                 $weight = Role::WEIGHT_OWNER;
             }
 

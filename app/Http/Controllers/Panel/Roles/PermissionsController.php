@@ -22,6 +22,11 @@ class PermissionsController extends PanelController
      */
     public static $navSecondary = 'nav.panel.users';
 
+    public function authorize($ability, $arguments = [])
+    {
+        $this->authorize('admin-users');
+    }
+
     /**
      * Show the application dashboard to the user.
      *
@@ -29,14 +34,10 @@ class PermissionsController extends PanelController
      */
     public function index(Role $role)
     {
-        if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions()) {
-            return abort(403);
-        }
-
         $permissionGroups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
         $permissionGroups = $permissionGroups->filter(function ($group) {
             $permissions = $group->permissions->filter(function ($permission) {
-                return $this->user->can($permission);
+                return user()->permission($permission);
             });
 
             $group->setRelation('permissions', $permissions);
@@ -52,17 +53,13 @@ class PermissionsController extends PanelController
 
     public function patch(Role $role)
     {
-        if (!$this->user->canAdminRoles() || !$this->user->canAdminPermissions()) {
-            return abort(403);
-        }
-
         $input = Request::all();
         $permissions = Permission::all();
         $rolePermissions = [];
         $nullPermissions = [];
 
         foreach ($permissions as $permission) {
-            if ($this->user->can($permission->permission_id)) {
+            if (user()->permission($permission->permission_id)) {
                 $nullPermissions[] = $permission->permission_id;
 
                 foreach ($input['permission'] as $permission_id => $permission_value) {

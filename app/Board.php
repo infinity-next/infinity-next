@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use App\Services\ContentFormatter;
 use App\Support\IP;
 use Carbon\Carbon;
@@ -234,7 +234,7 @@ class Board extends Model
         return $this->hasManyThrough('App\StatsUnique', 'App\Stats', 'board_uri', 'stats_id');
     }
 
-    public function canAttach(PermissionUser $user)
+    public function canAttach(Permittable $user)
     {
         if (!$this->getConfig('postAttachmentsMax')) {
             return false;
@@ -243,22 +243,22 @@ class Board extends Model
         return $user->canAttachNew($this) || $user->canAttachOld($this);
     }
 
-    public function canBan(PermissionUser $user)
+    public function canBan(Permittable $user)
     {
         return $user->canBan($this);
     }
 
-    public function canDelete(PermissionUser $user)
+    public function canDelete(Permittable $user)
     {
         return $user->canDeleteLocally($this);
     }
 
-    public function canEditConfig(PermissionUser $user)
+    public function canEditConfig(Permittable $user)
     {
         return $user->canEditConfig($this);
     }
 
-    public function canPost(PermissionUser $user, $thread = null)
+    public function canPost(Permittable $user, $thread = null)
     {
         if ($thread instanceof Post) {
             if ($thread->isLocked()) {
@@ -271,12 +271,12 @@ class Board extends Model
         return $this->canPostThread($user);
     }
 
-    public function canPostThread(PermissionUser $user)
+    public function canPostThread(Permittable $user)
     {
         return $user->canPostThread($this);
     }
 
-    public function canPostInLockedThreads(PermissionUser $user)
+    public function canPostInLockedThreads(Permittable $user)
     {
         return $user->canPostInLockedThreads($this);
     }

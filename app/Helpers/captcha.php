@@ -5,7 +5,7 @@ use \InfinityNext\LaravelCaptcha\Captcha;
 if (!function_exists('captcha')) {
     function captcha($profile = 'default')
     {
-        $captcha = Captcha::findWithSession();
+        $captcha = Captcha::findWithIP();
 
         if ($captcha instanceof Captcha) {
             return $captcha->getAsHtml($profile);

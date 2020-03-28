@@ -42,6 +42,7 @@
     38 => 'App\\Providers\\SettingsServiceProvider',
     39 => 'App\\Providers\\ValidationExtensionServiceProvider',
     40 => 'Collective\\Html\\HtmlServiceProvider',
+    41 => 'InfinityNext\\LaravelCaptcha\\CaptchaServiceProvider',
   ),
   'eager' => 
   array (
@@ -70,6 +71,7 @@
     22 => 'App\\Providers\\SessionServiceProvider',
     23 => 'App\\Providers\\SettingsServiceProvider',
     24 => 'App\\Providers\\ValidationExtensionServiceProvider',
+    25 => 'InfinityNext\\LaravelCaptcha\\CaptchaServiceProvider',
   ),
   'deferred' => 
   array (
