@@ -661,7 +661,7 @@ trait Permittable
 
         // In order to determine if we want to include a role in a specific mask,
         // we must also pull a user's roles to see what is directly applied to them.
-        $userRoles = !$this->isAnonymous() ? $this->roles->get()->modelKeys() : [];
+        $userRoles = !$this->isAnonymous() ? $this->roles->modelKeys() : [];
 
         $parentRoles = Role::where('system', true)->with('permissions')->get()->getDictionary();
 
