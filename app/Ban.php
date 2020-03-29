@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\BanAppeal;
+use App\Board;
+use App\Post;
+use App\User;
 use App\Support\IP as IP;
 use App\Contracts\PermissionUser as PermissionUser;
 use Carbon\Carbon;
@@ -52,26 +56,39 @@ class Ban extends Model
      *
      * @var array
      */
-    protected $fillable = ['ban_ip_start', 'ban_ip_end', 'board_uri', 'seen', 'created_at', 'updated_at', 'expires_at', 'mod_id', 'post_id', 'ban_reason_id', 'justification', 'is_robot'];
+    protected $fillable = [
+        'ban_ip_start',
+        'ban_ip_end',
+        'board_uri',
+        'seen',
+        'created_at',
+        'updated_at',
+        'expires_at',
+        'mod_id',
+        'post_id',
+        'ban_reason_id',
+        'justification',
+        'is_robot',
+    ];
 
     public function appeals()
     {
-        return $this->hasMany('\App\BanAppeal', 'ban_id');
+        return $this->hasMany(BanAppeal::class, 'ban_id');
     }
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     public function mod()
     {
-        return $this->belongsTo('\App\User', 'mod_id', 'user_id');
+        return $this->belongsTo(User::class, 'mod_id', 'user_id');
     }
 
     public function post()
     {
-        return $this->belongsTo('\App\Post', 'post_id');
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     /**
@@ -114,28 +131,6 @@ class Ban extends Model
             'is_robot' => true,
             'justification' => trans('validation.custom.unoriginal_content'),
         ]);
-    }
-
-    /**
-     * Determines if this ban can be appealed.
-     *
-     * @return bool
-     */
-    public function canAppeal()
-    {
-        return is_null($this->getAppeal());
-    }
-
-    /**
-     * Determines if a user can view this ban (as moderator or client).
-     *
-     * @param PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canView(PermissionUser $user)
-    {
-        return $this->isBanForIP() || $user->canViewBan($this);
     }
 
     /**

@@ -11,7 +11,7 @@ use App\PostCite;
 use App\User;
 use App\Report;
 use App\Role;
-use App\Contracts\PermissionUser;
+use App\Contracts\Auth\Permittable;
 use App\Contracts\Support\Formattable as FormattableContract;
 use App\Services\ContentFormatter;
 use App\Support\Formattable;
@@ -250,86 +250,15 @@ class Post extends Model implements FormattableContract
         return $this->hasMany(Report::class, 'post_id');
     }
 
-    /**
-     * Determines if the user can delete this post.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canDelete($user)
-    {
-        return $user->canDelete($this);
-    }
-
-    /**
-     * Determines if the user can edit this post.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canEdit($user)
-    {
-        return $user->canEdit($this);
-    }
-
-    /**
-     * Determines if the user can lock this post.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canLock($user)
-    {
-        return $user->canLock($this);
-    }
-
-    /**
-     * Determines if the user can report this post to board owners.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canReport($user)
-    {
-        return $user->canReport($this);
-    }
-
-    /**
-     * Determines if the user can report this post to site owners.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canReportGlobally($user)
-    {
-        return $user->canReportGlobally($this);
-    }
-
-    /**
-     * Determines if the user can sticky or unsticky this post.
-     *
-     * @param App\Contracts\PermissionUser $user
-     *
-     * @return bool
-     */
-    public function canSticky($user)
-    {
-        return $user->canSticky($this);
-    }
 
     /**
      * Counts the number of currently related reports that can be promoted.
      *
-     * @param PermissionUser $user
+     * @param  \App\Contracts\Auth\Permittable  $user
      *
      * @return int
      */
-    public function countReportsCanPromote(PermissionUser $user)
+    public function countReportsCanPromote(Permittable $user)
     {
         $count = 0;
 
@@ -345,11 +274,11 @@ class Post extends Model implements FormattableContract
     /**
      * Counts the number of currently related reports that can be demoted.
      *
-     * @param PermissionUser $user
+     * @param  \App\Contracts\Auth\Permittable  $user
      *
      * @return int
      */
-    public function countReportsCanDemote(PermissionUser $user)
+    public function countReportsCanDemote(Permittable $user)
     {
         $count = 0;
 
@@ -1829,7 +1758,7 @@ class Post extends Model implements FormattableContract
         });
     }
 
-    public function scopeWhereHasReportsFor($query, PermissionUser $user)
+    public function scopeWhereHasReportsFor($query, Permittable $user)
     {
         return $query->whereHas('reports', function ($query) use ($user) {
             $query->whereOpen();

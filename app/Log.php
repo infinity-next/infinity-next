@@ -2,15 +2,18 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser;
+use App\Board;
+use App\User;
+use App\Contracts\Auth\Permittable;
 use App\Support\IP;
+use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 
 class Log extends Model
 {
-    use \App\Traits\EloquentBinary;
+    use ;
 
     /**
      * The database table used by the model.
@@ -35,12 +38,12 @@ class Log extends Model
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     public function user()
     {
-        return $this->belongsTo('\App\User', 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -79,7 +82,7 @@ class Log extends Model
         return trans($capcode);
     }
 
-    public function getLogVisibleIp($ip, PermissionUser $user = null)
+    public function getLogVisibleIp($ip, ?Permittable $user = null)
     {
         if ($user !== null) {
             return $user->getTextForIP($ip);

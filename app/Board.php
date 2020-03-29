@@ -161,124 +161,77 @@ class Board extends Model
 
     public function assets()
     {
-        return $this->hasMany('\App\BoardAsset', 'board_uri');
+        return $this->hasMany(BoardAsset::class, 'board_uri');
     }
 
     public function checksums()
     {
-        return $this->hasMany('\App\PostChecksum', 'board_uri');
+        return $this->hasMany(PostChecksum::class, 'board_uri');
     }
 
     public function bans()
     {
-        return $this->hasMany('\App\Ban', 'board_uri');
+        return $this->hasMany(Ban::class, 'board_uri');
     }
 
     public function posts()
     {
-        return $this->hasMany('\App\Post', 'board_uri');
+        return $this->hasMany(Post::class, 'board_uri');
     }
 
     public function attachments()
     {
-        return $this->hasManyThrough('App\FileAttachment', 'App\Post', 'board_uri', 'post_id');
+        return $this->hasManyThrough(FileAttachment::class, Post::class, 'board_uri', 'post_id');
     }
 
     public function logs()
     {
-        return $this->hasMany('\App\Log', 'board_uri');
+        return $this->hasMany(Log::class, 'board_uri');
     }
 
     public function operator()
     {
-        return $this->belongsTo('\App\User', 'operated_by', 'user_id');
+        return $this->belongsTo(User::class, 'operated_by', 'user_id');
     }
 
     public function creator()
     {
-        return $this->belongsTo('\App\User', 'created_by', 'user_id');
+        return $this->belongsTo(User::class, 'created_by', 'user_id');
     }
 
     public function threads()
     {
-        return $this->hasMany('\App\Post', 'board_uri');
+        return $this->hasMany(Post::class, 'board_uri');
     }
 
     public function roles()
     {
-        return $this->hasMany('\App\Role', 'board_uri');
+        return $this->hasMany(Role::class, 'board_uri');
     }
 
     public function settings()
     {
-        return $this->hasMany('\App\BoardSetting', 'board_uri');
+        return $this->hasMany(BoardSetting::class, 'board_uri');
     }
 
     public function staffAssignments()
     {
-        return $this->hasManyThrough('App\UserRole', 'App\Role', 'board_uri', 'role_id');
+        return $this->hasManyThrough(UserRole::class, Role::class, 'board_uri', 'role_id');
     }
 
     public function stats()
     {
-        return $this->hasMany('\App\Stats', 'board_uri');
+        return $this->hasMany(Stats::class, 'board_uri');
     }
 
     public function tags()
     {
-        return $this->belongsToMany('App\BoardTag', 'board_tag_assignments', 'board_uri', 'board_tag_id');
+        return $this->belongsToMany(BoardTag::class, 'board_tag_assignments', 'board_uri', 'board_tag_id');
     }
 
     public function uniques()
     {
-        return $this->hasManyThrough('App\StatsUnique', 'App\Stats', 'board_uri', 'stats_id');
-    }
-
-    public function canAttach(Permittable $user)
-    {
-        if (!$this->getConfig('postAttachmentsMax')) {
-            return false;
-        }
-
-        return $user->canAttachNew($this) || $user->canAttachOld($this);
-    }
-
-    public function canBan(Permittable $user)
-    {
-        return $user->canBan($this);
-    }
-
-    public function canDelete(Permittable $user)
-    {
-        return $user->canDeleteLocally($this);
-    }
-
-    public function canEditConfig(Permittable $user)
-    {
-        return $user->canEditConfig($this);
-    }
-
-    public function canPost(Permittable $user, $thread = null)
-    {
-        if ($thread instanceof Post) {
-            if ($thread->isLocked()) {
-                return $this->canPostInLockedThreads($user);
-            }
-
-            return $this->canPostReply($user);
-        }
-
-        return $this->canPostThread($user);
-    }
-
-    public function canPostThread(Permittable $user)
-    {
-        return $user->canPostThread($this);
-    }
-
-    public function canPostInLockedThreads(Permittable $user)
-    {
-        return $user->canPostInLockedThreads($this);
+        return $this->hasManyThrough(StatsUnique::class, Stats::class, 'board_uri', 'stats_id');
     }
 
     public function clearCachedModel()

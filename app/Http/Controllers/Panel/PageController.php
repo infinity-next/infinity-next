@@ -42,21 +42,26 @@ class PageController extends PanelController
     public static $navTertiary = 'nav.panel.board.settings';
 
     /**
+     *
+     */
+     protected $board;
+
+    /**
      * Shares variables with the views.
      *
      * @param \App\Board $board Current board.
      */
-    public function boot()
+    public function boot(?Board $board = null)
     {
+        $this->board = $board;
+
         if (!$this->board) {
             $this::$navSecondary = 'nav.panel.site';
             $this::$navTertiary = null;
-
-            if (!$this->user->canAdminConfig()) {
-                abort(403);
-            }
-        } elseif (!$this->user->canEditConfig($this->board)) {
-            return abort(403);
+            $this->authorize('admin-config');
+        }
+        else {
+            $this->authorize('configure', $this->board);
         }
 
         view()->share([

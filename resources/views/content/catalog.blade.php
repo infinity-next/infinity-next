@@ -2,6 +2,15 @@
 
 @section('content')
 <main class="board-index index-catalog">
+    @can('post', $board)
+    <section class="index-form">
+        @include('content.board.post.form', [
+        'board'   => $board,
+        'actions' => ["thread"],
+        ])
+    </section>
+    @endcan
+
     @include('nav.board.pages', [
         'showCatalog' => false,
         'showIndex'   => true,
@@ -25,15 +34,6 @@
             @endforeach
         </ul>
     </section>
-
-    @can('post', $board)
-    <section class="index-form">
-        @include('content.board.post.form', [
-            'board'   => $board,
-            'actions' => ["thread"],
-        ])
-    </section>
-    @endcan
 
     @include('content.board.sidebar')
 </main>

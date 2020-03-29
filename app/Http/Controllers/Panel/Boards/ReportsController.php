@@ -37,12 +37,8 @@ class ReportsController extends PanelController
      */
     public function getIndex()
     {
-        if (!$this->user->canViewReports()) {
-            abort(403);
-        }
-
         return $this->view(static::VIEW_REPORTS, [
-            'reportedPosts' => $this->user->getReportedPostsViewable(),
+            'reportedPosts' => user()->getReportedPostsViewable(),
         ]);
     }
 
@@ -56,9 +52,7 @@ class ReportsController extends PanelController
      */
     public function getDismiss(Report $report)
     {
-        if (!$report->canView($this->user)) {
-            abort(403);
-        }
+        $this->authorize('report', $report);
 
         if (!$report->isOpen()) {
             abort(404);
@@ -82,9 +76,7 @@ class ReportsController extends PanelController
      */
     public function getPromote(Report $report)
     {
-        if (!$this->user->canReportGlobally() || !$report->canView($this->user)) {
-            abort(403);
-        }
+        $this->authorize('promote', $report);
 
         if (!$report->isOpen()) {
             abort(404);
@@ -109,9 +101,7 @@ class ReportsController extends PanelController
      */
     public function getDemote(Report $report)
     {
-        if (!$report->canView($this->user)) {
-            abort(403);
-        }
+        $this->authorize('demote', $report);
 
         if (!$report->isOpen()) {
             abort(404);
@@ -134,9 +124,7 @@ class ReportsController extends PanelController
      */
     public function getDismissIp(Report $report)
     {
-        if (!$report->canView($this->user)) {
-            abort(403);
-        }
+        $this->authorize('dismiss', $report);
 
         $reports = Report::whereOpen()
             ->whereResponsibleFor($this->user)
@@ -160,6 +148,8 @@ class ReportsController extends PanelController
      */
     public function getDismissPost(Post $post)
     {
+        $this->authorize('dismiss', $report);
+
         $reports = $post->reports()
             ->whereResponsibleFor($this->user)
             ->update([
@@ -181,9 +171,7 @@ class ReportsController extends PanelController
      */
     public function getPromotePost(Post $post)
     {
-        if (!$this->user->canReportGlobally($post)) {
-            abort(403);
-        }
+        $this->authorize('createGlobal', [Report::class, $report->board]);
 
         $reports = $post->reports()
             ->whereResponsibleFor($this->user)
@@ -207,9 +195,7 @@ class ReportsController extends PanelController
      */
     public function getDemotePost(Post $post)
     {
-        if (!$this->user->canViewReportsGlobally()) {
-            abort(403);
-        }
+        $this->authorize('demote', [Report::class, $report->board]);
 
         $reports = $post->reports()
             ->whereResponsibleFor($this->user)

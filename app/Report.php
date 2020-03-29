@@ -2,13 +2,17 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser;
+use App\Board;
+use App\Post;
+use App\User;
+use App\Contracts\Auth\Permittable;
 use App\Support\IP;
+use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-    use \App\Traits\EloquentBinary;
+    use EloquentBinary;
 
     /**
      * The database table used by the model.
@@ -23,6 +27,24 @@ class Report extends Model
      * @var string
      */
     protected $primaryKey = 'report_id';
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'reason' => "string",
+        'board_uri' => "string",
+        'post_id' => "int",
+        'reporter_ip' => "ip",
+        'user_id' => "int",
+        'is_dismissed' => "bool",
+        'is_successful' => "bool",
+        'global' => "bool",
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -52,17 +74,17 @@ class Report extends Model
 
     public function board()
     {
-        return $this->belongsTo(\App\Board::class, 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     public function post()
     {
-        return $this->belongsTo(\App\Post::class, 'post_id');
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(\App\User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -145,46 +167,14 @@ class Report extends Model
     }
 
     /**
-     * Returns the reporter's IP in a human-readable format.
-     *
-     * @return string
-     */
-    public function getReporterIpAsString()
-    {
-        return (new IP($this->reporter_ip))->toText();
-    }
-
-    /**
-     * Gets our binary value and unwraps it from any stream wrappers.
-     *
-     * @param mixed $value
-     *
-     * @return IP
-     */
-    public function getReporterIpAttribute($value)
-    {
-        return new IP($value);
-    }
-
-    /**
-     * Sets our binary value and encodes it if required.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function setReporterIpAttribute($value)
-    {
-        $this->attributes['reporter_ip'] = (new IP($value))->toSQL();
-    }
-
-    /**
      * Refines query to only reports by this user or by this IP.
+     *
+     * @param  \App\Contracts\Auth\Permittable  $user
      */
-    public function scopeWhereByIPOrUser($query, PermissionUser $user)
+    public function scopeWhereByIpOrUser($query, Permittable $user)
     {
         $query->where(function ($query) use ($user) {
-            $query->where('reporter_ip', new IP());
+            $query->where('reporter_ip', new IP);
 
             if (!$user->isAnonymous()) {
                 $query->orWhere('user_id', $user->user_id);
@@ -215,16 +205,17 @@ class Report extends Model
      * Reduced query to only reports that the user is directly responsible for.
      * This means 'site.reports' open `global` ONLY and 'board.reports' only matter in direct assignment.
      *
-     * @param PermissionUser $user
+     * @param  \App\Contracts\Auth\Permittable  $user
      */
-    public function scopeWhereResponsibleFor($query, PermissionUser $user)
+    public function scopeWhereResponsibleFor($query, Permittable $user)
     {
         return $query->where(function ($query) use ($user) {
             $query->whereIn('board_uri', $user->canInBoards('board.reports'));
 
             if (!$user->can('site.reports')) {
                 $query->where('global', false);
-            } else {
+            }
+            else {
                 $query->orWhere('global', true);
             }
         });

@@ -56,6 +56,7 @@ trait EloquentBinary
 
         switch ($this->getCastType($key)) {
             case 'ip':
+            case 'inet':
                 return new IP($value);
             case 'int':
             case 'integer':

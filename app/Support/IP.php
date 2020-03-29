@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use App\Contracts\PermissionUser;
+use App\Contracts\Permittable;
 use App\Support\IP\CIDR as CIDR;
 use Log;
 use Request;
@@ -112,7 +112,7 @@ class IP extends CIDR
         return parent::__toString();
     }
 
-    public function toTextForUser(PermissionUser $user = null)
+    public function toTextForUser(?Permittable $user = null)
     {
         if (is_null($user)) {
             $user = user();

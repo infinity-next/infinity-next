@@ -367,7 +367,7 @@ class PostController extends Controller
             $report = Report::where('post_id', '=', $post->post_id)
                 ->where('global', $global === 'global')
                 ->where('board_uri', $board->board_uri)
-                ->whereByIPOrUser(user())
+                ->whereByIpOrUser(user())
                 ->first();
         }
 
@@ -428,7 +428,7 @@ class PostController extends Controller
         $report = Report::firstOrNew([
             'global' => $global === 'global',
             'post_id' => $post->post_id,
-            'reporter_ip' => new IP(),
+            'reporter_ip' => (new IP)->toText(),
         ]);
 
         $report->board_uri = $board->board_uri;
