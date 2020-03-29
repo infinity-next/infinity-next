@@ -20,7 +20,7 @@
     @if (!isset($post))
     <ul class="post-menu">
         @can('password', [App\Post::class, $board])
-        <li class="menu-input menu-password">
+        <li class="menu-input menu-password no-js">
             {!! Form::password(
                 'password',
                 [
@@ -28,6 +28,7 @@
                     'class'       => "field-control",
                     'maxlength'   => 255,
                     'placeholder' => trans('board.field.password'),
+                    'autofill'    => "disabled",
             ]) !!}
         </li>
         @endcan
