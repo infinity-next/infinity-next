@@ -58,13 +58,13 @@
             'element-code'   : "pre code",
             'element-quote'  : "blockquote",
 
-            'action-tab'     : "div.post-action-tab",
-            'action-tabs'    : "ul.post-action-groups",
+            'action-tab'     : ".post-action-tab",
+            'action-tabs'    : ".post-action-groups",
 
             'author'         : ".author",
             'author_id'      : ".authorid",
 
-            'cite-slot'      : "li.detail-cites",
+            'cite-slot'      : ".detail-cites",
             'cite'           : "a.cite-post",
             'backlinks'      : "a.cite-backlink",
             'forwardlink'    : "blockquote.post a.cite-post",
@@ -72,18 +72,18 @@
             'post-form'      : "#post-form",
             'post-form-body' : "#body",
 
-            'attachment'         : "li.post-attachment",
-            'attacment-expand'   : "li.post-attachment:not(.attachment-expanded) a.attachment-link",
-            'attacment-collapse' : "li.post-attachment.attachment-expanded a.attachment-link",
+            'attachment'         : ".post-attachment",
+            'attacment-expand'   : ".post-attachment:not(.attachment-expanded) .attachment-link",
+            'attacment-collapse' : ".post-attachment.attachment-expanded .attachment-link",
             'attachment-media'   : "audio.attachment-inline, video.attachment-inline",
             'attachment-image'   : "img.attachment-img",
             'attachment-image-download'   : "img.attachment-type-file",
             'attachment-image-expandable' : "img.attachment-type-img",
             'attachment-image-audio'      : "img.attachment-type-audio",
             'attachment-image-video'      : "img.attachment-type-video",
-            'attachment-hoverable'        : "li.post-attachment:not(.attachment-expanded) img.attachment-type-img",
+            'attachment-hoverable'        : ".post-attachment:not(.attachment-expanded) img.attachment-type-img",
             'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
-            'attachment-link'    : "a.attachment-link"
+            'attachment-link'    : ".attachment-link"
         },
 
         // HTML Templates
@@ -338,11 +338,12 @@
             $widget : this.$widget
         };
 
-        $element.on(
-            'ended.ib-post',
-            data,
-            this.events.attachmentMediaEnded
-        );
+        $element
+            .on('loadeddata.ib-post', data, this.events.attachmentMediaLoadedData)
+            // collapse video when the video is done playing
+            .on('ended.ib-post', data, this.events.attachmentMediaEnded)
+            // collapse video when it's useless-clicked
+            .on('click.ib-post', data, this.events.attachmentMediaEnded);
     };
 
     // Stores a post in the session store.
@@ -509,7 +510,7 @@
         attachmentCollapseClick : function(event) {
             var widget  = event.data.widget;
             var $link   = $(this);
-            var $item   = $link.parents("li.post-attachment");
+            var $item   = $link.parents(".post-attachment");
             var $img    = $(widget.options.selector['attachment-image'], $item);
             var $inline = $(widget.options.selector['attachment-inline'], $item);
 
@@ -613,7 +614,7 @@
         attachmentMediaEnded : function(event) {
             var widget  = event.data.widget;
             var $media  = $(this);
-            var $item   = $media.parents("li.post-attachment");
+            var $item   = $media.parents(".post-attachment");
             var $link   = $(widget.options.selector['attachment-link'], $item);
             var $img    = $(widget.options.selector['attachment-image'], $item);
             var $inline = $(widget.options.selector['attachment-inline'], $item);
@@ -623,6 +624,15 @@
             $inline.remove();
             $img.toggle(true);
             $img.parent().addClass('attachment-grow');
+        },
+
+        attachmentMediaLoadedData : function(event) {
+            this.scrollIntoView({
+                behavior: "auto",
+                block: "start",
+                inline: "nearest"
+            });
+            this.play();
         },
 
         attachmentMediaMouseOver : function(event) {
@@ -666,7 +676,7 @@
         attachmentExpandClick : function(event) {
             var widget = event.data.widget;
             var $link  = $(this);
-            var $item  = $link.parents("li.post-attachment");
+            var $item  = $link.parents(".post-attachment");
             var $img   = $(widget.options.selector['attachment-image'], $link);
 
             // We don't do anything if the user is CTRL+Clicking,
@@ -781,6 +791,7 @@
                                 .addClass('attachment-type-download attachment-type-failed');
                         })
                         .appendTo($video);
+
 
                     $img.toggle(false);
 

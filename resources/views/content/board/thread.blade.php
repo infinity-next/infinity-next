@@ -37,16 +37,16 @@
 
 @if (!isset($catalog) || !$catalog)
 <div class="replies">
-@foreach ($thread->getReplies() as $reply)
-        <article class="reply">
-            @endspaceless
-            {!! $reply->toHTML(
-                    false,
-                    isset($multiboard) ? $multiboard : false,
-                    false
-            ) !!}
-            @spaceless
-        </article>
+    @foreach ($thread->getReplies() as $reply)
+    <div class="reply">
+        @endspaceless
+        {!! $reply->toHTML(
+                false,
+                isset($multiboard) ? $multiboard : false,
+                false
+        ) !!}
+        @spaceless
+    </div>
     @endforeach
 
     @if (isset($updater) && $updater === true)

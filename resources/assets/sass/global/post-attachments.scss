@@ -1,8 +1,8 @@
-ul.post-attachments {
+.post-attachments {
     display: block;
     overflow-x: auto;
-    max-width: 99%;
-    max-width: calc(100% - 1em);
+    //max-width: 99%;
+    //max-width: calc(100% - 1em);
 
     #{$rtl} & {
         float: right;
@@ -15,11 +15,11 @@ ul.post-attachments {
         max-width: 100%;
     }
     .reply-container & {
-        padding: 0 0 0 1em;
+        padding: 0 0 0 0.5em;
+        margin: 0;
     }
 
     &.attachments-multi {
-        padding-top: 0;
         float: none;
 
         .reply-container.sfw & {
@@ -59,22 +59,22 @@ ul.post-attachments {
         }
     }
 
-    li.post-attachment {
+    .post-attachment {
         position: relative;
         display: inline-block;
         vertical-align: text-top;
 
         #{$rtl} & {
-            padding: 0 0 0.75em 0.75em;
+            padding: 0 0 0.5em 0.5em;
         }
         #{$ltr} & {
-            padding: 0 0.75em 0.75em 0;
+            padding: 0 0.5em 0.5em 0;
         }
     }
-        div.action-bar-attachments {
+        .action-bar-attachments {
             display: inline-block;
 
-            div.post-action-tab {
+            .post-action-tab {
                 display: block;
                 margin: 0;
 
@@ -115,14 +115,14 @@ ul.post-attachments {
             }*/
         }
 
-        div.attachment-container {
+        .attachment-container {
             display: block;
         }
-            li.attachment-expanded div.attachment-container {
+            .attachment-expanded .attachment-container {
                 display: inline-block;
                 max-width: 100%;
             }
-            div.attachment-container.attachment-grow {
+            .attachment-container.attachment-grow {
                 margin: 0;
                 width: 100%;
             }
@@ -131,11 +131,10 @@ ul.post-attachments {
             display: inline;
             outline: none;
         }
-        a.attachment-download {
+        .attachment-download {
             clear: both;
             display: inline-block;
             white-space: nowrap;
-            vertical-align: text-bottom;
 
             .detail-filename {
                 direction: ltr;
@@ -145,24 +144,23 @@ ul.post-attachments {
                 margin-right: 0.5em;
                 vertical-align: middle;
             }
-        }
-            li.post-attachment.attachment-expanded a.attachment-link {
-                display: block;
-            }
-
-            a.attachment-download .detail-filesize {
+            .detail-filesize {
                 margin-right: 0.25em;
             }
-            a.attachment-download .detail-filesize::before {
+            .detail-filesize::before {
                 display: inline;
                 content: "(";
             }
-            a.attachment-download .detail-filedim::after {
+            .detail-filedim::after {
                 display: inline;
                 content: ")";
             }
             .detail-close {
                 display: none;
+            }
+        }
+            .post-attachment.attachment-expanded .attachment-link {
+                display: block;
             }
 
             figure.attachment {
@@ -176,23 +174,23 @@ ul.post-attachments {
                     padding-right: 2em;
                 }
 
-                li.post-attachment.attachment-expanded figure.attachment {
+                .post-attachment.attachment-expanded figure.attachment {
                     /* min-width: 100%; */
                     max-width: 100%;
                 }
 
-                li.post-attachment.attachment-expanded img.attachment-img {
+                .post-attachment.attachment-expanded img.attachment-img {
                     /* min-width: 100%; */
                     max-width: 100%;
                 }
 
-                div.attachment-wrapper {
+                .attachment-wrapper {
                     position: relative;
                     padding: 0;
                     margin: 0 auto;
                     text-align: center;
                 }
-                    figure.attachment-type-audio div.attachment-wrapper {
+                    figure.attachment-type-audio .attachment-wrapper {
                         margin: 0 -2em 0 0;
                         padding: 0 2em 0 0;
 
@@ -218,7 +216,7 @@ ul.post-attachments {
                         }
                     }
 
-                    li.attachment-expanded figure.attachment-type-audio div.attachment-wrapper {
+                    .attachment-expanded figure.attachment-type-audio .attachment-wrapper {
                         margin: 0 0 0 0;
                         padding: 0 7em 0 0;
 
@@ -228,12 +226,12 @@ ul.post-attachments {
                         }
                     }
 
-                    li.attachment-expanded figure.attachment-type-video {
+                    .attachment-expanded figure.attachment-type-video {
                         .detail-close {
                             display: inline;
                         }
 
-                        div.attachment-wrapper {
+                        .attachment-wrapper {
                             height: inherit !important;
                         }
                     }
@@ -250,7 +248,7 @@ ul.post-attachments {
                 html.js a.attachment-link img.attachment-type-img {
                     cursor: zoom-in;
                 }
-                html.js li.attachment-expanded a.attachment-link img.attachment-type-img {
+                html.js .attachment-expanded a.attachment-link img.attachment-type-img {
                     cursor: zoom-out;
                 }
 
@@ -264,22 +262,22 @@ ul.post-attachments {
                     -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
                     border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
                 }
-                    li.post-attachment.attachment-expanded {
+                    .post-attachment.attachment-expanded {
                         clear: both;
                         float: none;
                         width: 100%;
                         display: block;
                     }
-                        li.post-attachment.attachment-expanded::before,
-                        li.post-attachment.attachment-expanded::after {
+                        .post-attachment.attachment-expanded::before,
+                        .post-attachment.attachment-expanded::after {
                             content: ' ';
                             clear: both;
                             display: block;
                         }
-                    li.post-attachment.attachment-expanded,
-                    li.post-attachment.attachment-expanded figure.attachment,
-                    li.post-attachment.attachment-expanded div.attachment-wrapper,
-                    li.post-attachment.attachment-expanded img.attachment-img {
+                    .post-attachment.attachment-expanded,
+                    .post-attachment.attachment-expanded .attachment,
+                    .post-attachment.attachment-expanded .attachment-wrapper,
+                    .post-attachment.attachment-expanded img.attachment-img {
                         clear: both;
                         float: none;
                         max-width: 100%;
@@ -287,7 +285,7 @@ ul.post-attachments {
                         width: auto;
                         height: auto;
                     }
-                        li.post-attachment.attachment-expanded figure.attachment.attachment-type-audio {
+                        .post-attachment.attachment-expanded .attachment.attachment-type-audio {
                             max-width: 350px;
                             padding-right: 3em;
                         }
@@ -296,44 +294,44 @@ ul.post-attachments {
                         min-width: 150px;
                     }
 
-                li.post-attachment audio.attachment-inline {
+                .post-attachment audio.attachment-inline {
                     display: inline-block;
                     width: 100%;
                     margin: 0 auto 0.5em 0;
                     max-width: 400px;
                     vertical-align: top;
                 }
-                li.post-attachment video.attachment-inline {
+                .post-attachment video.attachment-inline {
                     display: inline-block;
                     max-width: 100%;
                     vertical-align: top;
                 }
 
-                attachment-inline + .attachment-link .attachment-wrapper {
+                .attachment-inline + .attachment-link .attachment-wrapper {
                     display: none;
                 }
 
-                figcaption.attachment-details {
+                .attachment-details {
                     display: block;
                     max-width: 100%;
 
                     position: relative;
-                    padding: 0 1em;
+                    padding: 0;
                     text-align: center;
                     white-space: nowrap;
                 }
 
-                    figure.attachment-type-audio figcaption.attachment-details {
+                    .attachment-type-audio .attachment-details {
                         max-width: none;
                         margin-right: -2em;
                     }
-                    li.attachment-expanded figure.attachment-type-audio figcaption.attachment-details {
-                        padding: 0 1em;
+                    .attachment-expanded .attachment-type-audio .attachment-details {
+                        padding: 0 0.5em;
                         margin-right: -3em;
                     }
 
-                    div.attachment-action-group,
-                    p.attachment-detail {
+                    .attachment-action-group,
+                    .attachment-detail {
                         display: block;
                         font-size: 90%;
 
@@ -345,7 +343,7 @@ ul.post-attachments {
                         max-width: 100%;
                     }
 
-                    div.attachment-action-group {
+                    .attachment-action-group {
                         #{$rtl} & {
                             text-align: right;
                         }
@@ -354,13 +352,13 @@ ul.post-attachments {
                         }
                     }
 
-                    figure.attachment-type-audio figcaption.attachment-details p.attachment-detail {
+                    figure.attachment-type-audio figcaption.attachment-details .attachment-detail {
                         margin-bottom: 0px;
                     }
-                    div.attachment-container:last-child {
+                    .attachment-container:last-child {
                         margin-bottom: 0px;
                     }
-                    div.attachment-action-group span.attachment-action {
+                    .attachment-action-group .attachment-action {
                         margin: 0 0.25em;
                     }
 

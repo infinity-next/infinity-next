@@ -1,4 +1,4 @@
-<div class="post-container {{
+<article class="post-container {{
         is_null($details['reply_to']) ? 'op-container' : 'reply-container'
     }} {{
         $post->hasBody() ? 'has-body' : 'has-no-body'

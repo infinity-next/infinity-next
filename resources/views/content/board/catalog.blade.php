@@ -12,4 +12,4 @@
         'post'    => $post,
         'catalog' => true,
     ])
-</div>
+</article>

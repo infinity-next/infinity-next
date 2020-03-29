@@ -87,13 +87,13 @@ main.index-catalog {
                         overflow: visible;
                     }
 
-                     ul.post-attachments {
+                     .post-attachments {
                         display: block;
                         background: rgba(255,255,255,0.6);
                         padding: 0;
                         float: none;
 
-                         li.post-attachment {
+                         .post-attachment {
                             float: none;
                             text-align: center;
                             padding: 0;
@@ -191,7 +191,7 @@ main.index-catalog {
             max-width: 100%;
         }
 
-     div.post-action-bar {
+     .post-action-bar {
         display: inline;
 
         top: 0;
@@ -200,8 +200,8 @@ main.index-catalog {
 
         margin: 0;
     }
-         div.post-action-tab,
-         div.post-action-tab.action-tab-actions {
+         .post-action-tab,
+         .post-action-tab.action-tab-actions {
             display: inline-block;
 
             position: relative;
@@ -228,7 +228,7 @@ main.index-catalog {
         position: absolute;
         z-index: 5;
     }
-         div.post-action-tab.action-tab-reply {
+         .post-action-tab.action-tab-reply {
             position: absolute;
             top: 0;
             right: 0;

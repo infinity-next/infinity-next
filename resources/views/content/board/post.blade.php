@@ -67,4 +67,4 @@
         @endif
         @endif
     </div>
-</div>
+</article>

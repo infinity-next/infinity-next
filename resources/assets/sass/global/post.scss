@@ -124,19 +124,10 @@
     }
         .post-details {
             clear: both;
-            padding: 0.6em 0 0.4em 0;
+            padding: 0.25em 0.5em;
             margin: 0;
             line-height: 1.8em;
             white-space: normal;
-
-            #{$rtl} & {
-                padding-right: 0;
-                padding-left: 1em;
-            }
-            #{$ltr} & {
-                padding-right: 1em;
-                padding-left: 0;
-            }
 
             @media (min-width: $width-tablet) {
                 #{$responsive} & {
@@ -295,7 +286,7 @@
 
     div.post-action-bar {
     }
-        div.post-action-tab {
+        .post-action-tab {
             display: inline-block;
             cursor: default;
             position: relative;
@@ -306,7 +297,7 @@
             line-height: 1.8em;
             height: 1.8em;
 
-            padding: 0 0.25em;
+            padding: 0;
             margin-left: 0.25em;
 
             html.js & {
@@ -314,9 +305,8 @@
             }
         }
 
-            span.post-action-label {
+            .post-action-label {
                 line-height: 1;
-                vertical-align: text-top;
 
                 &::before {
                     display: inline-block;
