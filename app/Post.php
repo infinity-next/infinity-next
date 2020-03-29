@@ -170,7 +170,8 @@ class Post extends Model implements FormattableContract
     public function attachments()
     {
         return $this->belongsToMany(FileStorage::class, 'file_attachments', 'post_id', 'file_id')
-            ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position');
+            ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position')
+            ->orderBy('pivot_position', 'asc');
     }
 
     public function attachmentLinks()
@@ -1635,7 +1636,9 @@ class Post extends Model implements FormattableContract
 
     public function scopeAndAttachments($query)
     {
-        return $query->with('attachments');
+        return $query->with(['attachments' => function ($eagerQuery) {
+            $eagerQuery->orderBy('file_attachments.position');
+        }]);
     }
 
     public function scopeAndBacklinks($query)
@@ -2098,7 +2101,8 @@ class Post extends Model implements FormattableContract
                     }
                 }
             }
-        } elseif (is_array($files = Request::input('files'))) {
+        }
+        elseif (is_array($files = Request::input('files'))) {
             $uniques = [];
             $hashes = $files['hash'];
             $names = $files['name'];

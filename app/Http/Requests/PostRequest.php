@@ -116,7 +116,8 @@ class PostRequest extends Request implements ApiContract
                 if ($role && $role->capcode != '') {
                     $input['capcode_id'] = (int) $role->role_id;
                     // $input['author']     = $user->username;
-                } else {
+                }
+                else {
                     $this->failedAuthorization();
                 }
             } else {
