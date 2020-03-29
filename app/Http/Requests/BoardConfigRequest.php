@@ -4,11 +4,12 @@ namespace App\Http\Requests;
 
 use App\Board;
 use App\OptionGroup;
+use Illuminate\Foundation\Http\FormRequest;
 use Sabberworm\CSS\OutputFormat;
 use Sabberworm\CSS\Parser;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class BoardConfigRequest extends Request
+class BoardConfigRequest extends FormRequest
 {
     /**
      * Input items that should not be returned when reloading the page.
@@ -68,7 +69,7 @@ class BoardConfigRequest extends Request
     {
         $rules = [
             'boardBasicTitle' => 'required|string|between:1,255',
-            'boardBasicDesc' => 'string|between:1,255',
+            'boardBasicDesc' => 'nullable|string|between:1,255',
             'boardBasicIndexed' => 'boolean',
             'boardBasicWorksafe' => 'boolean',
         ];
@@ -89,7 +90,7 @@ class BoardConfigRequest extends Request
      */
     public function sanitize()
     {
-        $input = ""$this->input('boardCustomCSS', false);
+        $input = $this->input('boardCustomCSS', false);
 
         if ($input) {
             $parser = new Parser($input);
@@ -101,7 +102,7 @@ class BoardConfigRequest extends Request
 
     public function authorize($ability, $arguments = [])
     {
-        $this->authorize('configure', $this->board);
+        return user()->can('configure', $this->board);
     }
 
     /**

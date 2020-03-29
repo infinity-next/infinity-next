@@ -146,11 +146,11 @@ class BoardPolicy extends AbstractPolicy
 
     public function settingEdit(User $user, ?Board $board = null, ?Option $option = null)
     {
-        if (is_null($board) || is_null($option)) {
+        if (is_null($board)) {
             return Response::deny();
         }
 
-        if ($option->isLocked()) {
+        if (!is_null($option) && $option->isLocked()) {
             return $this->permission('site.board.setting_lock')
              ? Response::allow()
              : Response::deny('auth.site.setting_locked');

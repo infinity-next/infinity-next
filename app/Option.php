@@ -283,10 +283,12 @@ class Option extends Model implements PseudoEnumContract
                 // For Larael 5.2, replace this with the * rule.
                 for ($i = 0; $i <= 50; ++$i) {
                     $requirements["boardWordFilter.find.{$i}"] = [
+                        'nullable',
                         'string',
                         'between:1,256',
                     ];
                     $requirements["boardWordFilter.replace.{$i}"] = [
+                        'nullable',
                         'string',
                         'between:0,256',
                     ];
