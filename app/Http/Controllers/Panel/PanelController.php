@@ -32,7 +32,6 @@ abstract class PanelController extends Controller
     public function __construct(Router $router)
     {
         $this->middleware('auth');
-        return parent::__construct($router);
     }
 
     /**
