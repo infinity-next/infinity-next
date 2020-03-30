@@ -2,12 +2,14 @@
 
 @section('content')
 <main class="multiboard-index index-catalog">
-    <label class="overwatch js-only" data-widget="overwatch">
+    <div class="overwatch js-only" data-widget="overwatch">
+        {{--
         <input type="checkbox" class="overwatch-toggle" />
-        <span class="overwatch-label label-enter">Enter Overwatch</span>
-        <span class="overwatch-label label-pause">OVERWATCHING</span>
+            <span class="overwatch-label label-enter">Enter Overwatch</span>
+            <span class="overwatch-label label-pause">OVERWATCHING</span>
+        --}}
         <div class="overwatch-label label-reading"><tt>Waiting for you to finish reading ...</tt></div>
-    </label>
+    </div>
 
     <section class="index-threads static">
         <ul class="thread-list" id="CatalogMix">

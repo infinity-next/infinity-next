@@ -111,8 +111,8 @@
             widget.timer = widget.options.refresh;
 
             var $logo = $(widget.options.selector['logo'])
-            $logo.data('original', $logo.attr('src'));
-            $logo.attr('src', window.app.media_url+'static/img/logo_overscan.gif');
+            //$logo.data('original', $logo.attr('src'));
+            //$logo.attr('src', window.app.media_url+'static/img/logo_overscan.gif');
         },
 
         updateAlways : function(json, textStatus, jqXHR) {
@@ -294,15 +294,19 @@
             .on('blur.ib-overwatch', data, widget.events.windowUnfocus)
         ;
 
-        widget.$catalog.mixItUp(widget.mixItUp);
+        document.addEventListener('DOMContentLoaded', function() {
+            widget.$catalog.mixItUp(widget.mixItUp);
 
-        widget.hasFocus = document.hasFocus();
-        widget.updateLast = $(widget.options.selector['thread-item']).data('bumped');
-        widget.viewedLast = widget.updateLast;
+            widget.hasFocus = document.hasFocus();
+            widget.updateLast = $(widget.options.selector['thread-item']).data('bumped');
+            widget.viewedLast = widget.updateLast;
 
-        widget.updateTimer = setInterval(function() {
-            widget.updateInterval.apply(widget);
-        }, 100);
+            widget.updateTimer = setInterval(function() {
+                widget.updateInterval.apply(widget);
+            }, 100);
+
+            widget.$widget.trigger('scanstart');
+        }, false);
 
         return true;
     };
