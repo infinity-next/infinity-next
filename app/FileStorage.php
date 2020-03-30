@@ -768,6 +768,8 @@ class FileStorage extends Model
                 return 'gif';
             case 'image/png':
                 return 'png';
+            case 'image/webp':
+                return 'webp';    
             //#
             // DOCUMENTS
             //#
@@ -906,6 +908,7 @@ class FileStorage extends Model
             case 'image/jpg':
             case 'image/gif':
             case 'image/png':
+            case 'image/webp':    
                 return true;
         }
 
