@@ -32,7 +32,7 @@
     };
 
     blueprint.prototype.defaults = {
-        preview_delay : 300,
+        preview_delay : 100,
 
         // Important class names.
         classname : {
