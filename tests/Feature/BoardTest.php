@@ -1,10 +1,12 @@
 <?php
 
+namespace Tests\Feature;
+
+use App\Board;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use App\Board;
+use Tests\TestCase;
 
 class BoardTest extends TestCase {
 

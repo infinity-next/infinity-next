@@ -1,12 +1,13 @@
 /node_modules
 /packages
-/vendor
-/storage/infinity.import
 /public/webgrind
 /public/mix-manifest.json
 /public/static/css/*.css
 /public/static/js/*.js
+/storage/infinity.import
+/vendor
 .env
 dump.rdb
 yarn-error.log
 yarn.lock
+.phpunit.result.cache

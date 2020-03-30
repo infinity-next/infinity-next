@@ -1,12 +1,15 @@
 <?php
 
-// use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+namespace Tests\Feature;
+
 
 use App\Permission;
 use App\Role;
 use App\User;
+// use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class PermissionsTest extends TestCase
 {
@@ -49,7 +52,7 @@ class PermissionsTest extends TestCase
     /**
      * Default preparation for each test
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

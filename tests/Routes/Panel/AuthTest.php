@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Routes\Panel;
+
+use Tests\Testcase;
 // use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
