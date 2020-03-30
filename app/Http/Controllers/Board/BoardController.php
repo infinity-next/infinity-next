@@ -194,7 +194,7 @@ class BoardController extends Controller
     public function putThread(PostRequest $request, Board $board, Post $thread = null)
     {
         $request->validate();
-        
+
         // Create the post.
         $post = new Post($request->all());
         $post->submitTo($board, $thread);
