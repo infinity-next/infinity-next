@@ -57,50 +57,7 @@
     blueprint.prototype.viewedRecently = false;
     blueprint.prototype.viewedLast     = false;
 
-    blueprint.prototype.bind = function() {
-        var widget = this;
-        var $catalog = widget.$catalog = $(widget.options.selector['thread-list']);
-        var data = {
-            widget   : widget,
-            $widget  : widget.$widget,
-            $catalog : widget.$catalog
-        };
-
-        widget.$widget
-            .on('change.ib-overscan', widget.options.selector['toggle'], data, widget.events.toggle)
-            .on('scanstart.ib-overscan', data, widget.events.scanStart)
-            .on('scanstop.ib-overscan', data, widget.events.scanStop)
-        ;
-
-        $(document)
-            .on('ready.ib-overwatch', data, widget.events.documentReady)
-            .on('mouseenter.ib-overwatch', widget.options.selector['post-container'], data, widget.events.threadHoverCheck)
-            .on('mouseleave.ib-overwatch', widget.options.selector['post-container'], data, widget.events.threadHoverCheck)
-        ;
-
-        $(window)
-            .on('focus.ib-overwatch', data, widget.events.windowFocus)
-            .on('blur.ib-overwatch', data, widget.events.windowUnfocus)
-        ;
-
-        return true;
-    };
-
     blueprint.prototype.events = {
-        documentReady : function(event) {
-            var widget = event.data.widget;
-
-            widget.$catalog.mixItUp(widget.mixItUp);
-
-            widget.hasFocus = document.hasFocus();
-            widget.updateLast = $(widget.options.selector['thread-item']).data('bumped');
-            widget.viewedLast = widget.updateLast;
-
-            widget.updateTimer = setInterval(function() {
-                widget.updateInterval.apply(widget);
-            }, 100);
-        },
-
         toggle : function(event) {
             event.data.widget.scanning = $(this).prop('checked');
 
@@ -310,6 +267,44 @@
         jqXHR.always(widget.events.updateAlways);
 
         widget.updating = true;
+    };
+
+    blueprint.prototype.bind = function() {
+        var widget = this;
+        var $catalog = widget.$catalog = $(widget.options.selector['thread-list']);
+        var data = {
+            widget   : widget,
+            $widget  : widget.$widget,
+            $catalog : widget.$catalog
+        };
+
+        widget.$widget
+            .on('change.ib-overscan', widget.options.selector['toggle'], data, widget.events.toggle)
+            .on('scanstart.ib-overscan', data, widget.events.scanStart)
+            .on('scanstop.ib-overscan', data, widget.events.scanStop)
+        ;
+
+        $(document)
+            .on('mouseenter.ib-overwatch', widget.options.selector['post-container'], data, widget.events.threadHoverCheck)
+            .on('mouseleave.ib-overwatch', widget.options.selector['post-container'], data, widget.events.threadHoverCheck)
+        ;
+
+        $(window)
+            .on('focus.ib-overwatch', data, widget.events.windowFocus)
+            .on('blur.ib-overwatch', data, widget.events.windowUnfocus)
+        ;
+
+        widget.$catalog.mixItUp(widget.mixItUp);
+
+        widget.hasFocus = document.hasFocus();
+        widget.updateLast = $(widget.options.selector['thread-item']).data('bumped');
+        widget.viewedLast = widget.updateLast;
+
+        widget.updateTimer = setInterval(function() {
+            widget.updateInterval.apply(widget);
+        }, 100);
+
+        return true;
     };
 
     ib.widget("overwatch", blueprint, options);
