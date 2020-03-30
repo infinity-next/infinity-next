@@ -1170,6 +1170,9 @@ class Board extends Model
             $threads = $this->threads()
                 ->op()
                 ->withEverythingForReplies()
+                ->with(['replies' => function ($query) {
+                    $query->where('body_has_content', true)->orderBy('post_id', 'desc')->limit(10);
+                }])
                 ->orderBy('stickied', 'desc')
                 ->orderBy('bumped_last', 'desc')
                 ->skip($postsPerCatalog * ($page - 1))
@@ -1177,19 +1180,16 @@ class Board extends Model
                 ->get();
 
             foreach ($threads as $threadIndex => $thread) {
-                //$thread->body_parsed = $thread->getBodyFormatted();
                 $thread->setRelation('board', $this);
-                $thread->setRelation('replies', collect());
-
                 $thread->page_number = floor($threadIndex / $postsPerPage) + 1;
-
                 $thread->prepareForCache();
             }
 
             return $threads;
         };
 
-        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+        //$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+        $threads = $rememberClosure();
 
         return $threads;
     }

@@ -64,10 +64,7 @@ body {
     -ms-flex: none;
 }
 
-a,
-a:link,
-a:visited,
-a:hover {
+a, a:link, a:visited, a:hover {
     color: $color-link;
     text-decoration: none;
 }

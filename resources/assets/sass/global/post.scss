@@ -92,6 +92,10 @@
     &.nsfw {
         background: #f0e0d6;
         border-color: #D9BFB7;
+
+        a, a:link, a:visited, a:hover {
+            color: #800000
+        }
     }
 
     border-width: 1px;

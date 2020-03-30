@@ -204,6 +204,10 @@ main.index-catalog {
         margin-top: 0.4em;
         margin-left: 0;
         padding: 0 0.5em;
+
+        &:empty {
+            display: none;
+        }
     }
          blockquote.post pre {
             margin: 1em 0;

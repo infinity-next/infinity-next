@@ -1399,7 +1399,7 @@ class Post extends Model implements FormattableContract
             });
         })->op();
 
-        // Add replies if we're not in catalog.
+        // Add replies
         $threads = $threads
             ->withEverythingAndReplies()
             ->with(['replies' => function ($query) use ($catalog) {
