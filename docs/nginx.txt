@@ -1,0 +1,17 @@
+server {
+    listen 80;
+
+    server_name domain.com;
+    root /var/www/infinity-next;
+    index index.php index.html index.htm;
+    include php.conf;
+
+    location /attachments {
+        internal;
+        alias /var/www/infinity-next/storage/app/attachments;
+    }
+
+    location / {
+        try_files /public/$uri /public/$uri/ /public/index.php$is_args$args;
+    }
+}
