@@ -12,60 +12,58 @@
  * @since      0.6.0
  */
 
-Route::group(['middleware' => [ \App\Http\Middleware\BoardAmbivilance::class,],], function () {
-    /**
-     * Bans and Appeals
-     */
-    Route::group(['prefix' => 'bans',], function () {
-        Route::get('banned', ['as' => 'banned', 'uses' => 'BansController@getIndexForSelf']);
+/**
+ * Bans and Appeals
+ */
+Route::group(['prefix' => 'bans',], function () {
+    Route::get('banned', ['as' => 'banned', 'uses' => 'BansController@getIndexForSelf']);
 
-        Route::get('board/{board}/{ban}', ['as' => 'board.ban', 'uses' => 'BansController@getBan']);
-        Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal', 'uses' => 'BansController@putAppeal']);
-        Route::get('board/{board}', ['as' => 'board.ban', 'uses' => 'BansController@getBoardIndex']);
+    Route::get('board/{board}/{ban}', ['as' => 'board.ban', 'uses' => 'BansController@getBan']);
+    Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal', 'uses' => 'BansController@putAppeal']);
+    Route::get('board/{board}', ['as' => 'board.ban', 'uses' => 'BansController@getBoardIndex']);
 
-        Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getBan']);
-        Route::put('global/{ban}', ['as' => 'site.ban.appeal', 'uses' => 'BansController@putAppeal']);
-        Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
-    });
-
-    /**
-     * Post History
-     */
-    Route::get('history/{ip}', ['as' => 'history.global', 'uses' => 'HistoryController@list',]);
-
-    /*
-     *  Page Controllers (Panel / Management)
-     */
-    Route::get('site/pages', ['as' => 'site.pages', 'uses' => 'PageController@index']);
-    Route::get('site/page/{page}/delete', ['as' => 'site.page.delete', 'uses' => 'PageController@delete',]);
-    Route::resource('site/page', 'PageController', [
-        'names' => [
-            'index' => 'site.page.index',
-            'create' => 'site.page.create',
-            'store' => 'site.page.store',
-            'show' => 'site.page.show',
-            'edit' => 'site.page.edit',
-            'update' => 'site.page.update',
-            'destroy' => 'site.page.destroy',
-        ],
-    ]);
-    Route::get('board/{board}/page/{page}/delete', [
-        'as' => 'board.page.delete',
-        'uses' => 'PageController@delete',
-    ]);
-    Route::get('board/{board}/pages', ['as' => 'board.pages', 'uses' => 'PageController@index']);
-    Route::resource('board/{board}/page', 'PageController', [
-        'names' => [
-            'index' => 'board.page.index',
-            'create' => 'board.page.create',
-            'store' => 'board.page.store',
-            'show' => 'board.page.show',
-            'edit' => 'board.page.edit',
-            'update' => 'board.page.update',
-            'destroy' => 'board.page.destroy',
-        ],
-    ]);
+    Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getBan']);
+    Route::put('global/{ban}', ['as' => 'site.ban.appeal', 'uses' => 'BansController@putAppeal']);
+    Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
 });
+
+/**
+ * Post History
+ */
+Route::get('history/{ip}', ['as' => 'history.global', 'uses' => 'HistoryController@list',]);
+
+/*
+ *  Page Controllers (Panel / Management)
+ */
+Route::get('site/pages', ['as' => 'site.pages', 'uses' => 'PageController@index']);
+Route::get('site/page/{page}/delete', ['as' => 'site.page.delete', 'uses' => 'PageController@delete',]);
+Route::resource('site/page', 'PageController', [
+    'names' => [
+        'index' => 'site.page.index',
+        'create' => 'site.page.create',
+        'store' => 'site.page.store',
+        'show' => 'site.page.show',
+        'edit' => 'site.page.edit',
+        'update' => 'site.page.update',
+        'destroy' => 'site.page.destroy',
+    ],
+]);
+Route::get('board/{board}/page/{page}/delete', [
+    'as' => 'board.page.delete',
+    'uses' => 'PageController@delete',
+]);
+Route::get('board/{board}/pages', ['as' => 'board.pages', 'uses' => 'PageController@index']);
+Route::resource('board/{board}/page', 'PageController', [
+    'names' => [
+        'index' => 'board.page.index',
+        'create' => 'board.page.create',
+        'store' => 'board.page.store',
+        'show' => 'board.page.show',
+        'edit' => 'board.page.edit',
+        'update' => 'board.page.update',
+        'destroy' => 'board.page.destroy',
+    ],
+]);
 
 /**
  * Board Controls

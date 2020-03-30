@@ -1,7 +1,7 @@
 @extends('layouts.main.panel')
 
 @section('title')
-    @if ($board->exists)
+    @if (isset($board))
         @lang('panel.title.board_pages', [
             'board_uri' => $board->board_uri,
         ])
@@ -11,10 +11,10 @@
 @endsection
 
 @section('actions')
-    <a class="panel-action" href="{{ route( $board->exists
+    <a class="panel-action" href="{{ route( isset($board)
         ? 'panel.board.page.create'
         : 'panel.site.page.create', [
-            'board' => $board,
+            'board' => $board ?? null,
         ]
     ) }}">+ @lang('panel.action.create_page')</a>
 @endsection
@@ -29,19 +29,19 @@
                 <a class="filterlist-secondary" href="{{ route($board->exists
                     ? 'panel.board.page.delete'
                     : 'panel.site.page.delete', [
-                        'id' => $page->page_id,
+                        'page' => $page,
                         'board' => $board,
                 ]) }}"><i class="fa fa-remove"></i></a>
                 <a class="filterlist-secondary" href="{{ route($board->exists
                     ? 'panel.board.page.edit'
                     : 'panel.site.page.edit', [
-                        'id' => $page->page_id,
+                        'page' => $page,
                         'board' => $board,
                 ]) }}">@lang('panel.action.update')</a>
                 <a class="filterlist-primary" href="{{ route($board->exists
                     ? 'panel.board.page.show'
                     : 'panel.site.page.show', [
-                        'id' => $page->page_id,
+                        'page' => $page,
                         'board' => $board,
                 ]) }}">
                     <em>{{ $page->name }}</em>

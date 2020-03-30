@@ -49,6 +49,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\TorFilter::class,
             \App\Http\Middleware\SlugRouting::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ShareBoardWithView::class,
         ],
 
         'media' => [

@@ -32,6 +32,7 @@ class Authenticate extends \Illuminate\Auth\Middleware\Authenticate
             $guards = [null];
         }
 
+        $user = null;
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
 
@@ -39,9 +40,15 @@ class Authenticate extends \Illuminate\Auth\Middleware\Authenticate
                     continue;
                 }
 
+                $user = $this->auth->guard($guard);
+
                 return $this->auth->shouldUse($guard);
             }
         }
+
+        view()->share([
+            'user' => $user,
+        ]);
 
         $this->unauthenticated($request, $guards);
     }

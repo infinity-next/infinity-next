@@ -36,13 +36,10 @@ Route::get('boards.html', ['as'   => 'boardlist', 'uses' => 'BoardlistController
 /**
  * Static Pages
  */
-Route::group(['middleware' => \App\Http\Middleware\BoardAmbivilance::class,], function() {
-    // site static page
-    Route::get('{page_title}.html', ['as' => 'page', 'uses' => 'PageController@show',]);
-
-    // board static page
-    Route::get('{board}/{page_title}.html', ['as' => 'board.page', 'uses' => 'PageController@show',]);
-});
+// global static page
+Route::get('{page_title}.html', ['as' => 'page', 'uses' => 'PageController@show',]);
+// board static page
+Route::get('{board}/{page_title}.html', ['as' => 'board.page', 'uses' => 'PageController@show',]);
 
 /*
 if (env('CONTRIB_ENABLED', false)) {

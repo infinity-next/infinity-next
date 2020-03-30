@@ -37,38 +37,6 @@ abstract class Controller extends BaseController
     protected $options;
 
     /**
-     * Constructs all controllers with the user and board as properties.
-     *
-     * @param  Router       $router
-     *
-     * @return void
-     */
-    public function __construct(Router $router)
-    {
-        $this->user = user();
-
-        $board = app(Board::class);
-        $this->board = $board->exists ? $board : null;
-
-        view()->share([
-            'board' => $board ?: null,
-            'user' => $this->user,
-        ]);
-
-        $this->boot();
-    }
-
-    /**
-     * Hook called immediately after __construct.
-     *
-     * @return void
-     */
-    protected function boot()
-    {
-        // Nothing!
-    }
-
-    /**
      * Logs an action.
      *
      * @param string           $action

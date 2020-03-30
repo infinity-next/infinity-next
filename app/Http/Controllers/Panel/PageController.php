@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Board;
 use App\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Session;
 
 /**
@@ -42,31 +43,32 @@ class PageController extends PanelController
     public static $navTertiary = 'nav.panel.board.settings';
 
     /**
-     *
-     */
-     protected $board;
-
-    /**
      * Shares variables with the views.
      *
      * @param \App\Board $board Current board.
      */
-    public function boot(?Board $board = null)
+    public function __construct(Board $board = null)
     {
-        $this->board = $board;
-
-        if (!$this->board) {
-            $this::$navSecondary = 'nav.panel.site';
-            $this::$navTertiary = null;
-            $this->authorize('admin-config');
-        }
-        else {
-            $this->authorize('configure', $this->board);
-        }
-
         view()->share([
             'tab' => 'pages',
         ]);
+    }
+
+    protected function authorizeAndResolve()
+    {
+        $board = resolve(Board::class);
+
+        if ($board instanceof Board && $board->exists) {
+            $this->authorize('configure', $board);
+        }
+        else {
+            $board = null;
+            $this->authorize('admin-config');
+            $this::$navSecondary = 'nav.panel.site';
+            $this::$navTertiary = null;
+        }
+
+        return $board;
     }
 
     /**
@@ -74,10 +76,12 @@ class PageController extends PanelController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Board $board)
     {
+        $board =  $this->authorizeAndResolve();
+
         $pages = Page::where([
-            'board_uri' => $this->board ? $this->board->board_uri : null,
+            'board_uri' => $board ? $board->board_uri : null,
         ])->get();
 
         return $this->view(static::VIEW_INDEX, [
@@ -92,6 +96,7 @@ class PageController extends PanelController
      */
     public function create()
     {
+        $board =  $this->authorizeAndResolve();
         return $this->view(static::VIEW_CREATE, [
             'page' => false,
         ]);
@@ -106,10 +111,10 @@ class PageController extends PanelController
      */
     public function store(Request $request)
     {
-        $board = $this->board;
+        $board =  $this->authorizeAndResolve();
         $request->replace([
             'name' => $request->get('name'),
-            'title' => str_slug($request->get('name')),
+            'title' => Str::slug($request->get('name')),
             'body' => $request->get('body'),
         ]);
 
@@ -151,6 +156,7 @@ class PageController extends PanelController
      */
     public function show(Page $page)
     {
+        $board =  $this->authorizeAndResolve();
         return $this->view(static::VIEW_SHOW, [
             'page' => $page,
         ]);
@@ -165,6 +171,7 @@ class PageController extends PanelController
      */
     public function edit(Page $page)
     {
+        $board =  $this->authorizeAndResolve();
         return $this->view(static::VIEW_EDIT, [
             'page' => $page,
         ]);
@@ -180,10 +187,10 @@ class PageController extends PanelController
      */
     public function update(Request $request, Page $page)
     {
-        $board = $page->board ?: null;
+        $board =  $this->authorizeAndResolve();
         $request->replace([
             'name' => $request->get('name'),
-            'title' => str_slug($request->get('name')),
+            'title' => Str::slug($request->get('name')),
             'body' => $request->get('body'),
         ]);
 
@@ -223,6 +230,7 @@ class PageController extends PanelController
      */
     public function delete(Page $page)
     {
+        $board =  $this->authorizeAndResolve();
         return $this->view(static::VIEW_DELETE, [
             'page' => $page,
         ]);
@@ -237,14 +245,15 @@ class PageController extends PanelController
      */
     public function destroy($page)
     {
+        $board =  $this->authorizeAndResolve();
         $page->delete();
 
         return redirect()->route(
             'panel.'.
-            ($this->board ? 'board.' : 'site.').
+            ($board ? 'board.' : 'site.').
             'page.'.
             'index', [
-                'board' => $this->board ? $board : null,
+                'board' => $board ?? null,
             ]
         );
     }

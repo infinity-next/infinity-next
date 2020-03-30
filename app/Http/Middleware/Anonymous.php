@@ -6,7 +6,7 @@ use App\Auth\AnonymousUser;
 use Closure;
 
 /**
- * Extension of the Authenticate middleware to reject anonymous users.
+ * Extension of the Authenticate middleware to accept anonymous users.
  *
  * @category   Middleware
  *
@@ -22,9 +22,16 @@ class Anonymous
 {
     public function handle($request, Closure $next)
     {
-        if (is_null(auth()->user())) {
-            auth()->guard()->setUser(new AnonymousUser);
+        $user = auth()->user();
+
+        if (is_null($user)) {
+            $user = new AnonymousUser;
+            auth()->guard()->setUser($user);
         }
+
+        view()->share([
+            'user' => $user,
+        ]);
 
         return $next($request);
     }

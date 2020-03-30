@@ -2,13 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Board;
 use Closure;
 
 /**
- * Removes Board information from the LOIC's parameter builder.
- *
- * Good for controllers which can operate with or without a board.
- * You can use `app('\App\Board')` to construct the route board instance.
+ * Adds the board global to the view.
  *
  * @category   Middleware
  *
@@ -18,10 +16,14 @@ use Closure;
  *
  * @since      0.6.0
  */
-class BoardAmbivilance
+class ShareBoardWithView
 {
     public function handle($request, Closure $next)
     {
+        view()->share([
+            'board' => app(Board::class),
+        ]);
+
         $request->route()->forgetParameter('board');
 
         return $next($request);

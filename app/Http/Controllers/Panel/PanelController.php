@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Routing\Router;
 use Cookie;
 
 abstract class PanelController extends Controller
@@ -22,13 +23,16 @@ abstract class PanelController extends Controller
     public static $navSecondary = 'nav.panel.home';
 
     /**
-     * Create a new controller instance.
+     * Constructs all controllers with the user and board as properties.
+     *
+     * @param  Router       $router
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Router $router)
     {
         $this->middleware('auth');
+        return parent::__construct($router);
     }
 
     /**
