@@ -165,6 +165,7 @@ class Post extends Model implements FormattableContract
         'locked_at' => 'datetime',
         'body_parsed_at' => 'datetime',
         'author_ip_nulled_at' => 'datetime',
+        'body_has_content' => 'boolean',
     ];
 
     public function attachments()
@@ -503,6 +504,15 @@ class Post extends Model implements FormattableContract
     }
 
     /**
+     *
+     *
+     */
+    public function getBodyExcerpt($length)
+    {
+        return substr($this->body, 0, $length);
+    }
+
+    /**
      * Returns the fully rendered HTML content of this post.
      *
      * @param bool $skipCache
@@ -772,6 +782,25 @@ class Post extends Model implements FormattableContract
         }
 
         return false;
+    }
+
+    public function getTimeSince()
+    {
+        $sec = $this->created_at->diffInSeconds();
+
+        if ($sec > 172800) {
+            return $this->created_at->diffInDays()."d";
+        }
+        elseif ($sec > 3600) {
+            return $this->created_at->diffInHours()."h";
+
+        }
+        elseif ($sec > 60) {
+            return $this->created_at->diffInMinutes()."m";
+        }
+        else {
+            return $sec."s";
+        }
     }
 
     /**
@@ -1314,6 +1343,11 @@ class Post extends Model implements FormattableContract
         return $body || $body_html;
     }
 
+    public function hasDetails()
+    {
+        return ($this->author || $this->subject);
+    }
+
     /**
      * Get the appends attribute.
      * Not normally available to models, but required for API responses.
@@ -1366,15 +1400,16 @@ class Post extends Model implements FormattableContract
         })->op();
 
         // Add replies if we're not in catalog.
-        if (!$catalog) {
-            $threads = $threads
-                ->withEverythingAndReplies()
-                ->with(['replies' => function ($query) {
+        $threads = $threads
+            ->withEverythingAndReplies()
+            ->with(['replies' => function ($query) use ($catalog) {
+                if ($catalog) {
+                    $query->where('body_has_content', true)->orderBy('post_id', 'desc')->limit(10);
+                }
+                else {
                     $query->forIndex();
-                }]);
-        } else {
-            $threads = $threads->withEverything();
-        }
+                }
+            }]);
 
         if ($updatedSince) {
             $threads->where('posts.bumped_last', '>', Carbon::createFromTimestamp($updatedSince));
@@ -1395,20 +1430,16 @@ class Post extends Model implements FormattableContract
 
             $thread->setRelation('board', $boards[$thread->board_uri]);
 
-            if (!$catalog) {
-                $replyTake = $thread->stickied_at ? 1 : 5;
+            $replyTake = $thread->stickied_at ? 1 : 5;
 
-                $thread->body_parsed = $thread->getBodyFormatted();
-                $thread->replies = $thread->replies
-                    ->sortBy('post_id')
-                    ->splice(-$replyTake, $replyTake);
+            $thread->body_parsed = $thread->getBodyFormatted();
+            $thread->replies = $thread->replies
+                ->sortBy('post_id')
+                ->splice(-$replyTake, $replyTake);
 
-                $thread->replies->each(function($reply) use ($boards) {
-                    $reply->setRelation('board', $boards[$reply->board_uri]);
-                });
-            } else {
-                $thread->setRelation('replies', collect());
-            }
+            $thread->replies->each(function($reply) use ($boards) {
+                $reply->setRelation('board', $boards[$reply->board_uri]);
+            });
 
             $thread->prepareForCache();
         }

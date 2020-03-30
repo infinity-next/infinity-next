@@ -511,22 +511,15 @@ class ContentFormatter
 
         foreach ($lines as $line) {
             if (preg_match($regex, trim($line), $matches)) {
-                // We're squelching undefined index warnings from $matches.
-                // InvalidArgumentException from Dice::throw are captured.
-                // Anything else is unexpected.
-                try {
-                    $throw = Dice::throw(
-                        @((int) $matches['rolling'] ?: 0),
-                        @((int) $matches['sides'] ?: 0),
-                        @((int) $matches['modifier'] ?: 0),
-                        @((int) $matches['greater_than'] ?: null),
-                        @((int) $matches['less_than'] ?: null),
-                        @((int) $matches['minimum'] ?: null),
-                        @((int) $matches['maximum'] ?: null)
-                    );
-                } catch (InvalidArgumentException $e) {
-                    continue;
-                }
+                $throw = Dice::throw(
+                    ((int) $matches['rolling'] ?? 0),
+                    ((int) $matches['sides'] ?? 0),
+                    ((int) $matches['modifier'] ?? 0),
+                    ((int) $matches['greater_than'] ?? null),
+                    ((int) $matches['less_than'] ?? null),
+                    ((int) $matches['minimum'] ?? null),
+                    ((int) $matches['maximum'] ?? null)
+                );
 
 
                 $throws->push([

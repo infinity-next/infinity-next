@@ -3,8 +3,8 @@
     <a name="{!! $details['board_id'] !!}"></a>
     <a name="reply-{!! $details['board_id'] !!}"></a>
 
-    @if (isset($catalog) && $catalog === true)
-        @if (isset($multiboard) && $multiboard === true)
+    @if ($catalog ?? false)
+        @if ($multiboard ?? false)
         @include('content.board.crown', [
             'board'  => $post->board,
         ])
@@ -24,8 +24,22 @@
         @if ($post->attachments->count() > 0)
             @include('content.board.post.single.attachments')
         @endif
-        @include('content.board.post.single.details')
+
+        @if ($post->hasDetails())
+            @include('content.board.post.single.details')
+        @endif
+
         @include('content.board.post.single.post')
+
+        @if ($post->replies->count())
+        <div class="catalog-replies">
+        @foreach ($post->replies as $reply)
+        <a href="{{ $reply->getUrl() }}" class="catalog-reply">
+            <time class="time-passed" datetime="{{ $reply->created_at->toDateTimeString() }}">{{ $reply->getTimeSince() }}</time> {{ $reply->getBodyExcerpt(100) }}
+        </a>
+        @endforeach
+        </div>
+        @endif
     @else
         @include('content.board.post.single.details')
         <div class="post-content-wrapper">
