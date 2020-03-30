@@ -640,17 +640,21 @@
         },
         {
             "name": "enshrined/svg-sanitize",
-            "version": "0.10.0",
+            "version": "0.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/darylldoyle/svg-sanitizer.git",
-                "reference": "5344d8511e494adf160f71f4b34024d3a3c66c82"
+                "reference": "bc66593f255b7d2613d8f22041180036979b6403"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/5344d8511e494adf160f71f4b34024d3a3c66c82",
-                "reference": "5344d8511e494adf160f71f4b34024d3a3c66c82",
+                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/bc66593f255b7d2613d8f22041180036979b6403",
+                "reference": "bc66593f255b7d2613d8f22041180036979b6403",
                 "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "^0.1.2",
@@ -664,7 +668,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -673,7 +677,7 @@
                 }
             ],
             "description": "An SVG sanitizer for PHP",
-            "time": "2019-01-11T12:31:32+00:00"
+            "time": "2020-01-20T01:34:17+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1016,20 +1020,20 @@
         },
         {
             "name": "infinity-next/sleuth",
-            "version": "0.2.6",
+            "version": "0.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/sleuth.git",
-                "reference": "204c2ce71008fe13ece343a5e5284d8c5566a5e1"
+                "reference": "d7762133cea17e192bd31ed2015834dc7389814d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/sleuth/zipball/204c2ce71008fe13ece343a5e5284d8c5566a5e1",
-                "reference": "204c2ce71008fe13ece343a5e5284d8c5566a5e1",
+                "url": "https://api.github.com/repos/infinity-next/sleuth/zipball/d7762133cea17e192bd31ed2015834dc7389814d",
+                "reference": "d7762133cea17e192bd31ed2015834dc7389814d",
                 "shasum": ""
             },
             "require": {
-                "enshrined/svg-sanitize": "0.10.*",
+                "enshrined/svg-sanitize": ">=0.13.1",
                 "illuminate/support": "6.*",
                 "php": "^7.2"
             },
@@ -1061,7 +1065,7 @@
                 "mime",
                 "type"
             ],
-            "time": "2019-10-07T17:13:29+00:00"
+            "time": "2020-03-30T07:52:31+00:00"
         },
         {
             "name": "intervention/image",
