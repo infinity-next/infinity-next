@@ -17,11 +17,11 @@
     />
 
     @section('css')
-        <link rel="stylesheet" href="{{ elixir('static/css/vendor.css') }}" data-no-instant id="style-vendor" />
-        <link rel="stylesheet" href="{{ elixir('static/css/global.css') }}" data-no-instant id="style-global" />
+        <link rel="stylesheet" href="{{ mix('static/css/vendor.css') }}" data-no-instant id="style-vendor" />
+        <link rel="stylesheet" href="{{ mix('static/css/global.css') }}" data-no-instant id="style-global" />
 
         @section('area-css')
-            <link rel="stylesheet" href="{{ elixir('static/css/public.css') }}" data-instant-track id="style-system"/>
+            <link rel="stylesheet" href="{{ mix('static/css/public.css') }}" data-instant-track id="style-system"/>
         @show
 
         @section('page-css')
