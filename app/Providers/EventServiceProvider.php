@@ -66,7 +66,9 @@ class EventServiceProvider extends ServiceProvider
 
         // Board specific events
         \App\Events\BoardWasCreated::class => [
+            \App\Listeners\BoardSetOwner::class,
             \App\Listeners\UserRecachePermissions::class,
+            \App\Listeners\LogEvent::class,
         ],
         \App\Events\BoardWasModified::class => [
             \App\Listeners\BoardModelRecache::class,
@@ -77,6 +79,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\BoardWasReassigned::class => [
             \App\Listeners\UserRecachePermissions::class,
+            \App\Listeners\LogEvent::class,
         ],
 
         // Page specific events

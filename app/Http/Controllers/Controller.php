@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Board;
 use App\Log;
 use App\Http\MessengerResponse;
-use App\Support\IP;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,53 +34,6 @@ abstract class Controller extends BaseController
      * @var array
      */
     protected $options;
-
-    /**
-     * Logs an action.
-     *
-     * @param string           $action
-     * @param App\Board|string $board
-     * @param array            $data
-     *
-     * @return App\Log
-     */
-    protected function log($action, $board = null, $data = null)
-    {
-        $board_uri = null;
-        $action_details = null;
-
-        if ($board instanceof \App\Board) {
-            $board_uri = $board->board_uri;
-            $action_details = $data;
-        } elseif ($board instanceof \App\Post) {
-            $board_uri = $board->board_uri;
-            $action_details = $data;
-        } elseif (is_string($board)) {
-            $board_uri = $board;
-            $action_details = $data;
-        } elseif (is_array($board) && is_null($data)) {
-            $board_uri = null;
-            $action_details = $board;
-        }
-
-        if (!is_null($action_details) && !is_array($action_details)) {
-            $action_details = [$action_details];
-        }
-
-        if (!is_null($action_details)) {
-            $action_details = json_encode($action_details);
-        }
-
-        $log = new Log([
-            'action_name' => $action,
-            'action_details' => $action_details,
-            'user_id' => user()->isAnonymous() ? null : user()->user_id,
-            'user_ip' => new IP,
-            'board_uri' => $board_uri,
-        ]);
-
-        return $log->save();
-    }
 
     /**
      * Returns an system option's value.

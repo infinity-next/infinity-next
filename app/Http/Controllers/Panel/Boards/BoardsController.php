@@ -245,11 +245,6 @@ class BoardsController extends PanelController
         // Save the board.
         $board->save();
 
-        // Seed board ownership permissions.
-        $board->setOwner(user());
-
-        $this->log('log.board.create', $board->board_uri);
-
         return redirect($board->getPanelUrl());
     }
 }

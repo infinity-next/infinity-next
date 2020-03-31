@@ -1286,25 +1286,6 @@ class Board extends Model
         $this->attributes['email'] = empty($value) ? null : $value;
     }
 
-    public function setOwner(User $user)
-    {
-        $user->forgetPermissions();
-
-        $role = Role::getOwnerRoleForBoard($this);
-
-        if (!$role->wasRecentlyCreated) {
-            UserRole::where('role_id', $role->role_id)->delete();
-        }
-
-        $this->operated_by = $user->user_id;
-        $this->save();
-
-        return UserRole::create([
-            'user_id' => $user->user_id,
-            'role_id' => $role->role_id,
-        ]);
-    }
-
     public function scopeAndAssets($query)
     {
         return $query->with('assets', 'assets.storage');

@@ -1,7 +1,7 @@
 @extends('layouts.main.panel')
 
 @section('title')
-    @if (isset($board))
+    @if ($board->exists)
         @lang('panel.title.board_pages', [
             'board_uri' => $board->board_uri,
         ])
@@ -11,7 +11,7 @@
 @endsection
 
 @section('actions')
-    <a class="panel-action" href="{{ route( isset($board)
+    <a class="panel-action" href="{{ route( $board->exists
         ? 'panel.board.page.create'
         : 'panel.site.page.create', [
             'board' => $board ?? null,
