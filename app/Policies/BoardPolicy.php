@@ -92,7 +92,7 @@ class BoardPolicy extends AbstractPolicy
     public function configure(User $user, ?Board $board = null)
     {
         if ($board instanceof Board) {
-            return $user->permission('board.config')
+            return $user->permission('board.config', $board)
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_config');
         }

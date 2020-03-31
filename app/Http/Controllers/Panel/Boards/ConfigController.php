@@ -57,10 +57,7 @@ class ConfigController extends PanelController
      */
     public function getAssets(Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
-
+        $this->authorize('configure', $board);
         return $this->view(static::VIEW_CONFIG, [
             'board' => $board,
             'banned' => $board->getBannedImages(),
@@ -78,6 +75,8 @@ class ConfigController extends PanelController
      */
     public function destroyAssets(Request $request, Board $board)
     {
+        $this->authorize('configure', $board);
+
         $input = Request::all();
         $validator = Validator::make($input, [
             'asset_type' => [
@@ -114,9 +113,7 @@ class ConfigController extends PanelController
      */
     public function patchAssets(Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $assetsToKeep = Request::input('asset', []);
         $assetsToName = Request::input('asset_name', []);
@@ -188,9 +185,7 @@ class ConfigController extends PanelController
      */
     public function putAssets(Request $request, Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         if ((bool) Request::input('delete', false)) {
             return $this->destroyAssets($request, $board);
@@ -348,6 +343,8 @@ class ConfigController extends PanelController
      */
     public function patchConfig(BoardConfigRequest $request, Board $board)
     {
+        $this->authorize('configure', $board);
+
         $input = $request->all();
         $optionGroups = $request->getBoardOptions();
         $settings = [];
@@ -421,9 +418,7 @@ class ConfigController extends PanelController
      */
     public function getTags(Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $tagArray = [];
 
@@ -446,10 +441,8 @@ class ConfigController extends PanelController
      */
     public function putTags(Board $board)
     {
-        if (!$board->canEditConfig($this->user)) {
-            return abort(403);
-        }
-
+        $this->authorize('configure', $board);
+        
         $input = Request::all();
         $rules = [
             'boardTags' => [
