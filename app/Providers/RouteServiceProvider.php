@@ -40,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/cp/home';
+    public const HOME = 'panel.home';
 
     /**
      * This namespace is applied to the controller routes in your routes file.

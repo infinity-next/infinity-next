@@ -101,7 +101,7 @@ class BoardsController extends PanelController
      */
     public function getStaff()
     {
-        $boards = $this->user->getBoardsWithStaffRights();
+        $boards = user()->getBoardsWithStaffRights();
         $boards->load('creator', 'operator');
 
         return $this->view(static::VIEW_DASHBOARD, [
@@ -117,9 +117,7 @@ class BoardsController extends PanelController
      */
     public function getCreate()
     {
-        if (!$this->user->canCreateBoard()) {
-            return abort(403);
-        }
+        $this->authorize('create', Board::class);
 
         $boardLastCreated = 0;
         $boardsOwned = 0;
@@ -152,9 +150,7 @@ class BoardsController extends PanelController
      */
     public function putCreate()
     {
-        if (!$this->user->canCreateBoard()) {
-            return abort(403);
-        }
+        $this->authorize('create', Board::class);
 
         $configErrors = [];
 

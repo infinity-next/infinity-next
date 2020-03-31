@@ -3,7 +3,7 @@
 Route::get('login', 'LoginController@showLoginForm')->name('login');
 Route::post('login', 'LoginController@login')->name('login.attempt');
 
-Route::post('logout', 'LoginController@logout')->name('logout');
+Route::get('logout', 'LoginController@logout')->name('logout');
 
 Route::get('register', 'RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'RegisterController@register')->name('register.attempt');
