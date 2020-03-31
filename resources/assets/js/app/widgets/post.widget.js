@@ -343,7 +343,9 @@
             // collapse video when the video is done playing
             .on('ended.ib-post', data, this.events.attachmentMediaEnded)
             // collapse video when it's useless-clicked
-            .on('click.ib-post', data, this.events.attachmentMediaEnded);
+            .on('click.ib-post', data, this.events.attachmentMediaEnded)
+            .on('play.ib-post', data, this.events.attachmentMediaPlay)
+            .on('pause.ib-post', data, this.events.attachmentMediaPause);
     };
 
     // Stores a post in the session store.
@@ -611,6 +613,16 @@
             return false;
         },
 
+        attachmentMediaPlay : function(event) {
+            var $media  = $(this).parents(".attachment-type-audio");
+            $media.addClass('playing');
+        },
+
+        attachmentMediaPause : function(event) {
+            var $media  = $(this).parents(".attachment-type-audio");
+            $media.removeClass('playing');
+        },
+
         attachmentMediaEnded : function(event) {
             var widget  = event.data.widget;
             var $media  = $(this);
@@ -619,7 +631,7 @@
             var $img    = $(widget.options.selector['attachment-image'], $item);
             var $inline = $(widget.options.selector['attachment-inline'], $item);
 
-            $item.removeClass('attachment-expanded');
+            $item.removeClass('attachment-expanded', 'playing');
             $img.attr('src', $link.attr('data-thumb-url'));
             $inline.remove();
             $img.toggle(true);
@@ -627,11 +639,14 @@
         },
 
         attachmentMediaLoadedData : function(event) {
-            this.scrollIntoView({
-                behavior: "auto",
-                block: "start",
-                inline: "nearest"
-            });
+            var rect = this.getBoundingClientRect();
+            if (rect.bottom > window.innerHeight) {
+                this.scrollIntoView(false);
+            }
+            if (rect.top < 0) {
+                this.scrollIntoView();
+            }
+
             this.play();
         },
 

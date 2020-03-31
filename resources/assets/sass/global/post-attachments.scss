@@ -214,6 +214,7 @@
                             background-image: url("#{$base-url}img/backgrounds/vinyl.svg");
                             background-repeat: no-repeat;
                             background-size: contain;
+
                         }
                     }
 
@@ -224,7 +225,11 @@
                         &::after {
                             right: -20%;
                             animation: fa-spin 1.304s infinite linear;
+                            animation-play-state: paused;
                         }
+                    }
+                    .attachment-expanded .attachment-type-audio.playing .attachment-wrapper::after {
+                        animation-play-state: running;
                     }
 
                     .attachment-expanded .attachment-type-video {
