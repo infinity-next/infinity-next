@@ -759,7 +759,7 @@
                         })
                         .appendTo($audio);
 
-                    $audio.insertBefore($link);
+                    $audio.insertAfter($link);
                     widget.bindMediaEvents($audio);
 
                     $audio.parent().addClass('attachment-grow');

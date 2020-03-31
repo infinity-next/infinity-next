@@ -163,23 +163,23 @@
                 display: block;
             }
 
-            figure.attachment {
+            .attachment {
                 display: block;
                 margin: 0;
                 position: relative;
                 z-index: 3;
             }
-                figure.attachment-type-audio {
+                .attachment-type-audio {
                     overflow: hidden;
                     padding-right: 2em;
                 }
 
-                .post-attachment.attachment-expanded figure.attachment {
+                .post-attachment.attachment-expanded .attachment {
                     /* min-width: 100%; */
                     max-width: 100%;
                 }
 
-                .post-attachment.attachment-expanded img.attachment-img {
+                .post-attachment.attachment-expanded .attachment-img {
                     /* min-width: 100%; */
                     max-width: 100%;
                 }
@@ -189,8 +189,8 @@
                     padding: 0;
                     margin: 0 auto;
                     text-align: center;
-                }
-                    figure.attachment-type-audio .attachment-wrapper {
+
+                    .attachment-type-audio & {
                         margin: 0 -2em 0 0;
                         padding: 0 2em 0 0;
 
@@ -215,8 +215,9 @@
                             background-size: contain;
                         }
                     }
+                }
 
-                    .attachment-expanded figure.attachment-type-audio .attachment-wrapper {
+                    .attachment-expanded .attachment-type-audio .attachment-wrapper {
                         margin: 0 0 0 0;
                         padding: 0 7em 0 0;
 
@@ -226,7 +227,7 @@
                         }
                     }
 
-                    .attachment-expanded figure.attachment-type-video {
+                    .attachment-expanded .attachment-type-video {
                         .detail-close {
                             display: inline;
                         }
@@ -245,14 +246,14 @@
                     z-index: 2;
                 }
 
-                html.js a.attachment-link img.attachment-type-img {
+                html.js a.attachment-link .attachment-type-img {
                     cursor: zoom-in;
                 }
-                html.js .attachment-expanded a.attachment-link img.attachment-type-img {
+                html.js .attachment-expanded .attachment-link .attachment-type-img {
                     cursor: zoom-out;
                 }
 
-                html.js a.attachment-link img.attachment-type-video {
+                html.js a.attachment-link .attachment-type-video {
                     box-sizing: border-box;
                     border-style: solid;
                     border-width: 17px;
@@ -277,7 +278,7 @@
                     .post-attachment.attachment-expanded,
                     .post-attachment.attachment-expanded .attachment,
                     .post-attachment.attachment-expanded .attachment-wrapper,
-                    .post-attachment.attachment-expanded img.attachment-img {
+                    .post-attachment.attachment-expanded .attachment-img {
                         clear: both;
                         float: none;
                         max-width: 100%;
@@ -289,7 +290,7 @@
                             max-width: 350px;
                             padding-right: 3em;
                         }
-                    .thumbnail-stock img.attachment-img {
+                    .thumbnail-stock .attachment-img {
                         min-height: 150px;
                         min-width: 150px;
                     }
@@ -352,7 +353,7 @@
                         }
                     }
 
-                    figure.attachment-type-audio figcaption.attachment-details .attachment-detail {
+                    .attachment-type-audio .attachment-details .attachment-detail {
                         margin-bottom: 0px;
                     }
                     .attachment-container:last-child {

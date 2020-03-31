@@ -59,6 +59,7 @@
                         <span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->pivot->filename }}">{{ $attachment->getShortFilename() }}</span>
                         @endif
                     </span>
+                    <br />
                     <span class="detail-item detail-filesize">{{ $attachment->getHumanFilesize() }}</span>
                     <span class="detail-item detail-filedim" title="{{ $attachment->getFileDimensions() }}">{{ $attachment->getFileDimensions() }}</span>
                 </a>
