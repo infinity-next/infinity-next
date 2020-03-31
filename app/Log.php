@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class Log extends Model
 {
-    use ;
+    use EloquentBinary;
 
     /**
      * The database table used by the model.

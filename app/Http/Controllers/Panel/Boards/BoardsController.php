@@ -34,21 +34,6 @@ class BoardsController extends PanelController
     public static $navSecondary = 'nav.panel.board';
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function createUser(array $data)
-    {
-        return User::create([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-    }
-
-    /**
      * Show the application dashboard to the user.
      * This is the config list.
      *
@@ -122,16 +107,17 @@ class BoardsController extends PanelController
         $boardLastCreated = 0;
         $boardsOwned = 0;
 
-        if (!$this->user->isAnonymous()) {
-            foreach ($this->user->createdBoards as $board) {
+        if (!user()->isAnonymous()) {
+            foreach (user()->createdBoards as $board) {
                 ++$boardsOwned;
 
                 if ($board->created_at->timestamp > $boardLastCreated) {
                     $boardLastCreated = $board->created_at->timestamp;
                 }
             }
-        } elseif (!$this->user->canCreateUser()) {
-            return abort(403);
+        }
+        else {
+            $this->can('register');
         }
 
         return $this->view(static::VIEW_CREATE, [
@@ -148,29 +134,30 @@ class BoardsController extends PanelController
      *
      * @return Response
      */
-    public function putCreate()
+    public function putCreate(Request $request)
     {
         $this->authorize('create', Board::class);
 
         $configErrors = [];
 
         // Check time and quantity restraints.
-        if (!$this->user->canAdminConfig()) {
+        if (!user()->can('admin-config')) {
             $boardLastCreated = null;
             $boardsOwned = 0;
             $boardCreateTimer = $this->option('boardCreateTimer');
             $boardsCreateMax = $this->option('boardCreateMax');
 
-            if (!$this->user->isAnonymous()) {
-                foreach ($this->user->createdBoards as $board) {
+            if (!user()->isAnonymous()) {
+                foreach (user()->createdBoards as $board) {
                     ++$boardsOwned;
 
                     if (is_null($boardLastCreated) || $board->created_at->timestamp > $boardLastCreated->timestamp) {
                         $boardLastCreated = $board->created_at;
                     }
                 }
-            } elseif (!$this->user->canCreateUser()) {
-                return abort(403);
+            }
+            else {
+                $this->authorize('register');
             }
 
             if ($boardsCreateMax > 0 && $boardsOwned >= $boardsCreateMax) {
@@ -197,15 +184,8 @@ class BoardsController extends PanelController
         // If the user is anonymous, we must also be creating an account.
         $input = Request::all();
 
-        if ($this->user->isAnonymous()) {
-            $validator = $this->registrationValidator($input);
-
-            if ($validator->fails()) {
-                $this->throwValidationException(
-                    $request,
-                    $validator
-                );
-            }
+        if (user()->isAnonymous()) {
+            $this->registrationValidator($input)->validate();
         }
 
         // Generate a list of banned URIs.
@@ -230,7 +210,7 @@ class BoardsController extends PanelController
 
         // Hide a second captcha on registration+create combo forms.
         $validator->sometimes('captcha', 'required|captcha', function ($input) {
-            return !$this->user->isAnonymous();
+            return !user()->isAnonymous();
         });
 
         // Create the board model.
@@ -242,7 +222,7 @@ class BoardsController extends PanelController
 
         $failed = $validator->fails();
 
-        if (!$this->user->canCreateBoardWithBannedUri() && $board->hasBannedUri()) {
+        if (!user()->canCreateBoardWithBannedUri() && $board->hasBannedUri()) {
             $validator->errors()->add(
                 'board_uri',
                 trans('validation.custom.board_uri_banned')
@@ -251,26 +231,22 @@ class BoardsController extends PanelController
         }
 
         if ($failed) {
-            $this->throwValidationException(
-                $request,
-                $validator
-            );
+            $validator->validate();
         }
 
         // Create user if we have to.
-        if ($this->user->isAnonymous()) {
-            $this->auth->login($this->createUser    ($request->all()));
-            $this->user = $this->auth->user();
+        if (user()->isAnonymous()) {
+            auth()->login($this->createUser($request->all()));
         }
 
-        $board->created_by = $this->user->user_id;
-        $board->operated_by = $this->user->user_id;
+        $board->created_by = user()->user_id;
+        $board->operated_by = user()->user_id;
 
         // Save the board.
         $board->save();
 
         // Seed board ownership permissions.
-        $board->setOwner($this->user);
+        $board->setOwner(user());
 
         $this->log('log.board.create', $board->board_uri);
 

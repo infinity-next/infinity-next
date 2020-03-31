@@ -218,16 +218,6 @@ trait Permittable
     }
 
     /**
-     * Can this user create a user?
-     *
-     * @return bool
-     */
-    public function canCreateUser()
-    {
-        return $this->permission('site.user.create');
-    }
-
-    /**
      * Can this user delete on this board?
      *
      * @return bool

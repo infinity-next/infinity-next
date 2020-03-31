@@ -36,9 +36,45 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        $this->registerProviders();
+        $this->registerGates();
+    }
 
+    public function registerProviders()
+    {
         Auth::provider('ineloquent', function ($app, array $config) {
             return new IneloquentUserProvider($this->app['hash'], $config['model']);
+        });
+    }
+
+    public function registerGates()
+    {
+        Gate::define('admin-config', function(User $user)
+        {
+            return $user->permission('sys.config')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_config');
+        });
+
+        Gate::define('admin-permissions', function(User $user)
+        {
+            return $user->permission('sys.permissions')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_permissions');
+        });
+
+        Gate::define('admin-tools', function(User $user)
+        {
+            return $user->permission('sys.tools')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_tools');
+        });
+
+        Gate::define('admin-users', function(User $user)
+        {
+            return $user->permission('sys.users')
+             ? Response::allow()
+             : Response::deny('auth.site.cannot_admin_users');
         });
 
         Gate::define('capcode', function (User $user, Board $board, ?Post $post = null) {
@@ -152,32 +188,9 @@ class AuthServiceProvider extends ServiceProvider
                 : Response::deny('auth.board.cannot_view_ip_address');
         });
 
-        Gate::define('admin-config', function(User $user)
+        Gate::define('register', function(User $user)
         {
-            return $user->permission('sys.config')
-             ? Response::allow()
-             : Response::deny('auth.site.cannot_admin_config');
-        });
-
-        Gate::define('admin-permissions', function(User $user)
-        {
-            return $user->permission('sys.permissions')
-             ? Response::allow()
-             : Response::deny('auth.site.cannot_admin_permissions');
-        });
-
-        Gate::define('admin-tools', function(User $user)
-        {
-            return $user->permission('sys.tools')
-             ? Response::allow()
-             : Response::deny('auth.site.cannot_admin_tools');
-        });
-
-        Gate::define('admin-users', function(User $user)
-        {
-            return $user->permission('sys.users')
-             ? Response::allow()
-             : Response::deny('auth.site.cannot_admin_users');
+            return $user->permission('site.user.create');
         });
     }
 }
