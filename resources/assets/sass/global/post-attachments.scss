@@ -189,7 +189,7 @@
                     padding: 0;
                     margin: 0 auto;
                     text-align: center;
-
+                }
                     .attachment-type-audio & {
                         margin: 0 -2em 0 0;
                         padding: 0 2em 0 0;
@@ -215,7 +215,6 @@
                             background-size: contain;
                         }
                     }
-                }
 
                     .attachment-expanded .attachment-type-audio .attachment-wrapper {
                         margin: 0 0 0 0;
