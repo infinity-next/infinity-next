@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Board;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 class BoardTest extends TestCase {
+    use RefreshDatabase;
 
     /**
      * The board used by tests
