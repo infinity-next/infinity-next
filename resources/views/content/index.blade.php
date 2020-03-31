@@ -24,6 +24,8 @@
         </section>
     </div>
 
+    @include('widgets.announcement')
+
     @include('content.index.activity')
 </main>
 @endsection

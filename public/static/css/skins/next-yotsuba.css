@@ -49,6 +49,12 @@ header nav.boardlist {
     color: #800000;
 }
 
+
+aside.announcement {
+    border-top-color: rgba(100, 0, 0, 0.5);
+    border-bottom-color: rgba(100, 0, 0, 0.5);
+}
+
 .post-container {
     background: #f0e0d6;
     border-color: #D9BFB7;

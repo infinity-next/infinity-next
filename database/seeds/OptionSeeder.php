@@ -239,6 +239,14 @@ class OptionSeeder extends Seeder {
                 ],
 
                 [
+                    'option_name'           => "siteAnnouncement",
+                    'default_value'         => "",
+                    'format'                => "textbox",
+                    'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+                    'data_type'             => "string",
+                    'validation_parameters' => "min:\$min|max:\$max",
+                ],
+                [
                     'option_name'           => "siteName",
                     'default_value'         => "Infinity Next",
                     'format'                => "text",
@@ -569,6 +577,7 @@ class OptionGroupSeeder extends Seeder {
 
                 'options' => [
                     'siteName',
+                    'siteAnnouncement',
                     'canary',
                 ],
             ],
