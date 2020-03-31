@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\Page;
-use App\Post;
-use App\Observers\PageObserver;
-use App\Observers\PostObserver;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -112,8 +108,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Page::observe(new PageObserver());
-        Post::observe(new PostObserver());
+        \App\Board::observe(new \App\Observers\BoardObserver);
+        \App\Page::observe(new \App\Observers\PageObserver);
+        \App\Post::observe(new \App\Observers\PostObserver);
         parent::boot();
     }
 }

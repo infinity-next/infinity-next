@@ -132,33 +132,6 @@ class Board extends Model
      */
     protected $compiledSettings;
 
-    /**
-     * Ties database triggers to the model.
-     *
-     * @static
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        // Setup event bindings...
-
-        // Fire event on board created.
-        static::created(function (Board $board) {
-            Event::dispatch(new BoardWasCreated($board, $board->operator));
-        });
-
-        // Handle board reassignment
-        static::saved(function (Board $board) {
-            foreach ($board->getDirty() as $attribute => $value) {
-                if ($attribute === 'operated_by') {
-                    Event::dispatch(new BoardWasReassigned($board, $board->operator));
-                    break;
-                }
-            }
-        });
-    }
-
     public function assets()
     {
         return $this->hasMany(BoardAsset::class, 'board_uri');
