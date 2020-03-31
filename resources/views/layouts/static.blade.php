@@ -93,7 +93,8 @@
         @show
 
         @yield('content')
-        @yield('content-addendum')
+
+        <div id="attachment-preview"><img id="attachment-preview-img" src="" /></div>
     </div>
 
     @yield('footer')

@@ -67,11 +67,11 @@
         </div>
         @endif
         @else
-        <a href="{!! $post->getUrl() !!}" data-instant>
-            <figure class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
+        <div class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
+            <a class="attachment-link" target="_blank" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getDownloadURL($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailURL($post->board) !!}"t>
                 {!! $attachment->getThumbnailHTML($post->board, 150) !!}
-            </figure>
-        </a>
+            </a>
+        </div>
         @endif
     </div>
     @endforeach

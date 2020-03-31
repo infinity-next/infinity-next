@@ -24,10 +24,4 @@
     },
 @stop
 
-@section('content-addendum')
-    <div id="attachment-preview">
-        <img id="attachment-preview-img" src="" />
-    </div>
-@stop
-
 @section('header-logo', $board->getBannerURL())
