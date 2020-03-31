@@ -45,8 +45,8 @@ class Permission extends Model
     /**
      * Returns board uris with this permission.
      *
-     * @param \App\Contracts\PermissionUser|null $user      User roles must belong to. Defaults to null.
-     * @param bool                               $anonymous Determines if we should allow generic, unassigned roles. Defaults true.
+     * @param  \App\Contracts\Auth\Permittable|null  $user      User roles must belong to. Defaults to null.
+     * @param  bool                                  $anonymous Determines if we should allow generic, unassigned roles. Defaults true.
      *
      * @return Collection of \App\Board->board_uri strings
      */
@@ -61,7 +61,7 @@ class Permission extends Model
                     $query->whereNull('user_id');
                 }
 
-                if ($user instanceof PermissionUser && !$user->isAnonymous()) {
+                if ($user instanceof Permittable && !$user->isAnonymous()) {
                     $query->orWhere('user_id', $user->user_id);
                 } elseif (!$anonymous) {
                     $query->where(\DB::raw('0'), '1');
