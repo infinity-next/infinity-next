@@ -2,7 +2,7 @@
 
 @section('title', e("{$board->title} - /{$board->board_uri}/"))
 @section('page-title')/{{ $board->board_uri }}/ - {{ $board->title }} {!! View::make('widgets.boardfav', [ 'board' => $board ]) !!}@stop
-@section('description', e($board->description))
+@section('description', $board->description)
 @section('body-class', "view-board board-{$board->board_uri}")
 
 @section('page-css')
