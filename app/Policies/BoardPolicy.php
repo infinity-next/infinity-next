@@ -115,6 +115,24 @@ class BoardPolicy extends AbstractPolicy
     }
 
     /**
+     * Can this user modify another user's permissions on this board?
+     *
+     * @param  \App\User   $user
+     * @param  \App\Board  $board
+     * @param  \App\User   $target
+     *
+     * @return Illuminate\Auth\Access\Response
+     */
+     public function editStaff(User $user, Board $board, User $target)
+     {
+         if ($user->user_id == $target->user_id) {
+             return Response::deny("auth.board.cann_edit_own_permissions");
+         }
+
+         return $user->can('admin-config');
+     }
+
+    /**
      * Can this user view posting history on this board?
      *
      * @param  \App\User  $user

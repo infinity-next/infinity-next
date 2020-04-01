@@ -43,15 +43,14 @@ class RoleController extends PanelController
     /**
      * Show role basic details.
      *
-     * @param \App\Board $board
+     * @param \App\Board  $board
+     * @param \App\Role   $role
      *
      * @return Response
      */
-    public function getIndex(Board $board, Role $role = null)
+    public function getIndex(Board $board, ?Role $role = null)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         return $this->view(static::VIEW_EDIT, [
             'board' => $board,
@@ -63,15 +62,14 @@ class RoleController extends PanelController
     /**
      * Update basic details for an existing role.
      *
-     * @param \App\Board $board
+     * @param \App\Board  $board
+     * @param \App\Role   $role
      *
      * @return Response
      */
     public function patchIndex(Board $board, Role $role)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $castes = $board->getRoleCastes($role->role, $role->role_id)->get()->pluck('caste');
 
@@ -109,12 +107,17 @@ class RoleController extends PanelController
         return $this->getIndex($board, $role);
     }
 
-
+    /**
+     * Shows a confirm delete page.
+     *
+     * @param \App\Board  $board
+     * @param \App\Role   $role
+     *
+     * @return Response
+     */
     public function getDelete(Board $board, Role $role)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         return $this->view(static::VIEW_DELETE, [
             'board' => $board,
@@ -123,12 +126,17 @@ class RoleController extends PanelController
         ]);
     }
 
-
+    /**
+     * Deletes a role.
+     *
+     * @param \App\Board  $board
+     * @param \App\Role   $role
+     *
+     * @return Response
+     */
     public function destroyDelete(Board $board, Role $role)
     {
-        if (!$this->user->canEditConfig($board)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $role->delete();
 
