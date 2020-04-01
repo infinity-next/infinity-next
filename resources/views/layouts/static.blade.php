@@ -94,7 +94,10 @@
 
         @yield('content')
 
-        <div id="attachment-preview"><img id="attachment-preview-img" src="" /></div>
+        <div id="attachment-preview">
+            <img id="attachment-preview-img" src="" />
+            <video id="attachment-preview-video" src="" muted autoload loop></video>
+        </div>
     </div>
 
     @yield('footer')

@@ -49,6 +49,7 @@
 
             'hover-box'      : "#attachment-preview",
             'hover-box-img'  : "#attachment-preview-img",
+            'hover-box-video'  : "#attachment-preview-video",
 
             'mode-reply'     : "main.mode-reply",
             'mode-index'     : "main.mode-index",
@@ -81,7 +82,6 @@
             'attachment-image-expandable' : "img.attachment-type-img",
             'attachment-image-audio'      : "img.attachment-type-audio",
             'attachment-image-video'      : "img.attachment-type-video",
-            'attachment-hoverable'        : ".post-attachment:not(.attachment-expanded) img.attachment-type-img",
             'attachment-inline'  : "audio.attachment-inline, video.attachment-inline",
             'attachment-link'    : ".attachment-link"
         },
@@ -277,13 +277,13 @@
             )
             .on(
                 'mouseover.ib-post',
-                widget.options.selector['attachment-hoverable'],
+                widget.options.selector['attachment-image'],
                 data,
                 widget.events.attachmentMediaMouseOver
             )
             .on(
                 'mouseout.ib-post',
-                widget.options.selector['attachment-hoverable'],
+                widget.options.selector['attachment-image'],
                 data,
                 widget.events.attachmentMediaMouseOut
             )
@@ -658,21 +658,40 @@
 
             var $img = $(this);
 
+            // content is not open already
             if ($img.parents("."+widget.options.classname['image-expanded']).length) {
                 return true;
             }
 
             var $link = $img.parents(widget.options.selector['attachment-link']).first();
-            var $preview = $(widget.options.selector['hover-box']);
 
             if ($link.attr('data-download-url') === undefined) {
                 return true;
             }
 
-            $preview.children().attr('src', $link.attr('data-download-url'));
+            var multimedia = false;
+            var $previewContent;
+
+            if ($img.is(widget.options.selector['attachment-image-expandable'])) {
+                $previewContent = $(widget.options.selector['hover-box-img']);
+            }
+            else if ($img.is(widget.options.selector['attachment-image-video'])) {
+                multimedia = true;
+                $previewContent = $(widget.options.selector['hover-box-video']);
+            }
+            else {
+                return true;
+            }
+
+            var $preview = $(widget.options.selector['hover-box']);
 
             widget.previewTimer = setTimeout(function() {
                 $preview.show();
+                $previewContent[0].src = $link.attr('data-download-url');
+
+                if (multimedia) {
+                    $previewContent[0].play();
+                }
             }, widget.options.preview_delay);
         },
 
