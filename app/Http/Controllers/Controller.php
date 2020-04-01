@@ -35,6 +35,11 @@ abstract class Controller extends BaseController
      */
     protected $options;
 
+    protected function log()
+    {
+        ## TODO ## Remove this.
+    }
+
     /**
      * Returns an system option's value.
      *

@@ -195,7 +195,7 @@ class PostController extends Controller
                 Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
 
                 foreach ($posts as $post) {
-                    Event::dispatch(new PostWasModerated($post, user()));
+                    event(new PostWasModerated($post, user()));
                 }
             }
             // Delete posts locally
