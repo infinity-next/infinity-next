@@ -117,76 +117,52 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
-	/*
-	|--------------------------------------------------------------------------
-	| Custom Validation Language Lines
-	|--------------------------------------------------------------------------
-	|
-	| Here you may specify custom validation messages for attributes using the
-	| convention "attribute.rule" to name the lines. This makes it quick to
-	| specify a specific custom language line for a given attribute rule.
-	|
-	*/
 
-	'custom' => [
-		'css'            => "The CSS you've supplied contains references that are not allowed.",
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify custom validation messages for attributes using the
+    | convention "attribute.rule" to name the lines. This makes it quick to
+    | specify a specific custom language line for a given attribute rule.
+    |
+    */
 
-		'file_corrupt'   => "<tt>:filename</tt> is corrupt or has an invalid file name.",
-		'file_generic'   => "Your file could not be uploaded",
-		'post_flood'     => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
-		'thread_flood'   => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
+    'captcha' => "The captcha was not completed correctly.",
+    'ugc_height' => "Your :attribute is too many lines or is too tall.",
 
-		'banned'         => "You are banned!",
-		'banned_for'     => "Reason: <em>:reason</em>",
+    'custom' => [
+        'css'            => "The CSS you've supplied contains references that are not allowed.",
 
-		'integrity'      => "Your file's integrity cannot be verified.",
+        'file_corrupt'   => "<tt>:filename</tt> is corrupt or has an invalid file name.",
+        'file_generic'   => "Your file could not be uploaded",
+        'post_flood'     => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
+        'thread_flood'   => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
 
-		'unoriginal_content'      => "Unoriginal content!",
-		'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
-		'unoriginal_image_board'  => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
+        'banned'         => "You are banned!",
+        'banned_for'     => "Reason: <em>:reason</em>",
 
-		'board_uri_banned' => "The requested URI is reserved by administration.",
-	],
+        'integrity'      => "Your file's integrity cannot be verified.",
 
-	/*
-	|--------------------------------------------------------------------------
-	| Form Specific Language
-	|--------------------------------------------------------------------------
-	|
-	| These lines are particular to a single, unique instance of a form.
-	|
-	*/
+        'unoriginal_content'      => "Unoriginal content!",
+        'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
+        'unoriginal_image_board'  => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
 
-	'form' => [
+        'board_uri_banned' => "The requested URI is reserved by administration.",
+    ],
 
-		/**
-		 * Post Form
-		 */
-		'post' => [
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap attribute place-holders
+    | with something more reader friendly such as E-Mail Address instead
+    | of "email". This simply helps us make messages a little cleaner.
+    |
+    */
 
-			// Body content.
-			'body' => [
-
-				// Newline requirement
-				'newlines' => "[0,1]Post body must be exactly :count line.|[2,Inf]Post body must have fewer than :count lines.",
-
-			],
-
-		],
-
-	],
-
-	/*
-	|--------------------------------------------------------------------------
-	| Custom Validation Attributes
-	|--------------------------------------------------------------------------
-	|
-	| The following language lines are used to swap attribute place-holders
-	| with something more reader friendly such as E-Mail Address instead
-	| of "email". This simply helps us make messages a little cleaner.
-	|
-	*/
-
-	'attributes' => [],
+    'attributes' => [],
 
 ];

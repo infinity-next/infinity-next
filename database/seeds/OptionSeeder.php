@@ -360,7 +360,7 @@ class OptionSeeder extends Seeder {
                 ],
                 [
                     'option_name'           => "postNewLines",
-                    'default_value'         => 0,
+                    'default_value'         => 50,
                     'format'                => "spinbox",
                     'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 1000 ] ),
                     'data_type'             => "unsigned_integer",

@@ -182,21 +182,6 @@ class PostRequest extends Request implements ApiContract
     }
 
     /**
-     * Form specific error messages.
-     *
-     * @return array Of field to language relationships.
-     */
-    public function messages()
-    {
-        $board = $this->board;
-        $postNewLines = (int) $board->getConfig('postNewLines', 0);
-
-        return [
-            'body.ugc_height' => trans_choice('validation.form.post.body.newlines', $postNewLines, ['count' => $postNewLines]),
-        ];
-    }
-
-    /**
      * Get the proper failed validation response for the request.
      *
      * @param array $errors
