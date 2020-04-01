@@ -126,6 +126,30 @@
     .post-content {
         padding: 0;
     }
+        .post-crown {
+            direction: ltr;
+            padding: 0.5em;
+        }
+        .crown-figure {
+            margin: 0;
+            padding: 0;
+        }
+        .crown-image {
+            display: inline-block;
+            line-height: 32px;
+            vertical-align: middle;
+            max-width: 32px;
+            max-height: 32px;
+        }
+        .crown-title {
+            display: inline-block;
+            padding-left: 0.5em;
+            vertical-align: middle;
+            font-size: 100%;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
         .post-details {
             clear: both;
             padding: 0.25em 0.5em;

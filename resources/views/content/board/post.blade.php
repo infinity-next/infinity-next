@@ -11,18 +11,18 @@
     a bunch of other stuff.
 --}}
 @set('details',     $post->getAttributes())
-@set('catalog',     isset($catalog) && $catalog ? true : false)
-@set('multiboard',  isset($multiboard) ? $multiboard : false)
-@set('preview',     isset($preview)    ? $preview    : (!isset($updater) || !$updater) && $post->body_too_long )
-@set('reply_to',    isset($reply_to) && $reply_to ? $reply_to : false)
+@set('catalog',     $catalog ?? false)
+@set('multiboard',  $multiboard ?? false)
+@set('preview',     $preview ?? (!isset($updater) || !$updater) && $post->body_too_long)
+@set('reply_to',    $reply_to ?? false)
 @include('content.board.post.single.container', [
     'post' => $post,
     'details' => $details,
 ])
     {{-- The interboard crown applied to posts in Overboard. --}}
-    @if ($multiboard && !$catalog && !$reply_to)
+    @if (!$catalog && !$reply_to && ($crown ?? false || $multiboard))
     @include('content.board.crown', [
-        'board'  => $post->board,
+        'board' => $post->board,
     ])
     @endif
 

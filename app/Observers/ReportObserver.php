@@ -21,13 +21,13 @@ class ReportObserver
     /**
      * Handles model after create (non-existant save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
     public function created(Report $report)
     {
-        Event::dispatch(new \App\Event\ReportWasCreated($report));
+        Event::dispatch(new \App\Events\ReportWasCreated($report));
 
         return true;
     }
@@ -35,11 +35,11 @@ class ReportObserver
     /**
      * Checks if this model is allowed to create (non-existant save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function creating(Page $page)
+    public function creating(Report $report)
     {
         return true;
     }
@@ -47,13 +47,13 @@ class ReportObserver
     /**
      * Handles model after delete (pre-existing hard or soft deletion).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function deleted($page)
+    public function deleted($report)
     {
-        Event::dispatch(new \App\Event\ReportWasDeleted($report));
+        Event::dispatch(new \App\Events\ReportWasDeleted($report));
 
         return true;
     }
@@ -61,11 +61,11 @@ class ReportObserver
     /**
      * Checks if this model is allowed to delete (pre-existing deletion).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function deleting($page)
+    public function deleting($report)
     {
         return true;
     }
@@ -73,11 +73,11 @@ class ReportObserver
     /**
      * Handles model after save (pre-existing or non-existant save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function saved(Page $page)
+    public function saved(Report $report)
     {
         return true;
     }
@@ -85,11 +85,11 @@ class ReportObserver
     /**
      * Checks if this model is allowed to save (pre-existing or non-existant save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function saving(Page $page)
+    public function saving(Report $report)
     {
         return true;
     }
@@ -97,13 +97,13 @@ class ReportObserver
     /**
      * Handles model after update (pre-existing save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function updated(Page $page)
+    public function updated(Report $report)
     {
-        Event::dispatch(new \App\Event\ReportWasModified($report));
+        Event::dispatch(new \App\Events\ReportWasModified($report));
 
         return true;
     }
@@ -111,11 +111,11 @@ class ReportObserver
     /**
      * Checks if this model is allowed to update (pre-existing save).
      *
-     * @param \App\Page $page
+     * @param \App\Report $report
      *
      * @return bool
      */
-    public function updating(Page $page)
+    public function updating(Report $report)
     {
         return true;
     }

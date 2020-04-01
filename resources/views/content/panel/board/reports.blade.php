@@ -9,9 +9,6 @@
         @foreach($reportedPosts as $reportedPost)
         <li class="reported-post">
             <article class="reported-content">
-                <h3 class="report-board" dir="ltr">/{{ $reportedPost->board_uri }}/ - {{ $reportedPost->board->title}}</h3>
-                <p class="report-board-desc">{{ $reportedPost->board->is_worksafe ? trans('board.sfw') : trans('board.nsfw') }}</p>
-
                 <ul class="report-actions actions-post" data-no-instant>
                     <li class="report-action">
                         <a class="report-action"
@@ -43,6 +40,7 @@
                     'reports' => $reportedPost->reports,
                     'catalog' => false,
                     'preview' => false,
+                    'crown'   => true,
                 ])
             </article>
 
