@@ -492,7 +492,6 @@
             var $this   = $(this);
             var $target = $(event.target);
 
-            console.log($target, $target.parents());
             // Make sure we're not actually in the menu.
             if ($target.parents(widget.options.selector['action-tabs']).length) {
                 return true;
