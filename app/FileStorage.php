@@ -696,23 +696,17 @@ class FileStorage extends Model
             return $board->getSpoilerUrl();
         }
 
-        if ($this->isImage() || $this->isDocument())
-        {
-            $ext = Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png";
+        if ($this->isImage() || $this->isDocument() || $this->isVideo()) {
+            $ext = "webp";
         }
-        else if ($this->isVideo())
-        {
-            $ext = "jpg";
-        }
-        else if ($this->isAudio())
-        {
-            if (!$this->hasThumb())
-            {
+        elseif ($this->isAudio()) {
+            if (!$this->hasThumb()) {
                 return $board->getAudioArtURL();
             }
 
-            $ext = 'png';
-        } elseif ($this->isImageVector()) {
+            $ext = 'webp';
+        }
+        elseif ($this->isImageVector()) {
             // With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
             return $this->getDownloadUrl($board);
         }
@@ -994,7 +988,7 @@ class FileStorage extends Model
                                 $constraint->aspectRatio();
                                 $constraint->upsize();
                             })
-                                ->encode(Settings::get('attachmentThumbnailJpeg') ? 'jpg' : 'png', Settings::get('attachmentThumbnailQuality'))
+                                ->encode('webp', Settings::get('attachmentThumbnailQuality'))
                                 ->save($this->getFullPathThumb());
 
                             $this->has_thumbnail = true;
@@ -1064,7 +1058,7 @@ class FileStorage extends Model
                             $constraint->aspectRatio();
                             $constraint->upsize();
                         })
-                            ->encode(Settings::get('attachmentThumbnailJpeg') ? 'jpg' : 'png', Settings::get('attachmentThumbnailQuality'))
+                            ->encode('webp', Settings::get('attachmentThumbnailQuality'))
                             ->save($this->getFullPathThumb());
 
                         $this->has_thumbnail = true;
@@ -1088,7 +1082,7 @@ class FileStorage extends Model
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
-                    ->encode(Settings::get('attachmentThumbnailJpeg') ? 'jpg' : 'png', Settings::get('attachmentThumbnailQuality'))
+                    ->encode('webp', Settings::get('attachmentThumbnailQuality'))
                     ->save($this->getFullPathThumb());
 
                 $this->has_thumbnail = true;
@@ -1153,7 +1147,7 @@ class FileStorage extends Model
                                     $constraint->aspectRatio();
                                     $constraint->upsize();
                             })
-                            ->encode(Settings::get('attachmentThumbnailJpeg') ? "jpg" : "png", Settings::get('attachmentThumbnailQuality'))
+                            ->encode('webp', Settings::get('attachmentThumbnailQuality'))
                             ->save($this->getFullPathThumb());
 
                         $this->has_thumbnail    = true;

@@ -251,22 +251,23 @@
                     z-index: 2;
                 }
 
-                html.js a.attachment-link .attachment-type-img {
-                    cursor: zoom-in;
-                }
-                html.js .attachment-expanded .attachment-link .attachment-type-img {
-                    cursor: zoom-out;
-                }
+                html.js & {
+                    .attachment-link .attachment-type-img {
+                        cursor: zoom-in;
+                    }
+                    .attachment-expanded .attachment-link .attachment-type-img {
+                        cursor: zoom-out;
+                    }
+                    .attachment-link .attachment-type-video {
+                        box-sizing: border-box;
+                        border-style: solid;
+                        border-width: 17px;
 
-                html.js a.attachment-link .attachment-type-video {
-                    box-sizing: border-box;
-                    border-style: solid;
-                    border-width: 17px;
-
-                    -moz-border-image:    url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                    -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                    -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                    border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                        -moz-border-image:    url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                        -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                        -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                        border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                    }
                 }
                     .post-attachment.attachment-expanded {
                         clear: both;

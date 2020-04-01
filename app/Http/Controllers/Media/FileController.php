@@ -92,13 +92,7 @@ class FileController extends Controller
 
 
                 if ($thumbnail) {
-                    if ($FileStorage->isImage()) {
-                        $responseHeaders['Content-Type'] = Settings::get('attachmentThumbnailJpeg') ? 'image/jpg' : 'image/png';
-                    } elseif ($FileStorage->isVideo()) {
-                        $responseHeaders['Content-Type'] = 'image/jpg';
-                    } elseif ($FileStorage->isAudio()) {
-                        $responseHeaders['Content-Type'] = 'image/png';
-                    }
+                    $responseHeaders['Content-Type'] = 'image/webp';
                 }
 
 
