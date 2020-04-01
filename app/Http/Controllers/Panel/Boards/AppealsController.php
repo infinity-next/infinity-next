@@ -31,11 +31,9 @@ class AppealsController extends PanelController
 
     public function getIndex(Board $board = null)
     {
-        if (!$this->user->canManageAppealsAny()) {
-            return abort(403);
-        }
+        $this->authorize('viewAny', BanAppeal::class);
 
-        $appeals = BanAppeal::getAppealsFor($this->user);
+        $appeals = BanAppeal::getAppealsFor(user());
 
         return $this->view(static::VIEW_APPEALS, [
             'appeals' => $appeals,
@@ -44,6 +42,8 @@ class AppealsController extends PanelController
 
     public function patchIndex(Board $board = null)
     {
+        $this->authorize('viewAny', BanAppeal::class);
+
         $approve = true;
         $appeal = Request::input('approve', false);
 
@@ -59,9 +59,7 @@ class AppealsController extends PanelController
             ->with('ban', 'ban.board')
             ->findOrFail((int) $appeal);
 
-        if (!$this->user->canManageAppeals($appeal->ban->board)) {
-            return abort(403);
-        }
+        $this->authorize('manage', $appeal);
 
         $appeal->approved = $approve;
         $appeal->seen = true;

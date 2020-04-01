@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Contracts\PermissionUser as PermissionUser;
+use App\Contracts\Auth\Permittable;
 use App\Support\IP;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,7 +40,7 @@ class BanAppeal extends Model
 
     public function ban()
     {
-        return $this->belongsTo('\App\Ban', 'ban_id');
+        return $this->belongsTo(Ban::class, 'ban_id');
     }
 
     /**
@@ -48,7 +48,7 @@ class BanAppeal extends Model
      *
      * @return Collection of \App\BanAppeal
      */
-    public static function getAppealsFor(PermissionUser $user)
+    public static function getAppealsFor(Permittable $user)
     {
         return static::whereHas('ban', function ($query) use ($user) {
             $query->whereActive();

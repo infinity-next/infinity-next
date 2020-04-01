@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Board;
 use App\Post;
+use App\Report;
 use App\Contracts\Auth\Permittable as User;
 use Illuminate\Auth\Access\Response;
 use Gate;
@@ -29,7 +30,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function create(?User $user, Board $board)
+    public function create(User $user, Board $board)
     {
         return $user->permission('board.post.report', $board)
             ? Response::allow()
@@ -44,7 +45,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function createGlobal(?User $user, Board $board)
+    public function createGlobal(User $user, Board $board)
     {
         return $user->permission('site.post.report', $board)
             ? Response::allow()
@@ -59,7 +60,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function demote(?User $user, Report $report)
+    public function demote(User $user, Report $report)
     {
         if ($report->isDemoted()) {
             return Response::deny('auth.report.already_demoted');
@@ -80,7 +81,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function dismiss(?User $user, Report $report)
+    public function dismiss(User $user, Report $report)
     {
         // At the moment, anyone who can view can dismiss.
         return $user->can('view', $report);
@@ -94,7 +95,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function promote(?User $user, Report $report)
+    public function promote(User $user, Report $report)
     {
         if ($report->isPromoted()) {
             return Response::deny('auth.report.already_promoted');
@@ -104,7 +105,7 @@ class ReportPolicy extends AbstractPolicy
             return Response::deny('auth.report.not_local');
         }
 
-        return $user->can('create-global', $report);
+        return $user->can('create-global', $report->board);
     }
 
     /**
@@ -115,7 +116,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function view(?User $user, Report $report)
+    public function view(User $user, Report $report)
     {
         // If this is a global report, we check for that permission.
         if ($report->global) {
@@ -137,7 +138,7 @@ class ReportPolicy extends AbstractPolicy
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function viewGlobal(?User $user)
+    public function viewGlobal(User $user)
     {
         return $user->permission('site.reports')
             ? Response::allow()

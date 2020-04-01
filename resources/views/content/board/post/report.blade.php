@@ -30,7 +30,7 @@
         <li class="report-detail detail-local">@lang('panel.reports.local_single')</li>
         @endif
 
-        <li class="report-detail detail-ip">{{ user()->getTextForIP($report->getReporterIpAsString()) }}
+        <li class="report-detail detail-ip">{{ user()->getTextForIP($report->reporter_ip) }}
             [<a href="{{ $report->getUrl('dismiss.ip') }}" class="report-dismiss-ip">@lang('panel.reports.dismiss_ip')</a>]
         </li>
 

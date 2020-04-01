@@ -332,26 +332,6 @@ trait Permittable
     }
 
     /**
-     * Can this user manage appeals for a specific board or globally?
-     *
-     * @return bool
-     */
-    public function canManageAppeals(Board $board = null)
-    {
-        return $this->permission('board.user.unban', $board);
-    }
-
-    /**
-     * Can this user manage appeals for any board?
-     *
-     * @return bool
-     */
-    public function canManageAppealsAny()
-    {
-        return $this->permission('board.user.unban') || $this->permissionAny('board.user.unban');
-    }
-
-    /**
      * Returns a list of boards that this user can manage ban appeals in.
      *
      * @return array of board URis.

@@ -2,15 +2,6 @@
 
 namespace App;
 
-use App\Ban;
-use App\BoardAsset;
-use App\Dice;
-use App\FileStorage;
-use App\FileAttachment;
-use App\PostCite;
-use App\User;
-use App\Report;
-use App\Role;
 use App\Contracts\Auth\Permittable;
 use App\Contracts\Support\Formattable as FormattableContract;
 use App\Services\ContentFormatter;
@@ -243,7 +234,7 @@ class Post extends Model implements FormattableContract
 
     public function replyFiles()
     {
-        return $this->hasManyThrough(FileAttachment::class, 'App\Post', 'reply_to', 'post_id');
+        return $this->hasManyThrough(FileAttachment::class, Post::class, 'reply_to', 'post_id');
     }
 
     public function reports()
@@ -264,7 +255,7 @@ class Post extends Model implements FormattableContract
         $count = 0;
 
         foreach ($this->reports as $report) {
-            if ($report->canPromote($user)) {
+            if ($user->can('promote', $report)) {
                 ++$count;
             }
         }
@@ -284,7 +275,7 @@ class Post extends Model implements FormattableContract
         $count = 0;
 
         foreach ($this->reports as $report) {
-            if ($report->canDemote($user)) {
+            if ($user->can('demote', $report)) {
                 ++$count;
             }
         }
