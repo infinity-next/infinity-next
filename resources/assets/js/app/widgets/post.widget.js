@@ -714,8 +714,11 @@
 
             // We don't do anything if the user is CTRL+Clicking,
             // or if the file is a download type.
-            if (event.altKey || event.ctrlKey || $img.is(widget.options.selector['attachment-image-download']))
-            {
+            if (event.altKey || event.ctrlKey || $img.is(widget.options.selector['attachment-image-download'])) {
+                return true;
+            }
+
+            if ($this.parents(".index-catalog").length) {
                 return true;
             }
 
@@ -880,29 +883,24 @@
 
             // Prevent InstantClick hijacking requests we can handle without
             // reloading the document.
-            if ($("#"+post_id).length)
-            {
+            if ($("#"+post_id).length) {
                 $cite.attr('data-no-instant', "data-no-instant");
             }
-            else
-            {
+            else {
                 $cite.removeAttr('data-no-instant');
             }
 
             widget.clearCites();
 
-            if (widget.citeLoad == post_id)
-            {
+            if (widget.citeLoad == post_id) {
                 return true;
             }
 
             // Loads session storage for our post if it exists.
-            if (typeof sessionStorage === "object")
-            {
+            if (typeof sessionStorage === "object") {
                 $post = $(sessionStorage.getItem( post_id ));
 
-                if ($post instanceof jQuery && $post.length)
-                {
+                if ($post instanceof jQuery && $post.length) {
                     widget.anchorBoxToLink($post, $cite);
                     return true;
                 }
@@ -917,8 +915,7 @@
             }).done(function(response, textStatus, jqXHR) {
                 $post = widget.cachePosts(response);
 
-                if (widget.citeLoad === post_id)
-                {
+                if (widget.citeLoad === post_id) {
                     widget.anchorBoxToLink($post, $cite);
                 }
             });

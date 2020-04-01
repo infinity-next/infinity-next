@@ -58,6 +58,7 @@ class ConfigController extends PanelController
     public function getAssets(Board $board)
     {
         $this->authorize('configure', $board);
+        
         return $this->view(static::VIEW_CONFIG, [
             'board' => $board,
             'banned' => $board->getBannedImages(),
@@ -253,8 +254,8 @@ class ConfigController extends PanelController
 
         if ($assetType == 'board_flags') {
             $new = $input["new_{$input['asset_type']}"];
-            $names = isset($new['name']) ? $new['name'] : [];
-            $uploads = isset($new['file']) ? $new['file'] : [];
+            $names = $new['name'] ?? [];
+            $uploads = $new['file'] ?? [];
             $rules = [];
 
             $nameRules = [
@@ -280,7 +281,8 @@ class ConfigController extends PanelController
                     ->back()
                     ->withErrors($validator->errors());
             }
-        } else {
+        }
+        else {
             $uploads = [Request::file("new_{$input['asset_type']}")];
         }
 

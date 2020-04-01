@@ -38,18 +38,15 @@ class RolesController extends PanelController
      */
     public static $navTertiary = 'nav.panel.board.settings';
 
-    public function authorize($ability, $arguments = [])
-    {
-        $this->authorize('configure', $this->board);
-    }
-
     /**
-     * Show the application dashboard to the user.
+     * List the board roles.
      *
      * @return Response
      */
     public function get(Board $board)
     {
+        $this->authorize('configure', $board);
+
         $roles = Role::whereBoardRole($board, user())->get();
 
         return $this->view(static::VIEW_ROLES, [
@@ -68,6 +65,8 @@ class RolesController extends PanelController
      */
     public function create(Board $board)
     {
+        $this->authorize('configure', $board);
+
         $roles = Role::whereCanParentForBoard($board, user())->get();
         $choices = [];
 
@@ -92,24 +91,29 @@ class RolesController extends PanelController
      */
     public function store(Board $board)
     {
-        $roles = Role::whereCanParentForBoard($board, $this->user)->get();
+        $this->authorize('configure', $board);
+
+        $roles = Role::whereCanParentForBoard($board, user())->get();
         $castes = $board->getRoleCastes(Request::input('roleType'))->get()->pluck('caste');
 
         $rules = [
             'roleType' => [
                 'required',
                 'string',
-                'in:'.$roles->lists('role')->implode(','),
+                'in:'.$roles->pluck('role')->implode(','),
             ],
             'roleCaste' => [
+                'nullable',
                 'string',
                 'alpha_num',
                 "unique:roles,role,{$board->board_uri},board_uri",
             ],
             'roleName' => [
+                'nullable',
                 'string',
             ],
             'roleCapcode' => [
+                'nullable',
                 'string',
             ],
         ];
