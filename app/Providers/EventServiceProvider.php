@@ -83,6 +83,15 @@ class EventServiceProvider extends ServiceProvider
         \Appp\Events\PageWasModified::class => [],
         \Appp\Events\PageWasDeleted::class => [],
 
+        /**
+         * Reports
+         */
+        \App\Events\ReportWasCreated::class => [],
+        \App\Events\ReportWasDeleted::class => [],
+        \App\Events\ReportWasDemoted::class => [],
+        \App\Events\ReportWasDismissed::class => [],
+        \App\Events\ReportWasPromoted::class => [],
+
         // Role events
         \App\Events\RoleWasModified::class => [
             \App\Listeners\UserRecachePermissions::class,
@@ -111,6 +120,8 @@ class EventServiceProvider extends ServiceProvider
         \App\Board::observe(new \App\Observers\BoardObserver);
         \App\Page::observe(new \App\Observers\PageObserver);
         \App\Post::observe(new \App\Observers\PostObserver);
+        \App\Report::observe(new \App\Observers\ReportObserver);
+
         parent::boot();
     }
 }

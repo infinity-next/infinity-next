@@ -2,11 +2,11 @@
 
 namespace App\Observers;
 
-use App\Board;
+use App\Report;
 use Event;
 
 /**
- * Board observers.
+ * Report model observer..
  *
  * @category   Observers
  *
@@ -16,18 +16,18 @@ use Event;
  *
  * @since      0.6.0
  */
-class BoardObserver
+class ReportObserver
 {
     /**
      * Handles model after create (non-existant save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function created(Board $board)
+    public function created(Report $report)
     {
-        Event::dispatch(new \App\Events\BoardWasCreated($board, $board->operator));
+        Event::dispatch(new \App\Event\ReportWasCreated($report));
 
         return true;
     }
@@ -35,11 +35,11 @@ class BoardObserver
     /**
      * Checks if this model is allowed to create (non-existant save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function creating(Board $board)
+    public function creating(Page $page)
     {
         return true;
     }
@@ -47,13 +47,13 @@ class BoardObserver
     /**
      * Handles model after delete (pre-existing hard or soft deletion).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
     public function deleted($page)
     {
-        Event::dispatch(new \App\Events\BoardWasDeleted($page));
+        Event::dispatch(new \App\Event\ReportWasDeleted($report));
 
         return true;
     }
@@ -61,7 +61,7 @@ class BoardObserver
     /**
      * Checks if this model is allowed to delete (pre-existing deletion).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
@@ -73,11 +73,11 @@ class BoardObserver
     /**
      * Handles model after save (pre-existing or non-existant save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function saved(Board $board)
+    public function saved(Page $page)
     {
         return true;
     }
@@ -85,11 +85,11 @@ class BoardObserver
     /**
      * Checks if this model is allowed to save (pre-existing or non-existant save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function saving(Board $board)
+    public function saving(Page $page)
     {
         return true;
     }
@@ -97,23 +97,13 @@ class BoardObserver
     /**
      * Handles model after update (pre-existing save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function updated(Board $board)
+    public function updated(Page $page)
     {
-        Event::dispatch(new \App\Events\BoardWasModified($board));
-
-        // Trigger a role recache if the board has been reassigned.
-        if (!$board->exists && !$board->wasRecentlyCreated) {
-            foreach ($board->getDirty() as $attribute => $value) {
-                if ($attribute === 'operated_by') {
-                    Event::dispatch(new \App\Events\BoardWasReassigned($board, $board->operator));
-                    break;
-                }
-            }
-        }
+        Event::dispatch(new \App\Event\ReportWasModified($report));
 
         return true;
     }
@@ -121,11 +111,11 @@ class BoardObserver
     /**
      * Checks if this model is allowed to update (pre-existing save).
      *
-     * @param \App\Board $board
+     * @param \App\Page $page
      *
      * @return bool
      */
-    public function updating(Board $board)
+    public function updating(Page $page)
     {
         return true;
     }
