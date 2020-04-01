@@ -262,7 +262,11 @@ class ConfigController extends PanelController
                 'string',
                 'between:1,128',
             ];
-            $imageRules = array_merge(['required'], BoardAsset::getRulesForFlags($board));
+            $imageRules = array_merge(['required'], [
+                'image',
+                'dimensions:max_height=64,max_width=8,min_height=8,min_width=64',
+                'max:16',
+            ]);
 
             foreach (range(0, count($uploads) - 1) as $index) {
                 $rules["name.{$index}"] = $nameRules;
