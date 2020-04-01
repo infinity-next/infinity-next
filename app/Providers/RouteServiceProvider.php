@@ -186,6 +186,7 @@ class RouteServiceProvider extends ServiceProvider
         // Sets up our routing tokens.
         Route::pattern('attachment', '[0-9]\d*');
         Route::pattern('board', Board::URI_PATTERN);
+        Route::pattern('hash', '[a-f0-9]{32}');
         Route::pattern('filename', "^[\w\-. ]+$");
         Route::pattern('id', '[0-9]\d*');
         Route::pattern('post_id', '[0-9]\d*');

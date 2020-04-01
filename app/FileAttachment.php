@@ -35,6 +35,20 @@ class FileAttachment extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'post_id' => 'int',
+        'file_id' => 'int',
+        'filename' => 'string',
+        'is_spoiler' => 'bool',
+        'is_deleted' => 'bool',
+        'position' => 'int',
+    ];
+
+    /**
      * Indicates if Laravel should set created_at and updated_at timestamps.
      *
      * @var array

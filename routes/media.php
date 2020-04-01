@@ -41,12 +41,11 @@ if (false && !is_hidden_service() && config('app.url_media', false)) {
 }
 else {
     Route::group(['prefix' => '{board}/file',], function() {
+        Route::get('{hash}/{filename}', 'FileController@getImageFromHash')
+            ->name('file.hash');
+
         Route::get('{attachment}/{filename}', 'FileController@getImageFromAttachment')
             ->name('file.attachment');
-
-        Route::get('{hash}/{filename}', 'FileController@getImageFromHash')
-            ->name('file.hash')
-            ->where(['hash' => "[a-f0-9]{32}",]);
 
         Route::get('thumb/{hash}/{filename}', [
             'as'   => 'thumb.hash',

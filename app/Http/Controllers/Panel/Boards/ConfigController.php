@@ -202,14 +202,14 @@ class ConfigController extends PanelController
             'new_board_banned' => [
                 'required_if:asset_type,board_banned',
                 'image',
-                'image_size:100-500',
+                'dimensions:max_height=500,max_width=500,min_height=100,min_width=100',
                 'max:250',
             ],
 
             'new_board_banner' => [
                 'required_if:asset_type,board_banner',
                 'image',
-                'image_size:<=300,<=100',
+                'dimensions:max_height=100,max_width=300',
                 'max:1024',
             ],
 
@@ -223,22 +223,21 @@ class ConfigController extends PanelController
             'new_board_icon' => [
                 'required_if:asset_type,board_icon',
                 'image',
-                'image_aspect:1',
-                'image_size:64,64',
+                'dimensions:width=64,height=64,ratio=1/1',
                 'max:50',
             ],
 
             'new_file_deleted' => [
                 'required_if:asset_type,file_deleted',
                 'image',
-                'image_size:100-500',
+                'dimensions:max_height=500,max_width=500,min_height=100,min_width=100',
                 'max:250',
             ],
 
             'new_file_spoiler' => [
                 'required_if:asset_type,file_spoiler',
                 'image',
-                'image_size:100-500',
+                'dimensions:max_height=500,max_width=500,min_height=100,min_width=100',
                 'max:250',
             ],
         ]);
@@ -442,7 +441,7 @@ class ConfigController extends PanelController
     public function putTags(Board $board)
     {
         $this->authorize('configure', $board);
-        
+
         $input = Request::all();
         $rules = [
             'boardTags' => [
