@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Panel\Boards;
 use App\Board;
 use App\User;
 use App\Http\Controllers\Panel\PanelController;
+use Illuminate\Auth\Events\Registered;
+use Hash;
 use Request;
 use Validator;
 use Event;
@@ -119,7 +121,7 @@ class StaffController extends PanelController
         }
         else {
             $createUser = true;
-            $validator = $this->registrationValidator();
+            $validator = $this->registrationValidator(Request::all());
         }
 
         $castes = $roles->pluck('role_id');
@@ -128,14 +130,13 @@ class StaffController extends PanelController
                 'required',
                 'array',
             ],
+            'castes.*' => [
+                'required',
+                'in:'.$castes->implode(','),
+            ]
         ];
         $casteInput = Request::only('castes');
         $casteValidator = Validator::make($casteInput, $casteRules);
-
-        $casteValidator->each('castes', [
-            'in:'.$castes->implode(','),
-        ]);
-
 
         if ($validator->fails()) {
             return redirect()
@@ -150,12 +151,15 @@ class StaffController extends PanelController
                 ->withErrors($casteValidator->errors());
         }
         elseif ($createUser) {
-            $target = $this->registrar->create(Request::all());
+            $target = User::create([
+                'username' => Request::input('username'),
+                'email' => Request::input('email'),
+                'password' => Hash::make(Request::input('password')),
+            ]);
         }
         else {
-            $target = User::whereUsername(Request::only('existinguser'))->firstOrFail();
+            $target = User::whereUsername(Request::input('existinguser'))->firstOrFail();
         }
-
 
         $target->roles()->detach($roles->pluck('role_id')->toArray());
         $target->roles()->attach($casteInput['castes']);

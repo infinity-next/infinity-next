@@ -51,14 +51,12 @@ class PermissionController extends PanelController
      */
     public function getPermissions(Board $board, Role $role)
     {
-        if (!$role->canSetPermissions($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $permissionGroups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
-        $permissionGroups = $permissionGroups->filter(function ($group) {
-            $permissions = $group->permissions->filter(function ($permission) {
-                return $this->user->can($permission);
+        $permissionGroups = $permissionGroups->filter(function ($group) use ($board) {
+            $permissions = $group->permissions->filter(function ($permission) use ($board) {
+                return user()->permission($permission, $board);
             });
 
             $group->setRelation('permissions', $permissions);
@@ -85,9 +83,7 @@ class PermissionController extends PanelController
      */
     public function patchPermissions(Board $board, Role $role)
     {
-        if (!$role->canSetPermissions($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('configure', $board);
 
         $input = Request::all();
         $permissions = Permission::all();
@@ -95,7 +91,7 @@ class PermissionController extends PanelController
         $nullPermissions = [];
 
         foreach ($permissions as $permission) {
-            if ($this->user->can($permission->permission_id)) {
+            if (user()->permission($permission->permission_id, $board)) {
                 $nullPermissions[] = $permission->permission_id;
 
                 foreach ($input['permission'] as $permission_id => $permission_value) {

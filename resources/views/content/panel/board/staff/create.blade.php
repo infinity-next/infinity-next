@@ -57,7 +57,7 @@
             <label class="form-selector" for="register-new">@lang('panel.staff.select_register_form')</label>
 
             <div class="form-selectable">
-                @include('content.panel.auth.register.form', [ 'captchaless' => true ])
+                @include('content.auth.register.form', [ 'captchaless' => true ])
             </div>
         </div>
 
