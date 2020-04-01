@@ -50,7 +50,7 @@ else {
         Route::get('thumb/{hash}/{filename}', [
             'as'   => 'thumb.hash',
             'uses' => 'FileController@getThumbnailFromHash',
-        ])->where(['hash' => "[a-f0-9]{32}",]);
+        ]);
 
         Route::get('thumb/{attachment}/{filename}', [
             'as'   => 'thumb.attachment',
