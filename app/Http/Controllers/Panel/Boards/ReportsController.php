@@ -52,7 +52,7 @@ class ReportsController extends PanelController
      */
     public function getDismiss(Report $report)
     {
-        $this->authorize('report', $report);
+        $this->authorize('dismiss', $report);
 
         if (!$report->isOpen()) {
             abort(404);
@@ -84,7 +84,7 @@ class ReportsController extends PanelController
 
         $report->global = true;
         $report->promoted_at = $report->freshTimestamp();
-        $report->promoted_by = $this->user->user_id;
+        $report->promoted_by = user()->user_id;
         $report->save();
 
         return redirect()->back()
@@ -109,7 +109,7 @@ class ReportsController extends PanelController
 
         $report->global = false;
         $report->promoted_at = $report->freshTimestamp();
-        $report->promoted_by = $this->user->user_id;
+        $report->promoted_by = user()->user_id;
         $report->save();
 
         return redirect()->back()
@@ -127,7 +127,7 @@ class ReportsController extends PanelController
         $this->authorize('dismiss', $report);
 
         $reports = Report::whereOpen()
-            ->whereResponsibleFor($this->user)
+            ->whereResponsibleFor(user())
             ->where('reporter_ip', $report->reporter_ip)
             ->update([
                 'is_dismissed' => true,
@@ -151,7 +151,7 @@ class ReportsController extends PanelController
         $this->authorize('dismiss', $report);
 
         $reports = $post->reports()
-            ->whereResponsibleFor($this->user)
+            ->whereResponsibleFor(user())
             ->update([
                 'is_dismissed' => true,
                 'is_successful' => false,
@@ -174,11 +174,11 @@ class ReportsController extends PanelController
         $this->authorize('createGlobal', [Report::class, $report->board]);
 
         $reports = $post->reports()
-            ->whereResponsibleFor($this->user)
+            ->whereResponsibleFor(user())
             ->update([
                 'global' => true,
                 'promoted_at' => $post->freshTimestamp(),
-                'promoted_by' => $this->user->user_id,
+                'promoted_by' => user()->user_id,
             ]);
 
         return redirect()->back()
@@ -198,11 +198,11 @@ class ReportsController extends PanelController
         $this->authorize('demote', [Report::class, $report->board]);
 
         $reports = $post->reports()
-            ->whereResponsibleFor($this->user)
+            ->whereResponsibleFor(user())
             ->update([
                 'global' => false,
                 'promoted_at' => $post->freshTimestamp(),
-                'promoted_by' => $this->user->user_id,
+                'promoted_by' => user()->user_id,
             ]);
 
         return redirect()->back()
