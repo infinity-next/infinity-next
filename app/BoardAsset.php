@@ -95,22 +95,6 @@ class BoardAsset extends Model implements PseudoEnumContract
         ]);
     }
 
-    /**
-     * Supplies validation parameters for board flags.
-     *
-     * @param  \App\Board|null  Optional. Board upload is for. Defaults null.
-     *
-     * @return array
-     */
-    public static function getRulesForFlags(Board $board)
-    {
-        return [
-            'image',
-            'image_size:8-64,8-21',
-            'max:16',
-        ];
-    }
-
     public function scopeWhereBoardIcon($query)
     {
         return $query->where('asset_type', 'board_icon');

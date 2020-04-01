@@ -96,8 +96,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
-
         Route::model('attachment', FileAttachment::class);
         Route::model('ban',        Ban::class);
         Route::model('board',      Board::class);
@@ -194,6 +192,8 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::pattern('worksafe', '^(sfw|nsfw)$');
         Route::pattern('boards', '^((\+|-)[a-z0-9]{1,32})+$');
+
+        parent::boot();
     }
 
     /**
