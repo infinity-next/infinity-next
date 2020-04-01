@@ -58,7 +58,7 @@ class ConfigController extends PanelController
     public function getAssets(Board $board)
     {
         $this->authorize('configure', $board);
-        
+
         return $this->view(static::VIEW_CONFIG, [
             'board' => $board,
             'banned' => $board->getBannedImages(),
@@ -265,7 +265,7 @@ class ConfigController extends PanelController
             ];
             $imageRules = array_merge(['required'], [
                 'image',
-                'dimensions:max_height=64,max_width=8,min_height=8,min_width=64',
+                'dimensions:max_height=64,max_width=64,min_height=8,min_width=8',
                 'max:16',
             ]);
 
