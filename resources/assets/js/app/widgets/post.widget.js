@@ -718,7 +718,7 @@
                 return true;
             }
 
-            if ($this.parents(".index-catalog").length) {
+            if ($link.parents(".index-catalog").length) {
                 return true;
             }
 
