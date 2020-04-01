@@ -5,7 +5,7 @@ namespace App\Events;
 use App\Post;
 use Illuminate\Queue\SerializesModels;
 
-class PostWasAdded extends Event
+class PostWasCreated extends Event
 {
     use SerializesModels;
 

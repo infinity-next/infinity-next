@@ -673,18 +673,16 @@
                 dataType:    "json",
                 contentType: "application/json; charset=utf-8"
             })
-                .done(function(response, textStatus, jqXHR) {
+                .always(function() {
                     $form.prop('disabled', false);
                     $(widget.options.selector['submit']).prop('disabled', false);
-
-                    if (typeof response !== "object")
-                    {
-                        try
-                        {
+                })
+                .always(function(response, textStatus, jqXHR) {
+                    if (typeof response !== "object") {
+                        try {
                             response = jQuery.parseJSON(response);
                         }
-                        catch (exception)
-                        {
+                        catch (exception) {
                             console.log("Post submission returned unpredictable response. Refreshing.");
                             window.location.reload();
                             return;
@@ -692,33 +690,33 @@
                     }
 
                     // This event trigger will cascade effects with our supplemental Messenger information.
-                    if (response.messenger)
-                    {
+                    if (response.messenger) {
                         $(window).trigger('messenger', response);
                         var json = response.data;
                     }
-                    else
-                    {
+                    else if (typeof response.responseJSON !== undefined){
+                        var json = response.responseJSON;
+                    }
+                    else {
                         var json = response;
                     }
 
-                    if (typeof json.redirect !== "undefined")
-                    {
-                        console.log("Post submitted. Redirecting.");
-                        window.ib.storeYouPost(json.post.board_uri, json.post.board_id);
-                        window.location = json.redirect;
-                    }
-                    else if (typeof json.errors !== "undefined")
-                    {
+                    if (typeof json.errors !== "undefined") {
                         console.log("Post rejected.");
 
-                        jQuery.each(json.errors, function(field, errors)
-                        {
-                            jQuery.each(errors, function(index, error)
-                            {
+                        jQuery.each(json.errors, function(field, errors) {
+                            jQuery.each(errors, function(index, error) {
                                 widget.notices.push(error, 'error');
                             });
                         });
+                    }
+                    else if (typeof json.message !== "undefined") {
+                        widget.notices.push(json.message, 'message');
+                    }
+                    else if (typeof json.redirect !== "undefined") {
+                        console.log("Post submitted. Redirecting.");
+                        window.ib.storeYouPost(json.post.board_uri, json.post.board_id);
+                        window.location = json.redirect;
                     }
                     else if (autoupdater !== false)
                     {

@@ -9,6 +9,7 @@ use App\Post;
 use App\PostChecksum;
 use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
+use App\Services\ContentFormatter;
 use App\Support\IP;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -191,7 +192,7 @@ class PostRequest extends Request implements ApiContract
         $postNewLines = (int) $board->getConfig('postNewLines', 0);
 
         return [
-            'body.regex' => trans_choice('validation.form.post.body.newlines', $postNewLines, ['count' => $postNewLines]),
+            'body.ugc_height' => trans_choice('validation.form.post.body.newlines', $postNewLines, ['count' => $postNewLines]),
         ];
     }
 
@@ -264,10 +265,10 @@ class PostRequest extends Request implements ApiContract
                 'max:'.$board->getConfig('postMaxLength', 65534),
             ];
 
+            // post formatting requirements
             $newLineMax = (int) $board->getConfig('postNewLines', 0);
-
             if ($newLineMax > 0) {
-                $rules['body'][] = "regex:/^(\n?(.*)){1,{$newLineMax}}$/";
+                $rules['body'][] = "ugc_height:{$newLineMax}";
             }
 
             if ($user->cannot('attach', $board)) {

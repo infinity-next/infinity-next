@@ -1937,7 +1937,7 @@ class Post extends Model implements FormattableContract
 
         if (user()->isAccountable()) {
             if (Cache::has('posting_now_'.$this->author_ip->toLong())) {
-                return abort(429);
+                return abort(429, "Slow down.");
             }
 
             // Cache what time we're submitting our post for flood checks.

@@ -59,6 +59,8 @@ class ContentFormatter
      */
     protected $wordfilters = [];
 
+    protected $lineCount = 0;
+
     /**
      * Builds an array of attributes for the Parsedown engine.
      *
@@ -158,7 +160,8 @@ class ContentFormatter
             $this->formattable = $post;
             $body = (string) $post->body;
             $this->wordfilters = $post->board->getWordfilters();
-        } else {
+        }
+        else {
             $body = (string) $post;
         }
 
@@ -271,6 +274,13 @@ class ContentFormatter
         $citelessContent = preg_replace("/\s/", '', $citelessContent);
         // If anything is left, we have content.
         $this->hasContent = (strlen($citelessContent) > 0);
+
+        // Count each line as a height.
+        $this->lineCount = count(preg_split('/\n|\r/', $content));
+        // Add additional height for headers.
+        $this->lineCount += preg_match_all('/\<h[123456]/i', $content);
+        // Count <h1> twice.
+        $this->lineCount += preg_match_all('/\<h1/i', $content);
 
         return $content;
     }
@@ -603,5 +613,15 @@ class ContentFormatter
     public function isRtl()
     {
         return $this->isRtl;
+    }
+
+    /**
+     * Returns an appoximate line height of this message
+     *
+     * @return int
+     */
+    public function getLineCount()
+    {
+        return $this->lineCount;
     }
 }

@@ -13,13 +13,38 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        // Post specific events
+        /**
+         * Board events
+         */
+        \App\Events\BoardWasCreated::class => [
+            \App\Listeners\BoardSetOwner::class,
+            \App\Listeners\UserRecachePermissions::class,
+            \App\Listeners\LogEvent::class,
+        ],
+        \App\Events\BoardWasModified::class => [
+            \App\Listeners\BoardModelRecache::class,
+            \App\Listeners\BoardListRecache::class,
+            \App\Listeners\BoardStyleRecache::class,
+            \App\Listeners\OverboardRecache::class,
+            \App\Listeners\BoardRecachePages::class,
+        ],
+        \App\Events\BoardWasReassigned::class => [
+            \App\Listeners\UserRecachePermissions::class,
+            \App\Listeners\LogEvent::class,
+        ],
+
+        /**
+         * Posts
+         */
         \App\Events\AttachmentWasModified::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,
             \App\Listeners\ThreadRecache::class,
         ],
-        \App\Events\PostWasAdded::class => [
+        \App\Events\PostWasCapcoded::class => [
+            \App\Listeners\LogEvent::class,
+        ],
+        \App\Events\PostWasCreated::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,
             \App\Listeners\PostHTMLRecache::class,
@@ -58,24 +83,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\ThreadNewReply::class => [
             \App\Listeners\ThreadAutopruneOnReply::class,
-        ],
-
-        // Board specific events
-        \App\Events\BoardWasCreated::class => [
-            \App\Listeners\BoardSetOwner::class,
-            \App\Listeners\UserRecachePermissions::class,
-            \App\Listeners\LogEvent::class,
-        ],
-        \App\Events\BoardWasModified::class => [
-            \App\Listeners\BoardModelRecache::class,
-            \App\Listeners\BoardListRecache::class,
-            \App\Listeners\BoardStyleRecache::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\BoardRecachePages::class,
-        ],
-        \App\Events\BoardWasReassigned::class => [
-            \App\Listeners\UserRecachePermissions::class,
-            \App\Listeners\LogEvent::class,
         ],
 
         // Page specific events

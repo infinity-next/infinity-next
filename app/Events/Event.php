@@ -4,8 +4,31 @@ namespace App\Events;
 
 abstract class Event
 {
-    const ACTION_CREATE = 1;
-    const ACTION_READ = 2;
-    const ACTION_UPDATE = 3;
-    const ACTION_DELETE = 4;
+    /**
+     * Log name
+     *
+     * @var string.
+    */
+    public $action = null;
+
+    /**
+     * Arbitrary log details to be JSON encoded.
+     *
+     * @var string
+     */
+    public $actionDetails = null;
+
+    /**
+     * The board the event is being fired on.
+     *
+     * @var \App\Support\IP
+     */
+    public $ip;
+
+    /**
+     * The board the event is being fired on.
+     *
+     * @var \App\Auth\Permittable
+     */
+    public $user;
 }

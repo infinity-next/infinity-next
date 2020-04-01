@@ -22,7 +22,7 @@ class PostObserver
     public function created(Post $post)
     {
         // Fire event, which clears cache among other things.
-        Event::dispatch(new PostWasAdded($post));
+        Event::dispatch(new \App\Events\PostWasCreated($post));
 
         // Add dice rolls.
         // Because of how dice rolls work, we don't ever remove them and only
@@ -36,6 +36,11 @@ class PostObserver
                 'command_text' => $throw['command_text'],
                 'order' => $throw['order'],
             ]);
+        }
+
+        // Log staff posts.
+        if ($post->capcode_id) {
+            Event::dispatch(new \App\Events\PostWasCapcoded($post, user()));
         }
 
         return true;

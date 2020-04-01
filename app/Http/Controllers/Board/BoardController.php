@@ -199,16 +199,6 @@ class BoardController extends Controller
         $post = new Post($request->all());
         $post->submitTo($board, $thread);
 
-        // Log staff posts.
-        if ($post->capcode_id) {
-            $this->log('log.post.capcode', $post, [
-                'board_id' => $post->board_id,
-                'board_uri' => $post->board_uri,
-                'capcode' => $post->capcode->getCapcodeName(),
-                'role' => $post->capcode->role,
-            ]);
-        }
-
         $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 
         if ($request->wantsJson()) {

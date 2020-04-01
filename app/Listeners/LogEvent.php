@@ -17,15 +17,22 @@ class LogEvent extends Listener
      */
     public function handle($event)
     {
-        $log = new Log;
-        $log->action_name = $event->action;
-        $log->user_ip = new IP;
-
-        if ($event->board instanceof Board) {
-            $log->board_uri = $event->board->board_uri;
+        if (is_null($event->action ?? null)) {
+            return;
         }
 
-        if ($event->user instanceof User) {
+        $log = new Log;
+        $log->action_name = "log.{$event->action}";
+        $log->user_ip = new IP;
+
+        if ($event->board ?? null instanceof Board) {
+            $log->board_uri = $event->board->board_uri;
+        }
+        else if ($event->post ?? null instanceof Post) {
+            $log->board_uri = $event->post->board_uri;
+        }
+
+        if ($event->user ?? null instanceof User) {
             $log->user_id = $event->user->user_id;
         }
 
