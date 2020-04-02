@@ -833,7 +833,7 @@ class Board extends Model
      *
      * @return string
      */
-    public function getUrl($route = "index", array $params = [], $abs = true)
+    public function getUrl($route = "catalog", array $params = [], $abs = true)
     {
         // Most people like URLs to be /foo/ instead of /foo.
         if ($route === "index" && empty($params)) {

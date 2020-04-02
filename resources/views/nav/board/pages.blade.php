@@ -1,7 +1,7 @@
 <nav class="pagination @if($showPages) pagination-full @endif @if($showCatalog) pagination-catalog @endif @if($showIndex) pagination-index @endif">
     <div class="pagination-buttons buttons-pages">
         @if ($showIndex)
-        <a class="button pagination-button" href="{{ $board->getUrl() }}" data-instant>@lang('board.button.index')</a>
+        <a class="button pagination-button" href="{{ $board->getUrl('index') }}" data-instant>@lang('board.button.index')</a>
         @endif
 
         @if ($showCatalog)
