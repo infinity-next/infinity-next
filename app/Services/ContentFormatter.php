@@ -564,7 +564,7 @@ class ContentFormatter
         }
 
         return function ($Line) use (&$formatter, $formattable) {
-            if (!$formattable->canDice()) {
+            if (!($formattable instanceof FormattableContract) || !$formattable->canDice()) {
                 return;
             }
 

@@ -7,8 +7,6 @@
 @section('content')
 <main id="frontpage">
     <div class="grid-container">
-        @include('content.index.modules.warning')
-
         <section id="site-info">
             <div class="grid-20 tablet-grid-100 mobile-grid-100 {{ $rtl ? 'push-80' : ''}}">
                 @include('content.index.modules.logo')

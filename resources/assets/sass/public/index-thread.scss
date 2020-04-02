@@ -36,20 +36,14 @@ main.index-threaded {
         }
 
         /* Threads */
-        main.index-threaded .thread,
-        aside.advertiser.top-left {
+        main.index-threaded .thread {
             padding: 1em;
-        }
+            clear: both;
+            border-top: 1px solid #d9bfb7;
 
-        main.index-threaded .thread-item {
-            border-top:    1px solid rgba(0, 0, 255, 0.5);
-            border-bottom: 1px solid rgba(0, 0, 255, 0.5);
-        }
-        main.index-threaded .thread-item:first-child {
-            border-top: none;
-        }
-        main.index-threaded .thread-item:last-child {
-            border-bottom: none;
+            &:first-child {
+                border-top: none;
+            }
         }
 
         main.multiboard-index {

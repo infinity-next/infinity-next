@@ -4,6 +4,7 @@
 
 @section('body-class',   "error error-{$status_code}")
 @section('page-title',   "{$status_code} " . trans("error.{$error_name}.title"))
+@section('announcement', "")
 
 @if ($status_code == 500)
     @section('header-logo', asset('static/img/logo_500.png'))

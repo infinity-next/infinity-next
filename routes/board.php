@@ -73,7 +73,7 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
 /**
  * Attachment Moderation
  */
-Route::group(['as' => 'file.', 'prefix' => 'file/{attachment}',], function () {
+Route::group(['as' => 'file.', 'prefix' => 'attachment/{attachment}',], function () {
      Route::get('remove', ['as' => 'delete', 'uses' => 'AttachmentController@getDeleteAttachment']);
      Route::post('remove', ['as' => 'destroy', 'uses' => 'AttachmentController@postDeleteAttachment']);
      Route::get('spoiler', ['as' => 'spoiler', 'uses' => 'AttachmentController@getSpoilerAttachment']);

@@ -59,11 +59,7 @@
         @section('header')
         <header class="board-header header-height-1">
             @section('nav-header')
-                @if (env('APP_ESI', false))
-                    <esi:include src="{{ esi_url('.internal/site/global-nav') }}" />
-                @else
-                    @include('nav.gnav')
-                @endif
+                @include('nav.gnav')
             @show
 
             @section('header-inner')
@@ -87,7 +83,9 @@
                     </figcaption>
                 </figure>
 
-                @include('widgets.announcement')
+                @section('announcement')
+                    @include('widgets.announcement')
+                @show
             @show
         </header>
         @show

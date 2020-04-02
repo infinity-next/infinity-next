@@ -8,20 +8,43 @@ main.index-catalog {
         text-align: left;
     }
 
-    section.index-threads {
+    .index-threads {
         margin: 1em 0 0 0;
     }
 
-    .thread-list {
+    .threads {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        align-items: center;
         position: relative;
+        justify-content: center;
         text-align: center;
+
         min-width: 100%;
     }
 
-    .thread-item {
-        display: inline-block;
+    .thread {
+        position: relative;
+
+        background: rgba(182, 182, 182, 0.12);
+        border: 1px solid rgba(111, 111, 111, 0.34);
+
+        padding: 2px;
         margin: 0 0.25em 0.25em 0;
-        width: 180px;
+
+        vertical-align: top;
+        text-align: left;
+        font-weight: normal;
+        font-size: 11px;
+
+        height: 25em;
+        width: 160px;
+
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            width: 100px;
+        }
 
         &.already-seen {
             opacity: 0.75;
@@ -31,25 +54,6 @@ main.index-catalog {
             }
         }
     }
-    html.js &.multiboard-index .thread-item {
-        //display: none;
-    }
-         .thread {
-            position: relative;
-
-            background: rgba(182, 182, 182, 0.12);
-            border: 1px solid rgba(111, 111, 111, 0.34);
-
-            padding: 2px;
-            margin: 0;
-
-            vertical-align: top;
-            text-align: left;
-            font-weight: normal;
-            font-size: 11px;
-
-            height: 25em;
-        }
              .post-container {
                 position: absolute;
                 top: 0;
@@ -66,11 +70,11 @@ main.index-catalog {
                     box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
                     border-radius: 4px;
 
-                    min-width: 150%;
+                    //min-width: 150%;
                     min-height: 100%;
                     overflow: visible;
 
-                    left: -25%;
+                    //left: -25%;
                     bottom: auto;
                     z-index: 6;
                 }
@@ -137,9 +141,13 @@ main.index-catalog {
                             }
                                  .attachment-img {
                                     display: inline-block;
-                                    max-height: 150px;
+                                    max-height: 160px;
                                     max-width: 100%;
                                     max-height: 100%;
+
+                                    @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+                                        max-width: 100px;
+                                    }
                                 }
                     }
 
@@ -262,45 +270,4 @@ main.index-catalog {
              div.op-container a.post-action-reply {
                 border-width: 0 1.5em 1.5em 0;
             }
-
-    /**
-     * Responsive Design
-     */
-    body.responsive & {
-        section.index-threads {
-            & .thread-item {
-                max-width: 150px;
-                min-width: 100px;
-
-                /**
-                 * Left and right tabs on narrow phones should slide to take more space
-                 */
-                @media (max-width: 360px) {
-                    &:nth-child(odd) .post-container:hover {
-                        left: auto;
-                        right: -50%;
-                    }
-                    &:nth-child(even) .post-container:hover {
-                        left: -50%;
-                        right: auto;
-                    }
-                }
-
-                /**
-                 * Devices that can show three columns need left and right columns to
-                 * slide to take more space.
-                 */
-                @media (min-width: 465px) and (max-width: 640px) {
-                    &:nth-child(3n+1) .post-container:hover {
-                        left: auto;
-                        right: -50%;
-                    }
-                    &:nth-child(3n+3) .post-container:hover {
-                        left: -50%;
-                        right: auto;
-                    }
-                }
-            }
-        }
-    }
 }

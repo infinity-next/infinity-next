@@ -21,7 +21,7 @@
             'logo' : "#logo",
 
             'thread-list' : '#CatalogMix',
-            'thread-item' : '.thread-item',
+            'thread-item' : '.thread',
             'post-container' : '.post-container',
         }
     };

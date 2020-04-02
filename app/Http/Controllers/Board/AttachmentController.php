@@ -45,16 +45,11 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        if (!$this->user->canDeleteGlobally()
-            && !$this->user->canDeleteLocally($board)
-            && !$this->user->canDeletePostWithPassword($board)
-        ) {
-            return abort(403);
-        }
+        $this->authorize('delete', $attachment->post);
 
         $scope = [
             'board' => $board,
-            'mod' => $this->user->canDeleteGlobally() || $this->user->canDeleteLocally($board),
+            'mod' => true,//user()->canDeleteGlobally() || user()->canDeleteLocally($board),
         ];
 
         return $this->view(static::VIEW_VERIFY, $scope);
@@ -73,16 +68,11 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        if (!$this->user->canSpoilerAttachmentGlobally()
-            && !$this->user->canSpoilerAttachmentLocally($board)
-            && !$this->user->canSpoilerAttachmentWithPassword($board)
-        ) {
-            return abort(403);
-        }
+        $this->authorize('delete', $attachment->post);
 
         $scope = [
             'board' => $board,
-            'mod' => $this->user->canSpoilerAttachmentGlobally() || $this->user->canSpoilerAttachmentLocally($board),
+            'mod' => user()->canSpoilerAttachmentGlobally() || user()->canSpoilerAttachmentLocally($board),
         ];
 
         return $this->view(static::VIEW_VERIFY, $scope);
@@ -107,6 +97,8 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
+        $this->authorize('delete', $attachment->post);
+
         $input = Request::all();
 
         $validator = Validator::make($input, [
@@ -123,7 +115,7 @@ class AttachmentController extends Controller
         }
 
         if ($input['scope'] == 'other') {
-            if ($this->user->canDeleteGlobally() || $this->user->canDeleteLocally($board)) {
+            if (user()->can('delete', $attachment->post)) {
                 $this->log('log.attachment.delete', $attachment->post, [
                     'board_uri' => $attachment->post->board_uri,
                     'board_id' => $attachment->post->board_id,
@@ -134,7 +126,7 @@ class AttachmentController extends Controller
                 abort(403);
             }
         } elseif ($input['scope'] == 'self') {
-            if ($this->user->canDeletePostWithPassword($board)) {
+            if (user()->canDeletePostWithPassword($board)) {
                 if (!$attachment->post->checkPassword($input['password'])) {
                     return redirect()
                         ->back()
@@ -170,6 +162,8 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
+        $this->authorize('delete', $attachment->post);
+
         $input = Request::all();
 
         $validator = Validator::make($input, [
@@ -186,7 +180,7 @@ class AttachmentController extends Controller
         }
 
         if ($input['scope'] == 'other') {
-            if ($this->user->canDeleteGlobally() || $this->user->canDeleteLocally($board)) {
+            if (user()->can('delete', $attachment->post)) {
                 $this->log(
                     !$attachment->is_spoiler ? 'log.attachment.spoiler' : 'log.attachment.unspoiler',
                     $attachment->post,
@@ -201,7 +195,7 @@ class AttachmentController extends Controller
                 abort(403);
             }
         } elseif ($input['scope'] == 'self') {
-            if ($this->user->canDeletePostWithPassword($board)) {
+            if (user()->canDeletePostWithPassword($board)) {
                 if (!$attachment->post->checkPassword($input['password'])) {
                     return redirect()
                         ->back()

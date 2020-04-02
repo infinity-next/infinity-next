@@ -19,20 +19,18 @@
     ])
 
     <section class="index-threads static">
-        <ul class="thread-list">
+        <div class="threads">
             @foreach ($posts as $post)
-            <li class="thread-item">
-                <article class="thread">
-                    @include('content.board.catalog'), [
-                        'board'      => $board,
-                        'post'       => $post,
-                        'multiboard' => false,
-                        'preview'    => false,
-                    ])
-                </article>
-            </li>
+            <article class="thread">
+                @include('content.board.catalog'), [
+                    'board'      => $board,
+                    'post'       => $post,
+                    'multiboard' => false,
+                    'preview'    => false,
+                ])
+            </article>
             @endforeach
-        </ul>
+        </div>
     </section>
 
     @include('content.board.sidebar')
