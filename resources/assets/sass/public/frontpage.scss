@@ -106,13 +106,11 @@
         direction: ltr;
         margin: 0.5em 0;
     }
-
     .crown-figure {
         margin: 0;
         padding: 0;
         text-align: center;
     }
-
     .crown-image {
         display: inline-block;
         line-height: 32px;
@@ -120,7 +118,6 @@
         max-width: 32px;
         max-height: 32px;
     }
-
     .crown-title {
         display: inline-block;
         padding-left: 0.5em;
@@ -156,6 +153,7 @@
         border-left: none;
         width: 100%;
         margin: 0;
+        padding: 1em;
     }
     .attachment-action-group {
         display: none;
