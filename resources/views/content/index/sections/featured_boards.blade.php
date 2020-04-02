@@ -6,7 +6,7 @@
         <div id="featured-boards">
             @foreach ($featured_boards as $featured_board)
             <div class="post-crown grid-33 tablet-grid-33 mobile-grid-100">
-                <a href="/{!! $featured_board->board_uri !!}/" class="crown-link">
+                <a href="{!! $featured_board->getUrl() !!}" class="crown-link">
                     <figure class="crown-figure">
                         <img class="crown-image" src="{{ $featured_board->getIconURL() }}" />
                         <figcaption class="crown-title">/{{ $featured_board->board_uri }}/ - {{ $featured_board->getDisplayName() }}</figcaption>
