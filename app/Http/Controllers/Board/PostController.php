@@ -148,13 +148,11 @@ class PostController extends Controller
 
             $banLengthStr = implode($banLengthStr, ' ');
 
-            // If we're banning without the ability to view IP addresses, we will get our address directly from the post in human-readable format.
-            $banIpAddr = user()->getTextForIP($post->author_ip);
             // The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
             $banCidr = Request::input('ban_ip_range');
             // This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
             // If we just pass the CDIR into the construct, we get 192.168.1.3-129.168.3.255 for some reason.
-            $banCidrRange = IP::cidr_to_range("{$banIpAddr}/{$banCidr}");
+            $banCidrRange = IP::cidr_to_range("{$post->author_ip}/{$banCidr}");
             // We then pass this range into the construct method.
             $banIp = new IP($banCidrRange[0], $banCidrRange[1]);
 
@@ -171,7 +169,7 @@ class PostController extends Controller
             $banModel->mod_id = user()->user_id;
             $banModel->post_id = $post->post_id;
             $banModel->ban_reason_id = null;
-            $banModel->justification = Request::input('justification');
+            $banModel->justification = Request::input('justification') ?: "No reason given.";
             $banModel->board_uri = $global ? null : $board->board_uri;
         }
 

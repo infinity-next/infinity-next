@@ -1,5 +1,5 @@
 <article class="post-container {{
-        is_null($details['reply_to']) ? 'op-container' : 'reply-container'
+        $reply_to ? 'op-container' : 'reply-container'
     }} {{
         $post->hasBody() ? 'has-body' : 'has-no-body'
     }} {{
@@ -12,7 +12,7 @@
     data-post_id="{{ $details['post_id'] }}"
     data-board_uri="{{ $details['board_uri'] }}"
     data-board_id="{{ $details['board_id'] }}"
-    data-reply-to-board-id="{{ $details['reply_to_board_id'] }}"
+    data-reply-to-board-id="{{ $reply_to ? $details['reply_to_board_id'] : null }}"
     data-created-at="{{ $post->created_at->timestamp }}"
     data-updated-at="{{ $post->updated_at->timestamp }}"
     data-bumped-last="{{ $post->bumped_last->timestamp }}"
