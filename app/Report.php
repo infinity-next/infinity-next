@@ -44,6 +44,7 @@ class Report extends Model
         'global' => "bool",
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'promoted_at' => 'datetime',
     ];
 
     /**
@@ -60,6 +61,7 @@ class Report extends Model
         'is_dismissed',
         'is_successful',
         'global',
+        'promoted_at',
     ];
 
     /**

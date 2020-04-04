@@ -13,7 +13,7 @@ $factory->define(Post::class, function (Faker $faker) {
         'created_at' => now(),
         'updated_at' => null,
 
-        'author_ip' $faker->ipv4,
+        'author_ip' => $faker->ipv4,
         'subject' => $faker->sentence,
         'author' => $faker->name,
         'email' => $faker->email,
