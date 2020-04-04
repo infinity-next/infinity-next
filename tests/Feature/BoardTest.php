@@ -89,7 +89,7 @@ class BoardTest extends TestCase {
      */
     public function testMissingBoard()
     {
-        $response = $this->action('GET', 'Board\BoardController@getIndex');
+        $response = $this->get('Board\BoardController@getIndex');
 
         $this->assertEquals(404, $response->getStatusCode());
     }

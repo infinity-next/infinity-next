@@ -38,7 +38,7 @@
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^8.5",
         "symfony/css-selector": "^5.0",
         "symfony/dom-crawler": "^5.0"
     },

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use App\Http\Controllers\Auth\SendsPasswordResetEmails;
 
 /**
  * Forgot password controller. Derived from stock laravel/laravel for v6

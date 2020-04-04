@@ -16,9 +16,8 @@ class AuthTest extends TestCase {
      */
     public function testLogin()
     {
-        $response = $this->call('GET', '/cp/auth/login/');
-
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->get('/cp/login')
+            ->assertOk();
     }
 
     /**
@@ -28,9 +27,8 @@ class AuthTest extends TestCase {
      */
     public function testLogout()
     {
-        $response = $this->call('GET', '/cp/auth/logout/');
-
-        $this->assertRedirectedTo('/');
+        $this->get('/cp/logout')
+            ->assertRedirect('/');
     }
 
     /**
@@ -40,8 +38,7 @@ class AuthTest extends TestCase {
      */
     public function testRegister()
     {
-        $response = $this->call('GET', '/cp/auth/register/');
-
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->get('/cp/register')
+            ->assertOk();
     }
 }

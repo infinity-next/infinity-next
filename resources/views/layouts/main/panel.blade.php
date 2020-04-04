@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('area-css')
-    <link rel="stylesheet" href="{{ elixir('static/css/panel.css') }}" data-instant-track id="style-system" />
+    <link rel="stylesheet" href="{{ mix('static/css/panel.css') }}" data-instant-track id="style-system" />
 @endsection
 
 @set('hideTitles', true)

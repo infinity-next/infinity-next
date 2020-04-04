@@ -90,13 +90,13 @@ class PermissionsTest extends TestCase
     public function testAdminModel()
     {
         // Assert is a user.
-        $this->assertInstanceOf("App\User", $this->admin);
+        $this->assertInstanceOf(User::class, $this->admin);
         // Assert has roles.
         $this->assertTrue( count($this->admin->roles) > 0 );
 
 
         // Assert role is a role.
-        $this->assertInstanceOf("App\Role", $this->adminRole);
+        $this->assertInstanceOf(Role::class, $this->adminRole);
         // Assert role has permissions.
         $this->assertTrue( count($this->adminRole->permissions) > 0 );
         // Assert that our admin role is the hard-coded admin ID.
@@ -137,13 +137,13 @@ class PermissionsTest extends TestCase
     public function testOwnerModel()
     {
         // Assert user is a user.
-        $this->assertInstanceOf("App\User", $this->owner);
+        $this->assertInstanceOf(User::class, $this->owner);
         // Assert has roles.
         $this->assertTrue( count($this->owner->roles) > 0 );
 
 
         // Assert role is a role.
-        $this->assertInstanceOf("App\Role", $this->ownerRole);
+        $this->assertInstanceOf(Role::class, $this->ownerRole);
         // Assert that our owner role has an inherited role ID of the hard-coded owner id.
         $this->assertEquals( Role::ID_OWNER, $this->ownerRole->inherit_id );
     }

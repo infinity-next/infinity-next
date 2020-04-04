@@ -3,7 +3,7 @@
 @section('title', "Reset Password")
 
 @section('body')
-<form class="form-pw" role="form" method="POST" action="{{ route('panel.password.email') }}">
+<form class="form-pw" role="form" method="POST" action="{{ route('auth.password.email') }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
     <fieldset class="form-fields">

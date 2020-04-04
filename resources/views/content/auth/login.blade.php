@@ -26,7 +26,7 @@
         </div>
 
         <div class="field row-forgot">
-            <a href="{{ route('auth.password.email') }}">
+            <a href="{{ route('auth.password.request') }}">
                 @lang('panel.field.login_link.password_forgot')
             </a>
         </div>
