@@ -15,40 +15,38 @@
             </a>
 
             <div class="attachment-details">
-                <div class="post-action-bar action-bar-attachments">
-                    @section('attachment-actions')
-                    @set('attachmentActions', false)
-                    <div class="post-action-tab action-tab-actions" data-no-instant>
-                        <span class="post-action-label post-action-open"><span class="post-action-text">@lang('board.action.open')</span></span>
-                        <ul class="post-action-groups">
-                            <li class="post-action-group">
-                                <ul class="post-actions">
-                                    @set('attachmentActions', true)
-                                    @if ($attachment->isSpoiler())
-                                    <li class="post-action">
-                                        <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="post-action-link attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
-                                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
-                                        </a>
-                                    </li>
-                                    @else
-                                    <li class="post-action">
-                                        <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="post-action-link attachment-spoiler" title="@lang('board.field.spoiler')" data-no-instant>
-                                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
-                                        </a>
-                                    </li>
-                                    @endif
+                @section('attachment-actions')
+                @set('attachmentActions', false)
+                <div class="post-action-tab action-tab-actions" data-no-instant>
+                    <span class="post-action-label post-action-open"><i class="fa fa-angle-down"></i><span class="post-action-text">@lang('board.action.open')</span></span>
+                    <ul class="post-action-groups">
+                        <li class="post-action-group">
+                            <ul class="post-actions">
+                                @set('attachmentActions', true)
+                                @if ($attachment->isSpoiler())
+                                <li class="post-action">
+                                    <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="post-action-link attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
+                                        <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
+                                    </a>
+                                </li>
+                                @else
+                                <li class="post-action">
+                                    <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="post-action-link attachment-spoiler" title="@lang('board.field.spoiler')" data-no-instant>
+                                        <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
+                                    </a>
+                                </li>
+                                @endif
 
-                                    <li class="post-action">
-                                        <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="post-action-link attachment-remove" title="@lang('board.field.remove')" data-no-instant>
-                                            <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    @show
+                                <li class="post-action">
+                                    <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="post-action-link attachment-remove" title="@lang('board.field.remove')" data-no-instant>
+                                        <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
+                @show
 
                 {{-- Note: Strict LTR direct here because this is technical info. --}}
                 <a class="attachment-action attachment-download" dir="ltr" target="_blank" href="{!! $attachment->getDownloadUrl($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">

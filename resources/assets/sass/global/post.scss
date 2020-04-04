@@ -168,6 +168,10 @@
             }
             .post-detail {
                 display: inline-block;
+                &.post-actions {
+                    text-align: center;
+                    width: 1em;
+                }
             }
             .post-detail:empty {
                 display: none;
@@ -305,62 +309,41 @@
         .op-container .post-metas {
             border-top: none;
         }
-        li.post-meta {
+        .post-meta {
             display: block;
             color: #333;
             font-size: 95%;
             padding: 0.2em 0.6em;
         }
 
-    div.post-action-bar {
+    .post-action-tab {
+        display: inline-block;
+        cursor: default;
+        position: relative;
+
+        /* border: 1px solid rgba(0,0,0,0.25);
+        border-radius: 2px; */
+
+        line-height: 1.8em;
+        height: 1.8em;
+
+        padding: 0;
+        margin-left: 0.25em;
+
+        html.js & {
+            cursor: pointer;
+        }
     }
-        .post-action-tab {
-            display: inline-block;
-            cursor: default;
-            position: relative;
-
-            /* border: 1px solid rgba(0,0,0,0.25);
-            border-radius: 2px; */
-
-            line-height: 1.8em;
-            height: 1.8em;
-
-            padding: 0;
-            margin-left: 0.25em;
-
-            html.js & {
-                cursor: pointer;
-            }
+    .post-action-tab.action-tab-actions {
+        margin-left: 0;
+        text-align: center;
+        width: 1.8em;
+    }
+        .action-tab-actions .post-action-text {
+            display: none;
         }
 
-            .post-action-label {
-                line-height: 1;
-
-                &::before {
-                    display: inline-block;
-                    padding: 0 0.25em;
-                    font-size: $font-size + 1;
-                    line-height: 1.2;
-
-                    #{$rtl} & {
-                        content: '◀';
-                    }
-                    #{$ltr} & {
-                        content: '▶';
-                    }
-                }
-            }
-            div.post-action-tab.action-tab-actions {
-                margin-left: 0;
-            }
-                div.action-tab-actions .fa {
-                    vertical-align: top;
-                }
-                div.action-tab-actions span.post-action-text {
-                    display: none;
-                }
-
-            a.catalog-open {
+            .catalog-open {
                 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
                 text-align: center;
                 vertical-align: middle;
@@ -403,19 +386,19 @@
                     display: block;
                 }
 
-                li.post-action-group {
+                .post-action-group {
                     background-color: #D6DAF0;
                     border: 1px solid rgba(0,0,0,0.25);
                 }
-                    ul.post-actions {
+                    .post-actions {
                         display: block;
                         vertical-align: top;
                         width: 100%;
                     }
-                    ul.post-actions:empty {
+                    .post-actions:empty {
                         display: none;
                     }
-                        li.post-action {
+                        .post-action {
                             border-bottom: 1px solid rgba(0,0,0,0.25);
                             width: 100%;
                         }

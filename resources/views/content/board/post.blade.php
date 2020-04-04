@@ -37,34 +37,34 @@
 
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
         @if ($preview || $post->bans->count() || !is_null($post->updated_by))
-        <ul class="post-metas">
+        <div class="post-metas">
             @if ($preview)
-            <li class="post-meta meta-see_more">@lang('board.preview_see_more', [
+            <div class="post-meta meta-see_more">@lang('board.preview_see_more', [
                 'url' => $post->getURL(),
-            ])</li>
+            ])</div>
             @endif
 
             @if ($post->bans->count())
             @foreach ($post->bans as $ban)
-            <li class="post-meta meta-ban_reason">
+            <div class="post-meta meta-ban_reason">
                 @if ($ban->justification != "")
                 <i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
                 @else
                 <i class="fa fa-ban"></i> @lang('board.meta.banned')
                 @endif
-            </li>
+            </div>
             @endforeach
             @endif
 
             @if (!is_null($post->updated_by))
-            <li class="post-meta meta-updated_by">
+            <div class="post-meta meta-updated_by">
                 <i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [
                     'name' => $details['updated_by_username'],
                     'time' => $post->updated_at
                 ])
-            </li>
+            </div>
             @endif
-        </ul>
+        </div>
         @endif
         @endif
     </div>

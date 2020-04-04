@@ -1,6 +1,10 @@
 .post-attachments {
     display: block;
-    overflow-x: auto;
+    // https://stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue
+    overflow: visible;
+    //overflow-x: visible;
+    //overflow-y: visible;
+    max-width: 100%;
     //max-width: 99%;
     //max-width: calc(100% - 1em);
 
@@ -15,7 +19,6 @@
         max-width: 100%;
     }
     .reply-container & {
-        padding: 0 0 0 0.5em;
         margin: 0;
     }
 
@@ -39,7 +42,7 @@
         }
     }
 
-    li.attachment-actions {
+    .attachment-actions {
         display: block;
         margin-top: -0.50em;
         padding-bottom: 0.75em;
@@ -65,10 +68,10 @@
         vertical-align: text-top;
 
         #{$rtl} & {
-            padding: 0 0 0.5em 0.5em;
+            padding: 0.5em 0 0.5em 0.5em;
         }
         #{$ltr} & {
-            padding: 0 0.5em 0.5em 0;
+            padding: 0.5em 0.5em 0.5em 0;
         }
     }
         .action-bar-attachments {
@@ -88,31 +91,6 @@
                     bottom: 2em;
                 }
             }
-
-            .post-action-label {
-                font-weight: bold;
-
-                &::before {
-                    display: inline-block;
-
-                    #{$rtl} & {
-                        content: '◁';
-                    }
-                    #{$ltr} & {
-                        content: '▷';
-                    }
-                }
-            }
-            /*
-            a.post-action {
-                display: block;
-                font-weight: normal;
-                font-size: 1.15em;
-                height: 1.15em;
-                line-height: 1;
-                margin-bottom: 0.3em;
-                visibility: hidden;
-            }*/
         }
 
         .attachment-container {
@@ -135,13 +113,13 @@
             clear: both;
             display: inline-block;
             white-space: nowrap;
+            text-align: center;
 
             .detail-filename {
                 direction: ltr;
                 text-align: center;
             }
             .detail-download {
-                margin-right: 0.5em;
                 vertical-align: middle;
             }
             .detail-filesize {
@@ -319,13 +297,11 @@
                 }
 
                 .attachment-details {
-                    display: block;
-                    max-width: 100%;
-
-                    position: relative;
-                    padding: 0;
-                    text-align: center;
-                    white-space: nowrap;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: row;
+                    padding: 0 1.8em 0 0; // compensates for post attachment alignment
                 }
 
                     .attachment-type-audio .attachment-details {

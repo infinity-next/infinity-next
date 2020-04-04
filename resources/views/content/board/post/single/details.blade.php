@@ -1,10 +1,6 @@
 <div class="post-details">
     @set('catalog', isset($catalog) && $catalog)
 
-    @if (!$catalog)
-    <span class="post-detail post-actions">@include('content.board.post.single.actions')</span>
-    @endif
-
     @if (isset($details['subject']) && $details['subject'] != "")
     <span class="post-detail post-subject">
         <h3 class="post-detail-item subject ugc">
@@ -78,6 +74,10 @@
     @endif
 
     <span class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></span>
+
+    @if (!$catalog)
+    <span class="post-detail post-actions">@include('content.board.post.single.actions')</span>
+    @endif
 
     @if (!$catalog)
         @if (!$reply_to && $post->isOP())
