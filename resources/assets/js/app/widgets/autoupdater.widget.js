@@ -209,29 +209,23 @@
             var postData     = json;
 
             // This important event fire ensures that sibling data is intercepted.
-            if (json.messenger)
-            {
+            if (json.messenger) {
                 postData = json.data;
                 $(window).trigger('messenger', json);
             }
 
-            if (postData instanceof Array)
-            {
-                $.each(postData, function(index, reply)
-                {
+            if (postData instanceof Array) {
+                $.each(postData, function(index, reply) {
                     var $existingPost = $(".post-container[data-post_id=" + reply.post_id+"]");
 
-                    if ($existingPost.length > 0)
-                    {
-                        if (reply.html !== null)
-                        {
+                    if ($existingPost.length > 0) {
+                        if (reply.html !== null) {
                             $newPost = $(reply.html);
 
-                            var existingUpdated = parseInt($existingPost.attr('data-updated-at'), 10),
-                                newUpdated      = parseInt($newPost.attr('data-updated-at'), 10);
+                            var existingUpdated = widget.getTimeFromPost($existingPost),
+                                newUpdated      = widget.getTimeFromPost($newPost);
 
-                            if (isNaN(existingUpdated) || isNaN(newUpdated) || (newUpdated > existingUpdated))
-                            {
+                            if (isNaN(existingUpdated) || isNaN(newUpdated) || (newUpdated > existingUpdated + 1)) {
                                 console.log("Autoupdater: Replacing " + reply.post_id);
 
                                 $existingPost.replaceWith($newPost);
@@ -244,8 +238,7 @@
                                 return true;
                             }
                         }
-                        else
-                        {
+                        else {
                             console.log("Autoupdater: Deleting " + reply.post_id);
 
                             $existingPost.addClass('post-deleted');
@@ -258,8 +251,7 @@
                             return true;
                         }
                     }
-                    else if (reply.html !== null)
-                    {
+                    else if (reply.html !== null) {
                         console.log("Autoupdater: Inserting " + reply.post_id);
 
                         $newPost = $(reply.html);

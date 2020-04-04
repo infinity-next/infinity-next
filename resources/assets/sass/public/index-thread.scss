@@ -118,17 +118,15 @@ main.index-threaded {
         }
 
         .autoupdater {
-            margin: 1em 0;
-            padding: 0 0 0 1.5em;
             white-space: nowrap;
         }
             .autoupdater .autoupdater-items {
-                margin: 0 0 0 -0.5em;
+                margin: 0.5em 0 0 -0.5em;
             }
                 .autoupdater .autoupdater-item {
                     display: inline-block;
                     list-style: none;
-                    margin: 0 0.5em;
+                    margin: 0 0.5em 0 0;
                 }
 
         main.index-threaded .post-container.op-container {
