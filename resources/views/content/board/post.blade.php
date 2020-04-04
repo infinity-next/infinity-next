@@ -15,6 +15,7 @@
 @set('multiboard',  $multiboard ?? false)
 @set('preview',     $preview ?? (!isset($updater) || !$updater) && $post->body_too_long)
 @set('reply_to',    $reply_to ?? false)
+
 @include('content.board.post.single.container', [
     'post' => $post,
     'details' => $details,

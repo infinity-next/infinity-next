@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+@set('siteName', site_setting('siteName', config('app.name')))
 @set('direction', isset($direction) ? $direction : "ltr")
 @set('ltr', isset($ltr) ? $ltr : true)
 @set('rtl', isset($rtl) ? $rtl : false)
 <html class="no-js" data-widget="instantclick" dir="{{ $direction }}">
 <head>
-    <title data-original="@yield('title') - {{ site_setting('siteName', env('SITE_NAME')) }}">@ifhas('title')@yield('title') - @endif{{ site_setting('siteName') }}</title>
+    <title data-original="@yield('title') - {{ $siteName }}">@ifhas('title')@yield('title') - @endif{{$siteName}}</title>
     <link rel="shortcut icon" id="favicon" href="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
         data-normal="{{ asset('static/img/assets/Favicon_Vivian.ico') }}"
         data-alert="{{ asset('static/img/assets/Favicon_Vivian_new.ico') }}" />
@@ -37,6 +38,10 @@
     @section('meta')
         <meta name="viewport" content="width=device-width" />
         <meta name="csrf-token" content="{{ csrf_token() }}" data-instant-track />
+    @show
+
+    @section('opengraph')
+        @include('meta.site')
     @show
 
     @section('widgets')
