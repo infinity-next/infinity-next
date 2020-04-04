@@ -47,7 +47,7 @@
 
         @if ($ban->isBanForIP())
             @if (!$ban->isExpired())
-                @if ($ban->willExpire() && $ban->expires_at->diffInDays() < 2)
+                @if ($ban->willExpire() && $ban->isShort())
                     <p>@lang('panel.bans.ban_review.appeal_at')</p>
                 @elseif (user()->can('appeal', $ban))
                     @if ($appeal = $ban->getAppeal())

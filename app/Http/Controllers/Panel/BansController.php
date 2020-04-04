@@ -66,7 +66,7 @@ class BansController extends PanelController
      *
      * Will also update its "seen" if it was not seen prior.
      *
-     * @param  \App\Ban    $ban
+     * @param  \App\Ban  $ban
      *
      * @return \Illuminate\Http\Response
      */
@@ -117,10 +117,6 @@ class BansController extends PanelController
     public function putAppeal(Ban $ban)
     {
         $this->authorize('appeal', $ban);
-
-        if (!$ban->canAppeal() || !$ban->isBanForIP()) {
-            return abort(403);
-        }
 
         $input = Request::all();
         $validator = Validator::make($input, [

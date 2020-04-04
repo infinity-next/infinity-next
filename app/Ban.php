@@ -329,6 +329,11 @@ class Ban extends Model
         return !is_null($this->expires_at) && $this->expires_at->isPast();
     }
 
+    public function isShort()
+    {
+        return $this->created_at->diffInHours($this->expires_at) <= 48;
+    }
+
     /**
      * Returns if this ban applies to all boards.
      *

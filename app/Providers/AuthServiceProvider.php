@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Ban;
+use App\BanAppeal;
 use App\Board;
 use App\Post;
 use App\Report;
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        Ban::class  => \App\Policies\BanPolicy::class,
         BanAppeal::class  => \App\Policies\BanAppealPolicy::class,
         Board::class => \App\Policies\BoardPolicy::class,
         Post::class => \App\Policies\PostPolicy::class,
