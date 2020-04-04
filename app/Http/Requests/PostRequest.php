@@ -329,9 +329,8 @@ class PostRequest extends Request implements ApiContract
      */
     public static function rulesForFiles(Board $board, array &$rules)
     {
-        global $app;
-
         $attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
+        $attachmentsFileSize = site_setting('attachmentFilesize') * 1.024;
 
         $rules['spoilers'] = 'boolean';
 
@@ -341,7 +340,7 @@ class PostRequest extends Request implements ApiContract
         // Create an additional rule for each possible file.
         for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment) {
             $rules["files.{$attachment}"] = [
-                'between:0,'.((int) $app['settings']('attachmentFilesize') * 1.024),
+                'between:0,'.$attachmentsFileSize,
                 'file_integrity',
             ];
         }

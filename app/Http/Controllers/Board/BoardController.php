@@ -291,6 +291,8 @@ class BoardController extends Controller
      */
     public function putFile(Board $board)
     {
+        $this->authorize('create-attachment');
+
         $input = Request::all();
         $rules = [];
 
@@ -300,11 +302,8 @@ class BoardController extends Controller
         $validator = Validator::make($input, $rules);
 
         if (!$validator->passes()) {
-            return json_encode([
-                'errors' => $validator->errors(),
-            ]);
+            return response()->json(['errors' => $validator->errors(),], 422);
         }
-
 
         $storage = new Collection();
 
