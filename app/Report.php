@@ -9,6 +9,7 @@ use App\Contracts\Auth\Permittable;
 use App\Support\IP;
 use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
+use View;
 
 class Report extends Model
 {
@@ -27,6 +28,15 @@ class Report extends Model
      * @var string
      */
     protected $primaryKey = 'report_id';
+
+    /**
+     * Attributes which do not exist but should be appended to the JSON output.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'html',
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -72,6 +82,10 @@ class Report extends Model
     protected $hidden = [
         'reporter_ip',
         'user_id',
+
+        'board',
+        'post',
+        'user',
     ];
 
     public function board()
@@ -87,6 +101,19 @@ class Report extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Returns the fully rendered HTML of a post in the JSON output.
+     *
+     * @return string
+     */
+    public function getHtmlAttribute()
+    {
+        return View::make('content.panel.report.item', [
+            'report' => $this,
+            'reportedPost' => $this->post,
+        ])->render();
     }
 
     /**

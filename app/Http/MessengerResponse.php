@@ -42,11 +42,13 @@ class MessengerResponse extends JsonResponse
      */
     protected function buildSiblingContent()
     {
-        return $this->siblingContent = [
-            'captcha'   => $this->buildSiblingCaptcha(),
+        $this->siblingContent = [
             'messenger' => true,
+            'captcha'   => $this->buildSiblingCaptcha(),
             'session'   => $this->buildSiblingSession(),
         ];
+
+        return $this->siblingContent;
     }
 
     /**

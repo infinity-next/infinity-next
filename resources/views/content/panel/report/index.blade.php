@@ -44,19 +44,12 @@
                 ])
             </article>
 
-            <ul class="post-reports">
+            <div class="post-reports">
                 @foreach ($reportedPost->reports as $report)
-                <li class="post-report">
-                    <div class="report-container">
-                        @include( 'content.board.post.report', [
-                            'board'  => $reportedPost->board,
-                            'post'   => $reportedPost,
-                            'report' => $report,
-                        ])
-                    </div>
-                </li>
+                    @include('content.panel.report.item')
                 @endforeach
-            </ul>
+            </div>
+
         </li>
         @endforeach
     </ul>

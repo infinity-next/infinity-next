@@ -131,6 +131,7 @@ class Post extends Model implements FormattableContract
      * @var array
      */
     protected $appends = [
+        'html',
         'content_raw',
         'content_html',
         'recently_created',

@@ -6,6 +6,7 @@ use App\Board;
 use App\Post;
 use App\Report;
 use App\Http\Controllers\Panel\PanelController;
+use Request;
 
 /**
  * Lists and manages content reports.
@@ -18,9 +19,9 @@ use App\Http\Controllers\Panel\PanelController;
  *
  * @since      0.5.1
  */
-class ReportsController extends PanelController
+class ReportController extends PanelController
 {
-    const VIEW_REPORTS = 'panel.board.reports';
+    const VIEW_REPORTS = 'panel.report.index';
 
     /**
      * View path for the secondary (sidebar) navigation.
@@ -35,60 +36,18 @@ class ReportsController extends PanelController
      *
      * @return Response
      */
-    public function getIndex()
+    public function index()
     {
+        if (Request::wantsJson()) {
+            return Post::whereHasReportsFor(user())
+                ->withEverythingForReplies()
+                ->with('reports')
+                ->get();
+        }
+
         return $this->view(static::VIEW_REPORTS, [
             'reportedPosts' => user()->getReportedPostsViewable(),
         ]);
-    }
-
-    /**
-     * Dismisses a single report and returns the user back to the reports page.
-     * Handles /report/{report}/dismiss.
-     *
-     * @param Report $report
-     *
-     * @return Response
-     */
-    public function getDismiss(Report $report)
-    {
-        $this->authorize('dismiss', $report);
-
-        if (!$report->isOpen()) {
-            abort(404);
-        }
-
-        $report->is_dismissed = true;
-        $report->is_successful = false;
-        $report->save();
-
-        return redirect()->back()
-            ->withSuccess(trans_choice('panel.reports.dismisssed', 1, ['reports' => 1]));
-    }
-
-    /**
-     * Promotes a single report and returns the user back to the reports page.
-     * Handles /report/{report}/promote.
-     *
-     * @param Report $report
-     *
-     * @return Response
-     */
-    public function getPromote(Report $report)
-    {
-        $this->authorize('promote', $report);
-
-        if (!$report->isOpen()) {
-            abort(404);
-        }
-
-        $report->global = true;
-        $report->promoted_at = $report->freshTimestamp();
-        $report->promoted_by = user()->user_id;
-        $report->save();
-
-        return redirect()->back()
-            ->withSuccess(trans_choice('panel.reports.promoted', 1, ['reports' => 1]));
     }
 
     /**
@@ -99,7 +58,7 @@ class ReportsController extends PanelController
      *
      * @return Response
      */
-    public function getDemote(Report $report)
+    public function demote(Report $report)
     {
         $this->authorize('demote', $report);
 
@@ -117,12 +76,60 @@ class ReportsController extends PanelController
     }
 
     /**
+     * Demotes a single report and returns the user back to the reports page.
+     * Handles /report/{post}/demote-post.
+     *
+     * @param Post $post
+     *
+     * @return Response
+     */
+    public function demotePost(Post $post)
+    {
+        $this->authorize('demote', [Report::class, $report->board]);
+
+        $reports = $post->reports()
+            ->whereResponsibleFor(user())
+            ->update([
+                'global' => false,
+                'promoted_at' => $post->freshTimestamp(),
+                'promoted_by' => user()->user_id,
+            ]);
+
+        return redirect()->back()
+            ->withSuccess(trans_choice('panel.reports.demoted', $reports, ['reports' => $reports]));
+    }
+
+    /**
+     * Dismisses a single report and returns the user back to the reports page.
+     * Handles /report/{report}/dismiss.
+     *
+     * @param Report $report
+     *
+     * @return Response
+     */
+    public function dismiss(Report $report)
+    {
+        $this->authorize('dismiss', $report);
+
+        if (!$report->isOpen()) {
+            abort(404);
+        }
+
+        $report->is_dismissed = true;
+        $report->is_successful = false;
+        $report->save();
+
+        return redirect()->back()
+            ->withSuccess(trans_choice('panel.reports.dismisssed', 1, ['reports' => 1]));
+    }
+
+    /**
      * Dismisses all reports for an IP and returns the user back to the reports page.
      * Handles /report/{report}/dismiss-ip.
      *
      * @return Response
      */
-    public function getDismissIp(Report $report)
+    public function dissmissIp(Report $report)
     {
         $this->authorize('dismiss', $report);
 
@@ -146,7 +153,7 @@ class ReportsController extends PanelController
      *
      * @return Response
      */
-    public function getDismissPost(Post $post)
+    public function dismissPost(Post $post)
     {
         $this->authorize('dismiss', $report);
 
@@ -163,13 +170,38 @@ class ReportsController extends PanelController
 
     /**
      * Promotes a single report and returns the user back to the reports page.
+     * Handles /report/{report}/promote.
+     *
+     * @param Report $report
+     *
+     * @return Response
+     */
+    public function promote(Report $report)
+    {
+        $this->authorize('promote', $report);
+
+        if (!$report->isOpen()) {
+            abort(404);
+        }
+
+        $report->global = true;
+        $report->promoted_at = $report->freshTimestamp();
+        $report->promoted_by = user()->user_id;
+        $report->save();
+
+        return redirect()->back()
+            ->withSuccess(trans_choice('panel.reports.promoted', 1, ['reports' => 1]));
+    }
+
+    /**
+     * Promotes a single report and returns the user back to the reports page.
      * Handles /report/{post}/promote-post.
      *
      * @param Post $post
      *
      * @return Response
      */
-    public function getPromotePost(Post $post)
+    public function promotePost(Post $post)
     {
         $this->authorize('createGlobal', [Report::class, $report->board]);
 
@@ -183,29 +215,5 @@ class ReportsController extends PanelController
 
         return redirect()->back()
             ->withSuccess(trans_choice('panel.reports.promoted', $reports, ['reports' => $reports]));
-    }
-
-    /**
-     * Demotes a single report and returns the user back to the reports page.
-     * Handles /report/{post}/demote-post.
-     *
-     * @param Post $post
-     *
-     * @return Response
-     */
-    public function getDemotePost(Post $post)
-    {
-        $this->authorize('demote', [Report::class, $report->board]);
-
-        $reports = $post->reports()
-            ->whereResponsibleFor(user())
-            ->update([
-                'global' => false,
-                'promoted_at' => $post->freshTimestamp(),
-                'promoted_by' => user()->user_id,
-            ]);
-
-        return redirect()->back()
-            ->withSuccess(trans_choice('panel.reports.demoted', $reports, ['reports' => $reports]));
     }
 }
