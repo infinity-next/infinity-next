@@ -1,5 +1,5 @@
 <article class="post-container {{
-        $reply_to ? 'op-container' : 'reply-container'
+        !$reply_to ? 'op-container' : 'reply-container'
     }} {{
         $post->hasBody() ? 'has-body' : 'has-no-body'
     }} {{
