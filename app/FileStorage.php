@@ -77,7 +77,7 @@ class FileStorage extends Model
      */
     public function attachments()
     {
-        return $this->hasMany('\App\FileAttachment', 'file_id');
+        return $this->hasMany(FileAttachment::class, 'file_id');
     }
 
     /**
@@ -88,7 +88,7 @@ class FileStorage extends Model
      */
     public function assets()
     {
-        return $this->hasMany('\App\BoardAsset', 'file_id');
+        return $this->hasMany(BoardAsset::class, 'file_id');
     }
 
     /**
@@ -99,7 +99,7 @@ class FileStorage extends Model
      */
     public function posts()
     {
-        return $this->belongsToMany("\App\Post", 'file_attachments', 'file_id', 'post_id')->withPivot('filename', 'position');
+        return $this->belongsToMany(Post::class, 'file_attachments', 'file_id', 'post_id')->withPivot('filename', 'position');
     }
 
     /**

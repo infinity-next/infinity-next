@@ -40,6 +40,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" data-instant-track />
     @show
 
+    <meta property="og:site_name" content="{{ $siteName }}" />
     @section('opengraph')
         @include('meta.site')
     @show
