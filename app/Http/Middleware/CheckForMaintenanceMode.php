@@ -20,7 +20,7 @@ class CheckForMaintenanceMode extends MaintenanceMiddleware
     public function handle($request, Closure $next)
     {
         if ($this->app->isDownForMaintenance()) {
-            $admins = explode(',', (string) env('APP_ADMIN_IP'));
+            $admins = explode(',', (string) env('APP_ROOT_IP'));
 
             if (!is_array($admins) || !count($admins) || !in_array(Request::ip(), $admins)) {
                 throw new HttpException(503);
