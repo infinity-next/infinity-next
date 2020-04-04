@@ -31,4 +31,18 @@ class BoardTest extends TestCase
         $this->assertNotSame($user->user_id, $board->creator->user_id);
         $this->assertNotSame($board->creator->user_id, $board->operator->user_id);
     }
+
+    public function testBoardPermission()
+    {
+        $user = factory(User::class)->create();
+        $boards = factory(Board::class, 5)->create();
+
+        foreach ($boards as $board) {
+            $this->assertFalse($user->can('configure', $board));
+        }
+
+        foreach ($boards as $board) {
+            $this->assertTrue($board->operator->can('configure', $board));
+        }
+    }
 }
