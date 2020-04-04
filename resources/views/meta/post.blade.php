@@ -1,7 +1,7 @@
 {{-- https://ogp.me/ --}}
 @section('opengraph')
 <meta property="og:title" content="{{ $thread->subject ?: "/{$board->board_uri}/ - {$board->title}" }}" />
-<meta property="og:description" content="{{ $thread->getBodyPreview('256') }}" />
+<meta property="og:description" content="{{ $thread->getBodyExcerpt('256') }}" />
 <meta property="og:url" content="{{ url()->current() }}" />
 
 @set('ogHasImage', false)
