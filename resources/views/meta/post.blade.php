@@ -10,6 +10,10 @@
     @if (!$attachment->pivot->is_deleted && $attachment->has_thumbnail)
         @set('ogHasImage', true)
         <meta property="og:image" content="{{ url($attachment->getThumbnailUrl($thread->board)) }}" />
+
+        @if ($attachment->isImage())
+            <meta name="twitter:image" content="{{ url($attachment->getDownloadUrl($thread->board)) }}" />
+        @endif
         @break
     @endif
 @endforeach
