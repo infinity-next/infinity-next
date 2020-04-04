@@ -106,13 +106,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('report',     Report::class);
         Route::model('role',       Role::class);
 
-        Route::bind('page_title', function ($value, $route) {
-            $board = $route->parameter('board');
-
-            return Page::where([
-                'board_uri' => $board instanceof Board ? $board->board_uri : null,
-                'title' => $value,
-            ])->first();
+        Route::bind('attachment', function ($value, $route) {
+            return FileAttachment::where('is_deleted', false)
+                ->with('storage')
+                ->find($value);
         });
 
         Route::bind('board', function ($value, $route) {
@@ -132,10 +129,13 @@ class RouteServiceProvider extends ServiceProvider
             return abort(404);
         });
 
-        Route::bind('attachment', function ($value, $route) {
-            return FileAttachment::where('is_deleted', false)
-                ->with('storage')
-                ->find($value);
+        Route::bind('page_title', function ($value, $route) {
+            $board = $route->parameter('board');
+
+            return Page::where([
+                'board_uri' => $board instanceof Board ? $board->board_uri : null,
+                'title' => $value,
+            ])->first();
         });
 
         Route::bind('post', function ($value, $route) {

@@ -53,7 +53,6 @@ class Kernel extends HttpKernel
         ],
 
         'media' => [
-            \App\Http\Middleware\Anonymous::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\FileFilter::class,
         ],

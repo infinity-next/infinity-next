@@ -117,7 +117,7 @@ class SettingManager
         ];
 
 
-        if ($this->hasDB() && user()->can('create', Board::class)) {
+        if (!is_null(user()) && user()->can('create', Board::class)) {
             $nav['new_board'] = route('panel.boards.create');
         }
 
@@ -136,7 +136,7 @@ class SettingManager
      */
     public function getNavigationPrimaryBoards()
     {
-        if ($this->hasDB() && $this->get('boardListShow', false)) {
+        if (!is_null(user()) && $this->get('boardListShow', false)) {
             if (Cache::has('site.boardlist')) {
                 return Cache::remember('site.gnav.boards', now()->addMinute(), function () {
                     $popularBoards = collect();
@@ -202,31 +202,13 @@ class SettingManager
     }
 
     /**
-     * Determines if we have a DB connection.
-     *
-     * @return bool
-     */
-    public function hasDB()
-    {
-        if (!isset($this->db)) {
-            try {
-                $this->db = (bool) DB::connection()->getDatabaseName();
-            } catch (Exception $e) {
-                $this->db = false;
-            }
-        }
-
-        return $this->db;
-    }
-
-    /**
      * Loads all settings.
      *
      * @return collection
      */
     public function fetchSettings()
     {
-        if ($this->hasDB()) {
+        if (!is_null(user())) {
             return Cache::remember('site.settings', now()->addMinutes(30), function () {
                 return SiteSetting::getAll();
             });
