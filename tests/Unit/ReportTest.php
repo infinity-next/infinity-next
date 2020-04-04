@@ -1,13 +1,15 @@
 <?php
 
-namespace Tests\Routes\Panel;
+namespace Tests\Unit;
 
+use App\Board;
 use App\Report;
+use App\User;
 use Tests\Testcase;
 
 class ReportTest extends TestCase
 {
-    public function testDemoted()
+    public function testStateDemoted()
     {
         $report = factory(Report::class)->state('demoted')->make();
 
@@ -16,7 +18,7 @@ class ReportTest extends TestCase
         $this->assertFalse($report->isPromoted());
     }
 
-    public function testOpen()
+    public function testStateOpen()
     {
         $report = factory(Report::class)->make();
 
@@ -25,7 +27,7 @@ class ReportTest extends TestCase
         $this->assertFalse($report->isPromoted());
     }
 
-    public function testPromoted()
+    public function testStatePromoted()
     {
         $report = factory(Report::class)->state('promoted')->make();
 
