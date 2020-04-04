@@ -49,7 +49,7 @@
             @if (!$ban->isExpired())
                 @if ($ban->willExpire() && $ban->expires_at->diffInDays() < 2)
                     <p>@lang('panel.bans.ban_review.appeal_at')</p>
-                @elseif (!$ban->canAppeal())
+                @elseif (user()->can('appeal', $ban))
                     @if ($appeal = $ban->getAppeal())
                         @if (is_null($appeal->approved))
                         <p>@lang('panel.bans.ban_review.appeal_pending', [

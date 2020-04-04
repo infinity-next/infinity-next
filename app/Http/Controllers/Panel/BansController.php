@@ -72,9 +72,7 @@ class BansController extends PanelController
      */
     public function getBan(Ban $ban)
     {
-        if (!$ban->canView($this->user)) {
-            return abort(403);
-        }
+        $this->authorize('view', $ban);
 
         $seeing = false;
 
@@ -118,6 +116,8 @@ class BansController extends PanelController
      */
     public function putAppeal(Ban $ban)
     {
+        $this->authorize('appeal', $ban);
+
         if (!$ban->canAppeal() || !$ban->isBanForIP()) {
             return abort(403);
         }

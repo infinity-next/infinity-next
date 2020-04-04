@@ -118,7 +118,7 @@ class IP extends CIDR
             $user = user();
         }
 
-        return $user->getTextForIP($this->toText());
+        return $user->getTextForIP($this);
     }
 
     public function intersects($cidr)

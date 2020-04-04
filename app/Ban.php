@@ -46,6 +46,7 @@ class Ban extends Model
     protected $casts = [
         'ban_ip_start' => 'ip',
         'ban_ip_end' => 'ip',
+        'ban_ip' => 'ip',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'expires_at' => 'datetime',
@@ -140,7 +141,7 @@ class Ban extends Model
      */
     public function getBanIpAttribute()
     {
-        return new IP($this->ban_ip_start, $this->ban_ip_end);
+        return $this->getCidr();
     }
 
     /**
@@ -242,6 +243,11 @@ class Ban extends Model
             ->with('mod');
 
         return $fetch ? $query->get() : $query;
+    }
+
+    public function getCidr()
+    {
+        return new IP($this->ban_ip_start, $this->ban_ip_end);
     }
 
     /**

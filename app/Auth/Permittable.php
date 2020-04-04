@@ -803,7 +803,7 @@ trait Permittable
             return (string) $ip;
         }
 
-        if ($ip instanceof CIDR && $ip->getStart() != $ip->getEnd()) {
+        if (($ip instanceof IP || $ip instanceof CIDR) && $ip->getStart() != $ip->getEnd()) {
             return ip_less($ip->getStart()).'/'.$ip->getPrefix();
         }
 

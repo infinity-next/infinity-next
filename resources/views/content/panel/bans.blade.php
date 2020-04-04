@@ -34,9 +34,9 @@
                     <td>{{ $ban->ban_ip->toTextForUser() }}</td>
                     <td>
                         @if (!$ban->isExpired())
-                            <a href="{!! $ban->getAppealUrl() !!}">@lang( $ban->canAppeal() ? 'panel.bans.appeal_open' : 'panel.bans.appeal_closed')</a>
+                            <a href="{!! $ban->getAppealUrl() !!}">@can('appeal', $ban)@lang('panel.bans.appeal_open') @else @lang('panel.bans.appeal_closed')@endcan</a>
                         @else
-                            @lang( 'panel.bans.appeal_expired' )
+                            @lang('panel.bans.appeal_expired')
                         @endif
                     </td>
                     <td>{!! isset($ban->mod) ? $ban->mod->getUsernameHTML() : "" !!}</td>
