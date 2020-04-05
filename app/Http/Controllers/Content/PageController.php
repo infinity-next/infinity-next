@@ -34,7 +34,7 @@ class PageController extends Controller
             return abort(404);
         }
 
-        return $this->view(static::VIEW_PAGE, [
+        return $this->makeView(static::VIEW_PAGE, [
             'page' => $page,
         ]);
     }

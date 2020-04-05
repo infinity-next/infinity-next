@@ -97,7 +97,7 @@ class MultiboardController extends Controller
 
     public function getOverboard($worksafe = null, $boards = null, $catalog = false)
     {
-        return $this->view(static::VIEW_OVERBOARD, [
+        return $this->makeView(static::VIEW_OVERBOARD, [
             'worksafe' => $worksafe,
             'boards'   => $boards,
             'catalog'  => $catalog,

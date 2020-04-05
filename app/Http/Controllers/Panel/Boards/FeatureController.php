@@ -45,7 +45,7 @@ class FeatureController extends PanelController
 
     public function getIndex(Board $board)
     {
-        return $this->view(static::VIEW_FEATURE);
+        return $this->makeView(static::VIEW_FEATURE);
     }
 
     public function postIndex(Board $board)

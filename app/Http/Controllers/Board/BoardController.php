@@ -66,7 +66,7 @@ class BoardController extends Controller
         // Load our list of threads and their latest replies.
         $posts = $board->getThreadsForIndex($page);
 
-        return $this->view(static::VIEW_BOARD, [
+        return $this->makeView(static::VIEW_BOARD, [
             'board' => &$board,
             'posts' => $posts,
             'reply_to' => false,
@@ -90,7 +90,7 @@ class BoardController extends Controller
         // Load our list of threads and their latest replies.
         $posts = $board->getThreadsForCatalog();
 
-        return $this->view(static::VIEW_CATALOG, [
+        return $this->makeView(static::VIEW_CATALOG, [
             'board' => $board,
             'posts' => $posts,
             'reply_to' => false,
@@ -108,7 +108,7 @@ class BoardController extends Controller
     {
         $optionGroups = OptionGroup::getBoardConfig($board);
 
-        return $this->view(static::VIEW_CONFIG, [
+        return $this->makeView(static::VIEW_CONFIG, [
             'board' => $board,
             'groups' => $optionGroups,
         ]);
@@ -125,7 +125,7 @@ class BoardController extends Controller
     {
         $this->authorize('audit', $board);
 
-        return $this->view(static::VIEW_LOGS, [
+        return $this->makeView(static::VIEW_LOGS, [
             'board' => $board,
             'logs' => $board->getLogs(),
         ]);
@@ -157,7 +157,7 @@ class BoardController extends Controller
             abort(400);
         }
 
-        return $this->view(static::VIEW_THREAD, [
+        return $this->makeView(static::VIEW_THREAD, [
             'board' => &$board,
             'posts' => [$thread],
             'reply_to' => $thread,
@@ -175,7 +175,7 @@ class BoardController extends Controller
      */
     public function getThreadRedirect(Board $board, Post $thread)
     {
-        return $this->view(static::VIEW_LANDING, [
+        return $this->makeView(static::VIEW_LANDING, [
             'board' => $board,
             'url' => $thread->getURL(),
             'message' => trans($thread->reply_to_board_id ? 'board.landing.reply_submitted' : 'board.landing.thread_submitted'),

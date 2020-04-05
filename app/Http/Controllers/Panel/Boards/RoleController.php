@@ -52,7 +52,7 @@ class RoleController extends PanelController
     {
         $this->authorize('configure', $board);
 
-        return $this->view(static::VIEW_EDIT, [
+        return $this->makeView(static::VIEW_EDIT, [
             'board' => $board,
             'role' => $role,
             'tab' => 'roles',
@@ -119,7 +119,7 @@ class RoleController extends PanelController
     {
         $this->authorize('configure', $board);
 
-        return $this->view(static::VIEW_DELETE, [
+        return $this->makeView(static::VIEW_DELETE, [
             'board' => $board,
             'role' => $role,
             'tab' => 'roles',

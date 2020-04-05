@@ -37,7 +37,7 @@ class UserController extends PanelController
     {
         $users = User::orderBy('username', 'asc')->paginate(15);
 
-        return $this->view(static::VIEW_DASHBOARD, [
+        return $this->makeView(static::VIEW_DASHBOARD, [
             'users' => $users,
         ]);
     }
@@ -58,7 +58,7 @@ class UserController extends PanelController
         });
         $globalRoles = $user->roles->diff($localRoles);
 
-        return $this->view(static::VIEW_SHOW, [
+        return $this->makeView(static::VIEW_SHOW, [
             'profile' => $user,
             'globalRoles' => $globalRoles,
             'localRoles'  => $localRoles,

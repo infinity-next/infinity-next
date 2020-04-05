@@ -84,7 +84,7 @@ class PageController extends PanelController
             'board_uri' => $board ? $board->board_uri : null,
         ])->get();
 
-        return $this->view(static::VIEW_INDEX, [
+        return $this->makeView(static::VIEW_INDEX, [
             'pages' => $pages,
         ]);
     }
@@ -97,7 +97,7 @@ class PageController extends PanelController
     public function create()
     {
         $board =  $this->authorizeAndResolve();
-        return $this->view(static::VIEW_CREATE, [
+        return $this->makeView(static::VIEW_CREATE, [
             'page' => false,
         ]);
     }
@@ -142,7 +142,7 @@ class PageController extends PanelController
 
         $page->save();
 
-        return $this->view(static::VIEW_SHOW, [
+        return $this->makeView(static::VIEW_SHOW, [
             'page' => $page,
         ]);
     }
@@ -157,7 +157,7 @@ class PageController extends PanelController
     public function show(Page $page)
     {
         $board =  $this->authorizeAndResolve();
-        return $this->view(static::VIEW_SHOW, [
+        return $this->makeView(static::VIEW_SHOW, [
             'page' => $page,
         ]);
     }
@@ -172,7 +172,7 @@ class PageController extends PanelController
     public function edit(Page $page)
     {
         $board =  $this->authorizeAndResolve();
-        return $this->view(static::VIEW_EDIT, [
+        return $this->makeView(static::VIEW_EDIT, [
             'page' => $page,
         ]);
     }
@@ -231,7 +231,7 @@ class PageController extends PanelController
     public function delete(Page $page)
     {
         $board =  $this->authorizeAndResolve();
-        return $this->view(static::VIEW_DELETE, [
+        return $this->makeView(static::VIEW_DELETE, [
             'page' => $page,
         ]);
     }

@@ -43,7 +43,7 @@ class WelcomeController extends Controller
 
         $featured_boards = Board::getFeatured(5);
 
-        return $this->view(static::VIEW_INDEX, [
+        return $this->makeView(static::VIEW_INDEX, [
             'featured' => $featured,
             'featured_boards' => $featured_boards,
             'stats' => $this->boardStats(),

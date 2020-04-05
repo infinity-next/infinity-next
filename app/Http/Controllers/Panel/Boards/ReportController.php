@@ -45,7 +45,7 @@ class ReportController extends PanelController
                 ->get();
         }
 
-        return $this->view(static::VIEW_REPORTS, [
+        return $this->makeView(static::VIEW_REPORTS, [
             'reportedPosts' => user()->getReportedPostsViewable(),
         ]);
     }

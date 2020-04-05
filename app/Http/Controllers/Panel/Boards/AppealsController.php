@@ -35,7 +35,7 @@ class AppealsController extends PanelController
 
         $appeals = BanAppeal::getAppealsFor(user());
 
-        return $this->view(static::VIEW_APPEALS, [
+        return $this->makeView(static::VIEW_APPEALS, [
             'appeals' => $appeals,
         ]);
     }

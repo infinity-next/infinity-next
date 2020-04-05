@@ -41,7 +41,7 @@ class RolesController extends PanelController
     {
         $roles = Role::where('system', true)->orderBy('weight', 'desc')->get();
 
-        return $this->view(static::VIEW_ROLES, [
+        return $this->makeView(static::VIEW_ROLES, [
             'roles' => $roles,
         ]);
     }

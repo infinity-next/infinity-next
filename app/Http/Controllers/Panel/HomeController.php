@@ -32,6 +32,6 @@ class HomeController extends PanelController
      */
     public function getIndex()
     {
-        return $this->view(static::VIEW_HOME);
+        return $this->makeView(static::VIEW_HOME);
     }
 }

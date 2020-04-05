@@ -59,7 +59,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return $this->view('auth.register');
+        return $this->makeView('auth.register');
     }
 
     /**

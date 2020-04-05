@@ -44,7 +44,7 @@ class BoardlistController extends Controller
             return $this->boardListJson();
         }
 
-        return $this->view(static::VIEW_INDEX, [
+        return $this->makeView(static::VIEW_INDEX, [
             'boards' => $this->boardListSearch(),
             'stats' => $this->boardStats(),
             'tags' => $this->boardListTags(),

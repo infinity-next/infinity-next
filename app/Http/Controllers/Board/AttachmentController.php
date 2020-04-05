@@ -52,7 +52,7 @@ class AttachmentController extends Controller
             'mod' => true,//user()->canDeleteGlobally() || user()->canDeleteLocally($board),
         ];
 
-        return $this->view(static::VIEW_VERIFY, $scope);
+        return $this->makeView(static::VIEW_VERIFY, $scope);
     }
 
     /**
@@ -75,7 +75,7 @@ class AttachmentController extends Controller
             'mod' => user()->canSpoilerAttachmentGlobally() || user()->canSpoilerAttachmentLocally($board),
         ];
 
-        return $this->view(static::VIEW_VERIFY, $scope);
+        return $this->makeView(static::VIEW_VERIFY, $scope);
         $attachment->is_spoiler = !$attachment->is_spoiler;
         $attachment->save();
 

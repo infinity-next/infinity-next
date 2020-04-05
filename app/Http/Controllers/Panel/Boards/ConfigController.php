@@ -59,7 +59,7 @@ class ConfigController extends PanelController
     {
         $this->authorize('configure', $board);
 
-        return $this->view(static::VIEW_CONFIG, [
+        return $this->makeView(static::VIEW_CONFIG, [
             'board' => $board,
             'banned' => $board->getBannedImages(),
             'banners' => $board->getBanners(),
@@ -333,7 +333,7 @@ class ConfigController extends PanelController
 
         $optionGroups = OptionGroup::getBoardConfig($board);
 
-        return $this->view(static::VIEW_CONFIG, [
+        return $this->makeView(static::VIEW_CONFIG, [
             'board' => $board,
             'groups' => $optionGroups,
 
@@ -431,7 +431,7 @@ class ConfigController extends PanelController
             $tagArray[] = $tag->tag;
         }
 
-        return $this->view(static::VIEW_TAGS, [
+        return $this->makeView(static::VIEW_TAGS, [
             'board' => $board,
             'tags' => $tagArray,
 
@@ -500,7 +500,7 @@ class ConfigController extends PanelController
 
         Event::dispatch(new BoardWasModified($board));
 
-        return $this->view(static::VIEW_TAGS, [
+        return $this->makeView(static::VIEW_TAGS, [
             'board' => $board,
             'tags' => array_keys($tagArray),
 

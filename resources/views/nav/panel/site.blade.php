@@ -8,6 +8,7 @@
                     <li class="cp-linkitem">
                         <a class="linkitem-name" href="{!! route('panel.site.config') !!}">@lang('nav.panel.secondary.site.config')</a>
                         <a class="linkitem-name" href="{!! route('panel.site.pages') !!}">@lang('nav.panel.secondary.site.pages')</a>
+                        <a class="linkitem-name" href="{!! route('panel.site.files.index') !!}">@lang('nav.panel.secondary.site.files')</a>
                         <a class="linkitem-name" href="{!! route('panel.site.phpinfo') !!}">phpinfo</a>
                     </li>
                 </ul>

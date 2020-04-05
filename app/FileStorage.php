@@ -596,32 +596,29 @@ class FileStorage extends Model
      *
      * @return string as HTML
      */
-    public function getThumbnailHtml(Board $board, $maxDimension = null)
+    public function getThumbnailHtml(?Board $board = null, $maxDimension = null)
     {
         $ext = $this->guessExtension();
         $mime = $this->mime;
         $url = media_url("static/img/filetypes/{$ext}.svg", false);
         $spoil = $this->isSpoiler();
         $deleted = $this->isDeleted();
-        $md5     = $deleted ? null : $this->hash;
+        $md5 = $deleted ? null : $this->hash;
 
         if ($deleted) {
             $url = $board->getAssetUrl('file_deleted');
-        } elseif ($spoil) {
+        }
+        elseif ($spoil) {
             $url = $board->getAssetUrl('file_spoiler');
         }
-        else if ($this->isImageVector())
-        {
-            $url = $this->getDownloadURL($board);
+        elseif ($this->isImageVector()) {
+            $url = $this->getDownloadUrl($board);
         }
-        else if ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument())
-        {
-            if ($this->hasThumb())
-            {
-                $url = $this->getThumbnailURL($board);
+        elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
+            if ($this->hasThumb()) {
+                $url = $this->getThumbnailUrl($board);
             }
-            else if ($this->isAudio())
-            {
+            elseif ($this->isAudio()) {
                 $url = media_url("static/img/assets/audio.gif", false);
             }
         }
@@ -647,18 +644,21 @@ class FileStorage extends Model
                 if ($oWidth > $oHeight) {
                     $height = 'auto';
                     $width = $maxDimension.'px';
-                } elseif ($oWidth < $oHeight) {
+                }
+                elseif ($oWidth < $oHeight) {
                     $height = $maxDimension.'px';
                     $width = 'auto';
-                } else {
-                    $height = $maxDimension;
-                    $width = $maxDimension;
+                }
+                else {
+                    $height = $maxDimension.'px';
+                    $width = $maxDimension.'px';
                 }
             }
 
             $minWidth = $width;
             $minHeight = $height;
-        } else {
+        }
+        else {
             $maxWidth = Settings::get('attachmentThumbnailSize').'px';
             $maxHeight = $maxWidth;
             $width = $maxWidth;
@@ -688,11 +688,11 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getThumbnailUrl(Board $board)
+    public function getThumbnailUrl(?Board $board = null)
     {
         $ext = $this->guessExtension();
 
-        if ($this->isSpoiler()) {
+        if ($board instanceof Board && $this->isSpoiler()) {
             return $board->getSpoilerUrl();
         }
 
@@ -701,7 +701,12 @@ class FileStorage extends Model
         }
         elseif ($this->isAudio()) {
             if (!$this->hasThumb()) {
-                return $board->getAudioArtURL();
+                if ($board instanceof Board) {
+                    return $board->getAudioArtURL();
+                }
+                else {
+                    return asset('static/img/assets/audio.gif');
+                }
             }
 
             $ext = 'webp';
@@ -711,19 +716,17 @@ class FileStorage extends Model
             return $this->getDownloadUrl($board);
         }
 
-        $params = [
-            'board' => $board,
-            'attachment' => $this->getIdentifier(),
+        if ($board instanceof Board) {
+
+            // "false" generates a relativel URL.
+            // Attachments get cached, so we want that
+            return route('static.thumb.attachment', $params, false);
+        }
+
+        return route('panel.site.files.send', [
+            'hash' => $this->hash,
             'filename' => "thumb_".$this->getDownloadName().".{$ext}",
-        ];
-
-        // if (!config('app.url_media', false)) {
-        //     $params['board'] = $board;
-        // }
-
-        // "False" generates a relativel URL.
-        // Attachments get cached, so we want that
-        return route('static.thumb.attachment', $params, false);//config('app.url_media', false));
+        ], false);
     }
 
     /**

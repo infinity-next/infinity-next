@@ -39,7 +39,7 @@ class BansController extends PanelController
         $bans = Ban::orderBy('ban_id', 'desc')
             ->paginate(15);
 
-        return $this->view(static::VIEW_BANS, [
+        return $this->makeView(static::VIEW_BANS, [
             'bans' => $bans,
             'clientOnly' => false,
         ]);
@@ -55,7 +55,7 @@ class BansController extends PanelController
         $bans = Ban::getBans(Request::ip(), false, false)
             ->paginate(15);
 
-        return $this->view(static::VIEW_BANS, [
+        return $this->makeView(static::VIEW_BANS, [
             'bans' => $bans,
             'clientOnly' => true,
         ]);
@@ -82,7 +82,7 @@ class BansController extends PanelController
             $seeing = true;
         }
 
-        return $this->view(static::VIEW_BAN, [
+        return $this->makeView(static::VIEW_BAN, [
             'ban' => $ban,
             'seeing' => $seeing,
         ]);
@@ -101,7 +101,7 @@ class BansController extends PanelController
             ->where('board_uri', $board->board_uri)
             ->paginate(15);
 
-        return $this->view(static::VIEW_BANS, [
+        return $this->makeView(static::VIEW_BANS, [
             'bans' => $bans,
             'clientOnly' => false,
         ]);

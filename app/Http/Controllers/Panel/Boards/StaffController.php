@@ -56,7 +56,7 @@ class StaffController extends PanelController
         $roles = $board->roles;
         $staff = $board->getStaff();
 
-        return $this->view(static::VIEW_LIST, [
+        return $this->makeView(static::VIEW_LIST, [
             'board' => $board,
             'roles' => $roles,
             'staff' => $staff,
@@ -77,7 +77,7 @@ class StaffController extends PanelController
         $roles = user()->getAssignableRoles($board);
         $staff = $board->getStaff();
 
-        return $this->view(static::VIEW_ADD, [
+        return $this->makeView(static::VIEW_ADD, [
             'board' => $board,
             'roles' => $roles,
             'staff' => $staff,
@@ -186,7 +186,7 @@ class StaffController extends PanelController
 
         $target->load('roles');
 
-        return $this->view(static::VIEW_EDIT, [
+        return $this->makeView(static::VIEW_EDIT, [
             'board' => $board,
             'roles' => $roles,
             'staff' => $target,
@@ -259,7 +259,7 @@ class StaffController extends PanelController
     {
         $this->authorize('editStaff', [$board, $target]);
 
-        return $this->view(static::VIEW_DELETE, [
+        return $this->makeView(static::VIEW_DELETE, [
             'board' => $board,
             'tab' => 'staff',
             'staff' => $user,

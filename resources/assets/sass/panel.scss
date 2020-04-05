@@ -20,8 +20,12 @@
 /**
  * Unique Pages
  */
-@import "panel/donate-form.scss";
 @import "panel/banned.scss";
+
+/**
+ * File management
+ */
+@import "panel/files.scss";
 
 /**
  * Deprecated -- should be merged in

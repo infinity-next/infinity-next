@@ -80,7 +80,7 @@ class PostController extends Controller
         $modActions = array_unique($modActions);
         sort($modActions);
 
-        return $this->view(static::VIEW_MOD, [
+        return $this->makeView(static::VIEW_MOD, [
             'actions' => $modActions,
             'form' => 'ban',
             'board' => $board,
@@ -296,7 +296,7 @@ class PostController extends Controller
     {
         $this->authorize('edit', $post);
 
-        return $this->view(static::VIEW_EDIT, [
+        return $this->makeView(static::VIEW_EDIT, [
             'actions' => ['edit'],
             'form' => 'edit',
             'board' => $board,
@@ -327,7 +327,7 @@ class PostController extends Controller
             'board_uri' => $post->board_uri,
         ]);
 
-        return $this->view(static::VIEW_EDIT, [
+        return $this->makeView(static::VIEW_EDIT, [
             'actions' => ['edit'],
             'form' => 'edit',
             'board' => $board,
@@ -369,7 +369,7 @@ class PostController extends Controller
                 ->first();
         }
 
-        return $this->view(static::VIEW_MOD, [
+        return $this->makeView(static::VIEW_MOD, [
             'actions' => $actions,
             'form' => 'report',
             'board' => $board,

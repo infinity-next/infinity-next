@@ -79,7 +79,7 @@ class AuthController extends PanelController
      */
     public function getLogin()
     {
-        return $this->view(static::VIEW_LOGIN);
+        return $this->makeView(static::VIEW_LOGIN);
     }
 
     /**
@@ -93,7 +93,7 @@ class AuthController extends PanelController
             abort(403);
         }
 
-        return $this->view(static::VIEW_REGISTER);
+        return $this->makeView(static::VIEW_REGISTER);
     }
 
     /**

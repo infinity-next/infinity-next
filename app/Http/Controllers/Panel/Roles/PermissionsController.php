@@ -45,7 +45,7 @@ class PermissionsController extends PanelController
             return $permissions->count();
         });
 
-        return $this->view(static::VIEW_PERMISSIONS, [
+        return $this->makeView(static::VIEW_PERMISSIONS, [
             'role' => $role,
             'groups' => $permissionGroups,
         ]);
@@ -92,7 +92,7 @@ class PermissionsController extends PanelController
 
         Event::dispatch(new RoleWasModified($role));
 
-        return $this->view(static::VIEW_PERMISSIONS, [
+        return $this->makeView(static::VIEW_PERMISSIONS, [
             'role' => $role,
             'groups' => $permission_groups,
         ]);

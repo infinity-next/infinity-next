@@ -183,11 +183,17 @@ Route::group(['namespace' => 'Site', 'as' => 'site.', 'prefix' => 'site',], func
     Route::patch('config', ['as' => 'config.edit', 'uses' => 'ConfigController@patch']);
 
     /**
+     * Files
+     */
+     Route::get('files', 'FileController@index')->name('files.index');
+     Route::get('files/{hash}', 'FileController@show')->name('files.show');
+     Route::get('files/{hash}/{filename}', 'FileController@send')->name('files.send');
+
+    /**
      * Utilities
      */
     // phpinfo
     Route::get('phpinfo', ['as' => 'phpinfo', 'uses' => 'SiteController@getPhpinfo']);
-
 
     // site dashboard
     Route::get('/', ['as' => 'index', 'uses' => 'SiteController@getIndex',]);

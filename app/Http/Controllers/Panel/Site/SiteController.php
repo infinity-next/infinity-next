@@ -32,7 +32,7 @@ class SiteController extends PanelController
      */
     public function getIndex()
     {
-        return $this->view(static::VIEW_DASHBOARD);
+        return $this->makeView(static::VIEW_DASHBOARD);
     }
 
     /**

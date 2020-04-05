@@ -45,7 +45,7 @@ class HistoryController extends PanelController
             ->orderBy('post_id', 'desc')
             ->paginate(15);
 
-        return $this->view(static::VIEW_HISTORY, [
+        return $this->makeView(static::VIEW_HISTORY, [
             'posts' => $posts,
             'ip' => $ip,
         ]);

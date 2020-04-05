@@ -68,7 +68,7 @@ class PasswordController extends PanelController
      */
     public function getIndex(Request $request)
     {
-        return $this->view(static::VIEW_CHANGE);
+        return $this->makeView(static::VIEW_CHANGE);
     }
 
     /**
@@ -94,11 +94,11 @@ class PasswordController extends PanelController
 
             $this->auth->login($user);
 
-            return $this->view(static::VIEW_CHANGE)
+            return $this->makeView(static::VIEW_CHANGE)
                 ->withStatus(trans('panel.password.reset_success'));
         }
 
-        return $this->view(static::VIEW_CHANGE)
+        return $this->makeView(static::VIEW_CHANGE)
             ->withErrors(['username' => trans('panel.password.password_old')]);
     }
 
@@ -115,7 +115,7 @@ class PasswordController extends PanelController
             return abort(400);
         }
 
-        return $this->view(static::VIEW_RESET)->with('token', $token);
+        return $this->makeView(static::VIEW_RESET)->with('token', $token);
     }
 
     /**
@@ -165,7 +165,7 @@ class PasswordController extends PanelController
      */
     public function getEmail()
     {
-        return $this->view(static::VIEW_FORGOT);
+        return $this->makeView(static::VIEW_FORGOT);
     }
 
     /**

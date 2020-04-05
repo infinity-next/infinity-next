@@ -54,7 +54,7 @@ class BoardsController extends PanelController
         $boards = user()->getBoardsWithAssetRights();
         $boards->load('creator', 'operator');
 
-        return $this->view(static::VIEW_DASHBOARD, [
+        return $this->makeView(static::VIEW_DASHBOARD, [
             'boards' => $boards,
             'suffix' => 'assets',
         ]);
@@ -73,7 +73,7 @@ class BoardsController extends PanelController
             $boards->load('creator', 'operator');
         }
 
-        return $this->view(static::VIEW_DASHBOARD, [
+        return $this->makeView(static::VIEW_DASHBOARD, [
             'boards' => $boards,
             'suffix' => 'config',
         ]);
@@ -89,7 +89,7 @@ class BoardsController extends PanelController
         $boards = user()->getBoardsWithStaffRights();
         $boards->load('creator', 'operator');
 
-        return $this->view(static::VIEW_DASHBOARD, [
+        return $this->makeView(static::VIEW_DASHBOARD, [
             'boards' => $boards,
             'suffix' => 'staff',
         ]);
@@ -120,7 +120,7 @@ class BoardsController extends PanelController
             $this->can('register');
         }
 
-        return $this->view(static::VIEW_CREATE, [
+        return $this->makeView(static::VIEW_CREATE, [
             'boardLastCreated' => $boardLastCreated,
             'boardsOwned' => $boardsOwned,
 

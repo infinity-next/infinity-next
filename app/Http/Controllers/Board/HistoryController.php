@@ -42,7 +42,7 @@ class HistoryController extends Controller
             $item->setRelation('board', $board);
         }
 
-        return $this->view(static::VIEW_HISTORY, [
+        return $this->makeView(static::VIEW_HISTORY, [
             'posts' => $posts,
             'multiboard' => false,
             'ip' => ip_less($post->author_ip->toText()),

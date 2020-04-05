@@ -49,7 +49,7 @@ class RolesController extends PanelController
 
         $roles = Role::whereBoardRole($board, user())->get();
 
-        return $this->view(static::VIEW_ROLES, [
+        return $this->makeView(static::VIEW_ROLES, [
             'board' => $board,
             'roles' => $roles,
             'tab' => 'roles',
@@ -74,7 +74,7 @@ class RolesController extends PanelController
             $choices[$role->getDisplayName()] = $role->role;
         }
 
-        return $this->view(static::VIEW_CREATE, [
+        return $this->makeView(static::VIEW_CREATE, [
             'board' => $board,
             'role' => null,
             'choices' => $choices,

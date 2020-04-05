@@ -10,6 +10,10 @@ main.cp form.form-config {
 
     div.panel-actions {
         float: right;
+
+        &:empty {
+            display: none;
+        }
     }
         div.panel-actions .panel-action {
             display: inline-block;
@@ -27,6 +31,10 @@ main.cp form.form-config {
     h3.panel-title {
         font-size: 1.17em;
         margin: 0 0 0.5em 0;
+
+        &:empty {
+            display: none;
+        }
     }
 
     form.form-config fieldset.form-fields {

@@ -246,6 +246,9 @@
                         -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
                         -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
                         border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+
+                        border-top: none;
+                        border-bottom: none;
                     }
                 }
                     .post-attachment.attachment-expanded {

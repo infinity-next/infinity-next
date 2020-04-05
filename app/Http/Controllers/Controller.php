@@ -105,26 +105,11 @@ abstract class Controller extends BaseController
      *
      * @return View
      */
-    protected function view($template, array $options = array())
+    protected function makeView($template, array $options = array())
     {
         return View::make(
             $this->template($template),
             $this->templateOptions($options)
         );
-    }
-
-    /**
-     * Creates a View with the requested content file.
-     *
-     * @param string $template
-     * @param array  $options
-     *
-     * @return View
-     */
-    protected function viewAsJson($template, array $options = array())
-    {
-        $html = $this->view($template, $options);
-
-        return new MessengerResponse($html);
     }
 }

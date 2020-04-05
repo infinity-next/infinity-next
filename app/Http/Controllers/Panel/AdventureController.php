@@ -65,7 +65,7 @@ class AdventureController extends PanelController
             $board = false;
         }
 
-        return $this->view(static::VIEW_ADVENTURE, [
+        return $this->makeView(static::VIEW_ADVENTURE, [
             'board' => $board,
         ]);
     }

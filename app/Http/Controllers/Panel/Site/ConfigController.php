@@ -43,7 +43,7 @@ class ConfigController extends PanelController
 
         $optionGroups = OptionGroup::getSiteConfig();
 
-        return $this->view(static::VIEW_CONFIG, [
+        return $this->makeView(static::VIEW_CONFIG, [
             'groups' => $optionGroups,
         ]);
     }
@@ -99,7 +99,7 @@ class ConfigController extends PanelController
 
         Event::dispatch(new SiteSettingsWereModified());
 
-        return $this->view(static::VIEW_CONFIG, [
+        return $this->makeView(static::VIEW_CONFIG, [
             'groups' => $optionGroups,
         ]);
     }
