@@ -33,6 +33,7 @@ if (!class_exists("DatabaseSeeder"))
             $this->call('PermissionSeeder');
             $this->call('PermissionGroupSeeder');
             $this->call('RolePermissionSeeder');
+            \App\RoleCache::truncate();
 
             $this->call('OptionSeeder');
             $this->call('OptionGroupSeeder');

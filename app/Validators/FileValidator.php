@@ -43,15 +43,11 @@ class FileValidator
 
     public function validateFileNew($attribute, $value, $parameters)
     {
-        return (int) DB::table(with(new FileStorage())->getTable())
-            ->where('hash', $value)
-            ->pluck('upload_count') == 0;
+        return (int)FileStorage::where('hash', $value)->pluck('upload_count')->first() == 0;
     }
 
     public function validateFileOld($attribute, $value, $parameters)
     {
-        return (int) DB::table(with(new FileStorage())->getTable())
-            ->where('hash', $value)
-            ->pluck('upload_count') > 0;
+        return (int)FileStorage::where('hash', $value)->pluck('upload_count')->first() > 0;
     }
 }

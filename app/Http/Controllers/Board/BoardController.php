@@ -291,8 +291,6 @@ class BoardController extends Controller
      */
     public function putFile(Board $board)
     {
-        $this->authorize('create-attachment');
-
         $input = Request::all();
         $rules = [];
 

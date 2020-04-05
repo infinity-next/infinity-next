@@ -11,7 +11,7 @@ class TorFilter
 {
     public function handle($request, Closure $next)
     {
-        $accountable = true;
+        $accountable = false;
         $geolocation = new Geolocation;
 
         if ($request->header('X-TOR', false) || is_hidden_service()) {

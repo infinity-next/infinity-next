@@ -16,11 +16,9 @@ class PermissionTest extends TestCase
     public function testUnaccountable()
     {
         $anon = new AnonymousUser;
-
         $this->assertTrue($anon->can('create-attachment'));
 
         $anon->setAccountable(false);
-
         $this->assertFalse($anon->can('create-attachment'));
     }
 }
