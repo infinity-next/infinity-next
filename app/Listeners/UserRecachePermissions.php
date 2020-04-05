@@ -22,11 +22,13 @@ class UserRecachePermissions extends Listener
     {
         if (isset($event->user)) {
             $event->user->forgetPermissions();
-        } elseif (isset($event->users)) {
+        }
+        elseif (isset($event->users)) {
             foreach ($event->users as $user) {
                 $user->forgetPermissions();
             }
-        } else {
+        }
+        else {
             RoleCache::delete();
         }
     }

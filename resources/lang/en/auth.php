@@ -17,7 +17,7 @@ return [
     "token"    => "This password reset token is invalid.",
     "sent"     => "We have e-mailed your password reset link!",
     "reset"    => "Your password has been reset!",
-    "mismatch" => "These credentials do not match our records.",
+    "failed"  => "These credentials do not match our records.",
 
     "board" => [
         "cannot_edit_uri" => "You cannot change this board's name.",

@@ -75,32 +75,32 @@ class Role extends Model
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_id');
+        return $this->belongsTo(Board::class, 'board_id');
     }
 
     public function inherits()
     {
-        return $this->hasOne('\App\Role', 'role_id', 'inherit_id');
+        return $this->hasOne(Role::class, 'role_id', 'inherit_id');
     }
 
     public function inheritors()
     {
-        return $this->hasMany('\App\Role', 'inherit_id', 'role_id');
+        return $this->hasMany(Role::class, 'inherit_id', 'role_id');
     }
 
     public function permissions()
     {
-        return $this->belongsToMany("\App\Permission", 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
+        return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id')->withPivot('value');
     }
 
     public function permissionAssignments()
     {
-        return $this->hasMany("\App\RolePermission", 'role_id');
+        return $this->hasMany(RolePermission::class, 'role_id');
     }
 
     public function users()
     {
-        return $this->belongsToMany('\App\User', 'user_roles', 'role_id', 'user_id');
+        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
     }
 
     /**
@@ -115,7 +115,7 @@ class Role extends Model
         // Fire event on role being deleted.
         static::deleting(function (Role $role) {
             // Fetch our users before we detatch things.
-            $users = $role->users();
+            $users = $role->users;
 
             $role->permissions()->detach();
             $role->users()->detach();

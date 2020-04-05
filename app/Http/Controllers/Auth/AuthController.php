@@ -167,7 +167,7 @@ class AuthController extends PanelController
      */
     protected function getFailedLoginMessage()
     {
-        return trans('auth.mismatch');
+        return trans('auth.failed');
     }
 
     /**
