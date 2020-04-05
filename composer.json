@@ -30,7 +30,8 @@
         "infinity-next/eightdown": "0.1.1.1",
         "infinity-next/sleuth": "^0.2",
         "intervention/image": "^2.5",
-        "james-heinrich/getid3": "^1.9"
+        "james-heinrich/getid3": "^1.9",
+        "jenssegers/imagehash": "^0.6.0"
     },
 
     "require-dev": {

@@ -2,9 +2,14 @@
 
 namespace App;
 
+use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
 use InfinityNext\Sleuth\FileSleuth;
 use Intervention\Image\ImageManager;
+use Jenssegers\ImageHash\Hash;
+use Jenssegers\ImageHash\ImageHash;
+use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use Jenssegers\ImageHash\Implementations\PerceptualHash;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use File;
@@ -27,6 +32,8 @@ use Storage;
  */
 class FileStorage extends Model
 {
+    use EloquentBinary;
+
     /**
      * The database table used by the model.
      *
@@ -48,6 +55,7 @@ class FileStorage extends Model
      */
     protected $fillable = [
         'hash',
+        'phash',
         'banned',
         'filesize',
         'file_width',
@@ -60,6 +68,41 @@ class FileStorage extends Model
         'has_thumbnail',
         'thumbnail_width',
         'thumbnail_height',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'hash' => 'string',
+        'phash' => 'int',
+        'banned' => "bool",
+        'filesize' => "int",
+        'file_width' => "int",
+        'file_height' => "int",
+        'mime' => "string",
+        'meta' => "string",
+        'first_uploaded_at' => "datetime",
+        'last_uploaded_at' => "datetime",
+        'upload_count' => "int",
+        'has_thumbnail' => "bool",
+        'thumbnail_width' => "int",
+        'thumbnail_height' => "int",
+    ];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'phash',
+        'banned',
+        'first_uploaded_at',
+        'last_uploaded_at',
+        'upload_count',
     ];
 
     /**
@@ -141,8 +184,8 @@ class FileStorage extends Model
     /**
      * Creates a new FileAttachment for a post using a direct upload.
      *
-     * @param UploadedFile $file
-     * @param Post         $post
+     * @param  UploadedFile  $file
+     * @param  Post          $post
      *
      * @return FileAttachment
      */
@@ -1228,14 +1271,30 @@ class FileStorage extends Model
 
         if (!($file instanceof SymfonyFile) && !($file instanceof UploadedFile)) {
             throw new \InvalidArgumentException('First argument for FileStorage::storeUpload is not a File or UploadedFile.');
-
             return false;
-        } elseif ($file instanceof UploadedFile) {
+        }
+        elseif ($file instanceof UploadedFile) {
             $clientUpload = true;
         }
 
         $fileContent = File::get($file);
-        $fileMD5 = md5((string) File::get($file));
+
+        // phash
+        $hasher = new ImageHash(new PerceptualHash());
+        $fileHash = $hasher->hash($fileContent);
+
+        static::where('banned', true)->pluck('phash')->each(function ($theirPhash) use ($hasher, $fileHash) {
+            $theirHash = Hash::fromHex(gmp_strval(gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63)), 16));
+
+            $distance = $hasher->distance($fileHash, $theirHash);
+            if ($distance < 10) {
+                throw new \Exception("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
+                return false;
+            }
+        });
+
+        // MD5 hash and check for re-up.
+        $fileMD5 = md5((string) $fileContent);
         $storage = static::getHash($fileMD5);
 
         if (!($storage instanceof static)) {
@@ -1243,6 +1302,7 @@ class FileStorage extends Model
             $fileTime = $storage->freshTimestamp();
 
             $storage->hash = $fileMD5;
+            $storage->phash = gmp_strval(gmp_sub(gmp_init("0x{$fileHash->toHex()}", 16), gmp_pow(2, 63)), 10);
             $storage->banned = false;
             $storage->filesize = $file->getSize();
             $storage->mime = $clientUpload ? $file->getClientMimeType() : $file->getMimeType();
@@ -1267,7 +1327,8 @@ class FileStorage extends Model
                     $storage->meta = json_encode($file->case->getMetaData());
                 }
             }
-        } else {
+        }
+        else {
             $fileTime = $storage->freshTimestamp();
         }
 

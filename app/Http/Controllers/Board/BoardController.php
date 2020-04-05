@@ -276,10 +276,10 @@ class BoardController extends Controller
         $storage = FileStorage::getHash($hash);
 
         if (is_null($storage) || !$storage->hasFile()) {
-            return [$hash => null];
+            return response()->json([$hash => null]);
         }
 
-        return [$hash => $storage];
+        return response()->json([$hash => $storage]);
     }
 
     /**
@@ -316,7 +316,8 @@ class BoardController extends Controller
                 $storage[$newStorage->hash] = $newStorage;
 
                 Cache::decrement('upstream_data_for_'.$ip->toLong(), $file->getSize());
-            } else {
+            }
+            else {
                 return abort(429);
             }
         }
