@@ -185,9 +185,10 @@ Route::group(['namespace' => 'Site', 'as' => 'site.', 'prefix' => 'site',], func
     /**
      * Files
      */
+     Route::get('files/{hash}/{filename}', 'FileController@send')->name('files.send');
      Route::get('files', 'FileController@index')->name('files.index');
      Route::get('files/{hash}', 'FileController@show')->name('files.show');
-     Route::get('files/{hash}/{filename}', 'FileController@send')->name('files.send');
+     Route::delete('files/{hash}', 'FileController@delete')->name('files.delete');
 
     /**
      * Utilities

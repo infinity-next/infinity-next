@@ -39,6 +39,10 @@ trait SendsFilesTrait
 
         $FileStorage = null;
 
+        if ($hash instanceof FileStorage) {
+            $FileStorage = $hash;
+            $hash = $FileStorage->hash;
+        }
         if (is_string($hash)) {
             $FileStorage = FileStorage::getHash($hash);
 

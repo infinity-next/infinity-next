@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Ban;
 use App\Board;
 use App\FileAttachment;
+use App\FileStorage;
 use App\Page;
 use App\Post;
 use App\Report;
@@ -99,6 +100,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('attachment', FileAttachment::class);
         Route::model('ban',        Ban::class);
         Route::model('board',      Board::class);
+        Route::model('hash',       FileStorage::class);
         Route::model('page',       Page::class);
         Route::model('post',       Post::class);
         Route::model('post_id',    Post::class);
@@ -127,6 +129,10 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             return abort(404);
+        });
+
+        Route::bind('hash', function ($value, $route) {
+            return FileStorage::where('hash', $value)->first();
         });
 
         Route::bind('page_title', function ($value, $route) {

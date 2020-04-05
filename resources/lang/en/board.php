@@ -159,6 +159,7 @@ return [
         'ban_delete'        => "Ban &amp; Delete",
         'ban_delete_board'  => "Ban &amp; Delete Board-wide",
         'ban_delete_global' => "Ban &amp; Delete Site-wide",
+        'fuzzyban'          => "Perceptual Hash Ban",
         'bumplock'          => "Bumplock",
         'unbumplock'        => "Un-Bumplock",
         'delete'            => "Delete",

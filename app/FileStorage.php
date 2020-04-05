@@ -209,7 +209,7 @@ class FileStorage extends Model
      */
     public function deleteFile()
     {
-        return unlink($this->getFullPath()) && unlink($this->getFullPathThumb());
+        return @unlink($this->getFullPath()) && @unlink($this->getFullPathThumb());
     }
 
     /**
@@ -717,6 +717,11 @@ class FileStorage extends Model
         }
 
         if ($board instanceof Board) {
+            $params = [
+                'board' => $board,
+                'attachment' => $this->getIdentifier(),
+                'filename' => "thumb_".$this->getDownloadName().".{$ext}",
+            ];
 
             // "false" generates a relativel URL.
             // Attachments get cached, so we want that
@@ -725,7 +730,7 @@ class FileStorage extends Model
 
         return route('panel.site.files.send', [
             'hash' => $this->hash,
-            'filename' => "thumb_".$this->getDownloadName().".{$ext}",
+            'filename' => "{$this->file_id}.{$ext}",
         ], false);
     }
 
@@ -899,6 +904,7 @@ class FileStorage extends Model
     public function isImage()
     {
         switch ($this->mime) {
+            case 'image/webp':
             case 'image/jpeg':
             case 'image/jpg':
             case 'image/gif':
