@@ -124,6 +124,6 @@ class FileController extends PanelController
 
          $file->deleteFile();
 
-         return $this->show($file);
+         return redirect()->route('panel.site.files.index');
      }
 }
