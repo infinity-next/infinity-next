@@ -6,7 +6,7 @@
                 @if ($file->storage->hasThumb())
                 <li class="recent-image {{ $file->post->board->isWorksafe() ? 'sfw' : 'nsfw' }}">
                     <a class="recent-image-link" href="{{ $file->post->getURL() }}">
-                        {!! $file->storage->getThumbnailHTML($file->post->board, 116) !!}
+                        {!! $file->storage->getThumbnailHtml($file->post->board, 116) !!}
                     </a>
                 </li>
                 @endif

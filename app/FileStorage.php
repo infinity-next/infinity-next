@@ -719,13 +719,20 @@ class FileStorage extends Model
         if ($board instanceof Board) {
             $params = [
                 'board' => $board,
-                'attachment' => $this->getIdentifier(),
+                'hash' => $this->hash,
                 'filename' => "thumb_".$this->getDownloadName().".{$ext}",
             ];
 
-            // "false" generates a relativel URL.
+            // "false" generates a relative URL.
             // Attachments get cached, so we want that
-            return route('static.thumb.attachment', $params, false);
+            if (!is_null($this->pivot)) {
+                $params['attachment'] = $this->pivot->attachment_id;
+                return route('static.thumb.attachment', $params, false);
+            }
+            else {
+                return route('static.thumb.hash', $params, false);
+
+            }
         }
 
         return route('panel.site.files.send', [
