@@ -12,9 +12,22 @@ class BoardTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testUpload()
+    public function testImageUpload()
     {
         $file = new File(dirname(__FILE__) . "/../Dummy/donut.jpg", true);
+        $upload = new Upload($file);
+        $storage = $upload->process();
+
+        $this->assertInstanceOf(FileStorage::class, $storage);
+
+        $this->assertCount(1, $storage->thumbnails);
+        $this->assertInstanceOf(FileStorage::class, $storage->thumbnails[0]);
+        $this->assertTrue($storage->thumbnails[0]->exists);
+    }
+
+    public function testVideoUpload()
+    {
+        $file = new File(dirname(__FILE__) . "/../Dummy/small.mp4", true);
         $upload = new Upload($file);
         $storage = $upload->process();
 

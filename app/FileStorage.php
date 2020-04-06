@@ -639,7 +639,7 @@ class FileStorage extends Model
             $url = $this->getDownloadUrl($board);
         }
         elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
-            if ($this->hasThumb()) {
+            if ($this->thumbnail instanceof FileStorage) {
                 $url = $this->thumbnail->getUrl($board);
             }
             elseif ($this->isAudio()) {
@@ -649,7 +649,6 @@ class FileStorage extends Model
 
         $classHTML = $this->getThumbnailClasses();
 
-
         // Measure dimensions.
         $height = 'auto';
         $width = 'auto';
@@ -657,8 +656,8 @@ class FileStorage extends Model
         $maxHeight = 'none';
         $minWidth = 'none';
         $minHeight = 'none';
-        $oHeight = $this->thumbnail->file_height;
-        $oWidth = $this->thumbnail->file_width;
+        $oHeight = $this->thumbnail ? $this->thumbnail->file_height : Settings::get('attachmentThumbnailSize', 250);
+        $oWidth = $this->thumbnail ? $this->thumbnail->file_width : Settings::get('attachmentThumbnailSize', 250);
 
         if ($this->has_thumbnail && !$this->isSpoiler() && !$this->isDeleted()) {
             $height = $oHeight.'px';
@@ -683,7 +682,7 @@ class FileStorage extends Model
             $minHeight = $height;
         }
         else {
-            $maxWidth = Settings::get('attachmentThumbnailSize').'px';
+            $maxWidth = Settings::get('attachmentThumbnailSize', 250).'px';
             $maxHeight = $maxWidth;
             $width = $maxWidth;
             $height = 'auto';
@@ -743,20 +742,11 @@ class FileStorage extends Model
         if ($board instanceof Board) {
             $params = [
                 'board' => $board,
-                'hash' => $this->hash,
+                'hash' => $this->thumbnail->hash,
                 'filename' => "thumb_".$this->getDownloadName().".{$ext}",
             ];
 
-            // "false" generates a relative URL.
-            // Attachments get cached, so we want that
-            if (!is_null($this->pivot)) {
-                $params['attachment'] = $this->pivot->attachment_id;
-                return route('static.thumb.attachment', $params, false);
-            }
-            else {
-                return route('static.thumb.hash', $params, false);
-
-            }
+            return route('static.file.hash', $params, false);
         }
 
         return route('panel.site.files.send', [

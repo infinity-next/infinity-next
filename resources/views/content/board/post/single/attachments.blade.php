@@ -10,7 +10,7 @@
         </figure>
         @else
         <div class="attachment attachment-type-{{ $attachment->guessExtension() }} {{ $attachment->getThumbnailClasses() }}" data-widget="lazyimg">
-            <a class="attachment-link" href="{!! $attachment->getUrl($board) !!}" data-download-url="{!! $attachment->getUrl($board) !!}" data-thumb-url="{!! $attachment->thumbnail->getUrl($board) !!}">
+            <a class="attachment-link" href="{!! $attachment->getUrl($board) !!}" data-download-url="{!! $attachment->getUrl($board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($board) !!}">
                 {!! $attachment->getThumbnailHtml($board) !!}
             </a>
 
@@ -66,7 +66,7 @@
         @endif
         @else
         <div class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
-            <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->thumbnail->getUrl($post->board) !!}"t>
+            <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($post->board) !!}"t>
                 {!! $attachment->getThumbnailHtml($post->board, 150) !!}
             </a>
         </div>

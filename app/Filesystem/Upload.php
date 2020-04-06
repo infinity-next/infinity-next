@@ -189,7 +189,6 @@ class Upload
             $storage->filesize = $file->getSize();
             $storage->mime = $this->isClientFile ? $file->getClientMimeType() : $file->getMimeType();
             $storage->first_uploaded_at = now();
-            $storage->phash = $this->phash($storage->blob);
 
             if (!isset($file->case)) {
                 $ext = $file->guessExtension();
@@ -211,6 +210,7 @@ class Upload
             }
 
             if ($storage->isImage()) {
+                $storage->phash = $this->phash($storage->blob);
                 $image = (new ImageManager())->make($storage->blob);
                 $storage->file_height = $image->height();
                 $storage->file_width = $image->width();
@@ -380,51 +380,46 @@ class Upload
 
     protected function processThumbnailsForVideo()
     {
-        // Used for debugging.
-        $output = "Haven't executed once yet.";
+        $output = "Haven't executed once yet."; // debug string
+        $thumbPath = stream_get_meta_data(tmpfile())['uri'];
+        $videoPath = $this->storage->getFullPath();
 
-        try {
-            $videoPath = $this->getFullPath();
+        // get duration
+        $time = exec(env('LIB_FFMPEG', 'ffmpeg')." -i {$videoPath} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
 
-            // get duration
-            $time = exec(env('LIB_FFMPEG', 'ffmpeg')." -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
-
-            // duration in seconds; half the duration = middle
-            $durationBits = explode(':', $time);
-            $durationSeconds = (float) $durationBits[2] + ((int) $durationBits[1] * 60) + ((int) $durationBits[0] * 3600);
-            $durationMiddle = $durationSeconds / 2;
+        // duration in seconds; half the duration = middle
+        $durationBits = explode(':', $time);
+        $durationSeconds = (float) $durationBits[2] + ((int) $durationBits[1] * 60) + ((int) $durationBits[0] * 3600);
+        $durationMiddle = $durationSeconds / 2;
 
 
-            $thumbPath = tmpfile();
+        $tsHours = str_pad(floor($durationMiddle / 3600), 2, '0', STR_PAD_LEFT);
+        $tsMinutes = str_pad(floor($durationMiddle / 60 % 3600), 2, '0', STR_PAD_LEFT);
+        $tsSeconds = str_pad(number_format($durationMiddle % 60, 2), 5, '0', STR_PAD_LEFT);
+        $timestamp = "{$tsHours}:{$tsMinutes}:{$tsSeconds}";
 
-            $tsHours = str_pad(floor($durationMiddle / 3600), 2, '0', STR_PAD_LEFT);
-            $tsMinutes = str_pad(floor($durationMiddle / 60 % 3600), 2, '0', STR_PAD_LEFT);
-            $tsSeconds = str_pad(number_format($durationMiddle % 60, 2), 5, '0', STR_PAD_LEFT);
-            $timestamp = "{$middleHours}:{$middleMinutes}:{$middleSeconds}";
+        $cmd = env('LIB_FFMPEG', 'ffmpeg').' '.
+                "-i {$videoPath} ".// Input video.
+                //"-filter:v yadif " . // Deinterlace.
+                '-deinterlace '.
+                '-an '.// No audio.
+                "-ss {$timestamp} ".// Timestamp for our thumbnail.
+                '-f mjpeg '.// Output format.
+                '-t 1 '.// Duration in seconds.
+                '-r 1 '.// FPS, 1 for 1 frame.
+                '-y '.// Overwrite file if it already exists.
+                '-threads 1 '.
+                "{$thumbPath} 2>&1";
 
-            $cmd = env('LIB_FFMPEG', 'ffmpeg').' '.
-                    "-i {$videoPath} ".// Input video.
-                    //"-filter:v yadif " . // Deinterlace.
-                    '-deinterlace '.
-                    '-an '.// No audio.
-                    "-ss {$timestamp} ".// Timestamp for our thumbnail.
-                    '-f mjpeg '.// Output format.
-                    '-t 1 '.// Duration in seconds.
-                    '-r 1 '.// FPS, 1 for 1 frame.
-                    '-y '.// Overwrite file if it already exists.
-                    '-threads 1 '.
-                    "{$thumbPath} 2>&1";
+        exec($cmd, $output, $returnvalue);
+        app('log')->info($output);
 
-            exec($cmd, $output, $returnvalue);
-            app('log')->info($output);
-
-            // Constrain thumbnail to proper dimensions.
-            if (filesize($thumbPath)) {
-                $this->procesThumbnail(file_get_contents($thumbPath));
-            }
+        // Constrain thumbnail to proper dimensions.
+        if (filesize($thumbPath)) {
+            $this->processThumbnail(file_get_contents($thumbPath));
         }
-        catch (\Exception $e) {
-            app('log')->error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
+        else {
+            app('log')->error("Video thumbnail has no size for file {$this->storage->hash}.");
         }
     }
 }
