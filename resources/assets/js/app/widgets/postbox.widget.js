@@ -116,66 +116,53 @@
                 widget.$widget.trigger('fileUploading', [ file ]);
 
                 reader.onload = function (event) {
-                    var Hasher = new SparkMD5;
-                    Hasher.appendBinary(this.result);
-
-                    var hash = Hasher.end();
+                    var hash = sha256(event.target.result);
                     file.hash = hash;
 
-                    jQuery.get( widget.options.checkFileUrl, {
-                        'md5' : hash
-                    })
-                        .done(function(data, textStatus, jqXHR) {
-                            if (typeof data === "object")
-                            {
-                                var response = data;
+                    jQuery.get( widget.options.checkFileUrl, { 'sha256' : hash })
+                    .done(function(data, textStatus, jqXHR) {
+                        if (typeof data !== "object") {
+                            console.log("SHA-256 file check received weird response:", data);
+                            return;
+                        }
 
-                                jQuery.each(response, function(index, datum) {
-                                    // Make sure this datum is for our file.
-                                    if (index !== hash)
-                                    {
-                                        return true;
-                                    }
-
-                                    // Does this file exist?
-                                    if (datum !== null)
-                                    {
-                                        // Is the file banned?
-                                        if (datum.banned == 1)
-                                        {
-                                            // Language
-                                            console.log("File "+file.name+" is banned from being uploaded.");
-
-                                            file.status = Dropzone.ERROR;
-                                            widget.dropzone.emit("error", file, "File <tt>"+file.name+"</tt> is banned from being uploaded", jqXHR);
-                                            widget.dropzone.emit("complete", file);
-                                        }
-                                        else
-                                        {
-                                            console.log("File "+file.name+" already exists.");
-
-                                            file.status = window.Dropzone.SUCCESS;
-                                            widget.dropzone.emit("success", file, datum, jqXHR);
-                                            widget.dropzone.emit("complete", file);
-                                        }
-                                    }
-                                    // If no presence, upload anew.
-                                    else
-                                    {
-                                        console.log("Uploading file "+file.name+".");
-
-                                        done();
-                                    }
-                                });
+                        var response = data;
+                        jQuery.each(response, function(index, datum) {
+                            // Make sure this datum is for our file.
+                            if (index !== hash) {
+                                return true;
                             }
-                            else
-                            {
-                                console.log("Received weird response:", data);
+
+                            // Does this file exist?
+                            if (datum !== null) {
+                                // Is the file banned?
+                                if (datum.banned == 1) {
+                                    // Language
+                                    console.log("File "+file.name+" is banned from being uploaded.");
+
+                                    file.status = Dropzone.ERROR;
+                                    widget.dropzone.emit("error", file, "File <tt>"+file.name+"</tt> is banned from being uploaded", jqXHR);
+                                    widget.dropzone.emit("complete", file);
+                                }
+                                else {
+                                    console.log("File "+file.name+" already exists.");
+
+                                    file.status = window.Dropzone.SUCCESS;
+                                    widget.dropzone.emit("success", file, datum, jqXHR);
+                                    widget.dropzone.emit("complete", file);
+                                }
+                            }
+                            // If no presence, upload anew.
+                            else {
+                                console.log("Uploading file "+file.name+".");
+
+                                done();
                             }
                         });
+                    });
                 };
 
-                reader.readAsBinaryString(file);
+                reader.readAsArrayBuffer(file);
             },
 
             canceled : function(file) {

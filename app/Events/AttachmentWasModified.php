@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\FileAttachment;
+use App\PostAttachment;
 use Illuminate\Queue\SerializesModels;
 
 class AttachmentWasModified extends Event
@@ -12,14 +12,14 @@ class AttachmentWasModified extends Event
     /**
      * The post the event is being fired on.
      *
-     * @var \App\FileAttachment
+     * @var \App\PostAttachment
      */
     public $attachment;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(FileAttachment $attachment)
+    public function __construct(PostAttachment $attachment)
     {
         $this->attachment = $attachment;
         $this->post = $attachment->post;

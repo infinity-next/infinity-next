@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Board;
 
 use App\Board;
 use App\FileStorage;
-use App\FileAttachment;
+use App\PostAttachment;
 use App\Http\Controllers\Controller;
 use File;
 use Request;
@@ -35,11 +35,11 @@ class AttachmentController extends Controller
     /**
      * Delete a post's attachment.
      *
-     * @param \App\FileAttachment $attachment
+     * @param \App\PostAttachment $attachment
      *
      * @return Response
      */
-    public function getDeleteAttachment(Board $board, FileAttachment $attachment)
+    public function getDeleteAttachment(Board $board, PostAttachment $attachment)
     {
         if (!$attachment->exists) {
             return abort(404);
@@ -58,11 +58,11 @@ class AttachmentController extends Controller
     /**
      * Toggle a post's spoiler status.
      *
-     * @param \App\FileAttachment $attachment
+     * @param \App\PostAttachment $attachment
      *
      * @return Response
      */
-    public function getSpoilerAttachment(Board $board, FileAttachment $attachment)
+    public function getSpoilerAttachment(Board $board, PostAttachment $attachment)
     {
         if (!$attachment->exists) {
             return abort(404);
@@ -87,11 +87,11 @@ class AttachmentController extends Controller
     /**
      * Delete a post's attachment.
      *
-     * @param \App\FileAttachment $attachment
+     * @param \App\PostAttachment $attachment
      *
      * @return Response
      */
-    public function postDeleteAttachment(Board $board, FileAttachment $attachment)
+    public function postDeleteAttachment(Board $board, PostAttachment $attachment)
     {
         if (!$attachment->exists) {
             return abort(404);
@@ -122,10 +122,12 @@ class AttachmentController extends Controller
                     'post_id' => $attachment->post->post_id,
                     'file' => $attachment->storage->hash,
                 ]);
-            } else {
+            }
+            else {
                 abort(403);
             }
-        } elseif ($input['scope'] == 'self') {
+        }
+        elseif ($input['scope'] == 'self') {
             if (user()->canDeletePostWithPassword($board)) {
                 if (!$attachment->post->checkPassword($input['password'])) {
                     return redirect()
@@ -152,11 +154,11 @@ class AttachmentController extends Controller
     /**
      * Delete a post's attachment.
      *
-     * @param \App\FileAttachment $attachment
+     * @param \App\PostAttachment $attachment
      *
      * @return Response
      */
-    public function postSpoilerAttachment(Board $board, FileAttachment $attachment)
+    public function postSpoilerAttachment(Board $board, PostAttachment $attachment)
     {
         if (!$attachment->exists) {
             return abort(404);
@@ -180,21 +182,20 @@ class AttachmentController extends Controller
         }
 
         if ($input['scope'] == 'other') {
-            if (user()->can('delete', $attachment->post)) {
-                $this->log(
-                    !$attachment->is_spoiler ? 'log.attachment.spoiler' : 'log.attachment.unspoiler',
-                    $attachment->post,
-                    [
-                        'board_uri' => $attachment->post->board_uri,
-                        'board_id' => $attachment->post->board_id,
-                        'post_id' => $attachment->post->post_id,
-                        'file' => $attachment->storage->hash,
-                    ]
-                );
-            } else {
-                abort(403);
-            }
-        } elseif ($input['scope'] == 'self') {
+            $this->authorize('delete', $attachment->post);
+
+            $this->log(
+                !$attachment->is_spoiler ? 'log.attachment.spoiler' : 'log.attachment.unspoiler',
+                $attachment->post,
+                [
+                    'board_uri' => $attachment->post->board_uri,
+                    'board_id' => $attachment->post->board_id,
+                    'post_id' => $attachment->post->post_id,
+                    'file' => $attachment->storage->hash,
+                ]
+            );
+        }
+        elseif ($input['scope'] == 'self') {
             if (user()->canDeletePostWithPassword($board)) {
                 if (!$attachment->post->checkPassword($input['password'])) {
                     return redirect()

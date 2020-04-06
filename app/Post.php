@@ -162,14 +162,14 @@ class Post extends Model implements FormattableContract
 
     public function attachments()
     {
-        return $this->belongsToMany(FileStorage::class, 'file_attachments', 'post_id', 'file_id')
+        return $this->belongsToMany(FileStorage::class, 'post_attachments', 'post_id', 'file_id')
             ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position')
             ->orderBy('pivot_position', 'asc');
     }
 
     public function attachmentLinks()
     {
-        return $this->hasMany(FileAttachment::class, 'post_id');
+        return $this->hasMany(PostAttachment::class, 'post_id');
     }
 
     public function backlinks()
@@ -235,7 +235,7 @@ class Post extends Model implements FormattableContract
 
     public function replyFiles()
     {
-        return $this->hasManyThrough(FileAttachment::class, Post::class, 'reply_to', 'post_id');
+        return $this->hasManyThrough(PostAttachment::class, Post::class, 'reply_to', 'post_id');
     }
 
     public function reports()
@@ -1589,8 +1589,8 @@ class Post extends Model implements FormattableContract
     public function scopeAndAttachments($query)
     {
         return $query->with(['attachments' => function ($eagerQuery) {
-            $eagerQuery->orderBy('file_attachments.position');
-        }]);
+            $eagerQuery->orderBy('post_attachments.position');
+        }], 'attachments.thumbnails');
     }
 
     public function scopeAndBacklinks($query)
@@ -1951,7 +1951,8 @@ class Post extends Model implements FormattableContract
 
                 Cache::put('last_thread_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, now()->addHour());
             }
-        } else {
+        }
+        else {
             $this->author_ip = null;
 
             if ($thread instanceof self) {
@@ -2067,7 +2068,7 @@ class Post extends Model implements FormattableContract
                     $uniques[$hash] = true;
                     $storage = $storages->where('hash', $hash)->first();
 
-                    if ($storage && !$storage->banned) {
+                    if ($storage && is_null($storage->banned_at)) {
                         $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
 
                         $upload = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);

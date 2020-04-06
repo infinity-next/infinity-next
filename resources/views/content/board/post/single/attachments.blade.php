@@ -6,12 +6,12 @@
         @if (!isset($catalog) || !$catalog)
         @if ($attachment->isDeleted())
         <figure class="attachment attachment-deleted">
-            {!! $attachment->getThumbnailHTML($board) !!}
+            {!! $attachment->getThumbnailHtml($board) !!}
         </figure>
         @else
         <div class="attachment attachment-type-{{ $attachment->guessExtension() }} {{ $attachment->getThumbnailClasses() }}" data-widget="lazyimg">
-            <a class="attachment-link" href="{!! $attachment->getDownloadURL($board) !!}" data-download-url="{!! $attachment->getDownloadURL($board) !!}" data-thumb-url="{!! $attachment->getThumbnailURL($board) !!}">
-                {!! $attachment->getThumbnailHTML($board) !!}
+            <a class="attachment-link" href="{!! $attachment->getUrl($board) !!}" data-download-url="{!! $attachment->getUrl($board) !!}" data-thumb-url="{!! $attachment->thumbnail->getUrl($board) !!}">
+                {!! $attachment->getThumbnailHtml($board) !!}
             </a>
 
             <div class="attachment-details">
@@ -49,7 +49,7 @@
                 @show
 
                 {{-- Note: Strict LTR direct here because this is technical info. --}}
-                <a class="attachment-action attachment-download" dir="ltr" target="_blank" href="{!! $attachment->getDownloadUrl($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
+                <a class="attachment-action attachment-download" dir="ltr" target="_blank" href="{!! $attachment->getUrl($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
                     <span class="detail-item detail-download">
                         @if ($attachment->pivot->is_spoiler)
                         <span class="detail-item detail-filename filename-spoilers">@lang('board.field.spoilers')</span>
@@ -66,8 +66,8 @@
         @endif
         @else
         <div class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
-            <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getDownloadURL($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailURL($post->board) !!}"t>
-                {!! $attachment->getThumbnailHTML($post->board, 150) !!}
+            <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->thumbnail->getUrl($post->board) !!}"t>
+                {!! $attachment->getThumbnailHtml($post->board, 150) !!}
             </a>
         </div>
         @endif

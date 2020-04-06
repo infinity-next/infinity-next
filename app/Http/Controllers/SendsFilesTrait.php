@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http;
+namespace App\Http\Controllers;
 
 use App\FileStorage;
 use File;
@@ -30,7 +30,7 @@ trait SendsFilesTrait
      *
      * @return Response
      */
-    public function sendFile($hash = false, $filename = false, $thumbnail = false)
+    public function sendFile($hash = false, $filename = false)
     {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
             header('HTTP/1.1 304 Not Modified');
@@ -52,17 +52,9 @@ trait SendsFilesTrait
         }
 
         if ($FileStorage instanceof FileStorage) {
-            $storagePath = !$thumbnail ? $FileStorage->getPath() : $FileStorage->getPathThumb();
-            $storagePathFull = !$thumbnail ? $FileStorage->getFullPath() : $FileStorage->getFullPathThumb();
+            $storagePath = $FileStorage->getPath();
+            $storagePathFull = $FileStorage->getFullPath();
             $cacheTime = 31536000; /// 1 year
-
-            if ($thumbnail && (!file_exists($storagePathFull) || is_dir($storagePathFull))) {
-                if (is_dir($storagePathFull)) {
-                    unlink($storagePathFull);
-                }
-
-                $FileStorage->processThumb();
-            }
 
             if (is_link($storagePathFull)) {
                 if (!is_readable($storagePathFull)) {
@@ -91,12 +83,6 @@ trait SendsFilesTrait
                     'Content-Type' => $FileStorage->mime,
                     'Filename' => urldecode($filename),
                 ];
-
-
-                if ($thumbnail) {
-                    $responseHeaders['Content-Type'] = 'image/webp';
-                }
-
 
                 // Determine if we can skip PHP content distribution.
                 // This is hugely important.

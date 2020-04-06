@@ -63,20 +63,21 @@ class BoardAsset extends Model implements PseudoEnumContract
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     public function flagPosts()
     {
-        return $this->hasMany('\App\Post', 'flag_id', 'file_id');
+        return $this->hasMany(Post::class, 'flag_id', 'file_id');
     }
 
     public function storage()
     {
-        return $this->belongsTo('\App\FileStorage', 'file_id');
+        return $this->belongsTo(FileStorage::class, 'file_id');
     }
 
-    public function asHTML()
+
+    public function toHtml()
     {
         return "<img src=\"{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-asset asset-{$this->asset_type}\" />";
     }
@@ -86,7 +87,7 @@ class BoardAsset extends Model implements PseudoEnumContract
         return $this->asset_name ?: '';
     }
 
-    public function getURL()
+    public function getUrl()
     {
         return route('static.file.hash', [
             'board' => $this->board,

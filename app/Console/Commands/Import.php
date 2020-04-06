@@ -7,7 +7,7 @@ use App\BoardAsset;
 use App\BoardTag;
 use App\BoardSetting;
 use App\FileStorage;
-use App\FileAttachment;
+use App\PostAttachment;
 use App\Page;
 use App\Post;
 use App\Role;
@@ -207,7 +207,7 @@ class Import extends Command
         $this->line("\tPrepping database.");
 
         // OUR TABLES
-        $attachmentsTable = $this->hcon->table(with(new FileAttachment())->getTable());
+        $attachmentsTable = $this->hcon->table(with(new PostAttachment())->getTable());
         $postTable = $this->hcon->table(with(new Post())->getTable());
         $boardTable = $this->hcon->table(with(new Board())->getTable());
         $roleTable = $this->hcon->table(with(new Role())->getTable());
@@ -346,7 +346,7 @@ class Import extends Command
 
         Board::where('board_uri', '>=', 'jonimu')->orderBy('board_uri', 'asc')->chunk(1, function ($boards) {
             foreach ($boards as $board) {
-                FileAttachment::whereForBoard($board)->forceDelete();
+                PostAttachment::whereForBoard($board)->forceDelete();
 
                 $this->line("\t\tImporting attachments from /{$board->board_uri}/");
 
@@ -389,7 +389,7 @@ class Import extends Command
                     foreach ($posts as $post) {
                     }
 
-                        if (FileAttachment::insert($aModels)) {
+                        if (PostAttachment::insert($aModels)) {
                             $attachmentsMade += count($aModels);
                         }
                     });
@@ -762,7 +762,7 @@ class Import extends Command
                 $this->line("\t\tTruncating Infinity Next posts for /{$board->board_uri}/");
                 $post_ids = $board->posts()->withTrashed()->lists('post_id');
 
-                FileAttachment::whereIn('post_id', $post_ids)->forceDelete();
+                PostAttachment::whereIn('post_id', $post_ids)->forceDelete();
                 $board->posts()->withTrashed()->forceDelete();
                 $board->posts_total = 0;
                 $board->save();
@@ -930,7 +930,7 @@ class Import extends Command
                 }
 
                 if (!isset($attachment['hash'])) {
-                    $attachment['hash'] = md5(file_get_contents($path));
+                    $attachment['hash'] = hash('sha256', file_get_contents($path));
                 }
 
                 $storage = FileStorage::getHash($attachment['hash']);
@@ -947,7 +947,7 @@ class Import extends Command
                     if (!$storage) {
                         $storage = new FileStorage([
                             'hash' => $attachment['hash'],
-                            'banned' => false,
+                            'banned_at' => null,
                             'filesize' => $attachment['size'],
                             'file_width' => $width,
                             'file_height' => $height,
@@ -1005,7 +1005,7 @@ class Import extends Command
             }
         }
 
-        FileAttachment::insert($aModels);
+        PostAttachment::insert($aModels);
 
         return count($aModels);
     }

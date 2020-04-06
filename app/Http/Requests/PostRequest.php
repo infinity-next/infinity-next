@@ -217,24 +217,12 @@ class PostRequest extends Request implements ApiContract
         $board = $this->board;
         $user = user();
         $rules = [
-            'author' => [
-                'nullable',
-                'string',
-                'encoding:UTF-8',
-            ],
-
-            'email' => [
-                'nullable',
-                'string',
-                'encoding:UTF-8',
-            ],
-
-            'subject' => [
-                'string',
-                'encoding:UTF-8',
-            ],
+            'author' => [ 'nullable', 'string', 'encoding:UTF-8', ],
+            'email' => [ 'nullable', 'string', 'encoding:UTF-8', ],
+            'subject' => [ 'string', 'encoding:UTF-8', ],
         ];
 
+        // Add a subject requirement if we need one.
         if (!$this->thread && $board->getConfig('threadRequireSubject')) {
             $rules['subject'][] = 'required';
         }
@@ -287,7 +275,8 @@ class PostRequest extends Request implements ApiContract
                         $rules['files.hash'][] = 'required';
                         $rules['files.hash'][] = "min:{$attachmentsMin}";
                     }
-                } else {
+                }
+                else {
                     $fileToken = 'files';
 
                     // Vanilla HTML upload
@@ -305,9 +294,9 @@ class PostRequest extends Request implements ApiContract
                         $rules["{$fileToken}.{$attachment}"][] = 'file_old';
                     }
                     // Can only attach new files.
-                    //elseif ($user->can('create-attachment') && !$user->can('attach', $board)) {
-                    //    $rules["{$fileToken}.{$attachment}"][] = 'file_new';
-                    //}
+                    elseif ($user->can('create-attachment') && !$user->can('attach', $board)) {
+                        $rules["{$fileToken}.{$attachment}"][] = 'file_new';
+                    }
 
                     for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment) {
                         $rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
@@ -322,10 +311,10 @@ class PostRequest extends Request implements ApiContract
     /**
      * Returns rules specifically for files for a board.
      *
-     * @param Board $board
-     * @param array $rules (POINTER, MODIFIED)
+     * @param  Board  $board
+     * @param  array  $rules (POINTER, MODIFIED)
      *
-     * @return array Validation rules.
+     * @return array  Validation rules.
      */
     public static function rulesForFiles(Board $board, array &$rules)
     {
@@ -349,10 +338,10 @@ class PostRequest extends Request implements ApiContract
     /**
      * Returns rules specifically for dropzone files for a board.
      *
-     * @param Board $board
-     * @param array $rules (POINTER, MODIFIED)
+     * @param  Board  $board
+     * @param  array  $rules (POINTER, MODIFIED)
      *
-     * @return array Validation rules.
+     * @return array  Validation rules.
      */
     public static function rulesForFileHashes(Board $board, array &$rules)
     {
@@ -379,8 +368,8 @@ class PostRequest extends Request implements ApiContract
             $rules["files.hash.{$attachment}"] = [
                 'string',
                 "required_with:files.name.{$attachment}",
-                'md5',
-                'exists:files,hash,banned,0',
+                'sha256',
+                'exists:files,hash',
             ];
 
             $rules["files.spoiler.{$attachment}"] = [
@@ -388,6 +377,7 @@ class PostRequest extends Request implements ApiContract
             ];
         }
     }
+
 
     /**
      * Validate the class instance.
@@ -406,83 +396,58 @@ class PostRequest extends Request implements ApiContract
         $messages = $validator->errors();
         $isReply = $this->thread instanceof Post;
 
+        // Check flood timers
         if ($isReply) {
             $floodTime = site_setting('postFloodTime');
 
-            // Check global flood.
             $nextPostTime = Carbon::createFromTimestamp(Cache::get('last_post_for_'.$ip->toLong(), 0) + $floodTime);
 
             if ($nextPostTime->isFuture()) {
                 $timeDiff = $nextPostTime->diffInSeconds() + 1;
 
-                $messages->add('flood', trans_choice('validation.custom.post_flood', $timeDiff, [
-                        'time_left' => $timeDiff,
+                $messages->add('flood', trans_choice('validation.post_flood', $timeDiff, [
+                    'time_left' => $timeDiff,
                 ]));
 
                 $this->failedValidation($validator);
-
                 return;
             }
-        } else {
+        }
+        else {
             $floodTime = site_setting('threadFloodTime');
 
-            // Check global flood.
             $nextPostTime = Carbon::createFromTimestamp(Cache::get('last_thread_for_'.$ip->toLong(), 0) + $floodTime);
 
             if ($nextPostTime->isFuture()) {
                 $timeDiff = $nextPostTime->diffInSeconds() + 1;
 
-                $messages->add('flood', trans_choice('validation.custom.thread_flood', $timeDiff, [
-                        'time_left' => $timeDiff,
+                $messages->add('flood', trans_choice('validation.thread_flood', $timeDiff, [
+                    'time_left' => $timeDiff,
                 ]));
 
                 $this->failedValidation($validator);
-
                 return;
             }
         }
 
         // Board-level setting validaiton.
-        $validator->sometimes('captcha', 'required|captcha', function ($input) use ($board) {
+        $validator->sometimes('captcha', 'required|captcha', function ($input) {
             return !user()->can('bypass-captcha');
         });
 
+        // Validate and return errors before we check file originality.
         if (!$validator->passes()) {
             $this->failedValidation($validator);
+            return;
         }
-        else {
-            if (user()->can('bypass-captcha', $board)) {
-                // Check last post time for flood.
-                $floodTime = site_setting('postFloodTime');
 
-                if ($floodTime > 0) {
-                    $lastPost = Post::getLastPostForIP();
-
-                    if ($lastPost) {
-                        $floodTimer = clone $lastPost->created_at;
-                        $floodTimer->addSeconds($floodTime);
-
-                        if ($floodTimer->isFuture()) {
-                            $messages->add('flood', trans('validation.custom.post_flood', [
-                                'time_left' => $floodTimer->diffInSeconds(),
-                            ]));
-
-                            $this->failedValidation($validator);
-
-                            return;
-                        }
-                    }
-                }
-            }
-
-
-            // Validate individual files being uploaded right now.
-            $this->validateOriginality();
-        }
+        // Validate individual files being uploaded right now.
+        $this->validateOriginality();
 
         if (count($validator->errors())) {
             $this->failedValidation($validator);
-        } elseif (!$this->passesAuthorization()) {
+        }
+        elseif (!$this->passesAuthorization()) {
             $this->failedAuthorization();
         }
     }
@@ -509,7 +474,7 @@ class PostRequest extends Request implements ApiContract
                         // If a file is uploaded that has a specific filename, it breaks the process.
                         if (method_exists($upload, 'getPathname') && !file_exists($upload->getPathname())) {
                             $validated = false;
-                            $messages->add("files.{$uploadIndex}", trans('validation.custom.file_corrupt', [
+                            $messages->add("files.{$uploadIndex}", trans('validation.file_corrupt', [
                                 'filename' => $upload->getClientOriginalName(),
                             ]));
                         }
@@ -524,14 +489,14 @@ class PostRequest extends Request implements ApiContract
                             if ($board->getConfig('originalityImages') == 'thread') {
                                 if ($thread instanceof Post && $originalPost = FileStorage::checkUploadExists($upload, $board, $thread)) {
                                     $validated = false;
-                                    $messages->add("files.{$uploadIndex}", trans('validation.custom.unoriginal_image_thread', [
+                                    $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_thread', [
                                         'filename' => $upload->getClientOriginalName(),
                                         'url' => $originalPost->getURL(),
                                     ]));
                                 }
                             } elseif ($originalPost = FileStorage::checkUploadExists($upload, $board)) {
                                 $validated = false;
-                                $messages->add("files.{$uploadIndex}", trans('validation.custom.unoriginal_image_board', [
+                                $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_board', [
                                     'filename' => $upload->getClientOriginalName(),
                                     'url' => $originalPost->getURL(),
                                 ]));
@@ -545,14 +510,14 @@ class PostRequest extends Request implements ApiContract
                         if ($board->getConfig('originalityImages') == 'thread') {
                             if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread)) {
                                 $validated = false;
-                                $messages->add("files.{$uploadIndex}", trans('validation.custom.unoriginal_image_thread', [
+                                $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_thread', [
                                     'filename' => $uploads['name'][$uploadIndex],
                                     'url' => $originalPost->getURL(),
                                 ]));
                             }
                         } elseif ($originalPost = FileStorage::checkHashExists($upload, $board)) {
                             $validated = false;
-                            $messages->add("files.{$uploadIndex}", trans('validation.custom.unoriginal_image_board', [
+                            $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_board', [
                                 'filename' => $uploads['name'][$uploadIndex],
                                 'url' => $originalPost->getURL(),
                             ]));
@@ -575,12 +540,10 @@ class PostRequest extends Request implements ApiContract
                 $checksums = PostChecksum::getChecksum($checksum);
             }
 
-            //dd($checksums);
-
             if ($checksums->count()) {
                 $validated = false;
 
-                $messages->add('body', trans('validation.custom.unoriginal_content'));
+                $messages->add('body', trans('validation.unoriginal_content'));
 
                 // If we are in R9K mode, set $respectTheRobot property to to false.
                 // This will trigger a Robot ban in failedValidation.
@@ -590,7 +553,6 @@ class PostRequest extends Request implements ApiContract
 
         if ($validated !== true) {
             $this->failedValidation($validator);
-
             return;
         }
     }

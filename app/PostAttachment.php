@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FileAttachment extends Model
+class PostAttachment extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'file_attachments';
+    protected $table = 'post_attachments';
 
     /**
      * The database primary key.
@@ -28,6 +28,7 @@ class FileAttachment extends Model
     protected $fillable = [
         'post_id',
         'file_id',
+        'thumbnail_id',
         'filename',
         'is_spoiler',
         'is_deleted',
@@ -42,6 +43,7 @@ class FileAttachment extends Model
     protected $casts = [
         'post_id' => 'int',
         'file_id' => 'int',
+        'thumbnail_id' => 'int',
         'filename' => 'string',
         'is_spoiler' => 'bool',
         'is_deleted' => 'bool',
@@ -72,6 +74,11 @@ class FileAttachment extends Model
         return $this->belongsTo(FileStorage::class, 'file_id');
     }
 
+    public function thumbnail()
+    {
+        return $this->belongsTo(FileStorage::class, 'thumbnail_id');
+    }
+
     /**
      * Ties database triggers to the model.
      *
@@ -84,9 +91,10 @@ class FileAttachment extends Model
         // Setup event bindings...
 
         // Fire events on post created.
-        static::created(function (FileAttachment $attachment) {
+        static::created(function (PostAttachment $attachment) {
             if (!is_link($attachment->storage->getFullPath())) {
-                $attachment->storage->processAttachment($attachment);
+                $attachment->storage->upload_count += 1;
+                $attachment->storage->save();
             }
         });
     }
@@ -115,7 +123,7 @@ class FileAttachment extends Model
         $query = static::where('is_spoiler', false)
             ->where('is_deleted', false)
             ->whereHas('storage', function ($query) {
-                $query->where('has_thumbnail', true);
+                $query->whereHas('thumbnails');
             })
             ->whereHas('post.board', function ($query) use ($sfw) {
                 $query->where('is_indexed', '=', true);

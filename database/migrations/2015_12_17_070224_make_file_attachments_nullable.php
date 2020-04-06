@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class MakeFileAttachmentsNullable extends Migration
 {
-	
+
 	/**
 	* Run the migrations.
 	*
@@ -31,5 +31,5 @@ class MakeFileAttachmentsNullable extends Migration
 			$table->bigInteger('file_id')->unsigned()->change();
 		});
 	}
-	
+
 }

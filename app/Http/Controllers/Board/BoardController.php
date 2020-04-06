@@ -8,6 +8,7 @@ use App\OptionGroup;
 use App\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Filesystem\Upload;
 use App\Support\IP;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -272,7 +273,7 @@ class BoardController extends Controller
      */
     public function getFile(Board $board)
     {
-        $hash = Request::input('md5');
+        $hash = Request::input('sha256');
         $storage = FileStorage::getHash($hash);
 
         if (is_null($storage) || !$storage->hasFile()) {
@@ -303,23 +304,13 @@ class BoardController extends Controller
             return response()->json(['errors' => $validator->errors(),], 422);
         }
 
-        $storage = new Collection();
+        $storage = collect([]);
 
         foreach ($input['files'] as $file) {
-            $ip = new IP;
-            $uploadSize = (int) Cache::get('upstream_data_for_'.$ip->toLong(), 0);
+            $upload = new Upload($file);
+            $fileStorage = $upload->process();
 
-            if ($uploadSize <= 52430000) {
-                Cache::increment('upstream_data_for_'.$ip->toLong(), $file->getSize(), 2);
-
-                $newStorage = FileStorage::storeUpload($file);
-                $storage[$newStorage->hash] = $newStorage;
-
-                Cache::decrement('upstream_data_for_'.$ip->toLong(), $file->getSize());
-            }
-            else {
-                return abort(429);
-            }
+            $storage->push($fileStorage);
         }
 
         return $storage;

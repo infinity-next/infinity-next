@@ -130,19 +130,21 @@ return [
     */
 
     'captcha' => "The captcha was not completed correctly.",
-    'ugc_height' => "Your :attribute is too many lines or is too tall.",
+    'ugc_height' => "The :attribute is too many lines or is too tall.",
     'css' => "The CSS you've supplied contains references that are not allowed.",
 
+    'file_generic' => "The file could not be uploaded.",
     'file_corrupt' => "<tt>:filename</tt> is corrupt or has an invalid file name.",
-    'file_generic' => "Your file could not be uploaded.",
     'file_old' => "Your connection is restricted from posting unrecognized files.",
+    'file_banned' => "The file is banned.",
+    'file_fuzzybanned' => "The file is percetually similar to another banned image.",
     'post_flood' => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
     'thread_flood' => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
+    'integrity' => "Your file's integrity cannot be verified.",
 
     'banned' => "You are banned!",
     'banned_for' => "Reason: <em>:reason</em>",
 
-    'integrity' => "Your file's integrity cannot be verified.",
 
     'unoriginal_content' => "Unoriginal content!",
     'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",

@@ -13,6 +13,11 @@ class FileValidator
         return (bool) preg_match('/^[a-f0-9]{32}$/i', $value);
     }
 
+    public function validateSha256($attribute, $value, $parameters)
+    {
+        return (bool) preg_match('/^[A-Fa-f0-9]{64}$/', $value);
+    }
+
     public function validateFileName($attribute, $value, $parameters)
     {
         return preg_match("/^[^\/\?\*;{}\\\]+\.[^\/\?\*;{}\\\]+$/", $value)

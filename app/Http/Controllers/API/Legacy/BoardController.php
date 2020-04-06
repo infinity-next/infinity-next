@@ -139,7 +139,7 @@ class BoardController extends ParentController
                 'filename' => $attachment->getBaseFileName(),
                 'ext' => '.'.$attachment->getExtension(),
                 'tim' => $attachment->getFileName('%t-%i'),
-                'md5' => base64_encode(hex2bin($attachment->hash)),
+                'hash' => base64_encode(hex2bin($attachment->hash)),
 
                 'fsize' => $attachment->filesize,
 

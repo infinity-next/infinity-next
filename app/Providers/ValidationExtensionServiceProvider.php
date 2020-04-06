@@ -22,6 +22,7 @@ class ValidationExtensionServiceProvider extends ServiceProvider
         $validator->extend('encoding', 'App\Validators\EncodingValidator@validateEncoding');
 
         $validator->extend('md5', 'App\Validators\FileValidator@validateMd5');
+        $validator->extend('sha256', 'App\Validators\FileValidator@validateSha256');
         $validator->extend('file_name', 'App\Validators\FileValidator@validateFileName');
         $validator->extend('file_integrity', 'App\Validators\FileValidator@validateFileIntegrity');
         $validator->extend('file_new', 'App\Validators\FileValidator@validateFileNew');

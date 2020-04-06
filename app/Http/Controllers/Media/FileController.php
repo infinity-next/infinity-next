@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Media;
 
 use App\Board;
 use App\FileStorage;
-use App\FileAttachment;
+use App\PostAttachment;
 use App\Events\AttachmentWasModified;
 use App\Http\Controllers\Controller;
-use App\Http\SendsFilesTrait as SendsFiles;
+use App\Http\Controllers\SendsFilesTrait as SendsFiles;
 use File;
 use Settings;
 use Storage;
@@ -34,10 +34,10 @@ class FileController extends Controller
     /**
      * Delivers a file from an attachment.
      *
-     * @param \App\FileAttachment $attachment
-     * @param string              $filename
+     * @param  \App\PostAttachment  $attachment
+     * @param  string               $filename
      */
-    public function getImageFromAttachment(FileAttachment $attachment, $filename = false)
+    public function getImageFromAttachment(PostAttachment $attachment, $filename = false)
     {
         if (!$attachment->exists || !$attachment->storage) {
             return abort(404);
@@ -60,12 +60,12 @@ class FileController extends Controller
     /**
      * Delivers a file's thumbnail by rerouting the request to getFile with an optional parameter set.
      *
-     * @param \App\FileAttachment $attachment
-     * @param  $string  $filename
+     * @param  \App\PostAttachment  $attachment
+     * @param   $string             $filename
      *
      * @return Response
      */
-    public function getThumbnailFromAttachment(FileAttachment $attachment, $filename = false)
+    public function getThumbnailFromAttachment(PostAttachment $attachment, $filename = false)
     {
         if ($attachment->storage) {
             return $this->sendFile($attachment->storage->hash, $filename, true);
@@ -77,8 +77,8 @@ class FileController extends Controller
     /**
      * Delivers a file from a hash.
      *
-     * @param string $hash
-     * @param string $filename
+     * @param  string  $hash
+     * @param  string  $filename
      */
     public function getThumbnailFromHash($hash = false, $filename = false)
     {

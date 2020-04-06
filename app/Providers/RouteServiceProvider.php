@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use App\Ban;
 use App\Board;
-use App\FileAttachment;
 use App\FileStorage;
 use App\Page;
 use App\Post;
+use App\PostAttachment;
 use App\Report;
 use App\Role;
 use App\User;
@@ -97,7 +97,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::model('attachment', FileAttachment::class);
+        Route::model('attachment', PostAttachment::class);
         Route::model('ban',        Ban::class);
         Route::model('board',      Board::class);
         Route::model('hash',       FileStorage::class);
@@ -109,7 +109,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('role',       Role::class);
 
         Route::bind('attachment', function ($value, $route) {
-            return FileAttachment::where('is_deleted', false)
+            return PostAttachment::where('is_deleted', false)
                 ->with('storage')
                 ->find($value);
         });
@@ -190,7 +190,7 @@ class RouteServiceProvider extends ServiceProvider
         // Sets up our routing tokens.
         Route::pattern('attachment', '[0-9]\d*');
         Route::pattern('board', Board::URI_PATTERN);
-        Route::pattern('hash', '[a-f0-9]{32}');
+        Route::pattern('hash', '[A-Fa-f0-9]{64}');
         Route::pattern('filename', "^[\w\-. ]+$");
         Route::pattern('id', '[0-9]\d*');
         Route::pattern('post_id', '[0-9]\d*');

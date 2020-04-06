@@ -2,16 +2,7 @@
 
 namespace App;
 
-use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
-use InfinityNext\Sleuth\FileSleuth;
-use Intervention\Image\ImageManager;
-use Jenssegers\ImageHash\Hash;
-use Jenssegers\ImageHash\ImageHash;
-use Jenssegers\ImageHash\Implementations\DifferenceHash;
-use Jenssegers\ImageHash\Implementations\PerceptualHash;
-use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use File;
 use Request;
 use Settings;
@@ -32,8 +23,6 @@ use Storage;
  */
 class FileStorage extends Model
 {
-    use EloquentBinary;
-
     /**
      * The database table used by the model.
      *
@@ -54,20 +43,18 @@ class FileStorage extends Model
      * @var array
      */
     protected $fillable = [
+        'source_id',
         'hash',
         'phash',
-        'banned',
         'filesize',
         'file_width',
         'file_height',
         'mime',
         'meta',
+        'banned_at',
         'first_uploaded_at',
         'last_uploaded_at',
         'upload_count',
-        'has_thumbnail',
-        'thumbnail_width',
-        'thumbnail_height',
     ];
 
     /**
@@ -76,20 +63,18 @@ class FileStorage extends Model
      * @var array
      */
     protected $casts = [
+        'source_id' => "int",
         'hash' => 'string',
         'phash' => 'int',
-        'banned' => "bool",
         'filesize' => "int",
         'file_width' => "int",
         'file_height' => "int",
         'mime' => "string",
         'meta' => "string",
+        'banned_at' => "datetime",
         'first_uploaded_at' => "datetime",
         'last_uploaded_at' => "datetime",
         'upload_count' => "int",
-        'has_thumbnail' => "bool",
-        'thumbnail_width' => "int",
-        'thumbnail_height' => "int",
     ];
 
     /**
@@ -99,7 +84,7 @@ class FileStorage extends Model
      */
     protected $hidden = [
         'phash',
-        'banned',
+        'banned_at',
         'first_uploaded_at',
         'last_uploaded_at',
         'upload_count',
@@ -113,14 +98,34 @@ class FileStorage extends Model
     public $timestamps = false;
 
     /**
-     * The \App\FileAttachment relationship.
-     * Represents a post -> storage relationship.
+     * Blob data for the file this object represents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     * @var string
      */
-    public function attachments()
+     public $blob;
+
+    /**
+     * Ties database triggers to the model.
+     *
+     * @static
+     */
+    public static function boot()
     {
-        return $this->hasMany(FileAttachment::class, 'file_id');
+        parent::boot();
+
+        // When being created, commit blob data.
+        static::creating(function ($storage) {
+            Storage::makeDirectory($storage->getDirectory());
+            Storage::put($storage->getPath(), $storage->blob);
+
+            $storage->filesize = Storage::size($storage->getPath());
+            $storage->first_uploaded_at = now();
+            $storage->last_uploaded_at = now();
+            $storage->upload_count = $storage->upload_count ?? 1;
+
+            return Storage::exists($storage->getPath());
+        });
     }
 
     /**
@@ -136,13 +141,35 @@ class FileStorage extends Model
 
     /**
      * The \App\Posts relationship.
-     * Uses the attachments() relationship to find posts where this file is attached..
+     * Uses the postAttachments() relationship to find posts where this file is attached..
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function posts()
     {
-        return $this->belongsToMany(Post::class, 'file_attachments', 'file_id', 'post_id')->withPivot('filename', 'position');
+        return $this->belongsToMany(Post::class, 'post_attachments', 'file_id', 'post_id')
+            ->withPivot('filename', 'position');
+    }
+
+    /**
+     * The \App\PostAttachment relationship.
+     * Represents a post -> storage relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function postAttachments()
+    {
+        return $this->hasMany(PostAttachment::class, 'file_id');
+    }
+
+    public function thumbnail()
+    {
+        return $this->hasOne(static::class, 'source_id');
+    }
+
+    public function thumbnails()
+    {
+        return $this->hasMany(static::class, 'source_id');
     }
 
     /**
@@ -152,7 +179,7 @@ class FileStorage extends Model
      */
     public function challengeExistence()
     {
-        $count = $this->assets->count() + $this->attachments->count();
+        $count = $this->assets->count() + $this->postAttachments->count();
 
         if ($count === 0) {
             $this->deleteFile();
@@ -165,7 +192,8 @@ class FileStorage extends Model
 
     public static function checkUploadExists(UploadedFile $file, Board $board, Post $thread = null)
     {
-        return static::checkHashExists(md5((string) File::get($file)), $board, $thread);
+        $hash = hash('sha256', (string) File::get($file));
+        return static::checkHashExists($hash, $board, $thread);
     }
 
     public static function checkHashExists($hash, Board $board, Post $thread = null)
@@ -176,21 +204,22 @@ class FileStorage extends Model
             $query = $query->whereInThread($thread);
         }
 
-        return $query->whereHas('attachments', function ($query) use ($hash) {
+        return $query->whereHas('postAttachments', function ($query) use ($hash) {
             $query->whereHash($hash);
         })->first();
     }
 
     /**
-     * Creates a new FileAttachment for a post using a direct upload.
+     * Creates a new PostAttachment for a post using a direct upload.
      *
      * @param  UploadedFile  $file
      * @param  Post          $post
      *
-     * @return FileAttachment
+     * @return PostAttachment
      */
     public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
     {
+        ## TODO ##  This needs to be moved somewhere elss stupid.
         $storage = static::storeUpload($file);
 
         $uploadName = urlencode($file->getClientOriginalName());
@@ -199,7 +228,7 @@ class FileStorage extends Model
         $fileName = basename($uploadName, '.'.$uploadExt);
         $fileExt = $storage->guessExtension();
 
-        $attachment = new FileAttachment();
+        $attachment = new PostAttachment;
         $attachment->post_id = $post->post_id;
         $attachment->file_id = $storage->file_id;
         $attachment->filename = urlencode("{$fileName}.{$fileExt}");
@@ -216,20 +245,21 @@ class FileStorage extends Model
     }
 
     /**
-     * Creates a new FileAttachment for a post using a hash.
+     * Creates a new PostAttachment for a post using a hash.
      *
      * @param Post   $post
      * @param string $filename
      * @param bool   $spoiler
      *
-     * @return FileAttachment
+     * @return PostAttachment
      */
     public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
     {
+        ## TODO ## Move this somewhere that makes more sense..
         $fileName = pathinfo($filename, PATHINFO_FILENAME);
         $fileExt = $this->guessExtension();
 
-        $attachment = new FileAttachment();
+        $attachment = new PostAttachment;
         $attachment->post_id = $post->post_id;
         $attachment->file_id = $this->file_id;
         $attachment->filename = urlencode("{$fileName}.{$fileExt}");
@@ -252,7 +282,7 @@ class FileStorage extends Model
      */
     public function deleteFile()
     {
-        return @unlink($this->getFullPath()) && @unlink($this->getFullPathThumb());
+        return @unlink($this->getFullPath());
     }
 
     /**
@@ -263,16 +293,6 @@ class FileStorage extends Model
     public function getAsFile()
     {
         return new File($this->getFullPath());
-    }
-
-    /**
-     * Returns the storage's thumbnail as a filesystem.
-     *
-     * @return \Illuminate\Filesystem\Filesystem
-     */
-    public function getAsFileThumb()
-    {
-        return new File($this->getFullPathThumb());
     }
 
     /**
@@ -300,18 +320,6 @@ class FileStorage extends Model
     }
 
     /**
-     * Returns the thumbnail's storage directory, minus the file name.
-     *
-     * @return string
-     */
-    public function getDirectoryThumb()
-    {
-        $prefix = $this->getHashPrefix($this->hash);
-
-        return "attachments/thumb/{$prefix}";
-    }
-
-    /**
      * Supplies a download name.
      *
      * @return string
@@ -328,10 +336,10 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getDownloadUrl(Board $board)
+    public function getUrl(Board $board)
     {
         $params = [
-            'attachment' => $this->pivot->attachment_id,
+            'hash' => $this->hash,
             'filename' => $this->getDownloadName(),
         ];
 
@@ -339,7 +347,7 @@ class FileStorage extends Model
             $params['board'] = $board;
         }
 
-        return route('static.file.attachment', $params, config('app.url_media', false));
+        return route('static.file.hash', $params, config('app.url_media', false));
     }
 
     /**
@@ -361,7 +369,7 @@ class FileStorage extends Model
      */
     public function getFileDimensions()
     {
-        if ($this->has_thumbnail) {
+        if ($this->hasThumb()) {
             return "{$this->file_width}x{$this->file_height}";
         }
 
@@ -382,9 +390,7 @@ class FileStorage extends Model
             $nameFormat = Settings::get('attachmentName');
         }
 
-        $first_uploade_at = new \Carbon\Carbon($this->first_uploaded_at);
-
-        $bits['t'] = $first_uploade_at->timestamp;
+        $bits['t'] = $this->first_uploaded_at->timestamp;
         $bits['i'] = 0;
         $bits['n'] = $bits['t'];
 
@@ -417,18 +423,6 @@ class FileStorage extends Model
         $storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
 
         return "{$storagePath}{$this->getPath()}";
-    }
-
-    /**
-     * Returns the full internal file path for the thumbnail.
-     *
-     * @return string
-     */
-    public function getFullPathThumb()
-    {
-        $storagePath = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
-
-        return "{$storagePath}{$this->getPathThumb()}";
     }
 
     /**
@@ -507,28 +501,15 @@ class FileStorage extends Model
     {
         $meta = json_decode($this->meta, true);
 
-        if (is_null($key))
-        {
+        if (is_null($key)) {
             return $meta;
         }
-        elseif (array_key_exists($key, $meta))
-        {
+        elseif (array_key_exists($key, $meta)) {
             return $meta[$key];
         }
-        else
-        {
+        else {
             return false;
         }
-    }
-
-    /**
-     * Returns the full internal file path for the thumbnail.
-     *
-     * @return string
-     */
-    public function getPathThumb()
-    {
-        return $this->getDirectoryThumb().'/'.$this->hash;
     }
 
     /**
@@ -646,7 +627,7 @@ class FileStorage extends Model
         $url = media_url("static/img/filetypes/{$ext}.svg", false);
         $spoil = $this->isSpoiler();
         $deleted = $this->isDeleted();
-        $md5 = $deleted ? null : $this->hash;
+        $hash = $deleted ? null : $this->hash;
 
         if ($deleted) {
             $url = $board->getAssetUrl('file_deleted');
@@ -659,7 +640,7 @@ class FileStorage extends Model
         }
         elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
             if ($this->hasThumb()) {
-                $url = $this->getThumbnailUrl($board);
+                $url = $this->thumbnail->getUrl($board);
             }
             elseif ($this->isAudio()) {
                 $url = media_url("static/img/assets/audio.gif", false);
@@ -676,8 +657,8 @@ class FileStorage extends Model
         $maxHeight = 'none';
         $minWidth = 'none';
         $minHeight = 'none';
-        $oHeight = $this->thumbnail_height;
-        $oWidth = $this->thumbnail_width;
+        $oHeight = $this->thumbnail->file_height;
+        $oWidth = $this->thumbnail->file_width;
 
         if ($this->has_thumbnail && !$this->isSpoiler() && !$this->isDeleted()) {
             $height = $oHeight.'px';
@@ -720,7 +701,7 @@ class FileStorage extends Model
         }
 
         return "<div class=\"attachment-wrapper\" style=\"height: {$height}; width: {$width};\">" .
-            "<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" data-md5=\"{$md5}\" style=\"height: {$height}; width: {$width};\"/>" .
+            "<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"height: {$height}; width: {$width};\"/>" .
         "</div>";
     }
 
@@ -891,8 +872,7 @@ class FileStorage extends Model
      */
     public function hasThumb()
     {
-        return (bool) $this->has_thumbnail;
-        //return is_link($this->getPathThumb()) || Storage::exists($this->getPathThumb());
+        return $this->has('thumbnails');
     }
 
     /**
@@ -1006,14 +986,20 @@ class FileStorage extends Model
         return false;
     }
 
+    public function openFile()
+    {
+        $this->blob = Storage::get($this->getPath());
+        return $this->blob;
+    }
+
     /**
      * Work to be done upon creating an attachment using this storage.
      *
-     * @param FileAttachment $attachment Defaults to null.
+     * @param  PostAttachment  $attachment  Defaults to null.
      *
      * @return FileStorage
      */
-    public function processAttachment(FileAttachment $attachment = null)
+    public function processAttachment(PostAttachment $attachment = null)
     {
         $this->last_uploaded_at = $this->freshTimestamp();
         // Not counting uploads unless it ends up on a post.
@@ -1023,211 +1009,6 @@ class FileStorage extends Model
         $this->save();
 
         return $this;
-    }
-
-    /**
-     * Turns an image into a thumbnail if possible, overwriting previous versions.
-     */
-    public function processThumb()
-    {
-        if (!Storage::exists($this->getPathThumb()) || !$this->has_thumbnail) {
-            if ($this->isAudio()) {
-                $ID3 = new \getID3();
-                $meta = $ID3->analyze($this->getFullPath());
-
-                if (isset($meta['comments']['picture']) && count($meta['comments']['picture'])) {
-                    foreach ($meta['comments']['picture'] as $albumArt) {
-                        try {
-                            $image = (new ImageManager())->make($albumArt['data']);
-
-                            $this->file_height = $image->height();
-                            $this->file_width = $image->width();
-
-                            $image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function ($constraint) {
-                                $constraint->aspectRatio();
-                                $constraint->upsize();
-                            })
-                                ->encode('webp', Settings::get('attachmentThumbnailQuality'))
-                                ->save($this->getFullPathThumb());
-
-                            $this->has_thumbnail = true;
-                            $this->thumbnail_height = $image->height();
-                            $this->thumbnail_width = $image->width();
-
-                            return true;
-                        } catch (\Exception $error) {
-                            // Nothing.
-                        }
-
-                        break;
-                    }
-                }
-            } elseif ($this->isVideo()) {
-                // Used for debugging.
-                $output = "Haven't executed once yet.";
-
-                try {
-                    Storage::makeDirectory($this->getDirectoryThumb());
-
-                    $video = $this->getFullPath();
-                    $image = $this->getFullPathThumb();
-                    $interval = 0;
-                    $frames = 1;
-
-                    // get duration
-                    $time = exec(env('LIB_FFMPEG', 'ffmpeg')." -i {$video} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
-
-                    // duration in seconds; half the duration = middle
-                    $durationBits = explode(':', $time);
-                    $durationSeconds = (float) $durationBits[2] + ((int) $durationBits[1] * 60) + ((int) $durationBits[0] * 3600);
-                    $durationMiddle = $durationSeconds / 2;
-
-                    $middleHours = str_pad(floor($durationMiddle / 3600), 2, '0', STR_PAD_LEFT);
-                    $middleMinutes = str_pad(floor($durationMiddle / 60 % 3600), 2, '0', STR_PAD_LEFT);
-                    $middleSeconds = str_pad(number_format($durationMiddle % 60, 2), 5, '0', STR_PAD_LEFT);
-                    $middleTimestamp = "{$middleHours}:{$middleMinutes}:{$middleSeconds}";
-
-                    // $ffmpeg -i $video -deinterlace -an -ss $interval -f mjpeg -t 1 -r 1 -y -s $size $image 2>&1
-
-                    $cmd = env('LIB_FFMPEG', 'ffmpeg').' '.
-                            "-i {$video} ".// Input video.
-                            //"-filter:v yadif " . // Deinterlace.
-                            '-deinterlace '.
-                            '-an '.// No audio.
-                            "-ss {$middleTimestamp} ".// Timestamp for our thumbnail.
-                            '-f mjpeg '.// Output format.
-                            '-t 1 '.// Duration in seconds.
-                            '-r 1 '.// FPS, 1 for 1 frame.
-                            '-y '.// Overwrite file if it already exists.
-                            '-threads 1 '.
-                            "{$image} 2>&1";
-
-
-                    exec($cmd, $output, $returnvalue);
-                    app('log')->info($output);
-
-                    // Constrain thumbnail to proper dimensions.
-                    if (Storage::exists($this->getPathThumb())) {
-                        $image = (new ImageManager())->make($this->getFullPathThumb());
-
-                        $this->file_height = $image->height();
-                        $this->file_width = $image->width();
-
-                        $image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function ($constraint) {
-                            $constraint->aspectRatio();
-                            $constraint->upsize();
-                        })
-                            ->encode('webp', Settings::get('attachmentThumbnailQuality'))
-                            ->save($this->getFullPathThumb());
-
-                        $this->has_thumbnail = true;
-                        $this->thumbnail_height = $image->height();
-                        $this->thumbnail_width = $image->width();
-
-                        return true;
-                    }
-                } catch (\Exception $e) {
-                    app('log')->error("ffmpeg encountered an error trying to generate a thumbnail for file {$this->hash}.");
-                }
-            } elseif ($this->isImage()) {
-                Storage::makeDirectory($this->getDirectoryThumb());
-
-                $image = (new ImageManager())->make($this->getFullPath());
-
-                $this->file_height = $image->height();
-                $this->file_width = $image->width();
-
-                $image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })
-                    ->encode('webp', Settings::get('attachmentThumbnailQuality'))
-                    ->save($this->getFullPathThumb());
-
-                $this->has_thumbnail = true;
-                $this->thumbnail_height = $image->height();
-                $this->thumbnail_width = $image->width();
-
-                return true;
-            }
-            else if ($this->mime === "application/epub+zip")
-            {
-                $epub = new \ZipArchive();
-                $epub->open($this->getFullPath());
-
-                // Find and parse the rootfile
-                $container     = $epub->getFromName("META-INF/container.xml");
-                $containerXML  = simplexml_load_string($container);
-                $rootFilePath  = $containerXML->rootfiles->rootfile[0]['full-path'];
-                $rootFile      = $epub->getFromName($rootFilePath);
-                $rootFileXML   = simplexml_load_string($rootFile);
-
-                // Determine base directory
-                $rootFileParts = pathinfo($rootFilePath);
-                $baseDirectory = ($rootFileParts['dirname'] == "." ? null : $rootFileParts['dirname']);
-
-                // XPath queries with namespaces are shit until XPath 2.0 so we hold its hand
-                $rootFileNS    = $rootFileXML->getDocNamespaces();
-
-                if (isset($rootFileNS[""]))
-                {
-                    $rootFileXML->registerXPathNamespace("default", $rootFileNS[""]);
-                    $ns = "default:";
-                }
-                else
-                {
-                    $ns = "";
-                }
-
-                // Non-standards used with OEB, prior to EPUB
-                $oebXPath   = "//{$ns}reference[@type='coverimagestandard' or @type='other.ms-coverimage-standard']";
-                // EPUB standards
-                $epubXPath = "//{$ns}item[@properties='cover-image' or @id=(//{$ns}meta[@name='cover']/@content)]";
-
-                // Query the rootfile for cover elements
-                $coverXPath = $rootFileXML->xpath("{$oebXPath} | {$epubXPath}");
-
-                if ($coverXPath)
-                {
-                    // Get real cover entry name and read it
-                    $coverHref   = $coverXPath[0]['href'];
-                    $coverEntry  = (is_null($baseDirectory) ? $coverHref : $baseDirectory . "/" . $coverHref);
-                    $coverString = $epub->getFromName($coverEntry);
-
-                    try
-                    {
-                        $cover = imagecreatefromstring($coverString);
-                        $image = (new ImageManager)->make($cover);
-
-                        $this->file_height = $image->height();
-                        $this->file_width  = $image->width();
-
-                        $image->resize(Settings::get('attachmentThumbnailSize'), Settings::get('attachmentThumbnailSize'), function($constraint) {
-                                    $constraint->aspectRatio();
-                                    $constraint->upsize();
-                            })
-                            ->encode('webp', Settings::get('attachmentThumbnailQuality'))
-                            ->save($this->getFullPathThumb());
-
-                        $this->has_thumbnail    = true;
-                        $this->thumbnail_height = $image->height();
-                        $this->thumbnail_width  = $image->width();
-
-                        return true;
-                    }
-                    catch (\Exception $e)
-                    {
-                        app('log')->error("Encountered an error trying to generate a thumbnail for file {$this->hash}.");
-                    }
-                }
-            }
-        }
-        else
-        {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -1252,93 +1033,7 @@ class FileStorage extends Model
      */
     public function scopeWhereOrphan($query)
     {
-        return $query->whereDoesntHave('attachments')
+        return $query->whereDoesntHave('postAttachments')
             ->whereDoesntHave('assets');
-    }
-
-    /**
-     * Handles an UploadedFile from form input. Stores, creates a model, and generates a thumbnail.
-     *
-     * @static
-     *
-     * @param UploadedFile|File $file
-     *
-     * @return FileStorage
-     */
-    public static function storeUpload($file)
-    {
-        $clientUpload = false;
-
-        if (!($file instanceof SymfonyFile) && !($file instanceof UploadedFile)) {
-            throw new \InvalidArgumentException('First argument for FileStorage::storeUpload is not a File or UploadedFile.');
-            return false;
-        }
-        elseif ($file instanceof UploadedFile) {
-            $clientUpload = true;
-        }
-
-        $fileContent = File::get($file);
-
-        // phash
-        $hasher = new ImageHash(new PerceptualHash());
-        $fileHash = $hasher->hash($fileContent);
-
-        static::where('banned', true)->pluck('phash')->each(function ($theirPhash) use ($hasher, $fileHash) {
-            $theirHash = Hash::fromHex(gmp_strval(gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63)), 16));
-
-            $distance = $hasher->distance($fileHash, $theirHash);
-            if ($distance < 10) {
-                throw new \Exception("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
-                return false;
-            }
-        });
-
-        // MD5 hash and check for re-up.
-        $fileMD5 = md5((string) $fileContent);
-        $storage = static::getHash($fileMD5);
-
-        if (!($storage instanceof static)) {
-            $storage = new static();
-            $fileTime = $storage->freshTimestamp();
-
-            $storage->hash = $fileMD5;
-            $storage->phash = gmp_strval(gmp_sub(gmp_init("0x{$fileHash->toHex()}", 16), gmp_pow(2, 63)), 10);
-            $storage->banned = false;
-            $storage->filesize = $file->getSize();
-            $storage->mime = $clientUpload ? $file->getClientMimeType() : $file->getMimeType();
-            $storage->first_uploaded_at = $fileTime;
-            $storage->upload_count = 0;
-
-            if (!isset($file->case)) {
-                $ext = $file->guessExtension();
-
-                $sleuth = new FileSleuth($file);
-                $file->case = $sleuth->check($file->getRealPath(), $ext);
-
-                if (!$file->case) {
-                    $file->case = $sleuth->check($file->getRealPath());
-                }
-            }
-
-            if (is_object($file->case)) {
-                $storage->mime = $file->case->getMimeType();
-
-                if ($file->case->getMetaData()) {
-                    $storage->meta = json_encode($file->case->getMetaData());
-                }
-            }
-        }
-        else {
-            $fileTime = $storage->freshTimestamp();
-        }
-
-        if (!Storage::exists($storage->getPath())) {
-            Storage::put($storage->getPath(), $fileContent);
-            Storage::makeDirectory($storage->getDirectoryThumb());
-        }
-
-        $storage->processAttachment();
-
-        return $storage;
     }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Panel\Site;
 
 use App\Ban;
-use App\FileAttachment;
 use App\FileStorage;
+use App\PostAttachment;
 use App\Http\Controllers\Panel\PanelController;
-use App\Http\SendsFilesTrait as SendsFiles;
+use App\Http\Controllers\SendsFilesTrait as SendsFiles;
 use Request;
 
 /**
@@ -89,11 +89,11 @@ class FileController extends PanelController
          }
 
          if (!$ban) {
-             FileAttachment::where('file_id', $file->file_id)
+             PostAttachment::where('file_id', $file->file_id)
                 ->update(['is_deleted' => true]);
         }
         else {
-            $file->banned = true;
+            $file->banned_at = now();
             $file->save();
 
             $bans = collect([]);

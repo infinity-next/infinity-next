@@ -152,9 +152,9 @@ class Board extends Model
         return $this->hasMany(Post::class, 'board_uri');
     }
 
-    public function attachments()
+    public function postAttachments()
     {
-        return $this->hasManyThrough(FileAttachment::class, Post::class, 'board_uri', 'post_id');
+        return $this->hasManyThrough(PostAttachment::class, Post::class, 'board_uri', 'post_id');
     }
 
     public function logs()
