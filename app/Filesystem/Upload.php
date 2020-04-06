@@ -382,7 +382,8 @@ class Upload
     {
         $output = "Haven't executed once yet."; // debug string
         $thumbPath = stream_get_meta_data(tmpfile())['uri'];
-        $videoPath = $this->storage->getFullPath();
+        $videoPath = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($videoPath, $this->storage->blob);
 
         // get duration
         $time = exec(env('LIB_FFMPEG', 'ffmpeg')." -i {$videoPath} 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//", $output, $returnvalue);
