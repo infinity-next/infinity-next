@@ -278,17 +278,17 @@ class Upload
         }
 
         // thumbnail based on upload type
-        if ($this->storage->isImage()) {
-            $this->processThumbnailsForImage();
-        }
-        elseif ($this->storage->isAudio()) {
+        if ($this->storage->isAudio()) {
             $this->processThumbnailsForAudio();
         }
         elseif ($this->storage->isVideo()) {
             $this->processThumbnailsForVideo();
         }
-        else if ($this->storage->mime === "application/epub+zip") {
+        elseif ($this->storage->mime === "application/epub+zip") {
             $this->processThumbnailsForBook();
+        }
+        elseif ($this->storage->isImage()) {
+            $this->processThumbnailsForImage();
         }
 
         $this->storage->setRelation('thumbnails', $this->thumbnails);
@@ -302,27 +302,41 @@ class Upload
      */
     protected function processThumbnailsForAudio()
     {
-        $id3 = new \getID3();
-        $meta = $id3->analyze($this->storage->getFullPath());
+        $temp = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($temp, $this->storage->blob);
 
-        if (!isset($meta['comments']['picture']) || empty($meta['comments']['picture'])) {
-            return;
+        $id3 = new \getID3();
+        $meta = $id3->analyze($temp);
+
+        if (isset($meta['comments']['picture']) && !empty($meta['comments']['picture'])) {
+            foreach ($meta['comments']['picture'] as $albumArt) {
+                //try {
+                    $this->processThumbnail($albumArt['data']);
+                //}
+                //catch (\Exception $error) {
+                //app('log')->error("Encountered an error trying to generate a thumbnail for audio {$this->hash}.");
+                //}
+            }
         }
 
-        foreach ($meta['comments']['picture'] as $albumArt) {
-            try {
-                $this->processThumbnail($albumArt['data']);
-            }
-            catch (\Exception $error) {
-                app('log')->error("Encountered an error trying to generate a thumbnail for audio {$this->hash}.");
+        if (isset($meta['id3v2']['APIC']) && !empty($meta['id3v2']['APIC'])) {
+            foreach ($meta['id3v2']['APIC'] as $apic) {
+                if (!isset($apic['data'])) {
+                    continue;
+                }
+
+                $this->processThumbnail($apic['data']);
             }
         }
     }
 
     protected function processThumbnailsForBook()
     {
+        $temp = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($temp, $this->storage->blob);
+
         $epub = new \ZipArchive();
-        $epub->open($this->storage->fileContent);
+        $epub->open($temp);
 
         // Find and parse the rootfile
         $container     = $epub->getFromName("META-INF/container.xml");
