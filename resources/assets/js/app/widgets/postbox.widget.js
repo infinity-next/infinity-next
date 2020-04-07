@@ -136,7 +136,7 @@
                             // Does this file exist?
                             if (datum !== null) {
                                 // Is the file banned?
-                                if (datum.banned == 1) {
+                                if (datum.banned_at) {
                                     // Language
                                     console.log("File "+file.name+" is banned from being uploaded.");
 
