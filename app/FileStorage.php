@@ -742,7 +742,7 @@ class FileStorage extends Model
         if ($board instanceof Board) {
             $params = [
                 'board' => $board,
-                'hash' => $this->has('thumbnail') ? $this->thumbnail->hash : $this->hash,
+                'hash' => $this->has('thumbnails') ? $this->thumbnails[0]->hash : $this->hash,
                 'filename' => "thumb_".$this->getDownloadName().".{$ext}",
             ];
 
