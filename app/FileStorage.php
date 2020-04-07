@@ -877,6 +877,7 @@ class FileStorage extends Model
             case 'audio/mp3':
             case 'audio/aac':
             case 'audio/mp4':
+            case 'audio/flac':
             case 'audio/ogg':
             case 'audio/wave':
             case 'audio/webm':
