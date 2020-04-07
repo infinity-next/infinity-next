@@ -742,7 +742,7 @@ class FileStorage extends Model
         if ($board instanceof Board) {
             $params = [
                 'board' => $board,
-                'hash' => $this->has('thumbnails') ? $this->thumbnails[0]->hash : $this->hash,
+                'hash' => $this->thumbnail->hash,
                 'filename' => "thumb_".$this->getDownloadName().".{$ext}",
             ];
 
@@ -862,7 +862,7 @@ class FileStorage extends Model
      */
     public function hasThumb()
     {
-        return $this->has('thumbnails');
+        return $this->thumbnails->count() > 0;
     }
 
     /**
