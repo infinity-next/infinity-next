@@ -71,6 +71,7 @@ return [
 
     'option' => [
         'siteName'                 => "Site Name",
+        'siteDescription'          => "Site Description",
         'siteAnnouncement'         => "Site Announcement",
         'canary'                   => "Show cute bird",
 

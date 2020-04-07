@@ -247,6 +247,14 @@ class OptionSeeder extends Seeder {
                     'validation_parameters' => "min:\$min|max:\$max",
                 ],
                 [
+                    'option_name'           => "siteDescription",
+                    'default_value'         => "",
+                    'format'                => "textbox",
+                    'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+                    'data_type'             => "string",
+                    'validation_parameters' => "min:\$min|max:\$max",
+                ],
+                [
                     'option_name'           => "siteName",
                     'default_value'         => "Infinity Next",
                     'format'                => "text",
@@ -254,7 +262,6 @@ class OptionSeeder extends Seeder {
                     'data_type'             => "string",
                     'validation_parameters' => "min:\$min|max:\$max",
                 ],
-
             ],
 
             'board' => [
@@ -577,6 +584,7 @@ class OptionGroupSeeder extends Seeder {
 
                 'options' => [
                     'siteName',
+                    'siteDescription',
                     'siteAnnouncement',
                     'canary',
                 ],
