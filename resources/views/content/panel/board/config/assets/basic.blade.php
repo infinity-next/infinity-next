@@ -13,8 +13,6 @@
             <img class="form-asset-img" src="{{ $board->getAssetURL($asset) }}" />
         </figure>
 
-        <div>{{ \App\BoardAsset::$validationRules[$asset][0] }}</div>
-
         <div class="form-asset-replace">
             <input class="field-control" id="new_{{$asset}}" name="new_{{$asset}}" type="file" />
         </div>
