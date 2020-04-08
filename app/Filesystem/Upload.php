@@ -124,6 +124,10 @@ class Upload
       */
      protected function openStorage($storage)
      {
+         if(!is_null($storage->banned_at)) {
+             throw new \Exception('File is explicitly banned.');
+         }
+
          $storage->openFile();
 
          $this->storage = $storage;
@@ -165,7 +169,7 @@ class Upload
             $theirPhash = gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63));
 
             $distance = gmp_hamdist($filePhash, $theirPhash);
-            if ($distance < 10) {
+            if ($distance < 16) {
                 app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
                 throw new \Exception("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
                 return false;
