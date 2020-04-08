@@ -7,8 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Post::class, function (Faker $faker) {
     return [
-        'board_uri' => $faker->word,
-
         'bumped_last' => now(),
         'created_at' => now(),
         'updated_at' => null,

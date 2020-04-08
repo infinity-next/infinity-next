@@ -2,13 +2,22 @@
 
 namespace App\Observers;
 
+use App\BoardAdventure;
+use App\FileStorage;
 use App\Post;
 use App\PostCite;
 use Carbon\Carbon;
+use App\Support\Geolocation;
+use App\Support\IP;
+use Cache;
+use DB;
+use Request;
 use Event;
 use App\Events\PostWasAdded;
 use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;
+use App\Events\ThreadNewReply;
+use App\Support\ContentFormatter;
 
 class PostObserver
 {
@@ -21,9 +30,88 @@ class PostObserver
      */
     public function created(Post $post)
     {
-        // Fire event, which clears cache among other things.
-        Event::dispatch(new \App\Events\PostWasCreated($post));
+        $board = $post->board;
+        $thread = $post->thread;
 
+        // Optionally, the OP of this thread needs a +1 to reply count.
+        if ($thread instanceof Post) {
+            // We're not using the Model for this because it fails under high volume.
+            $threadNewValues = [
+                'updated_at' => $thread->updated_at,
+                'reply_last' => $post->created_at,
+                'reply_count' => $thread->replies()->count(),
+                'reply_file_count' => $thread->replyFiles()->count(),
+            ];
+
+            if (!$post->isBumpless() && !$thread->isBumplocked()) {
+                $threadNewValues['bumped_last'] = $post->created_at;
+            }
+
+            DB::table('posts')
+                ->where('post_id', $thread->post_id)
+                ->update($threadNewValues);
+        }
+
+        // Process uploads.
+        $uploads = [];
+
+        // Check file uploads.
+        if (is_array($files = Request::file('files'))) {
+            $uploads = array_filter($files);
+
+            if (count($uploads) > 0) {
+                foreach ($uploads as $uploadIndex => $upload) {
+                    if (file_exists($upload->getPathname())) {
+                        FileStorage::createAttachmentFromUpload($upload, $post);
+                    }
+                }
+            }
+        }
+        elseif (is_array($files = Request::input('files'))) {
+            $uniques = [];
+            $hashes = $files['hash'];
+            $names = $files['name'];
+            $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
+
+            $storages = FileStorage::whereIn('hash', $hashes)->get();
+
+            foreach ($hashes as $index => $hash) {
+                if (!isset($uniques[$hash])) {
+                    $uniques[$hash] = true;
+                    $storage = $storages->where('hash', $hash)->first();
+
+                    if ($storage && is_null($storage->banned_at)) {
+                        $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+
+                        $upload = $storage->createAttachmentWithThis($post, $names[$index], $spoiler, false);
+                        $upload->position = $index;
+                        $uploads[] = $upload;
+                    }
+                }
+            }
+
+            $post->attachmentLinks()->saveMany($uploads);
+            FileStorage::whereIn('hash', $hashes)->increment('upload_count');
+        }
+
+        // Optionally, we also expend the adventure.
+        $adventure = BoardAdventure::getAdventure($board);
+
+        if ($adventure) {
+            $post->adventure_id = $adventure->adventure_id;
+            $adventure->expended_at = $post->created_at;
+            $adventure->save();
+        }
+
+        // Finally fire event on OP, if it exists.
+        if ($thread instanceof Post) {
+            $thread->setRelation('board', $board);
+            Event::dispatch(new ThreadNewReply($thread));
+        }
+
+        if (!is_null(user()) && user()->isAccountable()) {
+            Cache::forget('posting_now_'.$post->author_ip->toLong());
+        }
         // Add dice rolls.
         // Because of how dice rolls work, we don't ever remove them and only
         // create them with the post, not on update.
@@ -38,6 +126,9 @@ class PostObserver
             ]);
         }
 
+        // Fire event, which clears cache among other things.
+        Event::dispatch(new \App\Events\PostWasCreated($post));
+
         // Log staff posts.
         if ($post->capcode_id) {
             Event::dispatch(new \App\Events\PostWasCapcoded($post, user()));
@@ -49,14 +140,102 @@ class PostObserver
     /**
      * Checks if this model is allowed to create (non-existant save).
      *
-     * @param \App\Post $post
+     * @param  \App\Post  $post
      *
      * @return bool
      */
     public function creating(Post $post)
     {
-        // Reuire board_id to save.
-        return isset($post->board_id);
+        $board = $post->board;
+        $thread = $post->thread;
+
+        $post->board_uri = $board->board_uri;
+        $post->author_ip = $post->author_ip ?? new IP;
+        $post->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation : null;
+        $post->reply_last = $post->freshTimestamp();
+        $post->bumped_last = $post->reply_last;
+        $post->setCreatedAt($post->reply_last);
+        $post->setUpdatedAt($post->reply_last);
+
+        if (!is_null($thread) && !($thread instanceof Post)) {
+            $thread = $board->getLocalThread($thread);
+        }
+
+        if (!is_null(user()) && user()->isAccountable()) {
+            if (Cache::has('posting_now_'.$post->author_ip->toLong())) {
+                //return abort(429, "Slow down.");
+            }
+
+            // Cache what time we're submitting our post for flood checks.
+            Cache::put('posting_now_'.$post->author_ip->toLong(), true, now()->addSeconds(10));
+            Cache::put('last_post_for_'.$post->author_ip->toLong(), $post->created_at->timestamp, now()->addHour());
+
+            if ($thread instanceof Post) {
+                $post->reply_to = $thread->post_id;
+                $post->reply_to_board_id = $thread->board_id;
+
+                Cache::put('last_thread_for_'.$post->author_ip->toLong(), $post->created_at->timestamp, now()->addHour());
+            }
+        }
+        else {
+            $post->author_ip = null;
+
+            if ($thread instanceof Post) {
+                $post->reply_to = $thread->post_id;
+                $post->reply_to_board_id = $thread->board_id;
+            }
+        }
+
+        // Handle tripcode, if any.
+        if (preg_match('/^([^#]+)?(##|#)(.+)$/', $post->author, $match)) {
+            // Remove password from name.
+            $post->author = $match[1];
+            // Whether a secure tripcode was requested, currently unused.
+            $secure_tripcode_requested = ($match[2] == '##');
+            // Convert password to tripcode, store tripcode hash in DB.
+            $post->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
+        }
+
+        // Ensure we're using a valid flag.
+        if (!$post->flag_id || !$board->hasFlag($post->flag_id)) {
+            $post->flag_id = null;
+        }
+
+        // Store the post in the database.
+        DB::transaction(function () use ($post, $thread, $board) {
+            // The objective of this transaction is to prevent concurrency issues in the database
+            // on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
+            // alongside the primary autoincrement column `post_id`.
+
+            // First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
+            DB::table('boards')
+                ->where('board_uri', $post->board_uri)
+                ->increment('posts_total', 1, [
+                    'last_post_at' => $post->reply_last,
+                ]);
+
+            // Second, we record this value and lock the table.
+            $boards = DB::table('boards')
+                ->where('board_uri', $post->board_uri)
+                ->lockForUpdate()
+                ->select('posts_total')
+                ->get();
+
+            $posts_total = $boards[0]->posts_total;
+
+            // Third, we store a unique checksum for this post for duplicate tracking.
+            $board->checksums()->create([
+                'checksum' => $post->getChecksum(),
+            ]);
+
+            // We set our board_id and save the post.
+            $post->board_id = $posts_total;
+            $post->author_id = $post->makeAuthorId();
+            $post->password = $post->makePassword($post->password);
+            //$post->save();
+        });
+
+        return !is_null($post->board_id);
     }
 
     /**
@@ -70,16 +249,16 @@ class PostObserver
     {
         // After a post is deleted, update OP's reply count.
         if (!is_null($post->reply_to)) {
-            $lastReply = $post->op->getReplyLast();
+            $lastReply = $post->thread->getReplyLast();
 
             if ($lastReply) {
-                $post->op->reply_last = $lastReply->created_at;
+                $post->thread->reply_last = $lastReply->created_at;
             } else {
-                $post->op->reply_last = $post->op->created_at;
+                $post->thread->reply_last = $post->thread->created_at;
             }
 
-            $post->op->reply_count -= 1;
-            $post->op->save();
+            $post->thread->reply_count -= 1;
+            $post->thread->save();
         }
 
         // Update any posts that reference this one.
@@ -171,8 +350,7 @@ class PostObserver
      */
     public function saving(Post $post)
     {
-        // Reuire board_id to save.
-        return isset($post->board_id);
+        return true;
     }
 
     /**

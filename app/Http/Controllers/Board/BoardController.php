@@ -198,7 +198,9 @@ class BoardController extends Controller
 
         // Create the post.
         $post = new Post($request->all());
-        $post->submitTo($board, $thread);
+        $post->board()->associate($board);
+        $post->thread()->associate($thread);
+        $post->save();
 
         $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 

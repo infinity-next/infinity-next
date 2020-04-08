@@ -8,7 +8,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\File\File;
 
-class BoardTest extends TestCase
+class UploadTest extends TestCase
 {
     use RefreshDatabase;
 

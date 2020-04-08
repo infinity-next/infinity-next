@@ -223,7 +223,7 @@ class Post extends Model implements FormattableContract
         return $this->hasOne(BoardAsset::class, 'board_asset_id', 'flag_id');
     }
 
-    public function op()
+    public function thread()
     {
         return $this->belongsTo(static::class, 'reply_to', 'post_id');
     }
@@ -643,7 +643,7 @@ class Post extends Model implements FormattableContract
     public function getHtmlAttribute()
     {
         if (!$this->trashed()) {
-            return $this->toHTML(
+            return $this->toHtml(
                 $this->renderCatalog,
                 $this->renderMultiboard,
                 $this->renderPartial
@@ -1147,7 +1147,7 @@ class Post extends Model implements FormattableContract
     {
         if ($this->isOp()) {
             $board = $this->board()->with('settings')->get()->first();
-            $visibleThreads = $board->threads()->op()->where('bumped_last', '>=', $this->bumped_last)->count();
+            $visibleThreads = $board->threads()->thread()->where('bumped_last', '>=', $this->bumped_last)->count();
             $threadsPerPage = (int) $board->getConfig('postsPerPage', 10);
 
             return floor(($visibleThreads - 1) / $threadsPerPage) + 1;
@@ -1201,7 +1201,7 @@ class Post extends Model implements FormattableContract
      */
     public function getOp()
     {
-        return $this->op()
+        return $this->thread()
             ->get()
             ->first();
     }
@@ -1389,7 +1389,7 @@ class Post extends Model implements FormattableContract
                     $query->orWhereIn('boards.board_uri', $include);
                 }
             });
-        })->op();
+        })->thread();
 
         // Add replies
         $threads = $threads
@@ -1843,9 +1843,9 @@ class Post extends Model implements FormattableContract
     /**
      *Renders a single post.
      *
-     * @return string HTML
+     * @return  string  HTML
      */
-    public function toHTML($catalog, $multiboard, $preview)
+    public function toHtml($catalog, $multiboard, $preview)
     {
         if ($this->deleted_at) {
             return "";
@@ -1911,189 +1911,6 @@ class Post extends Model implements FormattableContract
     public function redirect($action = null)
     {
         return redirect($this->getUrl($action));
-    }
-
-    /**
-     * Pushes the post to the specified board, as a new thread or as a reply.
-     * This autoatically handles concurrency issues. Creating a new reply without
-     * using this method is forbidden by the `creating` event in ::boot.
-     *
-     *
-     * @param App\Board &$board
-     * @param App\Post  &$thread
-     */
-    public function submitTo(Board &$board, &$thread = null)
-    {
-        $this->board_uri = $board->board_uri;
-        $this->author_ip = new IP;
-        $this->author_country = $board->getConfig('postsAuthorCountry', false) ? new Geolocation : null;
-        $this->reply_last = $this->freshTimestamp();
-        $this->bumped_last = $this->reply_last;
-        $this->setCreatedAt($this->reply_last);
-        $this->setUpdatedAt($this->reply_last);
-
-        if (!is_null($thread) && !($thread instanceof self)) {
-            $thread = $board->getLocalThread($thread);
-        }
-
-        if (user()->isAccountable()) {
-            if (Cache::has('posting_now_'.$this->author_ip->toLong())) {
-                return abort(429, "Slow down.");
-            }
-
-            // Cache what time we're submitting our post for flood checks.
-            Cache::put('posting_now_'.$this->author_ip->toLong(), true, now()->addMinute());
-            Cache::put('last_post_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, now()->addHour());
-
-            if ($thread instanceof self) {
-                $this->reply_to = $thread->post_id;
-                $this->reply_to_board_id = $thread->board_id;
-
-                Cache::put('last_thread_for_'.$this->author_ip->toLong(), $this->created_at->timestamp, now()->addHour());
-            }
-        }
-        else {
-            $this->author_ip = null;
-
-            if ($thread instanceof self) {
-                $this->reply_to = $thread->post_id;
-                $this->reply_to_board_id = $thread->board_id;
-            }
-        }
-
-        // Handle tripcode, if any.
-        if (preg_match('/^([^#]+)?(##|#)(.+)$/', $this->author, $match)) {
-            // Remove password from name.
-            $this->author = $match[1];
-            // Whether a secure tripcode was requested, currently unused.
-            $secure_tripcode_requested = ($match[2] == '##');
-            // Convert password to tripcode, store tripcode hash in DB.
-            $this->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
-        }
-
-        // Ensure we're using a valid flag.
-        if (!$this->flag_id || !$board->hasFlag($this->flag_id)) {
-            $this->flag_id = null;
-        }
-
-        // Store the post in the database.
-        DB::transaction(function () use ($board, $thread) {
-            // The objective of this transaction is to prevent concurrency issues in the database
-            // on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
-            // alongside the primary autoincrement column `post_id`.
-
-            // First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
-            DB::table('boards')
-                ->where('board_uri', $this->board_uri)
-                ->increment('posts_total', 1, [
-                    'last_post_at' => $this->reply_last,
-                ]);
-
-            // Second, we record this value and lock the table.
-            $boards = DB::table('boards')
-                ->where('board_uri', $this->board_uri)
-                ->lockForUpdate()
-                ->select('posts_total')
-                ->get();
-
-            $posts_total = $boards[0]->posts_total;
-
-            // Third, we store a unique checksum for this post for duplicate tracking.
-            $board->checksums()->create([
-                'checksum' => $this->getChecksum(),
-            ]);
-
-            // Optionally, we also expend the adventure.
-            $adventure = BoardAdventure::getAdventure($board);
-
-            if ($adventure) {
-                $this->adventure_id = $adventure->adventure_id;
-                $adventure->expended_at = $this->created_at;
-                $adventure->save();
-            }
-
-            // We set our board_id and save the post.
-            $this->board_id = $posts_total;
-            $this->author_id = $this->makeAuthorId();
-            $this->password = $this->makePassword($this->password);
-            $this->save();
-
-            // Optionally, the OP of this thread needs a +1 to reply count.
-            if ($thread instanceof static) {
-                // We're not using the Model for this because it fails under high volume.
-                $threadNewValues = [
-                    'updated_at' => $thread->updated_at,
-                    'reply_last' => $this->created_at,
-                    'reply_count' => $thread->replies()->count(),
-                    'reply_file_count' => $thread->replyFiles()->count(),
-                ];
-
-                if (!$this->isBumpless() && !$thread->isBumplocked()) {
-                    $threadNewValues['bumped_last'] = $this->created_at;
-                }
-
-                DB::table('posts')
-                    ->where('post_id', $thread->post_id)
-                    ->update($threadNewValues);
-            }
-
-            // Queries and locks are handled automatically after this closure ends.
-        });
-
-        // Process uploads.
-        $uploads = [];
-
-        // Check file uploads.
-        if (is_array($files = Request::file('files'))) {
-            $uploads = array_filter($files);
-
-            if (count($uploads) > 0) {
-                foreach ($uploads as $uploadIndex => $upload) {
-                    if (file_exists($upload->getPathname())) {
-                        FileStorage::createAttachmentFromUpload($upload, $this);
-                    }
-                }
-            }
-        }
-        elseif (is_array($files = Request::input('files'))) {
-            $uniques = [];
-            $hashes = $files['hash'];
-            $names = $files['name'];
-            $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
-
-            $storages = FileStorage::whereIn('hash', $hashes)->get();
-
-            foreach ($hashes as $index => $hash) {
-                if (!isset($uniques[$hash])) {
-                    $uniques[$hash] = true;
-                    $storage = $storages->where('hash', $hash)->first();
-
-                    if ($storage && is_null($storage->banned_at)) {
-                        $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
-
-                        $upload = $storage->createAttachmentWithThis($this, $names[$index], $spoiler, false);
-                        $upload->position = $index;
-                        $uploads[] = $upload;
-                    }
-                }
-            }
-
-            $this->attachmentLinks()->saveMany($uploads);
-            FileStorage::whereIn('hash', $hashes)->increment('upload_count');
-        }
-
-
-        // Finally fire event on OP, if it exists.
-        if ($thread instanceof self) {
-            $thread->setRelation('board', $board);
-            Event::dispatch(new ThreadNewReply($thread));
-        }
-
-        if (user()->isAccountable()) {
-            Cache::forget('posting_now_'.$this->author_ip->toLong());
-        }
-
-        return $this;
     }
 
     /**

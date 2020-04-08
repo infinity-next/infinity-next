@@ -10,7 +10,7 @@ $factory->define(Board::class, function (Faker $faker) {
     $creator = factory(User::class)->create();
 
     return [
-        'board_uri' => $faker->word,
+        'board_uri' => $faker->unique()->word,
         'title' => $faker->words(3, true),
         'description' => $faker->sentence,
         'created_at' => now(),
