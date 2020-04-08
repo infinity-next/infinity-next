@@ -336,14 +336,17 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getUrl(Board $board)
+    public function getUrl(?Board $board = null)
     {
         $params = [
             'hash' => $this->hash,
             'filename' => $this->getDownloadName(),
         ];
 
-        if (!config('app.url_media', false)) {
+        if (is_null($board)) {
+            return route('panel.site.files.send', $params);
+        }
+        elseif (!config('app.url_media', false)) {
             $params['board'] = $board;
         }
 
@@ -636,7 +639,7 @@ class FileStorage extends Model
             $url = $board->getAssetUrl('file_spoiler');
         }
         elseif ($this->isImageVector()) {
-            $url = $this->getDownloadUrl($board);
+            $url = $this->getUrl($board);
         }
         elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
             if ($this->thumbnail instanceof FileStorage) {
@@ -659,9 +662,9 @@ class FileStorage extends Model
         $oHeight = $this->thumbnail ? $this->thumbnail->file_height : Settings::get('attachmentThumbnailSize', 250);
         $oWidth = $this->thumbnail ? $this->thumbnail->file_width : Settings::get('attachmentThumbnailSize', 250);
 
-        if ($this->has_thumbnail && !$this->isSpoiler() && !$this->isDeleted()) {
+        if ($this->hasThumb() && !$this->isSpoiler() && !$this->isDeleted()) {
             $height = $oHeight.'px';
-            $width = $this->thumbnail_width.'px';
+            $width = $this->thumbnail->file_width.'px';
 
             if (is_int($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension)) {
                 if ($oWidth > $oHeight) {
@@ -682,7 +685,7 @@ class FileStorage extends Model
             $minHeight = $height;
         }
         else {
-            $maxWidth = Settings::get('attachmentThumbnailSize', 250).'px';
+            $maxWidth = $maxDimension ? "{$maxDimension}px" : Settings::get('attachmentThumbnailSize', 250).'px';
             $maxHeight = $maxWidth;
             $width = $maxWidth;
             $height = 'auto';
