@@ -163,7 +163,7 @@ class PostObserver
 
         if (!is_null(user()) && user()->isAccountable()) {
             if (Cache::has('posting_now_'.$post->author_ip->toLong())) {
-                //return abort(429, "Slow down.");
+                return abort(429, "Slow down.");
             }
 
             // Cache what time we're submitting our post for flood checks.
