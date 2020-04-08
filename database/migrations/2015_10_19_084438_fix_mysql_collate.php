@@ -574,7 +574,7 @@ class FixMysqlCollate extends Migration
             // Foreigns and Indexes
             $table->foreign('file_id')
                 ->references('file_id')->on('files')
-                ->onUpdate('cascade');
+                ->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreign('board_uri')
                 ->references('board_uri')->on('boards')
@@ -649,11 +649,11 @@ class FixMysqlCollate extends Migration
         {
             $table->foreign('file_id')
                 ->references('file_id')->on('files')
-                ->onUpdate('cascade');
+                ->onDelete('set null')->onUpdate('cascade');
 
             $table->foreign('post_id')
                 ->references('post_id')->on('posts')
-                ->onUpdate('cascade');
+                ->onDelete('cascade')->onUpdate('cascade');
         });
 
         /**

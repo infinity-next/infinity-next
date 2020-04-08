@@ -22,8 +22,10 @@ class CreatePostDiceTable extends Migration
             $table->text('command_text');
             $table->smallInteger('order')->unsigned()->default(0);
 
-            $table->foreign('dice_id')->references('dice_id')->on('dice');
-            $table->foreign('post_id')->references('post_id')->on('posts');
+            $table->foreign('dice_id')->references('dice_id')->on('dice')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('post_id')->references('post_id')->on('posts')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

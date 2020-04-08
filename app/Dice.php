@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
@@ -20,6 +21,8 @@ use InvalidArgumentException;
  */
 class Dice extends Model
 {
+    use EloquentBinary;
+
     /**
      * Pattern to match a die.
      *
@@ -65,9 +68,9 @@ class Dice extends Model
      */
     protected $casts = [
         'rolling' => 'integer',
+        'rolls' => 'collection',
         'sides' => 'integer',
         'modifier' => 'integer',
-        'rolls' => 'collection',
         'total' => 'integer',
     ];
 

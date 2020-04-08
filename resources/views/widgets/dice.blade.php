@@ -1,4 +1,3 @@
-@spaceless
 <div class="dice {{
     $dice->rolls->count() > 1 ? 'roll-multiple' : 'roll-once'
 }} {{
@@ -50,8 +49,7 @@
         @endif
 
         <abbr title="@lang('widget.dice.total')" class="dice-total">
-            <span class="dice-symbol">=</span>
-            <span class="dice-total-text">{{ $dice->total }}</span>
+            <span class="dice-symbol">=</span>&nbsp;<span class="dice-total-text">{{ $dice->total }}</span>
 
             @if ($dice->isBinary())
             <span class="dice-binary-total">
@@ -73,4 +71,3 @@
     @endforeach
     </span>
 </div>
-@endspaceless

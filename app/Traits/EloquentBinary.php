@@ -76,7 +76,7 @@ trait EloquentBinary
             case 'json':
                 return $this->fromJson($value);
             case 'collection':
-                return new BaseCollection($this->fromJson($value));
+                return collect($this->fromJson($value));
             case 'date':
             case 'datetime':
                 return $this->asDateTime($value);

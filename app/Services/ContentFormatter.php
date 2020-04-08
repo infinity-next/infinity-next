@@ -522,13 +522,13 @@ class ContentFormatter
         foreach ($lines as $line) {
             if (preg_match($regex, trim($line), $matches)) {
                 $throw = Dice::throw(
-                    ((int) $matches['rolling'] ?? 0),
-                    ((int) $matches['sides'] ?? 0),
-                    ((int) $matches['modifier'] ?? 0),
-                    ((int) $matches['greater_than'] ?? null),
-                    ((int) $matches['less_than'] ?? null),
-                    ((int) $matches['minimum'] ?? null),
-                    ((int) $matches['maximum'] ?? null)
+                    ((int) isset($matches['rolling']) ? $matches['rolling'] : 0),
+                    ((int) isset($matches['sides']) ? $matches['sides'] : 6),
+                    ((int) isset($matches['modifier']) ? $matches['modifier'] : 0),
+                    ((int) isset($matches['greater_than']) ? $matches['greater_than'] : null),
+                    ((int) isset($matches['less_than']) ? $matches['less_than'] : null),
+                    ((int) isset($matches['minimum']) ? $matches['minimum'] : null),
+                    ((int) isset($matches['maximum']) ? $matches['maximum'] : null)
                 );
 
 
