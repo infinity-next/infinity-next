@@ -497,25 +497,25 @@ class ContentFormatter
         $throws = collect();
         $regex = '/^(?<line>'
             // "roll" declaration
-            .'[rR][oO][lL][lL] '
+            .'(roll|rolling|flip|flipping) '
             // Number of dice 1~99. Mandatory.
             .'(?<rolling>100|[1-9][0-9]?)'
             // "d" delimiter.
             .'[dD]'
             // All beyond optional.
             // Sides. 2~100.
-            .'(?<sides>[2-9]|[1-9][0-9]{1,4}|100)?'
+            .'(?<sides>[2-9]|[1-9][0-9]{1,4}|100)? ?'
             // +/- net amount.
-            .'(?<modifier>[\+-][1-9][0-9]{0,8})?'
+            .'(?<modifier>[\+-][1-9][0-9]{0,8})? ?'
             // "minimum" roll requirement.
-            .'((?:\^)(?<minimum>'.Dice::PATTERN.'))?'
+            .'((?:\^)(?<minimum>'.Dice::PATTERN.'))? ?'
             // "maixmum" roll requirement.
-            .'((?:v)(?<maximum>'.Dice::PATTERN.'))?'
+            .'((?:v)(?<maximum>'.Dice::PATTERN.'))? ?'
             // "greater than" count requirement.
-            .'((?:<)(?<greater_than>'.Dice::PATTERN.'))?'
+            .'((?:<)(?<greater_than>'.Dice::PATTERN.'))? ?'
             // "less than" count requirement.
             .'((?:>)(?<less_than>'.Dice::PATTERN.'))?'
-        .')$/';
+        .')$/i';
 
         $lines = explode("\n", $formattable->body);
 
