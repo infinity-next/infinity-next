@@ -174,7 +174,7 @@ class Board extends Model
 
     public function threads()
     {
-        return $this->hasMany(Post::class, 'board_uri');
+        return $this->hasMany(Post::class, 'board_uri')->whereNull('reply_to');
     }
 
     public function roles()
@@ -630,7 +630,7 @@ class Board extends Model
     public function getPageCount()
     {
         return Cache::remember("board.{$this->board_uri}.pages", now()->addHour(), function () {
-            $visibleThreads = $this->threads()->op()->count();
+            $visibleThreads = $this->threads()->count();
             $threadsPerPage = (int) $this->getConfig('postsPerPage', now()->addMinutes(10));
             $pageCount = ceil($visibleThreads / $threadsPerPage);
 
@@ -1141,7 +1141,6 @@ class Board extends Model
         $rememberKey = "board.{$this->board_uri}.catalog";
         $rememberClosure = function () use ($page, $postsPerCatalog, $postsPerPage) {
             $threads = $this->threads()
-                ->op()
                 ->withEverythingForReplies()
                 ->with(['replies' => function ($query) {
                     $query->where('body_has_content', true)->orderBy('post_id', 'desc')->limit(10);
@@ -1176,7 +1175,6 @@ class Board extends Model
         $rememberKey = "board.{$this->board_uri}.page.{$page}";
         $rememberClosure = function () use ($page, $postsPerPage) {
             $threads = $this->threads()
-                ->op()
                 ->withEverything()
                 ->with(['replies' => function ($query) {
                     $query->forIndex();

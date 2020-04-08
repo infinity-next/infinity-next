@@ -1708,7 +1708,7 @@ class Post extends Model implements FormattableContract
         return $query->whereAuthorIP($ip);
     }
 
-    public function scopeOp($query)
+    public function scopeThread($query)
     {
         return $query->where('reply_to', null);
     }

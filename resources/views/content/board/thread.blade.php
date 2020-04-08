@@ -5,7 +5,6 @@
 ) !!}
 
 @if (!$thread->reply_to)
-@if ($reply_to)@include('meta.post')@endif
 @spaceless
 @if ($thread->reply_count > count($thread->replies) && !$thread->reply_to)
 <div class="thread-replies-omitted">
