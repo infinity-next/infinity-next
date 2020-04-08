@@ -145,12 +145,20 @@ return [
     'banned' => "You are banned!",
     'banned_for' => "Reason: <em>:reason</em>",
 
-
     'unoriginal_content' => "Unoriginal content!",
     'unoriginal_image_thread' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this thread.",
     'unoriginal_image_board' => "File <tt>:filename</tt> <a href=\":url\">already exists</a> in this board.",
 
     'board_uri_banned' => "The requested URI is reserved by administration.",
+
+    'custom' => [
+        'new_board_banned.dimensions' => "Ban images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
+        'new_board_banner.dimensions' => "Board banners must have a ratio of :ratio and be at most :max_heightpx tall, or an SVG.",
+        'new_board_flags.dimensions' => "Flags must be exactly :heightpx tall and at most :max_widthpx wide, or an SVG.",
+        'new_board_icon.dimensions' => "Board icons must be exactly :widthx:heightpx, or an SVG.",
+        'new_file_deleted.dimensions' => "Attachment deleted images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
+        'new_file_spoiler.dimensions' => "Attachment spoiler images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
+    ],
 
     /*
     |--------------------------------------------------------------------------

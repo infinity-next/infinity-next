@@ -175,7 +175,14 @@ class Upload
         return gmp_strval($filePhash, 10);
     }
 
-    public function process()
+    /**
+     * Uploads the file into the file system, post-proceses, and returns storage model.
+     *
+     * @param  bool  $thumbnail  If thumbanil(s) should be created. Defaults true.
+     *
+     * @return \App\FileStorage
+     */
+    public function process($thumbnail = true)
     {
         $file = $this->file;
         $storage = $this->storage;
@@ -217,10 +224,15 @@ class Upload
             }
         }
 
-        $this->processThumbnails();
+        if ($thumbnail) {
+            $this->processThumbnails();
+            $storage->save();
+            $storage->thumbnails()->saveMany($this->thumbnails);
+        }
+        else {
+            $storage->save();
+        }
 
-        $storage->save();
-        $storage->thumbnails()->saveMany($this->thumbnails);
         return $storage;
     }
 

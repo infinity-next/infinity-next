@@ -76,11 +76,19 @@ class BoardAsset extends Model implements PseudoEnumContract
         return $this->belongsTo(FileStorage::class, 'file_id');
     }
 
-
-    public function toHtml()
-    {
-        return "<img src=\"{$this->getURL()}\" alt=\"/{$this->board_uri}/\" class=\"board-asset asset-{$this->asset_type}\" />";
-    }
+    /**
+     * Static values for asset requirements.
+     *
+     * @var array
+     */
+    public static $validationRules = [
+        'board_banned' => [ 'dimensions:max_height=500,max_width=500,min_height=100,min_width=100', 'max:250', ],
+        'board_banner' => [ 'dimensions:max_height=200,max_width=600,ratio=3/1', 'max:1024', ],
+        'board_flags' => [ 'dimensions:height=11,max_width:30,ratio=1/1', 'max:100', ],
+        'board_icon' => [ 'dimensions:width=64,height=64,ratio=1/1', 'max:50', ],
+        'file_deleted' => [ 'dimensions:max_height=250,max_width=250,min_height=100,min_width=100', 'max:250', ],
+        'file_spoiler' => [ 'dimensions:max_height=250,max_width=250,min_height=100,min_width=100', 'max:250', ],
+    ];
 
     public function getDisplayName()
     {
@@ -92,8 +100,13 @@ class BoardAsset extends Model implements PseudoEnumContract
         return route('static.file.hash', [
             'board' => $this->board,
             'hash' => $this->storage->hash,
-            'filename' => 'banner.png',
+            'filename' => "{$this->created_at->timestamp}.{$this->storage->guessExtension()}",
         ]);
+    }
+
+    public function toHtml()
+    {
+        return "<img src=\"{$this->getUrl()}\" alt=\"/{$this->board_uri}/\" class=\"board-asset asset-{$this->asset_type}\" />";
     }
 
     public function scopeWhereBoardIcon($query)

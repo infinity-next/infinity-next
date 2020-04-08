@@ -44,12 +44,12 @@ class BoardSetting extends Model
 
     public function option()
     {
-        return $this->belongsTo('\App\Option', 'option_name');
+        return $this->belongsTo(Option::class, 'option_name');
     }
 
     public function board()
     {
-        return $this->belongsTo('\App\Board', 'board_uri');
+        return $this->belongsTo(Board::class, 'board_uri');
     }
 
     /**
