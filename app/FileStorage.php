@@ -162,14 +162,9 @@ class FileStorage extends Model
         return $this->hasMany(PostAttachment::class, 'file_id');
     }
 
-    public function thumbnail()
-    {
-        return $this->hasOne(static::class, 'source_id');
-    }
-
     public function thumbnails()
     {
-        return $this->hasMany(static::class, 'source_id');
+        return $this->belongsToMany(static::class, 'file_thumbnails', 'source_id', 'thumbnail_id');
     }
 
     /**
@@ -631,6 +626,8 @@ class FileStorage extends Model
         $spoil = $this->isSpoiler();
         $deleted = $this->isDeleted();
         $hash = $deleted ? null : $this->hash;
+        $thumbnail = $this->thumbnails->first();
+
 
         if ($deleted) {
             $url = $board->getAssetUrl('file_deleted');
@@ -642,8 +639,8 @@ class FileStorage extends Model
             $url = $this->getUrl($board);
         }
         elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
-            if ($this->thumbnail instanceof FileStorage) {
-                $url = $this->thumbnail->getUrl($board);
+            if ($thumbnail instanceof FileStorage) {
+                $url = $thumbnail->getUrl($board);
             }
             elseif ($this->isAudio()) {
                 $url = media_url("static/img/assets/audio.gif", false);
@@ -655,13 +652,13 @@ class FileStorage extends Model
         // Measure dimensions.
         $height = 'auto';
         $width = 'auto';
-        $oHeight = $this->thumbnail ? $this->thumbnail->file_height : Settings::get('attachmentThumbnailSize', 250);
-        $oWidth = $this->thumbnail ? $this->thumbnail->file_width : Settings::get('attachmentThumbnailSize', 250);
+        $oHeight = $thumbnail ? $thumbnail->file_height : Settings::get('attachmentThumbnailSize', 250);
+        $oWidth = $thumbnail ? $thumbnail->file_width : Settings::get('attachmentThumbnailSize', 250);
 
         // configuration for an actual thumbnail image
         if ($this->hasThumb() && !$this->isSpoiler() && !$this->isDeleted()) {
             $height = $oHeight.'px';
-            $width = $this->thumbnail->file_width.'px';
+            $width = $thumbnail->file_width.'px';
 
             if ($maxDimension == "auto") {
                 $height = "auto";
@@ -703,6 +700,7 @@ class FileStorage extends Model
     public function getThumbnailUrl(?Board $board = null)
     {
         $ext = $this->guessExtension();
+        $thumbnail = $this->thumbnails->first();
 
         if ($board instanceof Board && $this->isSpoiler()) {
             return $board->getSpoilerUrl();
@@ -712,7 +710,7 @@ class FileStorage extends Model
             $ext = "webp";
         }
         elseif ($this->isAudio()) {
-            if (!$this->hasThumb()) {
+            if (!($thumbnail instanceof static)) {
                 if ($board instanceof Board) {
                     return $board->getAudioArtURL();
                 }
@@ -731,7 +729,7 @@ class FileStorage extends Model
         if ($board instanceof Board) {
             $params = [
                 'board' => $board,
-                'hash' => $this->thumbnail ? $this->thumbnail->hash : $this->hash,
+                'hash' => $thumbnail ? $thumbnail->hash : $this->hash,
                 'filename' => "thumb_".$this->getDownloadName().".{$ext}",
             ];
 
