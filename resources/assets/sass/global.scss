@@ -33,9 +33,14 @@
  * UGC
  */
 @import "global/post.scss";
-@import "global/post-attachments.scss";
 @import "global/attachment-preview.scss";
 @import "global/ugc.scss";
+
+/**
+ * UGC Media
+ */
+@import "global/attachments.scss";
+@import "global/post-attachments.scss";
 
 /**
  * Content Preferences

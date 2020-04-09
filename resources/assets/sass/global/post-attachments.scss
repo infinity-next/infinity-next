@@ -43,27 +43,7 @@
         }
     }
 
-    .attachment-actions {
-        display: block;
-        margin-top: -0.50em;
-        padding-bottom: 0.75em;
-        text-align: center;
-
-        .post-action-stopmedia {
-            display: none;
-        }
-        &.attachment-expanded .post-action-stopmedia {
-            display: block;
-        }
-
-        .attachment-action {
-            display: block;
-            cursor: pointer;
-            margin-right: 0.75em;
-        }
-    }
-
-    .post-attachment {
+    .attachment {
         position: relative;
         display: inline-block;
         vertical-align: text-top;
@@ -74,287 +54,54 @@
         #{$ltr} & {
             padding: 0.5em 0.5em 0.5em 0;
         }
-    }
-        .action-bar-attachments {
-            display: inline-block;
 
-            .post-action-tab {
-                display: block;
-                margin: 0;
-
-                &:hover {
-                    color: $color-link-hover;
-                }
-
-                .post-action-groups {
-                    z-index: 4;
-                    top: auto;
-                    bottom: 2em;
-                }
-            }
-        }
-
-        .attachment-container {
-            display: block;
-        }
-            .attachment-expanded .attachment-container {
-                display: inline-block;
-                max-width: 100%;
-            }
-            .attachment-container.attachment-grow {
-                margin: 0;
-                width: 100%;
-            }
-
-        a.attachment-link {
-            display: inline;
-            outline: none;
-        }
-        .attachment-download {
+        &.attachment-expanded {
             clear: both;
+            float: none;
+            width: 100%;
+            display: block;
+
+            &::before,
+            &::after {
+                content: ' ';
+                clear: both;
+                display: block;
+            }
+
+            &, & .attachment-link, & .attachment-wrapper, & .attachment-img {
+                clear: both;
+                float: none;
+                max-width: 100%;
+                max-height: none;
+                width: auto;
+                height: auto;
+            }
+            &.attachment-expanded.attachment-type-audio {
+                max-width: 350px;
+                padding-right: 3em;
+            }
+        }
+
+        .thumbnail-stock .attachment-img {
+            min-height: 150px;
+            min-width: 150px;
+        }
+
+        .attachment-img {
+            /* min-width: 100%; */
+            max-width: 100%;
+        }
+         audio.attachment-inline {
             display: inline-block;
-            white-space: nowrap;
-            text-align: center;
-
-            .detail-filename {
-                direction: ltr;
-                text-align: center;
-            }
-            .detail-download {
-                vertical-align: middle;
-            }
-            .detail-filesize {
-                margin-right: 0.25em;
-            }
-            .detail-filesize::before {
-                display: inline;
-                content: "(";
-            }
-            .detail-filedim::after {
-                display: inline;
-                content: ")";
-            }
-            .detail-close {
-                display: none;
-            }
+            width: 100%;
+            margin: 0 auto 0.5em 0;
+            max-width: 400px;
+            vertical-align: top;
         }
-            .post-attachment.attachment-expanded .attachment-link {
-                display: block;
-            }
-
-            .attachment {
-                display: block;
-                margin: 0;
-                position: relative;
-                z-index: 3;
-            }
-                .attachment-type-audio {
-                    overflow: hidden;
-                    padding-right: 2em;
-                }
-
-                .post-attachment.attachment-expanded .attachment {
-                    /* min-width: 100%; */
-                    max-width: 100%;
-                }
-
-                .post-attachment.attachment-expanded .attachment-img {
-                    /* min-width: 100%; */
-                    max-width: 100%;
-                }
-
-                .attachment-wrapper {
-                    position: relative;
-                    padding: 0;
-                    margin: 0 auto;
-                    text-align: center;
-                }
-
-                    .attachment-type-audio .attachment-wrapper {
-                        margin: 0 -2em 0 0;
-                        padding: 0 2em 0 0;
-
-                        &::after {
-                            content: ' ';
-                            display: block;
-                            height: 98%;
-                            width: 98%;
-                            padding: 0;
-                            pointer-events: none;
-
-                            position: absolute;
-                            top: 1%;
-                            left: auto;
-                            right: -1em;
-                            bottom: 1%;
-                            z-index: 1;
-
-                            background-position: center center;
-                            background-image: url("#{$base-url}img/backgrounds/vinyl.svg");
-                            background-repeat: no-repeat;
-                            background-size: contain;
-
-                        }
-                    }
-
-                    .attachment-expanded .attachment-type-audio .attachment-wrapper {
-                        margin: 0 0 0 0;
-                        padding: 0 7em 0 0;
-
-                        &::after {
-                            right: -20%;
-                            animation: fa-spin 1.304s infinite linear;
-                            animation-play-state: paused;
-                        }
-                    }
-                    .attachment-expanded .attachment-type-audio.playing .attachment-wrapper::after {
-                        animation-play-state: running;
-                    }
-
-                    .attachment-expanded .attachment-type-video {
-                        .detail-close {
-                            display: inline;
-                        }
-
-                        .attachment-wrapper {
-                            height: inherit !important;
-                        }
-                    }
-
-                img.attachment-img {
-                    display: inline-block;
-                    margin: 0 auto;
-
-                    vertical-align: top;
-                    position: relative;
-                    z-index: 2;
-                }
-
-                html.js & {
-                    .attachment-link .attachment-type-img {
-                        cursor: zoom-in;
-                    }
-                    .attachment-expanded .attachment-link .attachment-type-img {
-                        cursor: zoom-out;
-                    }
-                    .attachment-link .attachment-type-video {
-                        box-sizing: content-box;
-                        border-style: solid;
-                        border-width: 17px;
-
-                        -moz-border-image:    url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                        -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                        -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-                        border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
-
-                        border-top: none;
-                        border-bottom: none;
-                    }
-                }
-                    .post-attachment.attachment-expanded {
-                        clear: both;
-                        float: none;
-                        width: 100%;
-                        display: block;
-                    }
-                        .post-attachment.attachment-expanded::before,
-                        .post-attachment.attachment-expanded::after {
-                            content: ' ';
-                            clear: both;
-                            display: block;
-                        }
-                    .post-attachment.attachment-expanded,
-                    .post-attachment.attachment-expanded .attachment,
-                    .post-attachment.attachment-expanded .attachment-wrapper,
-                    .post-attachment.attachment-expanded .attachment-img {
-                        clear: both;
-                        float: none;
-                        max-width: 100%;
-                        max-height: none;
-                        width: auto;
-                        height: auto;
-                    }
-                        .post-attachment.attachment-expanded .attachment.attachment-type-audio {
-                            max-width: 350px;
-                            padding-right: 3em;
-                        }
-                    .thumbnail-stock .attachment-img {
-                        min-height: 150px;
-                        min-width: 150px;
-                    }
-
-                .post-attachment audio.attachment-inline {
-                    display: inline-block;
-                    width: 100%;
-                    margin: 0 auto 0.5em 0;
-                    max-width: 400px;
-                    vertical-align: top;
-                }
-                .post-attachment video.attachment-inline {
-                    display: inline-block;
-                    max-width: 100%;
-                    vertical-align: top;
-                }
-
-                .attachment-inline + .attachment-link .attachment-wrapper {
-                    display: none;
-                }
-
-                .attachment-details {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-direction: row;
-                    padding: 0 1.8em 0 0; // compensates for post attachment alignment
-                }
-
-                    .attachment-type-audio .attachment-details {
-                        max-width: none;
-                        margin-right: -2em;
-                    }
-                    .attachment-expanded .attachment-type-audio .attachment-details {
-                        padding: 0 0.5em;
-                        margin-right: -3em;
-                    }
-
-                    .attachment-action-group,
-                    .attachment-detail {
-                        display: block;
-                        font-size: 90%;
-
-                        height: auto;
-                        line-height: 1.2;
-                        padding: 0.5em 0;
-                        margin: 0;
-
-                        max-width: 100%;
-                    }
-
-                    .attachment-action-group {
-                        #{$rtl} & {
-                            text-align: right;
-                        }
-                        #{$ltr} & {
-                            text-align: left;
-                        }
-                    }
-
-                    .attachment-type-audio .attachment-details .attachment-detail {
-                        margin-bottom: 0px;
-                    }
-                    .attachment-container:last-child {
-                        margin-bottom: 0px;
-                    }
-                    .attachment-action-group .attachment-action {
-                        margin: 0 0.25em;
-                    }
-
-    @media (max-width: $width-tablet) {
-        a.attachment-download .detail-filesize {
-            display: none;
-        }
-        a.attachment-download .detail-filedim {
-            display: none;
+        video.attachment-inline {
+            display: inline-block;
+            max-width: 100%;
+            vertical-align: top;
         }
     }
 }

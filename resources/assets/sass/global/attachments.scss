@@ -1,0 +1,195 @@
+.attachment-link {
+    display: inline;
+    outline: none;
+}
+
+.attachment-download {
+    clear: both;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+
+    .detail-filename {
+        direction: ltr;
+        text-align: center;
+    }
+    .detail-download {
+        vertical-align: middle;
+    }
+    .detail-filesize {
+        margin-right: 0.25em;
+    }
+    .detail-filesize::before {
+        display: inline;
+        content: "(";
+    }
+    .detail-filedim::after {
+        display: inline;
+        content: ")";
+    }
+    .detail-close {
+        display: none;
+    }
+}
+
+    .attachment {
+        display: block;
+        margin: 0;
+        position: relative;
+        z-index: 3;
+    }
+        .attachment-type-audio {
+            overflow: hidden;
+            padding-right: 2em;
+        }
+
+        .attachment-wrapper {
+            position: relative;
+            padding: 0;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+            .attachment-type-audio .attachment-wrapper {
+                margin: 0 -2em 0 0;
+                padding: 0 2em 0 0;
+
+                &::after {
+                    content: ' ';
+                    display: block;
+                    height: 98%;
+                    width: 98%;
+                    padding: 0;
+                    pointer-events: none;
+
+                    position: absolute;
+                    top: 1%;
+                    left: auto;
+                    right: -1em;
+                    bottom: 1%;
+                    z-index: 1;
+
+                    background-position: center center;
+                    background-image: url("#{$base-url}img/backgrounds/vinyl.svg");
+                    background-repeat: no-repeat;
+                    background-size: contain;
+
+                }
+            }
+            .attachment-expanded.attachment-type-audio .attachment-wrapper {
+                margin: 0 0 0 0;
+                padding: 0 7em 0 0;
+                text-align: left;
+
+                &::after {
+                    right: -20%;
+                    animation: fa-spin 1.304s infinite linear;
+                    animation-play-state: paused;
+                }
+            }
+            .attachment-expanded.attachment-type-audio.playing .attachment-wrapper::after {
+                animation-play-state: running;
+            }
+
+            .attachment-expanded .attachment-type-video {
+                .detail-close {
+                    display: inline;
+                }
+
+                .attachment-wrapper {
+                    height: inherit !important;
+                }
+            }
+
+        img.attachment-img {
+            display: inline-block;
+            margin: 0 auto;
+
+            vertical-align: top;
+            position: relative;
+            z-index: 2;
+        }
+
+        html.js {
+            .attachment-link .attachment-type-img {
+                cursor: zoom-in;
+            }
+            .attachment-expanded .attachment-link .attachment-type-img {
+                cursor: zoom-out;
+            }
+            .attachment-link .attachment-type-video {
+                box-sizing: content-box;
+                border-style: solid;
+                border-width: 17px;
+
+                -moz-border-image:    url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                -webkit-border-image: url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                -o-border-image:      url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+                border-image:         url("#{$base-url}img/backgrounds/film.png") 27 fill stretch repeat;
+
+                border-top: none;
+                border-bottom: none;
+            }
+        }
+
+        .attachment-inline + .attachment-link .attachment-wrapper {
+            display: none;
+        }
+
+        .attachment-details {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+            padding: 0 1.8em 0 0; // compensates for post attachment alignment
+        }
+
+            .attachment-type-audio .attachment-details {
+                max-width: none;
+                margin-right: -2em;
+            }
+            .attachment-expanded .attachment-type-audio .attachment-details {
+                padding: 0 0.5em;
+                margin-right: -3em;
+            }
+
+            .attachment-action-group,
+            .attachment-detail {
+                display: block;
+                font-size: 90%;
+
+                height: auto;
+                line-height: 1.2;
+                padding: 0.5em 0;
+                margin: 0;
+
+                max-width: 100%;
+            }
+
+            .attachment-action-group {
+                #{$rtl} & {
+                    text-align: right;
+                }
+                #{$ltr} & {
+                    text-align: left;
+                }
+            }
+
+            .attachment-type-audio .attachment-details .attachment-detail {
+                margin-bottom: 0px;
+            }
+            .attachment-container:last-child {
+                margin-bottom: 0px;
+            }
+            .attachment-action-group .attachment-action {
+                margin: 0 0.25em;
+            }
+
+@media (max-width: $width-tablet) {
+    .attachment-download .detail-filesize {
+        display: none;
+    }
+    .attachment-download .detail-filedim {
+        display: none;
+    }
+}

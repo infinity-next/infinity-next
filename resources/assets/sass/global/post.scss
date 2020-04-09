@@ -168,10 +168,7 @@
             }
             .post-detail {
                 display: inline-block;
-                &.post-actions {
-                    text-align: center;
-                    width: 1em;
-                }
+                vertical-align: middle;
             }
             .post-detail:empty {
                 display: none;
@@ -186,16 +183,15 @@
 
                 .post-detail.post-country {
                     line-height: 1em;
-                    vertical-align: middle;
                 }
 
                 .post-detail-item {
                     box-sizing: border-box;
                     max-width: 100%;
 
-                    overflow: hidden;
+                    //overflow: hidden;
                     text-overflow: ellipsis;
-                    vertical-align: top;
+                    //vertical-align: top;
                 }
                     .post-select-input {
                         vertical-align: text-bottom;
@@ -261,9 +257,8 @@
                     .authorid.authorid-colorized {
                         border-radius: 5px;
                         line-height: 1.5;
-                        margin: -0.1em 0.25em -0.4em 0.25em;
+                        margin: 0 0.25em 0;
                         padding: 0 0.25em;
-                        vertical-align: text-top;
                     }
                     .authorid.authorid-colorized::before {
                         display: none;
@@ -275,7 +270,6 @@
 
                 .capcode {
                     display: inline-block;
-                    vertical-align: top;
                 }
                     .capcode::before {
                         display: inline-block;
@@ -390,10 +384,13 @@
                     background-color: #D6DAF0;
                     border: 1px solid rgba(0,0,0,0.25);
                 }
-                    .post-actions {
-                        display: inline-block;
-                        vertical-align: top;
+                    .post-detail.post-actions {
                         width: 100%;
+
+                        &, .post-action-bar, .post-action-tab {
+                            display: inline-block;
+                            width: 1.4em;
+                        }
                     }
                     .post-actions:empty {
                         display: none;
@@ -409,7 +406,6 @@
                                 display: block;
 
                                 color: #34345C;
-                                vertical-align: middle;
                                 white-space: nowrap;
 
                                 line-height: 1.4;
