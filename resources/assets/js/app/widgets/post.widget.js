@@ -513,7 +513,7 @@
 
             if ($inline.length > 0) {
                 $("[src]", $item).removeAttr('src');
-                $inline[0].stop();
+                $inline[0].pause(0);
                 $inline[0].removeAttribute('src');
                 $inline[0].load();
             }
