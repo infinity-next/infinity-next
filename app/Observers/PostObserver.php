@@ -54,60 +54,58 @@ class PostObserver
                 ->update($threadNewValues);
         }
 
-        DB::transaction(function () use ($post) {
-            // Process uploads.
-            $uploads = [];
+        // Process uploads.
+        $uploads = [];
 
-            // Check file uploads.
-            if (is_array($files = Request::file('files'))) {
-                $uploads = array_filter($files);
+        // Check file uploads.
+        if (is_array($files = Request::file('files'))) {
+            $uploads = array_filter($files);
 
-                if (count($uploads) > 0) {
-                    foreach ($uploads as $uploadIndex => $upload) {
-                        if (file_exists($upload->getPathname())) {
-                            FileStorage::createAttachmentFromUpload($upload, $post);
-                        }
+            if (count($uploads) > 0) {
+                foreach ($uploads as $uploadIndex => $upload) {
+                    if (file_exists($upload->getPathname())) {
+                        FileStorage::createAttachmentFromUpload($upload, $post);
                     }
                 }
             }
-            elseif (is_array($files = Request::input('files'))) {
-                $uniques = [];
-                $hashes = $files['hash'];
-                $names = $files['name'];
-                $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
+        }
+        elseif (is_array($files = Request::input('files'))) {
+            $uniques = [];
+            $hashes = $files['hash'];
+            $names = $files['name'];
+            $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
 
-                $storages = FileStorage::whereIn('hash', $hashes)->get();
+            $storages = FileStorage::whereIn('hash', $hashes)->get();
 
-                foreach ($hashes as $index => $hash) {
-                    if (!isset($uniques[$hash])) {
-                        $uniques[$hash] = true;
-                        $storage = $storages->where('hash', $hash)->first();
+            foreach ($hashes as $index => $hash) {
+                if (!isset($uniques[$hash])) {
+                    $uniques[$hash] = true;
+                    $storage = $storages->where('hash', $hash)->first();
 
-                        if ($storage->exists && is_null($storage->banned_at)) {
-                            $uploader = new Upload($storage);
-                            $uploader->processThumbnails();
+                    if ($storage->exists && is_null($storage->banned_at)) {
+                        $uploader = new Upload($storage);
+                        $uploader->process();
 
-                            $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+                        $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
 
-                            $fileName = pathinfo($names[$index], PATHINFO_FILENAME);
-                            $fileExt = $storage->guessExtension();
+                        $fileName = pathinfo($names[$index], PATHINFO_FILENAME);
+                        $fileExt = $storage->guessExtension();
 
-                            $attachment = new PostAttachment;
-                            $attachment->post_id = $post->post_id;
-                            $attachment->file_id = $storage->file_id;
-                            $attachment->filename = urlencode("{$fileName}.{$fileExt}");
-                            $attachment->is_spoiler = (bool) $spoiler;
+                        $attachment = new PostAttachment;
+                        $attachment->post_id = $post->post_id;
+                        $attachment->file_id = $storage->file_id;
+                        $attachment->filename = urlencode("{$fileName}.{$fileExt}");
+                        $attachment->is_spoiler = (bool) $spoiler;
 
-                            $attachment->position = $index;
-                            $uploads[] = $attachment;
-                        }
+                        $attachment->position = $index;
+                        $uploads[] = $attachment;
                     }
                 }
-
-                $post->attachmentLinks()->saveMany($uploads);
-                FileStorage::whereIn('hash', $hashes)->increment('upload_count');
             }
-        });
+
+            $post->attachmentLinks()->saveMany($uploads);
+            FileStorage::whereIn('hash', $hashes)->increment('upload_count');
+        }
 
         // Optionally, we also expend the adventure.
         $adventure = BoardAdventure::getAdventure($board);
@@ -134,6 +132,9 @@ class PostObserver
                 'order' => $throw['order'],
             ]);
         }
+
+        // NOTE: The transaction starts in creating()!
+        DB::commit();
 
         // Fire event, which clears cache among other things.
         Event::dispatch(new \App\Events\PostWasCreated($post));
@@ -217,38 +218,37 @@ class PostObserver
         }
 
         // Store the post in the database.
-        DB::transaction(function () use ($post, $thread, $board) {
-            // The objective of this transaction is to prevent concurrency issues in the database
-            // on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
-            // alongside the primary autoincrement column `post_id`.
+        // NOTE: This ends in created!
+         DB::beginTransaction();
+        // The objective of this transaction is to prevent concurrency issues in the database
+        // on the unique joint index [`board_uri`,`board_id`] which is generated procedurally
+        // alongside the primary autoincrement column `post_id`.
 
-            // First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
-            DB::table('boards')
-                ->where('board_uri', $post->board_uri)
-                ->increment('posts_total', 1, [
-                    'last_post_at' => $post->reply_last,
-                ]);
-
-            // Second, we record this value and lock the table.
-            $boards = DB::table('boards')
-                ->where('board_uri', $post->board_uri)
-                ->lockForUpdate()
-                ->select('posts_total')
-                ->get();
-
-            $posts_total = $boards[0]->posts_total;
-
-            // Third, we store a unique checksum for this post for duplicate tracking.
-            $board->checksums()->create([
-                'checksum' => $post->getChecksum(),
+        // First instruction is to add +1 to posts_total and set the last_post_at on the Board table.
+        DB::table('boards')
+            ->where('board_uri', $post->board_uri)
+            ->increment('posts_total', 1, [
+                'last_post_at' => $post->reply_last,
             ]);
 
-            // We set our board_id and save the post.
-            $post->board_id = $posts_total;
-            $post->author_id = $post->makeAuthorId();
-            $post->password = $post->makePassword($post->password);
-            //$post->save();
-        });
+        // Second, we record this value and lock the table.
+        $boards = DB::table('boards')
+            ->where('board_uri', $post->board_uri)
+            ->lockForUpdate()
+            ->select('posts_total')
+            ->get();
+
+        $posts_total = $boards[0]->posts_total;
+
+        // Third, we store a unique checksum for this post for duplicate tracking.
+        $board->checksums()->create([
+            'checksum' => $post->getChecksum(),
+        ]);
+
+        // We set our board_id and save the post.
+        $post->board_id = $posts_total;
+        $post->author_id = $post->makeAuthorId();
+        $post->password = $post->makePassword($post->password);
 
         return !is_null($post->board_id);
     }

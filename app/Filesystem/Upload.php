@@ -308,7 +308,6 @@ class Upload
             $this->processThumbnailsForImage();
         }
 
-        $this->storage->thumbnails()->saveMany($this->thumbnails);
         return $this->thumbnails;
     }
 
