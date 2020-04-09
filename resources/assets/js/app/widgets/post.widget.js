@@ -949,7 +949,7 @@
                 postboxWidget.responsiveAnchor(widget.$widget[0]);
 
                 window.scrollTo(x, y);
-                $postbox.trigger('click');
+                $postbox.trigger('open-form');
 
                 return false;
             }

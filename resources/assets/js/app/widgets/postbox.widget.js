@@ -614,6 +614,14 @@
             // Rebind jQuery UI widgets.
             widget.bindDraggable();
             widget.bindResize();
+
+            // focus the input field
+            setTimeout(function() {
+                var $textarea = $(widget.options.selector['form-body'], $widget);
+                $textarea.focus();
+                $textarea[0].selectionStart = $textarea[0].selectionEnd = $textarea[0].value.length;
+            }, 100);
+
         },
 
         formSubmit    : function(event) {
@@ -980,6 +988,12 @@
             );
 
         $widget
+            .on(
+                'open-form.ib-postbox',
+                data,
+                widget.events.formOpenClick
+            )
+
             // Watch for key downs as to capture ctrl+enter submission.
             // We don't die this to any particular item.
             .on(
