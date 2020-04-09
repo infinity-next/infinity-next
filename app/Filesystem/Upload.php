@@ -247,6 +247,7 @@ class Upload
      */
     public function processThumbnail($content)
     {
+        // deduplicate reposting of thumbnails
         $image = (new ImageManager())->make($content)
             ->resize(Settings::get('attachmentThumbnailSize', 200), Settings::get('attachmentThumbnailSize', 200), function ($constraint) {
                 $constraint->aspectRatio();
@@ -307,7 +308,7 @@ class Upload
             $this->processThumbnailsForImage();
         }
 
-        $this->storage->setRelation('thumbnails', $this->thumbnails);
+        $this->storage->thumbnails()->saveMany($this->thumbnails);
         return $this->thumbnails;
     }
 
@@ -405,7 +406,12 @@ class Upload
      */
     protected function processThumbnailsForImage()
     {
-        $this->processThumbnail($this->storage->blob);
+        if ($this->storage->sources()->count()) {
+            $this->thumbnails->push($this->storage);
+        }
+        else {
+            $this->processThumbnail($this->storage->blob);
+        }
     }
 
     protected function processThumbnailsForVideo()

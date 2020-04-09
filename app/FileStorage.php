@@ -162,6 +162,11 @@ class FileStorage extends Model
         return $this->hasMany(PostAttachment::class, 'file_id');
     }
 
+    public function sources()
+    {
+        return $this->belongsToMany(static::class, 'file_thumbnails', 'thumbnail_id', 'source_id');
+    }
+
     public function thumbnails()
     {
         return $this->belongsToMany(static::class, 'file_thumbnails', 'source_id', 'thumbnail_id');
@@ -234,37 +239,6 @@ class FileStorage extends Model
 
             ++$storage->upload_count;
             $storage->save();
-        }
-
-        return $attachment;
-    }
-
-    /**
-     * Creates a new PostAttachment for a post using a hash.
-     *
-     * @param Post   $post
-     * @param string $filename
-     * @param bool   $spoiler
-     *
-     * @return PostAttachment
-     */
-    public function createAttachmentWithThis(Post $post, $filename, $spoiler = false, $autosave = true)
-    {
-        ## TODO ## Move this somewhere that makes more sense..
-        $fileName = pathinfo($filename, PATHINFO_FILENAME);
-        $fileExt = $this->guessExtension();
-
-        $attachment = new PostAttachment;
-        $attachment->post_id = $post->post_id;
-        $attachment->file_id = $this->file_id;
-        $attachment->filename = urlencode("{$fileName}.{$fileExt}");
-        $attachment->is_spoiler = (bool) $spoiler;
-
-        if ($autosave) {
-            $attachment->save();
-
-            ++$this->upload_count;
-            $this->save();
         }
 
         return $attachment;

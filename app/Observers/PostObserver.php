@@ -5,7 +5,9 @@ namespace App\Observers;
 use App\BoardAdventure;
 use App\FileStorage;
 use App\Post;
+use App\PostAttachment;
 use App\PostCite;
+use App\Filesystem\Upload;
 use Carbon\Carbon;
 use App\Support\Geolocation;
 use App\Support\IP;
@@ -52,47 +54,60 @@ class PostObserver
                 ->update($threadNewValues);
         }
 
-        // Process uploads.
-        $uploads = [];
+        DB::transaction(function () use ($post) {
+            // Process uploads.
+            $uploads = [];
 
-        // Check file uploads.
-        if (is_array($files = Request::file('files'))) {
-            $uploads = array_filter($files);
+            // Check file uploads.
+            if (is_array($files = Request::file('files'))) {
+                $uploads = array_filter($files);
 
-            if (count($uploads) > 0) {
-                foreach ($uploads as $uploadIndex => $upload) {
-                    if (file_exists($upload->getPathname())) {
-                        FileStorage::createAttachmentFromUpload($upload, $post);
+                if (count($uploads) > 0) {
+                    foreach ($uploads as $uploadIndex => $upload) {
+                        if (file_exists($upload->getPathname())) {
+                            FileStorage::createAttachmentFromUpload($upload, $post);
+                        }
                     }
                 }
             }
-        }
-        elseif (is_array($files = Request::input('files'))) {
-            $uniques = [];
-            $hashes = $files['hash'];
-            $names = $files['name'];
-            $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
+            elseif (is_array($files = Request::input('files'))) {
+                $uniques = [];
+                $hashes = $files['hash'];
+                $names = $files['name'];
+                $spoilers = isset($files['spoiler']) ? $files['spoiler'] : [];
 
-            $storages = FileStorage::whereIn('hash', $hashes)->get();
+                $storages = FileStorage::whereIn('hash', $hashes)->get();
 
-            foreach ($hashes as $index => $hash) {
-                if (!isset($uniques[$hash])) {
-                    $uniques[$hash] = true;
-                    $storage = $storages->where('hash', $hash)->first();
+                foreach ($hashes as $index => $hash) {
+                    if (!isset($uniques[$hash])) {
+                        $uniques[$hash] = true;
+                        $storage = $storages->where('hash', $hash)->first();
 
-                    if ($storage && is_null($storage->banned_at)) {
-                        $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+                        if ($storage->exists && is_null($storage->banned_at)) {
+                            $uploader = new Upload($storage);
+                            $uploader->processThumbnails();
 
-                        $upload = $storage->createAttachmentWithThis($post, $names[$index], $spoiler, false);
-                        $upload->position = $index;
-                        $uploads[] = $upload;
+                            $spoiler = isset($spoilers[$index]) ? $spoilers[$index] == 1 : false;
+
+                            $fileName = pathinfo($names[$index], PATHINFO_FILENAME);
+                            $fileExt = $storage->guessExtension();
+
+                            $attachment = new PostAttachment;
+                            $attachment->post_id = $post->post_id;
+                            $attachment->file_id = $storage->file_id;
+                            $attachment->filename = urlencode("{$fileName}.{$fileExt}");
+                            $attachment->is_spoiler = (bool) $spoiler;
+
+                            $attachment->position = $index;
+                            $uploads[] = $attachment;
+                        }
                     }
                 }
-            }
 
-            $post->attachmentLinks()->saveMany($uploads);
-            FileStorage::whereIn('hash', $hashes)->increment('upload_count');
-        }
+                $post->attachmentLinks()->saveMany($uploads);
+                FileStorage::whereIn('hash', $hashes)->increment('upload_count');
+            }
+        });
 
         // Optionally, we also expend the adventure.
         $adventure = BoardAdventure::getAdventure($board);
@@ -101,12 +116,6 @@ class PostObserver
             $post->adventure_id = $adventure->adventure_id;
             $adventure->expended_at = $post->created_at;
             $adventure->save();
-        }
-
-        // Finally fire event on OP, if it exists.
-        if ($thread instanceof Post) {
-            $thread->setRelation('board', $board);
-            Event::dispatch(new ThreadNewReply($thread));
         }
 
         if (!is_null(user()) && user()->isAccountable()) {
@@ -132,6 +141,12 @@ class PostObserver
         // Log staff posts.
         if ($post->capcode_id) {
             Event::dispatch(new \App\Events\PostWasCapcoded($post, user()));
+        }
+
+        // Finally fire event on OP, if it exists.
+        if ($thread instanceof Post) {
+            $thread->setRelation('board', $board);
+            Event::dispatch(new \App\Events\ThreadNewReply($thread));
         }
 
         return true;
