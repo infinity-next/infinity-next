@@ -452,31 +452,27 @@
                 var percentage = (factor / (rangeMax - rangeMin) / 2) + 0.5;
                 var newMax = Math.floor(maxDimension * percentage);
 
-                if (width > newMax || height > newMax)
-                {
+                if (width > newMax || height > newMax) {
                     var ratio;
 
                     if (height !== 0) {
-                        if (width >= height)
-                        {
+                        if (width >= height) {
                             ratio = newMax / width;
                             height *= ratio;
                             width = newMax;
                         }
-                        else
-                        {
+                        else {
                             ratio = newMax / height;
                             width *= ratio;
                             height = newMax;
                         }
                     }
-                    else
-                    {
+                    else {
                         width = newMax;
                         height = "auto";
                     }
 
-                    $img.add($box).css({
+                    $img.css({
                         'height' : height,
                         'width'  : width,
                     });

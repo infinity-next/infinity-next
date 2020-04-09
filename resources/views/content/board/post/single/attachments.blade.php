@@ -67,7 +67,7 @@
         @else
         <div class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="lazyimg">
             <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($post->board) !!}"t>
-                {!! $attachment->getThumbnailHtml($post->board, 150) !!}
+                {!! $attachment->getThumbnailHtml($post->board, 'auto') !!}
             </a>
         </div>
         @endif

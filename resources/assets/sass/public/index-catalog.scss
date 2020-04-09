@@ -141,6 +141,7 @@ main.index-catalog {
                             }
                                  .attachment-img {
                                     display: inline-block;
+                                    box-sizing: border-box !important;
                                     max-height: 160px;
                                     max-width: 100%;
                                     max-height: 100%;
