@@ -40,7 +40,7 @@ trait BoardStats
     {
         $controller = &$this;
 
-        $stats = Cache::remember('index.boardstats', now()->addHour(), function () use ($controller) {
+        $stats = Cache::remember('index.boardstats', now()->addMinutes(10), function () use ($controller) {
             $stats = [];
 
             foreach ($controller->boardStats as $boardStat) {

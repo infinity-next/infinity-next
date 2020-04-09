@@ -12,14 +12,11 @@ class OptionSeeder extends Seeder {
 
         $option_count = Option::count();
 
-        foreach ($this->slugs() as $slugType => $slugs)
-        {
-            foreach ($slugs as $slug)
-            {
+        foreach ($this->slugs() as $slugType => $slugs) {
+            foreach ($slugs as $slug) {
                 $slug['option_type'] = $slugType;
 
-                if (!isset($slug['format_parameters']) || is_null($slug['format_parameters']))
-                {
+                if (!isset($slug['format_parameters']) || is_null($slug['format_parameters'])) {
                     $slug['format_parameters'] = "{}";
                 }
 
@@ -28,8 +25,7 @@ class OptionSeeder extends Seeder {
                 ], $slug);
 
                 // Insert a default site setting.
-                if ($option->wasRecentlyCreated && $slugType == "site")
-                {
+                if ($option->wasRecentlyCreated && $slugType == "site") {
                     $option->siteSetting()->create([
                         'option_name'  => $slug['option_name'],
                         'option_value' => $slug['default_value'],
@@ -238,6 +234,15 @@ class OptionSeeder extends Seeder {
                     'validation_parameters' => "min:\$min",
                 ],
 
+
+                [
+                    'option_name'           => "copyrightAddendum",
+                    'default_value'         => "",
+                    'format'                => "textbox",
+                    'format_parameters'     => json_encode( [ 'min' => 0, 'max' => 65535 ] ),
+                    'data_type'             => "string",
+                    'validation_parameters' => "min:\$min|max:\$max",
+                ],
                 [
                     'option_name'           => "siteAnnouncement",
                     'default_value'         => "",
@@ -544,8 +549,7 @@ class OptionGroupSeeder extends Seeder {
 
         OptionGroupAssignment::truncate();
 
-        foreach ($this->slugs() as $slug)
-        {
+        foreach ($this->slugs() as $slug) {
             $optionGroupOptions = $slug['options'];
             unset($slug['options']);
 
@@ -558,8 +562,7 @@ class OptionGroupSeeder extends Seeder {
 
             $optionGroup->save();
 
-            foreach ($optionGroupOptions as $optionGroupIndex => $optionGroupOption)
-            {
+            foreach ($optionGroupOptions as $optionGroupIndex => $optionGroupOption) {
                 $optionGroupOptionModel = $optionGroup
                     ->assignments()
                     ->firstOrNew([
@@ -586,6 +589,7 @@ class OptionGroupSeeder extends Seeder {
                     'siteName',
                     'siteDescription',
                     'siteAnnouncement',
+                    'copyrightAddendum',
                     'canary',
                 ],
             ],

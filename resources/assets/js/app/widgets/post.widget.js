@@ -515,21 +515,17 @@
             var $img    = $(widget.options.selector['attachment-image'], $item);
             var $inline = $(widget.options.selector['attachment-inline'], $item);
 
-            if ($inline.length > 0)
-            {
-                $("[src]", $item).attr('src', "");
-                $inline[0].pause(0);
-                $inline[0].src = "";
+            if ($inline.length > 0) {
+                $("[src]", $item).removeAttr('src');
+                $inline[0].stop();
+                $inline[0].removeAttribute('src');
                 $inline[0].load();
             }
 
-            if ($img.is('[data-thumb-width]'))
-            {
+            if ($img.is('[data-thumb-width]')) {
                 $img.css('width', $img.attr('data-thumb-width') + "px");
             }
-
-            if ($img.is('[data-thumb-height]'))
-            {
+            if ($img.is('[data-thumb-height]')) {
                 $img.css('height', $img.attr('data-thumb-height') + "px");
             }
 
@@ -543,8 +539,7 @@
                 'min-height'       : '',
             });
 
-            if (event.delegateTarget === widget.$widget[0])
-            {
+            if (event.delegateTarget === widget.$widget[0]) {
                 widget.$widget[0].scrollIntoView({
                     block    : "start",
                     behavior : "instant"
@@ -561,43 +556,36 @@
             var $link  = $img.parents(widget.options.selector['attachment-link']).first();
 
             // Check for previous results.
-            if ($link.is(".attachment-canplay"))
-            {
+            if ($link.is(".attachment-canplay")) {
                 return true;
             }
-            else if ($link.is(".attachment-cannotplay"))
-            {
+            else if ($link.is(".attachment-cannotplay")) {
                 return false;
             }
 
             // Test audio.
-            if ($img.is(widget.options.selector['attachment-image-audio']))
-            {
+            if ($img.is(widget.options.selector['attachment-image-audio'])) {
                 var $audio  = $("<audio></audio>");
                 var mimetype = $img.attr('data-mime');
                 var fileext  = $link.attr('href').split('.').pop();
 
-                if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "")
-                {
+                if ($audio[0].canPlayType(mimetype) != "" || $audio[0].canPlayType("audio/"+fileext) != "") {
                     $link.addClass("attachment-canplay");
                     return true;
                 }
             }
             // Test video.
-            else if ($img.is(widget.options.selector['attachment-image-video']))
-            {
+            else if ($img.is(widget.options.selector['attachment-image-video'])) {
                 var $video   = $("<video></video>");
                 var mimetype = $img.attr('data-mime');
                 var fileext  = $link.attr('href').split('.').pop();
 
-                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
-                {
+                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext)) {
                     $link.addClass("attachment-canplay");
                     return true;
                 }
             }
-            else
-            {
+            else {
                 $link.addClass("attachment-canplay");
                 return true;
             }
@@ -635,6 +623,9 @@
             $inline.remove();
             $img.toggle(true);
             $img.parent().addClass('attachment-grow');
+
+            event.preventDefault();
+            return false;
         },
 
         attachmentMediaLoadedData : function(event) {
@@ -728,8 +719,7 @@
             $img.trigger('mouseout.ib-post');
 
             // If the attachment type is not an image, we can't expand inline.
-            if ($img.is(widget.options.selector['attachment-image-expandable']))
-            {
+            if ($img.is(widget.options.selector['attachment-image-expandable'])) {
                 $item.addClass('attachment-expanded');
                 $img.parent().css({
                         // Removed because the effect was gross.
@@ -771,8 +761,7 @@
                 event.preventDefault();
                 return false;
             }
-            else if ($img.is(widget.options.selector['attachment-image-audio']))
-            {
+            else if ($img.is(widget.options.selector['attachment-image-audio'])) {
                 var $audio  = $("<audio controls autoplay class=\"attachment-inline attachment-audio\"></audio>");
                 var $source = $("<source />");
                 var mimetype = $img.attr('data-mime');
@@ -804,15 +793,13 @@
                     return false;
                 }
             }
-            else if ($img.is(widget.options.selector['attachment-image-video']))
-            {
+            else if ($img.is(widget.options.selector['attachment-image-video'])) {
                 var $video   = $("<video controls autoplay class=\"attachment-inline attachment-video\"></video>");
                 var $source  = $("<source />");
                 var mimetype = $img.attr('data-mime');
                 var fileext  = $link.attr('href').split('.').pop();
 
-                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext))
-                {
+                if ($video[0].canPlayType(mimetype) || $video[0].canPlayType("video/"+fileext)) {
                     $item.addClass('attachment-expanded');
 
                     $source
@@ -837,8 +824,7 @@
                     event.preventDefault();
                     return false;
                 }
-                else
-                {
+                else {
                     $img
                         .addClass('attachment-type-file')
                         .removeClass('attachment-type-video');
@@ -846,15 +832,13 @@
                     return true;
                 }
             }
-            else
-            {
+            else {
                 return true;
             }
         },
 
         citeClick : function(event) {
-            if (event.altKey || event.ctrlKey)
-            {
+            if (event.altKey || event.ctrlKey) {
                 return true;
             }
 
@@ -863,8 +847,7 @@
             var board_id  = parseInt($cite.attr('data-board_id'), 10);
             var $target   = $("#post-"+board_uri+"-"+board_id);
 
-            if ($target.length)
-            {
+            if ($target.length) {
                 window.location.hash = board_id;
                 $target[0].scrollIntoView();
 
