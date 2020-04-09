@@ -115,10 +115,6 @@ class PostObserver
             $adventure->expended_at = $post->created_at;
             $adventure->save();
         }
-
-        if (!is_null(user()) && user()->isAccountable()) {
-            Cache::forget('posting_now_'.$post->author_ip->toLong());
-        }
         // Add dice rolls.
         // Because of how dice rolls work, we don't ever remove them and only
         // create them with the post, not on update.
@@ -135,6 +131,10 @@ class PostObserver
 
         // NOTE: The transaction starts in creating()!
         DB::commit();
+
+        if (!is_null(user()) && user()->isAccountable()) {
+            Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
+        }
 
         // Fire event, which clears cache among other things.
         Event::dispatch(new \App\Events\PostWasCreated($post));
@@ -178,12 +178,11 @@ class PostObserver
         }
 
         if (!is_null(user()) && user()->isAccountable()) {
-            if (Cache::has('posting_now_'.$post->author_ip->toLong())) {
+            if (!Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->get()) {
                 return abort(429, "Slow down.");
             }
 
             // Cache what time we're submitting our post for flood checks.
-            Cache::put('posting_now_'.$post->author_ip->toLong(), true, now()->addSeconds(10));
             Cache::put('last_post_for_'.$post->author_ip->toLong(), $post->created_at->timestamp, now()->addHour());
 
             if ($thread instanceof Post) {
