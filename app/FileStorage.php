@@ -700,7 +700,7 @@ class FileStorage extends Model
         }
         elseif ($this->isImageVector()) {
             // With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-            return $this->getDownloadUrl($board);
+            return $this->getUrl($board);
         }
 
         if ($board instanceof Board) {
