@@ -1964,6 +1964,7 @@ class Post extends Model implements FormattableContract
         // NOTE: Cache is better leveraged in other areas.
         //$thread = Cache::tags($rememberTags)
         //    ->remember($rememberKey, $rememberTimer, $rememberClosure);
+        $thread = $rememberClosure();
 
         if (!is_null($uri)) {
             return $thread->getReplySplice($uri);
