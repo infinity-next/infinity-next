@@ -55,10 +55,6 @@
             padding: 0 0.5em 0.5em 0;
         }
 
-        .attachments-multi & {
-            padding-top: 0.5em;
-        }
-
         &.attachment-expanded {
             clear: both;
             float: none;
@@ -107,5 +103,8 @@
             max-width: 100%;
             vertical-align: top;
         }
+    }
+    .reply-container &.attachments-multi .attachment {
+        padding-top: 0.5em;
     }
 }
