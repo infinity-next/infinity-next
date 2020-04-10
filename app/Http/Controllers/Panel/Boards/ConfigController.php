@@ -124,7 +124,7 @@ class ConfigController extends PanelController
         $board->is_indexed = isset($input['boardBasicIndexed']) && (bool) $input['boardBasicIndexed'];
         $board->is_worksafe = isset($input['boardBasicWorksafe']) && (bool) $input['boardBasicWorksafe'];
         $board->setRelation('settings', $settings);
-        $board->updated_at = Carbon::now();
+        $board->updated_at = now();
         $board->save();
 
         Event::dispatch(new BoardWasModified($board));
