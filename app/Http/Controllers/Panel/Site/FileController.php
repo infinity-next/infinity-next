@@ -42,7 +42,7 @@ class FileController extends PanelController
         $this->authorize('admin-config');
 
         $files = FileStorage::orderBy('last_uploaded_at', 'desc')
-            ->whereNull('source_id')
+            ->whereDoesntHave('sources')
             ->where('last_uploaded_at', '>', now()->subDay())
             ->get();
 
