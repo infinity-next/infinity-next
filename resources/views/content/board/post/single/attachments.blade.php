@@ -13,37 +13,33 @@
             {!! $attachment->getThumbnailHtml($board) !!}
         </a>
 
-        <div class="attachment-details">
+        <div class="attachment-details attachment-actions">
             @section('attachment-actions')
             @set('attachmentActions', false)
-            <div class="post-action-tab action-tab-actions" data-no-instant>
-                <span class="post-action-label post-action-open"><i class="fa fa-angle-down"></i><span class="post-action-text">@lang('board.action.open')</span></span>
-                <ul class="post-action-groups">
-                    <li class="post-action-group">
-                        <ul class="post-actions">
-                            @set('attachmentActions', true)
-                            @if ($attachment->isSpoiler())
-                            <li class="post-action">
-                                <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="post-action-link attachment-unspoiler" title="@lang('board.field.unspoiler')" data-no-instant>
-                                    <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
-                                </a>
-                            </li>
-                            @else
-                            <li class="post-action">
-                                <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="post-action-link attachment-spoiler" title="@lang('board.field.spoiler')" data-no-instant>
-                                    <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
-                                </a>
-                            </li>
-                            @endif
+            <div class="actions-anchor actions-attachment" data-no-instant>
+                <span class="actions-label"><i class="fa fa-angle-down"></i></span>
+                <div class="actions">
+                    @set('attachmentActions', true)
+                    @if ($attachment->isSpoiler())
+                    <div class="action">
+                        <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="action-link attachment-unspoiler" title="@lang('board.field.unspoiler')">
+                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
+                        </a>
+                    </div>
+                    @else
+                    <div class="action">
+                        <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="action-link attachment-spoiler" title="@lang('board.field.spoiler')">
+                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
+                        </a>
+                    </div>
+                    @endif
 
-                            <li class="post-action">
-                                <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="post-action-link attachment-remove" title="@lang('board.field.remove')" data-no-instant>
-                                    <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                    <div class="action">
+                        <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="action-link attachment-remove" title="@lang('board.field.remove')">
+                            <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
+                        </a>
+                    </div>
+                </div>
             </div>
             @show
 
@@ -65,7 +61,7 @@
     @endif
     @else
     <div class="attachment attachment-type-{{ $attachment->guessExtension() }}" data-widget="attachment">
-        <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($post->board) !!}"t>
+        <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($post->board) !!}">
             {!! $attachment->getThumbnailHtml($post->board, 'auto') !!}
         </a>
     </div>

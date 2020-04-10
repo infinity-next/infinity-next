@@ -310,109 +310,21 @@
             padding: 0.2em 0.6em;
         }
 
-    .post-action-tab {
-        display: inline-block;
-        cursor: default;
-        position: relative;
+.catalog-open {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: 2em;
+    height: 2em;
+    margin: 0;
+    display: block;
 
-        /* border: 1px solid rgba(0,0,0,0.25);
-        border-radius: 2px; */
-
-        line-height: 1.8em;
-        height: 1.8em;
-
-        padding: 0;
-        margin-left: 0.25em;
-
-        html.js & {
-            cursor: pointer;
-        }
+    .nsfw & {
+        background: rgba(255, 0, 0, 0.1);
     }
-    .post-action-tab.action-tab-actions {
-        margin-left: 0;
-        text-align: center;
-        width: 1.8em;
+    .sfw & {
+        background: rgba(  0, 0, 255, 0.1);
     }
-        .action-tab-actions .post-action-text {
-            display: none;
-        }
-
-            .catalog-open {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-                text-align: center;
-                vertical-align: middle;
-                font-size: 1.2em;
-                font-weight: bold;
-                line-height: 2em;
-                height: 2em;
-                margin: 0;
-                display: block;
-
-                .nsfw & {
-                    background: rgba(255, 0, 0, 0.1);
-                }
-                .sfw & {
-                    background: rgba(  0, 0, 255, 0.1);
-                }
-            }
-
-            ul.post-action-groups {
-                display: none;
-                max-width: 100vw;
-
-                position: absolute;
-                top: 1.5em;
-                z-index: 10;
-
-                #{$rtl} & {
-                    right: 0px;
-                }
-                #{$ltr} & {
-                    left: 0px;
-                }
-
-                list-style: none;
-                padding: 0 0 0 0;
-                margin: 0 0 0 -1px;
-            }
-                html.no-js div.post-action-tab:hover ul.post-action-groups,
-                html.js    div.post-action-tab.open  ul.post-action-groups {
-                    display: block;
-                }
-
-                .post-action-group {
-                    background-color: #D6DAF0;
-                    border: 1px solid rgba(0,0,0,0.25);
-                }
-                    .post-detail.post-actions {
-                        width: 100%;
-
-                        &, .post-action-bar, .post-action-tab {
-                            display: inline-block;
-                            width: 1.4em;
-                        }
-                    }
-                    .post-actions:empty {
-                        display: none;
-                    }
-                        .post-action {
-                            border-bottom: 1px solid rgba(0,0,0,0.25);
-                            width: 100%;
-                        }
-                        li.post-action:last-child {
-                            margin-bottom: -1px;
-                        }
-                            a.post-action-link {
-                                display: block;
-
-                                color: #34345C;
-                                white-space: nowrap;
-
-                                line-height: 1.4;
-
-                                padding: 0.25em 1em 0.25em;
-                            }
-                            a.post-action-link:hover{
-                                color: #dee0df;
-                                background: #34345C;
-                            }
+}

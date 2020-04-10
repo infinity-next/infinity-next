@@ -269,7 +269,7 @@ class FileStorage extends Model
      */
     public function getBaseFileName()
     {
-        $pathinfo = pathinfo($this->pivot->filename);
+        $pathinfo = pathinfo($this->attributes['pivot']->attributes['filename']);
 
         return $pathinfo['filename'];
     }
@@ -306,7 +306,7 @@ class FileStorage extends Model
     public function getUrl(?Board $board = null)
     {
         $params = [
-            'hash' => $this->hash,
+            'hash' => $this->attributes['hash'],
             'filename' => $this->getDownloadName(),
         ];
 
@@ -369,12 +369,12 @@ class FileStorage extends Model
         $bits['i'] = 0;
         $bits['n'] = $bits['t'];
 
-        if (isset($this->attribute['pivot'])) {
-            if (isset($this->attribute['pivot']->attribute['position'])) {
-                $bits['i'] = $this->attribute['pivot']->attribute['position'];
+        if (isset($this->attributes['pivot'])) {
+            if (isset($this->attributes['pivot']->attributes['position'])) {
+                $bits['i'] = $this->attributes['pivot']->attributes['position'];
             }
 
-            if (isset($this->attribute['pivot']->attribute['filename'])) {
+            if (isset($this->attributes['pivot']->attributes['filename'])) {
                 $bits['n'] = $this->getBaseFileName();
             }
         }
@@ -598,12 +598,12 @@ class FileStorage extends Model
     public function getThumbnailHtml(?Board $board = null, $maxDimension = null)
     {
         $ext = $this->guessExtension();
-        $mime = $this->mime;
+        $mime = $this->attributes['mime'];
         $url = media_url("static/img/filetypes/{$ext}.svg", false);
         $spoil = $this->isSpoiler();
         $deleted = $this->isDeleted();
-        $hash = $deleted ? null : $this->hash;
-        $thumbnail = $this->thumbnails->first();
+        $hash = $deleted ? null : $this->attributes['hash'];
+        $thumbnail = $this->thumbnails()->first();
 
 
         if ($deleted) {
@@ -629,13 +629,13 @@ class FileStorage extends Model
         // Measure dimensions.
         $height = 'auto';
         $width = 'auto';
-        $oHeight = $thumbnail ? $thumbnail->file_height : Settings::get('attachmentThumbnailSize', 250);
-        $oWidth = $thumbnail ? $thumbnail->file_width : Settings::get('attachmentThumbnailSize', 250);
+        $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 250);
+        $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 250);
 
         // configuration for an actual thumbnail image
         if ($this->hasThumb() && !$this->isSpoiler() && !$this->isDeleted()) {
             $height = $oHeight.'px';
-            $width = $thumbnail->file_width.'px';
+            $width = $thumbnail->attributes['file_width'].'px';
 
             if ($maxDimension == "auto") {
                 $height = "auto";
@@ -714,8 +714,8 @@ class FileStorage extends Model
         }
 
         return route('panel.site.files.send', [
-            'hash' => $this->hash,
-            'filename' => "{$this->file_id}.{$ext}",
+            'hash' => $this->attributes['hash'],
+            'filename' => "{$this->attributes['file_id']}.{$ext}",
         ], false);
     }
 
@@ -740,9 +740,9 @@ class FileStorage extends Model
      */
     public function guessExtension()
     {
-        $mimes = explode('/', $this->mime);
+        $mimes = explode('/', $this->attributes['mime']);
 
-        switch ($this->mime) {
+        switch ($this->attributes['mime']) {
             //#
             // IMAGES
             //#
@@ -826,7 +826,7 @@ class FileStorage extends Model
      */
     public function hasThumb()
     {
-        return $this->thumbnails->count() > 0;
+        return $this->thumbnails()->count() > 0;
     }
 
     /**
@@ -836,7 +836,7 @@ class FileStorage extends Model
      */
     public function isAudio()
     {
-        switch ($this->mime) {
+        switch ($this->attributes['mime']) {
             case 'audio/mpeg':
             case 'audio/mp3':
             case 'audio/aac':
@@ -859,9 +859,10 @@ class FileStorage extends Model
      */
     public function isDeleted()
     {
-        return isset($this->pivot)
-            && isset($this->pivot->is_deleted)
-            && (bool) $this->pivot->is_deleted;
+        // written in a way to bypass mutators
+        return isset($this->attributes['pivot'])
+            && isset($this->attributes['pivot']->attributes['is_deleted'])
+            && !!$this->attributes['pivot']->attributes['is_deleted'];
     }
 
     /**
@@ -871,7 +872,7 @@ class FileStorage extends Model
      */
     public function isDocument()
     {
-        switch ($this->mime)
+        switch ($this->attributes['mime'])
         {
             case "application/epub+zip" :
             case "application/pdf" :
@@ -888,7 +889,7 @@ class FileStorage extends Model
      */
     public function isImage()
     {
-        switch ($this->mime) {
+        switch ($this->attributes['mime']) {
             case 'image/webp':
             case 'image/jpeg':
             case 'image/jpg':
@@ -907,7 +908,7 @@ class FileStorage extends Model
      */
     public function isImageVector()
     {
-        return $this->mime === 'image/svg+xml';
+        return $this->attributes['mime'] === 'image/svg+xml';
     }
 
     /**
@@ -917,7 +918,10 @@ class FileStorage extends Model
      */
     public function isSpoiler()
     {
-        return isset($this->pivot) && isset($this->pivot->is_spoiler) && (bool) $this->pivot->is_spoiler;
+        // written in a way to bypass mutators
+        return isset($this->attributes['pivot'])
+            && isset($this->attributes['pivot']->attributes['is_spoiler'])
+            && !!$this->attributes['pivot']->attributes['is_spoiler'];
     }
 
     /**
@@ -928,7 +932,7 @@ class FileStorage extends Model
      */
     public function isVideo()
     {
-        switch ($this->mime) {
+        switch ($this->attributes['mime']) {
             case 'video/3gp':
             case 'video/webm':
             case 'video/mp4':

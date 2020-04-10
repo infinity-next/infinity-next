@@ -147,6 +147,7 @@ class PostObserver
         // Finally fire event on OP, if it exists.
         if ($thread instanceof Post) {
             $thread->setRelation('board', $board);
+            $thread->load('replies');
             Event::dispatch(new \App\Events\ThreadNewReply($thread));
         }
 

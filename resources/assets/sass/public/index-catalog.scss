@@ -133,11 +133,12 @@ main.index-catalog {
                             margin: 0 auto;
                             max-width:100%;
                             overflow: hidden;
-                            text-align: cneter;
+                            text-align: center;
                         }
                              .attachment {
-                                display: inline;
+                                display: block;
                                 margin: 0;
+                                padding: 0;
                             }
                                  .attachment-img {
                                     display: inline-block;

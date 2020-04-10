@@ -40,9 +40,7 @@ class PostTest extends TestCase
         });
         $this->board->forceDelete();
 
-        $this->board = null;
-        $this->posts = null;
-        $this->thread = null;
+        unset($this->board, $this->posts, $this->thread);
     }
 
     public function testIndex()

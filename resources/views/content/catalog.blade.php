@@ -22,7 +22,7 @@
         <div class="threads">
             @foreach ($posts as $post)
             <article class="thread">
-                @include('content.board.catalog'), [
+                @include('content.board.catalog', [
                     'board'      => $board,
                     'post'       => $post,
                     'multiboard' => false,

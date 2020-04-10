@@ -50,8 +50,8 @@
             'element-code'   : "pre code",
             'element-quote'  : "blockquote",
 
-            'action-tab'     : ".post-action-tab",
-            'action-tabs'    : ".post-action-groups",
+            'action-tab'     : ".actions-anchor", // the dropdown button
+            'action-tabs'    : ".actions", // the dropdown menu
 
             'author'         : ".author",
             'author_id'      : ".authorid",

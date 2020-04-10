@@ -21,7 +21,7 @@
             ) }}
         </a>
 
-        @if ($post->attachments->count() > 0)
+        @if ($post->hasAttachments())
             @include('content.board.post.single.attachments')
         @endif
 
@@ -31,9 +31,9 @@
 
         @include('content.board.post.single.post')
 
-        @if ($post->replies->count())
+        @if (isset($details['replies']))
         <div class="catalog-replies">
-        @foreach ($post->replies as $reply)
+        @foreach ($post->getRelation('replies') as $reply)
         <a href="{{ $reply->getUrl() }}" class="catalog-reply">
             <time class="time-passed" datetime="{{ $reply->created_at->toDateTimeString() }}">{{ $reply->getTimeSince() }}</time> {{ $reply->getBodyExcerpt(100) }}
         </a>

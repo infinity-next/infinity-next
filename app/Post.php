@@ -143,9 +143,6 @@ class Post extends Model implements FormattableContract
      * @var array
      */
     protected $casts = [
-        'board_id' => 'int',
-        'board_uri' => 'string',
-        'reply_to' => 'int',
         'author_ip' => 'ip',
         'reply_last' => 'datetime',
         'bumped_last' => 'datetime',
@@ -157,7 +154,6 @@ class Post extends Model implements FormattableContract
         'locked_at' => 'datetime',
         'body_parsed_at' => 'datetime',
         'author_ip_nulled_at' => 'datetime',
-        'body_has_content' => 'boolean',
     ];
 
     public function attachments()
@@ -878,8 +874,8 @@ class Post extends Model implements FormattableContract
                 $route,
             ]), '.'),
             [
-                'board'   => $this->board_uri,
-                'post_id' => $this->board_id,
+                'board'   => $this->attributes['board_uri'],
+                'post_id' => $this->attributes['board_id'],
             ] + $params,
             $abs
         );
@@ -904,11 +900,11 @@ class Post extends Model implements FormattableContract
      */
     public function isAuthoredByClient()
     {
-        if (is_null($this->author_ip)) {
+        if (!isset($this->attributes['author_ip']) || is_null($this->attributes['author_ip'])) {
             return false;
         }
 
-        return new IP($this->author_ip) === new IP();
+        return new IP($this->attributes['author_ip']) === new IP();
     }
 
     /**
@@ -918,7 +914,7 @@ class Post extends Model implements FormattableContract
      */
     public function isBumpless()
     {
-        if ($this->email == 'sage') {
+        if ($this->attributes['email'] == 'sage') {
             return true;
         }
 
@@ -932,7 +928,7 @@ class Post extends Model implements FormattableContract
      */
     public function isBumplocked()
     {
-        return !is_null($this->bumplocked_at);
+        return isset($this->attributes['bumplocked_at']) && !!$this->attributes['bumplocked_at'];
     }
 
     /**
@@ -952,7 +948,7 @@ class Post extends Model implements FormattableContract
      */
     public function isDeleted()
     {
-        return !is_null($this->deleted_at);
+        return isset($this->attributes['deleted_at']) && !!$this->attributes['deleted_at'];
     }
 
     /**
@@ -962,7 +958,7 @@ class Post extends Model implements FormattableContract
      */
     public function isOp()
     {
-        return is_null($this->reply_to);
+        return !isset($this->attributes['reply_to']) || is_null($this->attributes['reply_to']);
     }
 
     /**
@@ -972,7 +968,7 @@ class Post extends Model implements FormattableContract
      */
     public function isLocked()
     {
-        return !is_null($this->locked_at);
+        return isset($this->attributes['locked_at']) && !!$this->attributes['locked_at'];
     }
 
     /**
@@ -982,7 +978,7 @@ class Post extends Model implements FormattableContract
      */
     public function isStickied()
     {
-        return !is_null($this->stickied_at);
+        return isset($this->attributes['stickied_at']) && !!$this->attributes['stickied_at'];
     }
 
     /**
@@ -1314,6 +1310,11 @@ class Post extends Model implements FormattableContract
         return $this->attribute['author_ip'] !== null;
     }
 
+    public function hasAttachments()
+    {
+        return $this->getRelation('attachments')->count() > 0;
+    }
+
     /**
      * Determines if this post has a body message.
      *
@@ -1337,7 +1338,7 @@ class Post extends Model implements FormattableContract
 
     public function hasDetails()
     {
-        return ($this->author || $this->subject);
+        return $this->attributes['author'] || $this->attributes['subject'];
     }
 
     /**
@@ -1847,19 +1848,19 @@ class Post extends Model implements FormattableContract
      */
     public function toHtml($catalog, $multiboard, $preview)
     {
-        if ($this->deleted_at) {
+        if ($this->isDeleted()) {
             return "";
         }
 
         $user = user();
 
         $rememberTags = [
-            "board_{$this->board->board_uri}",
-            "post_{$this->post_id}",
+            "board_{$this->attributes['board_uri']}",
+            "post_{$this->attributes['post_id']}",
             "post_html",
         ];
-        $rememberTimer = 30;
-        $rememberKey = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
+        $rememberTimer = now()->addHour();
+        $rememberKey = "board.{$this->attributes['board_uri']}.post_html.{$this->attributes['board_id']}";
         $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
 
@@ -1871,7 +1872,7 @@ class Post extends Model implements FormattableContract
 
                 // Statuses
                 'catalog' => $catalog,
-                'reply_to' => $this->reply_to ?: false,
+                'reply_to' => $this->attributes['reply_to'] ?: false,
                 'multiboard' => $multiboard,
                 'preview' => $preview,
             ])->render();
@@ -1883,21 +1884,20 @@ class Post extends Model implements FormattableContract
 
         if ($catalog) {
             $rememberTags[] = 'catalog_post';
-            $rememberTimer += 30;
+            $rememberTimer->addMinutes(60);
         }
 
         if ($multiboard) {
             $rememberTags[] = 'multiboard_post';
-            $rememberTimer -= 20;
+            $rememberTimer->subMinutes(40);
         }
 
         if ($preview) {
             $rememberTags[] = 'preview_post';
-            $rememberTimer -= 20;
+            $rememberTimer->subMinutes(40);
         }
 
-        return Cache::tags($rememberTags)
-            ->remember($rememberKey, $rememberTimer, $rememberClosure);
+        return Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 
     /**

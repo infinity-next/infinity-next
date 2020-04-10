@@ -17,8 +17,8 @@ class ThreadAutopruneOnReply extends Listener
         if (isset($event->post) && $event->post instanceof Post) {
             $post = $event->post;
 
-            if (!$event->post->isOp()) {
-                $post = $post->op;
+            if (!$post->isOp()) {
+                $post = $post->getRelation('thread');
             }
 
             $replyCount = $post->replies()->count();

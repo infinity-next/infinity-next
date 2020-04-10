@@ -25,8 +25,8 @@ class UploadTest extends TestCase
         $hash = $storage->hash;
         $this->assertEquals(strlen($hash), 64);
 
-        $storage->forceDelete();
         $storage->thumbnails()->forceDelete();
+        $storage->forceDelete();
         $this->assertEquals(FileStorage::where('hash', $storage->hash)->count(), 0);
     }
 
@@ -45,8 +45,8 @@ class UploadTest extends TestCase
         $hash = $storage->hash;
         $this->assertEquals(strlen($hash), 64);
 
-        $storage->forceDelete();
         $storage->thumbnails()->forceDelete();
+        $storage->forceDelete();
         $this->assertEquals(FileStorage::where('hash', $storage->hash)->count(), 0);
     }
 
