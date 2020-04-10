@@ -13,7 +13,7 @@
 @set('details',     $post->getAttributes())
 @set('catalog',     $catalog ?? false)
 @set('multiboard',  $multiboard ?? false)
-@set('preview',     $preview ?? (!isset($updater) || !$updater) && $post->body_too_long)
+@set('preview',     $preview ?? (!isset($updater) || !$updater) && $details['body_too_long'])
 @set('reply_to',    $reply_to ?? false)
 
 @include('content.board.post.single.container', [
@@ -23,7 +23,7 @@
     {{-- The interboard crown applied to posts in Overboard. --}}
     @if (!$catalog && !$reply_to && ($crown ?? false || $multiboard))
     @include('content.board.crown', [
-        'board' => $post->board,
+        'board' => $post->getRelation('board'),
     ])
     @endif
 
@@ -36,16 +36,15 @@
         ])
 
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
-        @if ($preview || $post->bans->count() || !is_null($post->updated_by))
+        @if ($preview || $post->getRelation('bans')->count() || !is_null($details['updated_by']))
         <div class="post-metas">
             @if ($preview)
             <div class="post-meta meta-see_more">@lang('board.preview_see_more', [
-                'url' => $post->getURL(),
+                'url' => $post->getUrl(),
             ])</div>
             @endif
 
-            @if ($post->bans->count())
-            @foreach ($post->bans as $ban)
+            @foreach ($post->getRelation('bans') as $ban)
             <div class="post-meta meta-ban_reason">
                 @if ($ban->justification != "")
                 <i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
@@ -54,7 +53,6 @@
                 @endif
             </div>
             @endforeach
-            @endif
 
             @if (!is_null($post->updated_by))
             <div class="post-meta meta-updated_by">

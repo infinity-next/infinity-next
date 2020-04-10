@@ -1,6 +1,6 @@
 @if ($post->attachments->count())
 @spaceless
-<div class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
+<div class="post-attachments attachment-count-{{ $post->getRelation('attachments')->count() }} {{ $post->getRelation('attachments')->count() > 1 ? "attachments-multi" : "attachments-single" }}">
     @foreach ($post->attachments as $attachment)
     @if (!isset($catalog) || !$catalog)
     @if ($attachment->isDeleted())

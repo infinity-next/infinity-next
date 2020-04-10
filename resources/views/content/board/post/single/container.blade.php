@@ -3,9 +3,9 @@
     }} {{
         $post->hasBody() ? 'has-body' : 'has-no-body'
     }} {{
-        $post->attachments->count() > 1 ? 'has-files' : ($post->attachments->count() > 0 ? 'has-file' : 'has-no-file')
+        $post->getRelation('attachments')->count() > 1 ? 'has-files' : ($post->getRelation('attachments')->count() > 0 ? 'has-file' : 'has-no-file')
     }} {{
-        $post->board->isWorksafe() ? 'sfw' : 'nsfw'
+        $post->getRelation('board')->isWorksafe() ? 'sfw' : 'nsfw'
     }}"
     id="post-{{ $details['board_uri'] }}-{{ $details['board_id'] }}"
     data-widget="post"

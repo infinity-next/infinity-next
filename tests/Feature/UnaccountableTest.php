@@ -7,26 +7,39 @@ use App\Auth\AnonymousUser;
 //use Illuminate\Foundation\Testing\WithoutMiddleware;
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
 //use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+//use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\SeedDatabase;
 use Tests\Testcase;
 
 class UnaccountableTest extends TestCase
 {
-    use SeedDatabase,
-        RefreshDatabase;
+    use SeedDatabase;
+
+    protected $board;
+    protected $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = new AnonymousUser;
+        $this->board = factory(Board::class)->create();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->board->forceDelete();
+        unset($this->board, $this->user, $this->image);
+    }
 
     public function testUnaccountable()
     {
-        $anon = new AnonymousUser;
-        $board = factory(Board::class)->create();
-
         $image = UploadedFile::fake()->image('avatar.jpg', 512, 512)->size(100);
 
-        $response = $this->actingAs($anon)
+        $response = $this->actingAs($this->user)
             ->post(route('board.file.put', [
-                'board' => $board,
+                'board' => $this->board,
                 'files' => [ $image, ]
             ]));
         $response->assertStatus(422);

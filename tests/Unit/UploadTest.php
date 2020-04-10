@@ -5,14 +5,12 @@ namespace Tests\Unit;
 use App\FileStorage;
 use App\Filesystem\Upload;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+//use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\File\File;
 
 class UploadTest extends TestCase
 {
-    use RefreshDatabase;
-
-    public function testImageUpload()
+    public function testImageUploadAndDestruction()
     {
         $file = new File(dirname(__FILE__) . "/../Dummy/donut.jpg", true);
         $upload = new Upload($file);
@@ -23,6 +21,13 @@ class UploadTest extends TestCase
         $this->assertCount(1, $storage->thumbnails);
         $this->assertInstanceOf(FileStorage::class, $storage->thumbnails[0]);
         $this->assertTrue($storage->thumbnails[0]->exists);
+
+        $hash = $storage->hash;
+        $this->assertEquals(strlen($hash), 64);
+
+        $storage->forceDelete();
+        $storage->thumbnails()->forceDelete();
+        $this->assertEquals(FileStorage::where('hash', $storage->hash)->count(), 0);
     }
 
     public function testVideoUpload()
@@ -36,6 +41,13 @@ class UploadTest extends TestCase
         $this->assertCount(1, $storage->thumbnails);
         $this->assertInstanceOf(FileStorage::class, $storage->thumbnails[0]);
         $this->assertTrue($storage->thumbnails[0]->exists);
+
+        $hash = $storage->hash;
+        $this->assertEquals(strlen($hash), 64);
+
+        $storage->forceDelete();
+        $storage->thumbnails()->forceDelete();
+        $this->assertEquals(FileStorage::where('hash', $storage->hash)->count(), 0);
     }
 
     public function testFuzzyban()

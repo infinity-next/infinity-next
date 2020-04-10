@@ -1588,9 +1588,11 @@ class Post extends Model implements FormattableContract
 
     public function scopeAndAttachments($query)
     {
-        return $query->with(['attachments' => function ($eagerQuery) {
-            $eagerQuery->orderBy('post_attachments.position');
-        }], 'attachments.thumbnails');
+        return $query
+            ->with(['attachments' => function ($eagerQuery) {
+                $eagerQuery->orderBy('post_attachments.position');
+            }])
+            ->with('attachments.thumbnails');
     }
 
     public function scopeAndBacklinks($query)
@@ -1851,6 +1853,8 @@ class Post extends Model implements FormattableContract
             return "";
         }
 
+        $user = user();
+
         $rememberTags = [
             "board_{$this->board->board_uri}",
             "post_{$this->post_id}",
@@ -1858,16 +1862,16 @@ class Post extends Model implements FormattableContract
         ];
         $rememberTimer = 30;
         $rememberKey = "board.{$this->board->board_uri}.post_html.{$this->board_id}";
-        $rememberClosure = function () use ($catalog, $multiboard, $preview) {
+        $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
 
             return \View::make(
                 $catalog ? 'content.board.catalog' : 'content.board.post',
                 [
                     // Models
-                    'board' => $this->board,
+                    'board' => $this->getRelation('board'),
                     'post' => $this,
-                    'user' => user(),
+                    'user' => $user,
 
                     // Statuses
                     'catalog' => $catalog,
@@ -1897,8 +1901,9 @@ class Post extends Model implements FormattableContract
             $rememberTimer -= 20;
         }
 
-        return Cache::tags($rememberTags)
-            ->remember($rememberKey, $rememberTimer, $rememberClosure);
+        return $rememberClosure();
+        //return Cache::tags($rememberTags)
+        //    ->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 
     /**

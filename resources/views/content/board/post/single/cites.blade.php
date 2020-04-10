@@ -1,3 +1,3 @@
 @foreach($post->getAllowedBacklinks($board) as $cite)
-{!! $cite->getBacklinkHTML($board, $post) !!}
+{!! $cite->getBacklinkHtml($board, $post) !!}
 @endforeach

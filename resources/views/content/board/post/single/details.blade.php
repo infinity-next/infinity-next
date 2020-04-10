@@ -16,7 +16,7 @@
     <span class="post-detail post-author">
         <strong class="post-detail-item author ugc">
         @if ($details['email'] && !$catalog)<a href="mailto:{{ $details['email'] }}" class="post-detail-item email">@endif
-            {{ $post->author ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
+            {{ $details['author'] ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
         @if ($details['email'] && !$catalog)</a>@endif
         </strong>
         {{-- Always here. Added in by CSS. --}}
@@ -31,7 +31,7 @@
     </span>
 
     @if (isset($details['flag_id']) && !is_null($details['flag_id']))
-        <span class="post-detail post-custom-flag" title="{{ $post->flag->getDisplayName() }}">{!! $post->flag->asHTML() !!}</span>
+        <span class="post-detail post-custom-flag" title="{{ $post->getRelation('flag')->getDisplayName() }}">{!! $post->flag->asHTML() !!}</span>
     @endif
 
     @if ($board->getConfig('postsAuthorCountry', false) && $post->getCountryCode() && (!isset($catalog) || !$catalog))
@@ -80,7 +80,7 @@
     @endif
 
     @if (!$catalog)
-        @if (!$reply_to && $post->isOP())
+        @if (!$reply_to && $post->isOp())
         <span class="post-detail detail-open">
             {{-- Mobile Last 50 Open
             <a class="thread-replies-open only-mobile" href="{{ $post->getUrl('l50')}}">{{
