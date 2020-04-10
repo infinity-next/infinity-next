@@ -1901,9 +1901,8 @@ class Post extends Model implements FormattableContract
             $rememberTimer -= 20;
         }
 
-        return $rememberClosure();
-        //return Cache::tags($rememberTags)
-        //    ->remember($rememberKey, $rememberTimer, $rememberClosure);
+        return Cache::tags($rememberTags)
+            ->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 
     /**
@@ -1962,8 +1961,9 @@ class Post extends Model implements FormattableContract
             return $thread;
         };
 
-        $thread = Cache::tags($rememberTags)
-            ->remember($rememberKey, $rememberTimer, $rememberClosure);
+        // NOTE: Cache is better leveraged in other areas.
+        //$thread = Cache::tags($rememberTags)
+        //    ->remember($rememberKey, $rememberTimer, $rememberClosure);
 
         if (!is_null($uri)) {
             return $thread->getReplySplice($uri);
