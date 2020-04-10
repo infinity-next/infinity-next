@@ -1207,7 +1207,8 @@ class Board extends Model
             return $threads;
         };
 
-        $threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+        //$threads = Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+        $threads = $rememberClosure();
 
         return $threads;
     }

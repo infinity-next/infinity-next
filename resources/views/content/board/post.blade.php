@@ -36,7 +36,7 @@
         ])
 
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
-        @if ($preview || isset($details['bans']) || !is_null($details['updated_by']))
+        @if ($preview || isset($details['bans']) || isset($details['updated_by']))
         <div class="post-metas">
             @if ($preview)
             <div class="post-meta meta-see_more">@lang('board.preview_see_more', [

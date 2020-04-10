@@ -96,6 +96,13 @@ class FileStorage extends Model
      */
      public $blob;
 
+     /**
+      * Cheeky static to store default Settings::get('attachmentName') after first call
+      *
+      * @var string
+      */
+     public static $nameFormat;
+
     /**
      * Ties database triggers to the model.
      *
@@ -348,21 +355,26 @@ class FileStorage extends Model
      */
     public function getFileName($nameFormat = null)
     {
+        // Get admin settings for filename format.
         if (is_null($nameFormat)) {
-            // Build a thumbnail using the admin settings.
-            $nameFormat = Settings::get('attachmentName');
+            if (is_null(static::$nameFormat)) {
+                static::$nameFormat = $nameFormat = Settings::get('attachmentName');
+            }
+            else {
+                $nameFormat = static::$nameFormat;
+            }
         }
 
         $bits['t'] = $this->first_uploaded_at->timestamp;
         $bits['i'] = 0;
         $bits['n'] = $bits['t'];
 
-        if (isset($this->pivot)) {
-            if (isset($this->pivot->position)) {
-                $bits['i'] = $this->pivot->position;
+        if (isset($this->attribute['pivot'])) {
+            if (isset($this->attribute['pivot']->attribute['position'])) {
+                $bits['i'] = $this->attribute['pivot']->attribute['position'];
             }
 
-            if (isset($this->pivot->filename)) {
+            if (isset($this->attribute['pivot']->attribute['filename'])) {
                 $bits['n'] = $this->getBaseFileName();
             }
         }
