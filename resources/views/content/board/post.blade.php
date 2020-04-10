@@ -36,7 +36,7 @@
         ])
 
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
-        @if ($preview || $post->getRelation('bans')->count() || !is_null($details['updated_by']))
+        @if ($preview || isset($details['bans']) || !is_null($details['updated_by']))
         <div class="post-metas">
             @if ($preview)
             <div class="post-meta meta-see_more">@lang('board.preview_see_more', [
@@ -44,7 +44,7 @@
             ])</div>
             @endif
 
-            @foreach ($post->getRelation('bans') as $ban)
+            @foreach ($details['bans'] ?? [] as $ban)
             <div class="post-meta meta-ban_reason">
                 @if ($ban->justification != "")
                 <i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
@@ -54,7 +54,7 @@
             </div>
             @endforeach
 
-            @if (!is_null($post->updated_by))
+            @if (isset($details['updated_by']))
             <div class="post-meta meta-updated_by">
                 <i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [
                     'name' => $details['updated_by_username'],

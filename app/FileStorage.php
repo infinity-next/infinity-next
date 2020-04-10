@@ -63,18 +63,9 @@ class FileStorage extends Model
      * @var array
      */
     protected $casts = [
-        'source_id' => "int",
-        'hash' => 'string',
-        'phash' => 'int',
-        'filesize' => "int",
-        'file_width' => "int",
-        'file_height' => "int",
-        'mime' => "string",
-        'meta' => "string",
         'banned_at' => "datetime",
         'first_uploaded_at' => "datetime",
         'last_uploaded_at' => "datetime",
-        'upload_count' => "int",
     ];
 
     /**

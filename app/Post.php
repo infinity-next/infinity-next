@@ -1311,7 +1311,7 @@ class Post extends Model implements FormattableContract
      */
     public function hasAuthorIp()
     {
-        return $this->author_ip !== null;
+        return $this->attribute['author_ip'] !== null;
     }
 
     /**
@@ -1588,11 +1588,9 @@ class Post extends Model implements FormattableContract
 
     public function scopeAndAttachments($query)
     {
-        return $query
-            ->with(['attachments' => function ($eagerQuery) {
-                $eagerQuery->orderBy('post_attachments.position');
-            }])
-            ->with('attachments.thumbnails');
+        return $query->with(['attachments' => function ($eagerQuery) {
+            $eagerQuery->orderBy('post_attachments.position')->with('thumbnails');
+        }]);
     }
 
     public function scopeAndBacklinks($query)
@@ -1865,21 +1863,18 @@ class Post extends Model implements FormattableContract
         $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
 
-            return \View::make(
-                $catalog ? 'content.board.catalog' : 'content.board.post',
-                [
-                    // Models
-                    'board' => $this->getRelation('board'),
-                    'post' => $this,
-                    'user' => $user,
+            return view( $catalog ? 'content.board.catalog' : 'content.board.post', [
+                // Models
+                'board' => $this->getRelation('board'),
+                'post' => $this,
+                'user' => $user,
 
-                    // Statuses
-                    'catalog' => $catalog,
-                    'reply_to' => $this->reply_to ?: false,
-                    'multiboard' => $multiboard,
-                    'preview' => $preview,
-                ]
-            )->render();
+                // Statuses
+                'catalog' => $catalog,
+                'reply_to' => $this->reply_to ?: false,
+                'multiboard' => $multiboard,
+                'preview' => $preview,
+            ])->render();
         };
 
         if (!user()->isAnonymous()) {
