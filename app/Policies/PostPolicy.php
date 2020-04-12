@@ -46,11 +46,13 @@ class PostPolicy extends AbstractPolicy
     public function bumplock(?User $user, Post $post)
     {
         // This only applies to OPs.
-        if (!is_null($post->reply_to))
+        if (!is_null($post->reply_to)) {
             return Response::deny('auth.post.only_on_an_op');
+        }
 
-        if ($user->can('board.post.bumplock', $post->board_uri))
+        if ($user->permission('board.post.bumplock', $post->board_uri)) {
             return Response::allow();
+        }
 
         return Response::deny('auth.post.cannot_bumplock');
     }
@@ -67,8 +69,9 @@ class PostPolicy extends AbstractPolicy
      */
     public function ban(?User $user, Post $post)
     {
-        if (!$post->hasAuthorIp())
+        if (!$post->hasAuthorIp()) {
             return Response::deny('auth.post.no_ip_address');
+        }
 
         return $user->can('ban', $post->board)
             ? Response::allow()
@@ -240,10 +243,11 @@ class PostPolicy extends AbstractPolicy
     public function lock(?User $user, Post $post)
     {
         // This only applies to OPs.
-        if (!is_null($post->reply_to))
+        if (!is_null($post->reply_to)) {
             return Response::deny('auth.post.only_on_an_op');
+        }
 
-        return $user->can('board.post.lock', $post)
+        return $user->permission('board.post.lock', $post)
             ? Response::allow()
             : Response::deny('auth.post.cannot_lock');
     }
