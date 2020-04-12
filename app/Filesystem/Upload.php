@@ -67,6 +67,11 @@ class Upload
         }
     }
 
+    public function getThumbnail()
+    {
+        return $this->thumbnails->random();
+    }
+
     public function open($file)
     {
         if ($file instanceof FileStorage) {

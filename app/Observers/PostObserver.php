@@ -93,9 +93,15 @@ class PostObserver
 
                         $attachment = new PostAttachment;
                         $attachment->post_id = $post->post_id;
-                        $attachment->file_id = $storage->file_id;
                         $attachment->filename = urlencode("{$fileName}.{$fileExt}");
                         $attachment->is_spoiler = (bool) $spoiler;
+
+                        $attachment->setRelation('file', $storage);
+                        $attachment->file_id = $storage->file_id;
+
+                        $thumbnail = $uploader->getThumbnail();
+                        $attachment->setRelation('thumbnail', $thumbnail);
+                        $attachment->thumbnail_id = $thumbnail->file_id;
 
                         $attachment->position = $index;
                         $uploads[] = $attachment;
@@ -103,7 +109,7 @@ class PostObserver
                 }
             }
 
-            $post->attachmentLinks()->saveMany($uploads);
+            $post->attachments()->saveMany($uploads);
             FileStorage::whereIn('hash', $hashes)->increment('upload_count');
         }
 

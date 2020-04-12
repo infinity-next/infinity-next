@@ -41,15 +41,7 @@ class PostAttachment extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'post_id' => 'int',
-        'file_id' => 'int',
-        'thumbnail_id' => 'int',
-        'filename' => 'string',
-        'is_spoiler' => 'bool',
-        'is_deleted' => 'bool',
-        'position' => 'int',
-    ];
+    protected $casts = [];
 
     /**
      * Indicates if Laravel should set created_at and updated_at timestamps.
@@ -64,6 +56,21 @@ class PostAttachment extends Model
      * @var array
      */
     public $incrementing = false;
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'board',
+        'post',
+    ];
+
+    public function board()
+    {
+        return $this->hasOneThrough(Board::class, Post::class, 'post_id', 'board_uri', 'post_id', 'board_uri');
+    }
 
     public function post()
     {
@@ -232,7 +239,7 @@ class PostAttachment extends Model
      */
     public function toHtml($maxDimension = null)
     {
-        $board = $this->post->board;
+        $board = $this->board;
         $file = null;
         $thumbnail = null;
         $deleted = !!$this->attributes['is_deleted'];
@@ -316,7 +323,7 @@ class PostAttachment extends Model
     public function getThumbnailUrl()
     {
         if ($this->attributes['is_spoiler']) {
-            return $this->post->board->getSpoilerUrl();
+            return $this->board->getSpoilerUrl();
         }
         else if ($this->attributes['is_deleted']) {
             return;

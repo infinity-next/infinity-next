@@ -9,7 +9,7 @@
     </figure>
     @else
     <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $attachment->file->getHtmlClasses() }}" data-widget="attachment">
-        <a class="attachment-link" href="{!! $attachment->getUrl($board) !!}" data-download-url="{!! $attachment->getUrl($board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($board) !!}">
+        <a class="attachment-link" href="{!! $attachment->getUrl() !!}" data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml() !!}
         </a>
 

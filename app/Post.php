@@ -1593,7 +1593,7 @@ class Post extends Model implements FormattableContract
     {
         return $query->with(['attachments' => function ($eagerQuery) {
             $eagerQuery->orderBy('position');
-        }]);
+        }])->with('attachments.file', 'attachments.thumbnail');
     }
 
     public function scopeAndBacklinks($query)
@@ -1865,6 +1865,11 @@ class Post extends Model implements FormattableContract
         $rememberKey = "board.{$this->attributes['board_uri']}.post_html.{$this->attributes['board_id']}";
         $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
+
+            foreach ($this->attachments as $attachment) {
+                $attachment->setRelation('post', $this);
+                $attachment->setRelation('board', $this->getRelation('board'));
+            }
 
             return view( $catalog ? 'content.board.catalog' : 'content.board.post', [
                 // Models
