@@ -69,7 +69,7 @@ class Upload
 
     public function getThumbnail()
     {
-        return $this->thumbnails->random();
+        return $this->thumbnails->count() > 0 ? $this->thumbnails->first() : null;
     }
 
     public function open($file)

@@ -100,8 +100,10 @@ class PostObserver
                         $attachment->file_id = $storage->file_id;
 
                         $thumbnail = $uploader->getThumbnail();
-                        $attachment->setRelation('thumbnail', $thumbnail);
-                        $attachment->thumbnail_id = $thumbnail->file_id;
+                        if ($thumbnail instanceof FileStorage) {
+                            $attachment->setRelation('thumbnail', $thumbnail);
+                            $attachment->thumbnail_id = $thumbnail->file_id;
+                        }
 
                         $attachment->position = $index;
                         $uploads[] = $attachment;
