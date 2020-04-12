@@ -69,7 +69,7 @@ class PostAttachment extends Model
         return $this->belongsTo(Post::class, 'post_id');
     }
 
-    public function storage()
+    public function file()
     {
         return $this->belongsTo(FileStorage::class, 'file_id');
     }
@@ -92,11 +92,33 @@ class PostAttachment extends Model
 
         // Fire events on post created.
         static::created(function (PostAttachment $attachment) {
-            if (!is_link($attachment->storage->getFullPath())) {
-                $attachment->storage->upload_count += 1;
-                $attachment->storage->save();
+            if (!is_link($attachment->file->getFullPath())) {
+                $attachment->file->upload_count += 1;
+                $attachment->file->save();
             }
         });
+    }
+
+    /**
+     * Supplies a download name.
+     *
+     * @return string
+     */
+    public function getDownloadName()
+    {
+        return "{$this->attribute['filename']}.{$this->file->guessExtension()}";
+    }
+
+    /**
+     * Returns the attachment's extension.
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        $pathinfo = pathinfo($this->attribute['filename']);
+
+        return $pathinfo['extension'];
     }
 
     /**
@@ -122,7 +144,7 @@ class PostAttachment extends Model
     {
         $query = static::where('is_spoiler', false)
             ->where('is_deleted', false)
-            ->whereHas('storage', function ($query) {
+            ->whereHas('file', function ($query) {
                 $query->whereHas('thumbnails');
             })
             ->whereHas('post.board', function ($query) use ($sfw) {
@@ -130,8 +152,7 @@ class PostAttachment extends Model
                 $query->where('is_overboard', '=', true);
                 $query->where('is_worksafe', '=', $sfw);
             })
-            ->with('storage')
-            ->with('post.board')
+            ->with('file', 'thumbnail', 'post.board')
             ->take($number);
 
         if ($query->getQuery()->getConnection() instanceof \Illuminate\Database\PostgresConnection) {
@@ -149,6 +170,182 @@ class PostAttachment extends Model
         }
 
         return $query->get();
+    }
+
+    /**
+     * Returns a removal URL.
+     *
+     * @param \App\Board $board
+     *
+     * @return string
+     */
+    public function getRemoveUrl()
+    {
+        return route('board.file.delete', [
+            'attachment' => $this->attributes['attachment_id'],
+            'board' => $this->post->attributes['board_uri'],
+        ], false);
+    }
+
+    /**
+     * Truncates the middle of a filename to show extension.
+     *
+     * @return string Filename.
+     */
+    public function getShortFilename()
+    {
+        $filename = urldecode($this->filename);
+
+        if (mb_strlen($filename) <= 20) {
+            return $filename;
+        }
+
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $name = pathinfo($filename, PATHINFO_FILENAME);
+        $name = mb_substr($name, 0, 15);
+
+        return "{$name}... .{$ext}";
+    }
+
+    /**
+     * Returns a spoiler URL.
+     *
+     * @param \App\Board $board
+     *
+     * @return string
+     */
+    public function getSpoilerUrl()
+    {
+        return route('board.file.spoiler', [
+            'attachment' => $this->attributes['attachment_id'],
+            'board' => $this->post->attributes['board_uri'],
+        ], false);
+    }
+
+    /**
+     * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
+     *
+     * @param  null|string|int  $maxWidth Optional. Maximum width constraint. Accepts 'auto'. Defaults null.
+     *
+     * @return string as HTML
+     */
+    public function toHtml($maxDimension = null)
+    {
+        $board = $this->post->board;
+        $file = null;
+        $thumbnail = null;
+        $deleted = !!$this->attributes['is_deleted'];
+        $spoiler = !!$this->attributes['is_spoiler'];
+
+        if ($deleted) {
+            $url = $board->getAssetUrl('file_deleted');
+        }
+        else {
+            $file = $this->file;
+            $ext = $file->guessExtension();
+            $url = media_url("static/img/filetypes/{$ext}.svg", false);
+            $thumbnail = $this->thumbnail;
+
+            if ($spoiler) {
+                $url = $board->getAssetUrl('file_spoiler');
+            }
+            elseif ($this->file->isImageVector()) {
+                $url = $this->getUrl();
+            }
+            elseif ($file->isAudio() || $file->isImage() || $file->isVideo() || $file->isDocument()) {
+                if ($thumbnail instanceof FileStorage) {
+                    $url = $this->getThumbnailUrl();
+                }
+                elseif ($this->isAudio()) {
+                    $url = media_url("static/img/assets/audio.gif", false);
+                }
+            }
+        }
+
+        $classes = $deleted ? null : $file->getHtmlClasses();
+        $hash = $deleted ? null : $file->attributes['hash'];
+        $mime = $deleted ? null : $file->attributes['mime'];
+
+        // Measure dimensions.
+        $height = 'auto';
+        $width = 'auto';
+        $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 250);
+        $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 250);
+
+        // configuration for an actual thumbnail image
+        if ($thumbnail instanceof FileStorage && !$spoiler && !$deleted) {
+            $height = $oHeight.'px';
+            $width = $thumbnail->attributes['file_width'].'px';
+
+            if ($maxDimension == "auto") {
+                $height = "auto";
+                $width = "auto";
+            }
+            else if (is_int($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension)) {
+                if ($oWidth > $oHeight) {
+                    $height = 'auto';
+                    $width = $maxDimension.'px';
+                }
+                elseif ($oWidth < $oHeight) {
+                    $height = $maxDimension.'px';
+                    $width = 'auto';
+                }
+                else {
+                    $height = $maxDimension.'px';
+                    $width = $maxDimension.'px';
+                }
+            }
+        }
+        // board assets and placeholder file extension images
+        else {
+            $width = $maxDimension ? "{$maxDimension}px" : Settings::get('attachmentThumbnailSize', 250).'px';
+            $height = 'auto';
+        }
+
+        return "<div class=\"attachment-wrapper\">" .
+            "<img class=\"attachment-img {$classes}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"height: {$height}; width: {$width};\"/>" .
+        "</div>";
+    }
+
+    /**
+     * Supplies a clean URL for downloading an attachment on a board.
+     *
+     * @return string
+     */
+    public function getThumbnailUrl()
+    {
+        if ($this->attributes['is_spoiler']) {
+            return $this->post->board->getSpoilerUrl();
+        }
+
+        $params = [
+            'hash' => $this->thumbnail->attributes['hash'],
+            'filename' => "thumb_".$this->getDownloadName().".".$this->thumbnail->guessExtension(),
+        ];
+
+        if (!config('app.url_media', false)) {
+            $params['board'] = $this->post->attributes['board_uri'];
+        }
+
+        return route('static.file.hash', $params, false);
+    }
+    /**
+     * Supplies a clean URL for downloading an attachment on a board.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        $params = [
+            'hash' => $this->file->attributes['hash'],
+            'filename' => $this->getDownloadName(),
+        ];
+
+        if (!config('app.url_media', false)) {
+            $params['board'] = $this->post->attributes['board_uri'];
+        }
+
+        return route('static.file.hash', $params, config('app.url_media', false));
     }
 
     public function scopeWhereForBoard($query, Board $board)

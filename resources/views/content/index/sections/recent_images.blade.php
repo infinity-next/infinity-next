@@ -2,14 +2,12 @@
     <div class="smooth-box">
         <h2 class="index-title">@lang('index.title.recent_images')</h2>
         <ul class="recent-images selfclear">
-            @foreach (\App\PostAttachment::getRecentImages(30, false) as $file)
-                @if ($file->storage->hasThumb())
-                <li class="recent-image {{ $file->post->board->isWorksafe() ? 'sfw' : 'nsfw' }}">
-                    <a class="recent-image-link" href="{{ $file->post->getURL() }}">
-                        {!! $file->storage->getThumbnailHtml($file->post->board, 116) !!}
-                    </a>
-                </li>
-                @endif
+            @foreach (\App\PostAttachment::getRecentImages(30, false) as $attachment)
+            <li class="recent-image {{ $attachment->post->board->isWorksafe() ? 'sfw' : 'nsfw' }}">
+                <a class="recent-image-link" href="{{ $attachment->post->getUrl() }}">
+                    {!! $attachment->toHtml(116) !!}
+                </a>
+            </li>
             @endforeach
         </ul>
     </div>

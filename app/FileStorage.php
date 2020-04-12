@@ -544,7 +544,7 @@ class FileStorage extends Model
      *
      * @return string
      */
-    public function getThumbnailClasses()
+    public function getHtmlClasses()
     {
         $ext = $this->guessExtension();
         $type = 'other';
@@ -585,138 +585,6 @@ class FileStorage extends Model
         $classHTML = implode(' ', $classes);
 
         return $classHTML;
-    }
-
-    /**
-     * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
-     *
-     * @param \App\Board $board    The board this thumbnail will belong to.
-     * @param int        $maxWidth Optional. Maximum width constraint. Defaults null.
-     *
-     * @return string as HTML
-     */
-    public function getThumbnailHtml(?Board $board = null, $maxDimension = null)
-    {
-        $ext = $this->guessExtension();
-        $mime = $this->attributes['mime'];
-        $url = media_url("static/img/filetypes/{$ext}.svg", false);
-        $spoil = $this->isSpoiler();
-        $deleted = $this->isDeleted();
-        $hash = $deleted ? null : $this->attributes['hash'];
-        $thumbnail = $this->thumbnails()->first();
-
-
-        if ($deleted) {
-            $url = $board->getAssetUrl('file_deleted');
-        }
-        elseif ($spoil) {
-            $url = $board->getAssetUrl('file_spoiler');
-        }
-        elseif ($this->isImageVector()) {
-            $url = $this->getUrl($board);
-        }
-        elseif ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
-            if ($thumbnail instanceof FileStorage) {
-                $url = $thumbnail->getUrl($board);
-            }
-            elseif ($this->isAudio()) {
-                $url = media_url("static/img/assets/audio.gif", false);
-            }
-        }
-
-        $classHTML = $this->getThumbnailClasses();
-
-        // Measure dimensions.
-        $height = 'auto';
-        $width = 'auto';
-        $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 250);
-        $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 250);
-
-        // configuration for an actual thumbnail image
-        if ($this->hasThumb() && !$this->isSpoiler() && !$this->isDeleted()) {
-            $height = $oHeight.'px';
-            $width = $thumbnail->attributes['file_width'].'px';
-
-            if ($maxDimension == "auto") {
-                $height = "auto";
-                $width = "auto";
-            }
-            else if (is_int($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension)) {
-                if ($oWidth > $oHeight) {
-                    $height = 'auto';
-                    $width = $maxDimension.'px';
-                }
-                elseif ($oWidth < $oHeight) {
-                    $height = $maxDimension.'px';
-                    $width = 'auto';
-                }
-                else {
-                    $height = $maxDimension.'px';
-                    $width = $maxDimension.'px';
-                }
-            }
-        }
-        // board assets and placeholder file extension images
-        else {
-            $width = $maxDimension ? "{$maxDimension}px" : Settings::get('attachmentThumbnailSize', 250).'px';
-            $height = 'auto';
-        }
-
-        return "<div class=\"attachment-wrapper\">" .
-            "<img class=\"attachment-img {$classHTML}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"height: {$height}; width: {$width};\"/>" .
-        "</div>";
-    }
-
-    /**
-     * Supplies a clean thumbnail URL for embedding an attachment on a board.
-     *
-     * @param \App\Board $board
-     *
-     * @return string
-     */
-    public function getThumbnailUrl(?Board $board = null)
-    {
-        $ext = $this->guessExtension();
-        $thumbnail = $this->thumbnails->first();
-
-        if ($board instanceof Board && $this->isSpoiler()) {
-            return $board->getSpoilerUrl();
-        }
-
-        if ($this->isImage() || $this->isDocument() || $this->isVideo()) {
-            $ext = "webp";
-        }
-        elseif ($this->isAudio()) {
-            if (!($thumbnail instanceof static)) {
-                if ($board instanceof Board) {
-                    return $board->getAudioArtURL();
-                }
-                else {
-                    return asset('static/img/assets/audio.gif');
-                }
-            }
-
-            $ext = 'webp';
-        }
-        elseif ($this->isImageVector()) {
-            // With the SVG filetype, we do not generate a thumbnail, so just serve the actual SVG.
-            return $this->getUrl($board);
-        }
-
-        if ($board instanceof Board) {
-            $params = [
-                'board' => $board,
-                'hash' => $thumbnail ? $thumbnail->hash : $this->hash,
-                'filename' => "thumb_".$this->getDownloadName().".{$ext}",
-            ];
-
-            return route('static.file.hash', $params, false);
-        }
-
-        return route('panel.site.files.send', [
-            'hash' => $this->attributes['hash'],
-            'filename' => "{$this->attributes['file_id']}.{$ext}",
-        ], false);
     }
 
     /**

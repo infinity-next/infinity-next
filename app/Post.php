@@ -158,14 +158,9 @@ class Post extends Model implements FormattableContract
 
     public function attachments()
     {
-        return $this->belongsToMany(FileStorage::class, 'post_attachments', 'post_id', 'file_id')
-            ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position')
-            ->orderBy('pivot_position', 'asc');
-    }
-
-    public function attachmentLinks()
-    {
-        return $this->hasMany(PostAttachment::class, 'post_id');
+        return $this->hasMany(PostAttachment::class, 'post_id')
+            ->with('file', 'thumbnail')
+            ->orderBy('position', 'asc');
     }
 
     public function backlinks()
@@ -222,6 +217,13 @@ class Post extends Model implements FormattableContract
     public function thread()
     {
         return $this->belongsTo(static::class, 'reply_to', 'post_id');
+    }
+
+    public function thumbnails()
+    {
+        return $this->belongsToMany(FileStorage::class, 'post_attachments', 'post_id', 'thumbnail_id')
+            ->withPivot('attachment_id', 'filename', 'is_spoiler', 'is_deleted', 'position')
+            ->orderBy('pivot_position', 'asc');
     }
 
     public function replies()
@@ -1590,7 +1592,7 @@ class Post extends Model implements FormattableContract
     public function scopeAndAttachments($query)
     {
         return $query->with(['attachments' => function ($eagerQuery) {
-            $eagerQuery->orderBy('post_attachments.position')->with('thumbnails');
+            $eagerQuery->orderBy('position');
         }]);
     }
 
