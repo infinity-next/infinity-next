@@ -57,7 +57,7 @@
             @if (isset($details['updated_by']))
             <div class="post-meta meta-updated_by">
                 <i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [
-                    'name' => isset($details['updated_by_username']) ? $details['updated_by_username'] @lang('board.anonymous'),
+                    'name' => isset($details['updated_by_username']) ? $details['updated_by_username'] : trans('board.anonymous'),
                     'time' => $post->updated_at
                 ])
             </div>
