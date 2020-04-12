@@ -263,18 +263,6 @@ class FileStorage extends Model
     }
 
     /**
-     * Returns the attachment's base filename.
-     *
-     * @return string
-     */
-    public function getBaseFileName()
-    {
-        $pathinfo = pathinfo($this->attributes['pivot']->attributes['filename']);
-
-        return $pathinfo['filename'];
-    }
-
-    /**
      * Returns the storage directory, minus the file name.
      *
      * @return string
@@ -284,16 +272,6 @@ class FileStorage extends Model
         $prefix = $this->getHashPrefix($this->hash);
 
         return "attachments/full/{$prefix}";
-    }
-
-    /**
-     * Supplies a download name.
-     *
-     * @return string
-     */
-    public function getDownloadName()
-    {
-        return "{$this->getFileName()}.{$this->guessExtension()}";
     }
 
     /**
@@ -340,48 +318,6 @@ class FileStorage extends Model
     public function getFileDimensions()
     {
         return "{$this->attributes['file_width']}x{$this->attributes['file_height']}";
-    }
-
-    /**
-     * Determines and returns the "xxx" of "/url/xxx.ext" for URLs.
-     *
-     * @param string|null $format Optional. The token syntax for the filename. Defaults to site setting.
-     *
-     * @return string
-     */
-    public function getFileName($nameFormat = null)
-    {
-        // Get admin settings for filename format.
-        if (is_null($nameFormat)) {
-            if (is_null(static::$nameFormat)) {
-                static::$nameFormat = $nameFormat = Settings::get('attachmentName');
-            }
-            else {
-                $nameFormat = static::$nameFormat;
-            }
-        }
-
-        $bits['t'] = $this->first_uploaded_at->timestamp;
-        $bits['i'] = 0;
-        $bits['n'] = $bits['t'];
-
-        if (isset($this->attributes['pivot'])) {
-            if (isset($this->attributes['pivot']->attributes['position'])) {
-                $bits['i'] = $this->attributes['pivot']->attributes['position'];
-            }
-
-            if (isset($this->attributes['pivot']->attributes['filename'])) {
-                $bits['n'] = $this->getBaseFileName();
-            }
-        }
-
-        $attachmentName = $nameFormat;
-
-        foreach ($bits as $bitKey => $bitVal) {
-            $attachmentName = str_replace("%{$bitKey}", $bitVal, $attachmentName);
-        }
-
-        return $attachmentName;
     }
 
     /**
@@ -495,30 +431,6 @@ class FileStorage extends Model
         return $board->getUrl('file.delete', [
             'attachment' => $this->pivot->attachment_id,
         ], false);
-    }
-
-    /**
-     * Truncates the middle of a filename to show extension.
-     *
-     * @return string Filename.
-     */
-    public function getShortFilename()
-    {
-        if (isset($this->pivot) && isset($this->pivot->filename)) {
-            $filename = urldecode($this->pivot->filename);
-
-            if (mb_strlen($filename) <= 20) {
-                return $filename;
-            }
-
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            $name = pathinfo($filename, PATHINFO_FILENAME);
-            $name = mb_substr($name, 0, 15);
-
-            return "{$name}... .{$ext}";
-        }
-
-        return $this->getFileName();
     }
 
     /**

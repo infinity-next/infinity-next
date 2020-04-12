@@ -67,6 +67,13 @@ class PostAttachment extends Model
         'post',
     ];
 
+     /**
+      * Cheeky static to store default Settings::get('attachmentName') after first call
+      *
+      * @var string
+      */
+     public static $nameFormat;
+
     public function board()
     {
         return $this->hasOneThrough(Board::class, Post::class, 'post_id', 'board_uri', 'post_id', 'board_uri');
@@ -114,7 +121,8 @@ class PostAttachment extends Model
      */
     public function getDownloadName()
     {
-        return pathinfo($this->attributes['filename'], PATHINFO_FILENAME) . "." . $this->file->guessExtension();
+        return $this->getFormattedName() . "." . $this->file->guessExtension();
+        //return pathinfo($this->attributes['filename'], PATHINFO_FILENAME) . "." . $this->file->guessExtension();
     }
 
     /**
@@ -125,6 +133,45 @@ class PostAttachment extends Model
     public function getExtension()
     {
         return pathinfo($this->attributes['filename'], PATHINFO_EXTENSION );
+    }
+
+    /**
+     * Returns a filename that is compliant with the site configuration.
+     *
+     * @return string
+     */
+    public function getFormattedName($thumbnail = false)
+    {
+        $nameFormat = static::$nameFormat;
+
+        // Get admin settings for filename format.
+        if (is_null(static::$nameFormat)) {
+            static::$nameFormat = $nameFormat = Settings::get('attachmentName');
+        }
+
+        $bits['t'] = $this->post->created_at->timestamp;
+        $bits['i'] = 0;
+        $bits['n'] = $bits['t'];
+
+        if (isset($this->attributes['position'])) {
+            $bits['i'] = $this->attributes['position'];
+        }
+
+        if (isset($this->attributes['filename'])) {
+            $bits['n'] = pathinfo($this->attributes['filename'], PATHINFO_FILENAME);
+        }
+
+        $attachmentName = $nameFormat;
+
+        foreach ($bits as $bitKey => $bitVal) {
+            $attachmentName = str_replace("%{$bitKey}", $bitVal, $attachmentName);
+        }
+
+        if ($thumbnail) {
+            $attachmentName .= "s";
+        }
+
+        return $attachmentName;
     }
 
     /**
@@ -320,7 +367,7 @@ class PostAttachment extends Model
      */
     public function getThumbnailName()
     {
-        return "thumb_" . pathinfo($this->attributes['filename'], PATHINFO_FILENAME) . ".webp";
+        return $this->getFormattedName(true) . ".webp";
     }
 
     /**

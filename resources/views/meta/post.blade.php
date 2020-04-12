@@ -9,7 +9,7 @@
 @foreach($thread->attachments as $attachment)
     @if ($attachment->thumbnail)
         @set('ogHasImage', true)
-        <meta property="og:image" content="{{ url($attachment->thumbnail->getUrl($thread->board)) }}" />
+        <meta property="og:image" content="{{ url($attachment->getThumbnailUrl()) }}" />
         @break
     @endif
 @endforeach
