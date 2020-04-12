@@ -826,7 +826,7 @@ class FileStorage extends Model
      */
     public function hasThumb()
     {
-        return $this->thumbnails()->count() > 0;
+        return $this->thumbnails ? $this->thumbnails->count() : 0;
     }
 
     /**
