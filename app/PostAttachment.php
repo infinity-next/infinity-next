@@ -114,7 +114,7 @@ class PostAttachment extends Model
      */
     public function getDownloadName()
     {
-        return "{$this->attributes['filename']}.{$this->file->guessExtension()}";
+        return pathinfo($this->attributes['filename'], PATHINFO_FILENAME) . "." . $this->file->guessExtension();
     }
 
     /**
@@ -124,9 +124,7 @@ class PostAttachment extends Model
      */
     public function getExtension()
     {
-        $pathinfo = pathinfo($this->attributes['filename']);
-
-        return $pathinfo['extension'];
+        return pathinfo($this->attributes['filename'], PATHINFO_EXTENSION );
     }
 
     /**
@@ -316,6 +314,16 @@ class PostAttachment extends Model
     }
 
     /**
+     * Supplies a filename for thumbnails.
+     *
+     * @return string
+     */
+    public function getThumbnailName()
+    {
+        return "thumb_" . pathinfo($this->attributes['filename'], PATHINFO_FILENAME) . ".webp";
+    }
+
+    /**
      * Supplies a clean URL for downloading an attachment on a board.
      *
      * @return string
@@ -331,7 +339,7 @@ class PostAttachment extends Model
 
         $params = [
             'hash' => $this->thumbnail->attributes['hash'],
-            'filename' => "thumb_".$this->getDownloadName().".".$this->thumbnail->guessExtension(),
+            'filename' => $this->getThumbnailName(),
         ];
 
         if (!config('app.url_media', false)) {

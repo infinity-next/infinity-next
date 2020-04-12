@@ -191,7 +191,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::pattern('attachment', '[0-9]\d*');
         Route::pattern('board', Board::URI_PATTERN);
         Route::pattern('hash', '[A-Fa-f0-9]{64}');
-        Route::pattern('filename', "^[\w\-. ]+$");
+        Route::pattern('filename', "^[a-z0-9_.@()-\+]+$");
         Route::pattern('id', '[0-9]\d*');
         Route::pattern('post_id', '[0-9]\d*');
         Route::pattern('splice', '(l)?(\d+)?(-)?(\d+)?');
