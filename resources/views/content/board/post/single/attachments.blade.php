@@ -61,7 +61,7 @@
     @endif
     @else
     <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }}" data-widget="attachment">
-        <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl($post->board) !!}" data-thumb-url="{!! $attachment->getThumbnailUrl($post->board) !!}">
+        <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml('auto') !!}
         </a>
     </div>

@@ -318,6 +318,9 @@ class PostAttachment extends Model
         if ($this->attributes['is_spoiler']) {
             return $this->post->board->getSpoilerUrl();
         }
+        else if ($this->attributes['is_deleted']) {
+            return;
+        }
 
         $params = [
             'hash' => $this->thumbnail->attributes['hash'],
