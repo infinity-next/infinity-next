@@ -1309,7 +1309,7 @@ class Post extends Model implements FormattableContract
      */
     public function hasAuthorIp()
     {
-        return $this->attribute['author_ip'] !== null;
+        return isset($this->attributes['author_ip']) && $this->attributes['author_ip'] !== null;
     }
 
     public function hasAttachments()

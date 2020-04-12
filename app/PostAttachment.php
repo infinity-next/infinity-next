@@ -114,7 +114,7 @@ class PostAttachment extends Model
      */
     public function getDownloadName()
     {
-        return "{$this->attribute['filename']}.{$this->file->guessExtension()}";
+        return "{$this->attributes['filename']}.{$this->file->guessExtension()}";
     }
 
     /**
@@ -124,7 +124,7 @@ class PostAttachment extends Model
      */
     public function getExtension()
     {
-        $pathinfo = pathinfo($this->attribute['filename']);
+        $pathinfo = pathinfo($this->attributes['filename']);
 
         return $pathinfo['extension'];
     }

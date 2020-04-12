@@ -26,6 +26,7 @@
         @endcan
 
         @if (!user()->isAnonymous())
+        @if ($post->hasAuthorIp())
         @can('history', $post)
         @set('postActions', true)
         <div class="action">
@@ -49,6 +50,7 @@
             </a>
         </div>
         @endcan
+        @endif
 
         @can('edit', $post)
         @set('postActions', true)
@@ -135,6 +137,7 @@
                 </a>
             </div>
 
+            @if ($post->hasAuthorIp())
             @can('delete-history', $post)
             <div class="action">
                 <a class="action-link action-link-delete-all"
@@ -169,6 +172,7 @@
                 </a>
             </div>
             @endcan
+            @endif
         @endcan
 
         {{-- Global Actions --}}
@@ -194,6 +198,7 @@
             @endif
         @endcan
 
+        @if ($post->hasAuthorIp())
         @can('global-delete', $post)
             @set('postActions', true)
             <div class="action">
@@ -219,6 +224,7 @@
             </div>
             @endcan
         @endcan
+        @endif
         @endif
     </div>
 

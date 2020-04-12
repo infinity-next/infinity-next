@@ -173,14 +173,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('global-delete', function(User $user)
         {
-            return $user->permission('board.post.delete.other', null)
+            return $user->permission('board.post.delete.other')
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_delete');
         });
 
         Gate::define('global-history', function(User $user)
         {
-            return $user->permission('board.history', null)
+            return $user->permission('board.history')
                 ? Response::allow()
                 : Response::deny('auth.board.cannot_view_history');
         });
