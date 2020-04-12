@@ -41,7 +41,8 @@
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.5",
         "symfony/css-selector": "^5.0",
-        "symfony/dom-crawler": "^5.0"
+        "symfony/dom-crawler": "^5.0",
+        "laravel/telescope": "^3.2"
     },
 
     "autoload": {
@@ -82,7 +83,9 @@
 
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/telescope"
+            ]
         }
     }
 }

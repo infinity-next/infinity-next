@@ -339,11 +339,7 @@ class FileStorage extends Model
      */
     public function getFileDimensions()
     {
-        if ($this->hasThumb()) {
-            return "{$this->file_width}x{$this->file_height}";
-        }
-
-        return;
+        return "{$this->attributes['file_width']}x{$this->attributes['file_height']}";
     }
 
     /**
@@ -554,27 +550,22 @@ class FileStorage extends Model
         if ($this->isImageVector()) {
             $stock = false;
             $type = 'img';
-        } elseif ($this->isImage()) {
-            if ($this->hasThumb()) {
-                $stock = false;
-                $type = 'img';
-            }
-        } elseif ($this->isVideo()) {
-            if ($this->hasThumb()) {
-                $stock = false;
-                $type = 'video';
-            }
-        } elseif ($this->isAudio()) {
+        }
+        elseif ($this->isImage()) {
+            $stock = false;
+            $type = 'img';
+        }
+        elseif ($this->isVideo()) {
+            $stock = false;
+            $type = 'video';
+        }
+        elseif ($this->isAudio()) {
             $stock = false;
             $type = 'audio';
         }
-        else if ($this->isDocument())
-        {
-            if ($this->hasThumb())
-            {
-                $stock = false;
-                $type  = "document";
-            }
+        else if ($this->isDocument()) {
+            $stock = false;
+            $type  = "document";
         }
 
         $classes = [];
@@ -685,16 +676,6 @@ class FileStorage extends Model
     public function hasFile()
     {
         return is_readable($this->getFullPath()) && Storage::exists($this->getPath());
-    }
-
-    /**
-     * Returns if a thumbnail is present on the disk.
-     *
-     * @return bool
-     */
-    public function hasThumb()
-    {
-        return $this->thumbnails ? $this->thumbnails->count() : 0;
     }
 
     /**

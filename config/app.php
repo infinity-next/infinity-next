@@ -148,6 +148,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
         App\Providers\SessionServiceProvider::class,
         App\Providers\SettingsServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,

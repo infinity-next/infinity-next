@@ -196,5 +196,9 @@ class AuthServiceProvider extends ServiceProvider
         {
             return $user->permission('site.user.create');
         });
+
+        Gate::define('viewTelescope', function ($user) {
+            return $user->permission('sys.config');
+        });
     }
 }

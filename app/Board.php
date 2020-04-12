@@ -1153,6 +1153,10 @@ class Board extends Model
 
             foreach ($threads as $threadIndex => $thread) {
                 $thread->setRelation('board', $this);
+                $thread->attachments->each(function($postAttachment) use ($thread) {
+                    $postAttachment->setRelation('board', $this);
+                    $postAttachment->setRelation('post', $thread);
+                });
                 $thread->page_number = floor($threadIndex / $postsPerPage) + 1;
                 $thread->prepareForCache();
             }
@@ -1198,7 +1202,10 @@ class Board extends Model
 
                 foreach ($thread->replies as $reply) {
                     $reply->setRelation('board', $this);
-                    $reply->setRelation('attachments', $reply->attachments);
+                    $reply->attachments->each(function($postAttachment) use ($thread) {
+                        $postAttachment->setRelation('board', $this);
+                        $postAttachment->setRelation('post', $thread);
+                    });
                 }
 
                 $thread->prepareForCache();

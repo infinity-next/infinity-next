@@ -1592,8 +1592,8 @@ class Post extends Model implements FormattableContract
     public function scopeAndAttachments($query)
     {
         return $query->with(['attachments' => function ($eagerQuery) {
-            $eagerQuery->orderBy('position');
-        }])->with('attachments.file', 'attachments.thumbnail');
+            $eagerQuery->orderBy('position')->with('file', 'thumbnail');
+        }]);
     }
 
     public function scopeAndBacklinks($query)
