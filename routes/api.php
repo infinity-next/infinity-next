@@ -49,7 +49,7 @@ Route::group(['as' => 'board.', 'prefix' => '{board}', 'namespace' => "Board",],
     Route::put('thread.json', ['as' => 'thread.put', 'uses' => 'BoardController@putThread']);
 
     // Put reply to thread.
-    Route::put('thread/{post_id}.json', 'BoardController@putThread')
+    Route::put('thread/{post_id}.json', 'BoardController@putReply')
         ->name('thread.reply');
 
     // Get single thread.

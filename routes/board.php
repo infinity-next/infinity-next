@@ -91,7 +91,7 @@ Route::group(['as' => 'thread',], function () {
     Route::put('thread', ['as' => '.put', 'uses' => 'BoardController@putThread',]);
 
     // reply put
-    Route::put('thread/{post_id}', ['as' => '.reply', 'uses' => 'BoardController@putThread',]);
+    Route::put('thread/{post_id}', ['as' => '.reply', 'uses' => 'BoardController@putReply',]);
 
     // submission success (redirect to created post)
     Route::get('redirect/{post_id}', ['as' => '.redirect', 'uses' => 'BoardController@getThreadRedirect', ]);

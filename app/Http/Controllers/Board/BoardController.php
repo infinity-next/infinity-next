@@ -189,10 +189,9 @@ class BoardController extends Controller
      * @param \App\Http\Requests\PostRequest $request
      * @param Board                          $board
      * @param Post                           $thread
-     *
      * @return Response (redirects to the thread view)
      */
-    public function putThread(PostRequest $request, Board $board, Post $thread = null)
+    public function putReply(PostRequest $request, Board $board, Post $thread)
     {
         $request->validate();
 
@@ -202,7 +201,7 @@ class BoardController extends Controller
         $post->thread()->associate($thread);
         $post->save();
 
-        $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
+        // $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 
         if ($request->wantsJson()) {
             /*if (!is_null($thread) && $thread->exists) {
@@ -218,7 +217,31 @@ class BoardController extends Controller
                 return $posts;
             }*/
 
-            return [ 0 => $post ];
+            return [ $post ];
+        }
+
+        // Redirect to splash page.
+        return redirect("/{$board->board_uri}/redirect/{$post->board_id}");
+    }
+
+    /**
+     * Handles the creation of a new thread or reply.
+     *
+     * @param \App\Http\Requests\PostRequest $request
+     * @param Board                          $board
+     * @return Response (redirects to the thread view)
+     */
+    public function putThread(PostRequest $request, Board $board)
+    {
+        $request->validate();
+
+        // Create the post.
+        $post = new Post($request->all());
+        $post->board()->associate($board);
+        $post->save();
+
+        if ($request->wantsJson()) {
+            return [ $post ];
         }
 
         // Redirect to splash page.

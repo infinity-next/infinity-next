@@ -130,13 +130,43 @@ class BoardController extends ParentController implements ApiContract
      *
      * @param \App\Http\Requests\PostRequest $request
      * @param Board                          $board
-     * @param Post|null                      $thread
-     *
+     * @param Post                           $thread
      * @return Response (redirects to the thread view)
      */
-    public function putThread(PostRequest $request, Board $board, Post $thread = null)
+    public function putReply(PostRequest $request, Board $board, Post $thread)
     {
-        $response = parent::putThread($request, $board, $thread);
+        $response = parent::putReply($request, $board, $thread);
+
+        if ($response instanceof Post) {
+            $response = [
+                'post'     => $response->toArray(),
+                'redirect' => $response->getUrl(),
+            ];
+        }
+        //else {
+        //    $response = $response
+        //        ->sortByDesc('recently_created')
+        //        ->unique(function ($post) {
+        //            return $post->post_id;
+        //        })
+        //        ->sortBy('post_id');
+        //
+        //    $response = array_values($response->toArray());
+        //}
+
+        return $this->apiResponse($response);
+    }
+
+    /**
+     * Handles the creation of a new thread or reply.
+     *
+     * @param \App\Http\Requests\PostRequest $request
+     * @param Board                          $board
+     * @return Response (redirects to the thread view)
+     */
+    public function putThread(PostRequest $request, Board $board)
+    {
+        $response = parent::putThread($request, $board);
 
         if ($response instanceof Post) {
             $response = [
