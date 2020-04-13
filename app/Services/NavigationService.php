@@ -17,19 +17,18 @@ class NavigationService
     public function getPrimaryNavBoards()
     {
         if (site_setting('boardListShow', false) && Cache::has('site.boardlist')) {
+            $popularBoards = collect();
+
+            $popularBoardArray = Board::getBoardsForBoardlist(0, 20);
+            foreach ($popularBoardArray as $popularBoard) {
+                $popularBoards->push(new Board($popularBoard));
+            }
+
             return [
-                'popular_boards' => Cache::remember('site.gnav.popular_boards', now()->addHour(), function () {
-                    $popularBoards = collect();
-
-                    $popularBoardArray = Board::getBoardsForBoardlist(0, 20);
-                    foreach ($popularBoardArray as $popularBoard) {
-                        $popularBoards->push(new Board($popularBoard));
-                    }
-
+                'popular_boards' => Cache::remember('site.gnav.popular_boards', now()->addHour(), function () use ($popularBoards) {
                     return $popularBoards;
                 }),
-
-                'recent_boards' => Cache::remember('site.gnav.recent_boards', now()->addMinutes(5), function () {
+                'recent_boards' => Cache::remember('site.gnav.recent_boards', now()->addMinutes(5), function () use ($popularBoards) {
                     return Board::where('posts_total', '>', 0)
                         ->whereNotNull('last_post_at')
                         ->wherePublic()
