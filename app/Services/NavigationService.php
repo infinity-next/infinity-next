@@ -29,7 +29,7 @@ class NavigationService
                     return $popularBoards;
                 }),
 
-                'recent_boards' => Cache::remember('site.gnav.popular_boards', now()->addMinutes(5), function () {
+                'recent_boards' => Cache::remember('site.gnav.recent_boards', now()->addMinutes(5), function () {
                     return Board::where('posts_total', '>', 0)
                         ->whereNotNull('last_post_at')
                         ->wherePublic()
