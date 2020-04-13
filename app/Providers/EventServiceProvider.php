@@ -82,7 +82,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\ThreadRecache::class,
         ],
         \App\Events\ThreadNewReply::class => [
-            \App\Listeners\ThreadAutopruneOnReply::class,
+            \App\Listeners\DispatchThreadAutoprune::class,
         ],
 
         // Page specific events

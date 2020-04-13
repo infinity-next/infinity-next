@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80bb384db2597fa55d9ee36a7c730829",
+    "content-hash": "8bd5ad23c5c7f68deca8df9794ad00ab",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2195,6 +2195,59 @@
                 "random"
             ],
             "time": "2018-07-02T15:55:56+00:00"
+        },
+        {
+            "name": "pda/pheanstalk",
+            "version": "v4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pheanstalk/pheanstalk.git",
+                "reference": "41212671020de91086ace9e6181e69829466f087"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pheanstalk/pheanstalk/zipball/41212671020de91086ace9e6181e69829466f087",
+                "reference": "41212671020de91086ace9e6181e69829466f087",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2",
+                "phpunit/phpunit": "^7",
+                "vimeo/psalm": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pheanstalk\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Annesley",
+                    "email": "paul@annesley.cc",
+                    "homepage": "http://paul.annesley.cc/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sam Mousa",
+                    "email": "sam@mousa.nl",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "PHP client for beanstalkd queue",
+            "homepage": "https://github.com/pda/pheanstalk",
+            "keywords": [
+                "beanstalkd"
+            ],
+            "time": "2020-01-24T11:16:41+00:00"
         },
         {
             "name": "phpoption/phpoption",

@@ -156,6 +156,7 @@ class PostObserver
         if ($thread instanceof Post) {
             $thread->setRelation('board', $board);
             $thread->load('replies');
+
             Event::dispatch(new \App\Events\ThreadNewReply($thread));
         }
 

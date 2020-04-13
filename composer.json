@@ -31,7 +31,8 @@
         "infinity-next/sleuth": "^0.2",
         "intervention/image": "^2.5",
         "james-heinrich/getid3": "^1.9",
-        "jenssegers/imagehash": "^0.6.0"
+        "jenssegers/imagehash": "^0.6.0",
+        "pda/pheanstalk": "^4.0"
     },
 
     "require-dev": {

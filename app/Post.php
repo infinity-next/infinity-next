@@ -120,7 +120,7 @@ class Post extends Model implements FormattableContract
         // 'citedBy',
         // 'citedPosts',
         // 'editor',
-        'op',
+        'thread',
         // 'replies',
         // 'reports',
     ];
@@ -1857,12 +1857,12 @@ class Post extends Model implements FormattableContract
         $user = user();
 
         $rememberTags = [
-            "board_{$this->attributes['board_uri']}",
-            "post_{$this->attributes['post_id']}",
+            "board_{$this->board_uri}",
+            "post_{$this->post_id}",
             "post_html",
         ];
         $rememberTimer = now()->addDay();
-        $rememberKey = "board.{$this->attributes['board_uri']}.post_html.{$this->attributes['board_id']}";
+        $rememberKey = "board.{$this->board_uri}.post_html.{$this->board_id}";
         $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
 
@@ -1879,7 +1879,7 @@ class Post extends Model implements FormattableContract
 
                 // Statuses
                 'catalog' => $catalog,
-                'reply_to' => isset($this->attributes['reply_to']) && $this->attributes['reply_to'] ?? false,
+                'reply_to' => $this->reply_to ?? false,
                 'multiboard' => $multiboard,
                 'preview' => $preview,
             ])->render();

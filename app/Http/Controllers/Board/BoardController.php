@@ -205,7 +205,7 @@ class BoardController extends Controller
         $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 
         if ($request->wantsJson()) {
-            if (!is_null($thread) && $thread->exists) {
+            /*if (!is_null($thread) && $thread->exists) {
                 $updatedSince = Carbon::createFromTimestamp($request->input('updatedSince', Carbon::now()->timestamp));
                 $includeHTML = isset($input['updateHtml']);
 
@@ -216,10 +216,9 @@ class BoardController extends Controller
                 $posts->sortBy('board_id');
 
                 return $posts;
-            }
-            else {
-                return $post;
-            }
+            }*/
+
+            return [ 0 => $post ];
         }
 
         // Redirect to splash page.

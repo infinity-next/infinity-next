@@ -166,13 +166,20 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('post_id', function ($value, $route) {
+            $fast = $route->parameter('fast_prefetch', false);
             $board = $route->parameter('board');
 
             if (!($board instanceof Board)) {
                 $board = $this->app->make(Board::class);
             }
+
             if (is_numeric($value) && $board instanceof Board) {
-                $post = $board->getThreadByBoardId($value);
+                if ($fast) {
+                    $post = Post::getPostForBoard($board->board_uri, $value);
+                }
+                else {
+                    $post = $board->getThreadByBoardId($value);
+                }
 
                 if ($post instanceof Post && $post->exists) {
                     $route->parameter('post', $post);
