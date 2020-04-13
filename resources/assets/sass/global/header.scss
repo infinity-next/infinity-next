@@ -71,15 +71,16 @@ figcaption.page-details {
         font-size: 1em;
         font-weight: normal;
     }
-        h2.page-desc #sudo-lecture {
-            display: block;
-            margin: 0 auto;
-            width: 450px;
+    
+    #sudo-lecture {
+        display: block;
+        margin: 0 auto;
+        width: 450px;
 
-            font-family: monospace;
-            text-align: left;
-            white-space: pre;
-        }
+        font-family: monospace;
+        text-align: left;
+        white-space: pre;
+    }
 
     ul.page-links {
         display: block;

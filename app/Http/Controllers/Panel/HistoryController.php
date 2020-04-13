@@ -39,7 +39,7 @@ class HistoryController extends PanelController
             throw $e;
         }
 
-        $posts = Post::with('op', 'board', 'board.assets')
+        $posts = Post::with('thread', 'board', 'board.assets')
             ->withEverything()
             ->where('author_ip', $ip)
             ->orderBy('post_id', 'desc')

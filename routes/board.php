@@ -40,6 +40,7 @@ if (env('LEGACY_ROUTES', false)) {
 Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     // history
     Route::get('history', ['as' => 'history', 'uses' => 'HistoryController@list',]);
+    Route::get('history/global', ['as' => 'history.global', 'uses' => 'HistoryController@redirectGlobal',]);
 
     // mod (delete, ban)
     Route::get('moderate', ['as' => 'mod', 'uses' => 'PostController@moderate',]);

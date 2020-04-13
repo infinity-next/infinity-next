@@ -23,16 +23,14 @@ class HistoryController extends Controller
 
     public function list(Board $board, Post $post)
     {
-        if (!$this->user->canViewHistory($post)) {
-            return abort(403);
-        }
+        $this->authorize('history', $board);
 
         if (is_null($post->author_ip)) {
             return abort(400);
         }
 
         $posts = $board->posts()
-            ->with('op')
+            ->with('thread')
             ->withEverything()
             ->where('author_ip', $post->author_ip)
             ->orderBy('post_id', 'desc')
@@ -46,6 +44,19 @@ class HistoryController extends Controller
             'posts' => $posts,
             'multiboard' => false,
             'ip' => ip_less($post->author_ip->toText()),
+        ]);
+    }
+
+    public function redirectGlobal(Board $board, Post $post)
+    {
+        $this->authorize('global-history');
+
+        if (is_null($post->author_ip)) {
+            return abort(400);
+        }
+
+        return redirect()->route('panel.history.global', [
+            'ip' => $post->author_ip->toText(),
         ]);
     }
 }

@@ -7,6 +7,6 @@
     'ip' => $ip,
 ]))
 
-@section('description')
+@section('header-details')
     <div id="sudo-lecture">@lang('board.history.lecture')</div>
 @stop
