@@ -1861,7 +1861,7 @@ class Post extends Model implements FormattableContract
             "post_{$this->attributes['post_id']}",
             "post_html",
         ];
-        $rememberTimer = now()->addHour();
+        $rememberTimer = now()->addDay();
         $rememberKey = "board.{$this->attributes['board_uri']}.post_html.{$this->attributes['board_id']}";
         $rememberClosure = function () use ($catalog, $multiboard, $preview, $user) {
             $this->setRelation('attachments', $this->attachments);
@@ -1885,23 +1885,21 @@ class Post extends Model implements FormattableContract
             ])->render();
         };
 
-        if (!user()->isAnonymous()) {
-            return $rememberClosure();
-        }
-
         if ($catalog) {
+            $rememberKey .= ".catalog";
             $rememberTags[] = 'catalog_post';
-            $rememberTimer->addMinutes(60);
         }
-
         if ($multiboard) {
+            $rememberKey .= ".multiboard";
             $rememberTags[] = 'multiboard_post';
-            $rememberTimer->subMinutes(40);
         }
-
         if ($preview) {
+            $rememberKey .= ".preview";
             $rememberTags[] = 'preview_post';
-            $rememberTimer->subMinutes(40);
+        }
+        // This is a pure form of the post we want to keep for a long time.
+        if (!$catalog && !$multiboard && !$preview) {
+            $rememberTimer = $rememberTimer->addWeek();
         }
 
         return Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
