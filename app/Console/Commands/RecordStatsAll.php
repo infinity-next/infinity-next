@@ -15,7 +15,7 @@ class RecordStatsAll extends Command
      *
      * @var string
      */
-    protected $signature = 'recordstats:all';
+    protected $signature = 'stats:recompile';
 
     /**
      * The console command description.

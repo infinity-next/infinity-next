@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
             File::makeDirectory($logdir);
         }
 
-        $schedule->command('autoprune')
+        $schedule->command('ib:autoprune')
             ->hourly()
             ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
     }
@@ -84,7 +84,7 @@ class Kernel extends ConsoleKernel
             File::makeDirectory($logdir);
         }
 
-        $schedule->command('recordstats')
+        $schedule->command('stats:update')
             ->hourly()
             ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt.txt");
     }

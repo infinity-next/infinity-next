@@ -1879,7 +1879,7 @@ class Post extends Model implements FormattableContract
 
                 // Statuses
                 'catalog' => $catalog,
-                'reply_to' => $this->attributes['reply_to'] ?: false,
+                'reply_to' => isset($this->attributes['reply_to']) && $this->attributes['reply_to'] ?? false,
                 'multiboard' => $multiboard,
                 'preview' => $preview,
             ])->render();

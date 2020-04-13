@@ -3,9 +3,9 @@
 namespace App\Listeners;
 
 use App\Post;
-use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ThreadAutopruneOnReply extends Listener
+class ThreadAutopruneOnReply extends Listener implements ShouldQueue
 {
     /**
      * Handle the event.
@@ -23,7 +23,7 @@ class ThreadAutopruneOnReply extends Listener
 
             $replyCount = $post->replies()->count();
             $board = $post->board;
-            $now = Carbon::now();
+            $now = now();
             $modified = false;
 
 

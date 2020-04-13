@@ -12,7 +12,7 @@ class RecordStats extends Command
      *
      * @var string
      */
-    protected $name = 'recordstats';
+    protected $name = 'stats:update';
 
     /**
      * The console command description.
