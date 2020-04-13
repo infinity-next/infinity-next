@@ -11,6 +11,8 @@
             @lang('board.action.report_global')
         </a>
 
+        @if (!user()->isAnonymous())
+        @if (isset($details['author_ip']))
         <a class="action action-report " href="{!! $post->getUrl('history') !!}">
             @lang('board.action.history', [
                 'board_uri' => $details['board_uri'],
@@ -20,6 +22,7 @@
         <a class="action action-report " href="{!! route('panel.history.global', [ 'ip' => $details['author_ip'], ]) !!}">
             @lang('board.action.history_global')
         </a>
+        @endif
 
         <a class="action action-edit " href="{!! $post->getModUrl('edit') !!}">
             @lang('board.action.edit')
@@ -62,6 +65,7 @@
             @lang('board.action.delete')
         </a>
 
+        @if (isset($details['author_ip']))
         <a class="action action-delete-all " href="{!! $post->getModUrl('mod', [
                 'delete' => 1,
                 'scope'  => 'all',
@@ -83,6 +87,7 @@
             ]) !!}">
             @lang('board.action.ban_delete_board')
         </a>
+        @endif
 
         {{-- Global Actions --}}
         <a class="action action-feature-global " href="{!! $post->getModUrl('feature') !!}">
@@ -92,6 +97,7 @@
             )
         </a>
 
+        @if (isset($details['author_ip']))
         <a class="action action-delete-global " href="{!! $post->getModUrl('mod', [
                 'delete' => 1,
                 'scope'  => 'global',
@@ -106,5 +112,7 @@
             ]) !!}">
             @lang('board.action.ban_delete_global')
         </a>
+        @endif
+        @endif
     </div>
 </div>

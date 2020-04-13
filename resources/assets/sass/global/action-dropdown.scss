@@ -56,27 +56,21 @@
 }
 
 .action {
-    width: 100%;
+    display: block;
+    box-sizing: border-box;
     border-bottom: 1px solid rgba(0,0,0,0.25);
     width: 100%;
 
-    &:last-child {
-        margin-bottom: -1px;
-    }
-}
-
-.action-link {
-    display: block;
-
     color: #34345C;
     white-space: nowrap;
-
     line-height: 1.4;
-
     padding: 0.25em 1em 0.25em;
 
     &:hover {
         color: #dee0df;
         background: #34345C;
+    }
+    &:last-child {
+        margin-bottom: -1px;
     }
 }
