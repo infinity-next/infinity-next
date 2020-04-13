@@ -3,146 +3,108 @@
 
     {{-- Board specific content management actions --}}
     <div class="actions">
-        <div class="action">
-            <a class="action-link action-link-report " href="{!! $post->getModUrl('report') !!}">
-                @lang('board.action.report')
-            </a>
-        </div>
+        <a class="action action-report " href="{!! $post->getModUrl('report') !!}">
+            @lang('board.action.report')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-report-global " href="{!! $post->getModUrl('report.global') !!}">
-                @lang('board.action.report_global')
-            </a>
-        </div>
+        <a class="action action-report-global " href="{!! $post->getModUrl('report.global') !!}">
+            @lang('board.action.report_global')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-report " href="{!! $post->getUrl('history') !!}">
-                @lang('board.action.history', [
-                    'board_uri' => $details['board_uri'],
-                ])
-            </a>
-        </div>
+        <a class="action action-report " href="{!! $post->getUrl('history') !!}">
+            @lang('board.action.history', [
+                'board_uri' => $details['board_uri'],
+            ])
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-report " href="{!! route('panel.history.global', [ 'ip' => $details['author_ip'], ]) !!}">
-                @lang('board.action.history_global')
-            </a>
-        </div>
+        <a class="action action-report " href="{!! route('panel.history.global', [ 'ip' => $details['author_ip'], ]) !!}">
+            @lang('board.action.history_global')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-edit " href="{!! $post->getModUrl('edit') !!}">
-                @lang('board.action.edit')
-            </a>
-        </div>
+        <a class="action action-edit " href="{!! $post->getModUrl('edit') !!}">
+            @lang('board.action.edit')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-sticky" href="{!! $post->getModUrl('sticky') !!}">
-                @lang('board.action.sticky')
-            </a>
-        </div>
+        <a class="action action-sticky" href="{!! $post->getModUrl('sticky') !!}">
+            @lang('board.action.sticky')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-unsticky " href="{!! $post->getModUrl('unsticky') !!}">
-                @lang('board.action.unsticky')
-            </a>
-        </div>
+        <a class="action action-unsticky " href="{!! $post->getModUrl('unsticky') !!}">
+            @lang('board.action.unsticky')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-lock " href="{!! $post->getModUrl('lock') !!}">
-                @lang('board.action.lock')
-            </a>
-        </div>
+        <a class="action action-lock " href="{!! $post->getModUrl('lock') !!}">
+            @lang('board.action.lock')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-unlock " href="{!! $post->getModUrl('unlock') !!}">
-                @lang('board.action.unlock')
-            </a>
-        </div>
+        <a class="action action-unlock " href="{!! $post->getModUrl('unlock') !!}">
+            @lang('board.action.unlock')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-bumplock " href="{!! $post->getModUrl('bumplock') !!}">
-                @lang('board.action.bumplock')
-            </a>
-        </div>
+        <a class="action action-bumplock " href="{!! $post->getModUrl('bumplock') !!}">
+            @lang('board.action.bumplock')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-unbumplock " href="{!! $post->getModUrl('unbumplock') !!}">
-                @lang('board.action.unbumplock')
-            </a>
-        </div>
+        <a class="action action-unbumplock " href="{!! $post->getModUrl('unbumplock') !!}">
+            @lang('board.action.unbumplock')
+        </a>
 
         {{-- Broad sweeping user & board actions --}}
-        <div class="action">
-            <a class="action-link action-link-ban " href="{!! $post->getModUrl('mod', [
-                    'ban'    => 1,
-                ]) !!}">
-                @lang('board.action.ban')
-            </a>
-        </div>
+        <a class="action action-ban " href="{!! $post->getModUrl('mod', [
+                'ban'    => 1,
+            ]) !!}">
+            @lang('board.action.ban')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-delete " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                ]) !!}">
-                @lang('board.action.delete')
-            </a>
-        </div>
+        <a class="action action-delete " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+            ]) !!}">
+            @lang('board.action.delete')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-delete-all " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                    'scope'  => 'all',
-                ]) !!}">
-                @lang('board.action.delete_board')
-            </a>
-        </div>
+        <a class="action action-delete-all " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+                'scope'  => 'all',
+            ]) !!}">
+            @lang('board.action.delete_board')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-ban-delete " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                    'ban'    => 1,
-                ]) !!}">
-                @lang('board.action.ban_delete')
-            </a>
-        </div>
+        <a class="action action-ban-delete " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+                'ban'    => 1,
+            ]) !!}">
+            @lang('board.action.ban_delete')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-ban-delete-all " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                    'ban'    => 1,
-                    'scope'  => 'all',
-                ]) !!}">
-                @lang('board.action.ban_delete_board')
-            </a>
-        </div>
+        <a class="action action-ban-delete-all " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+                'ban'    => 1,
+                'scope'  => 'all',
+            ]) !!}">
+            @lang('board.action.ban_delete_board')
+        </a>
 
         {{-- Global Actions --}}
-        <div class="action">
-            <a class="action-link action-link-feature-global " href="{!! $post->getModUrl('feature') !!}">
-                @lang(isset($details['featured_at']) && $details['featured_at']
-                    ? 'board.action.refeature'
-                    : 'board.action.feature'
-                )
-            </a>
-        </div>
+        <a class="action action-feature-global " href="{!! $post->getModUrl('feature') !!}">
+            @lang(isset($details['featured_at']) && $details['featured_at']
+                ? 'board.action.refeature'
+                : 'board.action.feature'
+            )
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-delete-global " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                    'scope'  => 'global',
-                ]) !!}">
-                @lang('board.action.delete_global')
-            </a>
-        </div>
+        <a class="action action-delete-global " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+                'scope'  => 'global',
+            ]) !!}">
+            @lang('board.action.delete_global')
+        </a>
 
-        <div class="action">
-            <a class="action-link action-link-ban-delete-global " href="{!! $post->getModUrl('mod', [
-                    'delete' => 1,
-                    'ban'    => 1,
-                    'scope'  => 'global',
-                ]) !!}">
-                @lang('board.action.ban_delete_global')
-            </a>
-            </div>
+        <a class="action action-ban-delete-global " href="{!! $post->getModUrl('mod', [
+                'delete' => 1,
+                'ban'    => 1,
+                'scope'  => 'global',
+            ]) !!}">
+            @lang('board.action.ban_delete_global')
+        </a>
     </div>
 </div>

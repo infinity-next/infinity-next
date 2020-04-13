@@ -50,7 +50,7 @@ class PostPolicy extends AbstractPolicy
             return Response::deny('auth.post.only_on_an_op');
         }
 
-        if ($user->permission('board.post.bumplock', $post->board_uri)) {
+        if ($user->permission('board.post.bumplock', $post->attributes['board_uri'])) {
             return Response::allow();
         }
 
@@ -89,14 +89,14 @@ class PostPolicy extends AbstractPolicy
     public function delete(User $user, Post $post)
     {
         // If we can edit any post for this board ...
-        if ($user->permission('board.post.delete.other', $post->board_uri)) {
+        if ($user->permission('board.post.delete.other', $post->attributes['board_uri'])) {
             return Response::allow();
         }
 
         // If the author and our current user share an IP ...
         //if (!is_null($post->author_ip) && $post->author_ip->is(Request::ip())) {
             // Allow post edit, if the masks allows it.
-            //return $this->permission('board.post.edit.self', $post->board_uri);
+            //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
         //}
 
         return Response::deny('auth.post.cannot_without_password');
@@ -134,14 +134,14 @@ class PostPolicy extends AbstractPolicy
     public function edit(User $user, Post $post)
     {
         // If we can edit any post for this board ...
-        if ($user->permission('board.post.edit.other', $post->board_uri)) {
+        if ($user->permission('board.post.edit.other', $post->attributes['board_uri'])) {
             return Response::allow();
         }
 
         // If the author and our current user share an IP ...
         //if (!is_null($post->author_ip) && $post->author_ip->is(Request::ip())) {
             // Allow post edit, if the masks allows it.
-            //return $this->permission('board.post.edit.self', $post->board_uri);
+            //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
         //}
 
         return Response::deny('auth.post.cannot_without_password');

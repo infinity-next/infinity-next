@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Settings;
 use App\Services\SettingManager;
 use Illuminate\Support\ServiceProvider;
 

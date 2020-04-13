@@ -65,7 +65,8 @@
         @section('header')
         <header class="board-header header-height-1">
             @section('nav-header')
-                @include('nav.gnav')
+                @inject('nav', 'App\Services\NavigationService')
+                {!! $nav->cachePrimaryNav() !!}
             @show
 
             @section('header-inner')

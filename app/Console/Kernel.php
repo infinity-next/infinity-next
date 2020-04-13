@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
 
         $this->runRecordStats($schedule, $now);
         $this->runAutoprune($schedule, $now);
+        $this->runAutocache($schedule, $now);
         $this->runTorPull($schedule, $now);
     }
 
@@ -49,6 +50,19 @@ class Kernel extends ConsoleKernel
             ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
     }
 
+    private function runAutocache(Schedule $schedule, Carbon $now)
+    {
+        $logdir = storage_path('logs/autocache');
+
+        if (!File::exists($logdir)) {
+            File::makeDirectory($logdir);
+        }
+
+        $schedule->command('autocache:gnav')
+            ->everyTenMinutes()
+            ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
+    }
+
     private function runAutoprune(Schedule $schedule, Carbon $now)
     {
         $logdir = storage_path('logs/autoprune');
@@ -57,7 +71,7 @@ class Kernel extends ConsoleKernel
             File::makeDirectory($logdir);
         }
 
-        $schedule->command('ib:autoprune')
+        $schedule->command('autoprune')
             ->hourly()
             ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
     }

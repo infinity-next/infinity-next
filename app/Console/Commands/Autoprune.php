@@ -16,7 +16,7 @@ class Autoprune extends Command
      *
      * @var string
      */
-    protected $name = 'ib:autoprune';
+    protected $name = 'autoprune';
 
     /**
      * The console command description.

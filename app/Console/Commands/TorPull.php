@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Cache;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
+use Cache;
 use Storage;
 
 /**
@@ -16,7 +15,7 @@ use Storage;
  * @copyright  2016 Infinity Next Development Group
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html AGPL3
  *
- * @since  0.6.1
+ * @since  0.6.0
  */
 class TorPull extends Command
 {

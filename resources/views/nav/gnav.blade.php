@@ -8,7 +8,7 @@
                             <span class="gnav-link" data-widget="js-config">{{ trans("nav.global.options") }}</a>
                         </li>
 
-                        @foreach (Settings::getNavigationPrimary() as $navItem => $navUrl)
+                        @foreach ($navLinks as $navItem => $navUrl)
                         <li class="gnav-item item-{{ $navItem }} {{ false ? 'gnav-active' : '' }}">
                             <a href="{!! $navUrl !!}" class="gnav-link" data-item="{{ $navItem }}">{{ trans("nav.global.{$navItem}") }}</a>
                         </li>
@@ -17,7 +17,7 @@
                 </li>
             </ul>
 
-            @if (Settings::get('boardListShow', false))
+            @if ($showBoardList)
             <div class="flyout" id="flyout-boards" data-no-instant>
                 <div class="flyout-container">
                     <div class="flyout-header">
@@ -39,8 +39,8 @@
                             </ul>
                         </li>
 
-                        @if (is_array(Settings::getNavigationPrimaryBoards()))
-                        @foreach (Settings::getNavigationPrimaryBoards() as $groupname => $boards)
+                        @if (count($navBoards))
+                        @foreach ($navBoards as $groupname => $boards)
                         @if ($boards->count())
                         <li class="flyout-col">
                             <div class="flyout-col-title">{{ trans("nav.global.flyout.{$groupname}") }}</div>
