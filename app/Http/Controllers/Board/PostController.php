@@ -236,7 +236,7 @@ class PostController extends Controller
                             $this->log('log.post.delete.reply', $post, [
                                 'board_id' => $post->board_id,
                                 'board_uri' => $post->board_uri,
-                                'op_id' => $post->op->board_id,
+                                'op_id' => $post->thread->board_id,
                             ]);
                         } else {
                             $this->log('log.post.delete.op', $post, [
