@@ -47,6 +47,19 @@ Infinity Next is currently below its first release version. When it is finished,
 
 You should now have a `/test/` board. The admin account will be named `Admin`.
 
+## Adding WebSockets
+WebSockets will play an increasingly important part of the software as they increase the responsiveness of the entire application. It is suggested to set it up, though it is somewhat complicated.
+
+1. Install [Supervisor](https://laravel.com/docs/7.x/queues#supervisor-configuration) to run `artisan queue:work redis`. Example in `docs/supervisor.txt`.
+2. Install [Laravel Echo Server](https://github.com/tlaverdure/laravel-echo-server) by running `npm install -g laravel-echo-server` or `yarn global add laravel-echo-server`.
+3. Run `laravel-echo-server config` and generate a `laravel-echo-server.json`.
+    * You must be using Redis and you must make sure the Redis configuration matches exactly.
+    * Ensure the hostname matches exactly or events will not be sent to connected users.
+    * I suggest using the `docs/nginx.txt` configuration with a `/socket.io` proxy pass to the server instead of exposing it directly.
+4. Run `laravel-echo-server start`. This does not launch as a daemon, so consider using a program like `screen` to keep it running without a terminal attached.
+
+Further documentation about [Laravel Queues](https://laravel.com/docs/7.x/queues) and [Laravel Broadcasting](https://laravel.com/docs/7.x/broadcasting) can be found in the official Laravel documentation.
+
 # License
 Infinity Next is distributed under the [AGPL 3.0](http://choosealicense.com/licenses/agpl-3.0/).
 
