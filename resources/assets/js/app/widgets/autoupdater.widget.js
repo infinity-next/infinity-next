@@ -313,8 +313,7 @@
                 $(window).trigger('messenger', json);
             }
 
-            console.log(postData);
-            $widget.trigger('new-posts', postData, scrollIntoView);
+            $widget.trigger('new-posts', [ postData ], scrollIntoView);
 
             return false;
         },

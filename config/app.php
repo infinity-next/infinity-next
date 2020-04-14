@@ -41,7 +41,7 @@ return [
 
     'url'       => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'),
 
-    'url_ws'    => "ws://" . parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":6001",
+    'url_ws'    => "ws://" . parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . "/socket.io",
 
     'url_hs'    => env('APP_URL_HS', false),
 

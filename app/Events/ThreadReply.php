@@ -28,7 +28,9 @@ class ThreadReply implements ShouldBroadcast
         $this->thread = $thread->toArray();
 
         $reply->setAppendHtml(true);
-        $this->reply = $reply->toArray();
+        $reply = $reply->toArray();
+        $reply['recently_created'] = false;
+        $this->reply = $reply;
     }
 
     /**

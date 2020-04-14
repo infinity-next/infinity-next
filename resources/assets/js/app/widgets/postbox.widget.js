@@ -672,11 +672,10 @@
                 dataType:    "json",
                 contentType: "application/json; charset=utf-8"
             })
-                .always(function() {
+                .always(function(response, textStatus, jqXHR) {
                     $form.prop('disabled', false);
                     $(widget.options.selector['submit']).prop('disabled', false);
-                })
-                .always(function(response, textStatus, jqXHR) {
+
                     if (typeof response !== "object") {
                         try {
                             response = jQuery.parseJSON(response);
