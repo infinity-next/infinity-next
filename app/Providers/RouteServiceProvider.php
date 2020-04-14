@@ -144,24 +144,12 @@ class RouteServiceProvider extends ServiceProvider
             ])->first();
         });
 
-        Route::bind('post', function ($value, $route) {
-            $board = parameter('board');
+        Route::bind('post', function ($value) {
+            $post = Post::find($value);
 
-            if (!($board instanceof Board)) {
-                $board = $this->app->make(Board::class);
-            }
-            if (is_numeric($value) && $board instanceof Board) {
-                $post = Post::find($value);
-
-                if ($post instanceof Post && $post->exists) {
-                    $route->parameter('post', $post);
-
-                    $this->app->singleton(Post::class, function ($app) use ($post) {
-                        return $post;
-                    });
-
-                    return $post;
-                }
+            if ($post instanceof Post && $post->exists) {
+                $this->app->singleton(Post::class, $post);
+                return $post;
             }
         });
 

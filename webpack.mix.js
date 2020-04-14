@@ -39,6 +39,8 @@ mix
     .scripts([
         'resources/assets/js/app/**/*.js'
     ], 'public/static/js/app.js')
+
+    .js('resources/assets/js/app.js', 'public/static/js/vue.js')
 ;
 
 if (mix.inProduction()) {

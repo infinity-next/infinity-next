@@ -11,3 +11,5 @@ dump.rdb
 yarn-error.log
 yarn.lock
 .phpunit.result.cache
+laravel-echo-server.json
+laravel-echo-server.lock

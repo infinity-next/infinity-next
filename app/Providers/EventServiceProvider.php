@@ -47,7 +47,6 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\PostWasCreated::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,
-            \App\Listeners\PostHTMLRecache::class,
             \App\Listeners\ThreadRecache::class,
         ],
         \App\Events\PostWasBanned::class => [
@@ -80,9 +79,6 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\ThreadWasStickied::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\ThreadRecache::class,
-        ],
-        \App\Events\ThreadNewReply::class => [
-            \App\Listeners\DispatchThreadAutoprune::class,
         ],
 
         // Page specific events

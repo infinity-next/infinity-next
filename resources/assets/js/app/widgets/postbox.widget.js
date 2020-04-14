@@ -637,19 +637,23 @@
             // Note: serializeJSON is a plugin we use to convert form data into
             // a multidimensional array for application/json posts.
 
-            if ($updater.length && $updater[0].widget)
-            {
-                var data = $form.serialize();
+            if ($updater.length && $updater[0].widget) {
+                var autoupdater = $updater[0].widget;
 
-                autoupdater = $updater[0].widget;
-                data = $form
-                    .add("<input name=\"updatesOnly\" value=\"1\" />")
-                    .add("<input name=\"updateHtml\" value=\"1\" />")
-                    .add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
-                    .serializeJSON();
+                //if (autoupdater.updateWs) {
+                //    var data = $form
+                //        .add("<input name=\"updateWs\" value=\"1\" />")
+                //        .serializeJSON();
+                //}
+                //else {
+                    var data = $form
+                        .add("<input name=\"updatesOnly\" value=\"1\" />")
+                        .add("<input name=\"updateHtml\" value=\"1\" />")
+                        .add("<input name=\"updatedSince\" value=\"" + autoupdater.updateLast +"\" />")
+                        .serializeJSON();
+                //}
             }
-            else
-            {
+            else {
                 var data = $form.serializeJSON();
             }
 

@@ -38,6 +38,9 @@ return [
         'enable' => "Stream new replies",
         'update' => "Update",
         'updating' => "Updating ...",
+
+        'websocket' => "You will receive new posts automatically.",
+        'websocket_dc' => "You are disconnected from the websocket.",
     ],
 
     /**

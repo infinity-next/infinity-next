@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Exceptions\TorClearnet;
+use Throwable;
 use Exception;
 use ErrorException;
 use Mail;
@@ -34,7 +35,7 @@ class Handler extends ExceptionHandler
      *
      * @param \Exception $e
      */
-    public function report(Exception $e)
+    public function report(Throwable $e)
     {
         return parent::report($e);
     }
@@ -47,7 +48,7 @@ class Handler extends ExceptionHandler
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         $errorView = false;
         $errorEmail = false;

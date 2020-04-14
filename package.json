@@ -24,5 +24,11 @@
         "sass-loader": "^7.1.0",
         "unsemantic": "^1.2",
         "vue": "^2.5.17"
+    },
+    "dependencies": {
+        "laravel-echo": "^1.7.0",
+        "pusher-js": "^5.1.1",
+        "socket.io-client": "^2.3.0",
+        "vue-template-compiler": "^2.6.11"
     }
 }

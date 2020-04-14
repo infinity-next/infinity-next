@@ -7,29 +7,10 @@
         window.app = {
             'session'  : "{!! Session::getId() !!}",
 
-            'merchant' : "{{ env('CASHIER_SERVICE') }}",
-
         @if (env('APP_DEBUG'))
             'debug'      : true,
-
-            @if (env('STRIPE_LIVE_PUBLIC') && env('CASHIER_SERVICE') == "stripe")
-            'stripe_key' : "{!! env('STRIPE_TEST_PUBLIC', '') !!}",
-            @endif
-
-            @if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
-            'braintree_key' : "{!! $BraintreeClientKey !!}",
-            @endif
-
         @else
             'debug'      : false,
-
-            @if (env('STRIPE_LIVE_PUBLIC') && env('CASHIER_SERVICE') == "stripe")
-            'stripe_key' : "{!! env('STRIPE_LIVE_PUBLIC', '') !!}",
-            @endif
-
-            @if (env('CASHIER_SERVICE') == "braintree" && isset($BraintreeClientKey))
-            'braintree_key' : "{!! $BraintreeClientKey !!}",
-            @endif
         @endif
 
             'favicon'    : {
@@ -79,6 +60,7 @@
 
     <script data-no-instant src="{{ mix('static/js/vendor.js') }}"></script>
     <script data-no-instant src="{{ mix('static/js/app.js') }}"></script>
+    <script data-no-instant src="{{ mix('static/js/vue.js') }}"></script>
     @parent
 @stop
 

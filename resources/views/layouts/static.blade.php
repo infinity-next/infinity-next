@@ -14,7 +14,8 @@
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self' 'unsafe-inline' {!!config('app.url_media','')!!} {!!config('app.url_panel','')!!};
             img-src 'self' 'unsafe-inline' {!!config('app.url_media','')!!} {!!config('app.url_panel','')!!} data: blob: filesystem:;
-            script-src 'self' 'unsafe-inline' 'unsafe-eval' {!!config('app.url_media','')!!} {!!config('app.url_panel','')!!};"
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' {!!config('app.url_media','')!!} {!!config('app.url_panel','')!!};
+            connect-src 'self' 'unsafe-inline' 'unsafe-eval' {!!config('app.url_ws')!!};"
     />
 
     @section('css')

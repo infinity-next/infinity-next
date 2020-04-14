@@ -23,6 +23,9 @@
             'force-update'   : ".autoupdater-update",
             'updating'       : ".autoupdater-updating",
 
+            'poll'  : '.autoupdater-poll',
+            'ws'    : '.autoupdater-ws',
+
             'cite'           : "a.cite-post",
 
             'thread-event-target' : ".thread:first",
@@ -31,6 +34,8 @@
     },
 
     // Update tracking
+    blueprint.prototype.Echo         = null;
+    blueprint.prototype.updateWs     = false;
     blueprint.prototype.updating     = false;
     blueprint.prototype.updateTimer  = false;
     blueprint.prototype.updateURL    = false;
@@ -50,45 +55,37 @@
     blueprint.prototype.getTimeFromPost = function($post) {
         var $container = $post;
 
-        if (!$container.is(".post-container"))
-        {
+        if (!$container.is(".post-container")) {
             $container = $post.find(".post-container:first");
         }
 
-        if (!$container.length)
-        {
+        if (!$container.length) {
             return false;
         }
 
 
         var times = [0];
 
-        if ($container.is("[data-created-at]"))
-        {
+        if ($container.is("[data-created-at]")) {
             var createdAt = parseInt($container.attr('data-created-at'), 10);
 
-            if (!isNaN(createdAt))
-            {
+            if (!isNaN(createdAt)) {
                 times.push(createdAt);
             }
         }
 
-        if ($container.is("[data-deleted-at]"))
-        {
+        if ($container.is("[data-deleted-at]")) {
             var deletedAt = parseInt($container.attr('data-deleted-at'), 10);
 
-            if (!isNaN(deletedAt))
-            {
+            if (!isNaN(deletedAt)) {
                 times.push(deletedAt);
             }
         }
 
-        if ($container.is("[data-updated-at]"))
-        {
+        if ($container.is("[data-updated-at]")) {
             var updatedAt = parseInt($container.attr('data-updated-at'), 10);
 
-            if (!isNaN(updatedAt))
-            {
+            if (!isNaN(updatedAt)) {
                 times.push(updatedAt);
             }
         }
@@ -111,38 +108,30 @@
             .hide();
 
         $(window)
-            .on(
-                'scroll.ib-au',
-                data,
-                widget.events.windowScroll
-            )
-            .on(
-                'focus.ib-au',
-                data,
-                widget.events.windowFocus
-            )
-            .on(
-                'blur.ib-au',
-                data,
-                widget.events.windowUnfocus
-            )
+            .on('scroll.ib-au', data, widget.events.windowScroll)
+            .on('focus.ib-au', data, widget.events.windowFocus)
+            .on('blur.ib-au', data,widget.events.windowUnfocus)
         ;
 
         $widget
-            .on(
-                'click.ib-au',
-                widget.options.selector['force-update'],
-                data,
-                widget.events.updaterUpdateClick
-            )
-            .on(
-                'au-update.ib-au',
-                data,
-                widget.events.update
-            )
+            .on('click.ib-au', widget.options.selector['force-update'], data,widget.events.updaterUpdateClick)
+            .on('au-update.ib-au', data, widget.events.update)
+            .on('new-posts.ib-au', data, widget.events.handlePosts)
         ;
 
-        widget.bindTimer();
+        widget.updateWs = ('WebSocket' in window || 'MozWebSocket' in window);
+
+        if (widget.updateWs) {
+            $(widget.options.selector['ws'], $widget).show();
+            widget.Echo = window.Echo.join('Thread.'+$widget.data('id'))
+                .listen('ThreadReply', (e) => {
+                    $widget.trigger('new-posts', [[ e.reply ]]);
+                });
+        }
+        else {
+            $(widget.options.selector['poll'], $widget).show();
+            widget.bindTimer();
+        }
     };
 
     blueprint.prototype.bindTimer = function() {
@@ -179,40 +168,12 @@
 
     // Events
     blueprint.prototype.events = {
-        update : function(event) {
-            // Calls the widget's update function with a contextual this.
-            event.data.widget.update.call(event.data.widget);
-        },
-
-        updateComplete : function(json, textStatus, jqXHR) {
-            var widget = jqXHR.widget;
-
-            widget.updating = false;
-
-            $(widget.options.selector['force-update'])
-                .show();
-            $(widget.options.selector['updating'])
-                .hide();
-
-            clearInterval(widget.updateTimer);
-            widget.updateTimer = setInterval(function() {
-                widget.updateInterval.apply(widget);
-            }, 1000);
-        },
-
-        updateSuccess : function(json, textStatus, jqXHR, scrollIntoView) {
-            var widget       = jqXHR.widget;
-            var $widget      = widget.$widget;
+        handlePosts : function(event, postData, scrollIntoView) {
+            var widget       = event.data.widget;
+            var $widget      = event.data.$widget;
             var newPosts     = $();
             var updatedPosts = $();
             var deletedPosts = $();
-            var postData     = json;
-
-            // This important event fire ensures that sibling data is intercepted.
-            if (json.messenger) {
-                postData = json.data;
-                $(window).trigger('messenger', json);
-            }
 
             if (postData instanceof Array) {
                 $.each(postData, function(index, reply) {
@@ -266,23 +227,19 @@
                         widget.updateLast = Math.max(widget.updateLast, widget.getTimeFromPost($newPost));
 
                         // Push this ID into our You lists if we made it.
-                        if (reply.recently_created)
-                        {
+                        if (reply.recently_created) {
                             ib.storeYouPost(reply.board_uri, reply.board_id);
                         }
 
                         // Used primarily by postbox updates to force the scroll to see our new post.
-                        if (scrollIntoView === true)
-                        {
-                            if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined")
-                            {
+                        if (scrollIntoView === true) {
+                            if (typeof $newPost[0].scrollIntoViewIfNeeded !== "undefined") {
                                 $newPost[0].scrollIntoViewIfNeeded({
                                     behavior : "smooth",
                                     block    : "end"
                                 });
                             }
-                            else if (typeof $newPost[0].scrollIntoView !== "undefined")
-                            {
+                            else if (typeof $newPost[0].scrollIntoView !== "undefined") {
                                 $newPost[0].scrollIntoView({
                                     behavior : "smooth",
                                     block    : "end"
@@ -298,21 +255,17 @@
                 });
             }
 
-            if (newPosts.length)
-            {
-                if (!widget.hasFocus)
-                {
+            if (newPosts.length) {
+                if (!widget.hasFocus) {
                     widget.newReplies += newPosts.length;
                 }
-                else if (widget.scrollLocked)
-                {
+                else if (widget.scrollLocked) {
                     window.scrollTo(0, document.body.scrollHeight);
                 }
 
                 widget.updateMisses = 0;
             }
-            else
-            {
+            else {
                 ++widget.updateMisses;
             }
 
@@ -323,6 +276,45 @@
             }]);
 
             widget.updateLastReply();
+        },
+
+        update : function(event) {
+            // Calls the widget's update function with a contextual this.
+            event.data.widget.update.call(event.data.widget);
+        },
+
+        updateComplete : function(json, textStatus, jqXHR) {
+            var widget = jqXHR.widget;
+
+            widget.updating = false;
+
+            $(widget.options.selector['force-update'])
+                .show();
+            $(widget.options.selector['updating'])
+                .hide();
+
+            clearInterval(widget.updateTimer);
+
+            if (!widget.updateWs) { // don't start polling if we're on a socket
+                widget.updateTimer = setInterval(function() {
+                    widget.updateInterval.apply(widget);
+                }, 1000);
+            }
+        },
+
+        updateSuccess : function(json, textStatus, jqXHR, scrollIntoView) {
+            var widget       = jqXHR.widget;
+            var $widget      = widget.$widget;
+            var postData     = json;
+
+            // This important event fire ensures that sibling data is intercepted.
+            if (json.messenger) {
+                postData = json.data;
+                $(window).trigger('messenger', json);
+            }
+
+            console.log(postData);
+            $widget.trigger('new-posts', postData, scrollIntoView);
 
             return false;
         },

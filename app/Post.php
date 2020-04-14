@@ -1295,7 +1295,7 @@ class Post extends Model implements FormattableContract
 
         if ($includeHTML) {
             foreach ($posts as $post) {
-                $post->setAppendHTML(true);
+                $post->setAppendHtml(true);
             }
         }
 
@@ -1484,13 +1484,14 @@ class Post extends Model implements FormattableContract
      *
      * @return Post
      */
-    public function setAppendHTML($add = true)
+    public function setAppendHtml($add = true)
     {
         $appends = $this->getAppends();
 
         if ($add) {
             $appends[] = 'html';
-        } elseif (($key = array_search('html', $appends)) !== false) {
+        }
+        elseif (($key = array_search('html', $appends)) !== false) {
             unset($appends[$key]);
         }
 

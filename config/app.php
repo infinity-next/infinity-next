@@ -41,6 +41,8 @@ return [
 
     'url'       => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'),
 
+    'url_ws'    => "ws://" . parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":6001",
+
     'url_hs'    => env('APP_URL_HS', false),
 
     'url_media' => env('APP_URL_MEDIA', false),
@@ -145,6 +147,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
