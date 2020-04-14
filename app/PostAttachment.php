@@ -309,7 +309,7 @@ class PostAttachment extends Model
                 if ($thumbnail instanceof FileStorage) {
                     $url = $this->getThumbnailUrl();
                 }
-                elseif ($this->isAudio()) {
+                elseif ($file->isAudio()) {
                     $url = media_url("static/img/assets/audio.gif", false);
                 }
             }
