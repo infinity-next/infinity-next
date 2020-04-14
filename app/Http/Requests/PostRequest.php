@@ -217,9 +217,9 @@ class PostRequest extends Request implements ApiContract
         $board = $this->board;
         $user = user();
         $rules = [
-            'author' => [ 'nullable', 'string', 'encoding:UTF-8', ],
-            'email' => [ 'nullable', 'string', 'encoding:UTF-8', ],
-            'subject' => [ 'string', 'encoding:UTF-8', ],
+            'author' => [ 'nullable', 'string', 'encoding:UTF-8', 'max:60', ],
+            'email' => [ 'nullable', 'string', 'encoding:UTF-8', 'max:320', ],
+            'subject' => [ 'string', 'encoding:UTF-8', 'max:60', ],
         ];
 
         // Add a subject requirement if we need one.
