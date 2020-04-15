@@ -751,7 +751,7 @@ class FileStorage extends Model
             if ($thumbnail instanceof FileStorage) {
                 $url = $thumbnail->getUrl();
             }
-            elseif ($file->isAudio()) {
+            elseif ($this->isAudio()) {
                 $url = media_url("static/img/assets/audio.gif", false);
             }
         }
