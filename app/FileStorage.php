@@ -285,7 +285,7 @@ class FileStorage extends Model
     {
         $params = [
             'hash' => $this->attributes['hash'],
-            'filename' => $this->getDownloadName(),
+            'filename' => "{$this->attribute['file_id']}.{$this->guessExtension()}"
         ];
 
         if (is_null($board)) {
@@ -729,6 +729,47 @@ class FileStorage extends Model
         $this->save();
 
         return $this;
+    }
+
+    /**
+     * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
+     *
+     * @param  null|string|int  $maxWidth Optional. Maximum width constraint. Accepts 'auto'. Defaults null.
+     *
+     * @return string as HTML
+     */
+    public function toHtml($dimension = null)
+    {
+        $ext = $this->guessExtension();
+        $url = media_url("static/img/filetypes/{$ext}.svg", false);
+        $thumbnail = $this->thumbnails()->first();;
+
+        if ($this->isImageVector()) {
+            $url = $this->getUrl();
+        }
+        else if ($this->isAudio() || $this->isImage() || $this->isVideo() || $this->isDocument()) {
+            if ($thumbnail instanceof FileStorage) {
+                $url = $thumbnail->getUrl();
+            }
+            elseif ($file->isAudio()) {
+                $url = media_url("static/img/assets/audio.gif", false);
+            }
+        }
+
+        $classes = $this->getHtmlClasses();
+        $mime = $this->attributes['mime'];
+        $hash = $this->attributes['hash'];
+
+        if (is_null($dimension)) {
+             $dimension = Settings::get('attachmentThumbnailSize', 250);
+        }
+        else if (is_numeric($dimension)) {
+            $dimension = "{$dimension}px";
+        }
+
+        return "<div class=\"attachment-wrapper\">" .
+            "<img class=\"attachment-img {$classes}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"max-height: {$dimension}; max-width: {$dimension};\"/>" .
+        "</div>";
     }
 
     /**
