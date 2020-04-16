@@ -135,7 +135,7 @@ class BoardlistController extends Controller
 
         $boards = $boards->filter(function ($item) use ($lang, $tags, $sfw, $title) {
             // Are we able to view unindexed boards?
-            if (!$item['is_indexed'] && !$this->user->canViewUnindexedBoards()) {
+            if (!$item['is_indexed'] && !user()->canViewUnindexedBoards()) {
                 return false;
             }
 
