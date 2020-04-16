@@ -22,7 +22,7 @@ return [
 			"<p>Board <a href=\"/test/\">/test/</a> został utworzony.</p>",
 
 		'statistic' => [
-			'boards' => "{1}Jest tylko jeden board.|[0,Inf]Obecnie jest :boards_public publicznych i :boards_total razem.",
+			'boards' => "{1}Jest tylko jeden board.|[0,*]Obecnie jest :boards_public publicznych i :boards_total razem.",
 			'posts'  => "Wczoraj na całej stronie zostało utworzonych :recent_posts.",
 			'posts_all' => "Od :start_date zostało utworzonych :posts_total",
 

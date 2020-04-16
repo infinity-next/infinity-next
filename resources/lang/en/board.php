@@ -206,8 +206,8 @@ return [
         ],
 
         'count' => [
-            'replies' => "{0}unknown posts|{1}:count post|[2,Inf]:count posts",
-            'files'   => "{0}unknown files|{1}:count file|[2,Inf]:count files",
+            'replies' => "{0}unknown posts|{1}:count post|[2,*]:count posts",
+            'files'   => "{0}unknown files|{1}:count file|[2,*]:count files",
         ],
 
         'show' => [

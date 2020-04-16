@@ -24,11 +24,11 @@ return [
 
         'statistic' => [
             // These items are pluralized first, then submitted as the board and post strings to the below definitions.
-            'post_count' => "{1}<strong>:posts</strong> post|[0,Inf]<strong>:posts</strong> posts",
-            'board_count' => "{1}<strong>:boards</strong> board|[0,Inf]<strong>:boards</strong> boards",
+            'post_count' => "{1}<strong>:posts</strong> post|[2,*]<strong>:posts</strong> posts",
+            'board_count' => "{1}<strong>:boards</strong> board|[2,*]<strong>:boards</strong> boards",
 
             // {1} if there is only 1 board, the rest if there are >1 board.
-            'boards' => "{1}There is a single board.|[0,Inf]There are currenctly :boards_public public and :boards_total total.",
+            'boards' => "{1}There is a single board.|[2,*]There are currenctly :boards_public public and :boards_total total.",
             'posts'  => "Site-wide, :recent_posts have been made in the last day.",
             'posts_all' => ":posts_total have made on all active boards since :start_date.",
         ],

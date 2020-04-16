@@ -21,8 +21,8 @@ return [
             'csrf_token' => "The control panel requires cookies to be enabled.",
         ],
         'board' => [
-            'create_more_than_max' => "{0,1}You may not create more than 1 board.|[2,Inf]You may not create more than :boardCreateMax boards.",
-            'create_so_soon'       => "{0,1}You must wait 1 minute before creating another board.|[2,Inf]You must wait :boardCreateTimer minutes before creating another board.",
+            'create_more_than_max' => "{0,1}You may not create more than 1 board.|[2,*]You may not create more than :boardCreateMax boards.",
+            'create_so_soon'       => "{0,1}You must wait 1 minute before creating another board.|[2,*]You must wait :boardCreateTimer minutes before creating another board.",
         ],
         'staff' => [
             'no_roles' => "You must create an assignable role before you can add staff.",
@@ -93,8 +93,8 @@ return [
         'username'             => "Username",
         'register'             => "Register",
 
-        'assets_count'         => "{0}No assets|{1}1 custom asset|[2,Inf]:count custom assets",
-        'staff_count'          => "{0}No staff|{1}1 staff member|[2,Inf]:count staff members",
+        'assets_count'         => "{0}No assets|{1}1 custom asset|[2,*]:count custom assets",
+        'staff_count'          => "{0}No staff|{1}1 staff member|[2,*]:count staff members",
 
         'login_link'           => [
             'password_forgot'      => "Forgot Password",
@@ -116,7 +116,7 @@ return [
             "You may not be able to regain control later on.",
 
         // Logical switch, not plural.
-        'featured_at' => "{0}Board not featured.|[1,Inf]Board last featured :featured_at",
+        'featured_at' => "{0}Board not featured.|[1,*]Board last featured :featured_at",
     ],
 
     'list'      => [
@@ -196,9 +196,9 @@ return [
 
     'reports'   => [
         'empty'          => "You have no pending reports to review.",
-        'dismisssed'     => "{1}Report dismissed.|[2,Inf]Dismissed :reports reports.",
-        'demoted'       => "{1}Report demoted.|[2,Inf]Demoted :reports reports.",
-        'promoted'       => "{1}Report promoted.|[2,Inf]Promoted :reports reports.",
+        'dismisssed'     => "{1}Report dismissed.|[2,*]Dismissed :reports reports.",
+        'demoted'       => "{1}Report demoted.|[2,*]Demoted :reports reports.",
+        'promoted'       => "{1}Report promoted.|[2,*]Promoted :reports reports.",
 
         'is_not_associated' => "Anonymous Report",
         'is_associated'  => "Authored Report",

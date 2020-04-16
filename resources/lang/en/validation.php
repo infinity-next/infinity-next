@@ -138,8 +138,8 @@ return [
     'file_old' => "Your connection is restricted from posting unrecognized files.",
     'file_banned' => "The file is banned.",
     'file_fuzzybanned' => "The file is percetually similar to another banned image.",
-    'post_flood' => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before posting again.",
-    'thread_flood' => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,Inf]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
+    'post_flood' => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,*]You you must wait <strong>:time_left</strong> seconds before posting again.",
+    'thread_flood' => "{1}You you must wait <strong>:time_left</strong> second before creating a new thread.|[2,*]You you must wait <strong>:time_left</strong> seconds before creating a new thread.",
     'integrity' => "Your file's integrity cannot be verified.",
 
     'banned' => "You are banned!",
