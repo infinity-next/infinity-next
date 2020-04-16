@@ -60,8 +60,6 @@ class PostController extends Controller
             'delete' => 'required|digits_between:0,2',
 
             'ban' => 'required_if:delete,0|bool',
-            'raw_ip' => 'required_if:ban,1|boolean',
-            'ban_ip' => 'required_if:ban,1',
             'ban_ip_range' => 'required_if:ban,1|digits_between:0,128',
             'justification' => 'nullable|string|max:1024',
             'expires_days' => 'required_if:ban,1|digits_between:0,30',
