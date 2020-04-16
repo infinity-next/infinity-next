@@ -310,6 +310,17 @@
             padding: 0.2em 0.6em;
         }
 
+    .post-bans {
+        margin: 0 0 0 1.8em;
+        padding: 0 0 0.7em 0;
+
+        a.ban {
+            display: block;
+            font-weight: bold;
+            color: #f00 !important;
+        }
+    }
+
 .catalog-open {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;

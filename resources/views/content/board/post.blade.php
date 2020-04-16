@@ -35,8 +35,16 @@
             'catalog' => isset($catalog) ? !!$catalog : false,
         ])
 
+        @if ($post->bans->count())
+        <blockquote class="post-bans">
+            @foreach ($post->bans as $ban)
+            <a class="ban" href="{{ $ban->getUrl() }}">(@lang('board.meta.banned_meme'))</a>
+            @endforeach
+        </blockquote>
+        @endif
+
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
-        @if ($preview || isset($details['bans']) || isset($details['updated_by']))
+        @if ($preview || isset($details['updated_by']) || $post->bans->count())
         <div class="post-metas">
             @if ($preview)
             <div class="post-meta meta-see_more">@lang('board.preview_see_more', [
@@ -44,7 +52,8 @@
             ])</div>
             @endif
 
-            @foreach ($details['bans'] ?? [] as $ban)
+            {{--
+            @foreach ($post->bans as $ban)
             <div class="post-meta meta-ban_reason">
                 @if ($ban->justification != "")
                 <i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
@@ -53,6 +62,7 @@
                 @endif
             </div>
             @endforeach
+            --}}
 
             @if (isset($details['updated_by']))
             <div class="post-meta meta-updated_by">

@@ -1891,6 +1891,7 @@ class Post extends Model implements FormattableContract
             $rememberTimer = $rememberTimer->addWeek();
         }
 
+        return $rememberClosure();
         return Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 

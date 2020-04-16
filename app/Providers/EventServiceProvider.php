@@ -19,6 +19,7 @@ class EventServiceProvider extends ServiceProvider
          */
         \App\Events\BanWasCreated::class => [
             \App\Listeners\LogEvent::class,
+            \App\Listeners\PostHTMLRecache::class,
         ],
 
         /**

@@ -18,11 +18,19 @@ class BanWasCreated extends Event
     public $ban;
 
     /**
+     * The post the ban is on.
+     *
+     * @var \App\Post
+     */
+    public $post;
+
+    /**
      * Create a new event instance.
      */
     public function __construct(Ban $ban)
     {
         $this->ban = $ban;
+        $this->Post = $ban->post;
         $this->ip = $ban->getCidr();
 
         $this->action = 'post.ban.' . ($ban->isGlobal() ? 'global' : 'local');

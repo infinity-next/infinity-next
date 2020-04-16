@@ -188,8 +188,9 @@ return [
     ],
 
     'meta'              => [
-        'banned'            => "User was banned for this post.",
+        'banned'            => "User was banned for this post",
         'banned_for'        => "User was banned for this post. Reason: <em>:reason</em>",
+        'banned_meme'       => "USER WAS BANNED FOR THIS POST",
         'updated_by'        => "This post was last edited by :name at :time.",
     ],
 
