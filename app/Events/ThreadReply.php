@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Post;
+use App\Jobs\ThreadAutoprune;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -31,6 +32,8 @@ class ThreadReply implements ShouldBroadcast
         $reply = $reply->toArray();
         $reply['recently_created'] = false;
         $this->reply = $reply;
+
+        ThreadAutoprune::dispatch($thread);
     }
 
     /**

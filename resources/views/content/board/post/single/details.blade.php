@@ -40,9 +40,7 @@
 
     <span class="post-detail post-postedon">
         <span class="post-detail-item postedon">
-            @include('widgets.time', [
-                'carbon' => $post->created_at
-            ])
+            @include('widgets.time', [ 'carbon' => $post->created_at, ])
         </span>
     </span>
 

@@ -19,6 +19,7 @@
             @lang('board.action.history_global')
         </a>
 
+        @if ($post->isOp())
         <a class="action action-edit " href="{!! $post->getModUrl('edit') !!}">
             @lang('board.action.edit')
         </a>
@@ -46,6 +47,7 @@
         <a class="action action-unbumplock " href="{!! $post->getModUrl('unbumplock') !!}">
             @lang('board.action.unbumplock')
         </a>
+        @endif
 
         <a class="action action-ban " href="{!! $post->getModUrl('mod') !!}">
             @lang('board.action.moderate')

@@ -52,7 +52,6 @@ class EventServiceProvider extends ServiceProvider
         /**
          * Posts
          */
-        \App\Events\PostWasCreated::class => [],
         \App\Events\PostWasCapcoded::class => [
             \App\Listeners\LogEvent::class,
         ],
@@ -65,6 +64,9 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         // Thread (OP) specific Events
+        \App\Events\ThreadReply::class => [
+            \App\Listeners\DispatchThreadAutoprune::class,
+        ],
         \App\Events\ThreadWasCreated::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,

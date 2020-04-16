@@ -27,8 +27,8 @@ class DispatchThreadAutoprune extends Listener
      */
     public function handle($event)
     {
-        if (isset($event->post) && $event->post instanceof Post) {
-            ThreadAutoprune::dispatch($event->post);
+        if (isset($event->thread) && $event->thread instanceof Post) {
+            ThreadAutoprune::dispatch($event->thread);
         }
     }
 }

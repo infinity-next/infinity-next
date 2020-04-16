@@ -42,15 +42,14 @@ class ThreadAutoprune extends Job implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param  AudioProcessor  $processor
      * @return void
      */
-    public function handle(AudioProcessor $processor)
+    public function handle()
     {
         $post = $this->post;
 
         if (!$post->isOp()) {
-            $post = $post->getRelation('thread');
+            $post = $post->thread;
         }
 
         $replyCount = $post->replies()->count();
