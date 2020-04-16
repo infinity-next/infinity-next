@@ -1843,6 +1843,7 @@ class Post extends Model implements FormattableContract
         }
 
         $user = user();
+        $this->load('board');
 
         $rememberTags = [
             "board_{$this->board_uri}",
