@@ -957,7 +957,7 @@ class Post extends Model implements FormattableContract
      */
     public function isLocked()
     {
-        return isset($this->attributes['locked_at']) && !!$this->attributes['locked_at'];
+        return !is_null($this->locked_at);
     }
 
     /**

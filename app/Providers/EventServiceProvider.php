@@ -55,7 +55,8 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\PostWasCapcoded::class => [
             \App\Listeners\LogEvent::class,
         ],
-        \App\Events\PostWasDeleted::class => [
+        \App\Events\PostWasModified::class => [
+            \App\Listeners\PostHTMLRecache::class,
             \App\Listeners\ThreadRecount::class,
         ],
         \App\Events\PostsWereModerated::class => [

@@ -57,6 +57,7 @@
         </span>
     @endif
 
+    @if (!$reply_to)
     @if ($post->isStickied())
     <span class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></span>
     @elseif ($post->isBumplocked())
@@ -65,6 +66,7 @@
 
     @if ($post->isLocked())
     <span class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></span>
+    @endif
     @endif
 
     @if (isset($details['adventure_id']) && !is_null($details['adventure_id']))

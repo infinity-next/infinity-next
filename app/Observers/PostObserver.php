@@ -316,6 +316,7 @@ class PostObserver
      */
     public function saved(Post $post)
     {
+        ## TODO ## This should only happen when the body is changed, why does this happen every save?
         // Rebuild citation relationships.
 
         // Clear citations.
