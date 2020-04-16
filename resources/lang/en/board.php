@@ -22,14 +22,9 @@ return [
         "reply"  => "Reply",
         "thread" => "New Thread",
 
-        "delete"            => "Delete post from :board",
-        "all+delete"        => "Delete all posts on :board",
-        "delete+global"     => "Delete all posts on all boards",
-        "ban"               => "Ban user from :board for post",
-        "ban+global"        => "Ban user from entire site for post",
-        "ban+delete"        => "Ban user and delete post",
-        "all+ban+delete"    => "Ban user and delete all their posts on :board",
-        "ban+delete+global" => "Ban user and wipe all their posts from entire site",
+        'ban' => "Ban details",
+        'post_retention' => "Post retention",
+        'scope' => "Action scope",
 
         'report'            => "Report post",
         'report+global'     => "Report post to global staff",
@@ -155,16 +150,21 @@ return [
         'open'              => "Actions", // List of actions
         'close'             => "Close",
 
+        'global'            => "Site-wide",
+
+        'moderate'          => "Moderate",
         'ban'               => "Ban",
+        'ban_global'        => "Ban Site-wide",
         'ban_delete'        => "Ban &amp; Delete",
         'ban_delete_board'  => "Ban &amp; Delete Board-wide",
         'ban_delete_global' => "Ban &amp; Delete Site-wide",
+
         'fuzzyban'          => "Perceptual Hash Ban",
         'bumplock'          => "Bumplock",
         'unbumplock'        => "Un-Bumplock",
+        'keep'              => "Keep",
         'delete'            => "Delete",
-        'delete_board'      => "Delete Board-wide",
-        'delete_global'     => "Delete Site-wide",
+        'delete_all'        => "Delete All",
         'feature_global'    => "Feature Site-wide",
         'lock'              => "Lock",
         'unlock'            => "Unlock",

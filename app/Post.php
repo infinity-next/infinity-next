@@ -309,19 +309,6 @@ class Post extends Model implements FormattableContract
     }
 
     /**
-     * Removes thread caches containing this post.
-     */
-    public function clearThreadCache()
-    {
-        // If this post is a reply to a thread
-        Cache::tags(["board.{$this->board_uri}", 'threads'])->forget(
-            $this->reply_to_board_id
-            ? "board.{$this->board_uri}.thread.{$this->reply_to_board_id}"
-            : "board.{$this->board_uri}.thread.{$this->board_id}"
-        );
-    }
-
-    /**
      * Returns backlinks for this post which are permitted by board config.
      *
      * @param \App\Board|null $board Optional. Board to check against. If null, assumes this post's board.
@@ -1872,9 +1859,9 @@ class Post extends Model implements FormattableContract
                 $attachment->setRelation('board', $this->getRelation('board'));
             }
 
-            return view( $catalog ? 'content.board.catalog' : 'content.board.post', [
+            return view($catalog ? 'content.board.catalog' : 'content.board.post', [
                 // Models
-                'board' => $this->getRelation('board'),
+                'board' => $this->board,
                 'post' => $this,
                 'user' => $user,
 
@@ -1937,38 +1924,19 @@ class Post extends Model implements FormattableContract
         if ($board_uri instanceof Board) {
             $board = $board_uri;
             $board_uri = $board->board_uri;
-        } else {
-            $board = Board::find($board_uri);
+        }
+        else {
+            $board = $this->board;
         }
 
-        $rememberTags = [
-            "board_{$board->board_uri}",
-            "board_id_{$board_id}",
-            "threads",
-        ];
-        $rememberTimer = 30;
-        $rememberKey = "board.{$board_uri}.thread.{$board_id}";
-        $rememberClosure = function () use ($board, $board_uri, $board_id) {
-            $thread = static::where([
-                'posts.board_uri' => $board_uri,
-                'posts.board_id' => $board_id,
-            ])->withEverythingAndReplies()->first();
+        $thread = static::where([
+            'posts.board_uri' => $board_uri,
+            'posts.board_id' => $board_id,
+        ])->withEverythingAndReplies()->first();
 
-            if ($thread) {
-                $thread->setRelation('attachments', $thread->attachments);
-                $thread->prepareForCache();
-            }
-
-            return $thread;
-        };
-
-        // NOTE: Cache is better leveraged in other areas.
-        //$thread = Cache::tags($rememberTags)
-        //    ->remember($rememberKey, $rememberTimer, $rememberClosure);
-        $thread = $rememberClosure();
-
-        if (!is_null($uri)) {
-            return $thread->getReplySplice($uri);
+        if ($thread) {
+            $thread->setRelation('board', $board);
+            $thread->setRelation('attachments', $thread->attachments);
         }
 
         return $thread;

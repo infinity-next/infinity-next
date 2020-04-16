@@ -12,6 +12,13 @@ abstract class Event
     public $action = null;
 
     /**
+     * Board URI or null for global.
+     *
+     * @var string
+     */
+    public $actionBoard = null;
+
+    /**
      * Arbitrary log details to be JSON encoded.
      *
      * @var string

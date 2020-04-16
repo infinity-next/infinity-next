@@ -11,7 +11,9 @@ use App\Contracts\ApiController as ApiContract;
 use App\Http\Controllers\API\ApiController;
 use App\Services\ContentFormatter;
 use App\Support\IP;
+use App\Exceptions\BannedException;
 use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Cache;
 
@@ -149,62 +151,35 @@ class PostRequest extends Request implements ApiContract
 
         if ($ban) {
             $this->ban = $ban;
-
-            return false;
         }
 
         if ($this->thread instanceof Post) {
             return user()->can('reply', $this->thread);
         }
         else {
-            return  user()->can('post', $this->board);
+            return user()->can('post', $this->board);
         }
     }
 
     /**
-     * Returns the response if authorize() fails.
+     * Handle a failed validation attempt.
      *
-     * @return Response
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \App\Validation\BannedException;
      */
-    public function forbiddenResponse()
+    protected function failedValidation(Validator $validator)
     {
-        if ($this->ban) {
-            $url = route('panel.banned');
-
-            if ($this->ajax() || $this->wantsJson()) {
-                return $this->apiResponse(['redirect' => $url]);
-            } else {
-                return redirect($url);
-            }
+        if ($this->ban instanceof Ban) {
+            throw (new BannedException($validator))
+                        ->errorBag($this->errorBag)
+                        ->ban($this->ban)
+                        ->redirectTo($this->ban->getUrl());
         }
 
-        return abort(403);
-    }
-
-    /**
-     * Get the proper failed validation response for the request.
-     *
-     * @param array $errors
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function response(array $errors)
-    {
-        if (!$this->respectTheRobot) {
-            $this->ban = Ban::addRobotBan($this->board);
-
-            return $this->forbiddenResponse();
-        }
-
-        $redirectURL = $this->getRedirectUrl();
-
-        if ($this->wantsJson()) {
-            return $this->apiResponse(['errors' => $errors]);
-        }
-
-        return redirect($redirectURL)
-            ->withInput($this->except($this->dontFlash))
-            ->withErrors($errors, $this->errorBag);
+        return parent::failedValidation($validator);
     }
 
     /**
@@ -396,6 +371,12 @@ class PostRequest extends Request implements ApiContract
         $messages = $validator->errors();
         $isReply = $this->thread instanceof Post;
 
+        if ($this->ban instanceof Ban) {
+            $messages->add('banned', trans('validation.banned'));
+            $this->failedValidation($validator);
+            return;
+        }
+
         // Check flood timers
         if ($isReply) {
             $floodTime = site_setting('postFloodTime');
@@ -548,6 +529,7 @@ class PostRequest extends Request implements ApiContract
                 // If we are in R9K mode, set $respectTheRobot property to to false.
                 // This will trigger a Robot ban in failedValidation.
                 $this->respectTheRobot = !($strictness == 'boardr9k' || $strictness == 'siter9k');
+                $this->ban = Ban::addRobotBan($this->board);
             }
         }
 

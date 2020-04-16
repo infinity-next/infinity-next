@@ -128,7 +128,10 @@ trait Permittable
         $boards = [];
 
         if (!($permission instanceof Permission)) {
-            $permission = Permission::findOrFail($permission);
+            $permission = Permission::find($permission);
+            if (!($permission instanceof Permission) || !$permission->exists) {
+                throw new \InvalidArgumentException("Permission does not exist.");
+            }
         }
 
         $boardsWithRights = $permission->getBoardsWithPermissions($this, false);

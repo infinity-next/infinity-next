@@ -47,62 +47,8 @@
             @lang('board.action.unbumplock')
         </a>
 
-        {{-- Broad sweeping user & board actions --}}
-        <a class="action action-ban " href="{!! $post->getModUrl('mod', [
-                'ban'    => 1,
-            ]) !!}">
-            @lang('board.action.ban')
-        </a>
-
-        <a class="action action-delete " href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-            ]) !!}">
-            @lang('board.action.delete')
-        </a>
-
-        <a class="action action-delete-all" href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-                'scope'  => 'all',
-            ]) !!}">
-            @lang('board.action.delete_board')
-        </a>
-
-        <a class="action action-ban-delete " href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-                'ban'    => 1,
-            ]) !!}">
-            @lang('board.action.ban_delete')
-        </a>
-
-        <a class="action action-ban-delete-all " href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-                'ban'    => 1,
-                'scope'  => 'all',
-            ]) !!}">
-            @lang('board.action.ban_delete_board')
-        </a>
-
-        {{-- Global Actions --}}
-        <a class="action action-feature-global " href="{!! $post->getModUrl('feature') !!}">
-            @lang(isset($details['featured_at']) && $details['featured_at']
-                ? 'board.action.refeature'
-                : 'board.action.feature'
-            )
-        </a>
-
-        <a class="action action-delete-global " href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-                'scope'  => 'global',
-            ]) !!}">
-            @lang('board.action.delete_global')
-        </a>
-
-        <a class="action action-ban-delete-global " href="{!! $post->getModUrl('mod', [
-                'delete' => 1,
-                'ban'    => 1,
-                'scope'  => 'global',
-            ]) !!}">
-            @lang('board.action.ban_delete_global')
+        <a class="action action-ban " href="{!! $post->getModUrl('mod') !!}">
+            @lang('board.action.moderate')
         </a>
     </div>
 </div>

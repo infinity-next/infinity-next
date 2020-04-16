@@ -7,19 +7,18 @@ use App\FileStorage;
 use App\Post;
 use App\PostAttachment;
 use App\PostCite;
-use App\Filesystem\Upload;
-use App\Support\Geolocation;
-use App\Support\IP;
-use Cache;
-use DB;
-use Request;
-use Event;
-use App\Jobs\PostCreate as PostCreateJob;
 use App\Events\PostWasAdded;
 use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;
 use App\Events\ThreadNewReply;
+use App\Filesystem\Upload;
+use App\Jobs\PostCreate;
+use App\Support\Geolocation;
+use App\Support\IP;
 use App\Support\ContentFormatter;
+use Cache;
+use DB;
+use Request;
 
 class PostObserver
 {
@@ -144,7 +143,7 @@ class PostObserver
             Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
         }
 
-        dispatch(new PostCreateJob($post))->afterResponse();
+        PostCreate::dispatch($post);
 
         return true;
     }
@@ -283,7 +282,7 @@ class PostObserver
         $post->forget();
 
         // Fire event.
-        Event::dispatch(new PostWasDeleted($post));
+        event(new PostWasDeleted($post));
 
         return true;
     }
@@ -373,7 +372,7 @@ class PostObserver
     public function updated(Post $post)
     {
         // Fire event, which clears cache among other things.
-        Event::dispatch(new PostWasModified($post));
+        event(new PostWasModified($post));
 
         return true;
     }

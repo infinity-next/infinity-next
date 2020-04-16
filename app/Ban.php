@@ -245,6 +245,11 @@ class Ban extends Model
         return $fetch ? $query->get() : $query;
     }
 
+    public function getDurationForHumans()
+    {
+        return $this->expires_at->diffForHumans($this->created_at);
+    }
+
     public function getCidr()
     {
         return new IP($this->ban_ip_start, $this->ban_ip_end);

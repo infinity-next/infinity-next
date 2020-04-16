@@ -4,17 +4,20 @@ namespace App\Http\Controllers\Board;
 
 use App\Ban;
 use App\Board;
+use App\BoardAsset;
 use App\Post;
 use App\Report;
+use App\Events\BanWasCreated;
+use App\Events\PostWasModerated;
 use App\Http\Controllers\Controller;
+use App\Jobs\PostModeration;
 use App\Services\ContentFormatter;
 use App\Support\IP;
+use Gate;
 use Request;
 use Session;
 use Validator;
 use Event;
-use App\Events\PostWasBanned;
-use App\Events\PostWasModerated;
 
 /**
  * Post moderation and management.
@@ -32,261 +35,85 @@ class PostController extends Controller
     const VIEW_EDIT = 'board.post.mod';
     const VIEW_MOD  = 'board.post.mod';
 
-    public function moderate(Request $request, Board $board, Post $post)
+    public function moderate(Board $board, Post $post)
     {
-        $ban = Request::input('ban', false);
-        $delete = Request::input('delete', false);
-        $all = Request::input('scope', false) === "all";
-        $global = Request::input('scope', false) === "global";
-
-        if (!$ban && !$delete) {
-            return abort(400);
+        if (!Gate::any(['delete', 'ban'], $post)) {
+            return abort(403);
         }
 
-        $modActions = [];
-
-        if ($ban) {
-            $modActions[] = "ban";
-
-            if ($global) {
-                $modActions[] = "global";
-
-                $this->authorize('global-ban', $post);
-            } else {
-                if ($all) {
-                    $modActions[] = "all";
-                }
-
-                $this->authorize('ban', $post);
-            }
-
-        }
-        if ($delete) {
-            $modActions[] = "delete";
-
-            if ($global) {
-                $modActions[] = "global";
-
-                $this->authorize('global-delete', $post);
-            } else {
-                if ($all) {
-                    $modActions[] = "all";
-                }
-
-                $this->authorize('delete', $post);
-            }
-        }
-
-        $modActions = array_unique($modActions);
-        sort($modActions);
+        //$banBoards = user()->canInBoards('board.user.ban.free');
+        //$deleteBoards = user()->canInBoards('board.post.delete.other');
+        //$boardsWithRights = Board::whereIn('board_uri', array_unique(array_merge($banBoards, $deleteBoards)))->get();
 
         return $this->makeView(static::VIEW_MOD, [
-            'actions' => $modActions,
-            'form' => 'ban',
             'board' => $board,
             'post' => $post,
-
-            'ban' => $ban,
-            'delete' => $delete,
-            'scope' => Request::input('scope', false),
-
             'banMaxLength' => $this->option('banMaxLength'),
+            //'boardsWithRights' => $boardsWithRights,
         ]);
     }
 
 
-    public function issue(Request $request, Board $board, Post $post)
+    public function issue(Board $board, Post $post)
     {
-        $ban = Request::input('ban', false);
-        $delete = Request::input('delete', false);
-        $all = Request::input('scope', false) === "all";
-        $global = Request::input('scope', false) === "global";
+        $validator = Validator::make(Request::all(), [
+            'delete' => 'required|digits_between:0,2',
 
-        // Create ban.
-        if ($ban) {
-            if ($global) {
-                $this->authorize('global-ban', $post);
-            }
-            else {
-                $this->authorize('ban', $post);
-            }
+            'ban' => 'required_if:delete,0|bool',
+            'raw_ip' => 'required_if:ban,1|boolean',
+            'ban_ip' => 'required_if:ban,1',
+            'ban_ip_range' => 'required_if:ban,1|digits_between:0,128',
+            'justification' => 'nullable|string|max:1024',
+            'expires_days' => 'required_if:ban,1|digits_between:0,30',
+            'expires_hours' => 'required_if:ban,1|digits_between:0,24',
+            'expires_minutes' => 'required_if:ban,1|digits_between:0,60',
 
-            $validator = Validator::make(Request::all(), [
-                'raw_ip' => 'required|boolean',
-                'ban_ip' => 'required_if:raw_ip,true|ip',
-                'ban_ip_range' => 'required|between:0,128',
-                'justification' => 'max:255',
-                'expires_days' => 'required|integer|min:0|max:'.$this->option('banMaxLength'),
-                'expires_hours' => 'required|integer|min:0|max:23',
-                'expires_minutes' => 'required|integer|min:0|max:59',
-            ]);
+            'scope' => "required|string|in:_global,{$board->board_uri}",
+        ]);
 
-            if (!$validator->passes()) {
-                return redirect()
-                    ->back()
-                    ->withInput(Request::all())
-                    ->withErrors($validator->errors());
-            }
-
-            $banLengthStr = [];
-            $expiresDays = Request::input('expires_days');
-            $expiresHours = Request::input('expires_hours');
-            $expiresMinutes = Request::input('expires_minutes');
-
-            if ($expiresDays > 0) {
-                $banLengthStr[] = "{$expiresDays}d";
-            }
-            if ($expiresHours > 0) {
-                $banLengthStr[] = "{$expiresHours}h";
-            }
-            if ($expiresMinutes > 0) {
-                $banLengthStr[] = "{$expiresMinutes}m";
-            }
-            if ($expiresDays == 0 && $expiresHours == 0 && $expiresMinutes == 0) {
-                $banLengthStr[] = '&Oslash;';
-            }
-
-            $banLengthStr = implode($banLengthStr, ' ');
-
-            // The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
-            $banCidr = Request::input('ban_ip_range');
-            // This generates a range from start to finish. I.E. 192.168.1.3/22 becomes [192.168.0.0, 192.168.3.255].
-            // If we just pass the CDIR into the construct, we get 192.168.1.3-129.168.3.255 for some reason.
-            $banCidrRange = IP::cidr_to_range("{$post->author_ip}/{$banCidr}");
-            // We then pass this range into the construct method.
-            $banIp = new IP($banCidrRange[0], $banCidrRange[1]);
-
-            $banModel = new Ban();
-            $banModel->ban_ip_start = $banIp->getStart();
-            $banModel->ban_ip_end = $banIp->getEnd();
-            $banModel->seen = false;
-            $banModel->created_at = $banModel->freshTimestamp();
-            $banModel->updated_at = clone $banModel->created_at;
-            $banModel->expires_at = clone $banModel->created_at;
-            $banModel->expires_at = $banModel->expires_at->addDays($expiresDays);
-            $banModel->expires_at = $banModel->expires_at->addHours($expiresHours);
-            $banModel->expires_at = $banModel->expires_at->addMinutes($expiresMinutes);
-            $banModel->mod_id = user()->user_id;
-            $banModel->post_id = $post->post_id;
-            $banModel->ban_reason_id = null;
-            $banModel->justification = Request::input('justification') ?: "No reason given.";
-            $banModel->board_uri = $global ? null : $board->board_uri;
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Delete content
-        if ($delete) {
-            // Delete all posts globally.
+        // set markers for what we're doing.
+        $ban = !!Request::input('ban');
+        $delete = !!Request::input('delete');
+        $deleteAll = Request::input('delete') == 2;
+        $global = Request::input('scope') == '_global';
+
+        // authorization
+        if ($ban) {
             if ($global) {
-                $this->authorize('global-delete', $post);
-
-                $posts = Post::whereAuthorIP($post->author_ip)
-                    ->with('reports')
-                    ->get();
-
-                $this->log('log.post.delete.global', $post, [
-                    'board_id' => $post->board_id,
-                    'board_uri' => $post->board_uri,
-                    'ip' => $post->getAuthorIpAsString(),
-                    'posts' => $posts->count(),
-                ]);
-
-                Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
-
-                foreach ($posts as $post) {
-                    event(new PostWasModerated($post, user()));
-                }
+                $this->authorize('global-ban');
             }
-            // Delete posts locally
+            else {
+                $this->authorize('ban', $board);
+            }
+
+        }
+        if ($delete) {
+            if ($global) {
+                $this->authorize('global-delete');
+            }
             else {
                 $this->authorize('delete', $post);
-
-                // Delete all posts on board
-                if ($all) {
-                    $posts = Post::whereAuthorIP($post->author_ip)
-                        ->where('board_uri', $board->board_uri)
-                        ->with('reports')
-                        ->get();
-
-                    $this->log('log.post.delete.local', $post, [
-                        'board_id' => $post->board_id,
-                        'board_uri' => $post->board_uri,
-                        'ip' => $post->getAuthorIpAsString(),
-                        'posts' => $posts->count(),
-                    ]);
-
-                    Post::whereIn('post_id', $posts->pluck('post_id'))->delete();
-
-                    foreach ($posts as $post) {
-                        Event::dispatch(new PostWasModerated($post, user()));
-                    }
-                }
-                // Delete a single post
-                else {
-                    if (!$post->isAuthoredByClient()) {
-                        if ($ban) {
-                            $this->log('log.post.ban.delete', $post, [
-                                'board_id' => $post->board_id,
-                                'board_uri' => $post->board_uri,
-                                'ip' => $post->getAuthorIpAsString(),
-                                'justification' => $banModel->justification,
-                                'time' => $banLengthStr,
-                                'posts' => 1,
-                            ]);
-                        } elseif ($post->reply_to) {
-                            $this->log('log.post.delete.reply', $post, [
-                                'board_id' => $post->board_id,
-                                'board_uri' => $post->board_uri,
-                                'op_id' => $post->thread->board_id,
-                            ]);
-                        } else {
-                            $this->log('log.post.delete.op', $post, [
-                                'board_id' => $post->board_id,
-                                'board_uri' => $post->board_uri,
-                                'replies' => $post->replies()->count(),
-                            ]);
-                        }
-                    }
-                }
-
-                $post->delete();
-
-                Event::dispatch(new PostWasModerated($post, user()));
             }
         }
 
-        if ($ban) {
-            $banModel->save();
+        PostModeration::dispatch(user(), new IP, $post, Request::input());
 
-            if ($global) {
-                $this->log('log.post.ban.global', $post, [
-                    'board_id' => $post->board_id,
-                    'board_uri' => $post->board_uri,
-                    'ip' => $post->getAuthorIpAsString(),
-                    'justification' => $banModel->justification,
-                    'time' => $banLengthStr,
-                ]);
-            } else {
-                $this->log('log.post.ban.local', $post, [
-                    'board_id' => $post->board_id,
-                    'board_uri' => $post->board_uri,
-                    'ip' => $post->getAuthorIpAsString(),
-                    'justification' => $banModel->justification,
-                    'time' => $banLengthStr,
-                ]);
-            }
-
-            Event::dispatch(new PostWasBanned($post));
-
-            if (!$delete) {
-                Event::dispatch(new PostWasModerated($post, user()));
-            }
-        }
-
+        // redirect to whatever is most relevant.
         if ($delete) {
-            return redirect($board->getUrl());
+            if (!$post->isOp()) {
+                return redirect($post->thread->getUrl());
+            }
+            else {
+                return redirect($board->getUrl());
+            }
         }
-
-        return redirect($post->getUrl());
+        else {
+            return redirect($post->getUrl());
+        }
     }
 
     /**
@@ -346,7 +173,7 @@ class PostController extends Controller
 
         $actions = ['report'];
 
-        $ContentFormatter = new ContentFormatter();
+        $ContentFormatter = new ContentFormatter;
         $reportText = '';
 
         if ($global === 'global') {

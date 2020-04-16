@@ -182,7 +182,7 @@ class AssetController extends PanelController
         $this->authorize('configure', $board);
 
         if ((bool) Request::input('delete', false)) {
-            return $this->destroyAssets($board);
+            return $this->destroy($board);
         }
 
         $input = Request::all();

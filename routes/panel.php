@@ -20,7 +20,7 @@ Route::group(['prefix' => 'bans',], function () {
 
     Route::get('board/{board}/{ban}', ['as' => 'board.ban', 'uses' => 'BansController@getBan']);
     Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal', 'uses' => 'BansController@putAppeal']);
-    Route::get('board/{board}', ['as' => 'board.ban', 'uses' => 'BansController@getBoardIndex']);
+    Route::get('board/{board}', ['as' => 'board.bans', 'uses' => 'BansController@getBoardIndex']);
 
     Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getBan']);
     Route::put('global/{ban}', ['as' => 'site.ban.appeal', 'uses' => 'BansController@putAppeal']);

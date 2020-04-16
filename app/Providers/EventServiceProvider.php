@@ -13,6 +13,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+
+        /**
+         * Ban Events
+         */
+        \App\Events\BanWasCreated::class => [
+            \App\Listeners\LogEvent::class,
+        ],
+
         /**
          * Board events
          */
@@ -34,51 +42,39 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         /**
-         * Posts
+         * Post Attachments
          */
         \App\Events\AttachmentWasModified::class => [
             \App\Listeners\BoardRecachePages::class,
             \App\Listeners\OverboardRecache::class,
-            \App\Listeners\ThreadRecache::class,
         ],
+
+        /**
+         * Posts
+         */
+        \App\Events\PostWasCreated::class => [],
         \App\Events\PostWasCapcoded::class => [
             \App\Listeners\LogEvent::class,
         ],
-        \App\Events\PostWasCreated::class => [
-            \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\ThreadRecache::class,
-        ],
-        \App\Events\PostWasBanned::class => [
-            \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\ThreadRecache::class,
-        ],
         \App\Events\PostWasDeleted::class => [
-            \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\ThreadRecache::class,
-        ],
-        \App\Events\PostWasModified::class => [
-            \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\PostHTMLRecache::class,
-            \App\Listeners\ThreadRecache::class,
-        ],
-        \App\Events\PostWasModerated::class => [
-            \App\Listeners\ReportMarkSuccessful::class,
             \App\Listeners\ThreadRecount::class,
-
-            \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\OverboardRecache::class,
-            \App\Listeners\PostHTMLRecache::class,
-            \App\Listeners\ThreadRecache::class,
+        ],
+        \App\Events\PostsWereModerated::class => [
+            \App\Listeners\ReportMarkSuccessful::class,
+            \App\Listeners\LogEvent::class,
         ],
 
         // Thread (OP) specific Events
+        \App\Events\ThreadWasCreated::class => [
+            \App\Listeners\BoardRecachePages::class,
+            \App\Listeners\OverboardRecache::class,
+        ],
+        \App\Events\ThreadWasDeleted::class => [
+            \App\Listeners\BoardRecachePages::class,
+            \App\Listeners\OverboardRecache::class,
+        ],
         \App\Events\ThreadWasStickied::class => [
             \App\Listeners\BoardRecachePages::class,
-            \App\Listeners\ThreadRecache::class,
         ],
 
         // Page specific events
@@ -120,6 +116,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \App\Ban::observe(new \App\Observers\BanObserver);
         \App\Board::observe(new \App\Observers\BoardObserver);
         \App\Page::observe(new \App\Observers\PageObserver);
         \App\Post::observe(new \App\Observers\PostObserver);

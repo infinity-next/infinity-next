@@ -23,8 +23,11 @@ class LogEvent extends Listener
 
         $log = new Log;
         $log->action_name = "log.{$event->action}";
-        $log->user_ip = new IP;
+        $log->user_ip = $event->ip ?? new IP;
 
+        if ($event->actionBoard ?? null) {
+            $log->board_uri = $event->actionBoard;
+        }
         if ($event->board ?? null instanceof Board) {
             $log->board_uri = $event->board->board_uri;
         }

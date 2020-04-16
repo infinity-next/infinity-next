@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Board;
 
+use App\Ban;
 use App\Board;
 use App\FileStorage;
 use App\OptionGroup;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Filesystem\Upload;
 use App\Support\IP;
+use App\Exceptions\BannedException;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Cache;
@@ -193,7 +195,17 @@ class BoardController extends Controller
      */
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
-        $request->validate();
+        try {
+            $request->validate();
+        }
+        catch (BannedException $e) {
+            if ($request->wantsJson()) {
+                return [ 'redirect' => $e->redirectTo ];
+            }
+            else {
+                return redirect($e->redirectTo);
+            }
+        }
 
         // Create the post.
         $post = new Post($request->all());

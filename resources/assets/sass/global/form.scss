@@ -180,6 +180,27 @@ form {
             line-height: 1.2;
         }
 
+
+    .field-buttons {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+    }
+        .field-button {
+            display: block;
+            font-size: 1.2em;
+            padding: 0.5rem;
+            border: 1px solid rgba(150, 150, 150, 0.25);
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            background: rgba(125, 125, 125, 0.05);
+            white-space: nowrap;
+            user-select: none;
+        }
+            .field-button .crown-image {
+                max-height: 1.2em;
+                vertical-align: top;
+            }
+
     .row-captcha {
         background: #ffffff center 4px url("#{$base-url}img/assets/infinity.gif") no-repeat;
         border: 1px solid rgb(169, 169, 169);

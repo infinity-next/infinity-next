@@ -700,9 +700,12 @@
 
     $(window).on('messenger.ib-main', function(event, messages) {
         setTimeout(function() {
-            if (messages.messenger)
-            {
+            if (messages.messenger) {
                 ib.session = messages.session;
+            }
+
+            if (messages.data && messages.data.redirect) {
+                window.location = messages.data.redirect;
             }
         }, 32);
     });

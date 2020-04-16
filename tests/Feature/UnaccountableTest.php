@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Routes\Panel;
+namespace Tests\Feature;
 
 use App\Board;
 use App\Auth\AnonymousUser;
