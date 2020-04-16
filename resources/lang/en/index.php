@@ -28,7 +28,7 @@ return [
             'board_count' => "{1}<strong>:boards</strong> board|[2,*]<strong>:boards</strong> boards",
 
             // {1} if there is only 1 board, the rest if there are >1 board.
-            'boards' => "{1}There is a single board.|[2,*]There are currenctly :boards_public public and :boards_total total.",
+            'boards' => "{1}There is a single board.|[2,*]There are currently :boards_public public and :boards_total total.",
             'posts'  => "Site-wide, :recent_posts have been made in the last day.",
             'posts_all' => ":posts_total have made on all active boards since :start_date.",
         ],

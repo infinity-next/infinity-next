@@ -50,7 +50,7 @@ class PostPolicy extends AbstractPolicy
             return Response::deny('auth.post.only_on_an_op');
         }
 
-        if ($user->permission('board.post.bumplock', $post->attributes['board_uri'])) {
+        if ($user->permission('board.post.bumplock', $post)) {
             return Response::allow();
         }
 
@@ -89,7 +89,7 @@ class PostPolicy extends AbstractPolicy
     public function delete(User $user, Post $post)
     {
         // If we can edit any post for this board ...
-        if ($user->permission('board.post.delete.other', $post->attributes['board_uri'])) {
+        if ($user->permission('board.post.delete.other', $post)) {
             return Response::allow();
         }
 
@@ -134,7 +134,7 @@ class PostPolicy extends AbstractPolicy
     public function edit(User $user, Post $post)
     {
         // If we can edit any post for this board ...
-        if ($user->permission('board.post.edit.other', $post->attributes['board_uri'])) {
+        if ($user->permission('board.post.edit.other', $post)) {
             return Response::allow();
         }
 

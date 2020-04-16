@@ -62,7 +62,7 @@ class BoardPolicy extends AbstractPolicy
      */
     public function ban(User $user, Board $board)
     {
-        return ($user->permission('board.user.ban.free', $board) || $user->can('board.user.ban.reason', $board))
+        return ($user->permission('board.user.ban.free', $board) || $user->permission('board.user.ban.reason', $board))
             ? Response::allow()
             : Response::deny('auth.board.cannot_ban');
     }
