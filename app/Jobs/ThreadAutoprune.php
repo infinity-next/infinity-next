@@ -36,7 +36,12 @@ class ThreadAutoprune extends Job implements ShouldQueue
      */
     public function __construct(Post $post)
     {
-        $this->post = $post;
+        if ($post->isOp()) {
+            $this->post = $post;
+        }
+        else {
+            $this->post = $post->thread;
+        }
     }
 
     /**

@@ -32,8 +32,6 @@ class ThreadReply implements ShouldBroadcast
         $reply = $reply->toArray();
         $reply['recently_created'] = false;
         $this->reply = $reply;
-
-        ThreadAutoprune::dispatch($thread);
     }
 
     /**

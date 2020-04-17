@@ -13,6 +13,7 @@ use App\Events\PostWasModified;
 use App\Events\ThreadNewReply;
 use App\Filesystem\Upload;
 use App\Jobs\PostCreate;
+use App\Jobs\ThreadAutoprune;
 use App\Support\Geolocation;
 use App\Support\IP;
 use App\Support\ContentFormatter;
@@ -143,7 +144,9 @@ class PostObserver
             Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
         }
 
-        PostCreate::dispatch($post);
+        PostCreate::withChain([
+            new ThreadAutoprune($thread),
+        ])->dispatch($post);
 
         return true;
     }
