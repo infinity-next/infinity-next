@@ -110,7 +110,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('attachment', function ($value, $route) {
             return PostAttachment::where('is_deleted', false)
-                ->with('storage')
+                ->with('file')
                 ->find($value);
         });
 
