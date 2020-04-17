@@ -141,12 +141,15 @@ class PostObserver
         // NOTE: The transaction starts in creating()!
         DB::commit();
 
+        // unlock
+        Cache::restoreLock('posting_now_'.$post->author_ip->toLong(), Post::class)->release();
+
         if (!is_null(user()) && user()->isAccountable()) {
             Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
         }
 
         PostCreate::withChain([
-            new ThreadAutoprune($thread),
+            $thread ? new ThreadAutoprune($thread) : null,
         ])->dispatch($post);
 
         return true;
@@ -177,8 +180,8 @@ class PostObserver
         }
 
         if (!is_null(user()) && user()->isAccountable()) {
-            if (!Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->get()) {
-                return abort(429, "Slow down.");
+            if (!Cache::lock('posting_now_'.$post->author_ip->toLong(), 10, Post::class)->get()) {
+                return abort(429, "Your IP is still locked from posting.");
             }
 
             // Cache what time we're submitting our post for flood checks.
@@ -377,7 +380,7 @@ class PostObserver
     public function updated(Post $post)
     {
         PostUpdate::dispatch($post);
-        
+
         return true;
     }
 
