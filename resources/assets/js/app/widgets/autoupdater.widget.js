@@ -124,6 +124,9 @@
         if (widget.updateWs) {
             $(widget.options.selector['ws'], $widget).show();
             widget.Echo = window.Echo.join('Thread.'+$widget.data('id'))
+                .listen('PostWasModified', (e) => {
+                    $widget.trigger('new-posts', [[ e.post ]]);
+                })
                 .listen('ThreadReply', (e) => {
                     $widget.trigger('new-posts', [[ e.reply ]]);
                 });

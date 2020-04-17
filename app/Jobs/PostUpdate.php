@@ -3,16 +3,15 @@
 namespace App\Jobs;
 
 use App\Post;
-use App\Events\PostWasCapcoded;
-use App\Events\PostWasCreated;
-use App\Events\ThreadReply;
+use App\Events\PostWasEdited;
+use App\Events\PostWasModified;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class PostCreate extends Job implements ShouldQueue
+class PostUpdate extends Job implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,19 +34,15 @@ class PostCreate extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $post = $this->post;
+        // Fire an edited event if a user applied an edit
+        if ($this->post->isDirty('updated_by')) {
+            $event = new PostWasEdited($this->post);
+            $event->user = user();
+            $event->ip = new IP;
+            event($event);
+        }
 
         // Fire event, which clears cache among other things.
-        event(new PostWasCreated($post));
-
-        // Log staff posts.
-        if ($post->capcode_id) {
-            event(new PostWasCapcoded($post, user()));
-        }
-
-        // Finally fire event on OP, if it exists.
-        if (!is_null($post->reply_to)) {
-            broadcast(new ThreadReply($post->thread, $post));
-        }
+        broadcast(new PostWasModified($this->post));
     }
 }

@@ -46,6 +46,7 @@ class PostController extends Controller
         //$boardsWithRights = Board::whereIn('board_uri', array_unique(array_merge($banBoards, $deleteBoards)))->get();
 
         return $this->makeView(static::VIEW_MOD, [
+            'form' => "ban",
             'board' => $board,
             'post' => $post,
             'banMaxLength' => $this->option('banMaxLength'),
@@ -132,7 +133,7 @@ class PostController extends Controller
     /**
      * Updates a post with the edit.
      */
-    public function update(Request $request, Board $board, Post $post)
+    public function update(Board $board, Post $post)
     {
         $this->authorize('edit', $post);
 
@@ -146,11 +147,6 @@ class PostController extends Controller
         $post->updated_by = user()->user_id;
 
         $post->save();
-
-        $this->log('log.post.edit', $post, [
-            'board_id' => $post->board_id,
-            'board_uri' => $post->board_uri,
-        ]);
 
         return $this->makeView(static::VIEW_EDIT, [
             'actions' => ['edit'],

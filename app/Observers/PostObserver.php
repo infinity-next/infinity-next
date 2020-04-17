@@ -14,6 +14,7 @@ use App\Events\ThreadNewReply;
 use App\Filesystem\Upload;
 use App\Jobs\PostCreate;
 use App\Jobs\ThreadAutoprune;
+use App\Jobs\PostUpdate;
 use App\Support\Geolocation;
 use App\Support\IP;
 use App\Support\ContentFormatter;
@@ -375,9 +376,8 @@ class PostObserver
      */
     public function updated(Post $post)
     {
-        // Fire event, which clears cache among other things.
-        event(new PostWasModified($post));
-
+        PostUpdate::dispatch($post);
+        
         return true;
     }
 
