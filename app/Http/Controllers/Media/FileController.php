@@ -39,11 +39,11 @@ class FileController extends Controller
      */
     public function getImageFromAttachment(PostAttachment $attachment, $filename = false)
     {
-        if (!$attachment->exists || !$attachment->storage) {
+        if (!$attachment->exists || !$attachment->file) {
             return abort(404);
         }
 
-        return $this->sendFile($attachment->storage->hash, $filename);
+        return $this->sendFile($attachment->file->hash, $filename);
     }
 
     /**
@@ -67,8 +67,8 @@ class FileController extends Controller
      */
     public function getThumbnailFromAttachment(PostAttachment $attachment, $filename = false)
     {
-        if ($attachment->storage) {
-            return $this->sendFile($attachment->storage->hash, $filename, true);
+        if ($attachment->file) {
+            return $this->sendFile($attachment->file->hash, $filename, true);
         }
 
         return abort(404);

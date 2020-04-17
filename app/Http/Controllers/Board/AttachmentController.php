@@ -120,7 +120,7 @@ class AttachmentController extends Controller
                     'board_uri' => $attachment->post->board_uri,
                     'board_id' => $attachment->post->board_id,
                     'post_id' => $attachment->post->post_id,
-                    'file' => $attachment->storage->hash,
+                    'file' => $attachment->file->hash,
                 ]);
             }
             else {
@@ -191,7 +191,7 @@ class AttachmentController extends Controller
                     'board_uri' => $attachment->post->board_uri,
                     'board_id' => $attachment->post->board_id,
                     'post_id' => $attachment->post->post_id,
-                    'file' => $attachment->storage->hash,
+                    'file' => $attachment->file->hash,
                 ]
             );
         }
