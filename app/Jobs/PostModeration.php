@@ -73,6 +73,11 @@ class PostModeration implements ShouldQueue
             $event->ip = $this->ip;
             event($event);
         }
+        else {
+            foreach ($posts as $post) {
+                $post->touch(); // triggers modified event and changes updated_at time
+            }
+        }
     }
 
     protected function prepareBan()
