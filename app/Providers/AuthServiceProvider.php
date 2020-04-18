@@ -98,14 +98,14 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('bypass-captcha', function (User $user) {
-            // Check if site requires captchas.
-            if (!site_setting('captchaEnabled')) {
-                return Response::allow();
-            }
-
             // All Tor users must pass a captcha if possible.
             if (!$user->can('be-accountable')) {
                 return Response::deny('auth.captcha.unaccountable');
+            }
+
+            // Check if site requires captchas.
+            if (!site_setting('captchaEnabled')) {
+                return Response::allow();
             }
 
             // Check if this user belongs to a group which can bypass the captcha.
