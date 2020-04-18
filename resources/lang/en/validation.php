@@ -129,7 +129,7 @@ return [
     |
     */
 
-    'captcha' => "The captcha was not completed correctly.",
+    'captcha' => "The captcha was not completed correctly or has expired.",
     'ugc_height' => "The :attribute is too many lines or is too tall.",
     'css' => "The CSS you've supplied contains references that are not allowed.",
 

@@ -146,14 +146,11 @@
                     <input type="hidden" name="captcha_hash" value="" />
                 @endcan
 
-                {!! Form::text(
-                    'captcha',
-                    "",
-                    [
-                        'id'           => "captcha",
-                        'class'        => "field-control",
-                        'placeholder'  => "Security Code",
-                        'autocomplete' => "off",
+                {!! Form::text('captcha', "", [
+                    'id'           => "captcha",
+                    'class'        => "field-control",
+                    'placeholder'  => "Security Code",
+                    'autocomplete' => "off",
                 ]) !!}
             </label>
         </div>

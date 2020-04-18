@@ -141,11 +141,14 @@ class PostObserver
         // NOTE: The transaction starts in creating()!
         DB::commit();
 
-        // unlock
-        Cache::restoreLock('posting_now_'.$post->author_ip->toLong(), Post::class)->release();
-
+        // unlock accountable users
+        // tor users always have to do a captcha
         if (!is_null(user()) && user()->isAccountable()) {
-            Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
+            Cache::restoreLock('posting_now_'.$post->author_ip->toLong(), Post::class)->release();
+
+            if (!is_null(user()) && user()->isAccountable()) {
+                Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
+            }
         }
 
         PostCreate::withChain([

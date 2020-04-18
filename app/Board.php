@@ -8,7 +8,6 @@ use App\Support\IP;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use InfinityNext\LaravelCaptcha\Captcha;
 use Acetone;
 use DB;
 use Cache;

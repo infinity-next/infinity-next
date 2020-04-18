@@ -220,19 +220,9 @@ class PostController extends Controller
 
         $input = Request::all();
         $validator = Validator::make($input, [
-            'associate' => [
-                'boolean',
-            ],
-
-            'captcha' => [
-                'required',
-                'captcha',
-            ],
-
-            'reason' => [
-                'string',
-                'between:0,512',
-            ],
+            'associate' => [ 'boolean', ],
+            'captcha' => [ 'required', 'captcha', ],
+            'reason' => [ 'string', 'between:0,512', ],
         ]);
 
         if (!$validator->passes()) {

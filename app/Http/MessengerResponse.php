@@ -5,6 +5,7 @@ namespace App\Http;
 use App;
 use App\Board;
 use InfinityNext\LaravelCaptcha\Captcha;
+use InfinityNext\LaravelCaptcha\CaptchaChallenge;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\ResponseTrait;
 use Session;
@@ -60,7 +61,7 @@ class MessengerResponse extends JsonResponse
     {
         $needCaptcha = user()->cannot('bypass-captcha');
 
-        return $needCaptcha ? Captcha::findOrCreateCaptcha() : false;
+        return $needCaptcha ? (new CaptchaChallenge) : false;
     }
 
     /**

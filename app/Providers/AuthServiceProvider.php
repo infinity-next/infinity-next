@@ -13,9 +13,9 @@ use App\Support\IP;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Auth;
+use Cache;
 use Gate;
 use Session;
-use InfinityNext\LaravelCaptcha\Captcha;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -113,45 +113,11 @@ class AuthServiceProvider extends ServiceProvider
                 return Response::allow();
             }
 
-            // Begin to check captchas for last answers.
-            $ip = new IP;
-            $session_id = Session::getId();
+            // Check to see if we have any grace left for our session.
+            $grace = Cache::get("captcha.grace." . Session::getId());
 
-            $lastCaptcha = Captcha::select('created_at', 'cracked_at')
-                ->where(function ($query) use ($ip, $session_id) {
-                    // Find captchas answered by this user.
-                    $query->where('client_session_id', $session_id);
-
-                    // Pull the lifespan of a captcha.
-                    // This is the number of minutes between successful entries.
-                    $captchaLifespan = (int) site_setting('captchaLifespanTime', 0);
-
-                    if ($captchaLifespan > 0) {
-                        $query->whereNotNull('cracked_at');
-                        $query->where('cracked_at', '>=', now()->subMinutes($captchaLifespan));
-                    }
-                })
-                ->orderBy('cracked_at', 'desc')
-                ->first();
-
-            $requireCaptcha = !($lastCaptcha instanceof Captcha);
-
-            if (!$requireCaptcha) {
-                $captchaLifespan = (int) site_setting('captchaLifespanPosts');
-
-                if ($captchaLifespan > 0) {
-                    $postsWithCaptcha = Post::select('created_at')
-                        ->where('author_ip', $ip)
-                        ->where('created_at', '>=', $lastCaptcha->created_at)
-                        ->count();
-
-                    if ($postsWithCaptcha >= $captchaLifespan) {
-                        return Response::deny(trans_choice('auth.captcha.lifespan', $captchaLifespan));
-                    }
-                }
-                else {
-                    return Response::deny(trans_choice('auth.captcha.lifespan', $captchaLifespan));
-                }
+            if (is_null($grace) || $grace < 1) {
+                return Response::deny(trans('auth.captcha.lifespan'));
             }
 
             return Response::allow();

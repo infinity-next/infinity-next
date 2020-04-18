@@ -26,7 +26,7 @@
         "predis/predis": "^1.1.1",
         "geoip2/geoip2": "~2.1",
         "doctrine/dbal": "^2.10",
-        "infinity-next/laravel-captcha": "^1.0",
+        "infinity-next/laravel-captcha": "^2",
         "infinity-next/eightdown": "0.1.1.1",
         "infinity-next/sleuth": "^0.2",
         "intervention/image": "^2.5",
