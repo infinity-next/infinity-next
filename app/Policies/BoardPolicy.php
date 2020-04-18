@@ -169,7 +169,7 @@ class BoardPolicy extends AbstractPolicy
         }
 
         if (!is_null($option) && $option->isLocked()) {
-            return $this->permission('site.board.setting_lock')
+            return $user->permission('site.board.setting_lock')
              ? Response::allow()
              : Response::deny('auth.site.setting_locked');
         }
