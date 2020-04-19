@@ -7,7 +7,7 @@
 
 @set('ogHasImage', false)
 @foreach($thread->attachments as $attachment)
-    @if ($attachment->thumbnail)
+    @if (!$attachment->is_deleted && $attachment->thumbnail)
         @set('ogHasImage', true)
         <meta property="og:image" content="{{ url($attachment->getThumbnailUrl()) }}" />
         @break
