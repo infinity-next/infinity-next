@@ -97,6 +97,12 @@ Route::group(['namespace' => 'Boards',], function () {
         Route::post('feature', ['as' => 'feature.update', 'uses' => 'FeatureController@postIndex',]);
 
         /**
+         * Board Deletion
+         */
+         Route::get('delete', ['as' => 'delete', 'uses' => 'BoardsController@delete']);
+         Route::delete('delete', ['as' => 'destroy', 'uses' => 'BoardsController@destroy']);
+
+        /**
          * Roles
          */
         Route::get('roles/create',  ['as' => 'roles.create', 'uses' => 'RolesController@create',]);

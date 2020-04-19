@@ -45,6 +45,7 @@ return [
         'board_staff_edit'   => "Editing /:board_uri/ Staff: :staff_name",
         'board_staff_delete' => "Removing /:board_uri/ Staff: :staff_name",
         'permissions'        => ":role Role Permissions",
+        'delete_board'       => "Delete /:board_uri/ Forever",
         'they_are_banned'    => "Ban Overview",
         'you_are_banned'     => "You are BANNED!",
         'you_are_not_banned' => "You are not banned.",
@@ -61,6 +62,7 @@ return [
     'action'    => [
         'edit'                 => "Edit",
         'update'               => "Update",
+        'delete'               => "Delete",
 
         'add_staff'            => "Add Staff",
         'edit_staff'           => "Save Staff",
@@ -110,6 +112,9 @@ return [
         'feature' => "Featuring a thread will update its \"Featured At\" column to be the current date.<br />" .
             "Unfeaturing a thread will clear that value.<br />" .
             "Featured boards on the front page are sorted by their Featured At date.",
+
+        'delete_board' => "You are about to delete a board. This action is irreversible. " .
+            "All associated content will also be deleted.<br /><br />Do not proceed unless you are sure you want /:board_uri/ to be totally obliterated.",
 
         'delete_staff_self' => "<strong>Warning!</strong><br />" .
             "You are <em>removing yourself</em> from this board's staff.<br />" .

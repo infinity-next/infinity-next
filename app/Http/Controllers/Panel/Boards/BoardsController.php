@@ -22,8 +22,9 @@ use Validator;
  */
 class BoardsController extends PanelController
 {
-    const VIEW_DASHBOARD = 'panel.board.dashboard';
     const VIEW_CREATE = 'panel.board.create';
+    const VIEW_DASHBOARD = 'panel.board.dashboard';
+    const VIEW_DELETE = 'panel.board.delete';
     const VIEW_STAFF = 'panel.board.staff';
 
     /**
@@ -241,5 +242,41 @@ class BoardsController extends PanelController
         $board->save();
 
         return redirect($board->getPanelUrl());
+    }
+
+    public function delete(Board $board)
+    {
+        $this->authorize('delete', $board);
+
+        return $this->makeView(static::VIEW_DELETE, [
+            'board' => $board,
+        ]);
+    }
+
+    public function destroy(Board $board)
+    {
+        $this->authorize('delete', $board);
+
+        $board->assets()->forceDelete();
+        $board->stats()->forceDelete();
+        $board->tags()->forceDelete();
+
+        $board->staffAssignments()->forceDelete();
+        $board->settings()->forceDelete();
+
+        $board->bans()->forceDelete();
+        $board->logs()->forceDelete();
+
+        $board->checksums()->forceDelete();
+        $board->posts()->forceDelete();
+        $board->roles()->forceDelete();
+
+        $board->clearCachedModel();
+        $board->clearCachedThreads();
+        $board->clearCachedPages();
+
+        $board->forceDelete();
+
+        return redirect()->route('panel.boards.index');
     }
 }

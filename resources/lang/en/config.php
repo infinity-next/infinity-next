@@ -73,6 +73,7 @@ return [
         'siteName'                 => "Site Name",
         'siteDescription'          => "Site Description",
         'siteAnnouncement'         => "Site Announcement",
+        'copyrightAddendum'        => "Additional Copyright",
         'canary'                   => "Show cute bird",
 
         'board_uri'                => "URI",

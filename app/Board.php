@@ -248,7 +248,7 @@ class Board extends Model
         $stats = collect([]);
 
         if (is_null($carbon)) {
-            $carbon = \Carbon\Carbon::now()->subHour()->minute(0)->second(0);
+            $carbon = now()->subHour()->minute(0)->second(0);
         }
 
         static::chunk(25, function ($boards) use ($stats, $carbon) {

@@ -103,6 +103,21 @@ class BoardPolicy extends AbstractPolicy
     }
 
     /**
+     * Can this user delete a board?
+     *
+     * @param  \App\User        $user
+     * @param  \App\Board|null  $board
+     *
+     * @return Illuminate\Auth\Access\Response
+     */
+    public function delete(User $user, Board $board)
+    {
+        return $user->permission('board.delete')
+            ? Response::allow()
+            : Response::deny('auth.board.cannot_delete');
+    }
+
+    /**
      * Can this user edit a board's uri?
      *
      * @param  \App\User  $user
