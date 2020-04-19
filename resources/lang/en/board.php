@@ -123,6 +123,7 @@ return [
     // Default Values
     'anonymous'         => "Anonymous",
     'you'               => "You",
+    'robot'             => "ROBOT",
 
     // The direct link to a post, like No. 11111
     'post_number'       => "No.",
