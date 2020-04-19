@@ -156,7 +156,7 @@ class AssetController extends PanelController
                             } else {
                                 return redirect()
                                     ->back()
-                                    ->withErrors(['validation.custom.file_generic']);
+                                    ->withErrors(['validation.file_generic']);
                             }
 
                             break;

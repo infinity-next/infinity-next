@@ -13,21 +13,6 @@
  */
 
 /**
- * Bans and Appeals
- */
-Route::group(['prefix' => 'bans',], function () {
-    Route::get('banned', ['as' => 'banned', 'uses' => 'BansController@getIndexForSelf']);
-
-    Route::get('board/{board}/{ban}', ['as' => 'board.ban', 'uses' => 'BansController@getBan']);
-    Route::put('board/{board}/{ban}', ['as' => 'board.ban.appeal', 'uses' => 'BansController@putAppeal']);
-    Route::get('board/{board}', ['as' => 'board.bans', 'uses' => 'BansController@getBoardIndex']);
-
-    Route::get('global/{ban}', ['as' => 'site.ban', 'uses' => 'BansController@getBan']);
-    Route::put('global/{ban}', ['as' => 'site.ban.appeal', 'uses' => 'BansController@putAppeal']);
-    Route::get('/', ['as' => 'site.bans', 'uses' => 'BansController@getIndex']);
-});
-
-/**
  * Post History
  */
 Route::get('history/{ip}', ['as' => 'history.global', 'uses' => 'HistoryController@list',]);

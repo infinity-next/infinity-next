@@ -23,18 +23,6 @@ abstract class PanelController extends Controller
     public static $navSecondary = 'nav.panel.home';
 
     /**
-     * Constructs all controllers with the user and board as properties.
-     *
-     * @param  Router       $router
-     *
-     * @return void
-     */
-    public function __construct(Router $router)
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Passes a warning message if we do not have a CSRF token.
      *
      * @param array $options

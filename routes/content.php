@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Mostly static root-level content.
+ * Public content.
  *
  * @category   Routes
  *
@@ -40,13 +40,6 @@ Route::get('boards.html', ['as'   => 'boardlist', 'uses' => 'BoardlistController
 Route::get('{page_title}.html', ['as' => 'page', 'uses' => 'PageController@show',]);
 // board static page
 Route::get('{board}/{page_title}.html', ['as' => 'board.page', 'uses' => 'PageController@show',]);
-
-/*
-if (env('CONTRIB_ENABLED', false)) {
-    Route::get('contribute', 'PageController@getContribute');
-    Route::get('contribute.json', 'API\PageController@getContribute');
-}
-*/
 
 /**
  * Front page controller

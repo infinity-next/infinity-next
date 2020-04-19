@@ -130,7 +130,7 @@ class Ban extends Model
             'expires_at' => Carbon::now()->addSeconds($time),
             'board_uri' => $board->board_uri,
             'is_robot' => true,
-            'justification' => trans('validation.custom.unoriginal_content'),
+            'justification' => trans('validation.unoriginal_content'),
         ]);
     }
 

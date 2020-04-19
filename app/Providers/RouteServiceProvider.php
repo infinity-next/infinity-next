@@ -75,13 +75,19 @@ class RouteServiceProvider extends ServiceProvider
 
         'auth' => [
             'as'         => 'auth.',
-            'middleware' => ['web', 'auth'],
+            'middleware' => ['web', 'public'],
             'namespace'  => 'App\Http\Controllers\Auth',
         ],
 
         'panel' => [
             'as'         => 'panel.',
             'middleware' => ['web', 'panel'],
+            'namespace'  => 'App\Http\Controllers\Panel',
+        ],
+
+        'public' => [
+            'as'         => 'panel.',
+            'middleware' => ['web', 'public'],
             'namespace'  => 'App\Http\Controllers\Panel',
         ],
 
@@ -220,15 +226,22 @@ class RouteServiceProvider extends ServiceProvider
          * Panel
          */
         if (config('app.url_panel', false)) {
-            $this->routeGroup['panel'] += ['domain' => config('app.url_panel'),];
             $this->routeGroup['auth'] += ['domain' => config('app.url_panel'),];
-        } else {
+            $this->routeGroup['panel'] += ['domain' => config('app.url_panel'),];
+            $this->routeGroup['public'] += ['domain' => config('app.url_panel'),];
+        }
+        else {
             $this->routeGroup['auth'] += ['prefix' => 'cp',];
             $this->routeGroup['panel'] += ['prefix' => 'cp',];
+            $this->routeGroup['public'] += ['prefix' => 'cp',];
         }
 
         Route::group($this->routeGroup['auth'], function ($router) {
             require base_path('routes/auth.php');
+        });
+
+        Route::group($this->routeGroup['public'], function ($router) {
+            require base_path('routes/public.php');
         });
 
         Route::group($this->routeGroup['panel'], function ($router) {
