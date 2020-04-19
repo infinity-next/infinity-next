@@ -19,11 +19,11 @@
             @lang('board.action.history_global')
         </a>
 
-        @if ($post->isOp())
         <a class="action action-edit " href="{!! $post->getModUrl('edit') !!}">
             @lang('board.action.edit')
         </a>
 
+        @if ($post->isOp())
         <a class="action action-sticky" href="{!! $post->getModUrl('sticky') !!}">
             @lang('board.action.sticky')
         </a>
@@ -49,8 +49,12 @@
         </a>
         @endif
 
-        <a class="action action-ban " href="{!! $post->getModUrl('mod') !!}">
+        <a class="action action-moderate" href="{!! $post->getModUrl('mod') !!}">
             @lang('board.action.moderate')
+        </a>
+
+        <a class="action action-feature " href="{!! $post->getModUrl('feature') !!}">
+            @lang('board.action.feature')
         </a>
     </div>
 </div>
