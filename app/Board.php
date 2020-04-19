@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Contracts\Auth\Permittable;
-use App\Services\ContentFormatter;
 use App\Support\IP;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -662,13 +661,6 @@ class Board extends Model
                 $query->where('role_id', '!=', $ignoreID);
             }
         });
-    }
-
-    public function getSidebarContent()
-    {
-        $ContentFormatter = new ContentFormatter();
-
-        return $ContentFormatter->formatSidebar($this->getConfig('boardSidebarText'));
     }
 
     public function getSpoilerUrl()

@@ -514,24 +514,40 @@ class Post extends Model implements FormattableContract
             }
         }
 
-        $ContentFormatter = new ContentFormatter();
-        $this->body_too_long = false;
-        $this->body_parsed = $ContentFormatter->formatPost($this);
-        $this->body_parsed_preview = null;
-        $this->body_parsed_at = $this->freshTimestamp();
-        $this->body_has_content = $ContentFormatter->hasContent();
-        $this->body_rtl = $ContentFormatter->isRtl();
+        if ($this->board->getConfig('postsMarkdown')) {
+            $ContentFormatter = new ContentFormatter();
+            $this->body_too_long = false;
+            $this->body_parsed = $ContentFormatter->formatPost($this);
+            $this->body_parsed_preview = null;
+            $this->body_parsed_at = $this->freshTimestamp();
+            $this->body_has_content = $ContentFormatter->hasContent();
+            $this->body_rtl = $ContentFormatter->isRtl();
 
-        if (!mb_check_encoding($this->body_parsed, 'UTF-8')) {
-            return '<tt style="color:red;">Invalid encoding. This should never happen!</tt>';
+            if (!mb_check_encoding($this->body_parsed, 'UTF-8')) {
+                return '<tt style="color:red;">Invalid encoding. This should never happen!</tt>';
+            }
+
+            // If our body is too long, we need to pull the first X characters and do that instead.
+            // We also set a token indicating this post has hidden content.
+            if (mb_strlen($this->body) > 1200) {
+                $this->body_too_long = true;
+                $this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
+            }
         }
+        else {
+            $this->body_too_long = false;
+            $this->body_parsed = str_replace(["\n"], "<br />", e($this->body));
+            $this->body_parsed_preview = null;
+            $this->body_parsed_at = $this->freshTimestamp();
+            $this->body_has_content = !!strlen($this->body);
+            $this->body_rtl = false;
 
-
-        // If our body is too long, we need to pull the first X characters and do that instead.
-        // We also set a token indicating this post has hidden content.
-        if (mb_strlen($this->body) > 1200) {
-            $this->body_too_long = true;
-            $this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
+            // If our body is too long, we need to pull the first X characters and do that instead.
+            // We also set a token indicating this post has hidden content.
+            if (mb_strlen($this->body) > 1200) {
+                $this->body_too_long = true;
+                $this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
+            }
         }
 
         // We use an update here instead of just saving $post because, in this method

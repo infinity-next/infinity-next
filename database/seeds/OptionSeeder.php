@@ -414,8 +414,13 @@ class OptionSeeder extends Seeder {
                     'data_type'             => "boolean",
                     'validation_parameters' => "boolean",
                 ],
-
-
+                [
+                    'option_name'           => "postsMarkdown",
+                    'default_value'         => true,
+                    'format'                => "onoff",
+                    'data_type'             => "boolean",
+                    'validation_parameters' => "boolean",
+                ],
                 [
                     'option_name'           => "threadAttachmentsMin",
                     'default_value'         => 1,
@@ -691,6 +696,7 @@ class OptionGroupSeeder extends Seeder {
                     "threadAttachmentsMin",
                     "postMaxLength",
                     "postMinLength",
+                    "postsMarkdown",
                     "postNewLines",
                     "postFloodTime",
                     "threadFloodTime",

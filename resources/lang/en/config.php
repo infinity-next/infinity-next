@@ -127,6 +127,7 @@ return [
         'postAttachmentsMax'       => "Maximum attachments per post",
         'postAttachmentsMin'       => "Minimum attachments per post",
         'threadAttachmentsMin'     => "Minimum attachments for new threads",
+        'postsMarkdown'            => "Enable Markdown parsing.",
         'postMaxLength'            => "Maximum characters per post",
         'postMinLength'            => "Minimum characters per post",
         'postNewLines'             => "Maximum linebreaks per post",
@@ -189,6 +190,7 @@ return [
             'boardBacklinksWhitelist'  => "One board per line, only text, no slashes.",
 
             'threadAttachmentsMin'     => "If there are also minimum attachments per post, <wbr />the greater of the two will be used.",
+            'postsMarkdown'            => "If disabled, all post formatting will be disabled and <br />raw input will be presented.",
 
             'postNewLines'             => "Useful if spammers use many new lines to disrupt board flow.<br/>0 is no maximum.",
 
