@@ -113,10 +113,8 @@ class AuthServiceProvider extends ServiceProvider
                 return Response::allow();
             }
 
-            // Check to see if we have any grace left for our session.
-            $grace = Cache::get("captcha.grace." . Session::getId());
-
-            if (is_null($grace) || $grace < 1) {
+            // Check to see if we have any grace left for our session
+            if (!Cache::has("captcha.grace." . Session::getId())) {
                 return Response::deny(trans('auth.captcha.lifespan'));
             }
 
