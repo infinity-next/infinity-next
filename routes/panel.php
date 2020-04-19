@@ -93,8 +93,8 @@ Route::group(['namespace' => 'Boards',], function () {
         /*
          * Board Featuring
          */
-        Route::get('feature',  ['as' => 'feature', 'uses' => 'FeatureController@getIndex',]);
-        Route::post('feature', ['as' => 'feature.update', 'uses' => 'FeatureController@postIndex',]);
+        Route::get('feature',  ['as' => 'feature', 'uses' => 'FeatureController@show',]);
+        Route::post('feature', ['as' => 'feature.update', 'uses' => 'FeatureController@feature',]);
 
         /**
          * Board Deletion

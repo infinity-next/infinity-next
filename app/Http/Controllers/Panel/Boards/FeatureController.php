@@ -43,13 +43,17 @@ class FeatureController extends PanelController
         ]);
     }
 
-    public function getIndex(Board $board)
+    public function show(Board $board)
     {
+        $this->authorize('feature', $board);
+
         return $this->makeView(static::VIEW_FEATURE);
     }
 
-    public function postIndex(Board $board)
+    public function feature(Board $board)
     {
+        $this->authorize('feature', $board);
+
         $input = Request::all();
         $rules = [
             'action' => [

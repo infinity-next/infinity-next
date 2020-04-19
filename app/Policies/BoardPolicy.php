@@ -147,6 +147,21 @@ class BoardPolicy extends AbstractPolicy
          return $user->can('admin-config');
      }
 
+     /**
+      * Can this user feature a board across the site?
+      *
+      * @param  \App\User   $user
+      * @param  \App\Board  $board
+      *
+      * @return Illuminate\Auth\Access\Response
+      */
+     public function feature(User $user, Board $board)
+     {
+         return $user->permission('sys.config')
+             ? Response::allow()
+             : Response::deny('auth.post.cannot_feature');
+     }
+
     /**
      * Can this user view posting history on this board?
      *
