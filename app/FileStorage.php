@@ -114,8 +114,7 @@ class FileStorage extends Model
 
         // When being created, commit blob data.
         static::creating(function ($storage) {
-            Storage::makeDirectory($storage->getDirectory());
-            Storage::put($storage->getPath(), $storage->blob);
+            $storage->putFile();
 
             $storage->filesize = Storage::size($storage->getPath());
             $storage->first_uploaded_at = now();
@@ -729,6 +728,15 @@ class FileStorage extends Model
         $this->save();
 
         return $this;
+    }
+
+    /**
+     * Commits the blob to storage.
+     */
+    public function putFile()
+    {
+        Storage::makeDirectory($this->getDirectory());
+        Storage::put($this->getPath(), $this->blob);
     }
 
     /**

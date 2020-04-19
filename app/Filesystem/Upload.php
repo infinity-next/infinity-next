@@ -6,6 +6,7 @@ use App\FileStorage;
 use App\Support\IP;
 use InfinityNext\Sleuth\FileSleuth;
 use Intervention\Image\ImageManager;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Jenssegers\ImageHash\Hash;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\DifferenceHash;
@@ -109,14 +110,24 @@ class Upload
              'hash' => $hash,
          ]);
 
-         $storage->blob = $data;
-         unset($data);
-
-         $this->storage = $storage;
          if ($storage->exists) {
-             return $this->openStorage($storage);
+             try {
+                 return $this->openStorage($storage);
+             }
+             // this means, somehow, the storage object exists but the actual file is gone.
+             catch (FileNotFoundException $e) {
+                  $storage->blob = $data;
+                  $storage->putFile(); // force an overwrite
+                  $this->storage = $storage;
+             }
+         }
+         else {
+              $storage->blob = $data;
+              $this->storage = $storage;
+              // not forcing putFile here because that's in FileStorage::boot / creating
          }
 
+         unset($data); // explicitly unset this just in case.
          return $storage;
      }
 
@@ -133,10 +144,10 @@ class Upload
              throw new \Exception('File is explicitly banned.');
          }
 
-         $storage->openFile();
+        $storage->openFile();
 
-         $this->storage = $storage;
-         return $storage;
+        $this->storage = $storage;
+        return $storage;
      }
 
     public function cacheBandwidth(?IP $ip = null)
