@@ -90,7 +90,7 @@ class ConfigController extends PanelController
                 // Skip locked items unless we can edit them.
                 $locking = isset($input['lock'][$option->option_name]) && (bool) $input['lock'][$option->option_name];
 
-                if ($setting->isLocked() && !$this->user->canEditSettingLock($board, $option)) {
+                if ($setting->isLocked() && !user()->canEditSettingLock($board, $option)) {
                     continue;
                 }
 
