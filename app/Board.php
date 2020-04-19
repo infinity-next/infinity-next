@@ -900,12 +900,12 @@ class Board extends Model
     {
         $bannedUris = (string) Settings::get('boardUriBanned');
         $bannedUris = explode(PHP_EOL, $bannedUris);
-        $bannedUris[] = "cp"; // banned for 10 different reasons
+        $bannedUris[] = "^cp$"; // banned for 10 different reasons
 
         foreach ($bannedUris as $bannedUri) {
             $bannedUri = trim(str_replace(["\r\n", "\n", "\r"], ' ', $bannedUri));
 
-            if (preg_match("/{$bannedUri}/im", $this->board_uri)) {
+            if (preg_match("/{$bannedUri}/im", $this->board_uri, $match)) {
                 return true;
             }
         }
