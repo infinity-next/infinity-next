@@ -188,11 +188,6 @@ class BoardsController extends PanelController
             $this->registrationValidator($input)->validate();
         }
 
-        // Generate a list of banned URIs.
-        $bannedUris = array_filter(explode("\n", $this->option('boardUriBanned')));
-        $bannedUris[] = 'cp';
-        $bannedUris = implode(',', $bannedUris);
-
         // Validate the basic boardconstraints.
         $input['board_uri'] = strtolower((string) $input['board_uri']);
         $requirements = [
@@ -222,16 +217,16 @@ class BoardsController extends PanelController
 
         $failed = $validator->fails();
 
-        if (!user()->canCreateBoardWithBannedUri() && $board->hasBannedUri()) {
+        if (!user()->can('reservedUri', Board::class) && $board->hasBannedUri()) {
             $validator->errors()->add(
                 'board_uri',
-                trans('validation.custom.board_uri_banned')
+                trans('validation.board_uri_banned')
             );
             $failed = true;
         }
 
         if ($failed) {
-            $validator->validate();
+            return redirect()->back()->withInput()->withErrors($validator);
         }
 
         // Create user if we have to.

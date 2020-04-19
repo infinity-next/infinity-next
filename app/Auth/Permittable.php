@@ -211,16 +211,6 @@ trait Permittable
     }
 
     /**
-     * Can this user create a board with a banned URI?
-     *
-     * @return bool
-     */
-    public function canCreateBoardWithBannedUri()
-    {
-        return $this->permission('board.create.banned');
-    }
-
-    /**
      * Can this user delete on this board?
      *
      * @return bool

@@ -162,6 +162,20 @@ class BoardPolicy extends AbstractPolicy
             : Response::deny('auth.post.cannot_post');
     }
 
+    /**
+     * Can this user create a board with a banned / reserved URI?
+     *
+     * @param  \App\User   $user
+     *
+     * @return Illuminate\Auth\Access\Response
+     */
+    public function reservedUri(User $user)
+    {
+        return $user->permission('board.create.banned')
+            ? Response::allow()
+            : Response::deny('auth.post.cannot_post');
+    }
+
     public function settingEdit(User $user, ?Board $board = null, ?Option $option = null)
     {
         if (is_null($board)) {
