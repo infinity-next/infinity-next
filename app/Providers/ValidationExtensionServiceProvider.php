@@ -29,6 +29,8 @@ class ValidationExtensionServiceProvider extends ServiceProvider
         $validator->extend('file_old', 'App\Validators\FileValidator@validateFileOld');
 
         $validator->extend('ugc_height', 'App\Validators\FormattingValidator@validateUgcHeight');
+
+        $validator->extend('css', 'App\Validators\CSSValidator@validateCSS');
     }
 
     /**
