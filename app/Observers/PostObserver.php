@@ -7,7 +7,7 @@ use App\FileStorage;
 use App\Post;
 use App\PostAttachment;
 use App\PostCite;
-use App\Events\PostWasAdded;
+use App\Events\PostWasCreated;
 use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;
 use App\Events\ThreadNewReply;
@@ -151,9 +151,14 @@ class PostObserver
             }
         }
 
-        PostCreate::withChain([
-            $thread ? new ThreadAutoprune($thread) : null,
-        ])->dispatch($post);
+        event(new PostWasCreated($post));
+
+        if ($thread) {
+            PostCreate::withChain([new ThreadAutoprune($thread)])->dispatch($post);
+        }
+        else {
+            PostCreate::dispatch($post);
+        }
 
         return true;
     }
@@ -312,7 +317,7 @@ class PostObserver
         // Clear authorshop information.
         $post->author_ip = null;
         $post->author_ip_nulled_at = now();
-        $post->save();
+        // $post->save(); // I think save() is called with the deleted_at update.
 
         return true;
     }
@@ -382,7 +387,9 @@ class PostObserver
      */
     public function updated(Post $post)
     {
-        PostUpdate::dispatch($post);
+        if (!is_null($post->deleted_at)) {
+            PostUpdate::dispatch($post);
+        }
 
         return true;
     }

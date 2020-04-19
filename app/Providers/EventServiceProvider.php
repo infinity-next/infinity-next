@@ -56,6 +56,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\PostWasCapcoded::class => [
             \App\Listeners\LogEvent::class,
         ],
+       \App\Events\PostWasCreated::class => [
+           \App\Listeners\CaptchaGraceReduce::class,
+       ],
         \App\Events\PostWasEdited::class => [
             \App\Listeners\LogEvent::class,
         ],
@@ -116,6 +119,14 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\SiteSettingsRecache::class,
         ],
 
+        /**
+         * Package Events
+         */
+
+         //Captcha Events
+         \InfinityNext\LaravelCaptcha\Events\CaptchaWasAnswered::class => [
+             \App\Listeners\CaptchaGraceSet::class,
+         ],
     ];
 
     /**

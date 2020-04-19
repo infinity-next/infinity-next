@@ -19,18 +19,20 @@ class PostTest extends TestCase
 
         $this->board = factory(Board::class)->create();
         $this->thread = null;
-        $this->posts = factory(Post::class, 10)->make()->each(function($post) {
-            $post->board()->associate($this->board);
+        $this->posts = factory(Post::class, 10)->make();
+
+        foreach ($this->posts as $post) {
+            $post->board_uri = $this->board->board_uri;
 
             if (is_null($this->thread)) {
-                $post->save();
                 $this->thread = $post;
             }
             else {
-                $post->thread()->associate($this->thread);
-                $post->save();
+                $post->reply_to = $this->thread->post_id;
             }
-        });
+
+            $post->save();
+        }
     }
 
     protected function tearDown(): void

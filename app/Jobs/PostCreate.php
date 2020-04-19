@@ -37,8 +37,9 @@ class PostCreate extends Job implements ShouldQueue
     {
         $post = $this->post;
 
-        // Fire event, which clears cache among other things.
-        event(new PostWasCreated($post));
+        // moved to the post observer so it can affect the session
+        // only used for captcha incrementing as of 4-19-2020
+        //event(new PostWasCreated($post));
 
         // Log staff posts.
         if ($post->capcode_id) {
