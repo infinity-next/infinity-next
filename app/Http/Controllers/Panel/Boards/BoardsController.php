@@ -203,7 +203,7 @@ class BoardsController extends PanelController
                 'regex:('.Board::URI_PATTERN.')',
             ],
             'title' => 'required|string|between:1,255',
-            'description' => 'string|between:0,255',
+            'description' => 'nullable|string|between:0,255',
         ];
 
         $validator = Validator::make($input, $requirements);
