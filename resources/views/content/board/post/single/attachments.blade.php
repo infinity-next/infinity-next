@@ -3,7 +3,7 @@
 <div class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
     @foreach ($post->attachments as $attachment)
     @if (!isset($catalog) || !$catalog)
-    @if ($attachment->attributes['is_deleted'])
+    @if ($attachment->is_deleted)
     <figure class="attachment attachment-deleted">
         {!! $attachment->toHtml() !!}
     </figure>
@@ -20,7 +20,7 @@
                 <span class="actions-label"><i class="fa fa-angle-down"></i></span>
                 <div class="actions">
                     @set('attachmentActions', true)
-                    @if ($attachment->attributes['is_spoiler'])
+                    @if ($attachment->is_spoiler)
                     <div class="action">
                         <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="action-link attachment-unspoiler" title="@lang('board.field.unspoiler')">
                             <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
@@ -46,10 +46,10 @@
             {{-- Note: Strict LTR direct here because this is technical info. --}}
             <a class="attachment-action attachment-download" dir="ltr" target="_blank" href="{!! $attachment->getUrl($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
                 <span class="detail-item detail-download">
-                    @if ($attachment->attributes['is_spoiler'])
+                    @if ($attachment->is_spoiler)
                     <span class="detail-item detail-filename filename-spoilers">@lang('board.field.spoilers')</span>
                     @else
-                    <span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->attributes['filename'] }}">{{ $attachment->getShortFilename() }}</span>
+                    <span class="detail-item detail-filename filename-cleartext" title="{{ $attachment->filename }}">{{ $attachment->getShortFilename() }}</span>
                     @endif
                 </span>
                 <br />
