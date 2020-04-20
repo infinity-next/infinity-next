@@ -283,8 +283,8 @@ class FileStorage extends Model
     public function getUrl(?Board $board = null)
     {
         $params = [
-            'hash' => $this->attributes['hash'],
-            'filename' => "{$this->attribute['file_id']}.{$this->guessExtension()}"
+            'hash' => $this->hash,
+            'filename' => "{$this->file_id}.{$this->guessExtension()}"
         ];
 
         if (is_null($board)) {
