@@ -352,7 +352,7 @@ class FileStorage extends Model
      */
     public static function getHashPrefix($hash)
     {
-        return implode(str_split(substr($hash, 0, 4)), '/');
+        return implode('/', str_split(substr($hash, 0, 4)));
     }
 
     /**

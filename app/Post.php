@@ -349,7 +349,7 @@ class Post extends Model implements FormattableContract
         $hashParts[] = $this->reply_to_board_id ?: $this->board_id;
         $hashParts[] = $this->author_ip;
 
-        $hash = implode($hashParts, '-');
+        $hash = implode('-', $hashParts);
         $hash = hash('sha256', $hash);
         $hash = substr($hash, 12, 6);
 
@@ -397,7 +397,7 @@ class Post extends Model implements FormattableContract
             $hashParts[] = $this->board_id;
         }
 
-        $parts = implode($hashParts, '|');
+        $parts = implode('|', $hashParts);
 
         if ($encrypt) {
             return bcrypt($parts);
@@ -813,7 +813,7 @@ class Post extends Model implements FormattableContract
             $url_id = $this->board_id;
         }
 
-        return route(implode(array_filter(['api', 'board', $route, ]), '.'), [
+        return route(implode('.', array_filter(['api', 'board', $route,])), [
                 'board'   => $this->board_uri,
                 'post_id' => $url_id,
             ] + $params,
@@ -873,11 +873,11 @@ class Post extends Model implements FormattableContract
     public function getModUrl($route = "index", array $params = [], $abs = false)
     {
         return route(
-            implode(array_filter([
+            implode('.', array_filter([
                 'board',
                 'post',
                 $route,
-            ]), '.'),
+            ])),
             [
                 'board'   => $this->attributes['board_uri'],
                 'post_id' => $this->attributes['board_id'],

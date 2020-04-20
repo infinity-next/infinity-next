@@ -128,11 +128,11 @@ class Report extends Model
     public function getUrl($route = "index", array $params = [], $abs = true)
     {
         return route(
-            implode(array_filter([
+            implode('.', array_filter([
                 "panel",
                 "reports",
                 $route,
-            ]), '.'),
+            ])),
             [
                 'report' => $this,
             ] + $params,
@@ -152,12 +152,12 @@ class Report extends Model
     public function getPostUrl($route = "index", array $params = [], $abs = true)
     {
         return route(
-            implode(array_filter([
+            implode('.', array_filter([
                 "panel",
                 "reports",
                 $route,
                 "post",
-            ]), '.'),
+            ])),
             [
                 'post' => $this->post,
             ] + $params,

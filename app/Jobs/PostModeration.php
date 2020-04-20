@@ -95,7 +95,7 @@ class PostModeration implements ShouldQueue
         if (empty($banLengthStr)) {
             $banLengthStr[] = '&Oslash;';
         }
-        $banLengthStr = implode($banLengthStr, ' ');
+        $banLengthStr = implode(' ', $banLengthStr);
 
         // The CIDR is passed from our post parameters. By default, it is 32/128 for IPv4/IPv6 respectively.
         $banCidr = $this->input['ban_ip_range'];

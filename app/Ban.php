@@ -273,12 +273,12 @@ class Ban extends Model
         }
 
         return route(
-            implode(array_filter([
+            implode('.', array_filter([
                 "panel",
                 $this->isGlobal() ? "site" : "board",
                 "ban",
                 $route,
-            ]), '.'),
+            ])),
             $defParams + $params,
             true
         );

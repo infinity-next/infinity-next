@@ -7,7 +7,7 @@
 	@include('widgets.messages')
 
 	<fieldset class="form-fields">
-		<legend class="form-legend">{{ trans("board.legend." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
+		<legend class="form-legend">{{ trans("board.legend." . implode("+", $actions), [ 'board' => "/{$post->board_uri}/" ]) }}</legend>
 
 		@if (!$report)
 			<blockquote>@lang("board.report." . ($reportGlobal ? "global" : "local"))</blockquote>
@@ -92,7 +92,7 @@
 		@if (!$report)
 		<div class="field row-submit">
 			{!! Form::button(
-				trans("board.submit." . implode($actions,"+"), [ 'board' => "/{$post->board_uri}/" ]),
+				trans("board.submit." . implode("+", $actions), [ 'board' => "/{$post->board_uri}/" ]),
 				[
 					'type'      => "submit",
 					'class'     => "field-submit",

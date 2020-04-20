@@ -834,7 +834,7 @@ class Board extends Model
         }
 
         return route(
-            implode(array_filter(['board', $route]), '.'),
+            implode('.', array_filter(['board', $route])),
             [ 'board' => $this, ] + $params,
             $abs
         ).$trailing_slash;
@@ -852,7 +852,7 @@ class Board extends Model
     public function getPanelUrl($route = "basic", array $params = [], $abs = true)
     {
         return route(
-            implode(array_filter(['panel.board', $route]), '.'),
+            implode('.', array_filter(['panel.board', $route])),
             [ 'board' => $this, ] + $params,
             $abs
         );

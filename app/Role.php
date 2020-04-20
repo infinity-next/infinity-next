@@ -338,7 +338,7 @@ class Role extends Model
 
     public function getPanelUrl($route = "show")
     {
-        return route(implode(".", array_filter([
+        return route(implode('.', array_filter([
             "panel",
             is_null($this->board_uri) ? "" : "board",
             "role",

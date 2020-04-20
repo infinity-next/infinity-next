@@ -209,11 +209,11 @@ implements
     public function getUrl($route = "show", array $params = [], $abs = true)
     {
         return route(
-            implode(array_filter([
+            implode('.', array_filter([
                 "panel",
                 "user",
                 $route,
-            ]), '.'),
+            ])),
             [
                 'slug' => $this->getSlug(),
                 'user' => $this,
@@ -235,10 +235,10 @@ implements
     public function getBoardStaffUrl(Board $board, $route = "show", array $params = [], $abs = true)
     {
         return $board->getPanelUrl(
-            implode(array_filter([
+            implode('.', array_filter([
                 "staff",
                 $route,
-            ]), '.'),
+            ])),
             [
                 'user' => $this
             ] + $params,

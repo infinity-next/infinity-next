@@ -49,7 +49,7 @@
     @endif
 
     <fieldset class="form-fields">
-        <legend class="form-legend"><i class="fa fa-reply"></i>{{ trans("board.legend." . implode($actions, "+")) }}</legend>
+        <legend class="form-legend"><i class="fa fa-reply"></i>{{ trans("board.legend." . implode("+", $actions)) }}</legend>
 
         @include('widgets.messages')
 
@@ -168,7 +168,7 @@
         <div class="field row-submit">
         @endcan
             {!! Form::button(
-                trans("board.submit." . implode($actions, "+")),
+                trans("board.submit." . implode("+", $actions)),
                 [
                     'type'      => "submit",
                     'id'        => "submit-post",
