@@ -15,9 +15,9 @@
 
     <span class="post-detail post-author">
         <strong class="post-detail-item author ugc">
-        @if ($details['email'] && !$catalog)<a href="mailto:{{ $details['email'] }}" class="post-detail-item email">@endif
-            {{ $details['author'] ?: $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
-        @if ($details['email'] && !$catalog)</a>@endif
+        @if (isset($details['email']) && !!$details['email'] && !$catalog)<a href="mailto:{{ $details['email'] }}" class="post-detail-item email">@endif
+            {{ isset($details['author']) && !!$details['author'] ? $details['author'] : $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
+        @if (isset($details['email']) && !!$details['email'] && !$catalog)</a>@endif
         </strong>
         {{-- Always here. Added in by CSS. --}}
         <span class="author-you">@lang('board.you')</span>
