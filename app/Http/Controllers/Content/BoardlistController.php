@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Request;
 
 /**
@@ -158,7 +159,7 @@ class BoardlistController extends Controller
             }
 
             // Are we searching tags?
-            if ($tags->count() && $tags->intersect(array_pluck($item['tags'], 'tag'))->count() < $tags->count()) {
+            if ($tags->count() && $tags->intersect(Arr::pluck($item['tags'], 'tag'))->count() < $tags->count()) {
                 return false;
             }
 
