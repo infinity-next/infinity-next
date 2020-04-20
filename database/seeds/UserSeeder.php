@@ -28,7 +28,7 @@ class UserSeeder extends Seeder {
             {
                 $password[] = static::$potential_pass_words[array_rand(static::$potential_pass_words)];
             }
-            $password = implode($password, " ");
+            $password = implode(" ", $password);
 
             // Create the user.
             $user = new User;
