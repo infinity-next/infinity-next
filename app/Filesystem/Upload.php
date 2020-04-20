@@ -185,7 +185,7 @@ class Upload
             $theirPhash = gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63));
 
             $distance = gmp_hamdist($filePhash, $theirPhash);
-            if ($distance < 16) {
+            if ($distance < 9) {
                 app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
                 throw new \Exception("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
                 return false;
