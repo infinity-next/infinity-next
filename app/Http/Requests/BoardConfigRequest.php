@@ -74,9 +74,13 @@ class BoardConfigRequest extends FormRequest
             'boardBasicWorksafe' => 'boolean',
         ];
 
+        $user = user();
+
         foreach ($this->getBoardOptions() as $optionGroup) {
             foreach ($optionGroup->options as $option) {
-                $rules = array_merge($rules, $option->getValidation());
+                if ($user->can('setting-edit', [$this->board, $option])) {
+                    $rules = array_merge($rules, $option->getValidation());
+                }
             }
         }
 

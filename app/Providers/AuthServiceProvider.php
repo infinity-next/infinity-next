@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Ban;
 use App\BanAppeal;
 use App\Board;
+use App\Option;
 use App\Post;
 use App\Report;
 use App\Auth\IneloquentUserProvider;
@@ -159,6 +160,13 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('register', function(User $user)
         {
             return $user->permission('site.user.create');
+        });
+
+        Gate::define('setting-lock', function(User $user, Option $option)
+        {
+            return $user->permission('site.board.setting_lock')
+                ? Response::allow()
+                : Response::deny();
         });
 
         Gate::define('viewTelescope', function ($user) {

@@ -206,16 +206,10 @@ class BoardPolicy extends AbstractPolicy
             : Response::deny('auth.post.cannot_post');
     }
 
-    public function settingEdit(User $user, ?Board $board = null, ?Option $option = null)
+    public function settingEdit(User $user, Board $board, ?Option $option = null)
     {
-        if (is_null($board)) {
-            return Response::deny();
-        }
-
-        if (!is_null($option) && $option->isLocked()) {
-            return $user->permission('site.board.setting_lock')
-             ? Response::allow()
-             : Response::deny('auth.site.setting_locked');
+        if (!is_null($option) && $option->isLocked() && !$user->can('setting-lock', $option)) {
+            return Response::deny('auth.site.setting_locked');
         }
 
         return $user->can('configure', $board);

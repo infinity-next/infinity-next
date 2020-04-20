@@ -88,29 +88,30 @@ class ConfigController extends PanelController
                 ]);
 
                 // Skip locked items unless we can edit them.
-                $locking = isset($input['lock'][$option->option_name]) && (bool) $input['lock'][$option->option_name];
+                $locking = isset($input['lock'][$option->option_name]) && !!$input['lock'][$option->option_name];
 
-                if ($setting->isLocked() && !user()->canEditSettingLock($board, $option)) {
+                if ($setting->isLocked() && !user()->can('setting-lock', $option)) {
                     continue;
                 }
 
                 // Save the value.
                 if (isset($input[$option->option_name])) {
                     $setting->option_value = $input[$option->option_name];
-                } elseif ($option->format == 'onoff') {
+                }
+                elseif ($option->format == 'onoff') {
                     $setting->option_value = false;
-                } elseif (!$locking) {
+                }
+                elseif (!$locking) {
                     // Delete it if we have no value and aren't saving.
                     $setting->delete();
                     continue;
-                } else {
+                }
+                else {
                     $setting->option_value = null;
                 }
 
                 // Set our locked status.
-                if ($locking) {
-                    $setting->is_locked = (bool) $input['lock'][$option->option_name];
-                }
+                $setting->is_locked = $locking;
 
                 $setting->save();
 
