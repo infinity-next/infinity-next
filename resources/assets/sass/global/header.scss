@@ -57,13 +57,6 @@ figcaption.page-details {
         .fa.board-favorited {
             color: #FFC800;
         }
-            html.js body.view-board.board-int  h1.page-title .fa:before,
-            html.js body.view-board.board-ints h1.page-title .fa:before,
-            html.js body.view-board.board-intl h1.page-title .fa:before {
-                content: '✡';
-                font-size: 1.2em;
-                font-weight: bold;
-            }
 
     h2.page-desc {
         color: #333;
@@ -71,7 +64,7 @@ figcaption.page-details {
         font-size: 1em;
         font-weight: normal;
     }
-    
+
     #sudo-lecture {
         display: block;
         margin: 0 auto;
