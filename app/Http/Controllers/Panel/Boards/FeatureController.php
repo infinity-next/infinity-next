@@ -71,6 +71,6 @@ class FeatureController extends PanelController
 
         $board->save();
 
-        return $this->getIndex($board);
+        return $this->show($board);
     }
 }
