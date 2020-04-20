@@ -78,7 +78,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SlugRouting::class,
             \App\Http\Middleware\DontPrefetchModels::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            'throttle:120,1',
+            //'throttle:120,1',
         ],
     ];
 
