@@ -276,6 +276,21 @@ class PostAttachment extends Model
     }
 
     /**
+     * Returns an unspoiler URL.
+     *
+     * @param \App\Board $board
+     *
+     * @return string
+     */
+    public function getUnspoilerUrl()
+    {
+        return route('board.file.unspoiler', [
+            'attachment' => $this->attributes['attachment_id'],
+            'board' => $this->post->attributes['board_uri'],
+        ], false);
+    }
+
+    /**
      * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
      *
      * @param  null|string|int  $maxWidth Optional. Maximum width constraint. Accepts 'auto'. Defaults null.
