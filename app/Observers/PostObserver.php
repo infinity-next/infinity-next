@@ -17,7 +17,7 @@ use App\Jobs\ThreadAutoprune;
 use App\Jobs\PostUpdate;
 use App\Support\Geolocation;
 use App\Support\IP;
-use App\Support\ContentFormatter;
+use App\Services\ContentFormatter;
 use Cache;
 use DB;
 use Request;
