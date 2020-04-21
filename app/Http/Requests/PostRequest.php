@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Cache;
+use Session;
 
 /**
  * Handles a new post.
@@ -380,18 +381,25 @@ class PostRequest extends Request implements ApiContract
         // Check flood timers
         if ($isReply) {
             $floodTime = site_setting('postFloodTime');
+            $cacheKeys = [ 'last_post_for_session:' . Session::getId() ];
 
-            $nextPostTime = Carbon::createFromTimestamp(Cache::get('last_post_for_'.$ip->toLong(), 0) + $floodTime);
+            if ($user->isAccountable()) {
+                $cacheKeys[] = "last_post_for_ip:" . $ip->toLong();
+            }
 
-            if ($nextPostTime->isFuture()) {
-                $timeDiff = $nextPostTime->diffInSeconds() + 1;
+            foreach ($cacheKeys as $cacheKey) {
+                $nextPostTime = Carbon::createFromTimestamp(Cache::get($cacheKey, 0) + $floodTime);
 
-                $messages->add('flood', trans_choice('validation.post_flood', $timeDiff, [
-                    'time_left' => $timeDiff,
-                ]));
+                if ($nextPostTime->isFuture()) {
+                    $timeDiff = $nextPostTime->diffInSeconds() + 1;
 
-                $this->failedValidation($validator);
-                return;
+                    $messages->add('flood', trans_choice('validation.post_flood', $timeDiff, [
+                        'time_left' => $timeDiff,
+                    ]));
+
+                    $this->failedValidation($validator);
+                    return;
+                }
             }
         }
         else {

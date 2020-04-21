@@ -21,6 +21,7 @@ use App\Services\ContentFormatter;
 use Cache;
 use DB;
 use Request;
+use Session;
 
 class PostObserver
 {
@@ -33,6 +34,7 @@ class PostObserver
      */
     public function created(Post $post)
     {
+        $user = user();
         $board = $post->board;
         $thread = $post->thread;
 
@@ -141,16 +143,16 @@ class PostObserver
         // NOTE: The transaction starts in creating()!
         DB::commit();
 
-        // unlock accountable users
-        // tor users always have to do a captcha
-        if (!is_null(user()) && user()->isAccountable()) {
+        // unlock posting statuses
+        $accountable = !is_null($user) && $user->isAccountable();
+        $session = Session::getId();
+
+        if ($accountable) {
             Cache::restoreLock('posting_now_'.$post->author_ip->toLong(), Post::class)->release();
-
-            if (!is_null(user()) && user()->isAccountable()) {
-                Cache::lock('posting_now_'.$post->author_ip->toLong(), 10)->release();
-            }
         }
+        Cache::restoreLock("posting_now_session:{$session}", Post::class)->release();
 
+        // fire events
         event(new PostWasCreated($post));
 
         if ($thread) {
@@ -187,27 +189,34 @@ class PostObserver
             $thread = $board->getLocalThread($thread);
         }
 
-        if (!is_null(user()) && user()->isAccountable()) {
-            if (!Cache::lock('posting_now_'.$post->author_ip->toLong(), 10, Post::class)->get()) {
-                return abort(429, "Your IP is still locked from posting.");
-            }
+        $user = user();
+        $accountable = !is_null($user) && $user->isAccountable();
+        $session = Session::getId();
+        $ipLong = $accountable ? $post->author_ip->toLong() : null;
 
-            // Cache what time we're submitting our post for flood checks.
-            Cache::put('last_post_for_'.$post->author_ip->toLong(), $post->created_at->timestamp, now()->addHour());
+        if (!Cache::lock("posting_now_session:{$session}", 10, Post::class)->get()) {
+            return abort(429, "Your session is still locked from posting.");
+        }
+        if ($accountable && !Cache::lock("posting_now_session:{$ipLong}", 10, Post::class)->get()) {
+            return abort(429, "Your IP is still locked from posting.");
+        }
 
-            if ($thread instanceof Post) {
-                $post->reply_to = $thread->post_id;
-                $post->reply_to_board_id = $thread->board_id;
-
-                Cache::put('last_thread_for_'.$post->author_ip->toLong(), $post->created_at->timestamp, now()->addHour());
-            }
+        // Cache what time we're submitting our post for flood checks.
+        Cache::put("last_post_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
+        if ($accountable) {
+            Cache::put("last_post_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
         }
         else {
             $post->author_ip = null;
+        }
 
-            if ($thread instanceof Post) {
-                $post->reply_to = $thread->post_id;
-                $post->reply_to_board_id = $thread->board_id;
+        if ($thread instanceof Post) {
+            $post->reply_to = $thread->post_id;
+            $post->reply_to_board_id = $thread->board_id;
+
+            Cache::put("last_thread_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
+            if ($accountable) {
+                Cache::put("last_thread_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
             }
         }
 
