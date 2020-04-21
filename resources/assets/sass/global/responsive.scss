@@ -132,82 +132,6 @@ body.responsive {
         }
 
         /**
-         * Primary Navigation
-         */
-        nav.boardlist {
-            font-size: 1em;
-            padding: 0 1em;
-            overflow: hidden;
-        }
-            nav.boardlist .boardlist-text {
-                display: none;
-            }
-            nav.boardlist .boardlist-row {
-                display: inline-block;
-
-                height: 1.4em;
-                line-height: 1.4em;
-                padding: 0;
-                margin: 0 0.5em 0 0;
-
-                white-space: nowrap;
-            }
-
-            nav.boardlist .boardlist-categories,
-            nav.boardlist .boardlist-category,
-            nav.boardlist .boardlist-items,
-            nav.boardlist .boardlist-item {
-                display: inline-block;
-                height: 1em;
-                line-height: 1em;
-            }
-
-            nav.boardlist .boardlist-items {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-            nav.boardlist .boardlist-item {
-                display: inline;
-            }
-            nav.boardlist .boardlist-link {
-                text-decoration: none;
-            }
-
-            nav.boardlist .boardlist-category::before {
-                content: '[';
-                opacity: 0.6;
-            }
-            nav.boardlist .boardlist-category::after {
-                content: ']';
-                opacity: 0.6;
-            }
-            nav.boardlist .boardlist-item::after {
-                display: inline;
-                content: '/';
-                margin: 0 0.15em 0 0.4em;
-                opacity: 0.6;
-            }
-            nav.boardlist .boardlist-item:last-child::after {
-                display: none;
-            }
-
-        /**
-         * Navigation
-         */
-        nav.gnav .flyout {
-            width: auto;
-        }
-        nav.gnav .flyout-col {
-            display: inline-block;
-            float: left;
-            width: 21em;
-        }
-        nav.gnav .flyout-link {
-            line-height: 1.7em;
-            height: 1.7em;
-        }
-
-        /**
          * Catalog
          */
         main.index-catalog section.index-threads {
@@ -246,22 +170,6 @@ body.responsive {
         }
             html.js main.index-threaded aside.advertiser.bottom-right {
                 position: absolute;
-            }
-
-        /* Advertisements */
-        html.js main.index-threaded aside.advertiser.top-left {
-            text-align: left;
-        }
-        html.js main.index-threaded aside.advertiser.bottom-right {
-            position: absolute;
-            bottom: 0;
-            right: 5px;
-
-            width: 310px;
-        }
-            html.js main.index-threaded aside.advertiser.bottom-right figure.ad-field {
-                display: block;
-                width: 310px;
             }
     }
 }

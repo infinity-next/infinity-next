@@ -1,0 +1,81 @@
+nav.boardlist {
+    font-size: 1em;
+    padding: 0 1em;
+    overflow: hidden;
+
+    .boardlist-text {
+        display: none;
+    }
+    .boardlist-row {
+        height: 1.4em;
+        line-height: 1.4em;
+        padding: 0;
+        margin: 0 0.5em 0 0;
+    }
+
+    .boardlist-categories,
+    .boardlist-category,
+    .boardlist-items,
+    .boardlist-item {
+        height: 1em;
+        line-height: 1em;
+    }
+
+    .boardlist-items {
+        text-overflow: ellipsis;
+    }
+    .boardlist-item {
+        display: inline;
+    }
+    .boardlist-link {
+        text-decoration: none;
+    }
+
+    .boardlist-category::before {
+        content: '[';
+        opacity: 0.6;
+    }
+    .boardlist-category::after {
+        content: ']';
+        opacity: 0.6;
+    }
+    .boardlist-item::after {
+        display: inline;
+        content: '/';
+        margin: 0 0.15em 0 0.4em;
+        opacity: 0.6;
+    }
+    .boardlist-item:last-child::after {
+        display: none;
+    }
+
+    header & {
+        display: none;
+
+        background: #d6daf0;
+        color: #34345C;
+        vertical-align: baseline;
+
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+
+         .boardlist-link {
+            color: #34345C;
+            cursor: pointer;
+        }
+    }
+
+    footer & {
+        background: #666666;
+        color: #aeaeae;
+        position: static;
+
+        .boardlist-link {
+            color: #ffffff;
+        }
+    }
+}
+
+footer nav.boardlist-row.row-pages {
+    display: none;
+}
