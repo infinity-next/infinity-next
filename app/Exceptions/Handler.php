@@ -13,6 +13,7 @@ use ErrorException;
 use Mail;
 use Response;
 use Request;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -24,8 +25,8 @@ class Handler extends ExceptionHandler
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
-        HttpException::class,
         ValidationException::class,
+        TorClearnet::class,
     ];
 
     /**
