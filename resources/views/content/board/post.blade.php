@@ -44,7 +44,7 @@
         @endif
 
         {{-- Each condition for an item must also be supplied as a condition so the <ul> doesn't appear inappropriately. --}}
-        @if ($preview || isset($details['updated_by']) || $post->bans->count())
+        @if ($preview || isset($details['updated_by']) || isset($details['body_signed']) || $post->bans->count())
         <div class="post-metas">
             @if ($preview)
             <div class="post-meta meta-see_more">@lang('board.preview_see_more', [
@@ -70,6 +70,12 @@
                     'name' => isset($details['updated_by_username']) ? $details['updated_by_username'] : trans('board.anonymous'),
                     'time' => $post->updated_at
                 ])
+            </div>
+            @endif
+
+            @if (isset($details['body_signed']) && !is_null($details['body_signed']))
+            <div class="post-meta meta-updated_by">
+                <i class="fa fa-check"></i> @lang('board.meta.signed')
             </div>
             @endif
         </div>

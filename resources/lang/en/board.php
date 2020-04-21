@@ -188,11 +188,12 @@ return [
         'ip_range_128' => "{0}All IPv6 Addresses|[1,127]/:mask (:ips IPs)|{128}/:mask (:ips IP)",
     ],
 
-    'meta'              => [
-        'banned'            => "User was banned for this post",
-        'banned_for'        => "User was banned for this post. Reason: <em>:reason</em>",
-        'banned_meme'       => "USER WAS BANNED FOR THIS POST",
-        'updated_by'        => "This post was last edited by :name at :time.",
+    'meta' => [
+        'banned'      => "User was banned for this post",
+        'banned_for'  => "User was banned for this post. Reason: <em>:reason</em>",
+        'banned_meme' => "USER WAS BANNED FOR THIS POST",
+        'updated_by'  => "This post was last edited by :name at :time.",
+        'signed'      => "Message signed and validated by the server.",
     ],
 
 

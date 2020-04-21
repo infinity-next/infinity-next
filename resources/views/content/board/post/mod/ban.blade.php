@@ -139,6 +139,9 @@
         {{-- @endforeach --}}
     </div>
 </fieldset>
+@else
+    <p>@lang('board.ban.no_ip')</p>
+@endif
 
 <fieldset class="form-fields">
     <div class="field row-submit">
@@ -150,6 +153,3 @@
         ]) !!}
     </div>
 </fieldset>
-@else
-    <p>@lang('board.ban.no_ip')</p>
-@endif

@@ -198,26 +198,6 @@ class ContentFormatter
     }
 
     /**
-     * Returns a tripcode from a password.
-     * Note that this is a public, easily breakable algorithm, and is therefore insecure.
-     * However, it is retained because of its heavy use on anonymous websites from 2ch to 4chan.
-     *
-     * @param string $trip
-     *
-     * @return string (Tripcode)
-     */
-    public static function formatInsecureTripcode($trip)
-    {
-        $trip = mb_convert_encoding($trip, 'Shift_JIS', 'UTF-8');
-        $salt = substr($trip.'H..', 1, 2);
-        $salt = preg_replace('/[^.-z]/', '.', $salt);
-        $salt = strtr($salt, ':;<=>?@[\]^_`', 'ABCDEFGabcdef');
-        $trip = substr(crypt($trip, $salt), -10);
-
-        return $trip;
-    }
-
-    /**
      * Censors content.
      *
      * @return string

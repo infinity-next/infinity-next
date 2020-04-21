@@ -970,7 +970,7 @@ class Import extends Command
                     }
 
                     if ($attachment['thumbwidth'] && file_exists($thumb)) {
-                        // TODO: On the off chance I ever want to important from Vichan, this needs updating. 
+                        // TODO: On the off chance I ever want to important from Vichan, this needs updating.
                         $storage->has_thumbnail = true;
                         $storage->thumbnail_width = $attachment['thumbwidth'];
                         $storage->thumbnail_height = $attachment['thumbheight'];

@@ -15,9 +15,12 @@ use App\Filesystem\Upload;
 use App\Jobs\PostCreate;
 use App\Jobs\ThreadAutoprune;
 use App\Jobs\PostUpdate;
+use App\Services\ContentFormatter;
 use App\Support\Geolocation;
 use App\Support\IP;
-use App\Services\ContentFormatter;
+use App\Support\Tripcode\InsecureTripcode;
+use App\Support\Tripcode\SecureTripcode;
+use App\Support\Tripcode\PrettyGoodTripcode;
 use Cache;
 use DB;
 use Request;
@@ -189,6 +192,37 @@ class PostObserver
             $thread = $board->getLocalThread($thread);
         }
 
+        // Handle tripcode, if any.
+        if (preg_match('/^([^#]+)?(##|#)(.+)$/', $post->author, $match)) {
+            // Remove password from name.
+            $post->author = $match[1];
+            // Convert password to tripcode, store tripcode hash in DB.
+            switch ($match[2]) {
+                case '#' :
+                    $post->tripcode = (string)(new InsecureTripcode($match[3]));
+                break;
+                case '##' :
+                    $post->tripcode = (string)(new SecureTripcode($match[3]));
+                break;
+            }
+        }
+
+        // Handle post signing.
+        // This intentionally replaces traditional ## tripcoding.
+        if (mb_strpos($post->body, "-----BEGIN PGP SIGNED MESSAGE-----") === 0) {
+            $post->body_signed = $post->body;
+
+            $tripcode = new PrettyGoodTripcode($post->body);
+            $post->body = $tripcode->getMessage();
+            $post->tripcode = $tripcode->getTripcode();
+        }
+
+        // Ensure we're using a valid flag.
+        if (!$post->flag_id || !$board->hasFlag($post->flag_id)) {
+            $post->flag_id = null;
+        }
+
+        // Lock the cache and get ready for inserts.
         $user = user();
         $accountable = !is_null($user) && $user->isAccountable();
         $session = Session::getId();
@@ -220,20 +254,6 @@ class PostObserver
             }
         }
 
-        // Handle tripcode, if any.
-        if (preg_match('/^([^#]+)?(##|#)(.+)$/', $post->author, $match)) {
-            // Remove password from name.
-            $post->author = $match[1];
-            // Whether a secure tripcode was requested, currently unused.
-            $secure_tripcode_requested = ($match[2] == '##');
-            // Convert password to tripcode, store tripcode hash in DB.
-            $post->insecure_tripcode = ContentFormatter::formatInsecureTripcode($match[3]);
-        }
-
-        // Ensure we're using a valid flag.
-        if (!$post->flag_id || !$board->hasFlag($post->flag_id)) {
-            $post->flag_id = null;
-        }
 
         // Store the post in the database.
         // NOTE: This ends in created!

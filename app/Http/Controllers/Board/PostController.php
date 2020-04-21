@@ -144,6 +144,7 @@ class PostController extends Controller
         $post->body_parsed = null;
         $post->body_parsed_at = null;
         $post->body_html = null;
+        $post->body_signed = null;
         $post->updated_by = user()->user_id;
 
         $post->save();

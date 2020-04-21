@@ -85,7 +85,7 @@ class Post extends Model implements FormattableContract
         'capcode_id',
         'subject',
         'author',
-        'insecure_tripcode',
+        'tripcode',
         'email',
         'password',
         'flag_id',
@@ -97,6 +97,7 @@ class Post extends Model implements FormattableContract
         'body_parsed_preview',
         'body_parsed_at',
         'body_html',
+        'body_signed',
         'body_rtl',
     ];
 
@@ -794,6 +795,39 @@ class Post extends Model implements FormattableContract
         else {
             return $sec."s";
         }
+    }
+
+    public function getTripcodeHtml() : string
+    {
+        $html = "";
+
+        if ($this->body_signed) {
+            $html .= "<span class=\"tripcode tripcode-pgp\" title=\"{$this->tripcode}\">";
+            $html .= "<span class=\"prints prints-leading\">";
+            $prints =mb_str_split($this->tripcode, 4);
+
+            foreach ($prints as $i => $print) {
+                $html .= "<span class=\"print\">{$print}</span> ";
+
+                if ($i + 2 == count($prints)) {
+                    break; // break one early so we can use it last
+                }
+            }
+
+            $html .= "</span>";
+            $html .= "<span class=\"print\">" . $prints[$i+1] . "</span>";
+            $html .= "</span>";
+        }
+        elseif ($this->tripcode) {
+            if (mb_strlen($this->tripcode) > 10) {
+                $html .= "<span class=\"tripcode tripcode-secure\">!!{$this->tripcode}</span>";
+            }
+            else {
+                $html .= "<span class=\"tripcode tripcode-insecure\">!{$this->tripcode}</span>";
+            }
+        }
+
+        return $html;
     }
 
     /**
@@ -1907,7 +1941,6 @@ class Post extends Model implements FormattableContract
             $rememberTimer = $rememberTimer->addWeek();
         }
 
-        return $rememberClosure();
         return Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
     }
 

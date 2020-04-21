@@ -236,11 +236,8 @@
                     }
                 }
 
-                .insecure-tripcode {
+                .tripcode {
                     color: #117743;
-                }
-                .insecure-tripcode:before {
-                    content: '!';
                 }
 
                 .createdon {
@@ -295,7 +292,7 @@
 
 
     .post-metas {
-        border-top: 1px solid #D6DAF0;
+        //border-top: 1px solid #D6DAF0;
     }
         .post-metas:empty {
             display: none;

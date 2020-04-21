@@ -133,6 +133,10 @@ class PostPolicy extends AbstractPolicy
      */
     public function edit(User $user, Post $post)
     {
+        if ($post->body_signed) {
+            return Response::deny('auth.post.cannot_edit_signed_message');
+        }
+
         // If we can edit any post for this board ...
         if ($user->permission('board.post.edit.other', $post)) {
             return Response::allow();

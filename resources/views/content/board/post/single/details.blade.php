@@ -19,11 +19,11 @@
             {{ isset($details['author']) && !!$details['author'] ? $details['author'] : $board->getConfig('postAnonymousName', trans('board.anonymous')) }}
         @if (isset($details['email']) && !!$details['email'] && !$catalog)</a>@endif
         </strong>
+
+        {!! $post->getTripcodeHtml() !!}
+
         {{-- Always here. Added in by CSS. --}}
         <span class="author-you">@lang('board.you')</span>
-        @if (isset($details['insecure_tripcode']) && $details['insecure_tripcode'])
-        <span class="insecure-tripcode tripcode">{{ $details['insecure_tripcode'] }}</span>
-        @endif
 
         @if (isset($details['capcode_id']) && $details['capcode_id'] > 0)
         <strong class="post-detail-item capcode">{{ $post->getCapcodeName() }}</strong>
