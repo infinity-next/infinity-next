@@ -147,10 +147,10 @@ class PostObserver
         $accountable = !is_null($user) && $user->isAccountable();
         $session = Session::getId();
 
-        if ($accountable) {
-            Cache::restoreLock('posting_now_'.$post->author_ip->toLong(), Post::class)->release();
-        }
         Cache::restoreLock("posting_now_session:{$session}", Post::class)->release();
+        if ($accountable) {
+            Cache::restoreLock('posting_now_ip:'.$post->author_ip->toLong(), Post::class)->release();
+        }
 
         // fire events
         event(new PostWasCreated($post));
@@ -197,7 +197,7 @@ class PostObserver
         if (!Cache::lock("posting_now_session:{$session}", 10, Post::class)->get()) {
             return abort(429, "Your session is still locked from posting.");
         }
-        if ($accountable && !Cache::lock("posting_now_session:{$ipLong}", 10, Post::class)->get()) {
+        if ($accountable && !Cache::lock("posting_now_ip:{$ipLong}", 10, Post::class)->get()) {
             return abort(429, "Your IP is still locked from posting.");
         }
 
