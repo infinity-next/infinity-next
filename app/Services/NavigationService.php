@@ -9,7 +9,7 @@ class NavigationService
 {
     public function cachePrimaryNav()
     {
-        return Cache::rememberForever('site.nav.primary', function() {
+        return Cache::rememberForever(is_hidden_service() ? 'site.nav.primary.tor' : 'site.nav.primary', function() {
             return $this->renderPrimaryNav();
         });
     }
