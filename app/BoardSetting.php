@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\Traits\EloquentBinary;
 use Illuminate\Database\Eloquent\Model;
 
 class BoardSetting extends Model
 {
-    use \App\Traits\EloquentBinary;
+    use EloquentBinary;
 
     /**
      * The database table used by the model.

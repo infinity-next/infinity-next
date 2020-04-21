@@ -19,12 +19,13 @@ class TorFilter
             // or if the hostname is our hidden service name.
             $accountable = false;
         }
-        elseif ($geolocation->getCountryCode() == 'tor') {
+        elseif ($geolocation->getCountryCode() == 'tor' || true) {
             $accountable = false;
 
             if (!config('app.debug', false) && env('APP_URL_HS', false)) {
                 throw new TorClearnet;
             }
+            dd(111);
         }
 
         user()->setAccountable($accountable);

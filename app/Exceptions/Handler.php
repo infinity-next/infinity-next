@@ -3,16 +3,16 @@
 namespace App\Exceptions;
 
 use App\Exceptions\TorClearnet;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 use Exception;
 use ErrorException;
 use Mail;
 use Response;
 use Request;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\Debug\Exception\FlattenException as FlattenException;
-use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -24,7 +24,7 @@ class Handler extends ExceptionHandler
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
-        Symfony\Component\HttpKernel\Exception\HttpException::class,
+        HttpException::class,
         ValidationException::class,
     ];
 
@@ -91,7 +91,7 @@ class Handler extends ExceptionHandler
 
         if ($errorEmail) {
             // This makes use of a Symfony error handler to make pretty traces.
-            $SymfonyDisplayer = new SymfonyDisplayer(true);
+            $SymfonyDisplayer = new HtmlErrorRenderer(true);
             $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
             $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
@@ -118,11 +118,11 @@ class Handler extends ExceptionHandler
             // Duplicating logic in $errorEmail because output is completely
             // diffrent without app.debug enabled. I always want a stack trace
             // in my emails!
-            $SymfonyDisplayer = new SymfonyDisplayer(config('app.debug'));
+            $SymfonyDisplayer = new HtmlErrorRenderer(config('app.debug'));
             $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
 
             $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
-            $SymfonyHtml = $SymfonyDisplayer->getContent($FlattenException);
+            $SymfonyHtml = $SymfonyDisplayer->getBody($FlattenException);
 
             $response = response()->view($errorView, [
                 'exception' => $e,
