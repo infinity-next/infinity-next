@@ -959,12 +959,12 @@ class Board extends Model
             $stealFrom = $this->getConfig('boardCustomCSSSteal', '');
 
             if ($stealFrom != '') {
-                $stealFrom = Board::with('settings', 'settings.option')
+                $stealFrom = BoardSetting::where('option_name', "boardCustomCSS")
                     ->where('board_uri', $stealFrom)
                     ->first();
 
                 if ($stealFrom && $stealFrom->exists) {
-                    $stealFromStyle = $stealFrom->getConfig('boardCustomCSSEnable', false) ? $stealFrom->getConfig('boardCustomCSS') : '';
+                    $stealFromStyle = $stealFrom->option_value;
 
                     if ($stealFromStyle != '') {
                         return "/**\n * This style is borrowed from /{$stealFrom->board_uri}/.\n */\n\n\n".$stealFromStyle;
