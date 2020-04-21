@@ -147,9 +147,9 @@ class PostObserver
         $accountable = !is_null($user) && $user->isAccountable();
         $session = Session::getId();
 
-        Cache::restoreLock("posting_now_session:{$session}", Post::class)->release();
+        Cache::restoreLock("posting_now_session:{$session}", Post::class)->forceRelease();
         if ($accountable) {
-            Cache::restoreLock('posting_now_ip:'.$post->author_ip->toLong(), Post::class)->release();
+            Cache::restoreLock('posting_now_ip:'.$post->author_ip->toLong(), Post::class)->forceRelease();
         }
 
         // fire events
