@@ -195,14 +195,19 @@ class FileStorage extends Model
 
     public static function checkHashExists($hash, Board $board, Post $thread = null)
     {
+        $storage = static::whereHash($hash)->first();
+        if (!$storage) {
+            return;
+        }
+
         $query = Post::where('board_uri', $board->board_uri);
 
         if (!is_null($thread)) {
             $query = $query->whereInThread($thread);
         }
 
-        return $query->whereHas('postAttachments', function ($query) use ($hash) {
-            $query->whereHash($hash);
+        return $query->whereHas('attachments', function ($subQuery) use ($storage) {
+            $subQuery->where('file_id', $storage->file_id);
         })->first();
     }
 
