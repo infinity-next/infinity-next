@@ -34,15 +34,29 @@ class PrettyGoodTripcode implements Htmlable, Tripcode
      */
     public function __construct($clearsign)
     {
+        throw new InvalidPgpTripcode;
+
+        ## BROKEN: https://github.com/php-gnupg/php-gnupg/issues/18
         $gpg = gnupg_init();
         $verify = gnupg_verify($gpg, $clearsign, false, $this->message);
 
-        if (!$verify) {
+        if ($verify === false) {
             throw new InvalidPgpTripcode;
         }
 
         $this->fingerprint = $verify[0]['fingerprint'];
         $this->timestamp = $verify[0]['timestamp'];
+
+        ## REAL VALIDATION STARTS HERE
+        $tmpfname = tempnam("/tmp", "nextPgp");
+        file_put_contents($tmpfname, $clearsign);
+
+        exec("gpg --verify {$tmpfname} 2>&1", $output);
+
+        // this doesn't work either
+        if (count($output) != 3 || strpos($output[2], "Good signature") === false) {
+            throw new InvalidPgpTripcode($output[2]);
+        }
 
         return $this;
     }

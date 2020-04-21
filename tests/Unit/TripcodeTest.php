@@ -53,4 +53,12 @@ class TripcodeTest extends TestCase
         $forged = file_get_contents(__DIR__ . "/../Dummy/pgt_bad_sig.txt");
         $tripcode = new PrettyGoodTripcode($forged);
     }
+
+    public function testSpoofedPrettyGoodTripcode()
+    {
+        $this->expectException(InvalidPgpTripcode::class);
+
+        $forged = file_get_contents(__DIR__ . "/../Dummy/pgt_spoof_sig.txt");
+        $tripcode = new PrettyGoodTripcode($forged);
+    }
 }
