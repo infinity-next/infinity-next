@@ -337,8 +337,8 @@ class PostAttachment extends Model
         // Measure dimensions.
         $height = 'auto';
         $width = 'auto';
-        $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 250);
-        $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 250);
+        $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 200);
+        $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 200);
 
         // configuration for an actual thumbnail image
         if ($thumbnail instanceof FileStorage && !$spoiler && !$deleted) {
@@ -382,7 +382,7 @@ class PostAttachment extends Model
      */
     public function getThumbnailName()
     {
-        return $this->getFormattedName(true) . ".webp";
+        return $this->getFormattedName(true) . "." . $this->thumbnail->guessExtension();
     }
 
     /**

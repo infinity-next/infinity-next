@@ -269,7 +269,7 @@ class Upload
                 $constraint->aspectRatio();
                 $constraint->upsize();
             })
-            ->encode('webp', Settings::get('attachmentThumbnailQuality', 75));
+            ->encode('png', Settings::get('attachmentThumbnailQuality', 60)); ## todo: webp here when apple stops sucking
 
         $blob = (string) $image;
         $hash = hash('sha256', $blob);
@@ -284,7 +284,7 @@ class Upload
             $storage->file_height = $image->height();
             $storage->file_width = $image->width();
             $storage->hash = $hash;
-            $storage->mime = "image/webp";
+            $storage->mime = "image/png";  ## todo: webp here when apple stops sucking
             $storage->upload_count = 1;
             $storage->phash = $this->phash($storage->blob);
         }
