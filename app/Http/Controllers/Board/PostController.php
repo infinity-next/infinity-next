@@ -288,7 +288,7 @@ class PostController extends Controller
     public function unlock(Request $request, Board $board, Post $post)
     {
         // Redirect to anyBumplock with a flag denoting an unlock.
-        return $this->unlock($request, $board, $post, false);
+        return $this->lock($request, $board, $post, false);
     }
 
     /**

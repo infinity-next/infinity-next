@@ -416,7 +416,7 @@ class PostObserver
      */
     public function updated(Post $post)
     {
-        if (!is_null($post->deleted_at)) {
+        if (is_null($post->deleted_at)) {
             PostUpdate::dispatch($post);
         }
 
