@@ -6,6 +6,7 @@ use App\Board;
 use App\FileStorage;
 use App\PostAttachment;
 use App\Http\Controllers\Controller;
+use Gate;
 use File;
 use Request;
 use Response;
@@ -45,11 +46,13 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        $this->authorize('delete', $attachment->post);
+        if (!Gate::any(['delete', 'delete-self'], $attachment->post)) {
+            return abort(403);
+        }
 
         $scope = [
             'board' => $board,
-            'mod' => true,//user()->canDeleteGlobally() || user()->canDeleteLocally($board),
+            'mod' => user()->can('delete', $attachment->post),
         ];
 
         return $this->makeView(static::VIEW_VERIFY, $scope);
@@ -68,11 +71,13 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        $this->authorize('delete', $attachment->post);
+        if (!Gate::any(['delete', 'delete-self'], $attachment->post)) {
+            return abort(403);
+        }
 
         $scope = [
             'board' => $board,
-            'mod' => user()->canSpoilerAttachmentGlobally() || user()->canSpoilerAttachmentLocally($board),
+            'mod' => user()->can('delete', $attachment->post),
         ];
 
         return $this->makeView(static::VIEW_VERIFY, $scope);
@@ -97,8 +102,6 @@ class AttachmentController extends Controller
             return abort(404);
         }
 
-        $this->authorize('delete', $attachment->post);
-
         $input = Request::all();
 
         $validator = Validator::make($input, [
@@ -115,35 +118,31 @@ class AttachmentController extends Controller
         }
 
         if ($input['scope'] == 'other') {
-            if (user()->can('delete', $attachment->post)) {
-                $this->log('log.attachment.delete', $attachment->post, [
-                    'board_uri' => $attachment->post->board_uri,
-                    'board_id' => $attachment->post->board_id,
-                    'post_id' => $attachment->post->post_id,
-                    'file' => $attachment->file->hash,
-                ]);
-            }
-            else {
-                abort(403);
-            }
+            $this->authorize('delete', $attachment->post);
+            $this->log('log.attachment.delete', $attachment->post, [
+                'board_uri' => $attachment->post->board_uri,
+                'board_id' => $attachment->post->board_id,
+                'post_id' => $attachment->post->post_id,
+                'file' => $attachment->file->hash,
+            ]);
         }
         elseif ($input['scope'] == 'self') {
-            if (user()->canDeletePostWithPassword($board)) {
-                if (!$attachment->post->checkPassword($input['password'])) {
-                    return redirect()
-                        ->back()
-                        ->withInput($input)
-                        ->withErrors([
-                            'password' => \Lang::get('validation.password', [
-                                'attribute' => 'password',
-                            ]),
-                        ]);
-                }
+            $this->authorize('delete-self', $attachment->post);
+            if (!$attachment->post->checkPassword($input['password'])) {
+                return redirect()
+                    ->back()
+                    ->withInput($input)
+                    ->withErrors([
+                        'password' => \Lang::get('validation.password', [
+                            'attribute' => 'password',
+                        ]),
+                    ]);
             }
         }
 
         $attachment->is_deleted = true;
         $attachment->save();
+        $attachment->post->forget();
 
         Event::dispatch(new AttachmentWasModified($attachment));
 
@@ -163,8 +162,6 @@ class AttachmentController extends Controller
         if (!$attachment->exists) {
             return abort(404);
         }
-
-        $this->authorize('delete', $attachment->post);
 
         $input = Request::all();
 
@@ -196,22 +193,22 @@ class AttachmentController extends Controller
             );
         }
         elseif ($input['scope'] == 'self') {
-            if (user()->canDeletePostWithPassword($board)) {
-                if (!$attachment->post->checkPassword($input['password'])) {
-                    return redirect()
-                        ->back()
-                        ->withInput($input)
-                        ->withErrors([
-                            'password' => \Lang::get('validation.password', [
-                                'attribute' => 'password',
-                            ]),
-                        ]);
-                }
+            $this->authorize('delete-self', $attachment->post);
+            if (!$attachment->post->checkPassword($input['password'])) {
+                return redirect()
+                    ->back()
+                    ->withInput($input)
+                    ->withErrors([
+                        'password' => \Lang::get('validation.password', [
+                            'attribute' => 'password',
+                        ]),
+                    ]);
             }
         }
 
         $attachment->is_spoiler = !$attachment->is_spoiler;
         $attachment->save();
+        $attachment->post->forget();
 
         Event::dispatch(new AttachmentWasModified($attachment));
 

@@ -103,6 +103,30 @@ class PostPolicy extends AbstractPolicy
     }
 
     /**
+     * Can this user delete this post with a password?
+     *
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
+     *
+     * @return Illuminate\Auth\Access\Response
+     */
+    public function deleteSelf(User $user, Post $post)
+    {
+        // If we can edit any post for this board ...
+        if ($user->permission('board.post.delete.self', $post)) {
+            return Response::allow();
+        }
+
+        // If the author and our current user share an IP ...
+        //if (!is_null($post->author_ip) && $post->author_ip->is(Request::ip())) {
+            // Allow post edit, if the masks allows it.
+            //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
+        //}
+
+        return Response::deny('auth.post.cannot_without_password');
+    }
+
+    /**
      * Can this user delete all other posts by this IP on this board?
      *
      * @param  \App\User  $user

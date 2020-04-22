@@ -55,6 +55,8 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     // edit
     Route::get('edit', ['as' => 'edit', 'uses' => 'PostController@edit']);
     Route::patch('edit', ['as' => 'edit.update', 'uses' => 'PostController@update']);
+    Route::get('delete', ['as' => 'delete', 'uses' => 'PostController@delete']);
+    Route::post('delete', ['as' => 'destroy', 'uses' => 'PostController@destroy']);
 
     // stickying
     Route::get('sticky', ['as' => 'sticky', 'uses' => 'PostController@sticky']);

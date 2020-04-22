@@ -32,6 +32,7 @@ use Event;
  */
 class PostController extends Controller
 {
+    const VIEW_DELETE = 'board.verify';
     const VIEW_EDIT = 'board.post.mod';
     const VIEW_MOD  = 'board.post.mod';
 
@@ -118,7 +119,7 @@ class PostController extends Controller
     /**
      * Renders the post edit form.
      */
-    public function edit(Request $request, Board $board, Post $post)
+    public function edit(Board $board, Post $post)
     {
         $this->authorize('edit', $post);
 
@@ -128,6 +129,59 @@ class PostController extends Controller
             'board' => $board,
             'post' => $post,
         ]);
+    }
+
+    /**
+     * Delete a post's attachment.
+     *
+     * @return Response
+     */
+    public function delete(Board $board, Post $post)
+    {
+        $this->authorize('delete-self', $post);
+
+        return $this->makeView(static::VIEW_DELETE, [
+            'board' => $board,
+            'mod' => false,
+        ]);
+    }
+
+    /**
+     * Toggle a post's spoiler status.
+     *
+     * @param \App\PostAttachment $attachment
+     *
+     * @return Response
+     */
+    public function destroy(Board $board, Post $post)
+    {
+        $this->authorize('delete-self', $post);
+
+        $input = Request::all();
+        $validator = Validator::make($input, [
+            'password' => 'required|string',
+        ]);
+
+        if (!$validator->passes()) {
+            return redirect()->back()->withInput($input)->withErrors($validator->errors());
+        }
+
+        if (!$post->checkPassword($input['password'])) {
+            return redirect()->back()->withInput($input)->withErrors([
+                'password' => \Lang::get('validation.password', [
+                    'attribute' => 'password',
+                ]),
+            ]);
+        }
+
+        $post->delete();
+
+        if (!$post->isOp()) {
+            return redirect($post->thread->getUrl());
+        }
+        else {
+            return redirect($board->getUrl());
+        }
     }
 
     /**

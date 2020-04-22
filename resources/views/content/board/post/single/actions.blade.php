@@ -11,6 +11,10 @@
             @lang('board.action.report_global')
         </a>
 
+        <a class="action action-delete" href="{!! $post->getModUrl('delete') !!}">
+            @lang('board.action.delete')
+        </a>
+
         <a class="action action-history " href="{!! $post->getModUrl('history') !!}">
             @lang('board.action.history', [ 'board_uri' => $details['board_uri'], ])
         </a>

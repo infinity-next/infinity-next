@@ -14,26 +14,19 @@
         </a>
 
         <div class="attachment-details attachment-actions">
-            @section('attachment-actions')
-            @set('attachmentActions', false)
             <div class="actions-anchor actions-attachment" data-no-instant>
                 <span class="actions-label"><i class="fa fa-angle-down"></i></span>
                 <div class="actions">
-                    @set('attachmentActions', true)
-                    @if ($attachment->is_spoiler)
                     <div class="action">
                         <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="action-link attachment-unspoiler" title="@lang('board.field.unspoiler')">
                             <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
                         </a>
                     </div>
-                    @else
                     <div class="action">
                         <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="action-link attachment-spoiler" title="@lang('board.field.spoiler')">
                             <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
                         </a>
                     </div>
-                    @endif
-
                     <div class="action">
                         <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="action-link attachment-remove" title="@lang('board.field.remove')">
                             <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
@@ -41,7 +34,6 @@
                     </div>
                 </div>
             </div>
-            @show
 
             {{-- Note: Strict LTR direct here because this is technical info. --}}
             <a class="attachment-action attachment-download" dir="ltr" target="_blank" href="{!! $attachment->getUrl($board) . "?disposition=attachment" !!}" download="{!! $attachment->getDownloadName() !!}">
