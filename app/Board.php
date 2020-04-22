@@ -787,7 +787,7 @@ class Board extends Model
             });
 
         if ($stats->count()) {
-            $oldest = $stats->orderBy('stats_time', 'asc')->first();
+            $oldest = $stats->sortBy('stats_time')->first();
             return number_format($stats->sum('counter') / $oldest->stats_time->diffInHours(), 2);
         }
 
@@ -810,7 +810,7 @@ class Board extends Model
             });
 
         if ($stats->count()) {
-            $oldest = $stats->orderBy('stats_time', 'asc')->first();
+            $oldest = $stats->sortBy('stats_time')->first();
             return number_format($stats->sum('counter') / $oldest->stats_time->diffInDays(), 2);
         }
 
