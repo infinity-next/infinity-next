@@ -61,6 +61,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('autocache:gnav')
             ->everyTenMinutes()
             ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
+
+        $schedule->command('autocache:boardlist')
+            ->everyTenMinutes()
+            ->sendOutputTo("{$logdir}/{$now->format('Y-m-d_H')}.txt");
     }
 
     private function runAutoprune(Schedule $schedule, Carbon $now)

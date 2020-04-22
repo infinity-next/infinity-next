@@ -36,6 +36,6 @@ class StatsUnique extends Model
 
     public function uniques()
     {
-        return $this->hasOne('\App\Stats', 'stats_id');
+        return $this->hasOne(Stats::class, 'stats_id');
     }
 }

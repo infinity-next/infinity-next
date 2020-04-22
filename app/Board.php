@@ -702,7 +702,7 @@ class Board extends Model
      */
     public function getStatsActiveUsersAttribute()
     {
-        $stats = $this->stats->where('stats_type', 'authors');
+        $stats = $this->stats()->where('stats_type', 'authors');
 
         if ($stats->count()) {
             $uniques = new Collection();
@@ -734,7 +734,7 @@ class Board extends Model
      */
     public function getStatsActiveRangesAttribute()
     {
-        $stats = $this->stats->where('stats_type', 'ranges');
+        $stats = $this->stats()->where('stats_type', 'ranges');
 
         if ($stats->count()) {
             $uniques = new Collection();
@@ -757,18 +757,10 @@ class Board extends Model
     public function getStatsPlhAttribute()
     {
         $oneHourAgo = Carbon::now()->minute(0)->second(0)->subHour();
-
-        $stats = $this->stats
+        return $this->stats()
             ->where('stats_type', 'posts')
-            ->filter(function ($item) use ($oneHourAgo) {
-                return $item->stats_time->gte($oneHourAgo);
-            });
-
-        if ($stats->count()) {
-            return (int) $stats->sum('counter');
-        }
-
-        return 0;
+            ->where('stats_type', '>=', $oneHourAgo)
+            ->sum('counter');
     }
 
     /**
@@ -779,18 +771,12 @@ class Board extends Model
     public function getStatsPphAttribute()
     {
         $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
-
-        $stats = $this->stats
+        $stats = $this->stats()
             ->where('stats_type', 'posts')
-            ->filter(function ($item) use ($sevenDaysAgo) {
-                return $item->stats_time->gte($sevenDaysAgo);
-            });
+            ->where('stats_type', '>=', $sevenDaysAgo)
+            ->sum('counter');
 
-        if ($stats->count()) {
-            return number_format($stats->sum('counter') / 168, 2);
-        }
-
-        return 0;
+        return number_format($stats / 168, 0);
     }
 
     /**
@@ -801,18 +787,12 @@ class Board extends Model
     public function getStatsPpdAttribute()
     {
         $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
-
-        $stats = $this->stats
+        $stats = $this->stats()
             ->where('stats_type', 'posts')
-            ->filter(function ($item) use ($sevenDaysAgo) {
-                return $item->stats_time->gte($sevenDaysAgo);
-            });
+            ->where('stats_type', '>=', $sevenDaysAgo)
+            ->sum('counter');
 
-        if ($stats->count()) {
-            return number_format($stats->sum('counter') / 24, 2);
-        }
-
-        return 0;
+        return number_format($stats / 24, 0);
     }
 
     /**
@@ -1091,10 +1071,10 @@ class Board extends Model
 
         if ($force) {
             $boards = $rememberClosure();
-
             Cache::forget($rememberKey);
             Cache::put($rememberKey, $boards, $rememberTimer);
-        } else {
+        }
+        else {
             $boards = Cache::remember($rememberKey, $rememberTimer, $rememberClosure);
         }
 
@@ -1109,7 +1089,8 @@ class Board extends Model
     {
         if ($board_id instanceof Post) {
             throw new InvalidArgumentException('Board::getThreadByBoardId was called using a real Laravel post model. Only a board id should be passed.');
-        } else {
+        }
+        else {
             return Post::getForThreadView($this, $board_id);
         }
 

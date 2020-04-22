@@ -43,6 +43,6 @@ class Stats extends Model
 
     public function uniques()
     {
-        return $this->hasMany('\App\StatsUnique', 'stats_id');
+        return $this->hasMany(StatsUnique::class, 'stats_id');
     }
 }
