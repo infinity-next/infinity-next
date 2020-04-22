@@ -118,7 +118,11 @@
     </div>
 </fieldset>
 @endcan
+@else
+    <p>@lang('board.ban.no_ip')</p>
+@endif
 
+@canAny('global-delete', 'global-ban')
 <fieldset class="form-fields fields-togglable">
     <legend class="form-legend">@lang('board.legend.scope')</legend>
 
@@ -140,7 +144,7 @@
     </div>
 </fieldset>
 @else
-    <p>@lang('board.ban.no_ip')</p>
+    <input type="hidden" name="scope" value="{{ $board->board_uri }}" checked="checked" />
 @endif
 
 <fieldset class="form-fields">
