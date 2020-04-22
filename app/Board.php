@@ -759,7 +759,7 @@ class Board extends Model
         $oneHourAgo = Carbon::now()->minute(0)->second(0)->subHour();
         return $this->stats()
             ->where('stats_type', 'posts')
-            ->where('stats_type', '>=', $oneHourAgo)
+            ->where('stats_time', '>=', $oneHourAgo)
             ->sum('counter');
     }
 
@@ -773,7 +773,7 @@ class Board extends Model
         $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
         $stats = $this->stats()
             ->where('stats_type', 'posts')
-            ->where('stats_type', '>=', $sevenDaysAgo)
+            ->where('stats_time', '>=', $sevenDaysAgo)
             ->sum('counter');
 
         return number_format($stats / 168, 0);
@@ -789,7 +789,7 @@ class Board extends Model
         $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
         $stats = $this->stats()
             ->where('stats_type', 'posts')
-            ->where('stats_type', '>=', $sevenDaysAgo)
+            ->where('stats_time', '>=', $sevenDaysAgo)
             ->sum('counter');
 
         return number_format($stats / 24, 0);
