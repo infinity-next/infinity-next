@@ -84,7 +84,7 @@ class BoardAsset extends Model implements PseudoEnumContract
     public static $validationRules = [
         'board_banned' => [ 'dimensions:max_height=500,max_width=500,min_height=100,min_width=100', 'max:250', ],
         'board_banner' => [ 'dimensions:max_height=200,max_width=600,ratio=3/1', 'max:1024', ],
-        'board_flags.file.*' => [ 'dimensions:height=33,max_width=90', 'max:100', ],
+        'board_flags.file.*' => [ 'dimensions:max_height=33,max_width=90', 'max:100', ],
         'board_icon' => [ 'dimensions:width=64,height=64,ratio=1/1', 'max:50', ],
         'file_deleted' => [ 'dimensions:max_height=250,max_width=250,min_height=100,min_width=100', 'max:250', ],
         'file_spoiler' => [ 'dimensions:max_height=250,max_width=250,min_height=100,min_width=100', 'max:250', ],
