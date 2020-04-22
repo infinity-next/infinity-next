@@ -30,6 +30,17 @@ return [
     ],
 
     /**
+     * Attachments
+     */
+    'attachment' => [
+        'title' => "Attachments",
+
+        'option' => [
+            'attachment_preview' => "Show Image Preview on Hover"
+        ],
+    ],
+
+    /**
      * Auto-updater
      */
     'autoupdater' => [
@@ -114,7 +125,6 @@ return [
 
         'option' => [
             'author_id' => "Display Author IDs when available",
-            'attachment_preview' => "Show Image Preview on Hover"
         ],
     ],
 
