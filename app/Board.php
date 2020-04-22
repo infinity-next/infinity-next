@@ -756,7 +756,7 @@ class Board extends Model
      */
     public function getStatsPlhAttribute()
     {
-        $timestamp = Carbon::now()->minute(0)->second(0)->subHour();
+        $timestamp = Carbon::now()->minute(0)->second(0)->microsecond(0)->subHour();
 
         $stats = $this->stats
             ->where('stats_type', 'posts')
@@ -778,7 +778,7 @@ class Board extends Model
      */
     public function getStatsPphAttribute()
     {
-        $timestamp = Carbon::now()->minute(0)->second(0)->subDays(7);
+        $timestamp = Carbon::now()->minute(0)->second(0)->microsecond(0)->subDays(7);
 
         $stats = $this->stats
             ->where('stats_type', 'posts')
@@ -801,7 +801,7 @@ class Board extends Model
      */
     public function getStatsPpdAttribute()
     {
-        $timestamp = Carbon::now()->minute(0)->second(0)->subDays(7);
+        $timestamp = Carbon::now()->minute(0)->second(0)->microsecond(0)->subDays(7);
 
         $stats = $this->stats
             ->where('stats_type', 'posts')
