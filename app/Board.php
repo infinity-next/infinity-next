@@ -786,6 +786,9 @@ class Board extends Model
         }
         else {
             $hoursAgo = $firstStat->stats_time->diffInHours();
+            $stats = $this->stats()
+                ->where('stats_type', 'posts')
+                ->sum('counter');
         }
 
         return number_format($stats / $hoursAgo, 0);
@@ -814,6 +817,9 @@ class Board extends Model
         }
         else {
             $hoursAgo = $firstStat->stats_time->diffInHours();
+            $stats = $this->stats()
+                ->where('stats_type', 'posts')
+                ->sum('counter');
         }
 
         return number_format($stats / $hoursAgo, 0);
