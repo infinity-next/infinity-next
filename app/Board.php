@@ -702,7 +702,7 @@ class Board extends Model
      */
     public function getStatsActiveUsersAttribute()
     {
-        $stats = $this->stats()->where('stats_type', 'authors');
+        $stats = $this->stats()->where('stats_type', 'authors')->get();
 
         if ($stats->count()) {
             $uniques = new Collection();
@@ -734,7 +734,7 @@ class Board extends Model
      */
     public function getStatsActiveRangesAttribute()
     {
-        $stats = $this->stats()->where('stats_type', 'ranges');
+        $stats = $this->stats()->where('stats_type', 'ranges')->get();
 
         if ($stats->count()) {
             $uniques = new Collection();
@@ -770,13 +770,25 @@ class Board extends Model
      */
     public function getStatsPphAttribute()
     {
-        $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
-        $stats = $this->stats()
-            ->where('stats_type', 'posts')
-            ->where('stats_time', '>=', $sevenDaysAgo)
-            ->sum('counter');
+        $firstStat = $this->stats()->orderBy('stats_time', 'asc')->first();
+        if (is_null($firstStat)) {
+            return $this->posts_total;
+        }
 
-        return number_format($stats / 168, 0);
+        $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
+        $hoursAgo = 168;
+
+        if ($firstStat->stats_time->timestamp < $sevenDaysAgo->timestamp) {
+            $stats = $this->stats()
+                ->where('stats_type', 'posts')
+                ->where('stats_time', '>=', $sevenDaysAgo)
+                ->sum('counter');
+        }
+        else {
+            $hoursAgo = $firstStat->stats_time->diffInHours();
+        }
+
+        return number_format($stats / $hoursAgo, 0);
     }
 
     /**
@@ -786,13 +798,25 @@ class Board extends Model
      */
     public function getStatsPpdAttribute()
     {
-        $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
-        $stats = $this->stats()
-            ->where('stats_type', 'posts')
-            ->where('stats_time', '>=', $sevenDaysAgo)
-            ->sum('counter');
+        $firstStat = $this->stats()->orderBy('stats_time', 'asc')->first();
+        if (is_null($firstStat)) {
+            return $this->posts_total;
+        }
 
-        return number_format($stats / 24, 0);
+        $sevenDaysAgo = Carbon::now()->minute(0)->second(0)->subDays(7);
+        $hoursAgo = 24;
+
+        if ($firstStat->stats_time->timestamp < $sevenDaysAgo->timestamp) {
+            $stats = $this->stats()
+                ->where('stats_type', 'posts')
+                ->where('stats_time', '>=', $sevenDaysAgo)
+                ->sum('counter');
+        }
+        else {
+            $hoursAgo = $firstStat->stats_time->diffInHours();
+        }
+
+        return number_format($stats / $hoursAgo, 0);
     }
 
     /**
