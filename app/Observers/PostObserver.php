@@ -13,6 +13,7 @@ use App\Events\PostWasModified;
 use App\Events\ThreadNewReply;
 use App\Filesystem\Upload;
 use App\Jobs\PostCreate;
+use App\Jobs\PostRecache;
 use App\Jobs\ThreadAutoprune;
 use App\Jobs\PostUpdate;
 use App\Services\ContentFormatter;
@@ -360,36 +361,41 @@ class PostObserver
      */
     public function saved(Post $post)
     {
-        ## TODO ## This should only happen when the body is changed, why does this happen every save?
-        // Rebuild citation relationships.
-
-        // Clear citations.
-        $post->cites()->delete();
+        if (!$post->wasRecentlyCreated) {
+            // Clear citations.
+            $oldCites = $post->cites->pluck('cite_id');
+            $post->cites()->delete();
+        }
+        else {
+            $oldCites = collect([]);
+        }
 
         // Readd citations.
         $cited = $post->getCitesFromText();
-        $cites = [];
+        $cites = collect([]);
 
         foreach ($cited['posts'] as $citedPost) {
-            $cites[] = new PostCite([
+            $cites->push(new PostCite([
                 'post_board_uri' => $post->board_uri,
                 'post_board_id' => $post->board_id,
                 'cite_id' => $citedPost->post_id,
                 'cite_board_uri' => $citedPost->board_uri,
                 'cite_board_id' => $citedPost->board_id,
-            ]);
+            ]));
         }
 
         foreach ($cited['boards'] as $citedBoard) {
-            $cites[] = new PostCite([
+            $cites->push(new PostCite([
                 'post_board_uri' => $post->board_uri,
                 'post_board_id' => $post->board_id,
                 'cite_board_uri' => $citedBoard->board_uri,
-            ]);
+            ]));
         }
 
-        if (count($cites) > 0) {
+        if ($cites->count() > 0) {
             $post->cites()->saveMany($cites);
+            $postIds = $cites->merge($oldCites)->unique('cite_id')->pluck('cite_id')->toArray();
+            PostRecache::dispatch($postIds);
         }
 
         return true;

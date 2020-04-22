@@ -1886,7 +1886,7 @@ class Post extends Model implements FormattableContract
      *
      * @return  string  HTML
      */
-    public function toHtml($catalog, $multiboard, $preview)
+    public function toHtml($catalog = false, $multiboard = false, $preview = false)
     {
         if ($this->isDeleted()) {
             return "";

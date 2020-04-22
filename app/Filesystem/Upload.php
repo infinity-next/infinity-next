@@ -141,7 +141,7 @@ class Upload
      protected function openStorage($storage)
      {
          if(!is_null($storage->banned_at)) {
-             throw new \Exception('File is explicitly banned.');
+             throw new BannedHashException('File is explicitly banned.');
          }
 
         $storage->openFile();
@@ -187,7 +187,7 @@ class Upload
             $distance = gmp_hamdist($filePhash, $theirPhash);
             if ($distance < 9) {
                 app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
-                throw new \Exception("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
+                throw new BannedPhashException("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
                 return false;
             }
         });
@@ -443,7 +443,6 @@ class Upload
         $durationBits = explode(':', $time);
         $durationSeconds = (float) $durationBits[2] + ((int) $durationBits[1] * 60) + ((int) $durationBits[0] * 3600);
         $durationMiddle = $durationSeconds / 2;
-
 
         $tsHours = str_pad(floor($durationMiddle / 3600), 2, '0', STR_PAD_LEFT);
         $tsMinutes = str_pad(floor($durationMiddle / 60 % 3600), 2, '0', STR_PAD_LEFT);

@@ -44,23 +44,23 @@ class PostCite extends Model
     // Post that this citation is made in.
     public function post()
     {
-        return $this->belongsTo('\App\Post', 'post_id');
+        return $this->belongsTo(Post::class, 'post_id');
     }
 
     public function postBoard()
     {
-        return $this->belongsTo('\App\Board', 'board_uri', 'post_board_uri');
+        return $this->belongsTo(Board::class, 'board_uri', 'post_board_uri');
     }
 
-    // That that this citation references
+    // Post that this citation references.
     public function cite()
     {
-        return $this->belongsTo('\App\Post', 'cite_id', 'post_id');
+        return $this->belongsTo(Post::class, 'cite_id', 'post_id');
     }
 
     public function citeBoard()
     {
-        return $this->belongsTo('\App\Board', 'board_uri', 'cite_board_uri');
+        return $this->belongsTo(Board::class, 'board_uri', 'cite_board_uri');
     }
 
     /**
