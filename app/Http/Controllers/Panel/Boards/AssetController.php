@@ -211,23 +211,10 @@ class AssetController extends PanelController
             $new = $input["new_{$input['asset_type']}"];
             $names = $new['name'] ?? [];
             $uploads = $new['file'] ?? [];
-            $rules = [];
-
-            $nameRules = [
-                'required',
-                'string',
-                'between:1,128',
+            $rules = [
+                'name.*' => [ 'required', 'string', 'between:1,128', ],
+                'files.*' => array_merge(['required'], BoardAsset::$validationRules['board_flags.file.*']),
             ];
-            $imageRules = array_merge(['required'], [
-                'image',
-                'dimensions:max_height=64,max_width=64,min_height=8,min_width=8',
-                'max:16',
-            ]);
-
-            foreach (range(0, count($uploads) - 1) as $index) {
-                $rules["name.{$index}"] = $nameRules;
-                $rules["file.{$index}"] = $imageRules;
-            }
 
             $validator = Validator::make($new, $rules);
 

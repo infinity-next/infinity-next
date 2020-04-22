@@ -155,7 +155,7 @@ return [
         // asset validation
         'new_board_banned.dimensions' => "Ban images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
         'new_board_banner.dimensions' => "Board banners must have a ratio of :ratio and be at most :max_heightpx tall, or an SVG.",
-        'new_board_flags.dimensions' => "Flags must be exactly :heightpx tall and at most :max_widthpx wide, or an SVG.",
+        'new_board_flags.file.*.dimensions' => "Flags must be exactly :heightpx tall and at most :max_widthpx wide, or an SVG.",
         'new_board_icon.dimensions' => "Board icons must be exactly :widthx:heightpx, or an SVG.",
         'new_file_deleted.dimensions' => "Attachment deleted images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
         'new_file_spoiler.dimensions' => "Attachment spoiler images must be between :min_widthx:min_height and :max_widthx:max_height, or an SVG.",
