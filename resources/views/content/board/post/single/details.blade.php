@@ -31,7 +31,7 @@
     </span>
 
     @if (isset($details['flag_id']) && !is_null($details['flag_id']))
-        <span class="post-detail post-custom-flag" title="{{ $post->getRelation('flag')->getDisplayName() }}">{!! $post->flag->asHTML() !!}</span>
+        <span class="post-detail post-custom-flag" title="{{ $post->flag->getDisplayName() }}">{!! $post->flag->toHtml() !!}</span>
     @endif
 
     @if ($board->getConfig('postsAuthorCountry', false) && $post->getCountryCode() && (!isset($catalog) || !$catalog))
