@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel\Site;
 use App\Ban;
 use App\FileStorage;
 use App\PostAttachment;
+use App\Events\FileWasBanned;
 use App\Http\Controllers\Panel\PanelController;
 use App\Http\Controllers\SendsFilesTrait as SendsFiles;
 use Request;
