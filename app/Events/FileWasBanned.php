@@ -21,7 +21,7 @@ class ThreadReply implements ShouldBroadcast
      * @var \App\File
      */
     public $file;
-    public $post
+    public $post;
 
     /**
      * Create a new event instance.
