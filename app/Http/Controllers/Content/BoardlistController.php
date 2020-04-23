@@ -235,9 +235,10 @@ class BoardlistController extends Controller
         $tagWeight = [];
 
         foreach ($tags as $tag) {
-            $tagWeight[$tag->tag] = $tag->getWeight(3);
+            $weight = $tag->getWeight();
 
-            if ($tag->getWeight() > 0) {
+            if ($tag->getWeight() <= 0) {
+                $tagWeight[$tag->tag] = $weight;
             }
         }
 
