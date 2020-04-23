@@ -44,6 +44,7 @@ class FileController extends PanelController
         $files = FileStorage::orderBy('last_uploaded_at', 'desc')
             ->whereDoesntHave('sources')
             ->where('last_uploaded_at', '>', now()->subDay())
+            ->limit(100)
             ->get();
 
         return $this->makeView(static::VIEW_INDEX, [
@@ -90,8 +91,7 @@ class FileController extends PanelController
          }
 
          if (!$ban) {
-             PostAttachment::where('file_id', $file->file_id)
-                ->update(['is_deleted' => true]);
+            $file->posts()->delete();
         }
         else {
             $file->banned_at = now();
@@ -117,10 +117,6 @@ class FileController extends PanelController
             $bans->each(function ($ban) {
                 Ban::create($ban);
             });
-         }
-
-         if ($fuzzyban) {
-             ## TODO ##
          }
 
          $file->deleteFile();

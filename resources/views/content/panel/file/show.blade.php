@@ -8,7 +8,7 @@
 <form method="POST" action="{{ route('panel.site.files.delete', ['hash' => $file->hash]) }}">
     @method('DELETE')
     @csrf
-    <button name="action" value="delete">@lang('board.action.delete_global')</button>
+    <button name="action" value="delete">@lang('board.action.delete')</button>
     <button name="action" value="ban">@lang('board.action.ban_delete_global')</button>
     {{-- <button name="action" value="fuzzyban">@lang('board.action.fuzzyban')</button> --}}
 </form>
@@ -18,6 +18,7 @@
         <tr>
             <th style="max-width: 14em;"></th>
             <th style="max-width: 8em;"></th>
+            <th style="max-width: 8em;"></th>
             <th></th>
         </tr>
     </thead>
@@ -25,6 +26,7 @@
         @foreach ($file->posts as $post)
         <tr class="@if ($post->isDeleted()) row-inactive @endif">
             <td>/{{ $post->board_uri }}/</td>
+            <td><a href="{{ $post->getUrl() }}">No.{{ $post->board_id }}</a></td>
             <td>{{ $post->created_at->diffForHumans() }}</td>
             <td class="attachments">
                 @foreach ($post->attachments as $attachment)

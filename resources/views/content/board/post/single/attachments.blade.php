@@ -23,8 +23,13 @@
                         </a>
                     </div>
                     <div class="action">
-                        <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="action-link attachment-spoiler" title="@lang('board.field.spoiler')">
+                        <a href="{{ route('panel.site.files.show', $attachment->file->hash) }}" target="_blank" class="action-link attachment-spoiler" title="@lang('board.field.spoiler')">
                             <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
+                        </a>
+                    </div>
+                    <div class="action">
+                        <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="action-link attachment-remove" title="@lang('board.field.remove')">
+                            <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
                         </a>
                     </div>
                     <div class="action">
