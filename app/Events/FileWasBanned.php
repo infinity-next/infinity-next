@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 
-class ThreadReply implements ShouldBroadcast
+class FileWasBanned implements ShouldBroadcast
 {
     use SerializesModels;
 
@@ -26,7 +26,7 @@ class ThreadReply implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(Post $post, File $file)
+    public function __construct(Post $post, FileStorage $file)
     {
         $this->file = $file;
         $this->post = $post;
