@@ -1,10 +1,6 @@
 @extends('layouts.main.panel')
 
 @section('body')
-<div class="attachment">
-    {!! $file->toHtml() !!}
-</div>
-
 <form method="POST" action="{{ route('panel.site.files.delete', ['hash' => $file->hash]) }}">
     @method('DELETE')
     @csrf
@@ -12,6 +8,10 @@
     <button name="action" value="ban">@lang('board.action.ban_delete_global')</button>
     {{-- <button name="action" value="fuzzyban">@lang('board.action.fuzzyban')</button> --}}
 </form>
+
+<div class="attachment">
+    {!! $file->source_id && ($file->source->isImageVector() || $file->source->isImage()) ? $file->source->toHtml() : $file->toHtml() !!}
+</div>
 
 <table>
     <thead>

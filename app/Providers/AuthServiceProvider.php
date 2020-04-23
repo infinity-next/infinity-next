@@ -129,6 +129,13 @@ class AuthServiceProvider extends ServiceProvider
                 : Response::deny('auth.site.cannot_upload_files');
         });
 
+        Gate::define('ban-file', function(User $user)
+        {
+            return $user->permission('site.attachment.ban')
+                ? Response::allow()
+                : Response::deny('auth.site.cannot_upload_files');
+        });
+
         Gate::define('global-ban', function(User $user)
         {
             return ($user->permission('board.user.ban.free') || $user->permission('board.user.ban.reason'))

@@ -198,7 +198,10 @@ class PostAttachment extends Model
         $query = static::where('is_spoiler', false)
             ->where('is_deleted', false)
             ->whereHas('file', function ($query) {
+                $timestamp = now()->subMinutes(5);
                 $query->whereHas('thumbnails');
+                $query->whereDate('last_uploaded_at', '<=', $timestamp);
+                $query->whereTime('last_uploaded_at', '<=', $timestamp);
             })
             ->whereHas('post.board', function ($query) use ($sfw) {
                 $query->where('is_indexed', '=', true);

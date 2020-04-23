@@ -137,6 +137,7 @@ class EventServiceProvider extends ServiceProvider
         \App\Ban::observe(new \App\Observers\BanObserver);
         \App\Board::observe(new \App\Observers\BoardObserver);
         \App\Page::observe(new \App\Observers\PageObserver);
+        \App\FileStorage::observe(new \App\Observers\FileObserver);
         \App\Post::observe(new \App\Observers\PostObserver);
         \App\Report::observe(new \App\Observers\ReportObserver);
 

@@ -18,7 +18,7 @@
             </li>
             @endcan
 
-            @canany(['admin-users', 'admin-permissions'])
+            @canany(['admin-users', 'admin-permissions', 'admin-config', 'ban-file'])
             <li class="cp-linkgroup">
                 <a class="linkgroup-name linkgroup-users" href="{!! route('panel.user.index') !!}">@lang('nav.panel.primary.users')</a>
             </li>

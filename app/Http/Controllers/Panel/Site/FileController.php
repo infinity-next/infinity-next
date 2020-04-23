@@ -39,7 +39,7 @@ class FileController extends PanelController
      */
     public function index()
     {
-        $this->authorize('admin-config');
+        $this->authorize('ban-file');
 
         $files = FileStorage::orderBy('last_uploaded_at', 'desc')
             ->whereDoesntHave('sources')
@@ -57,7 +57,7 @@ class FileController extends PanelController
      */
     public function send(FileStorage $file)
     {
-        $this->authorize('admin-config');
+        $this->authorize('ban-file');
 
         return $this->sendFile($file);
     }
@@ -67,7 +67,7 @@ class FileController extends PanelController
      */
      public function show(FileStorage $file)
      {
-         $this->authorize('admin-config');
+         $this->authorize('ban-file');
 
          return $this->makeView(static::VIEW_SHOW, [
              'file' => $file,
@@ -76,7 +76,7 @@ class FileController extends PanelController
 
      public function delete(FileStorage $file)
      {
-         $this->authorize('admin-config');
+         $this->authorize('ban-file');
          $action = Request::input('action');
 
          $ban = false;
@@ -91,14 +91,18 @@ class FileController extends PanelController
          }
 
          if (!$ban) {
-            $file->posts()->delete();
+            $file->posts()->each(function ($post) use ($file) {
+                broadcast(new FileWasBanned($post, $file));
+            });
         }
         else {
             $file->banned_at = now();
             $file->save();
 
             $bans = collect([]);
-            $file->posts()->each(function ($post) use ($bans) {
+            $file->posts()->each(function ($post) use ($bans, $file) {
+                broadcast(new FileWasBanned($post, $file));
+
                 if (!is_null($post->author_ip) && !$bans->contains('ban_ip_start', $post->author_ip)) {
                     $bans->add([
                         'ban_ip_start' => $post->author_ip,

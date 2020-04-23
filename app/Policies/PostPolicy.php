@@ -32,7 +32,7 @@ class PostPolicy extends AbstractPolicy
     {
         return $board->getConfig('postsAllowAuthor')
             ? Response::allow()
-            : Response::deny('auth.post.cannot_use_authors');
+            : Response::deny(trans('auth.post.cannot_use_authors'));
     }
 
     /**
@@ -47,14 +47,14 @@ class PostPolicy extends AbstractPolicy
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to)) {
-            return Response::deny('auth.post.only_on_an_op');
+            return Response::deny(trans('auth.post.only_on_an_op'));
         }
 
         if ($user->permission('board.post.bumplock', $post)) {
             return Response::allow();
         }
 
-        return Response::deny('auth.post.cannot_bumplock');
+        return Response::deny(trans('auth.post.cannot_bumplock'));
     }
 
     /**
@@ -70,12 +70,12 @@ class PostPolicy extends AbstractPolicy
     public function ban(User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return $user->can('ban', $post->board)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_ban');
+            : Response::deny(trans('auth.post.cannot_ban'));
     }
 
     /**
@@ -99,7 +99,7 @@ class PostPolicy extends AbstractPolicy
             //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
         //}
 
-        return Response::deny('auth.post.cannot_without_password');
+        return Response::deny(trans('auth.post.cannot_without_password'));
     }
 
     /**
@@ -123,7 +123,7 @@ class PostPolicy extends AbstractPolicy
             //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
         //}
 
-        return Response::deny('auth.post.cannot_without_password');
+        return Response::deny(trans('auth.post.cannot_without_password'));
     }
 
     /**
@@ -141,7 +141,7 @@ class PostPolicy extends AbstractPolicy
         }
 
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return Response::allow();
@@ -158,7 +158,7 @@ class PostPolicy extends AbstractPolicy
     public function edit(User $user, Post $post)
     {
         if ($post->body_signed) {
-            return Response::deny('auth.post.cannot_edit_signed_message');
+            return Response::deny(trans('auth.post.cannot_edit_signed_message'));
         }
 
         // If we can edit any post for this board ...
@@ -172,7 +172,7 @@ class PostPolicy extends AbstractPolicy
             //return $this->permission('board.post.edit.self', $post->attributes['board_uri']);
         //}
 
-        return Response::deny('auth.post.cannot_without_password');
+        return Response::deny(trans('auth.post.cannot_without_password'));
     }
 
     /**
@@ -189,7 +189,7 @@ class PostPolicy extends AbstractPolicy
     {
         return $user->permission('sys.config')
             ? Response::allow()
-            : Response::deny('auth.post.cannot_feature');
+            : Response::deny(trans('auth.post.cannot_feature'));
     }
 
     /**
@@ -203,7 +203,7 @@ class PostPolicy extends AbstractPolicy
     public function history(User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return $user->can('history', $post->board);
@@ -220,7 +220,7 @@ class PostPolicy extends AbstractPolicy
     public function globalBan(User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return $user->can('global-ban');
@@ -237,7 +237,7 @@ class PostPolicy extends AbstractPolicy
     public function globalDelete(User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return $user->can('global-delete');
@@ -254,7 +254,7 @@ class PostPolicy extends AbstractPolicy
     public function globalHistory(User $user, Post $post)
     {
         if (!$post->hasAuthorIp()) {
-            return Response::deny('auth.post.no_ip_address');
+            return Response::deny(trans('auth.post.no_ip_address'));
         }
 
         return $user->can('global-history');
@@ -272,12 +272,12 @@ class PostPolicy extends AbstractPolicy
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to)) {
-            return Response::deny('auth.post.only_on_an_op');
+            return Response::deny(trans('auth.post.only_on_an_op'));
         }
 
         return $user->permission('board.post.lock', $post)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_lock');
+            : Response::deny(trans('auth.post.cannot_lock'));
     }
 
     /**
@@ -308,12 +308,12 @@ class PostPolicy extends AbstractPolicy
     public function reply(User $user, Post $post)
     {
         if ($post->isLocked() && !$user->can('lock', $post)) {
-            return Response::deny('auth.post.thread_is_locked');
+            return Response::deny(trans('auth.post.thread_is_locked'));
         }
 
         return $user->permission('board.post.create.reply', $post->board)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_reply');
+            : Response::deny(trans('auth.post.cannot_reply'));
     }
 
     /**
@@ -328,7 +328,7 @@ class PostPolicy extends AbstractPolicy
     {
         return $user->permission('board.post.report', $post)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_report');
+            : Response::deny(trans('auth.post.cannot_report'));
     }
 
     /**
@@ -343,7 +343,7 @@ class PostPolicy extends AbstractPolicy
     {
         return $user->permission('site.post.report', $post)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_report_global');
+            : Response::deny(trans('auth.post.cannot_report_global'));
     }
 
     /**
@@ -358,12 +358,12 @@ class PostPolicy extends AbstractPolicy
     {
         // This only applies to OPs.
         if (!is_null($post->reply_to)) {
-            return Response::deny('auth.post.only_on_an_op');
+            return Response::deny(trans('auth.post.only_on_an_op'));
         }
 
         return $user->permission('board.post.sticky', $post)
             ? Response::allow()
-            : Response::deny('auth.post.cannot_sticky');
+            : Response::deny(trans('auth.post.cannot_sticky'));
     }
 
     /**
@@ -384,7 +384,7 @@ class PostPolicy extends AbstractPolicy
             return Response::allow();
         }
 
-        return Response::deny('auth.post.cannot_use_subjects');
+        return Response::deny(trans('auth.post.cannot_use_subjects'));
     }
 
     /**
@@ -398,6 +398,6 @@ class PostPolicy extends AbstractPolicy
     public function update(User $user, Post $post)
     {
         ## TODO ##
-        return Resposne::deny('auth.post.cannot_edit');
+        return Resposne::deny(trans('auth.post.cannot_edit'));
     }
 }

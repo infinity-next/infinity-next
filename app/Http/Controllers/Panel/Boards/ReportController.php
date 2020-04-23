@@ -155,6 +155,7 @@ class ReportController extends PanelController
      */
     public function dismissPost(Post $post)
     {
+        $report = $post->reports()->First();
         $this->authorize('dismiss', $report);
 
         $reports = $post->reports()
