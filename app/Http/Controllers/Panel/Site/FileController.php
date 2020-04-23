@@ -94,6 +94,7 @@ class FileController extends PanelController
          if (!$ban) {
             $file->posts()->each(function ($post) use ($file) {
                 broadcast(new FileWasBanned($post, $file));
+                $post->delete();
             });
         }
         else {
