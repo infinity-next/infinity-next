@@ -31,7 +31,7 @@ class BoardTag extends Model
 
     public function boards()
     {
-        return $this->belongsToMany('\App\Board', 'board_tag_assignments', 'board_tag_id', 'board_uri');
+        return $this->belongsToMany(Board::class, 'board_tag_assignments', 'board_tag_id', 'board_uri');
     }
 
     /**
@@ -41,7 +41,7 @@ class BoardTag extends Model
      *
      * @return int
      */
-    public function getWeight()
+    public function getWeightAttribute()
     {
         $weight = 0;
 

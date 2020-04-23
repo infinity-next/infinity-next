@@ -232,15 +232,7 @@ class BoardlistController extends Controller
             'boards.stats.uniques',
         ])->limit(50)->get();
 
-        $tagWeight = [];
-
-        foreach ($tags as $tag) {
-            $weight = $tag->getWeight();
-
-            if ($tag->getWeight() <= 0) {
-                $tagWeight[$tag->tag] = $weight;
-            }
-        }
+        $tagWeight = $tags->sortByDesc('weight')->pluck('weight')->toArray();
 
         return $tagWeight;
     }
