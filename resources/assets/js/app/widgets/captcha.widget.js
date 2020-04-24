@@ -43,7 +43,7 @@ ib.widget("captcha", function(window, $, undefined) {
                 var $captcha = $(widget.options.selector['captcha'], widget.$widget),
                     $hidden  = $captcha.next(),
                     $field   = $captcha.parent().children("input"),
-                    url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".webp";
+                    url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".jpg";
 
                 widget.$widget.data('replacing', false);
                 $captcha

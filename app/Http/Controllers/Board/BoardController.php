@@ -195,6 +195,11 @@ class BoardController extends Controller
      */
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
+        $captcha = $request->input('captcha_hash', null);
+        if (!is_null($captcha) && !Cache::lock("captcha:{$captcha}", 5, Post::class)->get()) {
+            return abort(429, "This captcha is already being used.");
+        }
+
         try {
             $request->validate();
         }
@@ -245,7 +250,22 @@ class BoardController extends Controller
      */
     public function putThread(PostRequest $request, Board $board)
     {
-        $request->validate();
+        $captcha = $request->input('captcha_hash', null);
+        if (!is_null($captcha) && !Cache::lock("captcha:{$captcha}", 5, Post::class)->get()) {
+            return abort(429, "This captcha is already being used.");
+        }
+
+        try {
+            $request->validate();
+        }
+        catch (BannedException $e) {
+            if ($request->wantsJson()) {
+                return [ 'redirect' => $e->redirectTo ];
+            }
+            else {
+                return redirect($e->redirectTo);
+            }
+        }
 
         // Create the post.
         $post = new Post($request->all());
