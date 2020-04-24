@@ -203,6 +203,7 @@ class PostAttachment extends Model
                 $query->whereHas('thumbnails');
                 $query->whereDate('last_uploaded_at', '<=', $timestamp);
                 $query->whereTime('last_uploaded_at', '<=', $timestamp);
+                $query->groupBy('file_id');
             })
             ->whereHas('post.board', function ($query) use ($sfw) {
                 $query->where('is_indexed', '=', true);
@@ -216,11 +217,12 @@ class PostAttachment extends Model
             // PostgreSQL does not support the MySQL standards non-compliant group_by syntax.
             // DISTINCT itself selects distinct combinations [attachment_id,file_id], not just file_id.
             // We have to use raw SQL to accomplish this.
-            $query->select(
-                \DB::raw('distinct on (file_id) *')
-            );
+            // $query->select(
+            //     \DB::raw('distinct on (file_id) *')
+            // );
 
             $query->orderBy('file_id', 'desc');
+            //$query->groupBy('file_id');
         } else {
             $query->orderBy('attachment_id', 'desc');
             $query->groupBy('file_id');
