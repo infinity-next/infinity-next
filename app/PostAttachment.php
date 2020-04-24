@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cache;
 use Settings;
 
 class PostAttachment extends Model
@@ -186,11 +187,11 @@ class PostAttachment extends Model
      */
     public static function getRecentImages($number = 16)
     {
-        $sfw = static::getRecentImagesByWorksafe($number, true);
-        $nsfw = static::getRecentImagesByWorksafe($number, false);
-        $images = $sfw->merge($nsfw)->sortByDesc('attachment_id');
-
-        return $images;
+        return Cache::remember('site.recent_images', now()->addMinute(), function() use ($number) {
+            $sfw = static::getRecentImagesByWorksafe($number, true);
+            $nsfw = static::getRecentImagesByWorksafe($number, false);
+            return $sfw->merge($nsfw)->sortByDesc('attachment_id');
+        });
     }
 
     protected static function getRecentImagesByWorksafe($number = 16, $sfw = false)
@@ -202,6 +203,7 @@ class PostAttachment extends Model
                 $query->whereHas('thumbnails');
                 $query->whereDate('last_uploaded_at', '<=', $timestamp);
                 $query->whereTime('last_uploaded_at', '<=', $timestamp);
+                $query->groupBy('file_id');
             })
             ->whereHas('post.board', function ($query) use ($sfw) {
                 $query->where('is_indexed', '=', true);
@@ -215,11 +217,12 @@ class PostAttachment extends Model
             // PostgreSQL does not support the MySQL standards non-compliant group_by syntax.
             // DISTINCT itself selects distinct combinations [attachment_id,file_id], not just file_id.
             // We have to use raw SQL to accomplish this.
-            $query->select(
-                \DB::raw('distinct on (file_id) *')
-            );
+            // $query->select(
+            //     \DB::raw('distinct on (file_id) *')
+            // );
 
             $query->orderBy('file_id', 'desc');
+            //$query->groupBy('file_id');
         } else {
             $query->orderBy('attachment_id', 'desc');
             $query->groupBy('file_id');

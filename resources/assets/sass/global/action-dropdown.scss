@@ -52,6 +52,7 @@
     html.no-js .actions-anchor:hover &,
     html.js    .open  & {
         display: block;
+        z-index: 100;
     }
 }
 
