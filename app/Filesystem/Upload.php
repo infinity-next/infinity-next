@@ -171,28 +171,38 @@ class Upload
     /**
      * Perceptually hashes supplied content and checks it against the database.
      *
+     * @var  string  $content  Dynamic, should be file data.
+     *
      * @return int  An unsigned bigint safe for pgsql databases.
      */
-    public function phash($content)
+    public function phash()
     {
-        // phash
+        $contents = func_get_args ();
         $hasher = new ImageHash(new PerceptualHash());
+        $hashes = [];
 
-        $fileHash = $hasher->hash($content);
-        $filePhash = gmp_sub(gmp_init("0x{$fileHash->toHex()}", 16), gmp_pow(2, 63));
+        foreach ($contents as $content) {
+            $fileHash = $hasher->hash($content);
+            $hashes[] = gmp_sub(gmp_init("0x{$fileHash->toHex()}", 16), gmp_pow(2, 63));
+        }
 
-        FileStorage::whereNotNull('banned_at')->whereNotNull('phash')->pluck('phash')->each(function ($theirPhash) use ($filePhash) {
+        $hashes = array_unique($hashes);
+
+        FileStorage::whereNotNull('banned_at')->whereNotNull('phash')->pluck('phash')->each(function ($theirPhash) use ($hashes) {
             $theirPhash = gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63));
 
-            $distance = gmp_hamdist($filePhash, $theirPhash);
-            if ($distance < 9) {
-                app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
-                throw new BannedPhashException("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
-                return false;
+            foreach ($hashes as $filePhash) {
+                $distance = gmp_hamdist($filePhash, $theirPhash);
+
+                if ($distance < 9) {
+                    app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
+                    throw new BannedPhashException("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
+                    return false;
+                }
             }
         });
 
-        return gmp_strval($filePhash, 10);
+        return gmp_strval($hashes[0], 10);
     }
 
     /**
@@ -237,10 +247,11 @@ class Upload
             }
 
             if ($storage->isImage()) {
-                $storage->phash = $this->phash($storage->blob);
                 $image = (new ImageManager())->make($storage->blob);
                 $storage->file_height = $image->height();
                 $storage->file_width = $image->width();
+
+                $storage->phash = $this->phash($storage->blob);
             }
         }
 
@@ -286,7 +297,11 @@ class Upload
             $storage->hash = $hash;
             $storage->mime = "image/png";  ## todo: webp here when apple stops sucking
             $storage->upload_count = 1;
-            $storage->phash = $this->phash($storage->blob);
+
+            $trimmed1 = (clone $image)->trim('top-left', null, 20)->encode('jpg', 50);
+            $trimmed2 = (clone $image)->trim('bottom-right', null, 20)->encode('jpg', 50);
+
+            $storage->phash = $this->phash($storage->blob, $trimmed1, $trimmed2);
         }
         else {
             $storage->last_uploaded_at = now();

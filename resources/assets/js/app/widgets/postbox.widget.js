@@ -174,7 +174,12 @@
                 var widget  = this.widget;
                 var $widget = this.$widget;
 
-                widget.notices.push(message, 'error');
+                if (typeof message.message !== 'undefined') {
+                    widget.notices.push(message.message, 'error');
+                }
+                else {
+                    widget.notices.push(message, 'error');
+                }
 
                 $(file.previewElement).remove();
 
