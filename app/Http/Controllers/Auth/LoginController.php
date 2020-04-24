@@ -78,7 +78,7 @@ class LoginController extends Controller
      */
     public function showLinkRequestForm()
     {
-        return view('content.auth.passwords.email');
+        return view('content.auth.password.email');
     }
 
     /**

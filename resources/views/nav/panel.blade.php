@@ -32,14 +32,14 @@
                 @lang('panel.authed_as', [ 'name' => user()->getDisplayName() ])
             </li>
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('auth.logout') !!}">@lang('nav.panel.primary.logout')</a>
+                <a class="linkgroup-name" href="{!! route('logout') !!}">@lang('nav.panel.primary.logout')</a>
             </li>
             @else
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('auth.register') !!}">@lang('nav.panel.primary.register')</a>
+                <a class="linkgroup-name" href="{!! route('register') !!}">@lang('nav.panel.primary.register')</a>
             </li>
             <li class="cp-linkgroup">
-                <a class="linkgroup-name" href="{!! route('auth.login') !!}">@lang('nav.panel.primary.login')</a>
+                <a class="linkgroup-name" href="{!! route('login') !!}">@lang('nav.panel.primary.login')</a>
             </li>
             @endif
         </ul>

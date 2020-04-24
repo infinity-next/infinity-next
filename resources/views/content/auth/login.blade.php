@@ -3,7 +3,7 @@
 @section('title', "Login")
 
 @section('body')
-<form class="form-auth" role="form" method="POST" action="{{ route('auth.login.attempt') }}">
+<form class="form-auth" role="form" method="POST" action="{{ route('login.attempt') }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
     <fieldset class="form-fields">
@@ -26,13 +26,13 @@
         </div>
 
         <div class="field row-forgot">
-            <a href="{{ route('auth.password.request') }}">
+            <a href="{{ route('password.request') }}">
                 @lang('panel.field.login_link.password_forgot')
             </a>
         </div>
 
         <div class="field row-register">
-            <a href="{{ route('auth.register') }}">
+            <a href="{{ route('register') }}">
                 @lang('panel.field.login_link.register')
             </a>
         </div>

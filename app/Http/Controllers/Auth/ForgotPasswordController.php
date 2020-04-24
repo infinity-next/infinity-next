@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Auth\SendsPasswordResetEmails;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 /**
  * Forgot password controller. Derived from stock laravel/laravel for v6
@@ -30,4 +30,15 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+
+    /**
+     * Display the form to request a password reset link.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLinkRequestForm()
+    {
+        return view('content.auth.password.forgot');
+    }
 }

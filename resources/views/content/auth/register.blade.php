@@ -4,7 +4,7 @@
 
 @section('body')
 {!! Form::open([
-    'url'    => route('auth.register.attempt'),
+    'url'    => route('register.attempt'),
     'method' => "POST",
     'id'     => "create-form",
     'class'  => "form-auth",

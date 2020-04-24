@@ -74,7 +74,6 @@ class RouteServiceProvider extends ServiceProvider
         ],
 
         'auth' => [
-            'as'         => 'auth.',
             'middleware' => ['web', 'public'],
             'namespace'  => 'App\Http\Controllers\Auth',
         ],

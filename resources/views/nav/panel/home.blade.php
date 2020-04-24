@@ -7,7 +7,7 @@
 
                 <ul class="cp-linkitems">
                     <li class="cp-linkitem">
-                        <a class="linkitem-name" href="{!! route('auth.password.request') !!}">@lang('nav.panel.secondary.home.password_change')</a>
+                        <a class="linkitem-name" href="{!! route('password.request') !!}">@lang('nav.panel.secondary.home.password_change')</a>
                     </li>
                 </ul>
             </li>
