@@ -1031,16 +1031,16 @@
         },
         {
             "name": "infinity-next/laravel-captcha",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/laravel-captcha.git",
-                "reference": "d4f442384774e9e57b3be5da3aabe27cc1809867"
+                "reference": "e171365316613ca6b8c34d469f5c5aefccf802ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/laravel-captcha/zipball/d4f442384774e9e57b3be5da3aabe27cc1809867",
-                "reference": "d4f442384774e9e57b3be5da3aabe27cc1809867",
+                "url": "https://api.github.com/repos/infinity-next/laravel-captcha/zipball/e171365316613ca6b8c34d469f5c5aefccf802ff",
+                "reference": "e171365316613ca6b8c34d469f5c5aefccf802ff",
                 "shasum": ""
             },
             "require": {
@@ -1077,7 +1077,7 @@
                 }
             ],
             "description": "An anti-bot image captcha system written for Laravel.",
-            "time": "2020-04-19T10:46:46+00:00"
+            "time": "2020-04-24T13:37:13+00:00"
         },
         {
             "name": "infinity-next/sleuth",
