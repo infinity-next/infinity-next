@@ -4,9 +4,10 @@ namespace App;
 
 use App\Contracts\PseudoEnum  as PseudoEnumContract;
 use App\Traits\PseudoEnum as PseudoEnum;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
-class BoardAsset extends Model implements PseudoEnumContract
+class BoardAsset extends Model implements Htmlable, PseudoEnumContract
 {
     use PseudoEnum;
 

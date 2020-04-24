@@ -4,7 +4,7 @@ namespace App;
 
 use App\Contracts\Support\Formattable as FormattableContract;
 use App\Support\Formattable;
-use Illuminate\Contracts\Support\Htmlable as HtmlableContarct;
+use Illuminate\Contracts\Support\Htmlable as HtmlableContract;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @since      0.6.0
  */
-class Page extends Model implements HtmlableContarct, FormattableContract
+class Page extends Model implements HtmlableContract, FormattableContract
 {
     use Formattable;
 

@@ -19,7 +19,7 @@
             @endif
         @else
         <figure class="error-figure">
-            {!! $board->getBannedImages()->random()->asHTML() !!}
+            {!! $board->getBannedImages()->random()->toHtml() !!}
         </figure>
         @endif
 
