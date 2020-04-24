@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cache;
 use Settings;
 
 class PostAttachment extends Model
@@ -186,11 +187,11 @@ class PostAttachment extends Model
      */
     public static function getRecentImages($number = 16)
     {
-        $sfw = static::getRecentImagesByWorksafe($number, true);
-        $nsfw = static::getRecentImagesByWorksafe($number, false);
-        $images = $sfw->merge($nsfw)->sortByDesc('attachment_id');
-
-        return $images;
+        return Cache::remember('site.recent_images', now()->addMinute(), function() use ($number) {
+            $sfw = static::getRecentImagesByWorksafe($number, true);
+            $nsfw = static::getRecentImagesByWorksafe($number, false);
+            return $sfw->merge($nsfw)->sortByDesc('attachment_id');
+        });
     }
 
     protected static function getRecentImagesByWorksafe($number = 16, $sfw = false)
