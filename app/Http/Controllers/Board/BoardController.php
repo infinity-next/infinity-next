@@ -286,11 +286,13 @@ class BoardController extends Controller
      */
     public function putThread(PostRequest $request, Board $board)
     {
-
+        // lock the connection
+        $connLock = $this->lockConnection();
+        // lock the destination
         $lock = Cache::lock("posting_now_board:{$board->board_uri}", 5);
 
         try {
-            $connLock->block(1);
+            $connLock->block(5);
             $lock->block(5);
 
             try {
