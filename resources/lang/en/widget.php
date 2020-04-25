@@ -34,9 +34,12 @@ return [
      */
     'attachment' => [
         'title' => "Attachments",
+        'csam' => "A file moderator has banned this image, and as a courtesy it has been automatically removed from the page by the WebSocket.",
+        'csam_uncache' => "Additioanlly, your browser supports clearing files from the cache, so that has also be done for you.",
 
         'option' => [
-            'attachment_preview' => "Show Image Preview on Hover"
+            'attachment_preview' => "Show Image Preview on Hover",
+            'csam_delete' => "Auto-Purge Banned Images",
         ],
     ],
 

@@ -40,10 +40,10 @@ class FileWasBanned implements ShouldBroadcast
     public function broadcastOn()
     {
         if ($this->post['reply_to']) {
-            return new PresenceChannel("Thread.{$this->thread['reply_to']}");
+            return new PresenceChannel("Thread.{$this->post['reply_to']}");
         }
         else {
-            return new PresenceChannel("Thread.{$this->thread['post_id']}");
+            return new PresenceChannel("Thread.{$this->post['post_id']}");
         }
     }
 }

@@ -129,6 +129,10 @@
                 })
                 .listen('ThreadReply', (e) => {
                     $widget.trigger('new-posts', [[ e.reply ]]);
+                })
+                .listen('FileWasBanned', (e) => {
+                    $(".attachment[data-file=" + e.file.file_id + "], .attachment[data-thumbnail=" + e.file.file_id + "]")
+                        .trigger('file-banned', e);
                 });
         }
         else {

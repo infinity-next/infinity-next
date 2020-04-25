@@ -224,11 +224,6 @@
                 'click.ib-post',
                 data,
                 widget.events.windowClick
-            )
-            .on(
-                'resize.ib-post',
-                data,
-                widget.events.windowResize
             );
 
         $widget
@@ -577,10 +572,6 @@
 
         windowClick : function(event) {
             var $widget = event.data.$widget;
-        },
-
-        windowResize : function(event) {
-            event.data.widget.scaleThumbnails();
         }
     };
 

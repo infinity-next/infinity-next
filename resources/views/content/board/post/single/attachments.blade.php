@@ -4,11 +4,11 @@
     @foreach ($post->attachments as $attachment)
     @if (!isset($catalog) || !$catalog)
     @if ($attachment->is_deleted)
-    <figure class="attachment attachment-deleted">
+    <div class="attachment attachment-deleted">
         {!! $attachment->toHtml() !!}
-    </figure>
+    </div>
     @else
-    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $attachment->file->getHtmlClasses() }}" data-widget="attachment">
+    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $attachment->file->getHtmlClasses() }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
         <a class="attachment-link" href="{!! $attachment->getUrl() !!}" data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml() !!}
         </a>
@@ -57,7 +57,7 @@
     </div>
     @endif
     @else
-    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }}" data-widget="attachment">
+    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
         <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml('auto') !!}
         </a>

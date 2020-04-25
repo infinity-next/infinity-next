@@ -13,6 +13,11 @@
         attachment_preview : {
             type : "bool",
             initial : true
+        },
+        csam_delete : {
+            type : "bool",
+            initial : true
+
         }
     };
 
@@ -21,7 +26,8 @@
 
         // Important class names.
         classname : {
-            'image-expanded' : "attachment-expanded"
+            'image-expanded' : "attachment-expanded",
+            'image-deleted' : "attachment-deleted"
         },
 
         // Selectors for finding and binding elements.
@@ -257,7 +263,7 @@
             clearTimeout(widget.previewTimer);
         },
 
-        attachmentMediaExpand : function(event) {
+        attachmentMediaExpand : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
             var $link   = $(this);
@@ -395,6 +401,38 @@
                 return true;
             }
         },
+
+        fileBanned : function (event) {
+            var widget = event.data.widget;
+            var $widget = event.data.$widget;
+
+            console.log('wew lads');
+            if (!widget.is('csam_delete')) {
+                return false;
+            }
+
+            // get URLs before deleting
+            var $link = $(widget.options.selector['attachment-image'], $widget);
+            var dlUrl = $link.attr('data-download-url');
+            var thumbUrl = $link.attr('data-thumb-url');
+
+            // delete from dom
+            $widget.addClass(event.data.widget.options.classname['image-deleted']);
+            $widget.height($widget.height());
+            $widget.width($widget.width());
+            $widget[0].innerHTML = window.app.lang.attachment.csam;
+
+            // pull from cache
+            //if (window.caches !== 'undefined') {
+            //    window.caches.delete(dlUrl);
+            //    window.caches.delete(thumbUrl);
+            //    $widget[0].innerHTML += window.app.lang.attachment.csam_uncache;
+            //}
+        },
+
+        windowResize : function (event) {
+            event.data.widget.scaleThumbnails();
+        }
     };
 
     // Scales thumbnails down based on resolution.
@@ -470,6 +508,7 @@
         };
 
         $widget
+            .on('file-banned.ib-attachment', data, widget.events.fileBanned)
             .on('mouseover.ib-attachment', widget.options.selector['attachment-image'], data, widget.events.attachmentMediaMouseOver)
             .on('mouseout.ib-attachment', widget.options.selector['attachment-image'], data, widget.events.attachmentMediaMouseOut)
             .on('click.ib-attachment', widget.options.selector['attachment-link'], data, widget.events.attachmentMediaClick)
@@ -477,6 +516,8 @@
             .on('media-collapse.ib-attachment', widget.options.selector['attachment-link'], data, widget.events.attachmentMediaCollapse)
             .on('media-expand.ib-attachment', widget.options.selector['attachment-link'], data, widget.events.attachmentMediaExpand)
         ;
+
+        $(window).on('resize.ib-post', data, widget.events.windowResize);
 
         widget.scaleThumbnails();
     };
