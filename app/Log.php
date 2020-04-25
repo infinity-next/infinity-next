@@ -66,7 +66,7 @@ class Log extends Model
 
         $details = json_decode($this->action_details, true);
 
-        if (!is_array($detailss)) {
+        if (!is_array($details)) {
             return [];
         }
 
