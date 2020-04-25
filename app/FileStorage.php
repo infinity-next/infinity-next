@@ -170,6 +170,11 @@ class FileStorage extends Model
         return $this->belongsToMany(static::class, 'file_thumbnails', 'source_id', 'thumbnail_id');
     }
 
+    public function thumbnailPivots()
+    {
+        return $this->hasMany(FileThumbnail::class, 'thumbnail_id', 'file_id');
+    }
+
     /**
      * Will trigger a file deletion if the storage item is not used anywhere.
      *

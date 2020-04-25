@@ -43,7 +43,9 @@ class FileController extends PanelController
         $this->authorize('ban-file');
 
         $files = FileStorage::orderBy('last_uploaded_at', 'desc')
-            ->whereDoesntHave('sources')
+            ->whereDoesntHave('thumbnailPivots', function($query) {
+                $query->select(\DB::raw('1'));
+            })
             ->where('last_uploaded_at', '>', now()->subDay())
             ->limit(100)
             ->get();
