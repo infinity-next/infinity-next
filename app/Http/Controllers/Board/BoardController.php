@@ -321,7 +321,6 @@ class BoardController extends Controller
         finally {
             optional($lock)->release();
             optional($connLock)->release();
-            $this->unlock();
         }
 
         if ($request->wantsJson()) {
