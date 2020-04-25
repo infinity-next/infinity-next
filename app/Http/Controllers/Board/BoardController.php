@@ -44,6 +44,8 @@ class BoardController extends Controller
 
     protected function lockConnection()
     {
+        usleep(rand(10000, 100000)); // race condition on 24 processors
+
         // User Locking
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
@@ -57,7 +59,7 @@ class BoardController extends Controller
             }
         }
 
-        return null;
+        return abort(429, "Race condition.");
     }
 
     /**
@@ -216,12 +218,12 @@ class BoardController extends Controller
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
         // lock the connection
-        $connLock = $this->lockConnection();
+        $this->lockConnection();
+
         // lock the destination
         $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 5);
 
         try {
-            $connLock->block(5);
             $lock->block(5);
 
             // Begin Validation
@@ -245,13 +247,10 @@ class BoardController extends Controller
             $post->save();
         }
         catch (LockTimeoutException $e) {
-            optional($lock)->release();
-            optional($connLock)->release();
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
             optional($lock)->release();
-            optional($connLock)->release();
         }
 
         // $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
@@ -287,19 +286,17 @@ class BoardController extends Controller
     public function putThread(PostRequest $request, Board $board)
     {
         // lock the connection
-        $connLock = $this->lockConnection();
+        $this->lockConnection();
         // lock the destination
         $lock = Cache::lock("posting_now_board:{$board->board_uri}", 5);
 
         try {
-            $connLock->block(5);
             $lock->block(5);
 
             try {
                 $request->validate();
             }
             catch (BannedException $e) {
-                optional($lock)->release();
                 if ($request->wantsJson()) {
                     return [ 'redirect' => $e->redirectTo ];
                 }
@@ -314,13 +311,10 @@ class BoardController extends Controller
             $post->save();
         }
         catch (LockTimeoutException $e) {
-            optional($lock)->release();
-            optional($connLock)->release();
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
             optional($lock)->release();
-            optional($connLock)->release();
         }
 
         if ($request->wantsJson()) {
