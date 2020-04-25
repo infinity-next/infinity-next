@@ -153,6 +153,7 @@ class PostObserver
 
         Cache::put("last_post_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
         if ($accountable) {
+            $ipLong = (new IP)->toLong();
             Cache::put("last_post_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
         }
 
