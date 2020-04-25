@@ -1177,6 +1177,7 @@ class Board extends Model
                 ->with(['replies' => function ($query) {
                     $query->forIndex();
                 }])
+                ->orderBy('stickied', 'desc')
                 ->orderBy('stickied_at', 'desc')
                 ->orderBy('bumped_last', 'desc')
                 ->skip($postsPerPage * ($page - 1))
