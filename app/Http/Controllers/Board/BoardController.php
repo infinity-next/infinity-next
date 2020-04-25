@@ -42,53 +42,22 @@ class BoardController extends Controller
     const VIEW_THREAD = 'board';
     const VIEW_LOGS = 'board.logs';
 
-    protected $lockUuid;
-
-    protected function lock()
+    protected function lockConnection()
     {
-        $this->lockUuid = (string) Str::uuid();
-
         // User Locking
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            if (!Cache::lock("posting_now_ip:{$ipLong}", 30, $this->lockUuid)->get()) {
-                return abort(429, "Your IP is still locked from posting.");
-            }
+            return Cache::lock("posting_now_ip:{$ipLong}", 30);
         }
         // Unaccountable Locking
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                if (!Cache::lock("captcha:{$captcha}", 30, $this->lockUuid)->get()) {
-                    return abort(429, "This captcha is already being used.");
-                }
-            }
-            // Session lock (Not very effective.)
-            else {
-                $session = Session::getId();
-                if (!Cache::lock("posting_now_session:{$session}", 30, $this->lockUuid)->get()) {
-                    return abort(429, "Your session is still locked from posting.");
-                }
+                return Cache::lock("captcha:{$captcha}", 30);
             }
         }
-    }
 
-    protected function unlock()
-    {
-        if (user()->isAccountable()) {
-            $ipLong = (new IP)->toLong();
-            Cache::restoreLock("posting_now_ip:{$ipLong}", $this->lockUuid)->release();
-        }
-        else {
-            $captcha = Request::input('captcha_hash', null);
-            if (!is_null($captcha)) {
-                Cache::restoreLock("captcha:{$captcha}", $this->lockUuid)->release();
-            }
-            else {
-                $session = Session::getId();
-                Cache::restoreLock("posting_now_session:{$session}", $this->lockUuid)->release();
-            }
-        }
+        return null;
     }
 
     /**
@@ -246,12 +215,13 @@ class BoardController extends Controller
      */
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
-        $this->lock();
-
-        // Primary lock
-        $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 30, $this->lockUuid);
+        // lock the connection
+        $connLock = $this->lockConnection();
+        // lock the destination
+        $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 5);
 
         try {
+            $connLock->block(5);
             $lock->block(5);
 
             // Begin Validation
@@ -260,8 +230,6 @@ class BoardController extends Controller
             }
             catch (BannedException $e) {
                 optional($lock)->release();
-                $this->unlock();
-
                 if ($request->wantsJson()) {
                     return [ 'redirect' => $e->redirectTo ];
                 }
@@ -277,12 +245,13 @@ class BoardController extends Controller
             $post->save();
         }
         catch (LockTimeoutException $e) {
-            $this->unlock();
+            optional($lock)->release();
+            optional($connLock)->release();
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
             optional($lock)->release();
-            $this->unlock();
+            optional($connLock)->release();
         }
 
         // $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
@@ -317,12 +286,10 @@ class BoardController extends Controller
      */
     public function putThread(PostRequest $request, Board $board)
     {
-        $this->lock();
-
-        // Primary lock
-        $lock = Cache::lock("posting_now_board:{$board->board_uri}", 30, $this->lockUuid);
-
         try {
+            $connLock->block(1);
+
+            $lock = Cache::lock("posting_now_board:{$board->board_uri}", 5);
             $lock->block(5);
 
             try {
@@ -330,8 +297,6 @@ class BoardController extends Controller
             }
             catch (BannedException $e) {
                 optional($lock)->release();
-                $this->unlock();
-
                 if ($request->wantsJson()) {
                     return [ 'redirect' => $e->redirectTo ];
                 }
@@ -346,11 +311,13 @@ class BoardController extends Controller
             $post->save();
         }
         catch (LockTimeoutException $e) {
-            $this->unlock();
+            optional($lock)->release();
+            optional($connLock)->release();
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
             optional($lock)->release();
+            optional($connLock)->release();
             $this->unlock();
         }
 
