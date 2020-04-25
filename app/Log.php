@@ -66,6 +66,10 @@ class Log extends Model
 
         $details = json_decode($this->action_details, true);
 
+        if (!is_array($detailss)) {
+            return [];
+        }
+
         foreach ($details as $detailKey => &$detailValue) {
             $methodName = Str::camel("get_log_visible_{$detailKey}");
 
