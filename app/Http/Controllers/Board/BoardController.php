@@ -259,6 +259,9 @@ class BoardController extends Controller
                 $request->validate();
             }
             catch (BannedException $e) {
+                optional($lock)->release();
+                $this->unlock();
+
                 if ($request->wantsJson()) {
                     return [ 'redirect' => $e->redirectTo ];
                 }
@@ -278,7 +281,7 @@ class BoardController extends Controller
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
-            optional($lock)->forceRelease();
+            optional($lock)->release();
             $this->unlock();
         }
 
@@ -326,7 +329,7 @@ class BoardController extends Controller
                 $request->validate();
             }
             catch (BannedException $e) {
-                optional($lock)->forceRelease();
+                optional($lock)->release();
                 $this->unlock();
 
                 if ($request->wantsJson()) {
@@ -347,7 +350,7 @@ class BoardController extends Controller
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
-            optional($lock)->forceRelease();
+            optional($lock)->release();
             $this->unlock();
         }
 
