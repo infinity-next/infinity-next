@@ -6,7 +6,7 @@
     @csrf
     <button name="action" value="delete">@lang('board.action.delete')</button>
     <button name="action" value="ban">@lang('board.action.ban_delete_global')</button>
-    {{-- <button name="action" value="fuzzyban">@lang('board.action.fuzzyban')</button> --}}
+    <button name="action" value="fuzzyban">@lang('board.action.fuzzyban')</button>
 </form>
 
 <div class="attachment">

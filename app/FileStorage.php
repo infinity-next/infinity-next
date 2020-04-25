@@ -52,6 +52,7 @@ class FileStorage extends Model
         'mime',
         'meta',
         'banned_at',
+        'fuzzybanned_at',
         'first_uploaded_at',
         'last_uploaded_at',
         'upload_count',

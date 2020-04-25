@@ -21,6 +21,27 @@
         </label>
         @endif
     </div>
+
+    @can('global-delete')
+        <div class="field-buttons">
+            @canAny('global-delete', 'global-ban')
+            <label class="field-button">
+                <input type="radio" name="delete_scope" value="_global" />
+                <strong>@lang('board.action.global')</strong>
+            </label>
+            @endcan
+
+            {{-- @foreach ($boardsWithRights as $board) --}}
+            <label class="field-button">
+                <input type="radio" name="delete_scope" value="{{ $board->board_uri }}" checked="checked" />
+                <img class="crown-image" src="{{ $board->getIconUrl() }}" />
+                /{{ $board->board_uri }}/
+            </label>
+            {{-- @endforeach --}}
+        </div>
+    @else
+        <input type="hidden" name="delete_scope" value="{{ $board->board_uri }}" checked="checked" />
+    @endif
 </fieldset>
 @endcan
 
@@ -116,35 +137,31 @@
             </div>
         </div>
     </div>
+
+    @can('global-ban')
+        <div class="field-buttons">
+            @canAny('global-delete', 'global-ban')
+            <label class="field-button">
+                <input type="radio" name="ban_scope" value="_global" />
+                <strong>@lang('board.action.global')</strong>
+            </label>
+            @endcan
+
+            {{-- @foreach ($boardsWithRights as $board) --}}
+            <label class="field-button">
+                <input type="radio" name="ban_scope" value="{{ $board->board_uri }}" checked="checked" />
+                <img class="crown-image" src="{{ $board->getIconUrl() }}" />
+                /{{ $board->board_uri }}/
+            </label>
+            {{-- @endforeach --}}
+        </div>
+    @else
+        <input type="hidden" name="ban_scope" value="{{ $board->board_uri }}" checked="checked" />
+    @endif
 </fieldset>
 @endcan
 @else
     <p>@lang('board.ban.no_ip')</p>
-@endif
-
-@canAny('global-delete', 'global-ban')
-<fieldset class="form-fields fields-togglable">
-    <legend class="form-legend">@lang('board.legend.scope')</legend>
-
-    <div class="field-buttons">
-        @canAny('global-delete', 'global-ban')
-        <label class="field-button">
-            <input type="radio" name="scope" value="_global" />
-            <strong>@lang('board.action.global')</strong>
-        </label>
-        @endcan
-
-        {{-- @foreach ($boardsWithRights as $board) --}}
-        <label class="field-button">
-            <input type="radio" name="scope" value="{{ $board->board_uri }}" checked="checked" />
-            <img class="crown-image" src="{{ $board->getIconUrl() }}" />
-            /{{ $board->board_uri }}/
-        </label>
-        {{-- @endforeach --}}
-    </div>
-</fieldset>
-@else
-    <input type="hidden" name="scope" value="{{ $board->board_uri }}" checked="checked" />
 @endif
 
 <fieldset class="form-fields">

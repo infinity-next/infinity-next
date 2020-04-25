@@ -188,7 +188,7 @@ class Upload
 
         $hashes = array_unique($hashes);
 
-        FileStorage::whereNotNull('banned_at')->whereNotNull('phash')->pluck('phash')->each(function ($theirPhash) use ($hashes) {
+        FileStorage::whereNotNull('fuzzybanned_at')->whereNotNull('phash')->pluck('phash')->each(function ($theirPhash) use ($hashes) {
             $theirPhash = gmp_add(gmp_init($theirPhash, 10), gmp_pow(2, 63));
 
             foreach ($hashes as $filePhash) {
@@ -196,7 +196,7 @@ class Upload
 
                 if ($distance < 9) {
                     app('log')->error("Banned image: ".(new IP)->toText()." uploaded a file with a perceptual similarity to banned content (with a hamming distance of {$distance}).");
-                    throw new BannedPhashException("This file has a perceptual similarity to banned content (with a hamming distance of {$distance}).");
+                    throw new BannedPhashException("This file has a perceptual similarity to banned content " . (config('app.debug', false) ? "(with a hamming distance of {$distance})" : "") . ".");
                     return false;
                 }
             }

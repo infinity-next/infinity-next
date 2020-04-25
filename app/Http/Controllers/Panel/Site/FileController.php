@@ -82,27 +82,31 @@ class FileController extends PanelController
 
          $ban = false;
          $fuzzyban = false;
+         $bans = collect([]);
 
-         if ($action == "ban") {
-             $ban = true;
-         }
-         elseif ($action == "fuzzyban") {
-             $ban = true;
-             $fuzzyban = true;
+         switch ($action) {
+            case "fuzzyban" :
+                $fuzzyban = true;
+            case "ban" :
+                $ban = true;
+            break;
          }
 
          if (!$ban) {
-            $file->posts()->each(function ($post) use ($file) {
+            $file->posts()->withTrashed()->each(function ($post) use ($file) {
                 broadcast(new FileWasBanned($post, $file));
                 $post->delete();
             });
         }
         else {
             $file->banned_at = now();
-            $file->save();
+            if ($fuzzyban) {
+                $file->fuzzybanned_at = $file->banned_at;
+            }
 
-            $bans = collect([]);
-            $file->posts()->each(function ($post) use ($bans, $file) {
+            // NOTE: We are using withTrashed() here so if we need to delete
+            // multiple attachments on a single post, they all broadcast correctly.
+            $file->posts()->withTrashed()->each(function ($post) use ($bans, $file) {
                 broadcast(new FileWasBanned($post, $file));
 
                 if (!is_null($post->author_ip) && !$bans->contains('ban_ip_start', $post->author_ip)) {
@@ -119,12 +123,12 @@ class FileController extends PanelController
 
                 $post->delete();
             });
-
-            $bans->each(function ($ban) {
-                Ban::create($ban);
-            });
          }
 
+         $file->save();
+         $bans->each(function ($ban) {
+             Ban::create($ban);
+         });
          $file->deleteFile();
 
          return redirect()->route('panel.site.files.index');
