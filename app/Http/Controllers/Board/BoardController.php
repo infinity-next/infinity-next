@@ -77,16 +77,16 @@ class BoardController extends Controller
     {
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            Cache::restoreLock("posting_now_ip:{$ipLong}", $this->lockUuid)->forceRelease();
+            Cache::restoreLock("posting_now_ip:{$ipLong}", $this->lockUuid)->release();
         }
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                Cache::restoreLock("captcha:{$captcha}", $this->lockUuid)->forceRelease();
+                Cache::restoreLock("captcha:{$captcha}", $this->lockUuid)->release();
             }
             else {
                 $session = Session::getId();
-                Cache::restoreLock("posting_now_session:{$session}", $this->lockUuid)->forceRelease();
+                Cache::restoreLock("posting_now_session:{$session}", $this->lockUuid)->release();
             }
         }
     }
