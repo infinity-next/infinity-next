@@ -49,17 +49,17 @@ class BoardController extends Controller
         // User Locking
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            return Cache::lock("posting_now_ip:{$ipLong}", 30);
+            $lock = Cache::lock("posting_now_ip:{$ipLong}", 30);
         }
         // Unaccountable Locking
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                return Cache::lock("captcha:{$captcha}", 30);
+                $lock = Cache::lock("captcha:{$captcha}", 30);
             }
         }
 
-        return abort(429, "Race condition.");
+        return !$lock->get() ? abort(429, "Race condition.") : true;
     }
 
     /**
