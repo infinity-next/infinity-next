@@ -165,6 +165,11 @@ class FileStorage extends Model
         return $this->belongsToMany(static::class, 'file_thumbnails', 'thumbnail_id', 'source_id');
     }
 
+    public function sourcePivots()
+    {
+        return $this->hasMany(FileThumbnail::class, 'source_id', 'file_id');
+    }
+
     public function thumbnails()
     {
         return $this->belongsToMany(static::class, 'file_thumbnails', 'source_id', 'thumbnail_id');

@@ -187,11 +187,9 @@ class PostAttachment extends Model
      */
     public static function getRecentImages($number = 16)
     {
-        return Cache::remember('site.recent_images', now()->addMinute(), function() use ($number) {
-            $sfw = static::getRecentImagesByWorksafe($number, true);
-            $nsfw = static::getRecentImagesByWorksafe($number, false);
-            return $sfw->merge($nsfw)->sortByDesc('attachment_id');
-        });
+        $sfw = static::getRecentImagesByWorksafe($number, true);
+        $nsfw = static::getRecentImagesByWorksafe($number, false);
+        return $sfw->merge($nsfw)->sortByDesc('attachment_id');
     }
 
     protected static function getRecentImagesByWorksafe($number = 16, $sfw = false)
@@ -200,7 +198,7 @@ class PostAttachment extends Model
             ->where('is_deleted', false)
             ->whereHas('file', function ($query) {
                 $timestamp = now()->subMinutes(5);
-                $query->whereHas('thumbnails');
+                $query->whereHas('sourcePivots');
                 $query->whereDate('last_uploaded_at', '<=', $timestamp);
                 $query->whereTime('last_uploaded_at', '<=', $timestamp);
                 $query->groupBy('file_id');
