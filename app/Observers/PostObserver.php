@@ -151,9 +151,9 @@ class PostObserver
         $accountable = !is_null($user) && $user->isAccountable();
         $session = Session::getId();
 
-        Cache::restoreLock("posting_now_session:{$session}", Post::class)->forceRelease();
+        Cache::put("last_post_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
         if ($accountable) {
-            Cache::restoreLock('posting_now_ip:'.$post->author_ip->toLong(), Post::class)->forceRelease();
+            Cache::put("last_post_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
         }
 
         // fire events
@@ -226,33 +226,14 @@ class PostObserver
         // Lock the cache and get ready for inserts.
         $user = user();
         $accountable = !is_null($user) && $user->isAccountable();
-        $session = Session::getId();
-        $ipLong = $accountable ? $post->author_ip->toLong() : null;
 
-        if (!Cache::lock("posting_now_session:{$session}", 10, Post::class)->get()) {
-            return abort(429, "Your session is still locked from posting.");
-        }
-        if ($accountable && !Cache::lock("posting_now_ip:{$ipLong}", 10, Post::class)->get()) {
-            return abort(429, "Your IP is still locked from posting.");
-        }
-
-        // Cache what time we're submitting our post for flood checks.
-        Cache::put("last_post_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
-        if ($accountable) {
-            Cache::put("last_post_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
-        }
-        else {
+        if (!$accountable) {
             $post->author_ip = null;
         }
 
         if ($thread instanceof Post) {
             $post->reply_to = $thread->post_id;
             $post->reply_to_board_id = $thread->board_id;
-
-            Cache::put("last_thread_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
-            if ($accountable) {
-                Cache::put("last_thread_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
-            }
         }
 
 

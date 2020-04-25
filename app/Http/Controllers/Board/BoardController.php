@@ -13,6 +13,7 @@ use App\Filesystem\Upload;
 use App\Support\IP;
 use App\Exceptions\BannedException;
 use Carbon\Carbon;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\Eloquent\Collection;
 use Cache;
 use File;
@@ -39,6 +40,51 @@ class BoardController extends Controller
     const VIEW_LANDING = 'board.landing';
     const VIEW_THREAD = 'board';
     const VIEW_LOGS = 'board.logs';
+
+    protected function lock()
+    {
+        // User Locking
+        if (user()->isAccountable()) {
+            $ipLong = (new IP)->toLong();
+            if (!Cache::lock("posting_now_ip:{$ipLong}", 30, static::class)->get()) {
+                return abort(429, "Your IP is still locked from posting.");
+            }
+        }
+        // Unaccountable Locking
+        else {
+            $captcha = Request::input('captcha_hash', null);
+            if (!is_null($captcha)) {
+                if (!Cache::lock("captcha:{$captcha}", 30, static::class)->get()) {
+                    return abort(429, "This captcha is already being used.");
+                }
+            }
+            // Session lock (Not very effective.)
+            else {
+                $session = Session::getId();
+                if (!Cache::lock("posting_now_session:{$session}", 30, static::class)->get()) {
+                    return abort(429, "Your session is still locked from posting.");
+                }
+            }
+        }
+    }
+
+    protected function unlock()
+    {
+        if (user()->isAccountable()) {
+            $ipLong = (new IP)->toLong();
+            Cache::restoreLock("posting_now_ip:{$ipLong}", static::class)->forceRelease();
+        }
+        else {
+            $captcha = Request::input('captcha_hash', null);
+            if (!is_null($captcha)) {
+                Cache::restoreLock("captcha:{$captcha}", static::class)->forceRelease();
+            }
+            else {
+                $session = Session::getId();
+                Cache::restoreLock("posting_now_session:{$session}", static::class)->forceRelease();
+            }
+        }
+    }
 
     /**
      * Show the board index for the user.
@@ -195,28 +241,41 @@ class BoardController extends Controller
      */
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
-        $captcha = $request->input('captcha_hash', null);
-        if (!is_null($captcha) && !Cache::lock("captcha:{$captcha}", 5, Post::class)->get()) {
-            return abort(429, "This captcha is already being used.");
-        }
+        $this->lock();
+
+        // Primary lock
+        $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 30);
 
         try {
-            $request->validate();
-        }
-        catch (BannedException $e) {
-            if ($request->wantsJson()) {
-                return [ 'redirect' => $e->redirectTo ];
-            }
-            else {
-                return redirect($e->redirectTo);
-            }
-        }
+            $lock->block(5);
 
-        // Create the post.
-        $post = new Post($request->all());
-        $post->board()->associate($board);
-        $post->thread()->associate($thread);
-        $post->save();
+            // Begin Validation
+            try {
+                $request->validate();
+            }
+            catch (BannedException $e) {
+                if ($request->wantsJson()) {
+                    return [ 'redirect' => $e->redirectTo ];
+                }
+                else {
+                    return redirect($e->redirectTo);
+                }
+            }
+
+            // Create the post.
+            $post = new Post($request->all());
+            $post->board()->associate($board);
+            $post->thread()->associate($thread);
+            $post->save();
+        }
+        catch (LockTimeoutException $e) {
+            $this->unlock();
+            return abort(429, "Could not acquire lock within a reasonable time to create this post.");
+        }
+        finally {
+            optional($lock)->forceRelease();
+            $this->unlock();
+        }
 
         // $input = $request->only('updatesOnly', 'updateHtml', 'updatedSince');
 
@@ -250,27 +309,42 @@ class BoardController extends Controller
      */
     public function putThread(PostRequest $request, Board $board)
     {
-        $captcha = $request->input('captcha_hash', null);
-        if (!is_null($captcha) && !Cache::lock("captcha:{$captcha}", 5, Post::class)->get()) {
-            return abort(429, "This captcha is already being used.");
-        }
+        $this->lock();
+
+        // Primary lock
+        $lock = Cache::lock("posting_now_board:{$board->board_uri}", 30);
 
         try {
-            $request->validate();
-        }
-        catch (BannedException $e) {
-            if ($request->wantsJson()) {
-                return [ 'redirect' => $e->redirectTo ];
-            }
-            else {
-                return redirect($e->redirectTo);
-            }
-        }
+            $lock->block(5);
 
-        // Create the post.
-        $post = new Post($request->all());
-        $post->board()->associate($board);
-        $post->save();
+            try {
+                $request->validate();
+            }
+            catch (BannedException $e) {
+                optional($lock)->forceRelease();
+                $this->unlock();
+
+                if ($request->wantsJson()) {
+                    return [ 'redirect' => $e->redirectTo ];
+                }
+                else {
+                    return redirect($e->redirectTo);
+                }
+            }
+
+            // Create the post.
+            $post = new Post($request->all());
+            $post->board()->associate($board);
+            $post->save();
+        }
+        catch (LockTimeoutException $e) {
+            $this->unlock();
+            return abort(429, "Could not acquire lock within a reasonable time to create this post.");
+        }
+        finally {
+            optional($lock)->forceRelease();
+            $this->unlock();
+        }
 
         if ($request->wantsJson()) {
             return [ $post ];
