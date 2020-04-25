@@ -187,7 +187,7 @@ return [
             'expires_at'     => "This ban was placed at :start and expires at :end, which is :diff.",
             'expires_no'     => "This ban was placed at :start and <strong>never</strong> expires.",
             'mod'            => "The volunteer who filed your ban was :mod.",
-            'identity_match' => "According to our server, your IP is <tt>:ip</tt> and is affected by this ban.",
+            'identity_match' => "According to our server, your IP is <tt>:ip</tt> and is affected by this ban on <tt>:range</tt>.",
             'identity_notit' => "According to our server, your IP is <tt>:ip</tt> and is <em>not</em> affected by this ban.",
             'appeal_now'     => "You may appeal your ban.",
             'appeal_pending' => "Your appeal was submitted on :date (:diff) and is pending approval.",

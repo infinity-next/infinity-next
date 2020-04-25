@@ -40,7 +40,7 @@
         ]) !!}</p>
 
         @if ($ban->isBanForIP())
-            <p>@lang('panel.bans.ban_review.identity_match', [ 'ip' => \Request::ip() ])</p>
+            <p>@lang('panel.bans.ban_review.identity_match', [ 'ip' => \Request::ip(), 'range' => $ban->ban_ip->toText(), ])</p>
         @else
             <p>@lang('panel.bans.ban_review.identity_notit', [ 'ip' => \Request::ip() ])</p>
         @endif

@@ -494,28 +494,35 @@ class PostRequest extends Request implements ApiContract
                     }
                 }
                 // Dropzone hash checks.
-                elseif ($board->getConfig('originalityImages')) {
+                else {
                     foreach ($uploads['hash'] as $uploadIndex => $upload) {
-                        if ($board->getConfig('originalityImages') == 'thread') {
-                            if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread)) {
-                                $validated = false;
-                                $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_thread', [
-                                    'filename' => $uploads['name'][$uploadIndex],
-                                    'url' => $originalPost->getURL(),
-                                ]));
-                            }
-                        } elseif ($originalPost = FileStorage::checkHashExists($upload, $board)) {
-                            $validated = false;
-                            $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_board', [
-                                'filename' => $uploads['name'][$uploadIndex],
-                                'url' => $originalPost->getURL(),
-                            ]));
+                        switch ($board->getConfig('originalityImages')) {
+                            case "thread" :
+                                if ($thread instanceof Post && $originalPost = FileStorage::checkHashExists($upload, $board, $thread)) {
+                                    $validated = false;
+                                    $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_thread', [
+                                        'filename' => $uploads['name'][$uploadIndex],
+                                        'url' => $originalPost->getURL(),
+                                    ]));
+                                }
+                            break;
+                            case "board" :
+                                if ($originalPost = FileStorage::checkHashExists($upload, $board)) {
+                                    $validated = false;
+                                    $messages->add("files.{$uploadIndex}", trans('validation.unoriginal_image_board', [
+                                        'filename' => $uploads['name'][$uploadIndex],
+                                        'url' => $originalPost->getURL(),
+                                    ]));
+                                }
+                            break;
+                            default :
+                                ## TODO: OP originality check here, maybe.
+                            break;
                         }
                     }
                 }
             }
         }
-
 
         // Process body checksum for origianlity.
         $strictness = $board->getConfig('originalityPosts');
