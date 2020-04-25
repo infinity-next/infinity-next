@@ -15,6 +15,7 @@ use App\Exceptions\BannedException;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 use Cache;
 use File;
 use Request;
@@ -41,12 +42,16 @@ class BoardController extends Controller
     const VIEW_THREAD = 'board';
     const VIEW_LOGS = 'board.logs';
 
+    protected $lockUuid;
+
     protected function lock()
     {
+        $this->lockUuid = (string) Str::uuid();
+
         // User Locking
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            if (!Cache::lock("posting_now_ip:{$ipLong}", 30, static::class)->get()) {
+            if (!Cache::lock("posting_now_ip:{$ipLong}", 30, $this->lockUuid)->get()) {
                 return abort(429, "Your IP is still locked from posting.");
             }
         }
@@ -54,14 +59,14 @@ class BoardController extends Controller
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                if (!Cache::lock("captcha:{$captcha}", 30, static::class)->get()) {
+                if (!Cache::lock("captcha:{$captcha}", 30, $this->lockUuid)->get()) {
                     return abort(429, "This captcha is already being used.");
                 }
             }
             // Session lock (Not very effective.)
             else {
                 $session = Session::getId();
-                if (!Cache::lock("posting_now_session:{$session}", 30, static::class)->get()) {
+                if (!Cache::lock("posting_now_session:{$session}", 30, $this->lockUuid)->get()) {
                     return abort(429, "Your session is still locked from posting.");
                 }
             }
@@ -72,16 +77,16 @@ class BoardController extends Controller
     {
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            Cache::restoreLock("posting_now_ip:{$ipLong}", static::class)->forceRelease();
+            Cache::restoreLock("posting_now_ip:{$ipLong}", $this->lockUuid)->forceRelease();
         }
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                Cache::restoreLock("captcha:{$captcha}", static::class)->forceRelease();
+                Cache::restoreLock("captcha:{$captcha}", $this->lockUuid)->forceRelease();
             }
             else {
                 $session = Session::getId();
-                Cache::restoreLock("posting_now_session:{$session}", static::class)->forceRelease();
+                Cache::restoreLock("posting_now_session:{$session}", $this->lockUuid)->forceRelease();
             }
         }
     }
@@ -244,7 +249,7 @@ class BoardController extends Controller
         $this->lock();
 
         // Primary lock
-        $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 30);
+        $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 30, $this->lockUuid);
 
         try {
             $lock->block(5);
@@ -312,7 +317,7 @@ class BoardController extends Controller
         $this->lock();
 
         // Primary lock
-        $lock = Cache::lock("posting_now_board:{$board->board_uri}", 30);
+        $lock = Cache::lock("posting_now_board:{$board->board_uri}", 30, $this->lockUuid);
 
         try {
             $lock->block(5);
