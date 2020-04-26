@@ -403,8 +403,7 @@ class PostRequest extends Request implements ApiContract
             }
         }
         else {
-            $floodTime = site_setting('threadFloodTime');
-            $floodTime = site_setting('postFloodTime');
+            $floodTime = max(site_setting('postFloodTime', 5), site_setting('threadFloodTime', 5));
 
             $cacheKeys = [
                 'last_post_for_session:' . Session::getId(),

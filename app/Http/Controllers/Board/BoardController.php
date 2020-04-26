@@ -64,7 +64,7 @@ class BoardController extends Controller
             return abort(429, "Couldn't acquire lock. Did you enter a captcha?");
         }
 
-        return !$lock->get() ? abort(429, "You are posting too fast.") : true;
+        return !$lock->get() ? abort(429, "You are posting too fast.") : $lock;
     }
 
     /**
@@ -223,7 +223,7 @@ class BoardController extends Controller
     public function putReply(PostRequest $request, Board $board, Post $thread)
     {
         // lock the connection
-        $this->lockConnection();
+        $connLock = $this->lockConnection();
 
         // lock the destination
         $lock = Cache::lock("posting_now_thread:{$thread->post_id}", 5);
@@ -255,6 +255,7 @@ class BoardController extends Controller
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
+            optional($connLock)->release();
             optional($lock)->release();
         }
 
@@ -291,7 +292,8 @@ class BoardController extends Controller
     public function putThread(PostRequest $request, Board $board)
     {
         // lock the connection
-        $this->lockConnection();
+        $connLock = $this->lockConnection();
+
         // lock the destination
         $lock = Cache::lock("posting_now_board:{$board->board_uri}", 5);
 
@@ -319,6 +321,7 @@ class BoardController extends Controller
             return abort(429, "Could not acquire lock within a reasonable time to create this post.");
         }
         finally {
+            optional($connLock)->release();
             optional($lock)->release();
         }
 
