@@ -526,7 +526,7 @@ class Board extends Model
                 if ($setting->attributes['option_name'] == $option_name) {
                     $value = $setting->getDisplayValue();
 
-                    if (is_null($value) || $value == '') {
+                    if (is_null($value) || $value === '') {
                         return $fallback;
                     }
 

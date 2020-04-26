@@ -230,52 +230,55 @@ class PostRequest extends Request implements ApiContract
 
                 $attachmentsMax = max(0, (int) $board->getConfig('postAttachmentsMax', 1));
 
-                // There are different rules for starting threads.
-                if (!($this->thread instanceof Post)) {
-                    $attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0), (int) $board->getConfig('threadAttachmentsMin', 0));
-                } else {
-                    $attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0));
-                }
-
-
-                // Add the rules for file uploads.
-                if ($this->dropzone) {
-                    $fileToken = 'files.hash';
-
-                    // JavaScript enabled hash posting
-                    static::rulesForFileHashes($board, $rules);
-
-                    if ($attachmentsMin > 0) {
-                        $rules['files.name'][] = 'required';
-                        $rules['files.name'][] = "min:{$attachmentsMin}";
-                        $rules['files.hash'][] = 'required';
-                        $rules['files.hash'][] = "min:{$attachmentsMin}";
+                if ($attachmentsMax > 0) {
+                    // There are different rules for starting threads.
+                    if (!($this->thread instanceof Post)) {
+                        $attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0), (int) $board->getConfig('threadAttachmentsMin', 0));
                     }
-                }
-                else {
-                    $fileToken = 'files';
-
-                    // Vanilla HTML upload
-                    static::rulesForFiles($board, $rules);
-
-                    if ($attachmentsMin > 0) {
-                        $rules['files'][] = 'required';
-                        $rules['files'][] = "min:{$attachmentsMin}";
-                    }
-                }
-
-                for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment) {
-                    // Can only attach existing files.
-                    if (!$user->can('create-attachment')) {
-                        $rules["{$fileToken}.{$attachment}"][] = 'file_old';
-                    }
-                    // Can only attach new files.
-                    elseif ($user->can('create-attachment') && !$user->can('attach', $board)) {
-                        $rules["{$fileToken}.{$attachment}"][] = 'file_new';
+                    else {
+                        $attachmentsMin = max(0, (int) $board->getConfig('postAttachmentsMin', 0));
                     }
 
-                    for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment) {
-                        $rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
+
+                    // Add the rules for file uploads.
+                    if ($this->dropzone) {
+                        $fileToken = 'files.hash';
+
+                        // JavaScript enabled hash posting
+                        static::rulesForFileHashes($board, $rules);
+
+                        if ($attachmentsMin > 0) {
+                            $rules['files.name'][] = 'required';
+                            $rules['files.name'][] = "min:{$attachmentsMin}";
+                            $rules['files.hash'][] = 'required';
+                            $rules['files.hash'][] = "min:{$attachmentsMin}";
+                        }
+                    }
+                    else {
+                        $fileToken = 'files';
+
+                        // Vanilla HTML upload
+                        static::rulesForFiles($board, $rules);
+
+                        if ($attachmentsMin > 0) {
+                            $rules['files'][] = 'required';
+                            $rules['files'][] = "min:{$attachmentsMin}";
+                        }
+                    }
+
+                    for ($attachment = 0; $attachment < $attachmentsMax; ++$attachment) {
+                        // Can only attach existing files.
+                        if (!$user->can('create-attachment')) {
+                            $rules["{$fileToken}.{$attachment}"][] = 'file_old';
+                        }
+                        // Can only attach new files.
+                        elseif ($user->can('create-attachment') && !$user->can('attach', $board)) {
+                            $rules["{$fileToken}.{$attachment}"][] = 'file_new';
+                        }
+
+                        for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment) {
+                            $rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
+                        }
                     }
                 }
             }

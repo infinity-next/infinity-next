@@ -121,7 +121,7 @@
             ]) !!}
         </div>
 
-        @if(!isset($post))
+        @if(!isset($post) && $board->getConfig('postAttachmentsMax', 1) > 0)
         @can('attach', $board)
         <div class="field row-file">
             <div class="dz-container">
