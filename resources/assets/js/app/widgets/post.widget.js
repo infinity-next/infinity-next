@@ -445,8 +445,11 @@
             var widget  = event.data.widget;
             var $widget =  event.data.$widget;
 
-            if (event.target.tagName === 'A') {
-                return true; // if we're making a meaningful click.
+            // if we're making a meaningful click.
+            switch (event.target.tagName) {
+                case "A" :
+                case "IMG" :
+                    return true;
             }
 
             if (event.shiftKey) {
