@@ -132,7 +132,8 @@
             }
 
             $.each(data, function(index, item) {
-                if (localStorage.getItem("hidePosts."+item.board_uri).split(",").indexOf(item.post_id.toString()) > -1) {
+                var hidePosts = localStorage.getItem("hidePosts."+item.board_uri);
+                if (hidePosts !== null && hidePosts.split(",").indexOf(item.post_id.toString()) > -1) {
                     return true; // continue if we're hidden
                 }
 

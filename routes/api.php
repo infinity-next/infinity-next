@@ -20,7 +20,7 @@ Route::group(['as' => 'site', 'namespace' => "Content",], function () {
      Route::get('{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithBoards',]);
      Route::get('{worksafe}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogWithWorksafe',]);
      Route::get('{worksafe}/{boards}/catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
-     Route::get('catalog.json', ['uses' => 'MultiboardController@getOverboardCatalog',]);
+     Route::get('catalog.json', ['uses' => 'MultiboardController@getOverboardCatalogAll',]);
 
      Route::get('{boards}.json', ['uses' => 'MultiboardController@getOverboardWithBoards',]);
      Route::get('{worksafe}.json', ['uses' => 'MultiboardController@getOverboardWithWorksafe',]);

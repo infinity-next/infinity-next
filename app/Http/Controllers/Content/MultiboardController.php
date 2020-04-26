@@ -80,6 +80,11 @@ class MultiboardController extends Controller
         return $this->getOverboard(null, $boards, true);
     }
 
+    public function getOverboardCatalogAll()
+    {
+        return $this->getOverboard(null, null, true);
+    }
+
     public function getOverboardCatalog($worksafe = null, $boards = null)
     {
         return $this->getOverboard($worksafe, $boards, true);
@@ -89,7 +94,7 @@ class MultiboardController extends Controller
     {
         return $this->getOverboard($worksafe, null);
     }
-
+    
     public function getOverboardWithBoards($boards)
     {
         return $this->getOverboard(null, $boards);
