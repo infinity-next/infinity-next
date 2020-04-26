@@ -203,8 +203,9 @@ class PostAttachment extends Model
     public static function getRecentImages($number = 16)
     {
         $sfw = static::getRecentImagesByWorksafe($number, true);
+        return $sfw->sortByDesc('attachment_id');
         //$nsfw = static::getRecentImagesByWorksafe($number, false);
-        return $sfw->merge($nsfw)->sortByDesc('attachment_id');
+        //return $sfw->merge($nsfw)->sortByDesc('attachment_id');
     }
 
     protected static function getRecentImagesByWorksafe($number = 16, $sfw = false)
