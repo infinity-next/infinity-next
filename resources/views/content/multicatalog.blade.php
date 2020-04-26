@@ -9,7 +9,7 @@
     <section class="index-threads static">
         <ul class="threads" id="CatalogMix">
             @foreach ($threads as $thread)
-            <article class="thread mix board-{{ $thread->board_uri }}" data-id="{{ $thread->post_id }}" data-bumped="{{ $thread->bumped_last->timestamp }}">
+            <article class="thread catalog-thread mix board-{{ $thread->board_uri }}" data-id="{{ $thread->post_id }}" data-bumped="{{ $thread->bumped_last->timestamp }}">
                 @include('content.board.catalog', [
                     'board'      => $board,
                     'post'       => $thread,

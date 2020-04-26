@@ -58,12 +58,10 @@
             var allowDefault = true;
 
             if ($widget.is(".attachment-expanded")) {
-                console.log("Collapsing");
                 $link.trigger('media-collapse');
                 allowDefault = false;
             }
             else {
-                console.log("Expanding");
                 $link.trigger('media-expand');
                 allowDefault = !$widget.is(".attachment-expanded");
             }
@@ -406,7 +404,6 @@
             var widget = event.data.widget;
             var $widget = event.data.$widget;
 
-            console.log('wew lads');
             if (!widget.is('csam_delete')) {
                 return false;
             }

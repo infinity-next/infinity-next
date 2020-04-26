@@ -132,6 +132,10 @@
             }
 
             $.each(data, function(index, item) {
+                if (localStorage.getItem("hidePosts."+item.board_uri).split(",").indexOf(item.post_id.toString()) > -1) {
+                    return true; // continue if we're hidden
+                }
+
                 var $thread = $(item.html);
                 var $existing = $catalog.children("[data-id="+$thread.data('post_id')+"]");
 
@@ -295,7 +299,9 @@
         ;
 
         document.addEventListener('DOMContentLoaded', function() {
-            widget.$catalog.mixItUp(widget.mixItUp);
+            // hide collapsed threads
+            $catalog.children().children(".post-collapsed").parent().remove();
+            $catalog.mixItUp(widget.mixItUp);
 
             widget.hasFocus = document.hasFocus();
             widget.updateLast = $(widget.options.selector['thread-item']).data('bumped');

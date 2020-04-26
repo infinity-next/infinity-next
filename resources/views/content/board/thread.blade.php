@@ -1,4 +1,4 @@
-{!! $thread->toHTML(
+<span class="wingding"><span class="no-mobile">&gt;&gt;</span></span>{!! $thread->toHtml(
         false,
         isset($multiboard) ? $multiboard : false,
         false
@@ -41,7 +41,7 @@
     @foreach ($thread->getReplies() as $reply)
     <div class="reply">
         <span class="wingding"><span class="no-mobile">&gt;&gt;</span></span>
-        @endspaceless{!! $reply->toHTML(
+        @endspaceless{!! $reply->toHtml(
                 false,
                 isset($multiboard) ? $multiboard : false,
                 false

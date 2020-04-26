@@ -21,7 +21,7 @@
     <section class="index-threads static">
         <div class="threads">
             @foreach ($posts as $post)
-            <article class="thread">
+            <article class="thread catalog-thread">
                 @include('content.board.catalog', [
                     'board'      => $board,
                     'post'       => $post,

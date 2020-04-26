@@ -246,7 +246,7 @@
 
         // bind toggling
         var wingding = $widget[0].previousSibling;
-        if (typeof wingding !== 'undefined' && wingding.className == 'wingding') {
+        if (wingding !== null && wingding.className == 'wingding') {
             $(wingding).on('click', data, widget.events.toggleCollapse);
 
             if (hidden) {
@@ -433,6 +433,12 @@
             var $widget =  event.data.$widget;
 
             $widget.addClass(widget.options.classname['post-collapsed']);
+
+            // delete from catalog
+            var $parent = $widget.parent();
+            if ($parent.hasClass("catalog-thread")) {
+                $parent.hide();
+            }
         },
 
         postClick : function (event) {
@@ -497,7 +503,7 @@
             var widget = event.data.widget;
             var $widget = event.data.$widget;
 
-            var postId = parseInt(event.data.$widget[0].dataset.post_id, 10);
+            var postId = event.data.$widget[0].dataset.post_id;
             var board = event.data.$widget[0].dataset.board_uri;
             var hidePosts = [];
 
@@ -549,11 +555,12 @@
             var $wingding = $(this);
 
             if ($widget.hasClass(widget.options.classname['post-collapsed'])) {
-                $wingding.html(widget.options.template['uncollapse']);
+                $wingding.html(widget.options.template['collapse']);
+                console.log('unhiding');
                 $widget.trigger('unhide-post');
             }
             else {
-                $wingding.html(widget.options.template['collapse']);
+                $wingding.html(widget.options.template['uncollapse']);
                 $widget.trigger('hide-post');
             }
 
