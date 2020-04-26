@@ -4,6 +4,7 @@
         false
 ) !!}
 
+<div class="thread-dangling">
 @if (!$thread->reply_to)
 @include('meta.post')
 @spaceless
@@ -56,3 +57,4 @@
 @endif
 @endspaceless
 @endif
+</div>
