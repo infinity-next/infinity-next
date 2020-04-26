@@ -85,34 +85,34 @@
         #js-config .config-nav-item:hover {
             background: rgba(255, 255, 255, 0.5);
         }
-            #js-config .config-nav-item .fa {
+            #js-config .config-nav-item .fas {
                 width: 1.5em;
             }
-            #js-config .config-nav-item.item-main .fa::before {
+            #js-config .config-nav-item.item-main .fas::before {
                 content: "\f015";
             }
-            #js-config .config-nav-item.item-attachment .fa::before {
+            #js-config .config-nav-item.item-attachment .fas::before {
                 content: "\f03e";
             }
-            #js-config .config-nav-item.item-content .fa::before {
+            #js-config .config-nav-item.item-content .fas::before {
                 content: "\f15c";
             }
-            #js-config .config-nav-item.item-lazyimg .fa::before {
+            #js-config .config-nav-item.item-lazyimg .fas::before {
                 content: "\f03e";
             }
-            #js-config .config-nav-item.item-stylist .fa::before {
+            #js-config .config-nav-item.item-stylist .fas::before {
                 content: "\f1fc";
             }
-            #js-config .config-nav-item.item-time .fa::before {
+            #js-config .config-nav-item.item-time .fas::before {
                 content: "\f017";
             }
-            #js-config .config-nav-item.item-post .fa::before {
+            #js-config .config-nav-item.item-post .fas::before {
                 content: "\f0f6";
             }
-            #js-config .config-nav-item.item-postbox .fa::before {
+            #js-config .config-nav-item.item-postbox .fas::before {
                 content: "\f040";
             }
-            #js-config .config-nav-item.item-instantclick  .fa::before {
+            #js-config .config-nav-item.item-instantclick  .fas::before {
                 content: "\f0d0";
             }
     #js-config .config-group {

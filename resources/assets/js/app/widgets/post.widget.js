@@ -68,7 +68,9 @@
 
         // HTML Templates
         template : {
-            'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>"
+            'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>",
+            'collapse' : "<span class=\"post-collapse\"><i class=\"fas fa-minus-square\"></i>&nbsp;</span>",
+            'uncollapse' : "<span class=\"post-uncollapse\"><i class=\"fas fa-plus-square\"></i>&nbsp;</span>"
         }
     };
 
@@ -212,7 +214,9 @@
             .on('contentUpdate.ib-post', data, widget.events.postContentUpdate)
             .on('highlight-syntax.ib-post', data, widget.events.codeHighlight)
             .on('collapse-post', data, widget.events.postCollapse)
+            .on('uncollapse-post', data, widget.events.postUncollapse)
             .on('hide-post', data, widget.events.postHide)
+            .on('unhide-post', data, widget.events.postUnhide)
 
             // Post interactions
             .on('click.ib-post', widget.options.selector['post-reply'], data, widget.events.replyClick)
@@ -229,6 +233,29 @@
 
         $widget.trigger('contentUpdate');
         widget.cachePosts($widget);
+
+        // auto-hide
+        var postId = $widget[0].dataset.post_id;
+        var board = $widget[0].dataset.board_uri;
+        var hidden = false;
+
+        if (localStorage.getItem("hidePosts."+board) !== null && localStorage.getItem("hidePosts."+board).split(",").indexOf(postId) > -1) {
+            $widget.trigger('collapse-post');
+            var hidden = true;
+        }
+
+        // bind toggling
+        var wingding = $widget[0].previousSibling;
+        if (typeof wingding !== 'undefined' && wingding.className == 'wingding') {
+            $(wingding).on('click', data, widget.events.toggleCollapse);
+
+            if (hidden) {
+                wingding.innerHTML = widget.options.template['uncollapse'];
+            }
+            else {
+                wingding.innerHTML = widget.options.template['collapse'];
+            }
+        }
     };
 
     // Stores a post in the session store.
@@ -412,13 +439,16 @@
             var widget  = event.data.widget;
             var $widget =  event.data.$widget;
 
-            if (event.target.tagName == 'a') {
-                return; // if we're making a meaningful click.
+            if (event.target.tagName === 'A') {
+                return true; // if we're making a meaningful click.
             }
 
             if (event.shiftKey) {
                 $widget.trigger('hide-post');
             }
+
+            event.preventDefault();
+            return false;
          },
 
         postContentUpdate : function (event) {
@@ -447,12 +477,37 @@
                 hidePosts[board] = [];
             }
 
-            if (hidePosts[board].indexOf(postId) !== -1) {
+            if (hidePosts[board].indexOf(postId) === -1) {
                 hidePosts[board].push(postId);
-                localStorage.setItem("hidePosts."+board, hidePosts.join(','));
+                hidePosts[board] = hidePosts[board].filter(e => !!e);
+                localStorage.setItem("hidePosts."+board, hidePosts[board].join(','));
             }
 
             $widget.trigger('collapse-post');
+        },
+
+        postUncollapse : function (event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            $widget.removeClass(widget.options.classname['post-collapsed']);
+        },
+
+        postUnhide : function (event) {
+            var widget = event.data.widget;
+            var $widget = event.data.$widget;
+
+            var postId = parseInt(event.data.$widget[0].dataset.post_id, 10);
+            var board = event.data.$widget[0].dataset.board_uri;
+            var hidePosts = [];
+
+            if (localStorage.getItem("hidePosts."+board) !== null) {
+                hidePosts[board] = localStorage.getItem("hidePosts."+board).split(",")
+                    .filter(i => i !== postId);
+                localStorage.setItem("hidePosts."+board, hidePosts[board].join(','));
+            }
+
+            $widget.trigger('uncollapse-post');
         },
 
         replyClick : function(event) {
@@ -486,6 +541,24 @@
             }
 
             return true;
+        },
+
+        toggleCollapse : function (event) {
+            var widget = event.data.widget;
+            var $widget = event.data.$widget;
+            var $wingding = $(this);
+
+            if ($widget.hasClass(widget.options.classname['post-collapsed'])) {
+                $wingding.html(widget.options.template['uncollapse']);
+                $widget.trigger('unhide-post');
+            }
+            else {
+                $wingding.html(widget.options.template['collapse']);
+                $widget.trigger('hide-post');
+            }
+
+            event.preventDefault();
+            return false;
         },
 
         threadNewPosts : function(event, posts) {

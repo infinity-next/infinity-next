@@ -1,25 +1,22 @@
 .reply {
+    display: flex;
     padding: 0;
     margin: 0.25em 0 0.25em 0;
 }
-    /* Adds a 4chan style >> before posts.
-    .reply::before {
-        display: inline-block;
-        content: '>>';
-        color: #D6DAF0;
-        font-weight: bold;
-        vertical-align: top;
-        width: 1.5em;
-        float: left;
-        margin: 0 0 0 -1.5em;
-    }
-    .reply::after {
-        display: block;
-        clear: both;
-        content: ' ';
-    }
-    */
+.wingding {
+    display: inline-block;
+    color: #D6DAF0;
+    font-weight: bold;
+    vertical-align: top;
+    line-height: 1.8em; // same as .post-details
+    margin-left: -1em;
+    padding: 0 2px 0 7px;
+    user-select: none;
 
+    .nsfw & {
+        color: #e0bfb7;
+    }
+}
 .post {
     margin: 0;
     padding: 0.7em;
@@ -124,16 +121,18 @@
     .post-interior {
         //position: relative;
     }
-        .post-content-wrapper .post {
-            padding-top: 0;
-        }
 
-    .post-content {
-        padding: 0;
-
+    .post-content-wrapper {
         .post-collapsed & {
             display: none;
         }
+        & .post {
+            padding-top: 0;
+        }
+    }
+
+    .post-content {
+        padding: 0;
     }
         .post-crown {
             direction: ltr;
@@ -170,6 +169,10 @@
                 #{$responsive} & {
                     white-space: nowrap;
                 }
+            }
+
+            .post-collapsed & {
+                padding: 0;
             }
        }
             .op-container .post-details {

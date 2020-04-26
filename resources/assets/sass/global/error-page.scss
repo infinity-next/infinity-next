@@ -3,140 +3,140 @@
  * 404, 500, etc
  */
  body.error::before {
- 	position: fixed;
- 	top: 0;
- 	left: 0;
- 	right: 0;
- 	bottom: 0;
- 	z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
 
- 	display: block;
- 	content: ' ';
- 	pointer-events: none;
- 	opacity: 0.2;
+    display: block;
+    content: ' ';
+    pointer-events: none;
+    opacity: 0.2;
 
- 	background-image: url("#{$base-url}img/errors/whitenoise.gif");
+    background-image: url("#{$base-url}img/errors/whitenoise.gif");
  }
- 	main#error {
- 	}
- 		section.error-flair {
- 			padding: 0;
- 			margin-left: auto;
- 			margin-right: auto;
+    main#error {
+    }
+        section.error-flair {
+            padding: 0;
+            margin-left: auto;
+            margin-right: auto;
 
- 			overflow: hidden;
- 			max-width: 500px;
- 			height: auto;
- 			line-height: 0;
- 		}
- 			figure.error-figure {
- 				margin: 0;
- 				padding: 0;
- 				position: relative;
- 			}
- 			figure.error-figure img.board-asset {
- 				max-width: 500px;
- 				max-height: 250px;
- 			}
- 			figure.error-figure figcaption.error-caption {
- 				display: block;
- 				height: 1em;
- 				text-indent: 1em;
+            overflow: hidden;
+            max-width: 500px;
+            height: auto;
+            line-height: 0;
+        }
+            figure.error-figure {
+                margin: 0;
+                padding: 0;
+                position: relative;
+            }
+            figure.error-figure img.board-asset {
+                max-width: 500px;
+                max-height: 250px;
+            }
+            figure.error-figure figcaption.error-caption {
+                display: block;
+                height: 1em;
+                text-indent: 1em;
 
- 				position: absolute;
- 				bottom: 1em;
+                position: absolute;
+                bottom: 1em;
 
- 				text-align: right;
- 			}
- 				figure.error-figure a.error-credit {
- 					color: white;
- 					text-shadow: 1px black;
- 					text-align: right;
- 				}
+                text-align: right;
+            }
+                figure.error-figure a.error-credit {
+                    color: white;
+                    text-shadow: 1px black;
+                    text-align: right;
+                }
 
- 		main#error .error-trace {
- 			display: block;
- 			margin: 0 auto;
- 			max-width: 960px;
- 		}
+        main#error .error-trace {
+            display: block;
+            margin: 0 auto;
+            max-width: 960px;
+        }
 
- 	main#adventure,
- 	main#landing {
- 		position: absolute;
- 		top: 50%;
- 		left: 0;
- 		width: 100%;
- 		text-align: center;
- 	}
- 	main#adventure {
- 		left: 50%;
- 		height: 320px;
- 		width: 320px;
- 		margin-top: -160px;
- 		margin-left: -160px;
- 	}
- 		section.adventure-flair {
- 			padding: 0;
- 			margin-left: auto;
- 			margin-right: auto;
+    main#adventure,
+    main#landing {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    main#adventure {
+        left: 50%;
+        height: 320px;
+        width: 320px;
+        margin-top: -160px;
+        margin-left: -160px;
+    }
+        section.adventure-flair {
+            padding: 0;
+            margin-left: auto;
+            margin-right: auto;
 
- 			overflow: hidden;
- 			max-width: 320px;
- 			max-height: 320px;
- 		}
- 			figure.adventure-figure {
- 				margin: 0;
- 				padding: 0;
- 				position: relative;
- 				text-align: center;
- 			}
- 			figure.adventure-figure i.fa {
- 				font-size: 240px;
- 			}
- 			p.landing-message,
- 			figure.adventure-figure figcaption.adventure-caption {
- 				display: block;
- 				height: 2em;
- 				line-height: 2em;
+            overflow: hidden;
+            max-width: 320px;
+            max-height: 320px;
+        }
+            figure.adventure-figure {
+                margin: 0;
+                padding: 0;
+                position: relative;
+                text-align: center;
+            }
+            figure.adventure-figure i.fas {
+                font-size: 240px;
+            }
+            p.landing-message,
+            figure.adventure-figure figcaption.adventure-caption {
+                display: block;
+                height: 2em;
+                line-height: 2em;
 
- 				font-size: 2em;
- 				font-weight: bold;
- 				text-align: center;
- 				text-indent: 1em;
- 			}
- 				a.adventure-link {
- 					color: #34345C;
- 					text-shadow:
- 						-1px -1px 0 rgba(255,255,255,0.9),
- 						1px -1px 0 rgba(255,255,255,0.9),
- 						-1px 1px 0 rgba(255,255,255,0.9),
- 						1px 1px 0 rgba(255,255,255,0.9);
- 				}
- 				a.adventure-link:hover {
- 					color: #f00;
- 				}
+                font-size: 2em;
+                font-weight: bold;
+                text-align: center;
+                text-indent: 1em;
+            }
+                a.adventure-link {
+                    color: #34345C;
+                    text-shadow:
+                        -1px -1px 0 rgba(255,255,255,0.9),
+                        1px -1px 0 rgba(255,255,255,0.9),
+                        -1px 1px 0 rgba(255,255,255,0.9),
+                        1px 1px 0 rgba(255,255,255,0.9);
+                }
+                a.adventure-link:hover {
+                    color: #f00;
+                }
 
 /* Partial */
 figure.error {
-	display: block;
-	margin: 0 auto 2em 0;
-	padding: 0;
-	width: 82.5%;
-	text-align: center;
+    display: block;
+    margin: 0 auto 2em 0;
+    padding: 0;
+    width: 82.5%;
+    text-align: center;
 
-	i.error-icon {
-		font-size: 10em;
-		color: #565656;
-	}
+    i.error-icon {
+        font-size: 10em;
+        color: #565656;
+    }
 
-	figcaption.error-caption {
+    figcaption.error-caption {
 
-	}
-		h4.error-title {
-			font-size: 120%;
-			margin: 0;
-		}
-		span.error-desc {
+    }
+        h4.error-title {
+            font-size: 120%;
+            margin: 0;
+        }
+        span.error-desc {
 
-		}
+        }
 }

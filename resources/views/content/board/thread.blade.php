@@ -40,13 +40,12 @@
 <div class="replies">
     @foreach ($thread->getReplies() as $reply)
     <div class="reply">
-        @endspaceless
-        {!! $reply->toHTML(
+        <span class="wingding"><span class="no-mobile">&gt;&gt;</span></span>
+        @endspaceless{!! $reply->toHTML(
                 false,
                 isset($multiboard) ? $multiboard : false,
                 false
-        ) !!}
-        @spaceless
+        ) !!}@spaceless
     </div>
     @endforeach
 

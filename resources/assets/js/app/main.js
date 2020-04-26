@@ -179,17 +179,14 @@
      * @return undefined
      */
     ib.storeYouPost = function(uri, id) {
-        if (typeof window.localStorage !== "object")
-        {
+        if (typeof window.localStorage !== "object") {
             return [];
         }
 
-        try
-        {
+        try {
             var storage = localStorage.getItem("yourPosts."+uri).split(",");
         }
-        catch (e)
-        {
+        catch (e) {
             var storage = [];
         }
 

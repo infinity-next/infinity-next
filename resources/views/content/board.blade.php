@@ -3,7 +3,7 @@
 @section('body-class')@parent {{ $reply_to ? 'single-thread' : 'board-index' }}@endsection
 
 @section('content')
-<main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} @if (isset($page)) page-{{ $page }} @endif">
+<main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} {{ isset($page) ? "page-{$page}" : '' }} {{ $board->isWorksafe() ? 'sfw' : 'nsfw' }}">
     @can($reply_to ? 'reply' : 'post', $reply_to ? $reply_to : $board)
     <section class="index-form">
         @include('content.board.post.form', [

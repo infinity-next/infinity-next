@@ -123,11 +123,16 @@ main.index-threaded {
             .autoupdater .autoupdater-items {
                 margin: 0.5em 0 0 -0.5em;
             }
-                .autoupdater .autoupdater-item {
-                    display: inline-block;
-                    list-style: none;
-                    margin: 0 0.5em 0 0;
-                }
+            .autoupdater .autoupdater-item {
+                display: inline-block;
+                list-style: none;
+                margin: 0 0.5em 0 0;
+            }
+
+            .autoupdater-ws {
+                clear: both;
+                margin-top: 1em;
+            }
 
         main.index-threaded .post-container.op-container {
             display: block;

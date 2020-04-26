@@ -90,7 +90,7 @@
             position: relative;
             padding-right: 1.6em;
         }
-            th.sorting-by-desc .fa,
+            th.sorting-by-desc .fas,
             th.sorting-by-asc  .fa {
                 display: inline-block;
                 position: absolute;
@@ -101,10 +101,10 @@
                 margin-top: 0.25em;
                 vertical-align: middle;
             }
-            th.sorting-by-asc  .fa::before {
+            th.sorting-by-asc  .fas::before {
                 content: "\f160";
             }
-            th.sorting-by-desc .fa::before {
+            th.sorting-by-desc .fas::before {
                 content: "\f161";
             }
 
