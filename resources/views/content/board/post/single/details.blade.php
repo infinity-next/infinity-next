@@ -59,21 +59,21 @@
 
     @if (!$reply_to)
     @if ($post->isStickied())
-    <span class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fa fa-thumb-tack"></i></span>
+    <span class="post-detail detail-icon post-sticky" title="@lang('board.detail.sticky')"><i class="fas fa-thumb-tack"></i></span>
     @elseif ($post->isBumplocked())
-    <span class="post-detail detail-icon post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fa fa-anchor"></i></span>
+    <span class="post-detail detail-icon post-bumplocked" title="@lang('board.detail.bumplocked')"><i class="fas fa-anchor"></i></span>
     @endif
 
     @if ($post->isLocked())
-    <span class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fa fa-lock"></i></span>
+    <span class="post-detail detail-icon post-locked" title="@lang('board.detail.locked')"><i class="fas fa-lock"></i></span>
     @endif
     @endif
 
     @if (isset($details['adventure_id']) && !is_null($details['adventure_id']))
-    <span class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fa fa-rocket"></i></span>
+    <span class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fas fa-rocket"></i></span>
     @endif
 
-    <span class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fa fa-remove"></i></span>
+    <span class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fas fa-remove"></i></span>
 
     @if (!$catalog)
     <span class="post-detail post-actions">@include('content.board.post.single.actions')</span>

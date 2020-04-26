@@ -56,9 +56,9 @@
             @foreach ($post->bans as $ban)
             <div class="post-meta meta-ban_reason">
                 @if ($ban->justification != "")
-                <i class="fa fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
+                <i class="fas fa-ban"></i> @lang('board.meta.banned_for', [ 'reason' => $ban->justification ])
                 @else
-                <i class="fa fa-ban"></i> @lang('board.meta.banned')
+                <i class="fas fa-ban"></i> @lang('board.meta.banned')
                 @endif
             </div>
             @endforeach
@@ -66,7 +66,7 @@
 
             @if (isset($details['updated_by']))
             <div class="post-meta meta-updated_by">
-                <i class="fa fa-pencil"></i> @lang('board.meta.updated_by', [
+                <i class="fas fa-pencil"></i> @lang('board.meta.updated_by', [
                     'name' => isset($details['updated_by_username']) ? $details['updated_by_username'] : trans('board.anonymous'),
                     'time' => $post->updated_at
                 ])
@@ -75,7 +75,7 @@
 
             @if (isset($details['body_signed']) && !is_null($details['body_signed']))
             <div class="post-meta meta-updated_by">
-                <i class="fa fa-check"></i> @lang('board.meta.signed')
+                <i class="fas fa-check"></i> @lang('board.meta.signed')
             </div>
             @endif
         </div>

@@ -14,7 +14,7 @@
         <figure class="adventure-figure">
             @if ($board)
             <a class="adventure-link" href="{{ $board->getUrl() }}">
-                <i class="fa fa-rocket"></i>
+                <i class="fas fa-rocket"></i>
                 <figcaption class="adventure-caption">
                     @lang('panel.adventure.go')
                 </figcaption>

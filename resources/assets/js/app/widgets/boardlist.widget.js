@@ -58,11 +58,11 @@ ib.widget("boardlist", function(window, $, undefined) {
                 'board-content-wrap' : "<p class=\"board-cell\"></p>",
 
                 // Individual items or parts of a single table cell.
-                'board-datum-fav'    : "<i class=\"board-favorite fa fa-star\" data-widget=\"board-favorite\"></i>",
+                'board-datum-fav'    : "<i class=\"board-favorite fas fa-star\" data-widget=\"board-favorite\"></i>",
                 'board-datum-lang'   : "<span class=\"board-lang\"></span>",
                 'board-datum-uri'    : "<a class=\"board-link\"></a>",
-                'board-datum-sfw'    : "<i class=\"fa fa-briefcase board-sfw\" title=\"SFW\"></i>",
-                'board-datum-nsfw'   : "<i class=\"fa fa-briefcase board-nsfw\" title=\"NSFW\"></i>",
+                'board-datum-sfw'    : "<i class=\"fas fa-briefcase board-sfw\" title=\"SFW\"></i>",
+                'board-datum-nsfw'   : "<i class=\"fas fa-briefcase board-nsfw\" title=\"NSFW\"></i>",
                 'board-datum-tags'   : "<a class=\"tag-link\" href=\"#\"></a>",
 
 

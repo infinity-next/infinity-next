@@ -16,8 +16,8 @@ const mix = require('laravel-mix');
 mix
     // Vendor files
     .copy(
-        'node_modules/font-awesome/fonts',
-        'public/static/fonts/font-awesome'
+        'node_modules/@fortawesome/fontawesome-free/webfonts',
+        'public/static/fonts/fontawesome/'
     )
     .sass('resources/assets/sass/vendor.scss', 'public/static/css')
 

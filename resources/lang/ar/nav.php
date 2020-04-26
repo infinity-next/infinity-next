@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'navigation'  => "<i class=\"fa fa-bars\"></i>&nbsp;Navigation",
+    'navigation'  => "<i class=\"fas fa-bars\"></i>&nbsp;Navigation",
 
     'global'      => [
         'view_all_boards' => "روي كول البردات",

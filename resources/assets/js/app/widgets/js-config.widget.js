@@ -44,7 +44,7 @@
             panel     : "<form id=\"js-config\"></form>",
 
             // Close button
-            close     : "<div id=\"js-config-close\"><i class=\"fa fa-close\"></i></div>",
+            close     : "<div id=\"js-config-close\"><i class=\"fas fa-window-close\"></i></div>",
 
             // Config title
             title     : "<h1 class=\"config-title\">Infinity Next User Options</h1>",

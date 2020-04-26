@@ -115,6 +115,11 @@
         pointer-events: none;
         z-index: 1100;
     }
+
+    &.post-collapsed {
+        background: none;
+        border: none;
+    }
 }
     .post-interior {
         //position: relative;
@@ -125,6 +130,10 @@
 
     .post-content {
         padding: 0;
+
+        .post-collapsed & {
+            display: none;
+        }
     }
         .post-crown {
             direction: ltr;

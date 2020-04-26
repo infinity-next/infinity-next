@@ -1,1 +1,1 @@
-<i class="board-favorite fa fa-star" data-widget="board-favorite" data-board="{{ $board instanceof \App\Board ? $board->board_uri : $board }}"></i>
+<i class="board-favorite fas fa-star" data-widget="board-favorite" data-board="{{ $board instanceof \App\Board ? $board->board_uri : $board }}"></i>

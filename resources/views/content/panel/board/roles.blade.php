@@ -18,7 +18,7 @@
             @foreach ($roles as $role)
             <li class="filterlist-item">
                 <a class="filterlist-secondary" href="{{ $role->getPanelUrl('delete') }}">
-                    <i class="fa fa-remove"></i>
+                    <i class="fas fa-remove"></i>
                 </a>
                 <a class="filterlist-secondary" href="{{ $role->getPanelUrl('permissions') }}">
                     @lang('panel.list.field.permissions')

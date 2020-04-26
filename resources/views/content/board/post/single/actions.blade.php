@@ -1,5 +1,5 @@
 <div class="actions-anchor actions-post" data-no-instant>
-    <span class="actions-label"><i class="fa fa-angle-down"></i></span>
+    <span class="actions-label"><i class="fas fa-angle-down"></i></span>
 
     {{-- Board specific content management actions --}}
     <div class="actions">

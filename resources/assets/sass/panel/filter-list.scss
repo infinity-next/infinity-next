@@ -1,63 +1,63 @@
 
 main.cp .filterlist {
-	padding: 0 0 1em 0;
-	margin: 0 -12px 1em -10px;
+    padding: 0 0 1em 0;
+    margin: 0 -12px 1em -10px;
 }
-	main.cp .filterlist-heading {
-		color: #6d3f03;
-		background: #f9d9b0;
-		padding: 0.5em 0.75em;
-		margin: 1em 0 0 0;
-		border-top: 1px solid #f9bc6d;
-		border-bottom: 1px solid #f9bc6d;
-	}
-	main.cp .filterlist-list {
-		margin: 0;
-		padding: 0;
-	}
-		main.cp .filterlist-item {
-			margin: 0;
-			line-height: 2em;
-			vertical-align: middle;
-			border-bottom: 1px solid #f0f0f0;
-		}
-			main.cp .filterlist-primary,
-			main.cp .filterlist-secondary {
-				display: block;
-				padding-top: 0.5em;
-				padding-bottom: 0.5em;
-				vertical-align: middle;
-			}
-			main.cp .filterlist-primary {
-				padding-left: 1em;
-			}
-				main.cp .filterlist-item:hover .filterlist-primary {
-					background-color: #fff4e5;
-				}
-				main.cp .filterlist-primary em {
-					text-decoration: none;
-					font-style: normal;
-				}
-				main.cp .filterlist-primary dfn {
-					text-decoration: none;
-					font-style: normal;
-					font-size: 90%;
-					color: #ccc;
-				}
+    main.cp .filterlist-heading {
+        color: #6d3f03;
+        background: #f9d9b0;
+        padding: 0.5em 0.75em;
+        margin: 1em 0 0 0;
+        border-top: 1px solid #f9bc6d;
+        border-bottom: 1px solid #f9bc6d;
+    }
+    main.cp .filterlist-list {
+        margin: 0;
+        padding: 0;
+    }
+        main.cp .filterlist-item {
+            margin: 0;
+            line-height: 2em;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+        }
+            main.cp .filterlist-primary,
+            main.cp .filterlist-secondary {
+                display: block;
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+                vertical-align: middle;
+            }
+            main.cp .filterlist-primary {
+                padding-left: 1em;
+            }
+                main.cp .filterlist-item:hover .filterlist-primary {
+                    background-color: #fff4e5;
+                }
+                main.cp .filterlist-primary em {
+                    text-decoration: none;
+                    font-style: normal;
+                }
+                main.cp .filterlist-primary dfn {
+                    text-decoration: none;
+                    font-style: normal;
+                    font-size: 90%;
+                    color: #ccc;
+                }
 
-			main.cp .filterlist-secondary {
-				float: right;
-				padding-right: 0.5em;
-				padding-left: 0.5em;
+            main.cp .filterlist-secondary {
+                float: right;
+                padding-right: 0.5em;
+                padding-left: 0.5em;
 
-				background: #f0f7fc;
-				border-left: 1px solid #d7edfc;
-				color: #176093;
-			}
-				main.cp .filterlist-secondary:hover {
-					background-color: #d7edfc;
-				}
-				main.cp .filterlist-secondary .fa-remove {
-					font-size: 150%;
-					color: #ff0000;
-				}
+                background: #f0f7fc;
+                border-left: 1px solid #d7edfc;
+                color: #176093;
+            }
+                main.cp .filterlist-secondary:hover {
+                    background-color: #d7edfc;
+                }
+                main.cp .filterlist-secondary .fa-ban {
+                    font-size: 150%;
+                    color: #ff0000;
+                }

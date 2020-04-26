@@ -11,6 +11,6 @@
         </span>
     </div>
     <div class="autoupdater-ws" style="display: none;">
-        <i class="fa fa-wifi"></i> @lang('widget.autoupdater.websocket')
+        <i class="fas fa-sync fa-spin"></i> @lang('widget.autoupdater.websocket')
     </div>
 </div>

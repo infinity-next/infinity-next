@@ -15,26 +15,26 @@
 
         <div class="attachment-details attachment-actions">
             <div class="actions-anchor actions-attachment" data-no-instant>
-                <span class="actions-label"><i class="fa fa-angle-down"></i></span>
+                <span class="actions-label"><i class="fas fa-angle-down"></i></span>
                 <div class="actions">
                     <div class="action">
                         <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="action-link attachment-unspoiler" title="@lang('board.field.unspoiler')">
-                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.unspoiler')
+                            <i class="fas fa-question"></i>&nbsp;@lang('board.field.unspoiler')
                         </a>
                     </div>
                     <div class="action">
                         <a href="{{ $attachment->getSpoilerUrl($board) }}" target="_blank" class="action-link attachment-spoiler" title="@lang('board.field.spoiler')">
-                            <i class="fa fa-question"></i>&nbsp;@lang('board.field.spoiler')
+                            <i class="fas fa-question"></i>&nbsp;@lang('board.field.spoiler')
                         </a>
                     </div>
                     <div class="action">
                         <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="action-link attachment-remove" title="@lang('board.field.remove')">
-                            <i class="fa fa-remove"></i>&nbsp;@lang('board.field.remove')
+                            <i class="fas fa-remove"></i>&nbsp;@lang('board.field.remove')
                         </a>
                     </div>
                     <div class="action">
                         <a href="{{ route('panel.site.files.show', $attachment->file->hash) }}" target="_blank" class="action-link attachment-moderate" title="@lang('board.action.moderate')">
-                            <i class="fa fa-exclamation-triangle"></i>&nbsp;@lang('board.action.moderate')
+                            <i class="fas fa-exclamation-triangle"></i>&nbsp;@lang('board.action.moderate')
                         </a>
                     </div>
                 </div>

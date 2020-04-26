@@ -53,7 +53,7 @@ return [
         'update' => "Update",
         'updating' => "Updating ...",
 
-        'websocket' => "You will receive new posts automatically.",
+        'websocket' => "You are listening to the websocket and will receive updates as soon as they are made.",
         'websocket_dc' => "You are disconnected from the websocket.",
     ],
 

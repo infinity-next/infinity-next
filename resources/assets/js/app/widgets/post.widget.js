@@ -32,6 +32,7 @@
 
         // Important class names.
         classname : {
+            'post-collapsed' : "post-collapsed",
             'post-hover'     : "post-hover",
             'cite-you'       : "cite-you",
             'cite-op'        : "cite-op",
@@ -83,8 +84,7 @@
 
         $(this.options.classname['post-hover']).remove();
 
-        if (!$box.parents().length)
-        {
+        if (!$box.parents().length) {
             $box.appendTo("body")
                 .addClass(this.options.classname['post-hover'])
                 .css('position', "absolute");
@@ -97,8 +97,7 @@
         var posTop  = linkRect.top + window.scrollY;
 
         // Is the box's bottom below the bottom of the screen?
-        if (posTop + boxHeight + 25 > window.scrollY + window.innerHeight)
-        {
+        if (posTop + boxHeight + 25 > window.scrollY + window.innerHeight) {
             // Selects the larger of two values:
             // A) Our position in the scroll, or
             // B) The hidden part of the post subtracted from the top.
@@ -118,21 +117,18 @@
         var newWidth;
 
         // LTR display
-        if (ib.ltr)
-        {
+        if (ib.ltr) {
             // Left side has more space than right side,
             // and box is wider than remaining space.
             if (linkRect.left > document.body.scrollWidth - posLeftOnRight
-                && boxWidth > document.body.scrollWidth - posLeftOnRight)
-            {
+                && boxWidth > document.body.scrollWidth - posLeftOnRight) {
                 posLeft  = posLeftOnLeft;
                 newWidth = Math.min(maxWidth, boxWidth, linkRect.left - 15);
                 posLeft -= newWidth;
             }
             // Right side has more adequate room,
             // Or box fits in.
-            else
-            {
+            else {
                 posLeft  = posLeftOnRight;
                 newWidth = Math.min(
                     maxWidth,
@@ -142,8 +138,7 @@
             }
         }
         // RTL Display
-        else
-        {
+        else {
             // TODO
         }
 
@@ -170,25 +165,20 @@
             var post     = this.dataset.board_id.toString();
 
             // Check and see if we have an item for this citation's board.
-            if (typeof cites[board] === "undefined")
-            {
-                if (localStorage.getItem("yourPosts."+board) !== null)
-                {
+            if (typeof cites[board] === "undefined") {
+                if (localStorage.getItem("yourPosts."+board) !== null) {
                     cites[board] = localStorage.getItem("yourPosts."+board).split(",");
                 }
-                else
-                {
+                else {
                     cites[board] = [];
                 }
             }
 
-            if (cites[board].length > 0 && cites[board].indexOf(post) >= 0)
-            {
+            if (cites[board].length > 0 && cites[board].indexOf(post) >= 0) {
                 this.className += " " + widget.options.classname['cite-you'];
             }
 
-            if (board === post_board_uri && post === op_board_id)
-            {
+            if (board === post_board_uri && post === op_board_id) {
                 this.className += " " + widget.options.classname['cite-op'];
             }
         });
@@ -198,8 +188,7 @@
             var post  = widget.$widget[0].dataset.board_id.toString();
             var posts = localStorage.getItem("yourPosts."+board);
 
-            if (posts !== null && posts.split(",").indexOf(post) > 0)
-            {
+            if (posts !== null && posts.split(",").indexOf(post) > 0) {
                 widget.$widget[0].className += " post-you";
             }
         })();
@@ -215,60 +204,27 @@
         };
 
         $(window)
-            .on(
-                'au-updated.ib-post',
-                data,
-                widget.events.threadNewPosts
-            )
-            .on(
-                'click.ib-post',
-                data,
-                widget.events.windowClick
-            );
+            .on('au-updated.ib-post', data, widget.events.threadNewPosts)
+            .on('click.ib-post', data, widget.events.windowClick);
 
         $widget
-            .on(
-                'contentUpdate.ib-post',
-                data,
-                widget.events.postContentUpdate
-            )
-            .on(
-                'highlight-syntax.ib-post',
-                data,
-                widget.events.codeHighlight
-            )
-            .on(
-                'click.ib-post',
-                widget.options.selector['post-reply'],
-                data,
-                widget.events.postClick
-            )
-            .on(
-                'click.ib-post',
-                widget.options.selector['action-tab'],
-                data,
-                widget.events.actionTabClick
-            )
+            //custom events
+            .on('contentUpdate.ib-post', data, widget.events.postContentUpdate)
+            .on('highlight-syntax.ib-post', data, widget.events.codeHighlight)
+            .on('collapse-post', data, widget.events.postCollapse)
+            .on('hide-post', data, widget.events.postHide)
+
+            // Post interactions
+            .on('click.ib-post', widget.options.selector['post-reply'], data, widget.events.replyClick)
+            .on('click.ib-post', widget.options.selector['action-tab'], data, widget.events.actionTabClick)
 
             // Citations
-            .on(
-                'click.ib-post',
-                widget.options.selector['cite'],
-                data,
-                widget.events.citeClick
-            )
-            .on(
-                'mouseover.ib-post',
-                widget.options.selector['cite'],
-                data,
-                widget.events.citeMouseOver
-            )
-            .on(
-                'mouseout.ib-post',
-                widget.options.selector['cite'],
-                data,
-                widget.events.citeMouseOut
-            )
+            .on('click.ib-post', widget.options.selector['cite'], data, widget.events.citeClick)
+            .on('mouseover.ib-post', widget.options.selector['cite'], data, widget.events.citeMouseOver)
+            .on('mouseout.ib-post', widget.options.selector['cite'], data,widget.events.citeMouseOut)
+
+            // Macros that ought to yield to other events
+            .on('click.ib-post', data, widget.events.postClick)
         ;
 
         $widget.trigger('contentUpdate');
@@ -278,16 +234,13 @@
     // Stores a post in the session store.
     blueprint.prototype.cachePosts = function(jsonOrjQuery) {
         // This stores the post data into a session storage for fast loading.
-        if (typeof sessionStorage === "object")
-        {
+        if (typeof sessionStorage === "object") {
             var $post;
 
-            if (jsonOrjQuery instanceof jQuery)
-            {
+            if (jsonOrjQuery instanceof jQuery) {
                 $post = jsonOrjQuery;
             }
-            else if (jsonOrjQuery.html)
-            {
+            else if (jsonOrjQuery.html) {
                 var $post = $(jsonOrjQuery.html);
             }
 
@@ -295,8 +248,7 @@
             // The HTML dom cannot have duplicate IDs, ever. It's important.
             var $post = $($post[0].outerHTML); // Can't use .clone()
 
-            if (typeof $post[0] !== "undefined")
-            {
+            if (typeof $post[0] !== "undefined") {
                 var id    = $post[0].id;
                 $post.removeAttr('id');
                 var html = $post[0].outerHTML;
@@ -305,21 +257,16 @@
                 // Destroy older items if we are full.
                 var setting = true;
 
-                while (setting === true)
-                {
-                    try
-                    {
+                while (setting === true) {
+                    try {
                         sessionStorage.setItem( id, html );
                         break;
                     }
-                    catch (e)
-                    {
-                        if (sessionStorage.length > 0)
-                        {
+                    catch (e) {
+                        if (sessionStorage.length > 0) {
                             sessionStorage.removeItem( sessionStorage.key(0) );
                         }
-                        else
-                        {
+                        else {
                             setting = false;
                         }
                     }
@@ -334,8 +281,7 @@
 
     // Clears existing hover-over divs created by anchorBoxToLink.
     blueprint.prototype.clearCites = function() {
-        if (this.$cite instanceof jQuery)
-        {
+        if (this.$cite instanceof jQuery) {
             this.$cite.remove();
         }
 
@@ -445,24 +391,74 @@
             var $widget =  event.data.$widget;
 
             // Activate code highlighting if the JS module is enabled.
-            if (typeof window.hljs === "object")
-            {
-                $(widget.options.selector['element-code'], $widget).each(function()
-                {
+            if (typeof window.hljs === "object") {
+                $(widget.options.selector['element-code'], $widget).each(function() {
                     window.hljs.highlightBlock(this);
                 });
             }
-            else
-            {
+            else {
                 console.log("post.codeHighlight: missing hljs");
             }
         },
 
-        postClick : function(event) {
+        postCollapse : function (event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            $widget.addClass(widget.options.classname['post-collapsed']);
+        },
+
+        postClick : function (event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            if (event.target.tagName == 'a') {
+                return; // if we're making a meaningful click.
+            }
+
+            if (event.shiftKey) {
+                $widget.trigger('hide-post');
+            }
+         },
+
+        postContentUpdate : function (event) {
+            var widget  = event.data.widget;
+            var $widget =  event.data.$widget;
+
+            $(widget.options.selector.author_id, $widget)
+                .toggle(widget.is('author_id'));
+
+            widget.addAuthorship();
+            $widget.trigger('highlight-syntax');
+        },
+
+        postHide : function (event) {
+            var widget = event.data.widget;
+            var $widget = event.data.$widget;
+
+            var postId = event.data.$widget[0].dataset.post_id;
+            var board = event.data.$widget[0].dataset.board_uri;
+            var hidePosts = [];
+
+            if (localStorage.getItem("hidePosts."+board) !== null) {
+                hidePosts[board] = localStorage.getItem("hidePosts."+board).split(",");
+            }
+            else {
+                hidePosts[board] = [];
+            }
+
+            if (hidePosts[board].indexOf(postId) !== -1) {
+                hidePosts[board].push(postId);
+                localStorage.setItem("hidePosts."+board, hidePosts.join(','));
+            }
+
+            $widget.trigger('collapse-post');
+        },
+
+        replyClick : function(event) {
             var widget = event.data.widget;
 
-            if ($(widget.options.selector['mode-reply']).length !== 0)
-            {
+            if ($(widget.options.selector['mode-reply']).length !== 0) {
                 event.preventDefault();
 
                 var $this = $(this);
@@ -490,17 +486,6 @@
             }
 
             return true;
-        },
-
-        postContentUpdate : function(event) {
-            var widget  = event.data.widget;
-            var $widget =  event.data.$widget;
-
-            $(widget.options.selector.author_id, $widget)
-                .toggle(widget.is('author_id'));
-
-            widget.addAuthorship();
-            $widget.trigger('highlight-syntax');
         },
 
         threadNewPosts : function(event, posts) {

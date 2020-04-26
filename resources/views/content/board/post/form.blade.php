@@ -49,7 +49,7 @@
     @endif
 
     <fieldset class="form-fields">
-        <legend class="form-legend"><i class="fa fa-reply"></i>{{ trans("board.legend." . implode("+", $actions)) }}</legend>
+        <legend class="form-legend"><i class="fas fa-reply"></i>&nbsp;{{ trans("board.legend." . implode("+", $actions)) }}</legend>
 
         @include('widgets.messages')
 
@@ -125,7 +125,7 @@
         @can('attach', $board)
         <div class="field row-file">
             <div class="dz-container">
-                <span class="dz-instructions"><span class="dz-instructions-text"><i class="fa fa-upload"></i>&nbsp;@lang('board.field.file-dz')</span></span>
+                <span class="dz-instructions"><span class="dz-instructions-text"><i class="fas fa-upload"></i>&nbsp;@lang('board.field.file-dz')</span></span>
                 <div class="fallback">
                     <input class="field-control" id="file" name="files[]" type="file" multiple />
                     <div class="field-control">

@@ -19,8 +19,9 @@
  * Font Awesome
  * Used for glyph symbols across the site.
  */
-$fa-font-path: "/static/fonts/font-awesome";
-@import "node_modules/font-awesome/scss/font-awesome.scss";
+$fa-font-path: "/static/fonts/fontawesome";
+@import "node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 
 /**
  * Highlight JS
