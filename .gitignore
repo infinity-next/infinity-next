@@ -4,6 +4,7 @@
 /public/mix-manifest.json
 /public/static/css/*.css
 /public/static/js/*.js
+/public/static/fonts/*
 /storage/infinity.import
 /vendor
 .env
