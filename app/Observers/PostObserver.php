@@ -152,9 +152,17 @@ class PostObserver
         $session = Session::getId();
 
         Cache::put("last_post_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
+
         if ($accountable) {
             $ipLong = (new IP)->toLong();
             Cache::put("last_post_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
+        }
+
+        if ($thread instanceof Post) {
+            Cache::put("last_thread_for_session:{$session}", $post->created_at->timestamp, now()->addHour());
+            if ($accountable) {
+                Cache::put("last_thread_for_ip:{$ipLong}", $post->created_at->timestamp, now()->addHour());
+            }
         }
 
         // fire events

@@ -42,24 +42,29 @@ class BoardController extends Controller
     const VIEW_THREAD = 'board';
     const VIEW_LOGS = 'board.logs';
 
-    protected function lockConnection()
+    protected function lockConnection($time = 5)
     {
         usleep(rand(10000, 100000)); // race condition on 24 processors
+        $lock = null;
 
         // User Locking
         if (user()->isAccountable()) {
             $ipLong = (new IP)->toLong();
-            $lock = Cache::lock("posting_now_ip:{$ipLong}", 5);
+            $lock = Cache::lock("posting_now_ip:{$ipLong}", $time);
         }
         // Unaccountable Locking
         else {
             $captcha = Request::input('captcha_hash', null);
             if (!is_null($captcha)) {
-                $lock = Cache::lock("captcha:{$captcha}", 5);
+                $lock = Cache::lock("captcha:{$captcha}", $time);
             }
         }
 
-        return !$lock->get() ? abort(429, "Race condition.") : true;
+        if (is_null($lock)) {
+            return abort(429, "Couldn't acquire lock. Did you enter a captcha?");
+        }
+
+        return !$lock->get() ? abort(429, "You are posting too fast.") : true;
     }
 
     /**

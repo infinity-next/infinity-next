@@ -404,18 +404,31 @@ class PostRequest extends Request implements ApiContract
         }
         else {
             $floodTime = site_setting('threadFloodTime');
+            $floodTime = site_setting('postFloodTime');
 
-            $nextPostTime = Carbon::createFromTimestamp(Cache::get('last_thread_for_'.$ip->toLong(), 0) + $floodTime);
+            $cacheKeys = [
+                'last_post_for_session:' . Session::getId(),
+                'last_thread_for_session:' . Session::getId(),
+            ];
 
-            if ($nextPostTime->isFuture()) {
-                $timeDiff = $nextPostTime->diffInSeconds() + 1;
+            if ($user->isAccountable()) {
+                $cacheKeys[] = "last_post_for_ip:" . $ip->toLong();
+                $cacheKeys[] = "last_thread_for_ip:" . $ip->toLong();
+            }
 
-                $messages->add('flood', trans_choice('validation.thread_flood', $timeDiff, [
-                    'time_left' => $timeDiff,
-                ]));
+            foreach ($cacheKeys as $cacheKey) {
+                $nextPostTime = Carbon::createFromTimestamp(Cache::get($cacheKey, 0) + $floodTime);
 
-                $this->failedValidation($validator);
-                return;
+                if ($nextPostTime->isFuture()) {
+                    $timeDiff = $nextPostTime->diffInSeconds() + 1;
+
+                    $messages->add('flood', trans_choice('validation.thread_flood', $timeDiff, [
+                        'time_left' => $timeDiff,
+                    ]));
+
+                    $this->failedValidation($validator);
+                    return;
+                }
             }
         }
 

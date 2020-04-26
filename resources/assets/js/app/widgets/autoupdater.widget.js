@@ -224,7 +224,7 @@
 
                         $newPost = $(reply.html);
 
-                        var $article = $("<article class=\"reply\"></article>");
+                        var $article = $("<div class=\"reply\"><span class=\"wingding\"><span class=\"no-mobile\">&gt;&gt;</span></span></div>");
 
                         // Insertion has to be done very carefully so we have a
                         // valid reference for $newPost.
