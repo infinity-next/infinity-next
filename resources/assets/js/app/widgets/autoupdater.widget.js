@@ -472,13 +472,11 @@
         }
 
         // This corrects our favicon.
-        if (widget.newReplies > 0)
-        {
+        if (!widget.hasFocus && widget.newReplies > 0) {
             $("#favicon").attr('href', window.app.favicon.alert);
             document.title = "(" + widget.newReplies + ") " + $('<div/>').html(window.app.title).text();
         }
-        else
-        {
+        else {
             $("#favicon").attr('href', window.app.favicon.normal);
             document.title = $('<div/>').html(window.app.title).text();
         }
