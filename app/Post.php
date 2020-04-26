@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\Support\Jsonable;
 use Cache;
 use DB;
 use DateTime;
@@ -34,7 +36,7 @@ use App\Events\ThreadNewReply;
  *
  * @since      0.5.1
  */
-class Post extends Model implements FormattableContract
+class Post extends Model implements FormattableContract, Htmlable, Jsonable
 {
     use Formattable;
     use EloquentBinary;
@@ -1886,7 +1888,7 @@ class Post extends Model implements FormattableContract
      *
      * @return  string  HTML
      */
-    public function toHtml($catalog = false, $multiboard = false, $preview = false)
+    public function toHtml($catalog = false, $multiboard = false, $preview = false) : string
     {
         if ($this->isDeleted()) {
             return "";
@@ -1942,6 +1944,19 @@ class Post extends Model implements FormattableContract
         }
 
         return Cache::tags($rememberTags)->remember($rememberKey, $rememberTimer, $rememberClosure);
+    }
+
+    public function jsonSerialize()
+    {
+        $json = parent::jsonSerialize();
+
+        $json['attachments'] = $json['attachments'] ?? $this->attachments;
+
+        if ($this->isOp()) {
+            $json['replies'] = $json['replies'] ?? $this->replies;
+        }
+
+        return $json;
     }
 
     /**

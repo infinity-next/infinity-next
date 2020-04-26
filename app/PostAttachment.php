@@ -59,6 +59,16 @@ class PostAttachment extends Model
     public $incrementing = false;
 
     /**
+     * Attributes which do not exist but should be appended to the JSON output.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'thumbnail_url',
+        'file_url',
+    ];
+
+    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -134,6 +144,11 @@ class PostAttachment extends Model
     public function getExtension()
     {
         return pathinfo($this->attributes['filename'], PATHINFO_EXTENSION );
+    }
+
+    public function getFileUrlAttribute()
+    {
+        return $this->getUrl();
     }
 
     /**
@@ -277,6 +292,11 @@ class PostAttachment extends Model
             'attachment' => $this->attributes['attachment_id'],
             'board' => $this->post->attributes['board_uri'],
         ], false);
+    }
+
+    public function getThumbnailUrlAttribute()
+    {
+        return $this->getThumbnailUrl();
     }
 
     /**

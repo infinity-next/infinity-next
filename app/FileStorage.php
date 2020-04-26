@@ -77,6 +77,7 @@ class FileStorage extends Model
     protected $hidden = [
         'phash',
         'banned_at',
+        'fuzzybanned_at',
         'first_uploaded_at',
         'last_uploaded_at',
         'upload_count',
