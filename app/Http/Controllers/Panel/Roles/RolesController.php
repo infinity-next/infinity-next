@@ -27,11 +27,6 @@ class RolesController extends PanelController
      */
     public static $navSecondary = 'nav.panel.users';
 
-    public function authorize($ability, $arguments = [])
-    {
-        $this->authorize('admin-users');
-    }
-
     /**
      * Show the application dashboard to the user.
      *
@@ -39,6 +34,8 @@ class RolesController extends PanelController
      */
     public function index()
     {
+        $this->authorize('admin-users');
+        
         $roles = Role::where('system', true)->orderBy('weight', 'desc')->get();
 
         return $this->makeView(static::VIEW_ROLES, [

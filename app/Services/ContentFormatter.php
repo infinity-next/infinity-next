@@ -206,7 +206,7 @@ class ContentFormatter
     {
         foreach ($this->wordfilters as $find => $replace) {
             // Matches |bad| but not |<span class="censored">bad</span>|.
-            $pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/";
+            $pattern = "/<span class=\\\"censored.*?<\\/span>|(?P<match>\\b{$find}\\b)/i";
 
             try {
                 $newContent = preg_replace_callback($pattern, function ($matches) use ($replace) {

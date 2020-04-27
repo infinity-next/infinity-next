@@ -22,11 +22,6 @@ class PermissionsController extends PanelController
      */
     public static $navSecondary = 'nav.panel.users';
 
-    public function authorize($ability, $arguments = [])
-    {
-        $this->authorize('admin-users');
-    }
-
     /**
      * Show the application dashboard to the user.
      *
@@ -34,6 +29,8 @@ class PermissionsController extends PanelController
      */
     public function index(Role $role)
     {
+        $this->authorize('admin-users');
+
         $permissionGroups = PermissionGroup::orderBy('display_order', 'asc')->withPermissions()->get();
         $permissionGroups = $permissionGroups->filter(function ($group) {
             $permissions = $group->permissions->filter(function ($permission) {
@@ -53,6 +50,8 @@ class PermissionsController extends PanelController
 
     public function patch(Role $role)
     {
+        $this->authorize('admin-users');
+        
         $input = Request::all();
         $permissions = Permission::all();
         $rolePermissions = [];

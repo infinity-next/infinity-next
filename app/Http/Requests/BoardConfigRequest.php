@@ -104,11 +104,6 @@ class BoardConfigRequest extends FormRequest
         }
     }
 
-    public function authorize($ability, $arguments = [])
-    {
-        return user()->can('configure', $this->board);
-    }
-
     /**
      * @return array
      */
