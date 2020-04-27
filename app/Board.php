@@ -382,7 +382,7 @@ class Board extends Model
      */
     public function getAudioArtUrl()
     {
-        return asset('static/img/assets/audio.gif');
+        return media_url('static/img/assets/audio.gif');
     }
 
     /**
@@ -452,12 +452,15 @@ class Board extends Model
 
         if (count($banners) > 0) {
             return $banners->random()->getUrl();
-        } elseif (!user()->isAccountable()) {
-            return asset('static/img/logo_tor.png');
-        } elseif (!$this->isWorksafe()) {
-            return asset('static/img/logo_yotsuba.png');
-        } else {
-            return asset('static/img/logo.png');
+        }
+        elseif (!user()->isAccountable()) {
+            return media_url('static/img/logo_tor.png', false);
+        }
+        elseif (!$this->isWorksafe()) {
+            return media_url('static/img/logo_yotsuba.png', false);
+        }
+        else {
+            return media_url('static/img/logo.png', false);
         }
 
         return false;
@@ -589,9 +592,10 @@ class Board extends Model
 
         if (!$icon) {
             if ($this->is_worksafe) {
-                return asset('/static/img/assets/Favicon_Burichan.ico');
-            } else {
-                return asset('/static/img/assets/Favicon_Yotsuba.ico');
+                return media_url('static/img/assets/Favicon_Burichan.ico', false);
+            }
+            else {
+                return media_url('static/img/assets/Favicon_Yotsuba.ico', false);
             }
         }
 

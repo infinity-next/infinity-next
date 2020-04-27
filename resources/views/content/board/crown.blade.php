@@ -1,6 +1,6 @@
 <div class="post-crown">
     <figure class="crown-figure">
-        <img class="crown-image" src="{{ $board->getIconURL() }}" />
+        <img class="crown-image" src="{{ $board->getIconUrl() }}" />
         <figcaption class="crown-title">
             <a href="{!! $board->getUrl() !!}" class="crown-link">/{{ $board->board_uri }}/ - {{ $board->getDisplayName() }}</a>
         </figcaption>

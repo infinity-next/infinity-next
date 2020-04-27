@@ -296,7 +296,7 @@ class Ban extends Model
         $images = File::allFiles(base_path().'/public/static/img/errors/robot');
         $filename = $images[array_rand($images)]->getFilename();
 
-        return asset("static/img/errors/robot/{$filename}");
+        return "/static/img/errors/robot/{$filename}";
     }
 
     public function getAppealUrl(array $params = [], $abs = true)
