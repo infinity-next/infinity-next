@@ -332,6 +332,9 @@ class Upload
         elseif ($this->storage->isVideo()) {
             $this->processThumbnailsForVideo();
         }
+        elseif ($this->storage->mime === "application/pdf") {
+            $this->processThumbnailsForPdf();
+        }
         elseif ($this->storage->mime === "application/epub+zip") {
             $this->processThumbnailsForBook();
         }
@@ -427,6 +430,26 @@ class Upload
                 app('log')->error("Encountered an error trying to generate a thumbnail for book {$this->hash}.");
             }
         }
+    }
+
+    /**
+     * Thumbnails a PDF upload.
+     *
+     * @return void
+     */
+    protected function processThumbnailsForPdf()
+    {
+        $temp = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($temp, $this->storage->blob);
+
+        $pdfThumb = new \imagick;
+        //$pdfThumb->setResolution(72, 72);
+        $pdfThumb->readImage("{$temp}[0]");
+        //$pdfThumb->readImageBlob($this->storage->blob, "ugc.pdf[0]");
+        $pdfThumb->setImageFormat('jpg');
+
+        $this->processThumbnail($pdfThumb->getImageBlob());
+        unlink($temp);
     }
 
     /**

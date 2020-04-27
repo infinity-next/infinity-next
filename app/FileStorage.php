@@ -65,6 +65,7 @@ class FileStorage extends Model
      */
     protected $casts = [
         'banned_at' => "datetime",
+        'fuzzybanned_at' => "datetime",
         'first_uploaded_at' => "datetime",
         'last_uploaded_at' => "datetime",
     ];
@@ -104,28 +105,6 @@ class FileStorage extends Model
       * @var string
       */
      public static $nameFormat;
-
-    /**
-     * Ties database triggers to the model.
-     *
-     * @static
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        // When being created, commit blob data.
-        static::creating(function ($storage) {
-            $storage->putFile();
-
-            $storage->filesize = Storage::size($storage->getPath());
-            $storage->first_uploaded_at = now();
-            $storage->last_uploaded_at = now();
-            $storage->upload_count = $storage->upload_count ?? 1;
-
-            return Storage::exists($storage->getPath());
-        });
-    }
 
     /**
      * The \App\BoardAsset relationship.

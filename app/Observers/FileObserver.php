@@ -38,14 +38,14 @@ class FileObserver
      */
     public function creating(FileStorage $file)
     {
-        $storage->putFile();
+        $file->putFile();
 
-        $storage->filesize = Storage::size($storage->getPath());
-        $storage->first_uploaded_at = now();
-        $storage->last_uploaded_at = now();
-        $storage->upload_count = $storage->upload_count ?? 1;
+        $file->filesize = Storage::size($file->getPath());
+        $file->first_uploaded_at = now();
+        $file->last_uploaded_at = now();
+        $file->upload_count = $file->upload_count ?? 1;
 
-        return Storage::exists($storage->getPath());
+        return Storage::exists($file->getPath());
     }
 
     /**
@@ -57,6 +57,8 @@ class FileObserver
      */
     public function deleted($file)
     {
+        $file->deleteFile();
+
         return true;
     }
 

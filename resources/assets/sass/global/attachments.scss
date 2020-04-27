@@ -1,5 +1,5 @@
 .attachment-link {
-    display: inline;
+    display: inline-block;
     outline: none;
 }
 
@@ -45,14 +45,15 @@
 
         .attachment-wrapper {
             position: relative;
+            display: inline-block;
             padding: 0;
             margin: 0 auto;
             text-align: center;
         }
 
             .attachment-type-audio .attachment-wrapper {
-                margin: 0 -2em 0 0;
-                padding: 0 2em 0 0;
+                // margin: 0 -2em 0 0;
+                // padding: 0 2em 0 0;
 
                 &::after {
                     content: ' ';
@@ -100,6 +101,32 @@
                     height: inherit !important;
                 }
             }
+
+            .attachment.attachment-type-document .attachment-wrapper {
+                position: relative;
+                overflow: hidden;
+                border-radius: 0 16px 0 0;
+                clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 16px, calc(100% - 16px) 0);
+
+                &::after {
+                    position: absolute;
+                    content: " ";
+                    top: 0;
+                    right: 0;
+                    background: #FFF;
+                    box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+                    /* Firefox 3.0 damage limitation */
+                    display: block; width: 0;
+                    width: 16px;
+                    height: 16px;
+                    z-index: 3;
+                }
+            }
+
+body, html {
+  margin: 0; padding: 0;
+  background: white;
+}
 
         img.attachment-img {
             display: inline-block;
