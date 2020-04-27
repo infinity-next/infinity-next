@@ -433,7 +433,7 @@ li.post-attachment {
 /*Fix for Code Blocks, STOP BURNING MY RETINAS!*/
 
 .hljs {
-    background: #000;
+    background: #101112;
     color: #C5C8C6;
 }
 .hljs-tag {
