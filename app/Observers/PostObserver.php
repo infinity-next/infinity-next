@@ -203,7 +203,7 @@ class PostObserver
         }
 
         // Handle tripcode, if any.
-        if (PrettyGoodTripcode::hasSignedMessage($post->body) === true) {
+        if (strlen($post->body) && PrettyGoodTripcode::hasSignedMessage($post->body) === true) {
             $post->body_signed = $post->body;
 
             $tripcode = new PrettyGoodTripcode($post->body);
