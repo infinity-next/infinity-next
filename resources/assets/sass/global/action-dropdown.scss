@@ -48,6 +48,10 @@
     padding: 0 0 0 0;
     margin: 0 0 0 -1px;
 
+    .actions-up & {
+        bottom: 1.5em; // same as top above
+        top: auto;
+    }
 
     html.no-js .actions-anchor:hover &,
     html.js    .open  & {

@@ -14,8 +14,8 @@
         </a>
 
         <div class="attachment-details attachment-actions">
-            <div class="actions-anchor actions-attachment" data-no-instant>
-                <span class="actions-label"><i class="fas fa-angle-down"></i></span>
+            <div class="actions-anchor actions-attachment actions-up" data-no-instant>
+                <span class="actions-label"><i class="fas fa-angle-up"></i></span>
                 <div class="actions">
                     <div class="action">
                         <a href="{{ $attachment->getUnspoilerUrl($board) }}" target="_blank" class="action-link attachment-unspoiler" title="@lang('board.field.unspoiler')">

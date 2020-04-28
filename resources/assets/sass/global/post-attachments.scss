@@ -26,6 +26,9 @@
 
     &.attachments-multi {
         float: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
 
         .reply-container.sfw & {
             background: rgba(0,0,155,0.1);
@@ -48,6 +51,7 @@
         //position: relative;
         display: inline-block;
         vertical-align: text-top;
+        text-align: center;
 
         #{$rtl} & {
             padding: 0 0 0.5em 0.5em;
