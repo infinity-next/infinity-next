@@ -2,6 +2,12 @@
     display: flex;
     padding: 0;
     margin: 0.25em 0 0.25em 0;
+
+    @media (max-width: $width-tablet) {
+        #{$responsive} & {
+            clear: both; // prevent float right effect
+        }
+    }
 }
 .wingding {
     display: inline-block;
