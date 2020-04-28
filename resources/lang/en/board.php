@@ -193,7 +193,7 @@ return [
         'banned_for'  => "User was banned for this post. Reason: <em>:reason</em>",
         'banned_meme' => "USER WAS BANNED FOR THIS POST",
         'updated_by'  => "This post was last edited by :name at :time.",
-        'signed'      => "Message signed and validated by the server.",
+        'signed'      => "Message signed and validated by the server, but it can make no assurance who posted it. <a href=\":url\" target=\"_new\">View raw message.</a>",
     ],
 
 

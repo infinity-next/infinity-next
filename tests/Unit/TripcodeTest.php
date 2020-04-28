@@ -39,26 +39,44 @@ class TripcodeTest extends TestCase
 
     public function testPrettyGoodTripcode()
     {
+        $pubkey = file_get_contents(__DIR__ . "/../Dummy/pgt_pub.txt");
         $signed = file_get_contents(__DIR__ . "/../Dummy/pgt_sig.txt");
-        $tripcode = new PrettyGoodTripcode($signed);
+        $tripcode = new PrettyGoodTripcode($signed, $pubkey);
 
         $this->assertSame($tripcode->getTripcode(), "8E570D9F7F70256595769E49F9BC5BCAD7E18635");
         $this->assertSame($tripcode->getTimestamp(), 1587472827);
+    }
+
+    public function testPrettyGoodTripcodeByFingerprint()
+    {
+        $signed = file_get_contents(__DIR__ . "/../Dummy/pgt_sig.txt");
+        $tripcode = new PrettyGoodTripcode($signed, "8E570D9F7F70256595769E49F9BC5BCAD7E18635");
+
+        $this->assertSame($tripcode->getTripcode(), "8E570D9F7F70256595769E49F9BC5BCAD7E18635");
+        $this->assertSame($tripcode->getTimestamp(), 1587472827);
+    }
+
+    public function testPrettyGoodMatch()
+    {
+        $signed = file_get_contents(__DIR__ . "/../Dummy/pgt_sig.txt");
+        $this->assertTrue(PrettyGoodTripcode::hasSignedMessage($signed));
     }
 
     public function testForgedPrettyGoodTripcode()
     {
         $this->expectException(InvalidPgpTripcode::class);
 
+        $pubkey = file_get_contents(__DIR__ . "/../Dummy/pgt_pub.txt");
         $forged = file_get_contents(__DIR__ . "/../Dummy/pgt_bad_sig.txt");
-        $tripcode = new PrettyGoodTripcode($forged);
+        $tripcode = new PrettyGoodTripcode($forged, $pubkey);
     }
 
     public function testSpoofedPrettyGoodTripcode()
     {
         $this->expectException(InvalidPgpTripcode::class);
 
+        $pubkey = file_get_contents(__DIR__ . "/../Dummy/pgt_pub.txt");
         $forged = file_get_contents(__DIR__ . "/../Dummy/pgt_spoof_sig.txt");
-        $tripcode = new PrettyGoodTripcode($forged);
+        $tripcode = new PrettyGoodTripcode($forged, $pubkey);
     }
 }

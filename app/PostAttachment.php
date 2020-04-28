@@ -148,6 +148,10 @@ class PostAttachment extends Model
 
     public function getFileUrlAttribute()
     {
+        if ($this->isDeleted()) {
+            return $this->board->getAssetUrl('file_deleted');
+        }
+
         return $this->getUrl();
     }
 
@@ -315,6 +319,11 @@ class PostAttachment extends Model
         ], false);
     }
 
+    public function isDeleted()
+    {
+        return !!$this->attributes['is_deleted'] || is_null($this->file);
+    }
+
     /**
      * Returns an XML valid attachment HTML string that handles missing thumbnail URLs.
      *
@@ -327,7 +336,7 @@ class PostAttachment extends Model
         $board = $this->board;
         $file = null;
         $thumbnail = null;
-        $deleted = !!$this->attributes['is_deleted'];
+        $deleted = $this->isDeleted();
         $spoiler = !!$this->attributes['is_spoiler'];
 
         if ($deleted) {
@@ -417,6 +426,10 @@ class PostAttachment extends Model
      */
     public function getThumbnailUrl()
     {
+        if ($this->isDeleted()) {
+            return $this->board->getAssetUrl('file_deleted');
+        }
+
         if ($this->attributes['is_spoiler']) {
             return $this->board->getSpoilerUrl();
         }

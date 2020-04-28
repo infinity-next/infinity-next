@@ -28,12 +28,13 @@
         "doctrine/dbal": "^2.10",
         "infinity-next/laravel-captcha": "^2",
         "infinity-next/eightdown": "0.1.1.1",
-        "infinity-next/sleuth": "^0.2",
+        "infinity-next/sleuth": "^0.3",
         "intervention/image": "^2.5",
         "james-heinrich/getid3": "^1.9",
         "jenssegers/imagehash": "^0.6.0",
         "pda/pheanstalk": "^4.0",
-        "sabberworm/php-css-parser": "^8.3"
+        "sabberworm/php-css-parser": "^8.3",
+        "pear/crypt_gpg": "^1.6"
     },
 
     "require-dev": {

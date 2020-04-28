@@ -3,7 +3,7 @@
 <div class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
     @foreach ($post->attachments as $attachment)
     @if (!isset($catalog) || !$catalog)
-    @if ($attachment->is_deleted)
+    @if ($attachment->isDeleted())
     <div class="attachment attachment-deleted">
         {!! $attachment->toHtml() !!}
     </div>

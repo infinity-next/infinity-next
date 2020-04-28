@@ -15,6 +15,7 @@ use App\Services\ContentFormatter;
 use App\Support\IP;
 use Gate;
 use Request;
+use Response;
 use Session;
 use Validator;
 use Event;
@@ -369,6 +370,17 @@ class PostController extends Controller
     {
         // Redirect to anyBumplock with a flag denoting an unbumplock.
         return $this->bumplock($request, $board, $post, false);
+    }
+
+    public function signature(Board $board, Post $post)
+    {
+        if (is_null($post->body_signed)) {
+            return abort(404);
+        }
+
+        $response = response()->make($post->body_signed, 200);
+        $response->header('Content-Type', 'text/plain');
+        return $response;
     }
 
     /**

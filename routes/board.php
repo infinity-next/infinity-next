@@ -71,6 +71,9 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     // feature
     Route::get('feature', ['as' => 'feature', 'uses' => 'PostController@feature']);
     Route::get('unfeature', ['as' => 'unfeature', 'uses' => 'PostController@unfeature']);
+
+    // signatre
+    Route::get('signature', ['as' => 'signature', 'uses' => 'PostController@signature']);
 });
 
 /**

@@ -4,7 +4,9 @@ namespace App\Filesystem;
 
 use App\FileStorage;
 use App\Support\IP;
+use App\Support\Tripcode\PrettyGoodTripcode;
 use InfinityNext\Sleuth\FileSleuth;
+use InfinityNext\Sleuth\Detectives\PlaintextDetective;
 use Intervention\Image\ImageManager;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Jenssegers\ImageHash\Hash;
@@ -52,11 +54,11 @@ class Upload
      */
     protected $storage;
 
-     /**
-      * A collection of storage models for processed thumbnails.
-      *
-      * @var  Collection  $thumbnails
-      */
+    /**
+     * A collection of storage models for processed thumbnails.
+     *
+     * @var  Collection  $thumbnails
+     */
     protected $thumbnails;
 
     public function __construct($file = null)
@@ -131,24 +133,24 @@ class Upload
          return $storage;
      }
 
-     /**
-      * Sets up the class instance with an existing file model.
-      *
-      * @param  App\FileStorage  $file
-      *
-      * @return App\FileStorage
-      */
-     protected function openStorage($storage)
-     {
-         if(!is_null($storage->banned_at)) {
-             throw new BannedHashException('File is explicitly banned.');
-         }
+    /**
+     * Sets up the class instance with an existing file model.
+     *
+     * @param  App\FileStorage  $file
+     *
+     * @return App\FileStorage
+     */
+    protected function openStorage($storage)
+    {
+        if(!is_null($storage->banned_at)) {
+            throw new BannedHashException('File is explicitly banned.');
+        }
 
         $storage->openFile();
 
         $this->storage = $storage;
         return $storage;
-     }
+    }
 
     public function cacheBandwidth(?IP $ip = null)
     {
@@ -227,6 +229,7 @@ class Upload
             $storage->mime = $this->isClientFile ? $file->getClientMimeType() : $file->getMimeType();
             $storage->first_uploaded_at = now();
 
+            // use more advance probing
             if (!isset($file->case)) {
                 $ext = $file->guessExtension();
 
@@ -243,6 +246,15 @@ class Upload
 
                 if ($file->case->getMetaData()) {
                     $storage->meta = json_encode($file->case->getMetaData());
+                }
+
+                // Special Handling
+                switch (get_class($file->case)) {
+                    // PGP Pubkey Insertion
+                    case PlaintextDetective::class :
+                        $insert = PrettyGoodTripcode::insertKey(file_get_contents($file->getRealPath()));
+                        $storage->meta = json_encode($insert);
+                    break;
                 }
             }
 

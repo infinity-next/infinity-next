@@ -22,6 +22,7 @@ use App\Support\IP;
 use App\Support\Tripcode\InsecureTripcode;
 use App\Support\Tripcode\SecureTripcode;
 use App\Support\Tripcode\PrettyGoodTripcode;
+use App\Support\Tripcode\NoPublicKey;
 use Cache;
 use DB;
 use Request;
@@ -202,7 +203,16 @@ class PostObserver
         }
 
         // Handle tripcode, if any.
-        if (preg_match('/^([^#]+)?(##|#)(.+)$/', $post->author, $match)) {
+        if (PrettyGoodTripcode::hasSignedMessage($post->body) === true) {
+            $post->body_signed = $post->body;
+
+            $tripcode = new PrettyGoodTripcode($post->body);
+            $post->body = $tripcode->getMessage();
+            $post->tripcode = $tripcode->getTripcode();
+            $post->author = $tripcode->getName();
+            $post->email = $tripcode->getEmail();
+        }
+        elseif (preg_match('/^([^#]+)?(##|#)(.+)$/', $post->author, $match)) {
             // Remove password from name.
             $post->author = $match[1];
             // Convert password to tripcode, store tripcode hash in DB.
@@ -214,16 +224,6 @@ class PostObserver
                     $post->tripcode = (string)(new SecureTripcode($match[3]));
                 break;
             }
-        }
-
-        // Handle post signing.
-        // This intentionally replaces traditional ## tripcoding.
-        if (mb_strpos($post->body, "-----BEGIN PGP SIGNED MESSAGE-----") === 0) {
-            $post->body_signed = $post->body;
-
-            $tripcode = new PrettyGoodTripcode($post->body);
-            $post->body = $tripcode->getMessage();
-            $post->tripcode = $tripcode->getTripcode();
         }
 
         // Ensure we're using a valid flag.

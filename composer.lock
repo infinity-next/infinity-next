@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7f1d671ee65e630d9375c6a4cda8c28",
+    "content-hash": "d2f43f06d92d9024ab928521575c74f4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -807,16 +807,16 @@
         },
         {
             "name": "fruitcake/laravel-cors",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruitcake/laravel-cors.git",
-                "reference": "0e0500133dbb6325266133dd72f040617c9cdbd0"
+                "reference": "1d127dbec313e2e227d65e0c483765d8d7559bf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/0e0500133dbb6325266133dd72f040617c9cdbd0",
-                "reference": "0e0500133dbb6325266133dd72f040617c9cdbd0",
+                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/1d127dbec313e2e227d65e0c483765d8d7559bf6",
+                "reference": "1d127dbec313e2e227d65e0c483765d8d7559bf6",
                 "shasum": ""
             },
             "require": {
@@ -877,7 +877,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-03-11T21:05:07+00:00"
+            "time": "2020-04-28T08:47:37+00:00"
         },
         {
             "name": "geoip2/geoip2",
@@ -1097,16 +1097,16 @@
         },
         {
             "name": "infinity-next/sleuth",
-            "version": "0.2.11",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinity-next/sleuth.git",
-                "reference": "6d3592c777520c8ae54a2855cd1a57f8e5711eb5"
+                "reference": "d5d686218ab0db3d6997174901fe9b3af2d072c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinity-next/sleuth/zipball/6d3592c777520c8ae54a2855cd1a57f8e5711eb5",
-                "reference": "6d3592c777520c8ae54a2855cd1a57f8e5711eb5",
+                "url": "https://api.github.com/repos/infinity-next/sleuth/zipball/d5d686218ab0db3d6997174901fe9b3af2d072c9",
+                "reference": "d5d686218ab0db3d6997174901fe9b3af2d072c9",
                 "shasum": ""
             },
             "require": {
@@ -1142,7 +1142,7 @@
                 "mime",
                 "type"
             ],
-            "time": "2020-04-27T09:17:19+00:00"
+            "time": "2020-04-28T10:35:21+00:00"
         },
         {
             "name": "intervention/image",
@@ -2293,6 +2293,183 @@
                 "beanstalkd"
             ],
             "time": "2020-01-24T11:16:41+00:00"
+        },
+        {
+            "name": "pear/console_commandline",
+            "version": "v1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/Console_CommandLine.git",
+                "reference": "331b295d00c9fa2dae30fe14538d430d72d954c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/Console_CommandLine/zipball/331b295d00c9fa2dae30fe14538d430d72d954c6",
+                "reference": "331b295d00c9fa2dae30fe14538d430d72d954c6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-xml": "*",
+                "pear/pear_exception": "^1.0.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Console": "./"
+                },
+                "exclude-from-classmap": [
+                    "tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                ""
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Quadling",
+                    "email": "rquadling@gmail.com"
+                },
+                {
+                    "name": "David Jean Louis",
+                    "email": "izimobil@gmail.com"
+                }
+            ],
+            "description": "A full featured command line options and arguments parser.",
+            "homepage": "https://github.com/pear/Console_CommandLine",
+            "keywords": [
+                "console"
+            ],
+            "time": "2020-04-16T15:04:15+00:00"
+        },
+        {
+            "name": "pear/crypt_gpg",
+            "version": "v1.6.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/Crypt_GPG.git",
+                "reference": "7aa6a2a2b0017acb7eb9adf109ee4bfee0bf1d2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/Crypt_GPG/zipball/7aa6a2a2b0017acb7eb9adf109ee4bfee0bf1d2f",
+                "reference": "7aa6a2a2b0017acb7eb9adf109ee4bfee0bf1d2f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "pear/console_commandline": "*",
+                "pear/pear_exception": "*",
+                "php": ">=5.4.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^5.7.21 || ^6 || ^7"
+            },
+            "suggest": {
+                "ext-posix": "May require the posix PHP extension"
+            },
+            "bin": [
+                "scripts/crypt-gpg-pinentry"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Crypt/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "./"
+            ],
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Gauthier",
+                    "email": "mike@silverorange.com"
+                },
+                {
+                    "name": "Nathan Fredrickson",
+                    "email": "nathan@silverorange.com"
+                },
+                {
+                    "name": "Aleksander Machniak",
+                    "email": "alec@alec.pl"
+                }
+            ],
+            "description": "Provides an object oriented interface to the GNU Privacy Guard (GnuPG). It requires the GnuPG executable to be on the system.",
+            "homepage": "https://github.com/pear/Crypt_GPG",
+            "keywords": [
+                "PGP",
+                "encryption",
+                "gnupg",
+                "gpg"
+            ],
+            "time": "2020-03-22T11:49:18+00:00"
+        },
+        {
+            "name": "pear/pear_exception",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/PEAR_Exception.git",
+                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
+                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=4.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "class",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "PEAR/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "."
+            ],
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Helgi Thormar",
+                    "email": "dufuz@php.net"
+                },
+                {
+                    "name": "Greg Beaver",
+                    "email": "cellog@php.net"
+                }
+            ],
+            "description": "The PEAR Exception base class.",
+            "homepage": "https://github.com/pear/PEAR_Exception",
+            "keywords": [
+                "exception"
+            ],
+            "time": "2019-12-10T10:24:42+00:00"
         },
         {
             "name": "phpoption/phpoption",
