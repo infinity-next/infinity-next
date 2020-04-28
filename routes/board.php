@@ -73,7 +73,8 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     Route::get('unfeature', ['as' => 'unfeature', 'uses' => 'PostController@unfeature']);
 
     // signatre
-    Route::get('signature', ['as' => 'signature', 'uses' => 'PostController@signature']);
+    Route::get('signature.asc', ['as' => 'signature', 'uses' => 'PostController@signature']);
+    Route::get('publickey.asc', ['as' => 'publickey', 'uses' => 'PostController@publicKey']);
 });
 
 /**

@@ -75,7 +75,10 @@
 
             @if (isset($details['body_signed']) && !is_null($details['body_signed']))
             <div class="post-meta meta-updated_by">
-                <i class="fas fa-check"></i> @lang('board.meta.signed', [ 'url' => $post->getModUrl('signature'), ])
+                <i class="fas fa-check"></i> @lang('board.meta.signed', [
+                    'signature' => $post->getModUrl('signature'),
+                    'publickey' => $post->getModUrl('publickey')
+                ])
             </div>
             @endif
         </div>

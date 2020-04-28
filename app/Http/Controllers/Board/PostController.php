@@ -372,6 +372,25 @@ class PostController extends Controller
         return $this->bumplock($request, $board, $post, false);
     }
 
+    public function publicKey(Board $board, Post $post)
+    {
+        if (is_null($post->body_signed)) {
+            return abort(404);
+        }
+
+        try {
+            $gpg = new \Crypt_GPG;
+            $key = $gpg->exportPublicKey($post->tripcode); // fetch by fingerprint
+        }
+        catch (\Crypt_GPG_KeyNotFoundException $e) {
+            return abort(410); // Lost the key somehow, error 410 to distinguish it
+        }
+
+        $response = response()->make($key, 200);
+        $response->header('Content-Type', 'text/plain');
+        return $response;
+    }
+
     public function signature(Board $board, Post $post)
     {
         if (is_null($post->body_signed)) {

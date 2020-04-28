@@ -1,3 +1,3 @@
 @include('layouts.error', [
-	'status_code' => 503,
+    'status_code' => 503,
 ])

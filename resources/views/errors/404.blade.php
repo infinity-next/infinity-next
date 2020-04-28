@@ -1,3 +1,3 @@
 @include('layouts.error', [
-	'status_code' => 404,
+    'status_code' => 404,
 ])
