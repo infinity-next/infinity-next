@@ -374,16 +374,20 @@ class PostAttachment extends Model
         $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 200);
         $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 200);
 
+        if (!is_int($maxDimension)) {
+            $maxDimension = max($oHeight, $oWidth);
+        }
+
         // configuration for an actual thumbnail image
         if ($thumbnail instanceof FileStorage && !$spoiler && !$deleted) {
             $height = $oHeight.'px';
-            $width = $thumbnail->attributes['file_width'].'px';
+            $width = $oWidth.'px';
 
             if ($maxDimension == "auto") {
                 $height = "auto";
                 $width = "auto";
             }
-            else if (is_int($maxDimension) && ($oWidth > $maxDimension || $oHeight > $maxDimension)) {
+            else {
                 if ($oWidth > $oHeight) {
                     $height = 'auto';
                     $width = $maxDimension.'px';
@@ -393,14 +397,14 @@ class PostAttachment extends Model
                     $width = 'auto';
                 }
                 else {
-                    $height = $maxDimension.'px';
-                    $width = $maxDimension.'px';
+                    $height = 'auto';
+                    $width = 'auto';
                 }
             }
         }
         // board assets and placeholder file extension images
         else {
-            $width = $maxDimension ? "{$maxDimension}px" : Settings::get('attachmentThumbnailSize', 250).'px';
+            $width = $maxDimension ? "{$maxDimension}px" : Settings::get('attachmentThumbnailSize', 200).'px';
             $height = 'auto';
         }
 

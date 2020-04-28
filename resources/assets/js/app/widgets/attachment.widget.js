@@ -55,11 +55,21 @@
         attachmentMediaClick : function(event) {
             var $widget = event.data.$widget;
             var $link = $(this);
+            var $target = $(event.target);
             var allowDefault = true;
 
             if ($widget.is(".attachment-expanded")) {
-                $link.trigger('media-collapse');
-                allowDefault = false;
+                var collapse = true;
+
+                if ($target.is(".attachment-video")) {
+                    collapse = ($target.height() - event.originalEvent.offsetY) > 75;
+                }
+
+                if (collapse) {
+                    $link.trigger('ended');
+                    $link.trigger('media-collapse');
+                    allowDefault = false;
+                }
             }
             else {
                 $link.trigger('media-expand');
@@ -68,6 +78,7 @@
 
             if (!allowDefault) {
                 event.preventDefault();
+                event.stopPropagation();
                 return false;
             }
         },
@@ -382,7 +393,7 @@
                     $img.toggle(false);
 
                     widget.bindMediaEvents($video);
-                    $video.insertBefore($link);
+                    $video.insertAfter($link);
 
                     event.preventDefault();
                     return false;
@@ -434,6 +445,9 @@
 
     // Scales thumbnails down based on resolution.
     blueprint.prototype.scaleThumbnails = function() {
+        // Disabling this for now because it behaves strangely and I don't even know why it's here.
+        return true;
+
         if ($("body").is(".responsive")) {
             var $widget = this.$widget;
             var maxDimension = 200;
@@ -531,7 +545,7 @@
             // collapse video when the video is done playing
             .on('ended.ib-attachment', data, this.events.attachmentMediaEnded)
             // collapse video when it's useless-clicked
-            .on('click.ib-attachment', data, this.events.attachmentMediaEnded)
+            .on('click.ib-attachment', data, this.events.attachmentMediaClick)
             .on('play.ib-attachment', data, this.events.attachmentMediaPlay)
             .on('pause.ib-attachment', data, this.events.attachmentMediaPause);
         }

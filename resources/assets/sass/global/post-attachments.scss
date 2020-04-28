@@ -26,9 +26,11 @@
 
     &.attachments-multi {
         float: none;
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
+
+        // after a lot of testing, I'm confident saying it's better to have attachments wrap.
+        //overflow-x: auto;
+        //overflow-y: hidden;
+        //white-space: nowrap;
 
         .reply-container.sfw & {
             background: rgba(0,0,155,0.1);
@@ -60,11 +62,20 @@
             padding: 0 0.5em 0.5em 0;
         }
 
+        .attachment-collapse-fallback {
+            display: none;
+        }
+
         &.attachment-expanded {
             clear: both;
             float: none;
             width: 100%;
             display: block;
+            text-align: left;
+
+            .attachment-collapse-fallback {
+                display: inline-block;
+            }
 
             &::before,
             &::after {
@@ -93,8 +104,8 @@
         }
 
         .attachment-img {
-            /* min-width: 100%; */
-            max-width: 100%;
+            max-width: 40vw;
+            max-height: 40vw;
         }
          audio.attachment-inline {
             display: inline-block;

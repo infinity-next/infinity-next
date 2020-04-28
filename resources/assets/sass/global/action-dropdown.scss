@@ -38,10 +38,10 @@
     border: 1px solid rgba(0,0,0,0.25);
 
     #{$rtl} & {
-        right: 0px;
+        left: 0px;
     }
     #{$ltr} & {
-        left: 0px;
+        right: 0px;
     }
 
     list-style: none;
@@ -51,6 +51,15 @@
     .actions-up & {
         bottom: 1.5em; // same as top above
         top: auto;
+
+        #{$rtl} & {
+            left: 0px;
+            right: auto;
+        }
+        #{$ltr} & {
+            left: auto;
+            right: 0px;
+        }
     }
 
     html.no-js .actions-anchor:hover &,
