@@ -145,7 +145,7 @@ class Autoprune extends Command
             // Remove relationships.
             $forTrash->chunk(100, function ($posts) {
                 foreach ($posts as $post) {
-                    $post->attachmentLinks()->delete();
+                    $post->attachments()->delete();
                 }
             });
 
