@@ -429,6 +429,20 @@ li.post-attachment {
    padding: 0 1em 5px 2px;
    display: inline-block;
 }
+
+/*Fix for Code Blocks, STOP BURNING MY RETINAS!*/
+
+.hljs {
+    background: #282A2E;
+    color: #C5C8C6;
+}
+.hljs-tag {
+    color: #C5C8C6
+}
+.actions {
+    background-color: #333;
+}
+
 /*Fix attachment scrollbars*/
 ul.post-attachments {
     overflow: hidden !important;
