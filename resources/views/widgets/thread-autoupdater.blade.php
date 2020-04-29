@@ -10,7 +10,9 @@
             (<a href="#update-now" class="autoupdater-update">@lang('widget.autoupdater.update')</a><span class="autoupdater-updating">@lang('widget.autoupdater.updating')</span>)
         </span>
     </div>
+    @can('be-accountable')
     <div class="autoupdater-ws" style="display: none;">
         <i class="fas fa-sync fa-spin"></i>&nbsp;@lang('widget.autoupdater.websocket')
     </div>
+    @endcan
 </div>

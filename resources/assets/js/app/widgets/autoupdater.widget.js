@@ -119,10 +119,11 @@
             .on('new-posts.ib-au', data, widget.events.handlePosts)
         ;
 
-        widget.updateWs = ('WebSocket' in window || 'MozWebSocket' in window);
+        var $ws = $(widget.options.selector['ws'], $widget);
+        widget.updateWs = ('WebSocket' in window || 'MozWebSocket' in window) && $ws.length > 0;
 
         if (widget.updateWs) {
-            $(widget.options.selector['ws'], $widget).show();
+            $ws.show();
             widget.Echo = window.Echo.join('Thread.'+$widget.data('id'))
                 .listen('PostWasModified', (e) => {
                     $widget.trigger('new-posts', [[ e.post ]]);
