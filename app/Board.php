@@ -1182,6 +1182,7 @@ class Board extends Model
                     $query->forIndex();
                 }])
                 ->orderBy('stickied', 'desc')
+                ->orderBy('stickied_at', 'desc')
                 ->orderBy('bumped_last', 'desc')
                 ->skip($postsPerPage * ($page - 1))
                 ->take($postsPerPage)
