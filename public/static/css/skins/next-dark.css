@@ -1,6 +1,11 @@
+:root {
+    --background-fade: #000;
+    --background-color: #222;
+}
+
 html, body{
-    background-color: #000;
-    background-image: linear-gradient(to bottom, #000 0%, #000 1em, #222 200px, #222 100%);
+    background-color: #222;
+    background-color: var(--background-color);
     color:#ccc;
 }
 /* navig */

@@ -1,4 +1,7 @@
 #thread-watcher {
+    background: rgba(255, 255, 255, 0.66);
+    background: var(--background-fade);
+
     position: fixed;
     white-space: nowrap;
     min-width: 146px;
@@ -8,8 +11,8 @@
     z-index: 90;
     padding: 0.5em;
 
-    top: 39px;
-    left: 1em;
+    top: 45px;
+    left: 10px;
 
     .watched-unwatch {
         cursor: pointer;

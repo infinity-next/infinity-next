@@ -4,12 +4,8 @@
 html,
 body {
     background-color: $background-color;
-    background-image: -ms-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-    background-image: -moz-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-    background-image: -o-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, $background-fade), color-stop(40px, $background-fade), color-stop(240px, $background-color), color-stop(100, $background-color));
-    background-image: -webkit-linear-gradient(top, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
-    background-image: linear-gradient(to bottom, $background-fade 0%, $background-fade 40px, $background-color 240px, $background-color 100%);
+    background-color: var(--background-color);
+    background-image: linear-gradient(to bottom, var(--background-fade) 0%, var(--background-fade) 40px, var(--background-color) 240px, var(--background-color) 100%);
 
     box-sizing: border-box;
     height: auto;

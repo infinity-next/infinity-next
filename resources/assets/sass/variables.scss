@@ -50,3 +50,8 @@ $width-highres: 2560px;
 
 $rtl: "[dir='rtl']";
 $ltr: "[dir='ltr']";
+
+:root {
+    --background-fade: #{$background-fade};
+    --background-color: #{$background-color};
+}

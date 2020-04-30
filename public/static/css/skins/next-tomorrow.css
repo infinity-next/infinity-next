@@ -1,5 +1,11 @@
+:root {
+    --background-fade: #1d1f21;
+    --background-color: #1d1f21;
+}
+
 html, body {
     background-color: #1d1f21;
+    background-color: var(--background-color);
     background-image: none;
     color: #C5C8C6;
 }
@@ -89,7 +95,7 @@ h2.page-desc {
     margin-top: -2px;
 }
 /**/
-    
+
 /* Navigation Buttons */
 main.board-index .pagination-buttons {
     float: none;
@@ -109,7 +115,7 @@ ul.pagination-pages {
 }
 a.pagination-link {
     padding: 4px 0;
-} 
+}
 /* Post form */
 form.form-post {
     margin-bottom: 1em;
@@ -532,7 +538,7 @@ button:disabled:hover, a.button.disabled:hover {
     color: #555;
 }
 ul.pagination-pages::before, ul.pagination-pages::after, li.pagination-page::after,
-    ul.boardlist-category::before, ul.boardlist-category::after, li.boardlist-item, 
+    ul.boardlist-category::before, ul.boardlist-category::after, li.boardlist-item,
     li.boardlist-category::before, li.boardlist-category::after {
     padding: 3px 0;
     color: #C5C8C6 !important;
@@ -561,11 +567,11 @@ footer nav.boardlist .boardlist-link:hover {
 #footnotes .agpl-compliance {
     color: #81a2be;
     text-decoration: none;
-} 
+}
 #footnotes .agpl-compliance:hover {
     color: #FFF;
     text-decoration: none;
-} 
+}
 nav.boardlist .boardlist-row li.boardlist-category:nth-of-type(2) {
     display: none;
 }
@@ -648,7 +654,7 @@ nav.boardlist .boardlist-row li.boardlist-category:nth-of-type(2) {
 }
 #js-config .config-nav-item:hover, #js-config .config-nav-active {
     background: #81a2be!important;
-    color: #FFFFFF!important;     
+    color: #FFFFFF!important;
 }
 #js-config .config-option {
     background: #282A2E;

@@ -15,9 +15,14 @@
     #D9BFB7 - Post border
 */
 
+:root {
+    --background-color: #FFFFEE;
+}
+
 html,
 body {
     background-color: #FFFFEE;
+    background-color: var(--background-color);
     background-image: -ms-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
     background-image: -moz-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
     background-image: -o-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
