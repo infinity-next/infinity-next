@@ -31,7 +31,8 @@ Route::group(['prefix' => '*', 'as' => 'overboard'], function () {
     Route::get('/', ['uses' => 'MultiboardController@getOverboard',]);
 });
 
-Route::get('boards.html', ['as'   => 'boardlist', 'uses' => 'BoardlistController@getIndex',]);
+// Boardlist
+Route::get('boards.html', ['as' => 'boardlist', 'uses' => 'BoardlistController@getIndex',]);
 
 /**
  * Static Pages

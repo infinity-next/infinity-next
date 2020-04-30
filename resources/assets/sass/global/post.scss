@@ -24,8 +24,10 @@
     }
 }
 .post {
-    margin: 0;
-    padding: 0.7em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
     word-wrap: break-word;
     white-space: normal;
 }

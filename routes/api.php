@@ -11,6 +11,9 @@ Route::group(['as' => 'site', 'namespace' => "Content",], function () {
 
     // overboard update
     Route::get('overboard.json', 'MultiboardController@getOverboard');
+
+    // thread watcher
+    Route::post('watcher.json', ['as' => 'watcher', 'uses' => "WatcherController@fetch"]);
 });
 
 /**

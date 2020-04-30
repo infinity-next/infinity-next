@@ -389,8 +389,7 @@
         var widget  = this;
         var $widget = this.widget;
 
-        if (!widget.updating)
-        {
+        if (!widget.updating) {
             $(widget.options.selector['force-update'])
                 .hide();
 
@@ -423,20 +422,17 @@
         var $widget = this.$widget;
         clearInterval(widget.updateTimer);
 
-        if (!widget.updating && $(widget.options.selector['enabled']).is(":checked"))
-        {
+        if (!widget.updating && $(widget.options.selector['enabled']).is(":checked")) {
             var $timer = $(widget.options.selector['timer'], widget.$widget);
             var time   = parseInt($timer.attr('data-time'), 10);
 
-            if (isNaN(time))
-            {
+            if (isNaN(time)) {
                 time = 0;
             }
 
             --time;
 
-            if (time <= 0)
-            {
+            if (time <= 0) {
                 time = (widget.hasFocus ? widget.updateMisses * 1.25 : Math.pow(widget.updateMisses, 1.5)) + 3;
                 time = parseInt(Math.max(1, Math.min(time, 20)), 10);
 
@@ -458,15 +454,13 @@
         var $widget = this.$widget;
 
         // This corrects which post has the last reply class.
-        if (widget.$lastPost !== null)
-        {
+        if (widget.$lastPost !== null) {
             widget.$widget
                 .siblings("." + widget.options.classname['last-reply'])
                 .removeClass(widget.options.classname['last-reply']);
 
             // If we have replies after this, add the border.
-            if (widget.$lastPost.next(widget.options.selector['thread-reply']).length)
-            {
+            if (widget.$lastPost.next(widget.options.selector['thread-reply']).length) {
                 widget.$lastPost
                     .addClass(widget.options.classname['last-reply']);
             }

@@ -216,6 +216,15 @@ table {
     clear: both;
 }
 
+
+/* Interactable Interface */
+.dialog {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.move {
+    cursor: move;
+}
+
 /* Design */
 .smooth-box {
     background: #fff;

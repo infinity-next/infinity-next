@@ -6,6 +6,14 @@
     max-width: 100vw;
     max-height: 100vw;
     z-index: 90;
+    padding: 0.5em;
+
+    top: 39px;
+    left: 1em;
+
+    .watched-unwatch {
+        cursor: pointer;
+    }
 }
 
 // a button on the post

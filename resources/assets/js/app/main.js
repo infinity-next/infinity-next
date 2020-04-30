@@ -137,7 +137,7 @@
     // Determines if this device is a small portview.
     ib.isMobile = function()
     {
-        return (window.innerHeight < 480 || window.innerWidth < 728)
+        return $(document).hasClass("touchevents");
     };
 
     // Lpad 5 into "05".

@@ -273,6 +273,10 @@
                 .on('click.ib-post', widget.options.selector['watch'], data, widget.events.postWatch)
                 .on('click.ib-post', widget.options.selector['unwatch'], data, widget.events.postUnwatch)
             ;
+
+            $(window).on('storage.ib-thread-watcher', data, widget.events.storage);
+
+            widget.updateHeart();
         }
     };
 
@@ -341,15 +345,9 @@
             return;
         }
 
-        try {
-            var storage = localStorage.getItem("watchThreads").split(",");
-        }
-        catch (e) {
-            var storage = [];
-        }
-
+        var storage = ib.getThreadsWatched();
         var $details = $(".post-watch, .post-unwatch", this.$widget);
-        var isWatched = storage.indexOf(this.$widget.data('post_id').toString()) > -1;
+        var isWatched = this.$widget.data('post_id') in storage;
 
         $details.toggleClass('post-watch', !isWatched).toggleClass('post-unwatch', isWatched);
     };
@@ -562,7 +560,41 @@
         },
 
         postWatch : function (event) {
-            ib.threadWatch(event.data.$widget.data('post_id'));
+            var $widget = event.data.$widget;
+            var id = $widget.data('post_id');
+            var data = {
+                post_id: id,
+                board_id: $widget.data('board_id'),
+                board_uri: $widget.data('board_uri'),
+                bumped_last: $widget.data('bumped_last')
+            };
+
+            // make sure bump time is accurate
+            var lastReply = $(".post-container", $widget.parent()).last()[0].dataset.createdAt || 0;
+            data.bumped_last = Math.max(data.bumped_last, lastReply);
+
+            // create excerpt
+            var subject = $(".subject", $widget).text().trim();
+            var body = $(".post", $widget).text().trim();
+            var excerpt = null;
+
+            if (subject.length && body.length) {
+                excerpt = (subject + " - " + body).substr(0, 256).trim();
+            }
+            else if (subject.length) {
+                excerpt = subject.substr(0, 256).trim();
+            }
+            else if (body.length) {
+                excerpt = body.substr(0, 256).trim();
+            }
+            else {
+                var attachmentCnt = $(".attachment", $widget).length;
+                excerpt = window.app.lang['thread-watcher']['post_with_x_attachments'].replace(":attachments", attachmentCnt);
+            }
+
+            data.excerpt = excerpt;
+
+            ib.threadWatch(id, data);
             event.data.widget.updateHeart();
         },
 
@@ -602,7 +634,7 @@
         // This is an HTML localStorage event.
         // it only fires if ANOTHER WINDOW trips the change.
         storage : function(event) {
-            if (event.data.widget.isOp && event.originalEvent.key == "watchedThreads") {
+            if (event.data.widget.isOp && event.originalEvent.key == "watchThreads") {
                 event.data.widget.updateHeart();
             }
         },

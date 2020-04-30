@@ -7,7 +7,7 @@
     'class'  => "form-mod smooth-box",
 ]) !!}
 @else
-<form method="POST" id="post-form" class="form-post" data-widget="postbox" action="{{ route(
+<form method="POST" id="post-form" class="form-post dialog" data-widget="postbox" action="{{ route(
     $reply_to ? 'board.thread.reply' : 'board.thread.put',
     ['board' => $board->board_uri,] + ($reply_to
         ? ['post_id' => $reply_to->board_id]
@@ -49,7 +49,7 @@
     @endif
 
     <fieldset class="form-fields">
-        <legend class="form-legend"><i class="fas fa-reply"></i>&nbsp;{{ trans("board.legend." . implode("+", $actions)) }}</legend>
+        <legend class="form-legend move"><i class="fas fa-reply"></i>&nbsp;{{ trans("board.legend." . implode("+", $actions)) }}</legend>
 
         @include('widgets.messages')
 

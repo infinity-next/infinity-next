@@ -194,8 +194,8 @@ return [
         'banned_meme' => "USER WAS BANNED FOR THIS POST",
         'updated_by'  => "This post was last edited by :name at :time.",
         'signed'      => "Message signed and validated by the server, but it can make no assurance as to who posted it. " .
-            "<a href=\":signature\" target=\"_new\">View raw message.</a> " .
-            "<a href=\":publickey\" target=\"_new\">View publickey.</a>",
+            "<a href=\":signature\" target=\"_blank\">View raw message.</a> " .
+            "<a href=\":publickey\" target=\"_blank\">View publickey.</a>",
     ],
 
 

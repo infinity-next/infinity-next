@@ -203,6 +203,13 @@ return [
             'abbrevdays' => [
                 "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
             ],
-        ]
+        ],
     ],
+
+    /**
+     * Thread Watcher
+     */
+     'thread-watcher' => [
+         'post_with_x_attachments' => "Post with :attachments attachment(s).",
+     ],
 ];

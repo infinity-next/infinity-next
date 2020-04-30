@@ -9,7 +9,7 @@
     </div>
     @else
     <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $attachment->file->getHtmlClasses() }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
-        <a class="attachment-link" target="_new" href="{!! $attachment->getUrl() !!}" data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
+        <a class="attachment-link" target="_blank" href="{!! $attachment->getUrl() !!}" data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             @if ($attachment->file->isVideo())<span class="attachment-collapse-fallback">[-]</span>@endif
             {!! $attachment->toHtml() !!}
         </a>
@@ -59,7 +59,7 @@
     @endif
     @else
     <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
-        <a class="attachment-link" target="_new" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
+        <a class="attachment-link" target="_blank" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml('auto') !!}
         </a>
     </div>
