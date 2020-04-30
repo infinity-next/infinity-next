@@ -36,7 +36,8 @@
             'post-hover'     : "post-hover",
             'cite-you'       : "cite-you",
             'cite-op'        : "cite-op",
-            'tabs-open'      : "open"
+            'tabs-open'      : "open",
+            'op'             : "op-container"
         },
 
         // Selectors for finding and binding elements.
@@ -54,6 +55,9 @@
             'action-tab'     : ".actions-anchor", // the dropdown button
             'action-tabs'    : ".actions", // the dropdown menu
 
+            'details'        : ".post-details",
+            'watch'          : ".post-watch",
+            'unwatch'        : ".post-unwatch",
             'author'         : ".author",
             'author_id'      : ".authorid",
 
@@ -70,7 +74,8 @@
         template : {
             'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>",
             'collapse' : "<span class=\"post-collapse\"><i class=\"fas fa-minus-square\"></i>&nbsp;</span>",
-            'uncollapse' : "<span class=\"post-uncollapse\"><i class=\"fas fa-plus-square\"></i>&nbsp;</span>"
+            'uncollapse' : "<span class=\"post-uncollapse\"><i class=\"fas fa-plus-square\"></i>&nbsp;</span>",
+            'watch' : "<span class=\"post-watch\"><i class=\"fas fa-heart\"></i></span>"
         }
     };
 
@@ -256,6 +261,19 @@
                 wingding.innerHTML = widget.options.template['collapse'];
             }
         }
+
+        widget.isOp = false;
+        if ($widget.hasClass(this.options.classname['op'])) {
+            widget.isOp = true;
+
+            var $details = $(".post-details", $widget);
+            var $heart = $details.prepend(this.options.template['watch']);
+
+            $widget
+                .on('click.ib-post', widget.options.selector['watch'], data, widget.events.postWatch)
+                .on('click.ib-post', widget.options.selector['unwatch'], data, widget.events.postUnwatch)
+            ;
+        }
     };
 
     // Stores a post in the session store.
@@ -316,6 +334,24 @@
 
         this.$cite    = null;
         this.citeLoad = null;
+    };
+
+    blueprint.prototype.updateHeart = function() {
+        if (!this.isOp) {
+            return;
+        }
+
+        try {
+            var storage = localStorage.getItem("watchThreads").split(",");
+        }
+        catch (e) {
+            var storage = [];
+        }
+
+        var $details = $(".post-watch, .post-unwatch", this.$widget);
+        var isWatched = storage.indexOf(this.$widget.data('post_id').toString()) > -1;
+
+        $details.toggleClass('post-watch', !isWatched).toggleClass('post-unwatch', isWatched);
     };
 
     // Events
@@ -519,6 +555,17 @@
             $widget.trigger('uncollapse-post');
         },
 
+        postUnwatch : function (event) {
+            // pass the global post_id as base10 to handler
+            ib.threadUnwatch(event.data.$widget.data('post_id'));
+            event.data.widget.updateHeart();
+        },
+
+        postWatch : function (event) {
+            ib.threadWatch(event.data.$widget.data('post_id'));
+            event.data.widget.updateHeart();
+        },
+
         replyClick : function(event) {
             var widget = event.data.widget;
 
@@ -550,6 +597,14 @@
             }
 
             return true;
+        },
+
+        // This is an HTML localStorage event.
+        // it only fires if ANOTHER WINDOW trips the change.
+        storage : function(event) {
+            if (event.data.widget.isOp && event.originalEvent.key == "watchedThreads") {
+                event.data.widget.updateHeart();
+            }
         },
 
         toggleCollapse : function (event) {

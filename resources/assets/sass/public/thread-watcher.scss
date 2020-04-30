@@ -1,0 +1,17 @@
+#thread-watcher {
+    position: fixed;
+    white-space: nowrap;
+    min-width: 146px;
+    min-height: 100px;
+    max-width: 100vw;
+    max-height: 100vw;
+    z-index: 90;
+}
+
+// a button on the post
+.post-watch {
+    opacity: 0.66;
+}
+.post-unwatch {
+    opacity: 1;
+}

@@ -16,8 +16,7 @@ ib.widget("board-favorite", function(window, $, undefined) {
         favorites : function() {
             var storageItem = localStorage.getItem(widget.options.storage.favorites);
 
-            if (typeof storageItem === "string")
-            {
+            if (typeof storageItem === "string") {
                 return storageItem.split(",");
             }
 
@@ -27,13 +26,11 @@ ib.widget("board-favorite", function(window, $, undefined) {
         favoriteThis : function( addFavorite ) {
             var boards = widget.favorites();
 
-            if (addFavorite)
-            {
+            if (addFavorite) {
                 boards.push(widget.board);
                 boards = jQuery.unique(boards);
             }
-            else
-            {
+            else {
                 boards = jQuery.grep(boards, function(value) {
                     return value != widget.board;
                 });
@@ -101,8 +98,7 @@ ib.widget("board-favorite", function(window, $, undefined) {
             // This is an HTML localStorage event.
             // it only fires if ANOTHER WINDOW trips the change.
             storage : function(event) {
-                if (event.originalEvent.key == widget.options.storage.favorites)
-                {
+                if (event.originalEvent.key == widget.options.storage.favorites) {
                     widget.events.favoriteChange();
                 }
             }
