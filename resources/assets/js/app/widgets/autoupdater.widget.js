@@ -140,6 +140,10 @@
             $(widget.options.selector['poll'], $widget).show();
             widget.bindTimer();
         }
+
+        // set this thread as seen if we need
+        widget.threadId = parseInt($widget.data('id'), 10);
+        widget.clearLastSeen();
     };
 
     blueprint.prototype.bindTimer = function() {
@@ -352,6 +356,16 @@
             widget.$lastPost    = widget.$lastPost.length ? widget.$lastPost : null;
             widget.hasFocus     = false;
             widget.scrollLocked = false;
+
+            // set last seen post in thread watcher
+            var thread = widget.threadId;
+            var storage = ib.getThreadsWatched();
+
+            if (typeof storage[thread] === 'object' && widget.$lastPost !== null) {
+                storage[thread].last_seen = parseInt($(".post-container", widget.$lastPost).data('board_id'), 10) || null;
+                localStorage.setItem("watchThreads", JSON.stringify(storage));
+                document.getElementsByClassName('thread-watcher')[0]?.widget?.buildWatchlist();
+            }
         },
 
         windowScroll : function(event) {
@@ -377,21 +391,21 @@
     };
 
     blueprint.prototype.clearLastSeen = function () {
-        console.log("Clearing last seen");
-        this.hasFocus   = true;
-        this.$lastPost  = null;
-        this.newReplies = 0;
-
         // update thread watcher
-        var thread = $(".op-container:first").attr('data-post_id');
+        var thread = this.threadId;
         var storage = ib.getThreadsWatched();
 
         if (typeof storage[thread] === 'object') {
             storage[thread].bumped_last = Math.floor(Date.now() / 1000);
             storage[thread].unseen = 0;
             localStorage.setItem("watchThreads", JSON.stringify(storage));
-            document.getElementByClassName('autoupdater')[0]?.widget?.buildWatchlist();
+            document.getElementsByClassName('thread-watcher')[0]?.widget?.buildWatchlist();
         }
+
+        // update window
+        this.hasFocus   = true;
+        this.$lastPost  = null;
+        this.newReplies = 0;
 
         document.title = $('<div/>').html(window.app.title).text();
         $("#favicon").attr('href', window.app.favicon.normal);

@@ -262,6 +262,7 @@
             }
         }
 
+        // handle thread watching
         widget.isOp = false;
         if ($widget.hasClass(this.options.classname['op'])) {
             widget.isOp = true;

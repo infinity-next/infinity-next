@@ -147,10 +147,15 @@
             var thread = storage[threadId];
             var $thread = $(this.templates.thread);
             var $link = $(this.templates.link);
+            var hash = "";
+
+            if (thread.last_seen || false) {
+                hash = "#post-" + thread.board_uri + "-" + thread.last_seen;
+            }
 
             $link
                 .attr('id', "watched-link-" + thread.post_id)
-                .attr('href', "/" + thread.board_uri + "/thread/" + thread.board_id)
+                .attr('href', "/" + thread.board_uri + "/thread/" + thread.board_id + hash)
                 .text("/" + thread.board_uri + "/ - " + thread.excerpt)
             ;
 
