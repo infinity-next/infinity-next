@@ -364,7 +364,11 @@
             if (typeof storage[thread] === 'object' && widget.$lastPost !== null) {
                 storage[thread].last_seen = parseInt($(".post-container", widget.$lastPost).data('board_id'), 10) || null;
                 localStorage.setItem("watchThreads", JSON.stringify(storage));
-                document.getElementsByClassName('thread-watcher')[0]?.widget?.buildWatchlist();
+
+                var el = document.getElementsByClassName('thread-watcher')[0];
+                if (el) {
+                    el.widget.buildWatchlist();
+                }
             }
         },
 
@@ -399,7 +403,11 @@
             storage[thread].bumped_last = Math.floor(Date.now() / 1000);
             storage[thread].unseen = 0;
             localStorage.setItem("watchThreads", JSON.stringify(storage));
-            document.getElementsByClassName('thread-watcher')[0]?.widget?.buildWatchlist();
+
+            var el = document.getElementsByClassName('thread-watcher')[0];
+            if (el) {
+                el.widget.buildWatchlist();
+            }
         }
 
         // update window

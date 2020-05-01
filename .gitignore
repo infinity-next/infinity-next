@@ -3,7 +3,9 @@
 /public/webgrind
 /public/mix-manifest.json
 /public/static/css/*.css
+/public/static/css/*.txt
 /public/static/js/*.js
+/public/static/js/*.txt
 /public/static/fonts/*
 /storage/infinity.import
 /vendor

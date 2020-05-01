@@ -198,7 +198,10 @@
                 }
 
                 localStorage.setItem("watchThreads", JSON.stringify(storage));
-                document.getElementById('thread-watcher')?.widget?.buildWatchlist();
+                var el = document.getElementsByClassName('thread-watcher')[0];
+                if (el) {
+                    el.widget.buildWatchlist();
+                }
             });
         //}
     };
@@ -212,15 +215,22 @@
         var post = null;
 
         if (typeof storage !== 'undefined') {
-            post = document.getElementById('post-' + storage[id].board_uri + "-" + storage[id].board_id)?.widget;
+            post = document.getElementById('post-' + storage[id].board_uri + "-" + storage[id].board_id);
         }
 
         delete storage[id];
 
         localStorage.setItem("watchThreads", JSON.stringify(storage));
 
-        document.getElementById('thread-watcher')?.widget?.buildWatchlist();
-        post?.updateHeart();
+        var watcher = document.getElementById('thread-watcher');
+        if (watcher) {
+            watcher.widget.buildWatchlist();
+        }
+
+        if (post && post.widget) {
+            post.widget.updateHeart();
+        }
+
         return storage;
     }
     ib.threadWatch = function(id, data) {
@@ -230,7 +240,11 @@
 
         localStorage.setItem("watchThreads", JSON.stringify(storage));
 
-        document.getElementById('thread-watcher')?.widget?.buildWatchlist();
+        var watcher = document.getElementById('thread-watcher');
+        if (watcher) {
+            watcher.widget.buildWatchlist();
+        }
+
         return storage;
     }
     ib.getThreadsWatched = function(id) {

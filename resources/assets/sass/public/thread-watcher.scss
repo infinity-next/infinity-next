@@ -22,6 +22,11 @@
     .watched-unwatch {
         cursor: pointer;
     }
+    .watched-thread {
+        max-width: 32em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 // a button on the post
