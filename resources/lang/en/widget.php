@@ -210,6 +210,7 @@ return [
      * Thread Watcher
      */
      'thread-watcher' => [
+         'legend' => "Thread Watcher",
          'post_with_x_attachments' => "Post with :attachments attachment(s).",
      ],
 ];

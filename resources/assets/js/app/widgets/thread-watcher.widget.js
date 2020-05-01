@@ -19,22 +19,45 @@
     };
 
     blueprint.prototype.templates = {
+        nav : "<span class=\"boardlist-item\"><i class=\"boardlist-link fas fa-eye\"></i></span>",
+        gnav : "<li class=\"gnav-item item-config require-js\"><i class=\"gnav-link fas fa-eye\"></i></li>",
+
         base : "<div id=\"thread-watcher\" class=\"dialog\" data-widget=\"thread-watcher\"></div>",
-        handle : "<div class=\"move\">Thread Watcher</div>",
+        handle : "<div class=\"watched-legend\"></div>",
+        legend : "<span class=\"watched-name move\">:legend&nbsp;</span>",
+        refresh : "<span class=\"watched-refresh\"><i class=\"fas fa-sync\"></i></span></div>",
+        move : "<span class=\"watched-space move\"></span>",
+        close : "<span class=\"watched-close\"><i class=\"fas fa-times\"></i></span></div>",
+
         container : "<div class=\"watched-threads\"></div>",
         thread : "<div class=\"watched-thread\"></div>",
         unwatch : "<span class=\"watched-unwatch\"><i class=\"fas fa-minus-circle unwatch\"></i>&nbsp;</span>",
-        link : "<a class=\"watched-link\"></a>"
+        link : "<a class=\"watched-link\"></a>",
+        unseen : "<span class=\"watched-new\">(:unseen)&nbsp;</span>"
     };
 
     blueprint.prototype.defaults = {
         selector : {
+            close : ".watched-close",
             threads : ".watched-threads",
+            refresh : ".watched-refresh",
             unwatch : ".watched-unwatch"
         }
     };
 
     blueprint.prototype.events = {
+        closeClick : function (event) {
+            event.data.$widget.hide();
+        },
+
+        navClick : function (event) {
+            event.data.$widget.show();
+        },
+
+        refreshClick : function (event) {
+            event.data.widget.update();
+        },
+
         storage : function (event) {
             if (event.originalEvent.key == "watchThreads") {
                 event.data.widget.buildWatchlist();
@@ -61,14 +84,41 @@
             $widget : $widget
         };
 
-        $widget.append(widget.templates.handle);
+        $widget.append($(widget.templates.handle).append(
+            widget.templates.legend.replace(':legend', ib.trans('thread-watcher.legend')),
+            widget.templates.refresh,
+            widget.templates.move,
+            widget.templates.close
+        ));
         $widget.append(widget.templates.container);
 
         widget.buildWatchlist();
         widget.bindDraggable();
 
-        $widget.on('click.ib-thread-watcher', widget.options.selector.unwatch, data, widget.events.unwatchClick);
+        $widget
+            .on('click.ib-thread-watcher', widget.options.selector.close, data, widget.events.closeClick)
+            .on('click.ib-thread-watcher', widget.options.selector.refresh, data, widget.events.refreshClick)
+            .on('click.ib-thread-watcher', widget.options.selector.unwatch, data, widget.events.unwatchClick)
+        ;
+
         $(window).on('storage.ib-thread-watcher', data, widget.events.storage);
+
+        // bar nav
+        var $nav = $(widget.templates.nav);
+        $nav.insertBefore($(".boardlist-link:last"));
+
+        // global nav
+        var $gnav = $(widget.templates.gnav);
+        $gnav.insertAfter($(".gnav-item.item-config:last"));
+
+        $nav.on('click.ib-thread-watcher', data, widget.events.navClick);
+        $gnav.on('click.ib-thread-watcher', data, widget.events.navClick);
+
+        $widget.hide();
+
+        setInterval(function () {
+            widget.update();
+        }, 10000);
     };
 
     blueprint.prototype.bindDraggable = function () {
@@ -99,6 +149,7 @@
             var $link = $(this.templates.link);
 
             $link
+                .attr('id', "watched-link-" + thread.post_id)
                 .attr('href', "/" + thread.board_uri + "/thread/" + thread.board_id)
                 .text("/" + thread.board_uri + "/ - " + thread.excerpt)
             ;
@@ -108,16 +159,22 @@
                 bumped_last : thread.bumped_last
             });
 
-            $thread.append(this.templates.unwatch, $link);
+            $thread.append(
+                this.templates.unwatch,
+                this.templates.unseen.replace(":unseen", thread.unseen || 0),
+                $link
+            );
             $threads.append($thread);
         }
+
+        return $("#thread-watcher");
     };
 
     blueprint.prototype.update = function () {
-        var lastUpdate = parseInt(localStorage.getItem('watchThread.lastUpdate')  || 0, 10);
+        //var lastUpdate = parseInt(localStorage.getItem('watchThread.lastUpdate')  || 0, 10);
         var now = Date.now();
 
-        if (lastUpdate + 30000 < now) {
+        //if (lastUpdate + 30000 < now) {
             localStorage.setItem('watchThread.lastUpdate', now);
 
             var threads = ib.getThreadsWatched();
@@ -127,18 +184,18 @@
                 payload[thread] = threads[thread].bumped_last;
             }
 
-            $.post("/watcher.json", payload, function (data) {
+            $.post("/watcher.json", { threads : payload }, function (data) {
                 var storage = ib.getThreadsWatched(); // fetch again because async
                 localStorage.setItem('watchThread.lastUpdate', Date.now());
 
                 for (datum in data) {
-                    threads[datum].bumped_last = Math.max(threads[datum].bumped_last, data[datum] || 0);
+                    storage[datum].unseen = data[datum];
                 }
 
-                console.log(JSON.stringify(storage));
                 localStorage.setItem("watchThreads", JSON.stringify(storage));
+                document.getElementById('thread-watcher')?.widget?.buildWatchlist();
             });
-        }
+        //}
     };
 
 
@@ -173,7 +230,7 @@
     }
     ib.getThreadsWatched = function(id) {
         var storage = JSON.parse(localStorage.getItem("watchThreads"));
-        storage = (storage === 'undefined' || typeof storage !== 'object' || storage instanceof Array) ? {} : storage;
+        storage = (storage === null || typeof storage === 'undefined' || typeof storage !== 'object' || storage instanceof Array) ? {} : storage;
 
         if (typeof id === 'undefined') {
             return storage;

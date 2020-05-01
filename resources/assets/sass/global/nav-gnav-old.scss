@@ -3,6 +3,12 @@ nav.boardlist {
     padding: 0 1em;
     overflow: hidden;
 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+
     .boardlist-text {
         display: none;
     }
@@ -11,6 +17,9 @@ nav.boardlist {
         line-height: 1.4em;
         padding: 0;
         margin: 0 0.5em 0 0;
+    }
+    .row-right {
+        float: right;
     }
 
     .boardlist-categories,
@@ -50,16 +59,13 @@ nav.boardlist {
     }
 
     header & {
-        display: none;
-
         background: #d6daf0;
         color: #34345C;
         vertical-align: baseline;
 
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-        -webkit-box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 
-         .boardlist-link {
+        .boardlist-link {
             color: #34345C;
             cursor: pointer;
         }
@@ -72,6 +78,42 @@ nav.boardlist {
 
         .boardlist-link {
             color: #ffffff;
+        }
+    }
+
+    @media (max-width: 840px) {
+        font-size: 1.5em;
+        line-height: 2.5em;
+
+        div.boardlist-text {
+            display: block;
+            text-align: center;
+        }
+        div.boardlist-row {
+            display: none;
+            border-bottom: 0.20em solid rgba(0,0,0,0.25);
+        }
+        ul.boardlist-categories {
+
+        }
+        li.boardlist-category {
+            clear: both;
+            display: block;
+        }
+        ul.boardlist-items {
+            display: block;
+
+        }
+        li.boardlist-item {
+            display: block;
+            box-sizing: border-box;
+            padding: 0 1em;
+            min-width: 300px;
+            width: 50%;
+            float: left;
+        }
+        a.boardlist-link {
+            display: block;
         }
     }
 }

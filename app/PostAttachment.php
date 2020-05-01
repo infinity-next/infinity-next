@@ -219,8 +219,9 @@ class PostAttachment extends Model
             ->whereHas('file', function ($query) {
                 $timestamp = now()->subMinutes(5);
                 $query->whereHas('sourcePivots');
-                $query->whereDate('last_uploaded_at', '<=', $timestamp);
-                $query->whereTime('last_uploaded_at', '<=', $timestamp);
+                $query->where('last_uploaded_at', '<=', $timestamp);
+                //$query->whereDate('last_uploaded_at', '<=', $timestamp);
+                //$query->whereTime('last_uploaded_at', '<=', $timestamp);
                 $query->groupBy('file_id');
             })
             ->whereHas('post.board', function ($query) use ($sfw) {

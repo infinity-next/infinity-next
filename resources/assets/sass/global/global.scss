@@ -215,6 +215,8 @@ table {
 
 /* Interactable Interface */
 .dialog {
+    background: rgba(255, 255, 255, 0.66);
+    background: var(--primary-medium);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 .move {

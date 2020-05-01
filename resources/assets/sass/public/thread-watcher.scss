@@ -1,11 +1,8 @@
 #thread-watcher {
-    background: rgba(255, 255, 255, 0.66);
-    background: var(--background-fade);
-
     position: fixed;
     white-space: nowrap;
     min-width: 146px;
-    min-height: 100px;
+    min-height: 1em;
     max-width: 100vw;
     max-height: 100vw;
     z-index: 90;
@@ -14,6 +11,14 @@
     top: 45px;
     left: 10px;
 
+    .watched-legend {
+        display: flex;
+    }
+    .watched-space { // b
+        flex-grow: 1;
+    }
+    .watched-refresh,
+    .watched-close,
     .watched-unwatch {
         cursor: pointer;
     }

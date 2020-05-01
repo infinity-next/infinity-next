@@ -566,7 +566,8 @@
                 post_id: id,
                 board_id: $widget.data('board_id'),
                 board_uri: $widget.data('board_uri'),
-                bumped_last: $widget.data('bumped_last')
+                bumped_last: $widget.data('bumped-last'),
+                unseen: 0
             };
 
             // make sure bump time is accurate

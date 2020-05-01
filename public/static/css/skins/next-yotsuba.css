@@ -16,19 +16,15 @@
 */
 
 :root {
+    --background-fade: #FED6AF;
     --background-color: #FFFFEE;
+    --primary-medium: #F0E0D6;
 }
 
 html,
 body {
     background-color: #FFFFEE;
     background-color: var(--background-color);
-    background-image: -ms-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
-    background-image: -moz-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
-    background-image: -o-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FED6AF), color-stop(1em, #FED6AF), color-stop(200px, #FFFFEE), color-stop(100, #FFFFEE));
-    background-image: -webkit-linear-gradient(top, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
-    background-image: linear-gradient(to bottom, #FED6AF 0%, #FED6AF 1em, #FFFFEE 200px, #FFFFEE 100%);
 }
 
 a,

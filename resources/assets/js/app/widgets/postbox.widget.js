@@ -208,6 +208,9 @@
                 if (typeof response !== "object")
                 {
                     var response = jQuery.parseJSON(response);
+
+                    // Get the autoupdater to clear its last seen message since we're in the thread reading it.
+                    document.getElemenstByClassName('autoupdater')[0]?.widget?.clearLastSeen();
                 }
 
                 if (typeof response.errors !== "undefined")

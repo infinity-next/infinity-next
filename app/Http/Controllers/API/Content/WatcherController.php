@@ -31,13 +31,19 @@ class WatcherController extends ParentController implements ApiContract
             $response = [];
 
             $datetime = Carbon::createFromTimestamp(min($timestamps));
-            $posts = Post::whereIn('reply_to', $threads)
-                ->whereDate('created_at', '>', $datetime)
-                ->whereTime('created_at', '>', $datetime)
-                ->get('reply_to', 'created_at');
+            $posts = Post::select(['board_id', 'reply_to', 'created_at'])
+                ->whereIn('reply_to', $threads)
+                ->where('created_at', '>=', $datetime)
+                //->whereDate('created_at', '>=', $datetime)
+                //->whereTime('created_at', '>', $datetime)
+                ->get();
+
+            //dd($posts->where('reply_to', 2419)->pluck('board_id'));
 
             foreach ($input as $thread => $timestamp) {
-                $response[$thread] = $posts->where('reply_to', $thread)->count();
+                $response[$thread] = $posts->where('reply_to', $thread)
+                    ->where('created_at', '>', Carbon::createFromTimestamp($timestamp))
+                    ->count();
             }
         }
 

@@ -6,6 +6,7 @@
  *  1100 - Hover-over posts.
  *  1000 - Boardlist, top. Should be highest element on boards and threads.
  *  1000 - Post form.
+ *   900 - Old boardlist, slides under gnav.
  *    10 - Post action links.
  *     5 - Post attachment.
  *     1 - Global Footer
@@ -54,4 +55,5 @@ $ltr: "[dir='ltr']";
 :root {
     --background-fade: #{$background-fade};
     --background-color: #{$background-color};
+    --primary-medium: #{$primary-medium};
 }

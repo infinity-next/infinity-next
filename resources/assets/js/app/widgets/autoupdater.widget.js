@@ -340,15 +340,7 @@
         },
 
         windowFocus : function(event) {
-            var widget  = event.data.widget;
-            var $widget = event.data.$widget;
-
-            widget.hasFocus   = true;
-            widget.$lastPost  = null;
-            widget.newReplies = 0;
-
-            document.title = $('<div/>').html(window.app.title).text();
-            $("#favicon").attr('href', window.app.favicon.normal);
+            event.data.widget.clearLastSeen();
         },
 
         windowUnfocus : function(event) {
@@ -383,6 +375,27 @@
             widget.scrollLocked = (elemBottom <= docViewBottom) && (elemBottom >= docViewTop);
         }
     };
+
+    blueprint.prototype.clearLastSeen = function () {
+        console.log("Clearing last seen");
+        this.hasFocus   = true;
+        this.$lastPost  = null;
+        this.newReplies = 0;
+
+        // update thread watcher
+        var thread = $(".op-container:first").attr('data-post_id');
+        var storage = ib.getThreadsWatched();
+
+        if (typeof storage[thread] === 'object') {
+            storage[thread].bumped_last = Math.floor(Date.now() / 1000);
+            storage[thread].unseen = 0;
+            localStorage.setItem("watchThreads", JSON.stringify(storage));
+            document.getElementByClassName('autoupdater')[0]?.widget?.buildWatchlist();
+        }
+
+        document.title = $('<div/>').html(window.app.title).text();
+        $("#favicon").attr('href', window.app.favicon.normal);
+    }
 
     // Main update trigger.
     blueprint.prototype.update = function() {
