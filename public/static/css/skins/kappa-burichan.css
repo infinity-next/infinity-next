@@ -41,22 +41,20 @@ header nav.boardlist {
             font: 9pt FontAwesome;
         }
         html.js .row-links .boardlist-item:nth-of-type(1) a::before {
-            content: "";
+            font-family: Arial, sans-serif;
+            content: "☗";
         }
         html.js .row-links .boardlist-item:nth-of-type(2) a::before {
-            content: "";
+            content: "☰";
         }
         html.js .row-links .boardlist-item:nth-of-type(3) a::before {
-            content: "";
+            content: "🌏︎";
         }
         html.js .row-links .boardlist-item:nth-of-type(4) a::before {
-            content: "";
+            content: "⮫";
         }
         html.js .row-links .boardlist-item:nth-of-type(5) a::before {
-            content: "";
-        }
-        html.js .row-links .boardlist-item:nth-of-type(6) a::before {
-            content: "";
+            content: "➕ ";
         }
     nav.boardlist .boardlist-item a:hover {
         color: red;
