@@ -160,7 +160,8 @@ main.index-catalog {
                          .post-details {
                             white-space: normal;
                         }
-                         .post-detail {
+                        .post-watch, // hide watch hearts in catalog
+                        .post-detail {
                             display: none;
                             margin: 0;
                             padding: 0 0.5em;

@@ -26,6 +26,7 @@
         "vue": "^2.5.17"
     },
     "dependencies": {
+        "dropzone": "enyo/dropzone",
         "laravel-echo": "^1.7.0",
         "pusher-js": "^5.1.1",
         "socket.io-client": "^2.3.0",

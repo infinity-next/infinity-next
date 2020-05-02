@@ -4,7 +4,7 @@
 // Widget Version   : 2
 // ===========================================================================
 
-(function(window, $, undefined) {
+(function (window, $, undefined) {
     // Widget blueprint
     var blueprint = ib.getBlueprint();
 
@@ -97,7 +97,7 @@
             maxFilesize    : window.app.settings.attachmentFilesize / 1024,
 
             // Binds the instance to our widget.
-            init: function() {
+            init: function () {
                 var widget = this.options.widget;
 
                 widget.dropzone = this;
@@ -108,7 +108,7 @@
             },
 
             // Handles the acceptance of files.
-            accept : function(file, done) {
+            accept : function (file, done) {
                 var widget  = this.widget;
                 var $widget = this.$widget;
                 var reader  = new FileReader();
@@ -120,14 +120,14 @@
                     file.hash = hash;
 
                     jQuery.get( widget.options.checkFileUrl, { 'sha256' : hash })
-                    .done(function(data, textStatus, jqXHR) {
+                    .done(function (data, textStatus, jqXHR) {
                         if (typeof data !== "object") {
                             console.log("SHA-256 file check received weird response:", data);
                             return;
                         }
 
                         var response = data;
-                        jQuery.each(response, function(index, datum) {
+                        jQuery.each(response, function (index, datum) {
                             // Make sure this datum is for our file.
                             if (index !== hash) {
                                 return true;
@@ -165,12 +165,12 @@
                 reader.readAsArrayBuffer(file);
             },
 
-            canceled : function(file) {
+            canceled : function (file) {
                 var $widget = this.$widget;
                 $widget.trigger('fileCanceled', [ file ]);
             },
 
-            error : function(file, message, xhr) {
+            error : function (file, message, xhr) {
                 var widget  = this.widget;
                 var $widget = this.$widget;
 
@@ -186,7 +186,7 @@
                 $widget.trigger('fileFailed', [ file ]);
             },
 
-            removedfile : function(file) {
+            removedfile : function (file) {
                 var widget = this.widget;
                 var _ref;
 
@@ -201,7 +201,7 @@
                 return this._updateMaxFilesReachedClass();
             },
 
-            success : function(file, response, xhr) {
+            success : function (file, response, xhr) {
                 var widget  = this.widget;
                 var $widget = this.$widget;
 
@@ -218,9 +218,9 @@
 
                 if (typeof response.errors !== "undefined")
                 {
-                    jQuery.each(response.errors, function(field, errors)
+                    jQuery.each(response.errors, function (field, errors)
                     {
-                        jQuery.each(errors, function(index, error)
+                        jQuery.each(errors, function (index, error)
                         {
                             widget.dropzone.emit("error", file, error, xhr);
                             widget.dropzone.emit("complete", file);
@@ -285,11 +285,11 @@
     // Compiled settings.
     blueprint.prototype.options = false;
 
-    blueprint.prototype.hasCaptcha = function() {
+    blueprint.prototype.hasCaptcha = function () {
         return $(this.options.selector['captcha-row'], this.$widget).is(":visible");
     };
 
-    blueprint.prototype.responsiveAnchor = function($elem) {
+    blueprint.prototype.responsiveAnchor = function ($elem) {
         if (!ib.isMobile()) {
             return false;
         }
@@ -321,7 +321,7 @@
         return top;
     };
 
-    blueprint.prototype.resizePostbox = function() {
+    blueprint.prototype.resizePostbox = function () {
         var widget  = this;
         var $widget = this.$widget;
 
@@ -368,7 +368,7 @@
     };
 
     // Gets the selection range of our post box.
-    blueprint.prototype.getBodySelection = function()
+    blueprint.prototype.getBodySelection = function ()
     {
         var el = $(this.options.selector['form-body'], this.$widget)[0];
         var start = 0;
@@ -425,7 +425,7 @@
     }
 
     // Replaces selected text with new text in our post box.
-    blueprint.prototype.replaceBodySelection = function(text)
+    blueprint.prototype.replaceBodySelection = function (text)
     {
         var $textarea = $(this.options.selector['form-body'], this.$widget);
         var textarea  = $textarea[0];
@@ -456,7 +456,7 @@
 
     // Events
     blueprint.prototype.events = {
-        bodyChange    : function(event) {
+        bodyChange    : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -494,19 +494,19 @@
             }
         },
 
-        captchaHide   : function(widget) {
+        captchaHide   : function (widget) {
             var $widget = widget.$widget;
 
             $(widget.options.selector['captcha-row'], $widget).hide();
         },
 
-        captchaShow   : function(widget) {
+        captchaShow   : function (widget) {
             var $widget = widget.$widget;
 
             $(widget.options.selector['captcha-row'], $widget).show();
         },
 
-        closeClick    : function(event) {
+        closeClick    : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -526,7 +526,7 @@
             event.stopPropagation();
         },
 
-        fileUploading : function(event, file) {
+        fileUploading : function (event, file) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -537,7 +537,7 @@
                 .prop('disabled', widget.activeUploads > 0);
         },
 
-        fileCanceled  : function(event, file) {
+        fileCanceled  : function (event, file) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -548,7 +548,7 @@
                 .prop('disabled', widget.activeUploads > 0);
         },
 
-        fileFailed    : function(event, file) {
+        fileFailed    : function (event, file) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -559,7 +559,7 @@
                 .prop('disabled', widget.activeUploads > 0);
         },
 
-        fileUploaded  : function(event, file) {
+        fileUploaded  : function (event, file) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -570,7 +570,7 @@
                 .prop('disabled', widget.activeUploads > 0);
         },
 
-        formClear     : function(event) {
+        formClear     : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -598,7 +598,7 @@
             }
         },
 
-        formClick     : function(event) {
+        formClick     : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -613,7 +613,7 @@
             }
         },
 
-        formOpenClick : function(event) {
+        formOpenClick : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -627,7 +627,7 @@
             widget.bindResize();
 
             // focus the input field
-            setTimeout(function() {
+            setTimeout(function () {
                 var $textarea = $(widget.options.selector['form-body'], $widget);
                 $textarea.focus();
                 $textarea[0].selectionStart = $textarea[0].selectionEnd = $textarea[0].value.length;
@@ -635,7 +635,19 @@
 
         },
 
-        formSubmit    : function(event) {
+        formPaste     : function (event) {
+            var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+
+            for (index in items) {
+                var item = items[index];
+                if (item.kind === 'file') {
+                    // adds the file to your dropzone instance
+                    event.data.widget.dropzone.addFile(item.getAsFile());
+                }
+            }
+        },
+
+        formSubmit    : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -683,7 +695,7 @@
                 dataType:    "json",
                 contentType: "application/json; charset=utf-8"
             })
-                .always(function(response, textStatus, jqXHR) {
+                .always(function (response, textStatus, jqXHR) {
                     $form.prop('disabled', false);
                     $(widget.options.selector['submit']).prop('disabled', false);
 
@@ -713,8 +725,8 @@
                     if (typeof json.errors !== "undefined") {
                         console.log("Post rejected.");
 
-                        jQuery.each(json.errors, function(field, errors) {
-                            jQuery.each(errors, function(index, error) {
+                        jQuery.each(json.errors, function (field, errors) {
+                            jQuery.each(errors, function (index, error) {
                                 widget.notices.push(error, 'error');
                             });
                         });
@@ -753,7 +765,7 @@
             return false;
         },
 
-        maximizeClick : function(event) {
+        maximizeClick : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -767,10 +779,10 @@
             widget.unbindResize();
         },
 
-        messenger     : function(event, messages) {
+        messenger     : function (event, messages) {
             if (messages.messenger)
             {
-                ib.getInstances('postbox').each(function()
+                ib.getInstances('postbox').each(function ()
                 {
                     var widget  = this.widget;
                     var $widget = widget.$widget;
@@ -814,7 +826,7 @@
             }
         },
 
-        minimizeClick : function(event) {
+        minimizeClick : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -828,13 +840,13 @@
             widget.bindResize();
         },
 
-        pageChange    : function(event) {
+        pageChange    : function (event) {
             widget.options.checkFileUrl = window.app.board_url + "check-file";
             widget.dropzone.options.url = window.app.board_url + "upload-file";
             widget.dropzone.options.maxFilesize = window.app.settings.attachmentFilesize / 1024;
         },
 
-        postDragStop  : function(event, ui) {
+        postDragStop  : function (event, ui) {
             var widget  = this.widget;
             var $widget = this.widget.$widget;
 
@@ -862,7 +874,7 @@
             }
         },
 
-        postKeyDown  : function(event) {
+        postKeyDown  : function (event) {
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
@@ -877,7 +889,7 @@
             }
         },
 
-        postResize    : function(event, ui) {
+        postResize    : function (event, ui) {
             var widget  = this.widget;
             var $widget = this.widget.$widget;
 
@@ -900,7 +912,7 @@
             return ui;
         },
 
-        postResizeStart : function(event, ui) {
+        postResizeStart : function (event, ui) {
             var widget  = this.widget;
             var $widget = this.widget.$widget;
             var axis    = $(this).data('ui-resizable').axis;
@@ -917,7 +929,7 @@
             }
         },
 
-        postResizeStop  : function(event, ui) {
+        postResizeStop  : function (event, ui) {
             var widget  = this.widget;
             var $widget = this.widget.$widget;
             var axis    = $(this).data('ui-resizable').axis;
@@ -936,14 +948,14 @@
             }
         },
 
-        spoilerChange : function(event) {
+        spoilerChange : function (event) {
             var $this = $(this);
             var $next = $this.next();
 
             $this.next().attr('value', $this.prop('checked') ? 1 : 0);
         },
 
-        windowResize  : function(event) {
+        windowResize  : function (event) {
             // For some pathetic reason, the jQery UI Resize widget uses the "resize"
             // event name, which is also an HTML default for window resizes. Events fired
             // also bubble up to the window, so this gets called when the post box resizes too.
@@ -955,7 +967,7 @@
     },
 
     // Event bindings
-    blueprint.prototype.bind = function() {
+    blueprint.prototype.bind = function () {
         var widget  = this;
         var $widget = this.$widget;
         var data    = {
@@ -992,103 +1004,36 @@
             //InstantClick.on("change", data, widget.events.pageChange);
         }
 
-        $(document)
-            // Post form open buttons outside the form itself
-            .on(
-                'click.ib-postbox',
-                widget.options.selector['form-open'],
-                data,
-                widget.events.formOpenClick
-            );
+        // Post form open buttons outside the form itself
+        $(document).on('click.ib-postbox', widget.options.selector['form-open'], data, widget.events.formOpenClick);
 
         $widget
-            .on(
-                'open-form.ib-postbox',
-                data,
-                widget.events.formOpenClick
-            )
+            .on('open-form.ib-postbox', data, widget.events.formOpenClick)
 
             // Watch for key downs as to capture ctrl+enter submission.
             // We don't die this to any particular item.
-            .on(
-                'keydown.ib-postbox',
-                data,
-                widget.events.postKeyDown
-            )
+            .on('keydown.ib-postbox', data, widget.events.postKeyDown)
 
             // Watch for form size clicks
-            .on(
-                'click.ib-postbox',
-                data,
-                widget.events.formClick
-            )
-            .on(
-                'click.ib-postbox',
-                widget.options.selector['button-close'],
-                data,
-                widget.events.closeClick
-            )
-            .on(
-                'click.ib-postbox',
-                widget.options.selector['button-maximize'],
-                data,
-                widget.events.maximizeClick
-            )
-            .on(
-                'click.ib-postbox',
-                widget.options.selector['button-minimize'],
-                data,
-                widget.events.minimizeClick
-            )
+            .on('click.ib-postbox', data, widget.events.formClick)
+            .on('paste.ib-postbox', data, widget.events.formPaste)
+            .on('click.ib-postbox', widget.options.selector['button-close'], data, widget.events.closeClick)
+            .on('click.ib-postbox', widget.options.selector['button-maximize'], data, widget.events.maximizeClick)
+            .on('click.ib-postbox', widget.options.selector['button-minimize'], data, widget.events.minimizeClick)
 
             // Watch field changes
-            .on(
-                'change.ib-postbox',
-                widget.options.selector['form-body'],
-                data,
-                widget.events.bodyChange
-            )
-            .on(
-                'keyup.ib-postbox',
-                widget.options.selector['form-body'],
-                data,
-                widget.events.bodyChange
-            )
-            .on(
-                'change.ib-postbox',
-                widget.options.selector['form-spoiler'],
-                data,
-                widget.events.spoilerChange
-            )
+            .on('change.ib-postbox', widget.options.selector['form-body'], data, widget.events.bodyChange)
+            .on('keyup.ib-postbox', widget.options.selector['form-body'], data, widget.events.bodyChange)
+            .on('change.ib-postbox', widget.options.selector['form-spoiler'], data, widget.events.spoilerChange)
 
             // Watch form submission.
-            .on(
-                'submit.ib-postbox',
-                data,
-                widget.events.formSubmit
-            )
+            .on('submit.ib-postbox', data, widget.events.formSubmit)
 
             // Watch for file statuses.
-            .on(
-                'fileFailed.ib-postbox',
-                data,
-                widget.events.fileFailed
-            )
-            .on(
-                'fileCanceled.ib-postbox',
-                data,
-                widget.events.fileCanceled
-            )
-            .on(
-                'fileUploaded.ib-postbox',
-                data,
-                widget.events.fileUploaded
-            )
-            .on(
-                'fileUploading.ib-postbox',
-                data,
-                widget.events.fileUploading
-            )
+            .on('fileFailed.ib-postbox', data, widget.events.fileFailed)
+            .on('fileCanceled.ib-postbox', data, widget.events.fileCanceled)
+            .on('fileUploaded.ib-postbox', data, widget.events.fileUploaded)
+            .on('fileUploading.ib-postbox', data, widget.events.fileUploading)
         ;
 
         // Insert our first cite if we load with #post-333 as hash.
@@ -1105,7 +1050,7 @@
         $widget.addClass("postbox-closed");
     };
 
-    blueprint.prototype.bindCounter = function() {
+    blueprint.prototype.bindCounter = function () {
         var widget   = this;
         var $widget  = this.$widget;
         var $body    = $(widget.options.selector['form-body'], widget.$widget);
@@ -1116,7 +1061,7 @@
         $body.trigger('change');
     };
 
-    blueprint.prototype.bindDraggable = function() {
+    blueprint.prototype.bindDraggable = function () {
         var widget   = this;
         var $widget  = this.$widget;
 
@@ -1132,7 +1077,7 @@
         }
     };
 
-    blueprint.prototype.bindResize = function() {
+    blueprint.prototype.bindResize = function () {
         var widget   = this;
         var $widget  = this.$widget;
 
@@ -1172,7 +1117,7 @@
         }
     };
 
-    blueprint.prototype.unbindCounter = function() {
+    blueprint.prototype.unbindCounter = function () {
         var widget   = this;
 
         if (widget.$counter && widget.$counter instanceof jQuery)
@@ -1181,7 +1126,7 @@
         }
     };
 
-    blueprint.prototype.unbindDraggable = function() {
+    blueprint.prototype.unbindDraggable = function () {
         var widget   = this;
         var $widget  = this.$widget;
 
@@ -1193,7 +1138,7 @@
         }
     };
 
-    blueprint.prototype.unbindResize = function() {
+    blueprint.prototype.unbindResize = function () {
         var widget   = this;
         var $widget  = this.$widget;
 
@@ -1213,7 +1158,7 @@
     ib.widget("postbox", blueprint, options);
     ib.settings.postbox.password.setInitial(false);
 
-    $(document).on('ready.ib-postbox', function(event) {
+    $(document).on('ready.ib-postbox', function (event) {
         // Bit of a hack.
         // Sets form values to our password by default even outside
         // of the scope of a thread.

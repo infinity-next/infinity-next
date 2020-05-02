@@ -32,6 +32,7 @@ mix
 
     .scripts([
         'node_modules/jquery/dist/jquery.min.js',
+        'node_modules/dropzone/dist/dropzone.js',
         'resources/assets/vendor/**/*.js',
         'resources/assets/js/plugins/**/*.js'
     ], 'public/static/js/vendor.js')
