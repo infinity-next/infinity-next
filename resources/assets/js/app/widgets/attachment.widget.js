@@ -249,16 +249,18 @@
                 return true;
             }
 
-            var $preview = $(widget.options.selector['hover-box']);
+            if ($previewContent.length) {
+                var $preview = $(widget.options.selector['hover-box']);
 
-            widget.previewTimer = setTimeout(function() {
-                $preview.show();
-                $previewContent[0].src = $link.attr('data-download-url');
+                widget.previewTimer = setTimeout(function() {
+                    $preview.show();
+                    $previewContent[0].src = $link.attr('data-download-url');
 
-                if (multimedia) {
-                    $previewContent[0].play();
-                }
-            }, widget.options.preview_delay);
+                    if (multimedia) {
+                        $previewContent[0].play();
+                    }
+                }, widget.options.preview_delay);
+            }
         },
 
         attachmentMediaMouseOut : function(event) {

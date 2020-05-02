@@ -13,6 +13,7 @@
             // On setting update, trigger reformating..
             var setting = event.data.setting;
             var widget  = setting.widget;
+
             ib.getInstances(widget).trigger('contentUpdate');
         }
     };

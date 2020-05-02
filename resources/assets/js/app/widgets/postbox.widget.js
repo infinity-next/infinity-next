@@ -96,6 +96,9 @@
             // Maximum filesize (MB)
             maxFilesize    : window.app.settings.attachmentFilesize / 1024,
 
+            // https://www.dropzonejs.com/#config-clickable
+            clickable : true,
+
             // Binds the instance to our widget.
             init: function () {
                 var widget = this.options.widget;
@@ -600,8 +603,7 @@
             var widget  = event.data.widget;
             var $widget = event.data.$widget;
 
-            if ($widget.is(".postbox-closed"))
-            {
+            if ($widget.is(".postbox-closed")) {
                 // Tweak classes.
                 $widget.removeClass("postbox-minimized postbox-closed postbox-maximized");
 
@@ -981,8 +983,7 @@
         // The parent is bound first.
         widget.notices = window.ib.bindElement($(widget.options.selector['notices'])[0]);
 
-        if (typeof window.Dropzone !== 'undefined')
-        {
+        if (typeof window.Dropzone !== 'undefined'){
             var dropzoneOptions = jQuery.extend({}, widget.options.dropzone);
             dropzoneOptions.widget  = widget;
             dropzoneOptions.$widget = $widget;
@@ -993,7 +994,8 @@
 
         $(window)
             .on('messenger.ib-postbox.', data, widget.events.messenger)
-            .on('resize.ib-postbox',     data, widget.events.windowResize);
+            .on('resize.ib-postbox',     data, widget.events.windowResize)
+        ;
 
         // This will actually bind multiple times so make sure it only happens once.
         if (widget.initOnce !== true)
@@ -1013,7 +1015,7 @@
             .on('keydown.ib-postbox', data, widget.events.postKeyDown)
 
             // Watch for form size clicks
-            .on('click.ib-postbox', data, widget.events.formClick)
+            // .on('click.ib-postbox', data, widget.events.formClick) // I don't know what this does and it causes errors.
             .on('paste.ib-postbox', data, widget.events.formPaste)
             .on('click.ib-postbox', widget.options.selector['button-close'], data, widget.events.closeClick)
             .on('click.ib-postbox', widget.options.selector['button-maximize'], data, widget.events.maximizeClick)
@@ -1063,11 +1065,10 @@
         var widget   = this;
         var $widget  = this.$widget;
 
-        if (!ib.isMobile())
-        {
+        if (!ib.isMobile()) {
             $widget.draggable({
                 containment : "window",
-                handle      : "legend.form-legend",
+                handle      : ".move",
                 stop        : widget.events.postDragStop
             });
 

@@ -258,8 +258,7 @@
     };
 
     ib.option.prototype.eventStorageUpdate = function(event) {
-        if (event.originalEvent.key === event.data.setting.storage)
-        {
+        if (event.originalEvent.key === event.data.setting.storage) {
             var setting = event.data.setting;
             var $input  = $("#js-config-"+setting.widget+"-"+setting.name);
 
@@ -311,7 +310,12 @@
             throw "ib.option :: onUpdate not supplied a closure."
         }
 
-        $(window).on('storage', { setting : this }, closure);
+        $(window).on('storage.ib-js-config', { setting : this }, function (event) {
+            // avoid wasteful calls.
+            if (event.originalEvent.key === event.data.setting.storage) {
+                closure.call(this, event);
+            }
+        });
     };
 
     ib.option.prototype.set = function(value) {
@@ -379,22 +383,13 @@
 
         }
 
-        $html.attr('id',    "js-config-"+this.widget+"-"+this.name);
+        $html.attr('id', "js-config-"+this.widget+"-"+this.name);
         $html.attr('class', "config-option");
         $html.val(value);
-        $html.on(
-            'change',
-            { 'setting' : this },
-            this.eventInputChanged
-        );
+        $html.on('change', { 'setting' : this }, this.eventInputChanged);
 
-        if (typeof this.eventCustomInputChanged === "function")
-        {
-            $html.on(
-                'change',
-                { 'setting' : this },
-                this.eventCustomInputChanged
-            );
+        if (typeof this.eventCustomInputChanged === "function") {
+            $html.on('change', { 'setting' : this }, this.eventCustomInputChanged);
         }
 
         return $html;
@@ -445,15 +440,12 @@
         widget.prototype.name = name;
         ib.widgets[name] = widget;
 
-        if (typeof options === "object")
-        {
-            if (typeof ib.settings[name] === "undefined")
-            {
+        if (typeof options === "object") {
+            if (typeof ib.settings[name] === "undefined") {
                 ib.settings[name] = {};
             }
 
-            jQuery.each(options, function(optionName, optionParams)
-            {
+            jQuery.each(options, function(optionName, optionParams) {
                 var optionData = {
                     widget : name,
                     name : optionName,
@@ -463,12 +455,10 @@
                     onUpdate : null
                 };
 
-                if (typeof optionParams === "object")
-                {
+                if (typeof optionParams === "object") {
                     optionData = jQuery.extend(true, optionData, optionParams);
                 }
-                else
-                {
+                else {
                     optionData.type = optionParams;
                 }
 
@@ -478,14 +468,12 @@
                 ib.settings[name][optionName] = option;
 
                 // On HTML input change
-                if (typeof optionParams.onChange === "function")
-                {
+                if (typeof optionParams.onChange === "function") {
                     option.eventCustomInputChanged = optionParams.onChange;
                 }
 
                 // On option change in another tab
-                if (typeof optionParams.onUpdate === "function")
-                {
+                if (typeof optionParams.onUpdate === "function") {
                     option.onUpdate(optionParams.onUpdate);
                 }
             });
