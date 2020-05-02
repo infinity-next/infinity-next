@@ -35,27 +35,52 @@ header nav.boardlist {
         margin: 0 1px;
     }
     html.js .row-links .boardlist-item a {
+        
         font-size: 0;
     }
-        html.js .row-links .boardlist-item a::before {
-            font: 9pt FontAwesome;
-        }
-        html.js .row-links .boardlist-item:nth-of-type(1) a::before {
-            font-family: Arial, sans-serif;
-            content: "☗";
-        }
-        html.js .row-links .boardlist-item:nth-of-type(2) a::before {
-            content: "☰";
-        }
-        html.js .row-links .boardlist-item:nth-of-type(3) a::before {
-            content: "🌏︎";
-        }
-        html.js .row-links .boardlist-item:nth-of-type(4) a::before {
-            content: "⮫";
-        }
-        html.js .row-links .boardlist-item:nth-of-type(5) a::before {
-            content: "➕ ";
-        }
+
+    html.js .row-links .boardlist-item a::before {
+        font-size: 9pt;
+    }
+    html.js .row-links .boardlist-item:nth-of-type(1) a::before {
+        font-family: Arial, sans-serif;
+        content: "☗";
+    }
+    html.js .row-links .boardlist-item:nth-of-type(2) a::before {
+        content: "☰";
+    }
+    html.js .row-links .boardlist-item:nth-of-type(3) a::before {
+        content: "🌏︎";
+    }
+    html.js .row-links .boardlist-item:nth-of-type(4) a::before {
+        content: "⮫";
+    }
+    html.js .row-links .boardlist-item:nth-of-type(5) a::before {
+        content: "➕ ";
+    }
+
+    .fa-eye:before{
+        content: "[⏿]" !important;
+        font-weight: 100;
+        line-height: 15px
+    }
+    .fa-eye:after {content: "" !important;}
+
+
+    /* I dont exactly know how this is determined, but I'm removing */
+    .boardlist-category:nth-of-type(2) {
+       display: none;
+    }
+    .row-right {
+       display: none !important;
+    }
+
+    .fa-eye {
+        margin-right: 4.5em !important;
+        margin-top: 10px;
+    }
+
+
     nav.boardlist .boardlist-item a:hover {
         color: red;
     }
