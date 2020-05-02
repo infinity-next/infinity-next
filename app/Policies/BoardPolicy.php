@@ -141,10 +141,10 @@ class BoardPolicy extends AbstractPolicy
      public function editStaff(User $user, Board $board, User $target)
      {
          if ($user->user_id == $target->user_id) {
-             return Response::deny("auth.board.cann_edit_own_permissions");
+             return Response::deny("auth.board.cannot_edit_own_permissions");
          }
 
-         return $user->can('admin-config');
+         return $user->can('configure', $board);
      }
 
      /**

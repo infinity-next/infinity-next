@@ -15,7 +15,7 @@
         <ol class="filterlist-list">
             @foreach ($staff as $member)
             <li class="filterlist-item">
-                <a class="filterlist-secondary" href="{{ $member->getBoardStaffUrl($board, 'delete') }}"><i class="fas fa-remove"></i></a>
+                @can('editStaff', [$board, $member])<a class="filterlist-secondary" href="{{ $member->getBoardStaffUrl($board, 'delete') }}"><i class="fas fa-trash"></i></a>@endcan
                 <a class="filterlist-secondary" href="{{ $member->getUrl() }}">@lang('panel.list.field.userinfo')</a>
                 <a class="filterlist-primary" href="{{ $member->getBoardStaffUrl($board, 'update') }}">
                     <em>{{ $member->getDisplayName() }}</em>

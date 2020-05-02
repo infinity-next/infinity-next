@@ -73,7 +73,7 @@
     <span class="post-detail detail-icon post-adventurer" title="@lang('board.detail.adventurer')"><i class="fas fa-rocket"></i></span>
     @endif
 
-    <span class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fas fa-remove"></i></span>
+    <span class="post-detail detail-icon post-deleted" title="@lang('board.detail.deleted')"><i class="fas fa-trash"></i></span>
 
     @if (!$catalog)
     <span class="post-detail post-actions">@include('content.board.post.single.actions')</span>

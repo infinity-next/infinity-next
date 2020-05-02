@@ -25,7 +25,7 @@ use App\Events\UserRolesModified;
  */
 class StaffController extends PanelController
 {
-    const VIEW_LIST = 'panel.board.staff';
+    const VIEW_LIST = 'panel.board.staff.index';
     const VIEW_ADD = 'panel.board.staff.create';
     const VIEW_EDIT = 'panel.board.staff.edit';
     const VIEW_DELETE = 'panel.board.staff.delete';
@@ -151,20 +151,20 @@ class StaffController extends PanelController
                 ->withErrors($casteValidator->errors());
         }
         elseif ($createUser) {
-            $target = User::create([
+            $staff = User::create([
                 'username' => Request::input('username'),
                 'email' => Request::input('email'),
                 'password' => Hash::make(Request::input('password')),
             ]);
         }
         else {
-            $target = User::whereUsername(Request::input('existinguser'))->firstOrFail();
+            $staff = User::whereUsername(Request::input('existinguser'))->firstOrFail();
         }
 
-        $target->roles()->detach($roles->pluck('role_id')->toArray());
-        $target->roles()->attach($casteInput['castes']);
+        $staff->roles()->detach($roles->pluck('role_id')->toArray());
+        $staff->roles()->attach($casteInput['castes']);
 
-        Event::dispatch(new UserRolesModified($target));
+        Event::dispatch(new UserRolesModified($staff));
 
         return redirect($board->getPanelUrl('staff'));
     }
@@ -173,23 +173,23 @@ class StaffController extends PanelController
      * Opens staff management form.
      *
      * @param  \App\Board  $board
-     * @param  \App\User   $target
+     * @param  \App\User   $staff
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Board $board, User $target)
+    public function show(Board $board, User $staff)
     {
-        $this->authorize('editStaff', [$board, $target]);
+        $this->authorize('editStaff', [$board, $staff]);
 
         $roles = user()->getAssignableRoles($board);
         $staff = $board->getStaff();
 
-        $target->load('roles');
+        $staff->load('roles');
 
         return $this->makeView(static::VIEW_EDIT, [
             'board' => $board,
             'roles' => $roles,
-            'staff' => $target,
+            'staff' => $staff,
 
             'tab' => 'staff',
         ]);
@@ -199,17 +199,17 @@ class StaffController extends PanelController
      * Saves new castes to staff member.
      *
      * @param  \App\Board  $board
-     * @param  \App\User   $target
+     * @param  \App\User   $staff
      *
      * @return \Illuminate\Http\Response
      */
-    public function patch(Board $board, User $target)
+    public function patch(Board $board, User $staff)
     {
-        $this->authorize('editStaff', [$board, $target]);
+        $this->authorize('editStaff', [$board, $staff]);
 
-        $target->load('roles');
+        $staff->load('roles');
 
-        $roles = $target->getAssignableRoles($board);
+        $roles = $staff->getAssignableRoles($board);
         $castes = $roles->pluck('role_id');
         $rules = [
             'castes' => [
@@ -231,13 +231,13 @@ class StaffController extends PanelController
                 ->withErrors($validator->errors());
         }
 
-        $target->roles()->detach($roles->pluck('role_id')->toArray());
+        $staff->roles()->detach($roles->pluck('role_id')->toArray());
 
         if (is_array($input['castes'])) {
-            $target->roles()->attach($input['castes']);
+            $staff->roles()->attach($input['castes']);
         }
 
-        Event::dispatch(new UserRolesModified($target));
+        Event::dispatch(new UserRolesModified($staff));
 
         if (count($input['castes'])) {
             return redirect()->back();
@@ -251,18 +251,18 @@ class StaffController extends PanelController
      * Presents staff dismissal confirmation.
      *
      * @param  \App\Board  $board
-     * @param  \App\User   $target
+     * @param  \App\User   $staff
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete(Board $board, User $target)
+    public function delete(Board $board, User $staff)
     {
-        $this->authorize('editStaff', [$board, $target]);
+        $this->authorize('editStaff', [$board, $staff]);
 
         return $this->makeView(static::VIEW_DELETE, [
             'board' => $board,
             'tab' => 'staff',
-            'staff' => $user,
+            'staff' => $staff,
         ]);
     }
 
@@ -270,16 +270,16 @@ class StaffController extends PanelController
      * Deletes staff position.
      *
      * @param  \App\Board  $board
-     * @param  \App\User   $target
+     * @param  \App\User   $staff
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Board $board, User $target)
+    public function destroy(Board $board, User $staff)
     {
-        $this->authorize('editStaff', [$board, $target]);
+        $this->authorize('editStaff', [$board, $staff]);
         $user = user();
 
-        if ($user->user_id === $target->user_id) {
+        if ($user->user_id === $staff->user_id) {
             $this->validate(Request::all(), [
                 'confirmation' => [
                     'required',
@@ -288,13 +288,13 @@ class StaffController extends PanelController
             ]);
         }
 
-        $target->load('roles');
+        $staff->load('roles');
 
-        $roles = $target->getBoardRoles($board);
+        $roles = $staff->getBoardRoles($board);
 
-        $target->roles()->detach($roles->pluck('role_id')->toArray());
+        $staff->roles()->detach($roles->pluck('role_id')->toArray());
 
-        Event::dispatch(new UserRolesModified($target));
+        Event::dispatch(new UserRolesModified($staff));
 
         return redirect($board->getPanelUrl('staff'));
     }

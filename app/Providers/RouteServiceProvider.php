@@ -110,6 +110,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('post',       Post::class);
         Route::model('post_id',    Post::class);
         Route::model('user',       User::class);
+        Route::model('staff',      User::class);
         Route::model('report',     Report::class);
         Route::model('role',       Role::class);
 

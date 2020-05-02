@@ -31,7 +31,7 @@
                     : 'panel.site.page.delete', [
                         'page' => $page,
                         'board' => $board,
-                ]) }}"><i class="fas fa-remove"></i></a>
+                ]) }}"><i class="fas fa-trash"></i></a>
                 <a class="filterlist-secondary" href="{{ route($board->exists
                     ? 'panel.board.page.edit'
                     : 'panel.site.page.edit', [

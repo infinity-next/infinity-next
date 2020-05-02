@@ -129,10 +129,10 @@ Route::group(['namespace' => 'Boards',], function () {
         Route::group(['prefix' => 'staff'], function()
         {
             Route::get('create',               ['as' => 'staff.create', 'uses' => 'StaffController@create',]);
-            Route::get('{user}/delete', ['as' => 'staff.delete', 'uses' => 'StaffController@delete',]);
-            Route::delete('{user}',     ['as' => 'staff.destroy', 'uses' => 'StaffController@destroy',]);
-            Route::get('{user}',        ['as' => 'staff.show', 'uses' => 'StaffController@show',]);
-            Route::patch('{user}',             ['as' => 'staff.update', 'uses' => 'StaffController@patch',]);
+            Route::get('{staff}/delete', ['as' => 'staff.delete', 'uses' => 'StaffController@delete',]);
+            Route::delete('{staff}',     ['as' => 'staff.destroy', 'uses' => 'StaffController@destroy',]);
+            Route::get('{staff}',        ['as' => 'staff.show', 'uses' => 'StaffController@show',]);
+            Route::patch('{staff}',             ['as' => 'staff.update', 'uses' => 'StaffController@patch',]);
             Route::put('/',                    ['as' => 'staff.store', 'uses' => 'StaffController@store',]);
             Route::get('/',                    ['as' => 'staff', 'uses' => 'StaffController@index',]);
         });

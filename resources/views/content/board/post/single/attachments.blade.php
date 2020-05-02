@@ -30,7 +30,7 @@
                     </div>
                     <div class="action">
                         <a href="{{ $attachment->getRemoveUrl($board) }}" target="_blank" class="action-link attachment-remove" title="@lang('board.field.remove')">
-                            <i class="fas fa-remove"></i>&nbsp;@lang('board.field.remove')
+                            <i class="fas fa-trash"></i>&nbsp;@lang('board.field.remove')
                         </a>
                     </div>
                     <div class="action">

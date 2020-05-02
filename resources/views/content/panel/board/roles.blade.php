@@ -5,9 +5,7 @@
 ]))
 
 @section('actions')
-    <a class="panel-action" href="{{ $board->getPanelUrl('roles.create') }}">
-        + @lang('panel.action.add_role')
-    </a>
+    <a class="panel-action" href="{{ $board->getPanelUrl('roles.create') }}">+ @lang('panel.action.add_role')</a>
 @endsection
 
 @section('body')
@@ -18,7 +16,7 @@
             @foreach ($roles as $role)
             <li class="filterlist-item">
                 <a class="filterlist-secondary" href="{{ $role->getPanelUrl('delete') }}">
-                    <i class="fas fa-remove"></i>
+                    <i class="fas fa-trash"></i>
                 </a>
                 <a class="filterlist-secondary" href="{{ $role->getPanelUrl('permissions') }}">
                     @lang('panel.list.field.permissions')

@@ -674,29 +674,9 @@ class Board extends Model
 
     public function getStaff()
     {
-        $staff = [];
-        $roles = Role::with('users')
-            ->where('board_uri', $this->board_uri)
-            ->get();
-
-        $roles = [];
-        foreach ($this->roles as $role) {
-            foreach ($role->users as $user) {
-                $staff[$user->user_id] = $user;
-
-                if (!isset($roles[$user->user_id])) {
-                    $roles[$user->user_id] = [];
-                }
-
-                $roles[$user->user_id][] = $role;
-            }
-        }
-
-        foreach ($roles as $user_id => $role) {
-            $staff[$user_id]->setRelation('roles', collect($role));
-        }
-
-        return $staff;
+        return User::whereHas('roles', function ($query) {
+            $query->where('board_uri', $this->board_uri);
+        })->get();
     }
 
     /**
