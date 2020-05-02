@@ -368,8 +368,7 @@
     };
 
     // Gets the selection range of our post box.
-    blueprint.prototype.getBodySelection = function ()
-    {
+    blueprint.prototype.getBodySelection = function () {
         var el = $(this.options.selector['form-body'], this.$widget)[0];
         var start = 0;
         var end = 0;
@@ -425,8 +424,7 @@
     }
 
     // Replaces selected text with new text in our post box.
-    blueprint.prototype.replaceBodySelection = function (text)
-    {
+    blueprint.prototype.replaceBodySelection = function (text) {
         var $textarea = $(this.options.selector['form-body'], this.$widget);
         var textarea  = $textarea[0];
         var selection = this.getBodySelection();
