@@ -63,17 +63,40 @@ class PostObserver
         }
 
         // Process uploads.
-        $uploads = [];
+        $uploads = collect([]);
 
         // Check file uploads.
         if (is_array($files = Request::file('files'))) {
-            $uploads = array_filter($files);
+            $inputFiles = array_filter($files);
 
-            if (count($uploads) > 0) {
-                foreach ($uploads as $uploadIndex => $upload) {
-                    if (file_exists($upload->getPathname())) {
-                        FileStorage::createAttachmentFromUpload($upload, $post);
+            if (count($inputFiles) > 0) {
+                foreach ($inputFiles as $index => $uploadFile) {
+                    if (!file_exists($uploadFile->getPathname())) {
+                        continue;
                     }
+
+                    $uploader = new Upload($uploadFile);
+                    $storage = $uploader->process();
+
+                    $fileName = pathinfo($uploadFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $fileExt = $storage->guessExtension();
+
+                    $attachment = new PostAttachment;
+                    $attachment->post_id = $post->post_id;
+                    $attachment->filename = urlencode("{$fileName}.{$fileExt}");
+                    $attachment->is_spoiler = !!Request::input('spoilers', false);
+
+                    $attachment->setRelation('file', $storage);
+                    $attachment->file_id = $storage->file_id;
+
+                    $thumbnail = $uploader->getThumbnail();
+                    if ($thumbnail instanceof FileStorage) {
+                        $attachment->setRelation('thumbnail', $thumbnail);
+                        $attachment->thumbnail_id = $thumbnail->file_id;
+                    }
+
+                    $attachment->position = $index;
+                    $uploads->push($attachment);
                 }
             }
         }
@@ -114,13 +137,15 @@ class PostObserver
                         }
 
                         $attachment->position = $index;
-                        $uploads[] = $attachment;
+                        $uploads->push($attachment);
                     }
                 }
             }
+        }
 
+        foreach ($uploads as $upload) {
             $post->attachments()->saveMany($uploads);
-            FileStorage::whereIn('hash', $hashes)->increment('upload_count');
+            FileStorage::whereIn('hash', $uploads->pluck('hash'))->increment('upload_count');
         }
 
         // Optionally, we also expend the adventure.
