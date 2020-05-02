@@ -61,7 +61,7 @@ class MessengerResponse extends JsonResponse
     {
         $needCaptcha = user()->cannot('bypass-captcha');
 
-        return $needCaptcha ? (new CaptchaChallenge) : false;
+        return $needCaptcha ? (new CaptchaChallenge)->getHash() : false;
     }
 
     /**

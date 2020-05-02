@@ -1,27 +1,27 @@
 /**
  * Captcha widget
  */
-ib.widget("captcha", function(window, $, undefined) {
+ib.widget("captcha", function (window, $, undefined) {
     var widget = {
 
         // The default values that are set behind init values.
         defaults : {
 
-            captchaUrl    : window.app.panel_url+"captcha",
-            reloadUrl     : window.app.panel_url+"captcha/replace.json",
+            captchaUrl : window.app.panel_url+"captcha",
+            reloadUrl  : window.app.panel_url+"captcha/replace.json",
 
             // Selectors for finding and binding elements.
             selector : {
-                'captcha'         : ".captcha",
+                'captcha' : ".captcha",
             }
         },
 
         // Events
-        events   : {
-            captchaAjaxFail : function(jqXHR, textStatus, errorThrown) {
+        events : {
+            captchaAjaxFail : function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 429) {
                     // Retry again in a second.
-                    setTimeout(function() {
+                    setTimeout(function () {
                         widget.events.captchaReload();
                     }, 1000);
                 }
@@ -32,18 +32,26 @@ ib.widget("captcha", function(window, $, undefined) {
              *
              * @param  object  event
              */
-            captchaLoad : function(event) {
+            captchaLoad : function (event) {
                 var $captcha = $(this),
                     $parent  = $captcha.parent();
 
                 $parent.removeClass("captcha-loading");
             },
 
-            captchaLoadIn : function(event, captcha) {
-                var $captcha = $(widget.options.selector['captcha'], widget.$widget),
-                    $hidden  = $captcha.next(),
-                    $field   = $captcha.parent().children("input"),
-                    url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".jpg";
+            captchaLoadIn : function (event, captcha) {
+                // bailout if we somehow received a bad captcha
+                if (typeof captcha['hash_string'] === 'undefined') {
+                    if (typeof console.warn == 'function') {
+                        console.warn("No captcha hash string?");
+                    }
+                    return false;
+                }
+
+                var $captcha = $(widget.options.selector['captcha'], widget.$widget);
+                var $hidden  = $captcha.next();
+                var $field   = $captcha.parent().children("input");
+                var url      = widget.options.captchaUrl + "/" + captcha['hash_string'] + ".jpg";
 
                 widget.$widget.data('replacing', false);
                 $captcha
@@ -58,7 +66,7 @@ ib.widget("captcha", function(window, $, undefined) {
 
             },
 
-            captchaReload : function() {
+            captchaReload : function () {
                 var $captcha = $(widget.options.selector['captcha'], widget.$widget),
                     $parent  = $captcha.parent(),
                     $field   = $captcha.parent().children("input");
@@ -67,7 +75,7 @@ ib.widget("captcha", function(window, $, undefined) {
                 $parent.addClass("captcha-loading");
                 $field.val("").focus();
 
-                jQuery.getJSON(widget.options.reloadUrl, function(data) {
+                jQuery.getJSON(widget.options.reloadUrl, function (data) {
                     widget.$widget.trigger('load', data);
                 })
                 .fail(widget.events.captchaAjaxFail);
@@ -75,22 +83,23 @@ ib.widget("captcha", function(window, $, undefined) {
         },
 
         // Event bindings
-        bind     : {
-            widget : function() {
+        bind  : {
+            widget : function () {
 
                 $(widget.options.selector['captcha'])
                     // Load events cannot be tied on parents.
                     // Watch for source changes on the captcha.
-                    .on('load.ip-captcha', widget.events.captchaLoad);
+                    .on('load.ip-captcha', widget.events.captchaLoad)
+                ;
 
                 widget.$widget
                     .data('replacing', false)
 
                     // Watch for captcha clicks.
-                    .on('load.ib-captcha',                                       widget.events.captchaLoadIn)
-                    .on('reload.ib-captcha',                                     widget.events.captchaReload)
-                    .on('click.ib-captcha',  widget.options.selector['captcha'], widget.events.captchaReload);
-
+                    .on('load.ib-captcha', widget.events.captchaLoadIn)
+                    .on('reload.ib-captcha', widget.events.captchaReload)
+                    .on('click.ib-captcha', widget.options.selector['captcha'], widget.events.captchaReload)
+                ;
             }
         }
 
