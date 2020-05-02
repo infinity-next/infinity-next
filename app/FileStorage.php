@@ -204,41 +204,6 @@ class FileStorage extends Model
     }
 
     /**
-     * Creates a new PostAttachment for a post using a direct upload.
-     *
-     * @param  UploadedFile  $file
-     * @param  Post          $post
-     *
-     * @return PostAttachment
-     */
-    public static function createAttachmentFromUpload(UploadedFile $file, Post $post, $autosave = true)
-    {
-        ## TODO ##  This needs to be moved somewhere elss stupid.
-        $storage = static::storeUpload($file);
-
-        $uploadName = urlencode($file->getClientOriginalName());
-        $uploadExt = pathinfo($uploadName, PATHINFO_EXTENSION);
-
-        $fileName = basename($uploadName, '.'.$uploadExt);
-        $fileExt = $storage->guessExtension();
-
-        $attachment = new PostAttachment;
-        $attachment->post_id = $post->post_id;
-        $attachment->file_id = $storage->file_id;
-        $attachment->filename = urlencode("{$fileName}.{$fileExt}");
-        $attachment->is_spoiler = (bool) Request::input('spoilers');
-
-        if ($autosave) {
-            $attachment->save();
-
-            ++$storage->upload_count;
-            $storage->save();
-        }
-
-        return $attachment;
-    }
-
-    /**
      * Removes the associated file for this storage.
      *
      * @return bool Success. Will return FALSE if the file was already gone.
