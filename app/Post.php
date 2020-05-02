@@ -135,6 +135,7 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
      */
     protected $appends = [
         'html',
+        'locked',
         'content_raw',
         'content_html',
         'recently_created',
@@ -638,6 +639,14 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     public $renderCatalog = false;
     public $renderMultiboard = false;
     public $renderPartial = false;
+
+    /**
+     * Useful for APIs.
+     */
+    public function getLockedAttribute()
+    {
+        return !is_null($this->locked_at);
+    }
 
     /**
      * Returns the fully rendered HTML of a post in the JSON output.
