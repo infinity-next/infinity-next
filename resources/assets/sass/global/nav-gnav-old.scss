@@ -81,40 +81,38 @@ nav.boardlist {
         }
     }
 
-    @media (max-width: 840px) {
-        font-size: 1.5em;
-        line-height: 2.5em;
+    @media (max-width: $width-tablet) {
+        position: static;
+        display: none;
+        // font-size: 1.5em;
+        // line-height: 2.5em;
 
-        div.boardlist-text {
+        /*.boardlist-text {
             display: block;
             text-align: center;
         }
-        div.boardlist-row {
+        .boardlist-row {
             display: none;
             border-bottom: 0.20em solid rgba(0,0,0,0.25);
         }
-        ul.boardlist-categories {
-
+        .boardlist-categories {
         }
-        li.boardlist-category {
+        .boardlist-category {
             clear: both;
             display: block;
         }
-        ul.boardlist-items {
+        .boardlist-items {
             display: block;
 
         }
-        li.boardlist-item {
+        .boardlist-item {
             display: block;
             box-sizing: border-box;
             padding: 0 1em;
             min-width: 300px;
             width: 50%;
             float: left;
-        }
-        a.boardlist-link {
-            display: block;
-        }
+        }*/
     }
 }
 
