@@ -1,6 +1,5 @@
 /* Catalog View */
 main.index-catalog {
-
     #{$rtl} & {
         text-align: right;
     }
@@ -10,6 +9,11 @@ main.index-catalog {
 
     .index-threads {
         margin: 1em 0 0 0;
+        padding: 0;
+
+        @media (min-width: 821px) {
+            padding: 0 80px;
+        }
     }
 
     .threads {
@@ -28,11 +32,11 @@ main.index-catalog {
     .thread {
         position: relative;
 
-        background: rgba(182, 182, 182, 0.12);
-        border: 1px solid rgba(111, 111, 111, 0.34);
+        //background: rgba(182, 182, 182, 0.12);
+        //border: 1px solid rgba(111, 111, 111, 0.34);
 
         padding: 2px;
-        margin: 0 0.25em 0.25em 0;
+        margin: 0;// 0.25em 0.25em 0;
 
         vertical-align: top;
         text-align: left;
@@ -42,10 +46,6 @@ main.index-catalog {
         height: 25em;
         width: 160px;
 
-        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-            width: 100px;
-        }
-
         &.already-seen {
             opacity: 0.75;
 
@@ -53,158 +53,226 @@ main.index-catalog {
                 opacity: 1;
             }
         }
-    }
-             .post-container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
 
-                border: none;
-                padding-top: 0;
-                overflow: visible;
-                z-index: 5;
+        &:hover .post-container {
+            margin: 0 -50%;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
+
+            bottom: auto;
+            z-index: 6;
+            max-width: none;
+            width: 200%;
+
+            &.sfw {
+                background: #{$primary-medium};
+                background: var(--primary-medium);
+                border-color: #{$primary-dark};
+                border-color: var(--primary-dark);
             }
-                 .post-container:hover {
-                    box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
-                    border-radius: 4px;
+            &.nsfw {
+                background: #{$secondary-medium};
+                background: var(--secondary-medium);
+                border-color: #{$secondary-dark};
+                border-color: var(--secondary-dark);
+            }
 
-                    //min-width: 150%;
-                    min-height: 100%;
-                    overflow: visible;
+            .attachments-multi {
+                min-height: 150px;
+            }
+            .attachment {
+                display: block;
+            }
+            .catalog-replies {
+                display: block;
+            }
+        }
 
-                    //left: -25%;
-                    bottom: auto;
-                    z-index: 6;
+        // 2 wide
+        @media (min-width: 328px) and (max-width: 491px) {
+            &:nth-child(odd):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(even):hover .post-container { // second
+                margin: 0 0 0 -100%;
+            }
+        }
+        // 3 wide
+        @media (min-width: 492px) and (max-width: 655px) {
+            &:nth-child(3n+1):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(3n+3):hover .post-container { // third
+                margin: 0 0 0 -100%;
+            }
+        }
+        // 4 wide
+        @media (min-width: 656px) and (max-width: 820px) {
+            &:nth-child(4n+1):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(4n+4):hover .post-container { // forth
+                margin: 0 0 0 -100%;
+            }
+        }
+    }
+
+    .post-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        border: none;
+        background: none;
+        padding-top: 0;
+        overflow: hidden;
+        z-index: 5;
+    }
+
+    .post-content {
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+    .catalog-replies {
+        display: none;
+    }
+    .catalog-reply {
+        display: flex;
+        text-align: left;
+        white-space: nowrap;
+        border-top: 1px solid rgba(111, 111, 111, 0.34);
+        flex-direction: row;
+        align-items: stretch;
+        overflow: hidden;
+
+        .time-passed {
+            display: inline-block;
+            font-weight: bold;
+            font-style: italic;
+            min-width: 4ch;
+            margin-right: 1ch;
+        }
+    }
+
+    .post-attachments {
+        background: none;
+        float: none;
+        text-align: center;
+        padding: 0;
+        position: relative;
+
+        .attachment {
+            display: none;
+            margin: 0;
+            padding: 0;
+            float: none;
+            text-align: center;
+
+            &:nth-child(even) {
+                position: absolute;
+                left: 10px;
+            }
+            &:nth-child(odd) {
+                position: absolute;
+                right: 10px;
+            }
+            &:first-child {
+                position: initial;
+                display: block;
+                width: 100%;
+            }
+            &:nth-child(2) { top: 0px; }
+            &:nth-child(3) { top: 0px; }
+            &:nth-child(4) { top: 75px; }
+            &:nth-child(5) { top: 75px; }
+
+            &.attachment-not-first {
+                height: 75px;
+                width: 75px;
+                vertical-align: top;
+            }
+            &.attachment-many {
+                display: none;
+            }
+        }
+        .attachment-wrapper {
+            width: auto;
+            height: auto;
+            line-height: normal;
+            margin: 0 auto;
+            max-width:100%;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+        }
+         .attachment-img {
+            display: inline-block;
+            box-sizing: border-box !important;
+            max-height: 160px;
+            max-width: 100%;
+            max-height: 100%;
+            padding: 0;
+
+            @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+                max-width: 100px;
+            }
+        }
+    }
+
+        .post-details {
+            margin: 0;
+            min-height: 1.5em;
+            text-align: center;
+        }
+            .post-details {
+                white-space: normal;
+            }
+            .post-watch, // hide watch hearts in catalog
+            .post-detail {
+                display: none;
+                margin: 0;
+                padding: 0 0.5em;
+                line-height: 1.2;
+            }
+                .post-detail.post-stats,
+                .post-detail.post-actions,
+                .post-detail.post-subject {
+                    display: block;
+                    margin: 2px 0 0;
                 }
-
-                 .post-content {
-                    padding: 0;
-                    height: 100%;
-                    overflow: hidden;
+                .post-detail.post-stats {
+                    text-align: center;
                 }
-                    .catalog-replies {
-
+                .post-detail.post-actions {
+                    display: inline;
+                    padding: 0px 0.75em 0 0.25em;
+                    float: left;
+                }
+                .post-detail.post-author {
+                    display: none;
+                }
+                .post-detail-item.author {
+                    padding-right: 0;
+                }
+                .post-detail.post-subject {
+                    display: block;
+                    padding: 0.2em 0.5em 0 0.5em;
+                    line-height: 1.2em;
+                }
+                    .post-detail-item.subject {
+                        display: inline;
                     }
-                    .catalog-reply {
-                        display: flex;
-                        text-align: left;
-                        white-space: nowrap;
-                        border-top: 1px solid rgba(111, 111, 111, 0.34);
-                        flex-direction: row;
-                        align-items: stretch;
-                        overflow: hidden;
-
-                        .time-passed {
-                            display: inline-block;
-                            font-weight: bold;
-                            font-style: italic;
-                            min-width: 4ch;
-                            margin-right: 1ch;
-                        }
-                    }
-
-                    .post-content-wrapper {
-                        overflow: hidden;
-                    }
-                     .post-container:hover .post-content {
-                        overflow: visible;
+                .post-detail.post-capcode {
+                    display: inline-block;
+                }
+                    .post-detail-item.capcode {
+                        padding-left: 0;
                     }
 
-                     .post-attachments {
-                        display: block;
-                        background: rgba(255,255,255,0.6);
-                        padding: 0;
-                        float: none;
 
-                         .post-attachment {
-                            float: none;
-                            text-align: center;
-                            padding: 0;
-                            display: block;
-                            width: 100%;
-                            margin: 0;
-                        }
-                         .attachment-wrapper {
-                            width: auto;
-                            height: auto;
-                            line-height: normal;
-                            margin: 0 auto;
-                            max-width:100%;
-                            overflow: hidden;
-                            text-align: center;
-                        }
-                             .attachment {
-                                display: block;
-                                margin: 0;
-                                padding: 0;
-                            }
-                                 .attachment-img {
-                                    display: inline-block;
-                                    box-sizing: border-box !important;
-                                    max-height: 160px;
-                                    max-width: 100%;
-                                    max-height: 100%;
-
-                                    @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-                                        max-width: 100px;
-                                    }
-                                }
-                    }
-
-                     .post-details {
-                        margin: 0;
-                        min-height: 1.5em;
-                    }
-                         .post-details {
-                            white-space: normal;
-                        }
-                        .post-watch, // hide watch hearts in catalog
-                        .post-detail {
-                            display: none;
-                            margin: 0;
-                            padding: 0 0.5em;
-                            line-height: 1.2;
-                        }
-                             .post-detail.post-stats,
-                             .post-detail.post-actions,
-                             .post-detail.post-subject {
-                                display: block;
-                                margin: 2px 0 0;
-                            }
-                             .post-detail.post-stats {
-                                text-align: center;
-                            }
-                             .post-detail.post-actions {
-                                display: inline;
-                                padding: 0px 0.75em 0 0.25em;
-                                float: left;
-                            }
-                             .post-detail.post-author {
-                                display: none;
-                            }
-                                 .post-detail-item.author {
-                                    padding-right: 0;
-                                }
-                             .post-detail.post-subject {
-                                display: block;
-                                padding: 0.2em 0.5em 0 0.5em;
-                                font-size: 140%;
-                                line-height: 1.2em;
-                            }
-                                 .post-detail-item.subject {
-                                    display: inline;
-                                }
-                             .post-detail.post-capcode {
-                                display: inline-block;
-                            }
-                                 .post-detail-item.capcode {
-                                    padding-left: 0;
-                                }
-
-
-     blockquote.post {
+     .post {
         box-sizing: border-box;
         display: block;
         width: 100%;
@@ -220,14 +288,14 @@ main.index-catalog {
             display: none;
         }
     }
-         blockquote.post pre {
-            margin: 1em 0;
-        }
-         blockquote.post p.line {
-            max-width: 100%;
-        }
+    .post pre {
+        margin: 1em 0;
+    }
+     .post p.line {
+        max-width: 100%;
+    }
 
-     .post-action-bar {
+    .post-action-bar {
         display: inline;
 
         top: 0;
@@ -236,41 +304,41 @@ main.index-catalog {
 
         margin: 0;
     }
-         .post-action-tab,
-         .post-action-tab.action-tab-actions {
-            display: inline-block;
+    .post-action-tab,
+    .post-action-tab.action-tab-actions {
+        display: inline-block;
 
-            position: relative;
-            top: -0.2em;
-            left: 0.25em;
-            float: left;
+        position: relative;
+        top: -0.2em;
+        left: 0.25em;
+        float: left;
 
-            border: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-            vertical-align: top;
-            font-size: 140%;
-        }
+        border: none;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+        vertical-align: top;
+        font-size: 140%;
+    }
 
-         ul.post-action-groups {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-size: 72%;
-        }
+    .post-action-groups {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 72%;
+    }
 
-     div.post-action-bar.action-bar-open {
+    .post-action-bar.action-bar-open {
         position: absolute;
         z-index: 5;
     }
-         .post-action-tab.action-tab-reply {
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: auto;
-        }
-             div.op-container a.post-action-reply {
-                border-width: 0 1.5em 1.5em 0;
-            }
+    .post-action-tab.action-tab-reply {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: auto;
+    }
+    .op-container .post-action-reply {
+        border-width: 0 1.5em 1.5em 0;
+    }
 }

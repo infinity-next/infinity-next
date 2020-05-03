@@ -21,12 +21,12 @@
             ) }}
         </a>
 
-        @if ($post->hasDetails())
-            @include('content.board.post.single.details')
-        @endif
-
         @if ($post->hasAttachments())
             @include('content.board.post.single.attachments')
+        @endif
+
+        @if ($post->hasDetails())
+            @include('content.board.post.single.details')
         @endif
 
         @include('content.board.post.single.post')

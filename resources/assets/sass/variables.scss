@@ -35,6 +35,9 @@ $primary-medium: #D6DAF0;
 //$primary-lighter-still: ;
 //$primary-lightest: ;
 
+$secondary-dark: #D9BFB7;
+$secondary-medium: #f0e0d6;
+
 $font-stack: Arial, Helvetica, sans-serif;
 $font-size: 13px;
 
@@ -55,5 +58,10 @@ $ltr: "[dir='ltr']";
 :root {
     --background-fade: #{$background-fade};
     --background-color: #{$background-color};
+
+    --primary-dark: #{$primary-dark};
     --primary-medium: #{$primary-medium};
+
+    --secondary-dark: #{$secondary-dark};
+    --secondary-medium: #{$secondary-medium};
 }

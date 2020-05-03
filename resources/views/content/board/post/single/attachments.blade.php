@@ -1,7 +1,7 @@
 @if ($post->attachments->count())
 @spaceless
 <div class="post-attachments attachment-count-{{ $post->attachments->count() }} {{ $post->attachments->count() > 1 ? "attachments-multi" : "attachments-single" }}">
-    @foreach ($post->attachments as $attachment)
+    @foreach ($post->attachments as $index => $attachment)
     @if (!isset($catalog) || !$catalog)
     @if ($attachment->isDeleted())
     <div class="attachment attachment-deleted">
@@ -57,10 +57,10 @@
         </div>
     </div>
     @endif
-    @else
-    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
+    @else {{-- Catalog --}}
+    <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $index === 0 ? 'attachment-first' : 'attachment-not-first' }} {{ $index > 4 ? 'attachment-many' : '' }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
         <a class="attachment-link" target="_blank" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
-            {!! $attachment->toHtml('auto') !!}
+            {!! $attachment->toHtml($index === 0 ? 150 : 75) !!}
         </a>
     </div>
     @endif

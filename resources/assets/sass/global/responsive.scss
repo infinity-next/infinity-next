@@ -25,17 +25,6 @@ body.responsive {
             padding-left: 1em;
             padding-right: 1em;
         }
-
-        /**
-         * Catalog
-         */
-        main.index-catalog section.index-threads {
-            padding: 0;
-        }
-            main.index-catalog .thread-item {
-                max-width: 150px;
-                min-width: 100px;
-            }
     }
 
     /**
@@ -124,16 +113,6 @@ body.responsive {
         .only-mobile {
             display: none !important;
         }
-
-        /**
-         * Catalog
-         */
-        main.index-catalog section.index-threads {
-            padding: 0 45px;
-        }
-            main.index-catalog .thread-item {
-                max-width: 180px;
-            }
     }
 
     /**

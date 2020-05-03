@@ -91,12 +91,16 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); */
 
     &.sfw {
-        background: #D6DAF0;
-        border-color: #B7C5D9;
+        background: #{$primary-medium};
+        background: var(--primary-medium);
+        border-color: #{$primary-dark};
+        border-color: var(--primary-dark);
     }
     &.nsfw {
-        background: #f0e0d6;
-        border-color: #D9BFB7;
+        background: #{$secondary-medium};
+        background: var(--secondary-medium);
+        border-color: #{$secondary-dark};
+        border-color: var(--secondary-dark);
 
         a, a:link, a:visited, a:hover {
             color: #800000
@@ -338,7 +342,7 @@
     }
 
 .catalog-open {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    //border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;
     vertical-align: middle;
     font-size: 1.2em;
@@ -349,9 +353,9 @@
     display: block;
 
     .nsfw & {
-        background: rgba(255, 0, 0, 0.1);
+        //background: rgba(255, 0, 0, 0.1);
     }
     .sfw & {
-        background: rgba(  0, 0, 255, 0.1);
+        //background: rgba(  0, 0, 255, 0.1);
     }
 }

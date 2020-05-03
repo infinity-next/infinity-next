@@ -372,6 +372,8 @@ class PostAttachment extends Model
         // Measure dimensions.
         $height = 'auto';
         $width = 'auto';
+        $maxHeight = $maxDimension ? "{$maxDimension}px" : "none";
+        $maxWidth = $maxDimension ? "{$maxDimension}px" : "none";
         $oHeight = $thumbnail ? $thumbnail->attributes['file_height'] : Settings::get('attachmentThumbnailSize', 200);
         $oWidth = $thumbnail ? $thumbnail->attributes['file_width'] : Settings::get('attachmentThumbnailSize', 200);
 
@@ -410,7 +412,7 @@ class PostAttachment extends Model
         }
 
         return "<div class=\"attachment-wrapper\">" .
-            "<img class=\"attachment-img {$classes}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"height: {$height}; width: {$width};\"/>" .
+            "<img class=\"attachment-img {$classes}\" src=\"{$url}\" data-mime=\"{$mime}\" data-sha256=\"{$hash}\" style=\"height: {$height}; width: {$width}; max-height: {$maxHeight}; max-width: {$maxWidth};\"/>" .
         "</div>";
     }
 

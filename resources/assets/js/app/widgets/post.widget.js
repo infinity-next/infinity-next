@@ -76,7 +76,7 @@
             'backlink' : "<a class=\"cite cite-post cite-backlink\"></a>",
             'collapse' : "<span class=\"post-collapse\"><i class=\"fas fa-minus-square\"></i>&nbsp;</span>",
             'uncollapse' : "<span class=\"post-uncollapse\"><i class=\"fas fa-plus-square\"></i>&nbsp;</span>",
-            'watch' : "<span class=\"post-watch\"><i class=\"fas fa-heart\"></i></span>"
+            'watch' : "<span class=\"post-detail post-watch\"><i class=\"fas fa-heart\"></i></span>"
         }
     };
 
