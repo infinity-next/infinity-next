@@ -15,7 +15,7 @@
 
 @section('app-js')
     'board'          : "{{ $board->board_uri }}",
-    'board_url'      : "{{ trim($board->getUrl('index'), '/') }}",
+    'board_url'      : "{{ trim($board->getUrl('index', [], true), '/') }}",
     'board_settings' : {
         'postAttachmentsMax' : "{{ $board->getConfig('postAttachmentsMax') }}",
         'postAttachmentsMin' : "{{ $board->getConfig('postAttachmentsMin') }}",
