@@ -7,6 +7,7 @@ use App\FileStorage;
 use App\Post;
 use App\PostAttachment;
 use App\PostCite;
+use App\Events\PostWasCapcoded;
 use App\Events\PostWasCreated;
 use App\Events\PostWasDeleted;
 use App\Events\PostWasModified;

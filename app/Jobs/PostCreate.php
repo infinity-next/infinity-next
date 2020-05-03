@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Post;
-use App\Events\PostWasCapcoded;
 use App\Events\PostWasCreated;
 use App\Events\ThreadReply;
 use Illuminate\Bus\Queueable;

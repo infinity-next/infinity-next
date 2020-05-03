@@ -14,6 +14,11 @@ class CaptchaGraceReduce extends Listener
      */
     public function handle($event)
     {
+         // burn dirty captchas
+        if (is_hidden_service()) {
+            Cache::forget("captcha.grace.{$session}");
+        }
+        
         if (!site_setting('captchaEnabled')) {
             return;
         }
@@ -26,7 +31,7 @@ class CaptchaGraceReduce extends Listener
         $session = Session::getId();
         $graceRemaining = Cache::decrement("captcha.grace.{$session}");
 
-        if ($graceRemaining < 1 || is_hidden_service()) { // burn dirty captchas
+        if ($graceRemaining < 1) {
             Cache::forget("captcha.grace.{$session}");
         }
     }
