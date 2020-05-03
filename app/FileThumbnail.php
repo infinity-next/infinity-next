@@ -59,11 +59,11 @@ class FileThumbnail extends Model
 
     public function source()
     {
-        return $this->hasOne(FileStorage::class, 'source_id');
+        return $this->hasOne(FileStorage::class, 'file_id', 'source_id');
     }
 
     public function thumbnail()
     {
-        return $this->hasOne(FileStorage::class, 'thumbnail_id');
+        return $this->hasOne(FileStorage::class, 'file_id', 'thumbnail_id');
     }
 }

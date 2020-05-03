@@ -46,6 +46,10 @@ trait SendsFilesTrait
         if (is_string($hash)) {
             $FileStorage = FileStorage::getHash($hash);
 
+            if (is_null($FileStorage)) {
+                return abort(404);
+            }
+
             if (!is_string($filename)) {
                 $filename = "{$hash}.{$FileStorage->guessExtension()}";
             }
