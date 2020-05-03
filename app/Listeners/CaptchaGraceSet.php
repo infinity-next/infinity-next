@@ -18,6 +18,10 @@ class CaptchaGraceSet extends Listener
             return;
         }
 
+        if (is_hidden_service()) {
+            return;
+        }
+
         $session = Session::getId();
         $gracePosts = (int) site_setting('captchaLifespanPosts');
         $graceMinutes = (int) site_setting('captchaLifespanTime');

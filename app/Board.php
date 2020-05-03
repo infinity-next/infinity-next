@@ -804,14 +804,19 @@ class Board extends Model
     /**
      * Returns a fully qualified URL for a route on this board.
      *
-     * @param string $route Optional route addendum.
-     * @param array $params Optional array of parameters to be added.
-     * @param bool $abs Options indicator if the URL is to be absolute.
+     * @param  string  $route Optional route addendum.
+     * @param  array  $params Optional array of parameters to be added.
+     * @param  bool|null  $abs Options indicator if the URL is to be absolute.
      *
      * @return string
      */
-    public function getUrl($route = "catalog", array $params = [], $abs = true)
+    public function getUrl($route = "catalog", array $params = [], $abs = null)
     {
+        # TODO: Make this true by default if our current domain and the main domain are different.
+        if (is_null($abs)) {
+            $abs = false;
+        }
+
         // Most people like URLs to be /foo/ instead of /foo.
         if ($route === "index" && empty($params)) {
             $trailing_slash = "/";
