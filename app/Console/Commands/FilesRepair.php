@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use App\PostAttachment;
 use App\Filesystem\Upload;
+use App\Filesystem\BannedHashException;
+use App\Filesystem\BannedPhashException;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Cache;
 use Storage;
 
@@ -45,6 +48,10 @@ class FilesRepair extends Command
             foreach ($attachments as $attachment) {
                 $thumb = $attachment->thumbnail;
 
+                if ($attachment->is_deleted) {
+                    continue;
+                }
+
                 if (!is_null($thumb) && $thumb->hasFile()) {
                     if (!$attachment->file->thumbnails->contains($thumb)) {
                         $this->line("Reattaching thumbnail to its source.");
@@ -70,8 +77,26 @@ class FilesRepair extends Command
                 }
 
                 $this->info("Processing a new thumbnail.");
-                $uploader = new Upload($attachment->file);
-                $newThumbs = $uploader->processThumbnails();
+
+                try {
+                    $uploader = new Upload($attachment->file);
+                    $newThumbs = $uploader->processThumbnails();
+                }
+                catch (BannedHashException $e) {
+                    $attachment->is_deleted = true;
+                    $attachment->save();
+                    continue;
+                }
+                catch (BannedPhashException $e) {
+                    $attachment->is_deleted = true;
+                    $attachment->save();
+                    continue;
+                }
+                catch (FileNotFoundException $e) {
+                    $attachment->is_deleted = true;
+                    $attachment->save();
+                    continue;
+                }
 
                 if ($newThumbs->count() > 0) {
                     $this->line("We made a new one!");
