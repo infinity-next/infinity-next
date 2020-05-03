@@ -764,6 +764,6 @@ class FileStorage extends Model
      */
     public function scopeWhereOrphan($query)
     {
-        return $query->whereDoesntHave('postAttachments')->whereDoesntHave('assets')->whereDoesntHave('thumbnailPivots');
+        return $query->whereDoesntHave('postAttachments')->whereDoesntHave('assets')->whereDoesntHave('thumbnailPivots')->whereDoesntHave('sourcePivots');
     }
 }

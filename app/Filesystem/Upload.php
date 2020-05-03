@@ -330,9 +330,12 @@ class Upload
         // skip thumbnailing if we already have thumbnails
         if ($this->storage->exists) {
             $this->storage->load('thumbnails');
+            $thumbnails = $this->storage->thumbnails->filter(function ($thumbnail) {
+                return $thumbnail->hasFile();
+            });
 
-            if ($this->storage->thumbnails->count() > 0) {
-                $this->thumbnails = $this->storage->thumbnails;
+            if ($thumbnails->count() > 0) {
+                $this->thumbnails = $thumbnails;
                 return $this->thumbnails;
             }
         }
