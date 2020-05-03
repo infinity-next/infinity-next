@@ -41,11 +41,6 @@ class PostCreate extends Job implements ShouldQueue
         // only used for captcha incrementing as of 4-19-2020
         //event(new PostWasCreated($post));
 
-        // Log staff posts.
-        if ($post->capcode_id) {
-            event(new PostWasCapcoded($post, user()));
-        }
-
         // Finally fire event on OP, if it exists.
         if (!is_null($post->reply_to)) {
             broadcast(new ThreadReply($post->thread, $post));

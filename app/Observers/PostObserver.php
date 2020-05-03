@@ -193,6 +193,11 @@ class PostObserver
         // fire events
         event(new PostWasCreated($post));
 
+        // Log staff posts.
+        if ($post->capcode_id) {
+            event(new PostWasCapcoded($post, $user));
+        }
+
         if ($thread) {
             PostCreate::withChain([new ThreadAutoprune($thread)])->dispatch($post);
         }
