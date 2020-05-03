@@ -108,7 +108,7 @@ class FileController extends PanelController
 
             // NOTE: We are using withTrashed() here so if we need to delete
             // multiple attachments on a single post, they all broadcast correctly.
-            $file->posts()->withTrashed()->each(function ($post) use ($bans, $file) {
+            $file->posts()->withTrashed()->each(function ($post) use ($bans, $file, $fuzzyban) {
                 broadcast(new FileWasBanned($post, $file));
 
                 if (!is_null($post->author_ip) && !$bans->contains('ban_ip_start', $post->author_ip)) {
