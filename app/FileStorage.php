@@ -698,7 +698,7 @@ class FileStorage extends Model
     public function putFile()
     {
         Storage::makeDirectory($this->getDirectory());
-        Storage::put($this->getPath(), $this->blob);
+        return Storage::put($this->getPath(), $this->blob);
     }
 
     /**
