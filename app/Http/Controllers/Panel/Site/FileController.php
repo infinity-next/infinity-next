@@ -116,7 +116,7 @@ class FileController extends PanelController
                         'ban_ip_start' => $post->author_ip,
                         'ban_ip_end' => $post->author_ip,
                         'board_uri' => null,
-                        'expires_at' => now()->addDays(7),
+                        'expires_at' => now()->addDays($fuzzyban ? 7 : 1),
                         'mod_id' => user()->user_id,
                         'post_id' => $post->post_id,
                         'justification' => "Posting banned image.",

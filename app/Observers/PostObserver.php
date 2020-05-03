@@ -316,7 +316,7 @@ class PostObserver
     public function deleted($post)
     {
         // After a post is deleted, update OP's reply count.
-        if (!is_null($post->reply_to)) {
+        if (!is_null($post->thread)) {
             $lastReply = $post->thread->getReplyLast();
 
             if ($lastReply) {

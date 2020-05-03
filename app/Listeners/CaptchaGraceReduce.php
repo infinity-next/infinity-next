@@ -26,7 +26,7 @@ class CaptchaGraceReduce extends Listener
         $session = Session::getId();
         $graceRemaining = Cache::decrement("captcha.grace.{$session}");
 
-        if ($graceRemaining < 1) {
+        if ($graceRemaining < 1 || is_hidden_service()) { // burn dirty captchas
             Cache::forget("captcha.grace.{$session}");
         }
     }
