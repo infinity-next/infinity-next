@@ -47,7 +47,7 @@ trait SendsFilesTrait
             $FileStorage = FileStorage::getHash($hash);
 
             if (is_null($FileStorage)) {
-                return abort(404);
+                return abort(410, "File is gone from storage.");
             }
 
             if (!is_string($filename)) {
