@@ -41,11 +41,15 @@ class FilesRepair extends Command
     public function handle()
     {
         $this->comment("Fixing post attachments!");
-        PostAttachment::whereHas('post')->whereHas('file')->whereHas('thumbnail')->with('post', 'file', 'file.thumbnails', 'thumbnail')->chunk(100, function ($attachments) {
+        PostAttachment::whereHas('post')->whereHas('file')->whereHas('thumbnail')->with('post', 'file', 'file.thumbnails', 'thumbnail', 'thumbnail')->chunk(100, function ($attachments) {
             foreach ($attachments as $attachment) {
-                $thumb = $attachment->thumbnail ?? $attachment->file->thumbnails->first();
+                $thumb = $attachment->thumbnail;
 
                 if (!is_null($thumb) && $thumb->hasFile()) {
+                    if (!$attachment->file->thumbnails->contains($thumb)) {
+                        $this->line("Reattaching thumbnail to its source.");
+                        $attachment->file->thumbnails()->save($thumb);
+                    }
                     continue;
                 }
 
@@ -82,6 +86,8 @@ class FilesRepair extends Command
                     if (!$newThumb->hasFile()) {
                         $this->error("New thumb does not exist despite trying to make a new one.");
                     }
+
+                    $attachment->file->thumbnails()->saveMany($newThumbs);
                     continue;
                 }
 
