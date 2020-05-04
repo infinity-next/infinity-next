@@ -6,6 +6,7 @@ use App\Exceptions\TorClearnet;
 use App\Mail\SiteError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
