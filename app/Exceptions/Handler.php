@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Exceptions\TorClearnet;
+use App\Mail\SiteError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -52,11 +53,12 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         $errorView = false;
-        $errorEmail = false;
+        $errorEmail = true;
 
         switch (get_class($e)) {
             case TorClearnet::class:
                 $errorView = 'errors.403_tor_clearnet';
+                $errorEmail = false;
                 break;
 
             case Swift_TransportException::class:
@@ -78,10 +80,6 @@ class Handler extends ExceptionHandler
                 $errorView = 'errors.500_predis';
                 $errorEmail = true;
                 break;
-
-            default:
-                $errorView = false;
-                break;
         }
 
         if (config('app.debug', false)) {
@@ -91,28 +89,7 @@ class Handler extends ExceptionHandler
         $errorEmail = $errorEmail && env('MAIL_ADDR_ADMIN', false) && env('MAIL_ADMIN_SERVER_ERRORS', false);
 
         if ($errorEmail) {
-            // This makes use of a Symfony error handler to make pretty traces.
-            $SymfonyDisplayer = new HtmlErrorRenderer(true);
-            $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
-
-            $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
-            $SymfonyHtml = $SymfonyDisplayer->getContent($FlattenException);
-
-            $data = [
-                'exception' => $e,
-                'error_class' => get_class($e),
-                'error_css' => $SymfonyCss,
-                'error_html' => $SymfonyHtml,
-            ];
-
-            Mail::send('emails.error', $data, function ($message) {
-                $to = env('SITE_NAME', 'Infinity Next').' Webmaster';
-                $subject = env('SITE_NAME', 'Infinity Next').' Error';
-                $subject .= ' '.Request::url() ?: '';
-
-                $message->to(env('MAIL_ADDR_ADMIN', false), $to);
-                $message->subject($subject);
-            });
+            Mail::queue(new SiteError($e, Request::url()));
         }
 
         if ($errorView) {
@@ -120,7 +97,7 @@ class Handler extends ExceptionHandler
             // diffrent without app.debug enabled. I always want a stack trace
             // in my emails!
             $SymfonyDisplayer = new HtmlErrorRenderer(config('app.debug'));
-            $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::create($e);
+            $FlattenException = isset($FlattenException) ? $FlattenException : FlattenException::createFromThrowable($e);
 
             $SymfonyCss = $SymfonyDisplayer->getStylesheet($FlattenException);
             $SymfonyHtml = $SymfonyDisplayer->getBody($FlattenException);

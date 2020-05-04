@@ -22,7 +22,7 @@ use Illuminate\Queue\SerializesModels;
  *
  * @since      0.6.0
  */
-class ThreadAutoprune extends Job implements ShouldQueue
+class ThreadAutoprune implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
