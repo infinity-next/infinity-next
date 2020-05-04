@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Exceptions\TorClearnet;
 use App\Mail\SiteError;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
@@ -26,6 +27,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        AuthenticationException::class,
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
