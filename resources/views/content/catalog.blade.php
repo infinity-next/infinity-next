@@ -1,7 +1,7 @@
 @extends('layouts.main.board')
 
 @section('content')
-<main class="board-index index-catalog">
+<main class="board-index index-catalog catalog-flyout">
     @can('post', $board)
     <section class="index-form">
         @include('content.board.post.form', [

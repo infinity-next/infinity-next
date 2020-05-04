@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<main class="multiboard-index index-catalog">
+<main class="multiboard-index index-catalog catalog-flyout">
     <div class="overwatch js-only" data-widget="overwatch">
         <div class="overwatch-label label-reading"><tt>Waiting for you to finish reading ...</tt></div>
     </div>

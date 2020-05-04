@@ -59,7 +59,7 @@
     @endif
     @else {{-- Catalog --}}
     <div class="attachment attachment-type-{{ $attachment->file->guessExtension() }} {{ $index === 0 ? 'attachment-first' : 'attachment-not-first' }} {{ $index > 4 ? 'attachment-many' : '' }}" data-widget="attachment" data-file="{{ $attachment->file_id }}" data-thumbnail="{{ $attachment->thumbnail_id }}">
-        <a class="attachment-link" target="_blank" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
+        <a class="attachment-link" href="{!! $post->getUrl() !!}" data-instant data-download-url="{!! $attachment->getUrl() !!}" data-thumb-url="{!! $attachment->getThumbnailUrl() !!}">
             {!! $attachment->toHtml($index === 0 ? 150 : 75) !!}
         </a>
     </div>

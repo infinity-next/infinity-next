@@ -393,6 +393,8 @@ class Upload
                 $this->processThumbnail($apic['data']);
             }
         }
+
+        unlink($temp);
     }
 
     protected function processThumbnailsForBook()
@@ -445,6 +447,8 @@ class Upload
                 app('log')->error("Encountered an error trying to generate a thumbnail for book {$this->hash}.");
             }
         }
+
+        unlink($temp);
     }
 
     /**
@@ -513,10 +517,10 @@ class Upload
                 '-r 1 '.// FPS, 1 for 1 frame.
                 '-y '.// Overwrite file if it already exists.
                 '-threads 1 '.
-                "{$thumbPath} 2>&1";
+                "{$thumbPath} 2>&1"; // 2>&1 for output
 
         exec($cmd, $output, $returnvalue);
-        app('log')->info($output);
+        //app('log')->info($output);
 
         // Constrain thumbnail to proper dimensions.
         if (filesize($thumbPath)) {
@@ -525,5 +529,8 @@ class Upload
         else {
             app('log')->error("Video thumbnail has no size for file {$this->storage->hash}.");
         }
+
+        unlink($thumbPath);
+        unlink($videoPath);
     }
 }

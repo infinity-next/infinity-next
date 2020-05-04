@@ -53,68 +53,68 @@ main.index-catalog {
                 opacity: 1;
             }
         }
+    }
 
-        &:hover {
-            z-index: 6;
+    &.catalog-flyout .thread:hover {
+        z-index: 6;
 
-            .post-container {
-                margin: 0 -50%;
-                box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
+        .post-container {
+            margin: 0 -50%;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.66);
 
-                bottom: auto;
-                max-width: none;
-                width: 200%;
+            bottom: auto;
+            max-width: none;
+            width: 200%;
 
-                &.sfw {
-                    background: #{$primary-medium};
-                    background: var(--primary-medium);
-                    border-color: #{$primary-dark};
-                    border-color: var(--primary-dark);
-                }
-                &.nsfw {
-                    background: #{$secondary-medium};
-                    background: var(--secondary-medium);
-                    border-color: #{$secondary-dark};
-                    border-color: var(--secondary-dark);
-                }
-
-                .attachments-multi {
-                    min-height: 150px;
-                }
-                .attachment {
-                    display: block;
-                }
-                .catalog-replies {
-                    display: block;
-                }
+            &.sfw {
+                background: #{$primary-medium};
+                background: var(--primary-medium);
+                border-color: #{$primary-dark};
+                border-color: var(--primary-dark);
+            }
+            &.nsfw {
+                background: #{$secondary-medium};
+                background: var(--secondary-medium);
+                border-color: #{$secondary-dark};
+                border-color: var(--secondary-dark);
             }
 
-            // 2 wide
-            @media (min-width: 328px) and (max-width: 491px) {
-                &:nth-child(odd):hover .post-container { // first
-                    margin: 0 -100% 0 0;
-                }
-                &:nth-child(even):hover .post-container { // second
-                    margin: 0 0 0 -100%;
-                }
+            .attachments-multi {
+                min-height: 150px;
             }
-            // 3 wide
-            @media (min-width: 492px) and (max-width: 655px) {
-                &:nth-child(3n+1):hover .post-container { // first
-                    margin: 0 -100% 0 0;
-                }
-                &:nth-child(3n+3):hover .post-container { // third
-                    margin: 0 0 0 -100%;
-                }
+            .attachment {
+                display: block;
             }
-            // 4 wide
-            @media (min-width: 656px) and (max-width: 820px) {
-                &:nth-child(4n+1):hover .post-container { // first
-                    margin: 0 -100% 0 0;
-                }
-                &:nth-child(4n+4):hover .post-container { // forth
-                    margin: 0 0 0 -100%;
-                }
+            .catalog-replies {
+                display: block;
+            }
+        }
+
+        // 2 wide
+        @media (min-width: 328px) and (max-width: 491px) {
+            &:nth-child(odd):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(even):hover .post-container { // second
+                margin: 0 0 0 -100%;
+            }
+        }
+        // 3 wide
+        @media (min-width: 492px) and (max-width: 655px) {
+            &:nth-child(3n+1):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(3n+3):hover .post-container { // third
+                margin: 0 0 0 -100%;
+            }
+        }
+        // 4 wide
+        @media (min-width: 656px) and (max-width: 820px) {
+            &:nth-child(4n+1):hover .post-container { // first
+                margin: 0 -100% 0 0;
+            }
+            &:nth-child(4n+4):hover .post-container { // forth
+                margin: 0 0 0 -100%;
             }
         }
     }

@@ -10,13 +10,22 @@
 
     // Content events
     var events = {
-        doContentUpdate : function(event) {
-            blueprint.prototype.adjustDisplay(event.data.setting.get());
+        doCatalogFlyoutUpdate : function (event) {
+            blueprint.prototype.adjustCatalog();
+        },
+        doContentUpdate : function (event) {
+            blueprint.prototype.adjustDisplay();
         }
     };
 
     // Configuration options
     var options = {
+        catalog_flyout : {
+            type : "bool",
+            initial : true,
+            onChange : events.doCatalogFlyoutUpdate,
+            onUpdate : events.doCatalogFlyoutUpdate
+        },
         sfw : {
             type : "bool",
             initial : false,
@@ -25,12 +34,19 @@
         }
     };
 
-    blueprint.prototype.adjustDisplay = function(sfw) {
-        var widget  = this;
+    blueprint.prototype.adjustCatalog = function () {
+        var flyout = this.is('catalog_flyout');
 
-        var sfw = widget.is('sfw');
-        $("body").toggleClass('nsfw-filtered', sfw);
-        $("body").toggleClass('nsfw-allowed', !sfw);
+        $("main.index-catalog").toggleClass('catalog-flyout', flyout);
+    };
+
+    blueprint.prototype.adjustDisplay = function () {
+        var sfw = this.is('sfw');
+
+        $("body")
+            .toggleClass('nsfw-filtered', sfw)
+            .toggleClass('nsfw-allowed', !sfw)
+        ;
 
         // if (sfw) {
         //     var $ob = $(this.options.selector['overboard-nav']);
@@ -53,7 +69,8 @@
             $widget : $widget
         };
 
-        widget.adjustDisplay(widget.is('sfw'));
+        widget.adjustCatalog();
+        widget.adjustDisplay();
     };
 
     blueprint.prototype.defaults = {

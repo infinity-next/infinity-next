@@ -64,6 +64,7 @@ return [
         'title' => "Content",
 
         'option' => [
+            'catalog_flyout' => "Catalog Flyouts on Hover",
             'sfw' => "Safe-for-Work Mode",
         ],
     ],
