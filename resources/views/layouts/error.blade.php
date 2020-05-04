@@ -29,7 +29,7 @@
         </figure>
     </section>
 
-    @if ((isset($error_html) && $error_html != "") && (env('APP_DEBUG', false) === true || (user() && user()->canAdminConfig())))
+    @if ((isset($error_html) && $error_html != "") && (env('APP_DEBUG', false) === true || (user() && user()->can('admin-config'))))
     <section class="error-trace">
         {!! $error_html !!}
     </section>
