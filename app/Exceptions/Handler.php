@@ -9,6 +9,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Exception;
 use ErrorException;
@@ -27,8 +28,9 @@ class Handler extends ExceptionHandler
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
-        ValidationException::class,
+        NotFoundHttpException::class,
         TorClearnet::class,
+        ValidationException::class,
     ];
 
     /**
@@ -53,10 +55,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+        $errorClass = get_class($e);
         $errorView = false;
-        $errorEmail = true;
+        $errorEmail = in_array($errorClass, $this->dontReport);
 
-        switch (get_class($e)) {
+        switch ($errorClass) {
             case TorClearnet::class:
                 $errorView = 'errors.403_tor_clearnet';
                 $errorEmail = false;
