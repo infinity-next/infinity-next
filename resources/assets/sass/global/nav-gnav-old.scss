@@ -59,14 +59,17 @@ nav.boardlist {
     }
 
     header & {
-        background: #d6daf0;
-        color: #34345C;
+        background: #{$primary-medium};
+        background: var(--primary-medium);
+        color: #{$primary-darker};
+        color: var(--primary-darker);
         vertical-align: baseline;
 
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 
         .boardlist-link {
-            color: #34345C;
+            color: #{$primary-darker};
+            color: var(--primary-darker);
             cursor: pointer;
         }
     }

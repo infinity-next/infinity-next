@@ -74,7 +74,8 @@ nav.pagination {
     li.pagination-page::after {
         display: inline-block;
         padding: 0.25em 0.1em;
-        color: #34345C;
+        color: #{$primary-darker};
+        color: var(--primary-darker);
 
         #{$ltr} & {
             float: left;

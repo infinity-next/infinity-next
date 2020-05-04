@@ -83,14 +83,16 @@ a.button {
     margin-bottom: 0;
 
     background: rgba(255, 255, 255, 0.35);
-    border: 1px solid #34345C;
+    border: 1px solid #{$primary-darker};
+    border-color: var(--primary-darker);
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     outline: 0;
 
     cursor: pointer;
 
-    color: #34345C;
+    color: #{$primary-darker};
+    color: var(--primary-darker);
     font-size: 1.07142857142857em;
     font-weight: bold;
     line-height: 1.4545em;
@@ -100,7 +102,8 @@ a.button {
 }
     button:hover,
     a.button:hover {
-        background: #34345C;
+        background: #{$primary-darker};
+        background: var(--primary-darker);
         color: #FFFFFF;
     }
 
@@ -243,7 +246,8 @@ table {
     .infobox .infobox-title {
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
         font-weight: bold;
-        color: #34345C;
+        color: #{$primary-darker};
+        color: var(--primary-darker);
         padding: 0.5em;
     }
     .infobox .infobox-info {

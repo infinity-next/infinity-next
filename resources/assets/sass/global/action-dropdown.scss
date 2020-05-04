@@ -75,14 +75,16 @@
     border-bottom: 1px solid rgba(0,0,0,0.25);
     width: 100%;
 
-    color: #34345C;
+    color: #{$primary-darker};
+    color: var(--primary-darker);
     white-space: nowrap;
     line-height: 1.4;
     padding: 0.25em 1em 0.25em;
 
     &:hover {
         color: #dee0df;
-        background: #34345C;
+        background: #{$primary-darker};
+        background: var(--primary-darker);
     }
     &:last-child {
         margin-bottom: -1px;

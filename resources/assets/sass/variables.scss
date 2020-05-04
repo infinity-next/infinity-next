@@ -15,17 +15,6 @@
 
 $base-url: '/static/';
 
-$content-text: #2A2A2A;
-
-$color-link: #34345C;
-$color-link-hover: #ff0000;
-
-$color-author: #117743;
-
-$background-fade: #D1D5EE;
-$background-color: #EEF2FF;
-$background-white: #DEE0DF;
-
 $primary-darker: #34345C;
 $primary-dark: #B7C5D9;
 $primary-medium: #D6DAF0;
@@ -37,6 +26,17 @@ $primary-medium: #D6DAF0;
 
 $secondary-dark: #D9BFB7;
 $secondary-medium: #f0e0d6;
+
+$content-text: #2A2A2A;
+
+$color-link: $primary-darker;
+$color-link-hover: #ff0000;
+
+$color-author: #117743;
+
+$background-fade: #D1D5EE;
+$background-color: #EEF2FF;
+$background-white: #DEE0DF;
 
 $font-stack: Arial, Helvetica, sans-serif;
 $font-size: 13px;

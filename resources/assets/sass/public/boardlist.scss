@@ -47,7 +47,8 @@
                 float: right;
             }
             .board-uri .board-sfw {
-                color: #34345C;
+                color: #{$primary-darker};
+                color: var(--primary-darker);
                 margin: 0 0 0 0.6em;
                 float: right;
             }
@@ -185,7 +186,8 @@
         #search-form  .box-title {
             border-bottom: 1px solid rgba(0, 0, 0, 0.15);
             font-weight: bold;
-            color: #34345C;
+            color: #{$primary-darker};
+            color: var(--primary-darker);
             padding: 0.5em;
             margin-top: 0;
         }
