@@ -532,7 +532,7 @@ class FileStorage extends Model
             //#
             // APPLICATIONS
             //#
-            case 'x-shockwave-flash':
+            case 'application/x-shockwave-flash':
                 return 'swf';
         }
 

@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Exception;
@@ -31,6 +32,7 @@ class Handler extends ExceptionHandler
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
+        MethodNotAllowedHttpException::class,
         NotFoundHttpException::class,
         TorClearnet::class,
         ValidationException::class,
@@ -79,9 +81,6 @@ class Handler extends ExceptionHandler
                 $errorView = 'errors.500';
                 $errorEmail = true;
                 break;
-
-            case Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException::class:
-                return abort(400);
 
             case Predis\Connection\ConnectionException::class:
                 $errorView = 'errors.500_predis';
