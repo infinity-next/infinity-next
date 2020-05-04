@@ -53,7 +53,8 @@ html.js #{$responsive} main.index-threaded form.form-post {
             margin: 0;
             padding: 0;
 
-            background: #5c58ff;
+            background: #{$primary-darker};
+            background: var(--primary-darker);
             color: #FEFEFE;
             text-indent: 4px;
         }

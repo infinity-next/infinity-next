@@ -1,7 +1,8 @@
 /* Navigation */
 nav.gnav {
-    background: #EEF2FF;
-    border-bottom: 1px solid #dedede;
+    background: #{$background-color};
+    background: var(--background-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
     padding: 0;
     margin: 0;
@@ -41,18 +42,19 @@ nav.gnav {
                 }
             }
 
-        nav.gnav li.gnav-item  .gnav-link {
+        nav.gnav li.gnav-item .gnav-link {
             display: inline-block;
             font-size: 14px;
             margin: 0 7px;
             padding: 11px 2px;
             text-decoration: none;
             vertical-align: top;
+            color: #{$color-link};
+            color: var(--color-link);
         }
             nav.gnav li.gnav-item.gnav-active .gnav-link {
                 border-bottom: 3px solid #AF0A0F;
                 padding-bottom: 8px;
-                color: #AF0A0F;
             }
 
         nav.gnav .flyout {
@@ -90,11 +92,12 @@ nav.gnav {
                 box-sizing: border-box;
                 max-width: 100%;
 
-                background: #EEF2FF;
+                background: #{$background-color};
+                background: var(--background-color);
                 border-radius: 0 0 4px 4px;
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-                border-right: 1px solid #dedede;
-                border-bottom: 1px solid #dedede;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
             }
 
@@ -104,7 +107,7 @@ nav.gnav {
                 font-weight: bold;
                 padding: 12px 12px 6px 12px;
                 pointer-events: all;
-                border-bottom: 1px solid #dedede;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
                 nav.gnav .flyout-headlink {
                     display: block;
@@ -141,7 +144,7 @@ nav.gnav {
                 width: 100%;
                 height: 100%;
 
-                border-left: 1px solid #dedede;
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
                 border-right: 1px solid transparent;
                 padding: 0 1px 12px 1px;
                 margin: 0 -1px 0 -1px;
@@ -161,7 +164,7 @@ nav.gnav {
                         white-space: normal;
                     }
                         nav.gnav .flyout-item:hover {
-                            background-color: rgba(255,255,255,0.5);
+                            background-color: rgba(255, 255, 255, 0.5);
                         }
 
                         nav.gnav .flyout-uri {

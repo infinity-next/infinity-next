@@ -250,8 +250,10 @@ section.index-form {
             form.form-post button.field-submit,
             form.form-post div.row-file {
                 border: none;
-                background: #E4E4E4;
-                color: rgb(17, 17, 17);
+                background: #{$form-button};
+                background: var(--form-button);
+                color: #{--form-color};
+                color: var(--form-color);
                 text-align: center;
             }
 
@@ -263,7 +265,8 @@ section.index-form {
 
             form.form-post button.field-submit:hover,
             form.form-post div.row-file:hover {
-                background-color: #F1EFEF;
+                background: #{$form-button-hover};
+                background: var(--form-button-hover);
             }
 
             html.js form.form-post div.dz-container {

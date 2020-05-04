@@ -15,6 +15,10 @@
 
 $base-url: '/static/';
 
+$background-fade: #D1D5EE;
+$background-color: #EEF2FF;
+$background-white: #DEE0DF;
+
 $primary-darker: #34345C;
 $primary-dark: #B7C5D9;
 $primary-medium: #D6DAF0;
@@ -24,19 +28,20 @@ $primary-medium: #D6DAF0;
 //$primary-lighter-still: ;
 //$primary-lightest: ;
 
+$secondary-darker: #800000;
 $secondary-dark: #D9BFB7;
-$secondary-medium: #f0e0d6;
+$secondary-medium: #F0E0D6;
 
 $color-content: #111111;
-
 $color-link: $primary-darker;
 $color-link-hover: #ff0000;
-
 $color-author: #117743;
 
-$background-fade: #D1D5EE;
-$background-color: #EEF2FF;
-$background-white: #DEE0DF;
+$form-background: #FFFFFF;
+$form-button: #E4E4E4;
+$form-button-hover: #F1EFEF;
+$form-border: #CCCCCC;
+$form-color: #2A2A2A;
 
 $font-stack: Arial, Helvetica, sans-serif;
 $font-size: 13px;
@@ -63,6 +68,7 @@ $ltr: "[dir='ltr']";
     --primary-dark: #{$primary-dark};
     --primary-medium: #{$primary-medium};
 
+    --secondary-darker: #{$secondary-darker};
     --secondary-dark: #{$secondary-dark};
     --secondary-medium: #{$secondary-medium};
 
@@ -70,4 +76,11 @@ $ltr: "[dir='ltr']";
     --color-link: #{$color-link};
     --color-link-hover: #{$color-link-hover};
     --color-author: #{$color-author};
+
+    --form-background: #{$form-background};
+    --form-background-hover: #{$form-background};
+    --form-border: #{$form-border};
+    --form-button: #{$form-button};
+    --form-button-hover: #{$form-button-hover};
+    --form-color: #{$form-color};
 }

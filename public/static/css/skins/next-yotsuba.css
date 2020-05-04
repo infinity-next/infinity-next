@@ -1,141 +1,17 @@
-
 /**
  * YOTSUBA.CSS
  *
- * A skin that resembles traditional 4chan.
+ * A skin that resembles traditional 4chan NSFW boards.
  */
-
-/*
-    #FED6AF - Background (darkest)
-    #FFFFEE - Background (lightest)
-
-    #800000 - Text
-
-    #f0e0d6 - Post background
-    #D9BFB7 - Post border
-*/
 
 :root {
     --background-fade: #FED6AF;
     --background-color: #FFFFEE;
-    --primary-medium: #F0E0D6;
-}
 
-html,
-body {
-    background-color: #FFFFEE;
-    background-color: var(--background-color);
-}
+    --primary-darker: var(--secondary-darker);
+    --primary-dark: var(--secondary-dark);
+    --primary-medium: var(--secondary-medium);
 
-a,
-a:link,
-a:visited,
-a:hover {
-    color: #800000;
-}
-    a:hover {
-        color: #800000;
-    }
-
-button,
-a.button {
-    border-color: #D9BFB7;
-    color: #800000;
-}
-
-header nav.gnav,
-header nav.gnav .flyout-container,
-header nav.boardlist {
-    background: #FFFFEE;
-    color: #800000;
-}
-
-
-aside.announcement {
-    border-top-color: rgba(100, 0, 0, 0.5);
-    border-bottom-color: rgba(100, 0, 0, 0.5);
-}
-
-.post-container {
-    background: #f0e0d6;
-    border-color: #D9BFB7;
-}
-    main.index-threaded .thread-item {
-        border-color: rgba(255, 0, 0, 0.25);
-    }
-    main.index-threaded .post-container.op-container {
-        border-top-color: rgba(255,0,0,0.25);
-    }
-
-    li.thread-last-reply {
-        border-color: #D9BFB7;
-    }
-
-    .reply::before {
-        color: #D9BFB7;
-    }
-        main.index-threaded .reply-container ul.post-attachments.attachments-multi {
-            background-color: rgba(155,0,0,0.1);
-        }
-
-    ul.post-actions,
-    ul.post-metas {
-        border-color: #D9BFB7;
-    }
-        div.post-action-tab {
-            color: #800000;
-            border-color: #D9BFB7;
-        }
-            a.post-action-reply {
-                display: block;
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 1em 1em 0;
-                border-color: transparent #D9BFB7 transparent transparent;
-                overflow: hidden;
-            }
-            div.op-container a.post-action-reply {
-                border-color: transparent rgba(255,0,0,0.5) transparent transparent;
-            }
-
-            li.post-action-group {
-                background-color: #F0E0D6;
-                border: 1px solid #D9BFB7;
-            }
-                li.post-action {
-                    border-color: #D9BFB7;
-                }
-                    a.post-action-link:hover{
-                        color: #dee0df;
-                        background-color: #34345C;
-                    }
-
-    blockquote.post thead tr,
-    blockquote.post tbody tr:nth-of-type(even) {
-        background-color: rgba(100, 0, 0, 0.1);
-    }
-
-form.form-post {
-    background: #f0e0d6;
-}
-
-ul.pagination-pages::before,
-ul.pagination-pages::after,
-li.pagination-page::after {
-    color: #800000;
-}
-
-button:hover,
-a.button:hover,
-a.post-action-link:hover {
-    color: #FFFFEE;
-    background: #800000;
-}
-
-
-@media (min-width: 728px) and (min-height: 480px) {
-    html.js body.responsive main.index-threaded form.form-post .form-legend {
-        background: #b74b47;
-    }
+    --color-link: #800000;
+    --color-link-hover: #800000;
 }

@@ -92,8 +92,9 @@ figcaption.page-details {
             }
 
 aside.announcement {
-    border-top: 1px solid rgba(0, 0, 255, 0.5);
-    border-bottom: 1px solid rgba(0, 0, 255, 0.5);
+    border-bottom: 1px solid #{$primary-dark};
+    border-top: 1px solid #{$primary-dark};
+    border-color: var(--primary-dark);
     color: red;
     padding: 1em;
     margin: 1em 0;

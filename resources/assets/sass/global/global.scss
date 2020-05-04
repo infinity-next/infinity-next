@@ -148,10 +148,15 @@ a.button {
 input,
 textarea,
 select {
-    background: #fff;
+    background: #{$form-background};
+    background: var(--form-background);
+
     border-radius: 0px;
-    border: 1px solid #ccc;
-    color: #2a2a2a;
+    border: 1px solid #{$form-border};
+    border-color: var(--form-border);
+
+    color: #{$form-color};
+    color: var(--form-color);
 }
 
 input:focus,
