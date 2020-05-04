@@ -24,6 +24,7 @@ return [
                 'https://my.mixtape.moe/',
                 'https://fonts.googleapis.com/',
                 'https://fonts.gstatic.com/',
+                'https://catbox.moe/',
             ],
 
             /**
