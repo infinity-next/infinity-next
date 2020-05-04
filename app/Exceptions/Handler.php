@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
     {
         $errorClass = get_class($e);
         $errorView = false;
-        $errorEmail = in_array($errorClass, $this->dontReport);
+        $errorEmail = !in_array($errorClass, $this->dontReport);
 
         switch ($errorClass) {
             case TorClearnet::class:
