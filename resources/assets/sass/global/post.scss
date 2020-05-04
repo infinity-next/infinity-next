@@ -11,7 +11,8 @@
 }
 .wingding {
     display: inline-block;
-    color: #D6DAF0;
+    color: #{$primary-medium};
+    color: var(--primary-medium);
     font-weight: bold;
     vertical-align: top;
     line-height: 1.8em; // same as .post-details
@@ -229,7 +230,8 @@
 
                 .author {
                     display: inline-block;
-                    color: $color-author;
+                    color: #{$color-author};
+                    color: var(--color-author);
                     white-space: normal;
 
                     .email {
@@ -239,7 +241,8 @@
 
                 .author-you {
                     display: none;
-                    color: $color-author;
+                    color: #{$color-author};
+                    color: var(--color-author);
                     direction: ltr;
 
                     &::before {
@@ -315,12 +318,10 @@
 
 
     .post-metas {
-        //border-top: 1px solid #D6DAF0;
-    }
-        .post-metas:empty {
+        &:empty {
             display: none;
         }
-        .op-container .post-metas {
+        .op-container & {
             border-top: none;
         }
         .post-meta {
@@ -329,6 +330,7 @@
             font-size: 95%;
             padding: 0.2em 0.6em;
         }
+    }
 
     .post-bans {
         margin: 0 0 0 1.8em;

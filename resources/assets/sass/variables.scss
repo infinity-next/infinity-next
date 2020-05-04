@@ -27,7 +27,7 @@ $primary-medium: #D6DAF0;
 $secondary-dark: #D9BFB7;
 $secondary-medium: #f0e0d6;
 
-$content-text: #2A2A2A;
+$color-content: #111111;
 
 $color-link: $primary-darker;
 $color-link-hover: #ff0000;
@@ -59,9 +59,14 @@ $ltr: "[dir='ltr']";
     --background-fade: #{$background-fade};
     --background-color: #{$background-color};
 
+    --primary-darker: #{$primary-darker};
     --primary-dark: #{$primary-dark};
     --primary-medium: #{$primary-medium};
 
     --secondary-dark: #{$secondary-dark};
     --secondary-medium: #{$secondary-medium};
+
+    --color-content: #{$color-content};
+    --color-link: #{$color-link};
+    --color-link-hover: #{$color-link-hover};
 }

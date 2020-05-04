@@ -169,7 +169,8 @@
         margin: 0;
         padding: 1em;
         padding-bottom: 0.5em;
-        border-bottom: 1px solid #d6daf0;
+        border-bottom: 1px solid #{$primary-medium};
+        border-color: var(--primary-medium);
     }
     .smooth-box {
         padding: 0;
@@ -177,7 +178,8 @@
     .recent-images {
         text-align: center;
         font-size: 0;
-        background: #d6daf0;
+        background: #{$primary-medium};
+        background: var(--primary-medium);
     }
     .recent-image {
         position: relative;
@@ -232,7 +234,8 @@
         margin: 0 0 -2px 0;
         padding: 1em;
         padding-bottom: 0.5em;
-        border-bottom: 1px solid #d6daf0;
+        border-bottom: 1px solid #{$primary-medium};
+        border-color: var(--primary-medium);
     }
 
     #site-recent-posts .grid-container {
@@ -304,10 +307,12 @@
 
                     margin-left: 0;
                     padding-bottom: 1px;
-                    border-bottom: 1px solid #d6daf0;
+                    border-bottom: 1px solid #{$primary-medium};
+                    border-color: var(--primary-medium);
                 }
                     #site-recent-posts .recent-post:hover .post {
-                        border-bottom: 2px dashed #d6daf0;
+                        border-bottom: 2px dashed #{$primary-medium};
+                        border-color: var(--primary-medium);
                     }
                     #site-recent-posts .recent-post .post blockquote {
                         margin: 0;

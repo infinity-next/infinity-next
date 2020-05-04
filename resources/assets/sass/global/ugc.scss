@@ -30,7 +30,8 @@ blockquote.ugc {
     pre {
         clear: both;
         background-color: rgba(255, 255, 255, 0.35);
-        color: #111111;
+        color: #{$color-content};
+        color: var(--color-content);
 
         margin: 1em -0.75em 1em -1.7em;
 

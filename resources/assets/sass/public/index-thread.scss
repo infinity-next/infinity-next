@@ -39,7 +39,8 @@ main.index-threaded {
         main.index-threaded .thread {
             clear: both;
             padding: 1em;
-            border-top: 1px solid #d9bfb7;
+            border-top: 1px solid #{$primary-dark};
+            border-color: var(--primary-dark);
 
             &:first-child {
                 border-top: none;
@@ -127,7 +128,8 @@ main.multiboard-index {
 .thread-last-reply {
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
-    border-bottom: 2px dotted #B7C5D9;
+    border-bottom: 2px dotted #{$primary-dark};
+    border-color: var(--primary-dark);
 }
 
 .autoupdater {

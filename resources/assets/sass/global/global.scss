@@ -22,7 +22,8 @@ body {
     flex-direction: column;
     min-width: 320px;
 
-    color: rgb(17, 17, 17);
+    color: #{$color-content};
+    color: var(--color-content);
     -webkit-text-size-adjust: 100%;
 
     font-family: $font-stack;
@@ -61,11 +62,12 @@ body {
 }
 
 a, a:link, a:visited, a:hover {
-    color: $color-link;
+    color: #{$color-link};
+    color: var(--color-link);
     text-decoration: none;
 }
     a:hover {
-        color: $color-link-hover;
+        color: var(--color-link-hover);
     }
 
 ol,
