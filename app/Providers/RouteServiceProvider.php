@@ -11,8 +11,9 @@ use App\PostAttachment;
 use App\Report;
 use App\Role;
 use App\User;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Complex HTTP/S routing provider.
@@ -134,7 +135,7 @@ class RouteServiceProvider extends ServiceProvider
                 return $board;
             }
 
-            return abort(404);
+            throw (new ModelNotFoundException)->setModel(Board::class);
         });
 
         Route::bind('hash', function ($value, $route) {
@@ -157,6 +158,8 @@ class RouteServiceProvider extends ServiceProvider
                 $this->app->singleton(Post::class, $post);
                 return $post;
             }
+
+            throw (new ModelNotFoundException)->setModel(Post::class);
         });
 
         Route::bind('post_id', function ($value, $route) {
@@ -186,6 +189,8 @@ class RouteServiceProvider extends ServiceProvider
                     return $post;
                 }
             }
+
+            throw (new ModelNotFoundException)->setModel(Post::class);
         });
 
         // Sets up our routing tokens.
