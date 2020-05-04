@@ -529,6 +529,11 @@ class FileStorage extends Model
                 return 'flv';
             case 'video/x-matroska':
                 return 'mkv';
+            //#
+            // APPLICATIONS
+            //#
+            case 'x-shockwave-flash':
+                return 'swf';
         }
 
 
