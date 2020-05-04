@@ -228,13 +228,16 @@ class CSSValidator
                 $rule = $rules->getRule();
 
                 if (!$this->isAllowedRule($rule)) {
-                    dd("UH OH STINKY");
                     return false;
                 }
             }
         }
 
         foreach ($style->getAllValues() as $value) {
+            if (!is_object($value)) {
+                continue;
+            }
+
             switch (get_class($value)) {
                 case \Sabberworm\CSS\Value\URL::class:
 
@@ -252,7 +255,6 @@ class CSSValidator
                     $sValue = $this->getURLString($oValue);
 
                     if (!$this->isValidDataUri($sValue) && !$this->isAllowedImportUrl($sValue)) {
-                        dd("UH OH STINKY");
                         return false;
                     }
 
