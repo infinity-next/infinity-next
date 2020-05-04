@@ -33,7 +33,7 @@ blockquote.ugc {
         color: #{$color-content};
         color: var(--color-content);
 
-        margin: 1em -0.75em 1em -1.7em;
+        margin: 1em -40px 1em -1.7em;
 
         overflow-x: auto;
         overflow-y: auto;
@@ -56,7 +56,7 @@ blockquote.ugc {
         }
 
         &:last-child {
-            margin-bottom: -0.7em;
+            margin-bottom: -1em;
         }
     }
 
