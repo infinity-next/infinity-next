@@ -143,6 +143,13 @@ class AuthServiceProvider extends ServiceProvider
                 : Response::deny('auth.board.cannot_ban');
         });
 
+        Gate::define('global-bumplock', function(User $user)
+        {
+            return $user->permission('board.post.suppress')
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_ban');
+        });
+
         Gate::define('global-delete', function(User $user)
         {
             return $user->permission('board.post.delete.other')
