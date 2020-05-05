@@ -51,6 +51,13 @@ class FileValidator
         return (int)FileStorage::where('hash', $value)->pluck('upload_count')->first() == 0;
     }
 
+    public function validateFileAged($attribute, $value, $parameters)
+    {
+        $firstUploaded = FileStorage::where('hash', $value)->first()->first_uploaded_at;
+
+        return !$firstUploaded->addSeconds($parameters[0] ?? 1)->isFuture();
+    }
+
     public function validateFileOld($attribute, $value, $parameters)
     {
         return (int)FileStorage::where('hash', $value)->pluck('upload_count')->first() > 0;

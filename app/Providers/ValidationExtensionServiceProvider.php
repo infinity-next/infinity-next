@@ -26,6 +26,7 @@ class ValidationExtensionServiceProvider extends ServiceProvider
         $validator->extend('file_name', 'App\Validators\FileValidator@validateFileName');
         $validator->extend('file_integrity', 'App\Validators\FileValidator@validateFileIntegrity');
         $validator->extend('file_new', 'App\Validators\FileValidator@validateFileNew');
+        $validator->extend('file_aged', 'App\Validators\FileValidator@validateFileAged');
         $validator->extend('file_old', 'App\Validators\FileValidator@validateFileOld');
 
         $validator->extend('ugc_height', 'App\Validators\FormattingValidator@validateUgcHeight');

@@ -276,6 +276,10 @@ class PostRequest extends Request implements ApiContract
                             $rules["{$fileToken}.{$attachment}"][] = 'file_new';
                         }
 
+                        if (!$user->isAccountable()) {
+                            $rules["{$fileToken}.{$attachment}"][] = 'file_aged:90';
+                        }
+
                         for ($otherAttachment = 0; $otherAttachment < $attachment; ++$otherAttachment) {
                             $rules["{$fileToken}.{$attachment}"][] = "different:{$fileToken}.{$otherAttachment}";
                         }

@@ -203,7 +203,12 @@ class PostObserver
             PostCreate::withChain([new ThreadAutoprune($thread)])->dispatch($post);
         }
         else {
-            PostCreate::dispatch($post);
+            if ($accountable) {
+                PostCreate::dispatch($post);
+            }
+            else {
+                PostCreate::dispatch($post)->delay(now()->addSeconds(30));
+            }
         }
 
         return true;

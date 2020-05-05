@@ -316,6 +316,7 @@ class Upload
 
             $trimmed1 = (clone $image)->trim('top-left', null, 20);
             $trimmed2 = (clone $image)->trim('bottom-right', null, 20);
+            $trimmed3 = (clone $trimmed1)->trim('bottom-right', null, 20);
             $flippedV = (clone $image)->flip('v');
             $flippedH = (clone $image)->flip('h');
 
@@ -334,6 +335,10 @@ class Upload
                 (clone $trimmed2)->rotate(90)->encode('jpg', 50),
                 (clone $trimmed2)->rotate(180)->encode('jpg', 50),
                 (clone $trimmed2)->rotate(270)->encode('jpg', 50),
+                $trimmed3->encode('jpg', 50),
+                (clone $trimmed3)->rotate(90)->encode('jpg', 50),
+                (clone $trimmed3)->rotate(180)->encode('jpg', 50),
+                (clone $trimmed3)->rotate(270)->encode('jpg', 50),
                 $flippedV->encode('jpg', 50),
                 (clone $flippedV)->rotate(90)->encode('jpg', 50),
                 (clone $flippedV)->rotate(180)->encode('jpg', 50),
