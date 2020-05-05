@@ -314,10 +314,35 @@ class Upload
             $storage->mime = "image/png";  ## todo: webp here when apple stops sucking
             $storage->upload_count = 1;
 
-            $trimmed1 = (clone $image)->trim('top-left', null, 20)->encode('jpg', 50);
-            $trimmed2 = (clone $image)->trim('bottom-right', null, 20)->encode('jpg', 50);
+            $trimmed1 = (clone $image)->trim('top-left', null, 20);
+            $trimmed2 = (clone $image)->trim('bottom-right', null, 20);
+            $flippedV = (clone $image)->flip('v');
+            $flippedH = (clone $image)->flip('h');
 
-            $storage->phash = $this->phash($storage->blob, $trimmed1, $trimmed2);
+            $storage->phash = $this->phash(
+                // trims and rotations
+                $storage->blob,
+                (clone $image)->rotate(90)->encode('jpg', 50),
+                (clone $image)->rotate(180)->encode('jpg', 50),
+                (clone $image)->rotate(270)->encode('jpg', 50),
+                (clone $image)->rotate(270)->encode('jpg', 50),
+                $trimmed1->encode('jpg', 50),
+                (clone $trimmed1)->rotate(90)->encode('jpg', 50),
+                (clone $trimmed1)->rotate(180)->encode('jpg', 50),
+                (clone $trimmed1)->rotate(270)->encode('jpg', 50),
+                $trimmed2->encode('jpg', 50),
+                (clone $trimmed2)->rotate(90)->encode('jpg', 50),
+                (clone $trimmed2)->rotate(180)->encode('jpg', 50),
+                (clone $trimmed2)->rotate(270)->encode('jpg', 50),
+                $flippedV->encode('jpg', 50),
+                (clone $flippedV)->rotate(90)->encode('jpg', 50),
+                (clone $flippedV)->rotate(180)->encode('jpg', 50),
+                (clone $flippedV)->rotate(270)->encode('jpg', 50),
+                $flippedH->encode('jpg', 50),
+                (clone $flippedH)->rotate(90)->encode('jpg', 50),
+                (clone $flippedH)->rotate(180)->encode('jpg', 50),
+                (clone $flippedH)->rotate(270)->encode('jpg', 50)
+            );
         }
         else {
             $storage->last_uploaded_at = now();
