@@ -91,3 +91,49 @@
         margin-bottom: -1px;
     }
 }
+
+/**
+ * Post-specific action show/hide so the cache doesn't have to care about permissions.
+ */
+
+// depends on user global permission
+.can-not-global-feature .action-feature-global { display: none; }
+.can-not-global-history .action-history-global { display: none; }
+.can-not-global-report .action-report-global { display: none; }
+.can-not-global-bumplock .action-global-bumplock { display: none; }
+.can-not-global-bumplock .action-global-unbumplock { display: none; }
+
+// depends on user board permissions
+.can-not-ban .action-ban { display: none; }
+.can-not-bumplock .action-bumplock { display: none; }
+.can-not-bumplock .action-unbumplock { display: none; }
+.can-not-self-delete .action-delete { display: none; }
+.can-not-edit .action-edit { display: none; }
+.can-not-history .action-history { display: none; }
+.can-not-lock .action-lock { display: none; }
+.can-not-lock .action-unlock { display: none; }
+.can-not-report .action-report { display: none; }
+.can-not-sticky .action-sticky { display: none; }
+.can-not-sticky .action-unsticky { display: none; }
+.can-not-suppress .action-suppress { display: none; }
+.can-not-suppress .action-unsuppress { display: none; }
+.can-not-ban.can-not-delete .action-moderate { display: none; }
+
+// for now, attachment actions all use delete - except for file moderation.
+.can-not-ban-file .action-file-moderate { display: none; }
+.can-not-self-delete .action-file-remove { display: none; }
+.can-not-self-delete .action-file-spoiler { display: none; }
+.can-not-self-delete .action-file-unspoiler { display: none; }
+
+ // depends on the state of the post
+.is-bumplocked .action-bumplock { display: none; }
+.is-not-bumplocked .action-unbumplock { display: none; }
+.is-locked .action-lock { display: none; }
+.is-not-locked .action-unlock { display: none; }
+.is-stickied .action-sticky { display: none; }
+.is-not-stickied .action-unsticky { display: none; }
+
+// depends on the attachment
+.is-spoiler .action-file-spoiler { display: none; }
+.is-not-spoiler .action-file-unspoiler { display: none; }
+.is-removed .action-file-remove { display: none; }

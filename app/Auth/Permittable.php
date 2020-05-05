@@ -413,6 +413,21 @@ trait Permittable
             ->get();
     }
 
+    public function getBodyClassesAttribute()
+    {
+        $classes = [];
+        $classes[] = $this->can('be-accountable') ? 'can-be-accountable' : 'can-not-be-accountable';
+        $classes[] = $this->can('global-ban') ? 'can-global-ban' : 'can-not-global-ban';
+        $classes[] = $this->can('global-delete') ? 'can-global-delete' : 'can-not-global-delete';
+        $classes[] = $this->can('global-history') ? 'can-global-history' : 'can-not-global-history';
+        $classes[] = $this->can('global-report') ? 'can-global-report' : 'can-not-global-report';
+        $classes[] = $this->can('global-feature') ? 'can-global-feature' : 'can-not-global-feature';
+        $classes[] = $this->can('global-bumplock') ? 'can-global-bumplock' : 'can-not-global-bumplock';
+        $classes[] = $this->can('ban-file') ? 'can-ban-file' : 'can-not-ban-file';
+
+        return implode(" ", $classes);
+    }
+
     /**
      * Returns a list of board_uris where the canEditConfig permission is given.
      *

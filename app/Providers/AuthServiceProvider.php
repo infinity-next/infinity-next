@@ -157,6 +157,13 @@ class AuthServiceProvider extends ServiceProvider
                 : Response::deny('auth.board.cannot_view_history');
         });
 
+        Gate::define('global-report', function(User $user)
+        {
+            return $user->permission('site.post.report')
+                ? Response::allow()
+                : Response::deny('auth.board.cannot_view_history');
+        });
+
         Gate::define('ip-address', function(User $user)
         {
             return $user->permission('site.user.raw_ip')

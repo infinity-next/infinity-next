@@ -68,6 +68,7 @@ class PermissionSeeder extends Seeder {
             "board.post.sticky",
             "board.post.lock",
             "board.post.bumplock",
+            "board.post.suppress",
             "board.post.lock_bypass",
             "board.post.report",
             "board.user.ban.reason",

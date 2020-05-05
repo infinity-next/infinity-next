@@ -1,6 +1,6 @@
 @extends('layouts.main.board')
 
-@section('body-class')@parent {{ $reply_to ? 'single-thread' : 'board-index' }}@endsection
+@section('body-class')@parent {{ $reply_to ? 'single-thread' : 'board-index' }} {{ $board->body_classes }}@endsection
 
 @section('content')
 <main class="board-index index-threaded mode-{{ $reply_to ? "reply" : "index" }} {{ isset($page) ? "page-{$page}" : '' }} {{ $board->isWorksafe() ? 'sfw' : 'nsfw' }}">

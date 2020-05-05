@@ -59,9 +59,10 @@
         * "responsive", always keep (for now). Will eventually want to unset if user requests desktop view.
         * $direction, either "ltr" or "rtl".
         * "nsfw-allowed", keep. JS will turn this off if enabled.
+        * user()->getBodyClassesAttribute() is permission work, keep.
         * The yield renders additional body classes a specific view needs.
 --}}
-<body class="infinity-next responsive {{ $direction }} nsfw-allowed @yield('body-class')" id="top">
+<body class="infinity-next responsive {{ $direction }} nsfw-allowed {{ user()->getBodyClassesAttribute() }} @yield('body-class')" id="top">
     <div id="page-container">
         @section('header')
         <header class="board-header header-height-1">

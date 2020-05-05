@@ -439,4 +439,32 @@ class PostController extends Controller
             'html' => $ContentFormatter->formatPost($this),
         ]);
     }
+
+    /**
+     * Global bumplocks a thread.
+     */
+    public function suppress(Board $board, Post $post, $bumplock = true)
+    {
+        $this->authorize('global-delete');
+
+        if ($bumplock) {
+            $post->suppressed_at = now();
+        }
+        else {
+            $post->suppressed_at = null;
+        }
+
+        $post->save();
+
+        return $post->redirect();
+    }
+
+    /**
+     * Global un-bumplocks a thread.
+     */
+    public function unsuppress(Board $board, Post $post)
+    {
+        // Redirect to anyBumplock with a flag denoting an unbumplock.
+        return $this->suppress($board, $post, false);
+    }
 }

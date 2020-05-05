@@ -54,7 +54,8 @@ class MultiboardController extends Controller
 
                 if ($sign === "-") {
                     $excludes[] = $board_uri;
-                } else {
+                }
+                else {
                     $includes[] = $board_uri;
                 }
             }
@@ -94,7 +95,7 @@ class MultiboardController extends Controller
     {
         return $this->getOverboard($worksafe, null);
     }
-    
+
     public function getOverboardWithBoards($boards)
     {
         return $this->getOverboard(null, $boards);

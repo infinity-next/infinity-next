@@ -67,6 +67,8 @@ Route::group(['as' => 'post.', 'prefix' => 'post/{post_id}',], function () {
     Route::get('unlock', ['as' => 'unlock', 'uses' => 'PostController@unlock']);
     Route::get('bumplock', ['as' => 'bumplock', 'uses' => 'PostController@bumplock']);
     Route::get('unbumplock', ['as' => 'unbumplock', 'uses' => 'PostController@unbumplock']);
+    Route::get('global-bumplock', ['as' => 'suppress', 'uses' => 'PostController@suppress']);
+    Route::get('global-unbumplock', ['as' => 'unsuppress', 'uses' => 'PostController@unsuppress']);
 
     // feature
     Route::get('feature', ['as' => 'feature', 'uses' => 'PostController@feature']);

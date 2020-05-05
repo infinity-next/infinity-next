@@ -116,7 +116,12 @@
         },
 
         updateAlways : function(json, textStatus, jqXHR) {
-            jqXHR.widget.updating = false;
+            if (jqXHR.widget !== undefined) {
+                jqXHR.widget.updating = false;
+            }
+            else if (json.widget !== undefined) {
+                json.widget.updating = false;
+            }
         },
 
         updateDone : function(data, textStatus, jqXHR) {
@@ -146,10 +151,10 @@
 
                 $li.attr({
                     'data-id' : item.post_id,
-                    'data-bumped' : item.bumped_last
+                    'data-bumped' : item.global_bumped_last
                 }).data({
                     'id' : item.post_id,
-                    'bumped' : item.bumped_last
+                    'bumped' : item.global_bumped_last
                 }).addClass('board-'+item.board_uri);
 
                 $article.append(item.html);
@@ -170,7 +175,8 @@
                 });
 
                 // Track the last time the user saw a post.
-                widget.updateLast = item.bumped_last > widget.updateLast ? item.bumped_last : widget.updateLast;
+                widget.updateLast = Math.max(item.bumped_last || 0, item.global_bumped_last || 0, widget.updateLast || 0);
+                console.log(item.bumped_last || 0, item.global_bumped_last || 0, widget.updateLast || 0, widget.updateLast);
 
                 if (!widget.hasFocus) {
                     ++widget.updateCount;

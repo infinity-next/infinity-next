@@ -77,6 +77,7 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
         'stickied',
         'stickied_at',
         'bumplocked_at',
+        'suppressed_at',
         'locked_at',
         'featured_at',
 
@@ -116,6 +117,7 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
         'body_parsed',
         'body_parsed_at',
         'body_html',
+        'suppressed_at',
 
         // Relationships
         // 'bans',
@@ -139,6 +141,7 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
         'content_raw',
         'content_html',
         'recently_created',
+        'global_bumped_last',
     ];
 
     /**
@@ -155,6 +158,8 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
         'deleted_at' => 'datetime',
         'stickied_at' => 'datetime',
         'bumplocked_at' => 'datetime',
+        'global_bumped_last' => 'datetime',
+        'suppressed_at' => 'datetime',
         'locked_at' => 'datetime',
         'body_parsed_at' => 'datetime',
         'author_ip_nulled_at' => 'datetime',
@@ -469,6 +474,31 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     }
 
     /**
+     * A list of HTML classes for the post container.
+     *
+     * @return string
+     */
+    public function getBodyClassesAttribute() : string
+    {
+        $classes = [];
+        $classes[] = $this->hasBody() ? 'has-body' : 'has-no-body';
+        $classes[] = $this->attachments->count() > 1 ? 'has-files' : ($this->attachments->count() > 0 ? 'has-file' : 'has-no-file');
+        $classes[] = $this->board->isWorksafe() ? 'sfw' : 'nsfw';
+
+        if ($this->reply_to) {
+            $classes[] = 'reply-container';
+        }
+        else {
+            $classes[] = 'op-container';
+            $classes[] = $this->isBumplocked() ? 'is-bumplocked' : 'is-not-bumplocked';
+            $classes[] = $this->isLocked() ? 'is-locked' : 'is-not-locked';
+            $classes[] = $this->isStickied() ? 'is-stickied' : 'is-not-stickied';
+        }
+
+        return implode(" ", $classes);
+    }
+
+    /**
      * Language direction of this post.
      *
      * @return string|null
@@ -646,6 +676,15 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     public function getLockedAttribute()
     {
         return !is_null($this->locked_at);
+    }
+
+    public function getGlobalBumpedLastAttribute()
+    {
+        if (is_null($this->suppressed_at)) {
+            return $this->bumped_last;
+        }
+
+         return Carbon::createFromTimestamp(min($this->bumped_last->timestamp, $this->suppressed_at->timestamp));
     }
 
     /**
@@ -1029,6 +1068,16 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     public function isStickied()
     {
         return isset($this->attributes['stickied_at']) && !!$this->attributes['stickied_at'];
+    }
+
+    /**
+     * Determines if this thread cannot be bumped.
+     *
+     * @return bool
+     */
+    public function isSuppressed()
+    {
+        return isset($this->attributes['suppressed_at']) && !!$this->attributes['suppressed_at'];
     }
 
     /**
@@ -1459,7 +1508,8 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
         }
 
         $threads = $threads
-            ->orderBy('bumped_last', 'desc')
+            ->whereNull('suppressed_at')
+            ->orderByRaw('LEAST(bumped_last, suppressed_at) DESC')
             ->skip($postsPerPage * ($page - 1))
             ->take($postsPerPage)
             ->get();

@@ -270,7 +270,11 @@ class Upload
         if ($thumbnail) {
             $this->processThumbnails();
             $storage->save();
-            $storage->thumbnails()->saveMany($this->thumbnails);
+            $newThumbnails = $this->thumbnails->whereNotIn('file_id', $storage->thumbnails()->pluck('file_id'));
+
+            if ($newThumbnails->count() > 0) {
+                $storage->thumbnails()->saveMany($this->thumbnails);
+            }
         }
         else {
             $storage->save();

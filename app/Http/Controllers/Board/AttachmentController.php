@@ -42,10 +42,6 @@ class AttachmentController extends Controller
      */
     public function getDeleteAttachment(Board $board, PostAttachment $attachment)
     {
-        if (!$attachment->exists) {
-            return abort(404);
-        }
-
         if (!Gate::any(['delete', 'delete-self'], $attachment->post)) {
             return abort(403);
         }
@@ -67,10 +63,6 @@ class AttachmentController extends Controller
      */
     public function getSpoilerAttachment(Board $board, PostAttachment $attachment)
     {
-        if (!$attachment->exists) {
-            return abort(404);
-        }
-
         if (!Gate::any(['delete', 'delete-self'], $attachment->post)) {
             return abort(403);
         }
@@ -98,10 +90,6 @@ class AttachmentController extends Controller
      */
     public function postDeleteAttachment(Board $board, PostAttachment $attachment)
     {
-        if (!$attachment->exists) {
-            return abort(404);
-        }
-
         $input = Request::all();
 
         $validator = Validator::make($input, [
@@ -159,10 +147,6 @@ class AttachmentController extends Controller
      */
     public function postSpoilerAttachment(Board $board, PostAttachment $attachment)
     {
-        if (!$attachment->exists) {
-            return abort(404);
-        }
-
         $input = Request::all();
 
         $validator = Validator::make($input, [

@@ -11,7 +11,7 @@
             @lang('board.action.report_global')
         </a>
 
-        <a class="action action-delete" href="{!! $post->getModUrl('delete') !!}">
+        <a class="action action-self-delete" href="{!! $post->getModUrl('delete') !!}">
             @lang('board.action.delete')
         </a>
 
@@ -31,7 +31,6 @@
         <a class="action action-sticky" href="{!! $post->getModUrl('sticky') !!}">
             @lang('board.action.sticky')
         </a>
-
         <a class="action action-unsticky " href="{!! $post->getModUrl('unsticky') !!}">
             @lang('board.action.unsticky')
         </a>
@@ -39,7 +38,6 @@
         <a class="action action-lock " href="{!! $post->getModUrl('lock') !!}">
             @lang('board.action.lock')
         </a>
-
         <a class="action action-unlock " href="{!! $post->getModUrl('unlock') !!}">
             @lang('board.action.unlock')
         </a>
@@ -47,9 +45,15 @@
         <a class="action action-bumplock " href="{!! $post->getModUrl('bumplock') !!}">
             @lang('board.action.bumplock')
         </a>
-
         <a class="action action-unbumplock " href="{!! $post->getModUrl('unbumplock') !!}">
             @lang('board.action.unbumplock')
+        </a>
+
+        <a class="action action-global-bumplock " href="{!! $post->getModUrl('suppress') !!}">
+            @lang('board.action.suppress')
+        </a>
+        <a class="action action-global-unbumplock " href="{!! $post->getModUrl('unsuppress') !!}">
+            @lang('board.action.unsuppress')
         </a>
         @endif
 
@@ -57,7 +61,7 @@
             @lang('board.action.moderate')
         </a>
 
-        <a class="action action-feature " href="{!! $post->getModUrl('feature') !!}">
+        <a class="action action-feature-global" href="{!! $post->getModUrl('feature') !!}">
             @lang('board.action.feature')
         </a>
     </div>

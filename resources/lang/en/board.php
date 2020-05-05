@@ -163,6 +163,8 @@ return [
         'fuzzyban'          => "Perceptual Hash Ban",
         'bumplock'          => "Bumplock",
         'unbumplock'        => "Un-Bumplock",
+        'suppress'          => "Global Bumplock",
+        'unsuppress'        => "Global Unbumplock",
         'keep'              => "Keep",
         'delete'            => "Delete",
         'delete_all'        => "Delete All",

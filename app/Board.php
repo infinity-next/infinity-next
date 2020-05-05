@@ -478,6 +478,28 @@ class Board extends Model
     }
 
     /**
+     * Generates a class="" string for boards.
+     *
+     * @return string
+     */
+    public function getBodyClassesAttribute() : string
+    {
+        $user = user();
+        $classes = [];
+        $classes[] = $user->permission('board.history', $this) ? 'can-history' : 'can-not-history';
+        $classes[] = $user->permission('board.user.ban.free', $this) ? 'can-ban' : 'can-not-ban';
+        $classes[] = $user->permission('board.post.bumplock', $this) ? 'can-bumplock' : 'can-not-bumplock';
+        $classes[] = $user->permission('board.post.delete.other', $this) ? 'can-delete' : 'can-not-delete';
+        $classes[] = $user->permission('board.post.delete.self', $this) ? 'can-self-delete' : 'can-not-self-delete';
+        $classes[] = $user->permission('board.post.edit.other', $this) ? 'can-edit' : 'can-not-edit';
+        $classes[] = $user->permission('board.post.lock', $this) ? 'can-lock' : 'can-not-lock';
+        $classes[] = $user->permission('board.post.report', $this) ? 'can-report' : 'can-not-report';
+        $classes[] = $user->permission('board.post.sticky', $this) ? 'can-sticky' : 'can-not-sticky';
+
+        return implode(" ", $classes);
+    }
+
+    /**
      * Returns assignable castes.
      *
      * @return collection
