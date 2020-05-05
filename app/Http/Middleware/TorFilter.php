@@ -36,7 +36,7 @@ class TorFilter
         }
         else {
             // for Tor Browser as of 9.5a11
-            return $next($request)->header('Onion-Location', 'http://' . config('app.url_hs') . '/' . $request->path());
+            return $next($request)->header('Onion-Location', 'http://' . config('app.url_hs') . '/' . ltrim($request->path(), '/'));
         }
     }
 }
