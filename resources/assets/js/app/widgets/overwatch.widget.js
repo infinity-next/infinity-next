@@ -175,8 +175,7 @@
                 });
 
                 // Track the last time the user saw a post.
-                widget.updateLast = Math.max(item.bumped_last || 0, item.global_bumped_last || 0, widget.updateLast || 0);
-                console.log(item.bumped_last || 0, item.global_bumped_last || 0, widget.updateLast || 0, widget.updateLast);
+                widget.updateLast = Math.max(item.bumped_last || 0, widget.updateLast || 0);
 
                 if (!widget.hasFocus) {
                     ++widget.updateCount;
