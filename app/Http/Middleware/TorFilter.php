@@ -13,8 +13,10 @@ class TorFilter
     {
         $accountable = true;
         $geolocation = new Geolocation;
+        $hiddenService = is_hidden_service();
+        $hiddenServiceExists = config('app.url_hs', false);
 
-        if ($request->header('X-TOR', false) || is_hidden_service()) {
+        if ($request->header('X-TOR', false) || $hiddenService) {
             // Consider a user unaccountable if there's a custom X-TOR header,
             // or if the hostname is our hidden service name.
             $accountable = false;
@@ -22,13 +24,19 @@ class TorFilter
         elseif ($geolocation->getCountryCode() == 'tor') {
             $accountable = false;
 
-            if (!config('app.debug', false) && env('APP_URL_HS', false)) {
+            if (!config('app.debug', false) && $hiddenServiceExists) {
                 throw new TorClearnet;
             }
         }
 
         user()->setAccountable($accountable);
 
-        return $next($request);
+        if (!$accountable || !$hiddenServiceExists) {
+            return $next($request);
+        }
+        else {
+            // for Tor Browser as of 9.5a11
+            return $next($request)->header('Onion-Location', 'http://' . config('app.url_hs') . '/' . $request->path());
+        }
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -35,6 +36,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         MethodNotAllowedHttpException::class,
         NotFoundHttpException::class,
+        TokenMismatchException::class,
         TorClearnet::class,
         ValidationException::class,
     ];
