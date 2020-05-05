@@ -136,7 +136,7 @@ return [
     'file_generic' => "The file could not be uploaded.",
     'file_corrupt' => "<tt>:filename</tt> is corrupt or has an invalid file name.",
     'file_old' => "Your connection is restricted from posting unrecognized files.",
-    'file_aged' => "You file must exist 90 seconds before being posted.",
+    'file_aged' => "Your file must be thumbnailed on the server for 90 seconds before it can be posted.",
     'file_banned' => "The file is banned.",
     'file_fuzzybanned' => "The file is percetually similar to another banned image.",
     'post_flood' => "{1}You you must wait <strong>:time_left</strong> second before posting again.|[2,*]You you must wait <strong>:time_left</strong> seconds before posting again.",
