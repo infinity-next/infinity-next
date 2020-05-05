@@ -47,7 +47,9 @@ class FileController extends PanelController
                 $query->select(\DB::raw('1'));
             })
             ->where('last_uploaded_at', '>', now()->subDay())
-            ->limit(100)
+            ->whereNull('banned_at')
+            ->whereNull('fuzzybanned_at')
+            ->limit(300)
             ->get();
 
         return $this->makeView(static::VIEW_INDEX, [
