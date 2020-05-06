@@ -46,7 +46,7 @@ class FileController extends PanelController
             ->whereDoesntHave('thumbnailPivots', function($query) {
                 $query->select(\DB::raw('1'));
             })
-            ->where('last_uploaded_at', '>', now()->subDay())
+            ->where('last_uploaded_at', '>', now()->subHours(8))
             ->whereNull('banned_at')
             ->whereNull('fuzzybanned_at')
             ->limit(300)

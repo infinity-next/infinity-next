@@ -9,8 +9,17 @@
     <button name="action" value="fuzzyban">@lang('board.action.fuzzyban')</button>
 </form>
 
-<div class="attachment">
-    {!! $file->source_id && ($file->source->isImageVector() || $file->source->isImage()) ? $file->source->toHtml() : $file->toHtml() !!}
+<div class="attachment-showcase checkered-background">
+    @if ($file->thumbnails->count() > 1)
+    <div class="thumbnails">
+        @foreach ($file->thumbnails as $thumbnail)
+        <div class="thumbnail">{!! $thumbnail->toHtml(100) !!}</div>
+        @endforeach
+    </div>
+    @endif
+    <div class="attachment">
+        {!! $file->toHtml() !!}
+    </div>
 </div>
 
 <table>
@@ -28,7 +37,7 @@
             <td>/{{ $post->board_uri }}/</td>
             <td><a href="{{ $post->getUrl() }}">No.{{ $post->board_id }}</a></td>
             <td>{{ $post->created_at->diffForHumans() }}</td>
-            <td class="attachments">
+            <td class="attachments checkered-background">
                 @foreach ($post->attachments as $attachment)
                 <a class="attachment" href="{{ route('panel.site.files.show', $attachment->file->hash) }}" style="height: 100px; width: 100px;">
                     {!! $attachment->toHtml(100) !!}
