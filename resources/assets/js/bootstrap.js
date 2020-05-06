@@ -17,11 +17,14 @@ window._ = require('lodash');
  */
 
 import Echo from 'laravel-echo';
-window.io = require('socket.io-client');
-window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    host: window.location.hostname
-});
+// don't echo on .onion
+if (window.location.hostname.indexOf('.onion') === -1) {
+    window.io = require('socket.io-client');
+    window.Echo = new Echo({
+        broadcaster: 'socket.io',
+        host: window.location.protocol + "//" + window.location.hostname + (window.location.protocol === 'https:' ? ":2096" : ":2095")
+    });
+}
 
 import hljs from 'highlight.js';
 window.hljs = hljs;

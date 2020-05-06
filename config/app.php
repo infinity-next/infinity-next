@@ -41,7 +41,11 @@ return [
 
     'url'       => @$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'),
 
-    'url_ws'    => "ws://" . parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . "/socket.io",
+    'url_ws'    => (@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost')) .
+        " http://" . (parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":2095") .
+        " ws://" . (parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":2095") .
+        " https://" . (parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":2096") .
+        " wss://" . (parse_url(@$_SERVER['HTTP_HOST'] && @$_SERVER['HTTP_HOST'] === env('APP_URL_HS', false) ? env('APP_URL_HS') : env('APP_URL', 'http://localhost'), PHP_URL_HOST) . ":2096"),
 
     'url_hs'    => env('APP_URL_HS', false),
 

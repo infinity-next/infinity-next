@@ -72,7 +72,6 @@
             $widget : $widget
         };
 
-        console.log('wew');
         var night = this.is('theme_3rd_party');
         $(document.body).toggleClass('light', !night).toggleClass('night', night);
     };

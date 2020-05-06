@@ -1,7 +1,7 @@
 server {
     listen 80;
-
     server_name domain.com;
+
     root /var/www/infinity-next;
     index index.php index.html index.htm;
     include php.conf;
@@ -14,9 +14,15 @@ server {
         internal;
         alias /var/www/infinity-next/storage/app/attachments;
     }
+}
+
+# Alternatively, you can just listen to 2096 and do SSL in laravel-echo-server.json
+server {
+    listen 2096;
+    server_name domain.com;
 
     location /socket.io {
-        proxy_pass http:/127.0.0.1:6001;
+        proxy_pass http://127.0.0.1:6001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
