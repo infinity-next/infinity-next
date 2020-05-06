@@ -55,7 +55,7 @@ class FileValidator
     {
         $firstUploaded = FileStorage::where('hash', $value)->first();
 
-        if (!$firstUploaded || !$firstUpload->exists) {
+        if (!$firstUploaded || !$firstUploaded->exists) {
             return false;
         }
 
