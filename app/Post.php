@@ -1920,9 +1920,8 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
 
     public function jsonSerialize()
     {
-        $json = parent::jsonSerialize();
-
-        if (isset($json['deleted_at']) && !is_null($json['deleted_at'])) {
+        if (!is_null($this->deleted_at)) {
+            $json = $this->getAttributes();
             return array_intersect_key($json, array_flip([
                 'post_id',
                 'board_uri',
@@ -1936,6 +1935,8 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
             ]));
         }
         else {
+            $json = parent::jsonSerialize();
+
             $json['attachments'] = $json['attachments'] ?? $this->attachments;
 
             if ($this->isOp()) {
