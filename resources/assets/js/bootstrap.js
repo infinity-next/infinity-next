@@ -17,9 +17,11 @@ window._ = require('lodash');
  */
 
 import Echo from 'laravel-echo';
-
 window.io = require('socket.io-client');
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     host: window.location.hostname
 });
+
+import hljs from 'highlight.js';
+window.hljs = hljs;

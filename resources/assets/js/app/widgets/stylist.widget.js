@@ -8,6 +8,31 @@
     // Widget blueprint
     var blueprint = ib.getBlueprint();
 
+    var events = {
+        onCssChange : function (event) {
+            var setting = event.data.setting.get();
+            var domObj  = document.getElementById('user-css');
+            domObj.innerHTML = setting;
+        },
+
+        onThemeChange : function (event) {
+            var setting = event.data.setting.get();
+            var domObj  = document.getElementById('theme-stylesheet');
+
+            if (setting) {
+                domObj.href = window.app.url + "/static/css/skins/" + setting;
+            }
+            else {
+                domObj.href = "";
+            }
+        },
+
+        onTheme3rdPartyChange : function (event) {
+            var setting = event.data.setting.get();
+            $(document.body).toggleClass('light', !setting).toggleClass('night', setting);
+        }
+    };
+
     // Configuration options
     var options = {
         theme : {
@@ -20,48 +45,44 @@
                 "next-tomorrow.css",
                 "kappa-burichan.css",
             ],
-            onChange : function(event) {
-                var setting = event.data.setting.get();
-                var domObj  = document.getElementById('theme-stylesheet');
+            onChange : events.onThemeChange,
+            onUpdate : events.onThemeChange
+        },
 
-                if (setting)
-                {
-                    domObj.href = window.app.url + "/static/css/skins/" + setting;
-                }
-                else
-                {
-                    domObj.href = "";
-                }
-            },
-            onUpdate : function(event) {
-                var setting = event.data.setting.get();
-                var domObj  = document.getElementById('theme-stylesheet');
-
-                if (setting)
-                {
-                    domObj.href = window.app.url + "/static/css/skins/" + setting;
-                }
-                else
-                {
-                    domObj.href = "";
-                }
-            }
+        theme_3rd_party : {
+            type : "bool",
+            initial : false,
+            onChange : events.onTheme3rdPartyChange,
+            onUpdate : events.onTheme3rdPartyChange
         },
 
         css : {
             default : "",
             type    : "textarea",
-            onChange : function(event) {
-                var setting = event.data.setting.get();
-                var domObj  = document.getElementById('user-css');
-                domObj.innerHTML = setting;
-            },
-            onUpdate : function(event) {
-                var setting = event.data.setting.get();
-                var domObj  = document.getElementById('user-css');
-                domObj.innerHTML = setting;
-            }
-        }
+            onChange : events.onCssChange,
+            onUpdate : events.onCssChange
+        },
+    };
+
+    blueprint.prototype.bind = function() {
+        var widget  = this;
+        var $widget = this.$widget;
+        var data    = {
+            widget  : widget,
+            $widget : $widget
+        };
+
+        console.log('wew');
+        var night = this.is('theme_3rd_party');
+        $(document.body).toggleClass('light', !night).toggleClass('night', night);
+    };
+
+    blueprint.prototype.defaults = {
+        //
+    };
+
+    blueprint.prototype.events = {
+        //
     };
 
     ib.widget("stylist", blueprint, options);

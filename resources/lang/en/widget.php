@@ -153,6 +153,7 @@ return [
             'board' => "Prioritize Board CSS",
             'theme' => "Theme Base",
             'css'   => "Custom Styling",
+            'theme_3rd_party' => "Dark 3rd Party CSS"
         ],
     ],
 

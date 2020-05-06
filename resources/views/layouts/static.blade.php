@@ -48,6 +48,7 @@
 
     @section('widgets')
         <meta id="widget-content" data-widget="content" />
+        <meta id="widget-stylist" data-widget="stylist" />
     @show
 
     @yield('head')
@@ -57,12 +58,13 @@
     BODY CLASSES.
         * "infinity-next", always keep.
         * "responsive", always keep (for now). Will eventually want to unset if user requests desktop view.
+        * "light" can also be "night" and currently affects the hljs rendering.
         * $direction, either "ltr" or "rtl".
         * "nsfw-allowed", keep. JS will turn this off if enabled.
         * user()->getBodyClassesAttribute() is permission work, keep.
         * The yield renders additional body classes a specific view needs.
 --}}
-<body class="infinity-next responsive {{ $direction }} nsfw-allowed {{ user()->getBodyClassesAttribute() }} @yield('body-class')" id="top">
+<body class="infinity-next responsive light {{ $direction }} nsfw-allowed {{ user()->getBodyClassesAttribute() }} @yield('body-class')" id="top">
     <div id="page-container">
         @section('header')
         <header class="board-header header-height-1">

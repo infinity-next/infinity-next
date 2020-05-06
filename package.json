@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "dropzone": "enyo/dropzone",
+        "highlight.js": "^10.0.2",
         "laravel-echo": "^1.7.0",
         "pusher-js": "^5.1.1",
         "socket.io-client": "^2.3.0",

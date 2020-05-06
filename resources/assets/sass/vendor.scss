@@ -27,4 +27,9 @@ $fa-font-path: "/static/fonts/fontawesome";
  * Highlight JS
  * Used for formatting codeblocks.
  */
-@import "resources/assets/vendor/highlight-js/styles/github-gist";
+body.light {
+    @import "node_modules/highlight.js/scss/github-gist.scss";
+}
+body.night {
+    @import "node_modules/highlight.js/scss/tomorrow-night.scss";
+}
