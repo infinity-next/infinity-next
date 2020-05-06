@@ -1454,93 +1454,6 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     }
 
     /**
-     * Pull threads for the overboard.
-     *
-     * @static
-     *
-     * @param int $page
-     * @param bool|null $worksafe If we should only allow worksafe/nsfw.
-     * @param array $include Boards to include.
-     * @param array $exclude Boards to exclude.
-     * @param bool $catalog Catalog view.
-     * @param integer $updatedSince
-     *
-     * @return Collection of static
-     */
-    public static function getThreadsForOverboard($page = 0, $worksafe = null, array $include = [], array $exclude = [], $catalog = false, $updatedSince = null)
-    {
-        $postsPerPage = $catalog ? 150 : 10;
-        $boards = [];
-        $threads = static::whereHas('board', function ($query) use ($worksafe, $include, $exclude) {
-            $query->where('is_indexed', true);
-            $query->where('is_overboard', true);
-
-            $query->where(function ($query) use ($worksafe, $include, $exclude) {
-                $query->where(function ($query) use ($worksafe, $exclude) {
-                    if (!is_null($worksafe)) {
-                        $query->where('is_worksafe', $worksafe);
-                    }
-                    if (count($exclude)) {
-                        $query->whereNotIn('boards.board_uri', $exclude);
-                    }
-                });
-
-                if (count($include)) {
-                    $query->orWhereIn('boards.board_uri', $include);
-                }
-            });
-        })->thread();
-
-        // Add replies
-        $threads = $threads
-            ->withEverythingAndReplies()
-            ->with(['replies' => function ($query) use ($catalog) {
-                if ($catalog) {
-                    $query->where('body_has_content', true)->orderBy('post_id', 'desc')->limit(10);
-                }
-                else {
-                    $query->forIndex();
-                }
-            }]);
-
-        if ($updatedSince) {
-            $threads->where('posts.bumped_last', '>', Carbon::createFromTimestamp($updatedSince));
-        }
-
-        $threads = $threads
-            ->whereNull('suppressed_at')
-            ->orderByRaw('LEAST(bumped_last, suppressed_at) DESC')
-            ->skip($postsPerPage * ($page - 1))
-            ->take($postsPerPage)
-            ->get();
-
-        // The way that replies are fetched forIndex pulls them in reverse order.
-        // Fix that.
-        foreach ($threads as $thread) {
-            if (!isset($boards[$thread->board_uri])) {
-                $boards[$thread->board_uri] = Board::getBoardWithEverything($thread->board_uri);
-            }
-
-            $thread->setRelation('board', $boards[$thread->board_uri]);
-
-            $replyTake = $thread->stickied_at ? 1 : 5;
-
-            $thread->body_parsed = $thread->getBodyFormatted();
-            $thread->replies = $thread->replies
-                ->sortBy('post_id')
-                ->splice(-$replyTake, $replyTake);
-
-            $thread->replies->each(function($reply) use ($boards) {
-                $reply->setRelation('board', $boards[$reply->board_uri]);
-            });
-
-            $thread->prepareForCache();
-        }
-
-        return $threads;
-    }
-
-    /**
      * Prepares a thread and its relationships for a complete cache.
      *
      * @return \App\Post
@@ -2009,10 +1922,25 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
     {
         $json = parent::jsonSerialize();
 
-        $json['attachments'] = $json['attachments'] ?? $this->attachments;
+        if (isset($json['deleted_at']) && !is_null($json['deleted_at'])) {
+            return array_intersect_key($json, array_flip([
+                'post_id',
+                'board_uri',
+                'board_id',
+                'reply_to',
+                'reply_to_board_id',
+                'deleted_at',
+                'created_at',
+                'updated_at',
+                'bumped_last',
+            ]));
+        }
+        else {
+            $json['attachments'] = $json['attachments'] ?? $this->attachments;
 
-        if ($this->isOp()) {
-            $json['replies'] = $json['replies'] ?? $this->replies;
+            if ($this->isOp()) {
+                $json['replies'] = $json['replies'] ?? $this->replies;
+            }
         }
 
         return $json;

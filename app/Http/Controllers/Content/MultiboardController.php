@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Content;
 
-use App\Http\Controllers\Controller;
+use App\Board;
 use App\Post;
+use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Request;
 
 /**
@@ -21,17 +23,94 @@ class MultiboardController extends Controller
 {
     const VIEW_OVERBOARD = 'overboard';
 
-    protected function getThreads()
+    /**
+     * Pull threads for the overboard.
+     *
+     * @static
+     * @param  int  $page
+     * @param  bool|null  $worksafe If we should only allow worksafe/nsfw.
+     * @param  array  $include Boards to include.
+     * @param  array  $exclude Boards to exclude.
+     * @param  bool  $catalog Catalog view.
+     * @param  integer  $updatedSince
+     * @return Collection of static
+     */
+
+    protected function getThreads($page = 0, $worksafe = null, array $include = [], array $exclude = [], $catalog = false, $updatedSince = null)
     {
-        // Pass a variable amount of information into the parent method provided
-        // by the Post class.
-        return call_user_func_array(
-            [
-                Post::class,
-                'getThreadsForOverboard',
-            ],
-            func_get_args()
-        );
+        $postsPerPage = $catalog ? 150 : 10;
+        $boards = [];
+        $threads = Post::whereHas('board', function ($query) use ($worksafe, $include, $exclude) {
+            $query->where('is_indexed', true);
+            $query->where('is_overboard', true);
+
+            $query->where(function ($query) use ($worksafe, $include, $exclude) {
+                $query->where(function ($query) use ($worksafe, $exclude) {
+                    if (!is_null($worksafe)) {
+                        $query->where('is_worksafe', $worksafe);
+                    }
+                    if (count($exclude)) {
+                        $query->whereNotIn('boards.board_uri', $exclude);
+                    }
+                });
+
+                if (count($include)) {
+                    $query->orWhereIn('boards.board_uri', $include);
+                }
+            });
+        })->thread();
+
+        // Add replies
+        $threads = $threads
+            ->withEverythingAndReplies()
+            ->with(['replies' => function ($query) use ($catalog) {
+                if ($catalog) {
+                    $query->where('body_has_content', true)->orderBy('post_id', 'desc')->limit(10);
+                }
+                else {
+                    $query->forIndex();
+                }
+            }]);
+
+        if ($updatedSince) {
+            $threads = $threads->whereRaw("GREATEST(posts.bumped_last, posts.deleted_at) > '" . Carbon::createFromTimestamp($updatedSince) . "'");
+        }
+
+        if (Request::wantsJson()) {
+            $threads = $threads->withTrashed();
+        }
+
+        $threads = $threads
+            ->whereNull('suppressed_at')
+            ->orderByRaw('LEAST(bumped_last, suppressed_at) DESC')
+            ->skip($postsPerPage * ($page - 1))
+            ->take($postsPerPage)
+            ->get();
+
+        // The way that replies are fetched forIndex pulls them in reverse order.
+        // Fix that.
+        foreach ($threads as $thread) {
+            if (!isset($boards[$thread->board_uri])) {
+                $boards[$thread->board_uri] = Board::getBoardWithEverything($thread->board_uri);
+            }
+
+            $thread->setRelation('board', $boards[$thread->board_uri]);
+
+            $replyTake = $thread->stickied_at ? 1 : 5;
+
+            $thread->body_parsed = $thread->getBodyFormatted();
+            $thread->replies = $thread->replies
+                ->sortBy('post_id')
+                ->splice(-$replyTake, $replyTake);
+
+            $thread->replies->each(function($reply) use ($boards) {
+                $reply->setRelation('board', $boards[$reply->board_uri]);
+            });
+
+            $thread->prepareForCache();
+        }
+
+        return $threads;
     }
 
     protected function prepareThreads($worksafe = null, $boards = null, $catalog = false, $updatedSince = null)

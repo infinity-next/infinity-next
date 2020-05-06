@@ -142,10 +142,18 @@
                     return true; // continue if we're hidden
                 }
 
-                var $thread = $(item.html);
-                var $existing = $catalog.children("[data-id="+$thread.data('post_id')+"]");
+                var $existing = $catalog.children("[data-id="+item.post_id+"]");
+
+                if (item.deleted_at !== null) {
+                    if ($existing.length) {
+                        $existing.remove();
+                    }
+
+                    return true;
+                }
 
                 // DOM prep
+                var $thread = $(item.html);
                 var $li = $("<li class=\"thread-item mix\"></li>");
                 var $article = $("<article class=\"thread\"></article>");
 
@@ -265,11 +273,16 @@
             updatedSince : $(widget.options.selector['thread-item']+":first", $catalog)
         };
 
-        var jqXHR = $.ajax(window.location.pathname+".json", {
-            data : {
+        var jqXHR = jQuery.ajax({
+            type: "GET",
+            method: "GET",
+            url: window.location.pathname + ".json",
+            data: {
                 'updatedSince' : widget.updateLast,
-                'messenger'    : 1
-            }
+                'messenger' : 1
+            },
+            dataType: "json",
+            contentType: "application/json; charset=utf-8"
         });
 
         jqXHR.widget = widget;
