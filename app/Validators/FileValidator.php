@@ -59,7 +59,7 @@ class FileValidator
             return false;
         }
 
-        return !$firstUploaded->addSeconds($parameters[0] ?? 60)->isFuture();
+        return !$firstUploaded->addSecond($parameters[0] ?? 60)->isFuture();
     }
 
     public function validateFileOld($attribute, $value, $parameters)
