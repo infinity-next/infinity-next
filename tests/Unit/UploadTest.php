@@ -12,9 +12,35 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class UploadTest extends TestCase
 {
+    protected $donut;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $storage = FileStorage::where('hash', '5b8a791985ae692e3a410d621c16b092f67491e19ed0f3fa25d723073604d096')->first();
+
+        if ($storage) {
+            $storage->banned_at = now();
+            $storage->fuzzybanned_at = now();
+            $storage->save();
+        }
+        else {
+            $file = new File(dirname(__FILE__) . "/../Dummy/donut.jpg", true);
+            $upload = new Upload($file);
+            $storage = $upload->process();
+
+            $storage->banned_at = now();
+            $storage->fuzzybanned_at = now();
+            $storage->save();
+        }
+
+        $this->donut = $storage;
+    }
+
     public function testImageUploadAndDestruction()
     {
-        $file = new File(dirname(__FILE__) . "/../Dummy/donut.jpg", true);
+        $file = new File(dirname(__FILE__) . "/../Dummy/flock.jpg", true);
         $upload = new Upload($file);
         $storage = $upload->process();
 
@@ -52,26 +78,33 @@ class UploadTest extends TestCase
         $this->assertEquals(FileStorage::where('hash', $storage->hash)->count(), 0);
     }
 
-    public function testFuzzyban()
+    // distortion: literally fuzzy
+    public function testFuzzybanFuzzy()
     {
         $this->expectException(BannedPhashException::class);
 
-        $file = new File(dirname(__FILE__) . "/../Dummy/donut.jpg", true);
-        $upload = new Upload($file);
-        $storage = $upload->process();
-
-        $storage->banned_at = now();
-        $storage->fuzzybanned_at = now();
-        $storage->save();
-
         $bannedFile = new File(dirname(__FILE__) . "/../Dummy/donut_fuzzy.jpg", true);
         $bannedUpload = new Upload($bannedFile);
-        $bannedStorage = $bannedUpload->process();
+        $bannedStorage = $bannedUpload->processThumbnails(true);
+    }
 
-        $storage->banned_at = null;
-        $storage->fuzzybanned_at = null;
-        $storage->save();
+    // distortion: bottom-right black border
+    public function testFuzzybanBlacked()
+    {
+        $this->expectException(BannedPhashException::class);
+        $bannedFile = new File(dirname(__FILE__) . "/../Dummy/donut_blacked.jpg", true);
+        $bannedUpload = new Upload($bannedFile);
+        $bannedStorage = $bannedUpload->processThumbnails(true);
+    }
 
+    // distortion: uniform white border, mirrored
+    public function testFuzzybanOutline()
+    {
+        $this->expectException(BannedPhashException::class);
+
+        $bannedFile = new File(dirname(__FILE__) . "/../Dummy/donut_outlined.jpg", true);
+        $bannedUpload = new Upload($bannedFile);
+        $bannedStorage = $bannedUpload->processThumbnails(true);
     }
 
     public function testPdfUpload()
