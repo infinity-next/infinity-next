@@ -103,7 +103,7 @@ class ReportObserver
      */
     public function updated(Report $report)
     {
-        Event::dispatch(new \App\Events\ReportWasModified($report));
+        //Event::dispatch(new \App\Events\ReportWasModified($report));
 
         return true;
     }

@@ -31,7 +31,7 @@
             </li>
             @endcan
 
-            @can('viewGlobal', \App\Report::class)
+            @can('view', \App\Report::class)
             <li class="cp-linkgroup">
                 <a class="linkgroup-name">@lang('nav.panel.secondary.board.discipline')</a>
 

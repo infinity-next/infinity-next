@@ -112,14 +112,14 @@ class ReportPolicy extends AbstractPolicy
      * Can this user view this report?
      *
      * @param App\User    $user
-     * @param App\Report  $report
+     * @param App\Report|null  $report  If null, checks for any board with this permission.
      *
      * @return Illuminate\Auth\Access\Response
      */
-    public function view(User $user, Report $report)
+    public function view(User $user, ?Report $report = null)
     {
         // If this is a global report, we check for that permission.
-        if ($report->global) {
+        if (!is_null($report) && $report->global) {
             return $user->permission('board.reports', $report->board_uri)
                 ? Response::allow()
                 : Response::deny('auth.site.cannot_view_reports');
