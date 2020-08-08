@@ -57,6 +57,9 @@ Infinity Next is currently below its first release version. When it is finished,
    1. `apt autoremove apache2`
    1. `apt install nginx-full`
    1. `apt install php-fpm`
+1. Install Node.js (https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -`
+   1. `apt-get install -y nodejs`
 1. `adduser --system infinitynext --home /var/www/infinity-next`
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
@@ -89,9 +92,10 @@ Infinity Next is currently below its first release version. When it is finished,
 1. Give `www-data` read/write access to application storage:
    1. `chown -hR infinitynext:www-data /var/www/infinity-next/storage/`
    1. `chmod -R g+rw /var/www/infinity-next/storage/`
-1. Install Node.js (https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -`
-   1. `apt-get install -y nodejs`
+
+### Phase 4:
+
+1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `npm install`
 1. `npm run prod`
    1. Check `package.json` for npm script definitions.
