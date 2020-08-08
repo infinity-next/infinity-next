@@ -36,16 +36,87 @@ You can also pass `--prefer-source` to `composer` to forego the Github OAuth req
 # Installation
 Infinity Next is currently below its first release version. When it is finished, a compiled archive will be available with an installation process. Right now, however, you must build it yourself and have access to a command line interface.
 
-1. Pull the code and navigate to the directory where the `.env` file is.
-2. Edit the `.env` to your liking. This is where you enter database details.
-3. Issue the command `composer update` and wait as 3rd party libraries are added.
-4. Issue the command `php artisan migrate` or `./artisan migrate`
-5. Issue the command `php artisan db:seed` or `./artisan db:seed`
-    * Take note of the Admin account password that will be created for you.
-6. Add the Laravel crontab service provided in `crontab.txt`
-7. Restart your PHP daemon, using a command such as `service apache2 restart` or `service php5-fpm restart`.
+* These instructions are based on a clean Debian 10 installation.
+  * If you don't know how to deal with `sudo: command not found`, you probably shouldn't be doing this.
 
-You should now have a `/test/` board. The admin account will be named `Admin`.
+### Phase 1:
+
+1. Add `oldstable main` and `buster-backports main` to `/etc/apt/sources.list`
+   1. `apt update`
+1. `apt install php7.3 php7.3-common php-bcmath php-mcrypt php-gd php-mbstring php-xml php-curl php-redis php-pgsql php-zip php-gmp`
+1. `apt install postgresql`
+   1. `sudo -u postgres psql` or `runuser -u postgres psql`
+   1. `create user chan;`
+   1. `create database chan owner chan;`
+   1. `\c chan`
+   1. `CREATE EXTENSION fuzzystrmatch;`
+   1. `\password chan`
+   1. `\q`
+1. `apt install redis git`
+1. At your discretion: 
+   1. `apt autoremove apache2`
+   1. `apt install nginx-full`
+   1. `apt install php-fpm`
+1. Install Node.js (https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -`
+   1. `apt-get install -y nodejs`
+1. `adduser --system infinitynext --home /var/www/infinity-next`
+1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
+1. `chown -hR infinitynext /var/www/infinity-next`
+
+### Phase 2:
+
+1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
+1. `cp .env.example .env`
+1. Edit `.env`, set:
+   1. A unqiue 32 character value for `APP_KEY`.
+   1. `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD` as configured.
+1. `php composer.phar update` and wait as 3rd party libraries are installed.
+1. `php artisan migrate`
+1. `php artisan db:seed`
+    * Take note of the Admin account password that will be created for you.
+1. Add the Laravel crontab service provided in `crontab.txt`
+   1. `cat ./docs/crontab.txt`
+   1. `crontab -e`
+   1. Do the needful.
+1. `exit`
+
+### Phase 3:
+
+1. Add the virtual host configuration for nginx.
+   1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
+   1. Adjust `/etc/nginx/sites-available/infinity-next` as required.
+   1. `ln -s /etc/nginx/sites-available/infinity-next /etc/nginx/sites-enabled/infinity-next`
+   1. `nginx -t`
+      1. `systemctl restart nginx`
+1. Give `www-data` read/write access to application storage:
+   1. `chown -hR infinitynext:www-data /var/www/infinity-next/storage/`
+   1. `chmod -R g+rw /var/www/infinity-next/storage/`
+
+### Phase 4:
+
+1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
+1. `npm install`
+1. `npm run prod`
+   1. Check `package.json` for npm script definitions.
+1. CONGRATULATIONS!!! U HAVE SUCCESSED 🎉🎉🎉
+   1. You should now have a `/test/` board.
+   1. The admin account will be named `Admin`.
+
+
+#### To accommodate upstream reverse proxies:
+
+
+1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
+1. `php artisan vendor:publish`
+1. Edit `config/trustedproxy.php` as required.
+
+
+#### Additional reminders:
+
+1. Set your SMTP server in `.env` - you need this for password resets.
+1. Adjust your maximum file upload size in nginx and php!
+1. Install `ffmpeg` for multimedia assets to work!
 
 ## Adding WebSockets
 WebSockets will play an increasingly important part of the software as they increase the responsiveness of the entire application. It is suggested to set it up, though it is somewhat complicated.
