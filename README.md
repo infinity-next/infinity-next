@@ -50,12 +50,11 @@ Infinity Next is currently below its first release version. When it is finished,
    1. `CREATE EXTENSION fuzzystrmatch;`
    1. `\password chan`
    1. `\q`
-1. `apt install redis`
-1. `apt install git`
+1. `apt install redis git`
 1. At your discretion: 
    1. `apt autoremove apache2`
    1. `apt install nginx-full`
-   1. `apt isntall php-fpm`
+   1. `apt install php-fpm`
 1. `adduser --system infinitynext --home /var/www/infinity-next`
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
@@ -83,7 +82,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. `chown -hR infinitynext:www-data /var/www/infinity-next/storage/`
    1. `chmod -R g+rw /var/www/infinity-next/storage/`
 1. Install Node.js (https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -` (I used version 14 - not sure what version 9ch is using)
+   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -`
    1. `apt-get install -y nodejs`
 1. `npm install`
 1. `npm run prod`
@@ -92,7 +91,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. You should now have a `/test/` board.
    1. The admin account will be named `Admin`.
 
-To accomodate upstream reverse proxies:
+To accommodate upstream reverse proxies:
 
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `php artisan vendor:publish`
