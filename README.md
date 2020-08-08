@@ -58,6 +58,7 @@ Infinity Next is currently below its first release version. When it is finished,
 1. `adduser --system infinitynext --home /var/www/infinity-next`
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
+
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `cp .env.example .env`
 1. Edit `.env`, set:
@@ -72,6 +73,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. `crontab -e`
    1. Do the needful.
 1. `exit`
+
 1. Add the virtual host configuration for nginx.
    1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
    1. Adjust `/etc/nginx/sites-available/infinity-next` as required.
