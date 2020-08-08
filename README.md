@@ -39,6 +39,7 @@ Infinity Next is currently below its first release version. When it is finished,
 * These instructions are based on a clean Debian 10 installation.
   * If you don't know how to deal with `sudo: command not found`, you probably shouldn't be doing this.
 
+### Phase 1:
 
 1. Add `oldstable main` and `buster-backports main` to `/etc/apt/sources.list`
    1. `apt update`
@@ -60,6 +61,7 @@ Infinity Next is currently below its first release version. When it is finished,
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
 
+### Phase 2:
 
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `cp .env.example .env`
@@ -76,6 +78,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. Do the needful.
 1. `exit`
 
+### Phase 3:
 
 1. Add the virtual host configuration for nginx.
    1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
@@ -97,7 +100,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. The admin account will be named `Admin`.
 
 
-To accommodate upstream reverse proxies:
+#### To accommodate upstream reverse proxies:
 
 
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
@@ -105,7 +108,7 @@ To accommodate upstream reverse proxies:
 1. Edit `config/trustedproxy.php` as required.
 
 
-Additional reminders:
+#### Additional reminders:
 
 1. Set your SMTP server in `.env` - you need this for password resets.
 1. Adjust your maximum file upload size in nginx and php!
