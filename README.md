@@ -39,6 +39,7 @@ Infinity Next is currently below its first release version. When it is finished,
 * These instructions are based on a clean Debian 10 installation.
   * If you don't know how to deal with `sudo: command not found`, you probably shouldn't be doing this.
 
+
 1. Add `oldstable main` and `buster-backports main` to `/etc/apt/sources.list`
    1. `apt update`
 1. `apt install php7.3 php7.3-common php-bcmath php-mcrypt php-gd php-mbstring php-xml php-curl php-redis php-pgsql php-zip php-gmp`
@@ -59,6 +60,7 @@ Infinity Next is currently below its first release version. When it is finished,
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
 
+
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `cp .env.example .env`
 1. Edit `.env`, set:
@@ -73,6 +75,7 @@ Infinity Next is currently below its first release version. When it is finished,
    1. `crontab -e`
    1. Do the needful.
 1. `exit`
+
 
 1. Add the virtual host configuration for nginx.
    1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
@@ -93,11 +96,14 @@ Infinity Next is currently below its first release version. When it is finished,
    1. You should now have a `/test/` board.
    1. The admin account will be named `Admin`.
 
+
 To accommodate upstream reverse proxies:
+
 
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `php artisan vendor:publish`
 1. Edit `config/trustedproxy.php` as required.
+
 
 Additional reminders:
 
