@@ -40,57 +40,57 @@ Infinity Next is currently below its first release version. When it is finished,
   * If you don't know how to deal with `sudo: command not found`, you probably shouldn't be doing this.
 
 1. Add `oldstable main` and `buster-backports main` to `/etc/apt/sources.list`
-  1. `apt update`
+   1. `apt update`
 1. `apt install php7.3 php7.3-common php-bcmath php-mcrypt php-gd php-mbstring php-xml php-curl php-redis php-pgsql php-zip php-gmp`
 1. `apt install postgresql`
-  1. `sudo -u postgres psql` or `runuser -u postgres psql`
-  1. `create user chan;`
-  1. `create database chan owner chan;`
-  1. `\c chan`
-  1. `CREATE EXTENSION fuzzystrmatch;`
-  1. `\password chan`
-  1. `\q`
+   1. `sudo -u postgres psql` or `runuser -u postgres psql`
+   1. `create user chan;`
+   1. `create database chan owner chan;`
+   1. `\c chan`
+   1. `CREATE EXTENSION fuzzystrmatch;`
+   1. `\password chan`
+   1. `\q`
 1. `apt install redis`
 1. `apt install git`
 1. At your discretion: 
-  1. `apt autoremove apache2`
-  1. `apt install nginx-full`
-  1. `apt isntall php-fpm`
+   1. `apt autoremove apache2`
+   1. `apt install nginx-full`
+   1. `apt isntall php-fpm`
 1. `adduser --system infinitynext --home /var/www/infinity-next`
 1. `git clone https://github.com/infinity-next/infinity-next.git /var/www/infinity-next`
 1. `chown -hR infinitynext /var/www/infinity-next`
 1. `sudo -u infinitynext /bin/bash` or `runuser -u infinitynext /bin/bash`
 1. `cp .env.example .env`
 1. Edit `.env`, set:
-  1. A unqiue 32 character value for `APP_KEY`.
-  1. `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD` as configured.
+   1. A unqiue 32 character value for `APP_KEY`.
+   1. `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD` as configured.
 1. `php composer.phar update` and wait as 3rd party libraries are installed.
 1. `php artisan migrate`
 1. `php artisan db:seed`
     * Take note of the Admin account password that will be created for you.
 1. Add the Laravel crontab service provided in `crontab.txt`
-  1. `cat ./docs/crontab.txt`
-  1. `crontab -e`
-  1. Do the needful.
+   1. `cat ./docs/crontab.txt`
+   1. `crontab -e`
+   1. Do the needful.
 1. `exit`
 1. Add the virtual host configuration for nginx.
-  1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
-  1. Adjust `/etc/nginx/sites-available/infinity-next` as required.
-  1. `ln -s /etc/nginx/sites-available/infinity-next /etc/nginx/sites-enabled/infinity-next`
-  1. `nginx -t`
-    1. `systemctl restart nginx`
+   1. `cp /var/www/infinity-next/docs/nginx.txt /etc/nginx/sites-available/infinity-next`
+   1. Adjust `/etc/nginx/sites-available/infinity-next` as required.
+   1. `ln -s /etc/nginx/sites-available/infinity-next /etc/nginx/sites-enabled/infinity-next`
+   1. `nginx -t`
+      1. `systemctl restart nginx`
 1. Give `www-data` read/write access to application storage:
-	1. `chown -hR infinitynext:www-data /var/www/infinity-next/storage/`
-	1. `chmod -R g+rw /var/www/infinity-next/storage/`
+   1. `chown -hR infinitynext:www-data /var/www/infinity-next/storage/`
+   1. `chmod -R g+rw /var/www/infinity-next/storage/`
 1. Install Node.js (https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-  1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -` (I used version 14 - not sure what version 9ch is using)
-  1. `apt-get install -y nodejs`
+   1. `curl -sL https://deb.nodesource.com/setup_14.x | bash -` (I used version 14 - not sure what version 9ch is using)
+   1. `apt-get install -y nodejs`
 1. `npm install`
 1. `npm run prod`
-  1. Check `package.json` for npm script definitions.
+   1. Check `package.json` for npm script definitions.
 1. CONGRATULATIONS!!! U HAVE SUCCESSED 🎉🎉🎉
-  1. You should now have a `/test/` board.
-  1. The admin account will be named `Admin`.
+   1. You should now have a `/test/` board.
+   1. The admin account will be named `Admin`.
 
 To accomodate upstream reverse proxies:
 
