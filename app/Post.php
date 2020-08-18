@@ -579,6 +579,7 @@ class Post extends Model implements FormattableContract, Htmlable, Jsonable
             // If our body is too long, we need to pull the first X characters and do that instead.
             // We also set a token indicating this post has hidden content.
             if (mb_strlen($this->body) > 1200) {
+                $ContentFormatter = new ContentFormatter();
                 $this->body_too_long = true;
                 $this->body_parsed_preview = $ContentFormatter->formatPost($this, 1000);
             }
