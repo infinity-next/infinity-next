@@ -192,7 +192,8 @@ class Autoprune extends Command
             $this->comment("       Pruning /{$board->board_uri}/...");
 
             // Modify threads based on these settings.
-            foreach ($board->threads as $threadIndex => $thread) {
+            $threads = $board->threads()->get();
+            foreach ($threads as $threadIndex => $thread) {
                 $threadPage = (int) (floor($threadIndex / $threadsPerPage) + 1);
                 $modified = false;
                 $replyLast = clone $thread->reply_last;
