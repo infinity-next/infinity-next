@@ -37,6 +37,7 @@ class Autoprune extends Command
         // Load all of our boards with their settings and threads, 100 at a time.
         Board::with([
             'settings',
+            /*
             'threads' => function ($query) {
                 // Avoid selecting the content of a thread.
                 $query->select(
@@ -64,6 +65,7 @@ class Autoprune extends Command
                 // Oldest first
                 $query->orderBy('bumped_last', 'desc');
             },
+            */
         ])->chunk(25, function ($boards) use ($carbonNow) {
             $this->comment('    Pruning 25 boards...');
 
@@ -192,7 +194,8 @@ class Autoprune extends Command
             $this->comment("       Pruning /{$board->board_uri}/...");
 
             // Modify threads based on these settings.
-            foreach ($board->threads as $threadIndex => $thread) {
+            $threads = $board->threads()->whereNull('stickied_at')->orderBy('bumped_last', 'desc')->get();
+            foreach ($threads as $threadIndex => $thread) {
                 $threadPage = (int) (floor($threadIndex / $threadsPerPage) + 1);
                 $modified = false;
                 $replyLast = clone $thread->reply_last;
